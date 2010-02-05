@@ -1,0 +1,116 @@
+>sw|Q55645 (1-4)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (5-19)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (20-26)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (27-31)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+
+>sw|Q55645 (1-4)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (5-19)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (20-26)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (27-31)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+>sw|Q55645 (1-19)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPK
+>sw|Q55645 (5-26)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPKLHGFVNR
+>sw|Q55645 (20-31)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNRTGFDA
+
+>sw|Q55645 (1-4)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (5-19)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (20-26)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (27-31)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+>sw|Q55645 (1-19)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPK
+>sw|Q55645 (1-26)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPKLHGFVNR
+>sw|Q55645 (1-31)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPKLHGFVNRTGFDA
+>sw|Q55645 (5-26)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPKLHGFVNR
+>sw|Q55645 (5-31)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPKLHGFVNRTGFDA
+>sw|Q55645 (20-31)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNRTGFDA
+
+>sw|Q55645 (1-3)|TEST_HUMAN Test Protein for the cleave() method.
+GHI
+>sw|Q55645 (4-18)|TEST_HUMAN Test Protein for the cleave() method.
+KLMVSTRPIGASDNP
+>sw|Q55645 (19-25)|TEST_HUMAN Test Protein for the cleave() method.
+KLHGFVN
+>sw|Q55645 (26-31)|TEST_HUMAN Test Protein for the cleave() method.
+RTGFDA
+>sw|Q55645 (1-18)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNP
+>sw|Q55645 (4-25)|TEST_HUMAN Test Protein for the cleave() method.
+KLMVSTRPIGASDNPKLHGFVN
+>sw|Q55645 (19-31)|TEST_HUMAN Test Protein for the cleave() method.
+KLHGFVNRTGFDA
+
+>sw|Q55645 (1-4)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (5-10)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTR
+>sw|Q55645 (11-19)|TEST_HUMAN Test Protein for the cleave() method.
+PIGASDNPK
+>sw|Q55645 (20-26)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (27-31)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+
+>sw|Q55645 (15-18)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (19-33)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (34-40)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (41-45)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+>sw|Q55645 (15-33)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPK
+>sw|Q55645 (19-40)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPKLHGFVNR
+>sw|Q55645 (34-45)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNRTGFDA
+
+>sw|Q55645 (19-33)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (34-40)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (41-45)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+>sw|Q55645 (19-40)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPKLHGFVNR
+>sw|Q55645 (34-45)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNRTGFDA
+
+>sw|Q55645 (15-18)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (19-33)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (34-40)|TEST_HUMAN Test Protein for the cleave() method.
+LHGFVNR
+>sw|Q55645 (15-33)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPK
+>sw|Q55645 (19-40)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPKLHGFVNR
+
+>sw|Q55645 (15-18)|TEST_HUMAN Test Protein for the cleave() method.
+GHIK
+>sw|Q55645 (19-33)|TEST_HUMAN Test Protein for the cleave() method.
+LMVSTRPIGASDNPK
+>sw|Q55645 (42-46)|TEST_HUMAN Test Protein for the cleave() method.
+TGFDA
+>sw|Q55645 (15-33)|TEST_HUMAN Test Protein for the cleave() method.
+GHIKLMVSTRPIGASDNPK

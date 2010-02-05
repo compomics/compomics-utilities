@@ -1,0 +1,39 @@
+# No notation as of yet!!!
+# Devised these myself!
+Carbamidomethyl (C)=Cmm
+N-Formyl (Protein)=For
+Myristoylation (K)=Myr
+Amide (C-term)=Ami
+
+# These need some work for the N-term!!
+Acetyl (K)=Ace
+Acetyl (N-term)=Ace
+
+# Check these.
+Me-ester (DE)=Met
+Me-ester (C-term)=Met
+Phospho (ST)=P
+Phospho (Y)=P
+Sulphone (M)=Sul
+
+# Not in Mascot?
+NONE1=DiS
+NONE2=HOx
+#NONE3=For
+NONE4=COx
+NONE5=Cys
+
+
+# These are OK.
+Pyro-glu (N-term Q)=Pyr
+Pyro-glu (N-term E)=Pyr
+Oxidation (M)=Mox
+Deamidation (NQ)=Dam
+HSe=Hse
+Propionamide (C)=Prp
+Carbamyl (N-term)=Car
+thioprop (N-term)=Tpr
+thiopropcar (N-term)=Tpc
+ThiopropLys (K)=Tpl
+ThiopropCarbLys (K)=Tcl
+Homoarg (K)=Har

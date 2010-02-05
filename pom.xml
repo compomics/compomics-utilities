@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.compomics</groupId>
+	<artifactId>utilities</artifactId>
+	<packaging>jar</packaging>
+	<version>${version.number}</version>
+	<name>computational omics utilities</name>
+	<url>compomics_utilities.googlecode.com</url>
+
+<!-- Set the version number for the whole project -->
+	<properties>
+		<version.number>3.0</version.number>
+	</properties>
+    
+<!-- Licence -->
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+    <developers>
+        <developer>
+            <name>Lennart Martens</name>
+            <id>lennart</id>
+            <email>lennart.martens AT UGent.be</email>
+            <organization>Ghent University and FWO Vlaanderen</organization>
+            <roles>
+                <role>UML Model Design</role>
+                <role>Java Developer</role>
+                <role>Documentation</role>
+            </roles>
+        </developer>
+	  <developer>
+            <name>Harald Barsnes</name>
+            <id>harald</id>
+            <email>harald.barsnes AT ii.uib.no</email>
+            <organization>University of Bergen</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Kenny Helsens</name>
+            <id>kenny</id>
+            <email>kenny.helsens AT UGent.be</email>
+            <organization>University of Ghent</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Niklaas Colaert</name>
+            <id>kenny</id>
+            <email>niklaas.colaert AT UGent.be</email>
+            <organization>University of Ghent</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+<!-- Build -->
+	<build>
+        <!-- Plugins -->
+        <plugins>
+            <!-- Compiler plugin -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<showDeprecation>true</showDeprecation>
+					<debug>true</debug>
+				</configuration>
+			</plugin>
+
+            <!-- Jar plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/utilities-${project.version}</outputDirectory>
+				</configuration>
+			</plugin>
+
+            <!-- Dependency plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/utilities-${project.version}/lib</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<excludeTransitive>false</excludeTransitive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+            <!-- Resources plugin -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.3</version>
+                <!-- Copy resources into appropriate folder upon packaging -->
+				<executions>
+                    <!-- Copy main resources into test classpath when running the tests -->
+                    <execution>
+                        <id>copy-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>src/test/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>    
+
+	<!-- Repositories -->
+    <repositories>
+        <!-- UGent Genesis Maven 1 repository -->
+        <repository>
+            <id>genesis-maven-repository</id>
+            <name>Genesis repository</name>
+            <url>http://genesis.UGent.be/maven</url>
+            <layout>legacy</layout>
+        </repository>
+
+         <!-- UGent Genesis Maven 2 repository -->
+        <repository>
+            <id>genesis-maven2-repository</id>
+            <name>Genesis maven2 repository</name>
+            <url>http://genesis.UGent.be/maven2</url>
+            <layout>default</layout>
+        </repository>
+
+    </repositories>
+
+    <!-- Dependencies -->
+	<dependencies>
+        <!-- This project depends on the junit JAR file.
+          -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>build</scope>
+        </dependency>
+        <!-- This project depends on the JAR file "lmjunit-1.0.2.jar" (TestCaseLM)
+             the remote repository root of which is 'http://genesis.UGent.be/maven'.
+          -->
+        <dependency>
+            <groupId>lennart</groupId>
+            <artifactId>lmjunit</artifactId>
+            <version>1.0.2</version>
+            <type>jar</type>
+        </dependency>
+
+        <!-- The Servlet API from Sun -->
+        <dependency>
+            <groupId>servletapi</groupId>
+            <artifactId>servletapi</artifactId>
+            <version>2.2</version>
+        </dependency>
+	</dependencies>
+    
+</project>

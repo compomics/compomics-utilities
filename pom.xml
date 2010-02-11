@@ -183,7 +183,7 @@
         </dependency>
 	</dependencies>
 
-
+      <!-- The deployment maven2 repository-->
       <distributionManagement>
         <repository>
             <id>genesis-maven2-repo</id>

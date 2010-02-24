@@ -10,7 +10,7 @@
 
 <!-- Set the version number for the whole project -->
 	<properties>
-		<version.number>3.0</version.number>
+		<version.number>3.0.1</version.number>
 	</properties>
     
 <!-- Licence -->
@@ -163,7 +163,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
-            <scope>build</scope>
+            <scope>test</scope>
         </dependency>
         <!-- This project depends on the JAR file "lmjunit-1.0.2.jar" (TestCaseLM)
              the remote repository root of which is 'http://genesis.UGent.be/maven'.

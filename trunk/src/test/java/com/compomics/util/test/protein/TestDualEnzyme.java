@@ -48,7 +48,14 @@ public class TestDualEnzyme extends TestCaseLM {
 
         DualEnzyme de = new DualEnzyme("TestEnzyme", nterms, "C", "P", "Cterm", 1);
         Assert.assertEquals("TestEnzyme", de.getTitle());
-        Assert.assertEquals("METNRXC", new String(de.getCleavage()));
+        String cleavage = new String(de.getCleavage());
+        Assert.assertTrue(cleavage.indexOf("N") >= 0 && cleavage.indexOf("M") < cleavage.length()-2);
+        Assert.assertTrue(cleavage.indexOf("T") >= 0 && cleavage.indexOf("M") < cleavage.length()-2);
+        Assert.assertTrue(cleavage.indexOf("E") >= 0 && cleavage.indexOf("M") < cleavage.length()-2);
+        Assert.assertTrue(cleavage.indexOf("R") >= 0 && cleavage.indexOf("M") < cleavage.length()-2);
+        Assert.assertTrue(cleavage.indexOf("M") >= 0 && cleavage.indexOf("M") < cleavage.length()-2);
+        Assert.assertTrue(cleavage.indexOf("X") == 5);
+        Assert.assertTrue(cleavage.indexOf("C") == 6);
         Assert.assertEquals(1, de.getRestrict().length);
         Assert.assertEquals('P', de.getRestrict()[0]);
         Assert.assertEquals(1, de.getMiscleavages());

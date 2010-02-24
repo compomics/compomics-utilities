@@ -188,7 +188,7 @@ public class JFrameForBytes extends JFrame {
         String text = txtData.getText();
         try {
             FileDialog fd = new FileDialog(this, "Save contents of frame to disk...", FileDialog.SAVE);
-            fd.show();
+            fd.setVisible(true);
             String select = fd.getFile();
             if(select == null) {
                 return;

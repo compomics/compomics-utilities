@@ -7,8 +7,10 @@
 package com.compomics.util.gui.dialogs;
 
 
+import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.gui.JLabelAndComponentPanel;
 import com.compomics.util.interfaces.Connectable;
+import com.compomics.util.io.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,6 +55,7 @@ public class ConnectionDialog extends JDialog {
     private Connectable iTarget = null;
 
     private String iPropsFile = null;
+    private String iLastInitiatedConfiguration;
 
     /**
      * This constructor takes as arguments the parent JFrame and
@@ -71,6 +74,25 @@ public class ConnectionDialog extends JDialog {
         super(aParent, aTitle, true);
         this.iPropsFile = aPropsFile;
         this.iTarget = aTarget;
+        this.showConnectionDialog();
+    }
+
+    /**
+     * This constructor takes as arguments the parent JFrame and
+     * a title for the dialog.
+     * It also constructs the GUI.
+     *
+     * @param   aParent JFrame that is the parent of this JDialog.
+     * @param   aTarget Connectable to which the connection will be passed
+     *                  once it is successfully established.
+     * @param   aTitle  String with the title for this dialog
+     * @param   aConnectionProperties Properties instance with three variables (name, driver, url)
+     */
+    public ConnectionDialog(JFrame aParent, Connectable aTarget, String aTitle, Properties aConnectionProperties) {
+        super(aParent, aTitle, true);
+        this.iTarget = aTarget;
+
+        parseConnectionProperties(aConnectionProperties);
         this.showConnectionDialog();
     }
 
@@ -256,11 +278,15 @@ public class ConnectionDialog extends JDialog {
      *                parameters to initialize.
      */
     private void initConfiguration(InnerConfigParams aParams) {
+        iLastInitiatedConfiguration = aParams.getName();
         if(aParams.getDriver() != null) {
             txtDriver.setText(aParams.getDriver().trim());
         }
         if(aParams.getUrl() != null) {
             txtUrl.setText(aParams.getUrl().trim());
+        }
+        if(aParams.getUser() != null) {
+            txtUser.setText(aParams.getUser().trim());
         }
     }
 
@@ -315,6 +341,22 @@ public class ConnectionDialog extends JDialog {
             JOptionPane.showMessageDialog(this, new String[]{"Unable to make the connection to '" + url + "' using '" + driverClass + "'!", errorString, "\n"}, "Unable to connect!", JOptionPane.ERROR_MESSAGE);
             return;
         } else {
+            // Success!
+            // First, fut the last used values into a properties file and store for next time.
+            Properties lLastUsedProperties = new Properties();
+            if(iLastInitiatedConfiguration.toLowerCase().equals("default")){
+                lLastUsedProperties.put("user", user);
+                lLastUsedProperties.put("driver", driverClass);
+                lLastUsedProperties.put("url", url);
+            }else{
+                lLastUsedProperties.put("user_" + iLastInitiatedConfiguration, user);
+                lLastUsedProperties.put("driver_" + iLastInitiatedConfiguration, driverClass);
+                lLastUsedProperties.put("url_" + iLastInitiatedConfiguration, url);
+            }
+            
+            PropertiesManager.getInstance().updateProperties(CompomicsTools.MSLIMS, "ms_lims.properties", lLastUsedProperties);
+
+            // Now continue into ms_lims.
             JOptionPane.showMessageDialog(this, new String[]{"Connection to '" + url + "' established!", "\n"}, "Connection established!", JOptionPane.INFORMATION_MESSAGE);
             iTarget.passConnection(lConn, url.substring(url.lastIndexOf(":")+1));
             this.setVisible(false);
@@ -351,44 +393,8 @@ public class ConnectionDialog extends JDialog {
                     System.out.println("local classloader.");
                 }
                 p.load(is);
-                // Two options here - old-fashioned, single predefined configuration,
-                // or hot new multiple predefined configurations.
-                // Distinction is the presence of the 'CONFIGURATION' key in the
-                // latter case.
-                if( (p.getProperty("CONFIGURATION") == null || p.getProperty("CONFIGURATION").trim().length() == 0)
-                        &&
-                    (p.getProperty("configuration") == null || p.getProperty("configuration").trim().length() == 0)
-                   ) {
-                    // In this case, we expect only a sinlge predefined configuration,
-                    // which will be stored under the 'DEFAULT' key in the hashmap.
-                    String dbDriver = p.getProperty("driver");
-                    if(dbDriver == null) {
-                        dbDriver = p.getProperty("DRIVER");
-                    }
-                    String dbUrl = p.getProperty("url");
-                    if(dbUrl == null) {
-                        dbUrl = p.getProperty("URL");
-                    }
-                    iConnections.add(new InnerConfigParams("DEFAULT", dbDriver, dbUrl));
-                } else {
-                    String configurationString = p.getProperty("CONFIGURATION");
-                    if(configurationString == null) {
-                        configurationString = p.getProperty("configuration");
-                    }
-                    String[] configurations = configurationString.split(",");
-                    for (int i = 0; i < configurations.length; i++) {
-                        String lConfiguration = configurations[i].trim();
-                        String dbDriver = p.getProperty("DRIVER_" + lConfiguration);
-                        if(dbDriver == null) {
-                            dbDriver = p.getProperty("driver_" + lConfiguration);
-                        }
-                        String dbUrl = p.getProperty("url_" + lConfiguration);
-                        if(dbUrl == null) {
-                            dbUrl = p.getProperty("URL_" + lConfiguration);
-                        }
-                        iConnections.add(new InnerConfigParams(lConfiguration, dbDriver, dbUrl));
-                    }
-                }
+                parseConnectionProperties(p);
+
                 is.close();
             } catch(Exception e) {
                 // Do nothing.
@@ -397,7 +403,58 @@ public class ConnectionDialog extends JDialog {
         }
     }
 
+    private void parseConnectionProperties(final Properties aConnectionProperties) {
+        // Two options here - old-fashioned, single predefined configuration,
+        // or hot new multiple predefined configurations.
+        // Distinction is the presence of the 'CONFIGURATION' key in the
+        // latter case.
+        if( (aConnectionProperties.getProperty("CONFIGURATION") == null || aConnectionProperties.getProperty("CONFIGURATION").trim().length() == 0)
+                &&
+            (aConnectionProperties.getProperty("configuration") == null || aConnectionProperties.getProperty("configuration").trim().length() == 0)
+           ) {
+            // In this case, we expect only a sinlge predefined configuration,
+            // which will be stored under the 'DEFAULT' key in the hashmap.
+            String dbDriver = aConnectionProperties.getProperty("driver");
+            if(dbDriver == null) {
+                dbDriver = aConnectionProperties.getProperty("DRIVER");
+            }
+            String dbUrl = aConnectionProperties.getProperty("url");
+            if(dbUrl == null) {
+                dbUrl = aConnectionProperties.getProperty("URL");
+            }
+            String dbUser = aConnectionProperties.getProperty("USER");
+            if(dbUser == null) {
+                dbUser = aConnectionProperties.getProperty("user");
+            }
+
+            iConnections.add(new InnerConfigParams(dbUser, "DEFAULT", dbDriver, dbUrl));
+        } else {
+            String configurationString = aConnectionProperties.getProperty("CONFIGURATION");
+            if(configurationString == null) {
+                configurationString = aConnectionProperties.getProperty("configuration");
+            }
+            String[] configurations = configurationString.split(",");
+            for (int i = 0; i < configurations.length; i++) {
+                String lConfiguration = configurations[i].trim();
+                String dbDriver = aConnectionProperties.getProperty("DRIVER_" + lConfiguration);
+                if(dbDriver == null) {
+                    dbDriver = aConnectionProperties.getProperty("driver_" + lConfiguration);
+                }
+                String dbUrl = aConnectionProperties.getProperty("url_" + lConfiguration);
+                if(dbUrl == null) {
+                    dbUrl = aConnectionProperties.getProperty("URL_" + lConfiguration);
+                }
+                String dbUser = aConnectionProperties.getProperty("USER_" + lConfiguration);
+                if (dbUser == null) {
+                    dbUser = aConnectionProperties.getProperty("user_" + lConfiguration);
+                }
+                iConnections.add(new InnerConfigParams(dbUser, lConfiguration, dbDriver, dbUrl));
+            }
+        }
+    }
+
     private class InnerConfigParams {
+        private String iUser = null;
         private String iName = null;
         private String iDriver = null;
         private String iUrl = null;
@@ -408,12 +465,18 @@ public class ConnectionDialog extends JDialog {
             iUrl = aUrl;
         }
 
-        public String getName() {
-            return iName;
+        private InnerConfigParams(String aUser, String aName, String aDriver, String aUrl) {
+            this(aName, aDriver, aUrl);
+            iUser = aUser;
         }
 
-        public void setName(String aName) {
-            iName = aName;
+
+        public String getUser() {
+            return iUser;
+        }
+
+        public void setUser(String aUser) {
+            iUser = aUser;
         }
 
         public String getDriver() {
@@ -434,6 +497,14 @@ public class ConnectionDialog extends JDialog {
 
         public String toString() {
             return iName;
+        }
+
+        public String getName() {
+            return iName;
+        }
+
+        public void setName(final String aName) {
+            iName = aName;
         }
     }
 }

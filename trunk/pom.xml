@@ -10,7 +10,7 @@
 
 <!-- Set the version number for the whole project -->
 	<properties>
-		<version.number>3.0.1</version.number>
+		<version.number>3.0.2</version.number>
 	</properties>
     
 <!-- Licence -->

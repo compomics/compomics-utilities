@@ -91,47 +91,49 @@ public class PropertiesManager {
     public Properties getProperties(CompomicsTools aTool, String aPropertiesFileName) {
         Properties lProperties = new Properties();
         InputStream is;
-
-        // Make a filename filter for '.properties' files.
-        FilenameFilter lPropertiesFileNameFilter = new FilenameFilter() {
-            public boolean accept(final File dir, final String name) {
-                return name.endsWith(".properties");
-            }
-        };
-        // Get the application folder.
-        File lApplicationFolder = getApplicationFolder(aTool);
-
-        // Get all the properties files in the mslims folder.
-        File[] lPropertiesFiles = lApplicationFolder.listFiles(lPropertiesFileNameFilter);
-
-        // Iterate and try to match the requested file.
-        File lRequestedPropertiesFile = null;
-        boolean lPropertiesFound = false;
-        for (int i = 0; i < lPropertiesFiles.length; i++) {
-            File lLastFile = lPropertiesFiles[i];
-            if (lLastFile.getName().equals(aPropertiesFileName)) {
-                lRequestedPropertiesFile = lLastFile;
-                lPropertiesFound = true;
-                break;
-            }
-        }
-
-        // Verify that the properties have been found.
         try {
+
+            // Always get the properties from the classpath. the requested properties are not found,
+            // we will try to read the properties from the the classpath.
+            is = ClassLoader.getSystemResourceAsStream(aPropertiesFileName);
+            if (is == null) {
+                is = this.getClass().getClassLoader().getResourceAsStream(aPropertiesFileName);
+            }
+            Properties lClassPathProperties = new Properties();
+            lClassPathProperties.load(is);
+            String lClassPathVersion = lClassPathProperties.get("version").toString();
+
+            // Make a filename filter for '.properties' files.
+            FilenameFilter lPropertiesFileNameFilter = new FilenameFilter() {
+                public boolean accept(final File dir, final String name) {
+                    return name.endsWith(".properties");
+                }
+            };
+            // Get the application folder.
+            File lApplicationFolder = getApplicationFolder(aTool);
+
+            // Get all the properties files in the mslims folder.
+            File[] lPropertiesFiles = lApplicationFolder.listFiles(lPropertiesFileNameFilter);
+
+            // Iterate and try to match the requested file.
+            File lRequestedPropertiesFile = null;
+            boolean lPropertiesFound = false;
+            for (int i = 0; i < lPropertiesFiles.length; i++) {
+                File lLastFile = lPropertiesFiles[i];
+                if (lLastFile.getName().equals(aPropertiesFileName)) {
+                    lRequestedPropertiesFile = lLastFile;
+                    lPropertiesFound = true;
+                    break;
+                }
+            }
+
+            // Verify that the properties have been found.
             if (lPropertiesFound == true) {
                 // Create the properties via a file inputstream.
                 is = new FileInputStream(lRequestedPropertiesFile);
                 lProperties.load(is);
 
             } else {
-                // If the requested properties are not found,
-                // we will try to read the properties from the the classpath.
-                is = ClassLoader.getSystemResourceAsStream(aPropertiesFileName);
-                if (is == null) {
-                    is = this.getClass().getClassLoader().getResourceAsStream(aPropertiesFileName);
-                }
-                lProperties.load(is);
-
                 // And, write the content of this properties file to the user home directory for the next request.
                 try {
                     File lOutput;
@@ -145,11 +147,17 @@ public class PropertiesManager {
                     e.printStackTrace();
                 }
             }
+            if(lClassPathVersion != null){
+                // If a version variable is in the classpathfile,
+                // make sure it is udpated anyhow in the users local properties.
+                if(lClassPathVersion != lProperties.get("version").toString()){
+                    lProperties.put("version", lClassPathVersion);
+                }
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
         return lProperties;
     }
 

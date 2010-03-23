@@ -147,7 +147,7 @@ public class PropertiesManager {
                     e.printStackTrace();
                 }
             }
-            if(lClassPathVersion != null){
+            if(lClassPathVersion != null && lPropertiesFound == true){
                 // If a version variable is in the classpathfile,
                 // make sure it is udpated anyhow in the users local properties.
                 if(lClassPathVersion != lProperties.get("version").toString()){

@@ -6,6 +6,10 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
+
+import static java.util.logging.Logger.global;
 
 
 /**
@@ -142,7 +146,7 @@ public class PropertiesManager {
                         lOutput.createNewFile();
                     }
                     FileOutputStream fos = new FileOutputStream(lOutput);
-                    lProperties.store(fos, aPropertiesFileName + " properties file");
+                    lClassPathProperties.store(fos, aPropertiesFileName + " properties file");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

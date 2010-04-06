@@ -105,7 +105,12 @@ public class PropertiesManager {
             }
             Properties lClassPathProperties = new Properties();
             lClassPathProperties.load(is);
-            String lClassPathVersion = lClassPathProperties.get("version").toString();
+
+            Object lVersion = lClassPathProperties.get("version");
+            String lClassPathVersion = null;
+            if(lVersion != null){
+                lClassPathVersion = lVersion.toString();
+            }
 
             // Make a filename filter for '.properties' files.
             FilenameFilter lPropertiesFileNameFilter = new FilenameFilter() {
@@ -151,10 +156,12 @@ public class PropertiesManager {
                     e.printStackTrace();
                 }
             }
-            if(lClassPathVersion != null && lPropertiesFound == true){
+            
+            Object lPropertiesVersion = lProperties.get("version");
+            if(lPropertiesVersion != null && lClassPathVersion != null && lPropertiesFound == true){
                 // If a version variable is in the classpathfile,
                 // make sure it is udpated anyhow in the users local properties.
-                if(lClassPathVersion != lProperties.get("version").toString()){
+                if(lClassPathVersion != lPropertiesVersion.toString()){
                     lProperties.put("version", lClassPathVersion);
                 }
             }

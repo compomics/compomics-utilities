@@ -11,6 +11,7 @@
  * Time: 16:14:00
  */
 package com.compomics.util.test.protein;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 import junit.framework.Assert;
@@ -37,6 +38,8 @@ import com.compomics.util.interfaces.Modification;
  * @author Lennart Martens
  */
 public class TestModificationFactory extends TestCaseLM {
+	// Class specific log4j logger for TestModificationFactory instances.
+	Logger logger = Logger.getLogger(TestModificationFactory.class);
 
     public TestModificationFactory() {
         this("Test scenario for the ModificationFactory class.");

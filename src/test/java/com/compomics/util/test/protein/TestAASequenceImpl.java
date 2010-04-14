@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.test.protein;
+import org.apache.log4j.Logger;
 
 
 import java.util.Vector;
@@ -33,6 +34,8 @@ import com.compomics.util.interfaces.Modification;
  * @author	Lennart Martens
  */
 public class TestAASequenceImpl extends TestCase {
+	// Class specific log4j logger for TestAASequenceImpl instances.
+	Logger logger = Logger.getLogger(TestAASequenceImpl.class);
 	
 	public TestAASequenceImpl() {
 		this("Test for the AASequenceImpl class.");

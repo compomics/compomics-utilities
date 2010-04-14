@@ -11,6 +11,7 @@
  * Time: 7:48:02
  */
 package com.compomics.util.gui.renderers;
+import org.apache.log4j.Logger;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
@@ -30,6 +31,8 @@ import java.text.SimpleDateFormat;
  * @author Lennart
  */
 public class TimestampRenderer extends DefaultTableCellRenderer {
+	// Class specific log4j logger for TimestampRenderer instances.
+	Logger logger = Logger.getLogger(TimestampRenderer.class);
 
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus,
@@ -44,7 +47,7 @@ public class TimestampRenderer extends DefaultTableCellRenderer {
                 this.setFont(table.getFont());
             }
         } else {
-            System.err.println("Got a " + value.getClass().getName() + " for the renderer instead of a java.sql.Timestamp.");
+            logger.error("Got a " + value.getClass().getName() + " for the renderer instead of a java.sql.Timestamp.");
         }
 
 

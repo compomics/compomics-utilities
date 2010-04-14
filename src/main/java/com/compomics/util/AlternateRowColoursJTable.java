@@ -5,6 +5,7 @@
  * Time: 13:47:48
  */
 package com.compomics.util;
+import org.apache.log4j.Logger;
 
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -31,6 +32,8 @@ import java.util.Vector;
  * @version $Id: AlternateRowColoursJTable.java,v 1.1 2009/08/02 13:23:46 lennart Exp $
  */
 public class AlternateRowColoursJTable extends JTable {
+	// Class specific log4j logger for AlternateRowColoursJTable instances.
+	Logger logger = Logger.getLogger(AlternateRowColoursJTable.class);
 
     public AlternateRowColoursJTable() {}
 

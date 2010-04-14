@@ -11,6 +11,7 @@
  * Time: 13:10:11
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import sun.net.ftp.FtpClient;
 import sun.net.TelnetOutputStream;
@@ -31,6 +32,8 @@ import java.io.*;
  * @author Lennart Martens
  */
 public class FTPClient {
+	// Class specific log4j logger for FTPClient instances.
+	Logger logger = Logger.getLogger(FTPClient.class);
 
     /**
      * The String with the hostname for the FTP server.

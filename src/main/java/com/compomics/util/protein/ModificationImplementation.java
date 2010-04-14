@@ -11,6 +11,7 @@
  * Time: 15:06:24
  */
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -30,6 +31,8 @@ import java.util.Hashtable;
  * @author Lennart Martens
  */
 public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable, Serializable {
+	// Class specific log4j logger for ModificationImplementation instances.
+	Logger logger = Logger.getLogger(ModificationImplementation.class);
 
     /**
      * The ModificationTemplate which holds all the shared information for a modification.
@@ -262,7 +265,7 @@ public class ModificationImplementation implements com.compomics.util.interfaces
         try {
             clone = super.clone();
         } catch(CloneNotSupportedException cnse) {
-            cnse.printStackTrace();
+            logger.error(cnse.getMessage(), cnse);
         }
         return clone;
     }

@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.test;
+import org.apache.log4j.Logger;
 
 
 import junit.framework.*;
@@ -30,6 +31,8 @@ import com.compomics.util.test.nucleotide.TestNucleotideSequence;
  * @author	Lennart Martens
  */
 public class FullSuite extends TestCase {
+	// Class specific log4j logger for FullSuite instances.
+	Logger logger = Logger.getLogger(FullSuite.class);
 	
 	public FullSuite() {
 		super("Full test suite for Utilities project.");

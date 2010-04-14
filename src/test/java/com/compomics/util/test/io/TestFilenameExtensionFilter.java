@@ -11,6 +11,7 @@
  * Time: 16:17:26
  */
 package com.compomics.util.test.io;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 
@@ -33,6 +34,8 @@ import junit.framework.*;
  * @see com.compomics.util.io.FilenameExtensionFilter
  */
 public class TestFilenameExtensionFilter extends TestCaseLM {
+	// Class specific log4j logger for TestFilenameExtensionFilter instances.
+	Logger logger = Logger.getLogger(TestFilenameExtensionFilter.class);
 
     public TestFilenameExtensionFilter() {
         this("Test for the FilenameExtensionFilter class.");

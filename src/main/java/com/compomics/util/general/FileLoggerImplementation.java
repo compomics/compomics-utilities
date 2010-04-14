@@ -11,8 +11,8 @@
  * Time: 8:39:31
  */
 package com.compomics.util.general;
+import org.apache.log4j.Logger;
 
-import com.compomics.util.interfaces.Logger;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -32,7 +32,9 @@ import java.util.Date;
  *
  * @author Lennart Martens
  */
-public class FileLoggerImplementation implements Logger {
+public class FileLoggerImplementation implements com.compomics.util.interfaces.Logger {
+	// Class specific log4j logger for FileLoggerImplementation instances.
+	org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(FileLoggerImplementation.class);
 
     /**
      * The BufferedWriter connected to the logfile.
@@ -85,7 +87,7 @@ public class FileLoggerImplementation implements Logger {
             iOut.write(this.getTimestamp() + " " + aMessage + "\n");
             iOut.flush();
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -99,7 +101,7 @@ public class FileLoggerImplementation implements Logger {
             iOut.write(" - " + aMessage + "\n");
             iOut.flush();
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -113,7 +115,7 @@ public class FileLoggerImplementation implements Logger {
             iOut.write(" * " + this.getTimestamp() + " " + aMessage + "\n");
             iOut.flush();
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -180,7 +182,7 @@ public class FileLoggerImplementation implements Logger {
             this.iOut.close();
             this.iOut = null;
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 

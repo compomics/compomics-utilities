@@ -11,6 +11,7 @@
  * Time: 15:28:41
  */
 package com.compomics.util.test.protein;
+import org.apache.log4j.Logger;
 
 import junit.framework.*;
 import com.compomics.util.protein.AASequenceImpl;
@@ -35,6 +36,8 @@ import junit.TestCaseLM;
  * @see com.compomics.util.protein.Protein
  */
 public class TestProtein extends TestCaseLM {
+	// Class specific log4j logger for TestProtein instances.
+	Logger logger = Logger.getLogger(TestProtein.class);
 
     public TestProtein() {
         this("The test scenario for the Protein class.");

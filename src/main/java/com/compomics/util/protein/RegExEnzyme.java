@@ -1,4 +1,5 @@
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -13,6 +14,8 @@ import java.util.*;
  * @since 2.9
  */
 public class RegExEnzyme extends Enzyme {
+	// Class specific log4j logger for RegExEnzyme instances.
+	Logger logger = Logger.getLogger(RegExEnzyme.class);
 
 
     private Pattern iCleavagePattern = null;

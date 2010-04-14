@@ -11,6 +11,7 @@
  * Time: 13:45:05
  */
 package com.compomics.util.test.io;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 
@@ -38,6 +39,8 @@ import junit.framework.*;
  * @see com.compomics.util.io.MonitorableFileInputStream
  */
 public class TestMonitorableFileInputStream extends TestCaseLM {
+	// Class specific log4j logger for TestMonitorableFileInputStream instances.
+	Logger logger = Logger.getLogger(TestMonitorableFileInputStream.class);
 
     public TestMonitorableFileInputStream() {
         this("Test scenario for the MonitorableFileInputStream.");

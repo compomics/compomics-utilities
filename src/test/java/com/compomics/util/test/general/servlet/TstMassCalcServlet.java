@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.test.general.servlet;
+import org.apache.log4j.Logger;
 
 
 import java.io.*;
@@ -28,6 +29,8 @@ import junit.TestCaseLM;
  * @author	Lennart Martens
  */
 public class TstMassCalcServlet extends TestCaseLM {
+	// Class specific log4j logger for TstMassCalcServlet instances.
+	Logger logger = Logger.getLogger(TstMassCalcServlet.class);
 	
 	public TstMassCalcServlet() {
 		super("This class test the MassCalcServlet.");
@@ -96,9 +99,9 @@ public class TstMassCalcServlet extends TestCaseLM {
 						".\nResult self: " + test3 + ".\n");
 			}
 		} catch(IOException ioe) {
-			ioe.printStackTrace();
-			fail("IO went wrong in testMasCalcServlet!");
-		}
+            logger.error(ioe.getMessage(), ioe);
+            fail("IO went wrong in testMasCalcServlet!");
+        }
 	}
 	
 	/**
@@ -221,8 +224,8 @@ public class TstMassCalcServlet extends TestCaseLM {
 				Assert.assertTrue(test);
 			}
 		} catch(IOException ioe) {
-			ioe.printStackTrace();
-			fail("IO went wrong in testMasCalcServlet!");
-		}
+            logger.error(ioe.getMessage(), ioe);
+            fail("IO went wrong in testMasCalcServlet!");
+        }
 	}
 }

@@ -11,6 +11,7 @@
  * Time: 9:17:13
  */
 package com.compomics.util.test.protein;
+import org.apache.log4j.Logger;
 
 import junit.framework.*;
 import com.compomics.util.protein.Enzyme;
@@ -34,6 +35,8 @@ import junit.TestCaseLM;
  * @see com.compomics.util.protein.Enzyme
  */
 public class TestEnzyme extends TestCaseLM {
+	// Class specific log4j logger for TestEnzyme instances.
+	Logger logger = Logger.getLogger(TestEnzyme.class);
 
     public TestEnzyme() {
         this("Test scenario for the Enzyme class.");

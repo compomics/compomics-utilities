@@ -1,4 +1,5 @@
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.enumeration.OperatingSystemEnum;
 
@@ -13,6 +14,8 @@ import java.io.File;
  * This class serves as a fast OS independent access point to the file system.
  */
 public class FileSystemAccessor {
+	// Class specific log4j logger for FileSystemAccessor instances.
+	Logger logger = Logger.getLogger(FileSystemAccessor.class);
 
     /**
      * Empty constructor.

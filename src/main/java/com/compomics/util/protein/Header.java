@@ -11,6 +11,7 @@
  * Time: 13:43:28
  */
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 import java.util.StringTokenizer;
 
@@ -23,6 +24,8 @@ import java.util.StringTokenizer;
  * @author Lennart Martens
  */
 public class Header implements Cloneable {
+	// Class specific log4j logger for Header instances.
+	static Logger logger = Logger.getLogger(Header.class);
 
     /**
      * Private constructor to force use of factory methods.
@@ -271,8 +274,8 @@ public class Header implements Cloneable {
                         // Take everything from the first '|' we meet after the accession number.
                         result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
                     } catch(Exception excep) {
-                        excep.printStackTrace();
-                        System.out.println(aFASTAHeader);
+                        logger.error(excep.getMessage(), excep);
+                        logger.info(aFASTAHeader);
                     }
                 } else if(aFASTAHeader.startsWith("OE")) {
                     // Halobacterium header from the Max Planck people.
@@ -657,7 +660,7 @@ public class Header implements Cloneable {
                     }
                 }
             } catch(RuntimeException excep) {
-                System.err.println(" * Unable to process FASTA header line:\n\t" + aFASTAHeader + "\n\n");
+                logger.error(" * Unable to process FASTA header line:\n\t" + aFASTAHeader + "\n\n");
                 throw excep;
             }
         }
@@ -1019,7 +1022,7 @@ public class Header implements Cloneable {
         try {
             result = super.clone();
         } catch(CloneNotSupportedException cnse) {
-            cnse.printStackTrace();
+            logger.error(cnse.getMessage(), cnse);
         }
         return result;
     }

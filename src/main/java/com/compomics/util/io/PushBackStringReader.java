@@ -11,6 +11,7 @@
  * Time: 22:10:45
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import java.util.Vector;
 import java.util.StringTokenizer;
@@ -30,6 +31,8 @@ import java.util.StringTokenizer;
  * @author Lennart Martens
  */
 public class PushBackStringReader {
+	// Class specific log4j logger for PushBackStringReader instances.
+	Logger logger = Logger.getLogger(PushBackStringReader.class);
 
     /**
      * This Vector caches the entire String in memory, separating the elements through

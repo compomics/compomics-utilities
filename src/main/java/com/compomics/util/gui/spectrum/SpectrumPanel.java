@@ -5,6 +5,7 @@
  * Time: 16:34:34
  */
 package com.compomics.util.gui.spectrum;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
@@ -34,6 +35,8 @@ import java.util.*;
  * @version $Id: SpectrumPanel.java,v 1.9 2009/08/17 15:15:28 lennart Exp $
  */
 public class SpectrumPanel extends JPanel {
+	// Class specific log4j logger for SpectrumPanel instances.
+	static Logger logger = Logger.getLogger(SpectrumPanel.class);
 
     /**
      * This status indicates that no annotation will be displayed,
@@ -609,7 +612,7 @@ public class SpectrumPanel extends JPanel {
      * This method prints the usage for this class and exits with the error flag raised.
      */
     private static void printUsage() {
-        System.err.println("\n\nUsage:\n\tSpectrumPanel <spectrumfile>\n\n");
+        logger.error("\n\nUsage:\n\tSpectrumPanel <spectrumfile>\n\n");
         System.exit(1);
     }
 
@@ -813,7 +816,7 @@ public class SpectrumPanel extends JPanel {
         iMassMin = aMinMass - (aMinMass % power);
         iMassMax = aMaxMass + (power-(aMaxMass % power));
 //@TODO just some helpful printouts for when this is refined further.
-//System.out.println(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
+//logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
 
 
         iIntMax = maxInt + (maxInt / 10);

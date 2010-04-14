@@ -11,6 +11,7 @@
  * Time: 13:53:50
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -25,6 +26,8 @@ package com.compomics.util.io;
  * @author Lennart
  */
 public class FtpLoginException extends FtpProtocolException {
+	// Class specific log4j logger for FtpLoginException instances.
+	Logger logger = Logger.getLogger(FtpLoginException.class);
     FtpLoginException(String s)	{
         super(s);
     }

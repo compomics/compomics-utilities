@@ -11,6 +11,7 @@
  * Time: 15:52:54
  */
 package com.compomics.util.db;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.db.components.*;
 
@@ -31,6 +32,8 @@ import java.text.SimpleDateFormat;
  * @author Lennart Martens
  */
 public class DBAccessor {
+	// Class specific log4j logger for DBAccessor instances.
+	Logger logger = Logger.getLogger(DBAccessor.class);
 
     /**
      * The name for the generated class.
@@ -95,21 +98,21 @@ public class DBAccessor {
         iPackage = aPackage.trim();
 
         // Individual components.
-        if(debug)System.out.println("\nGenerating instance variables...");
+        if(debug)logger.info("\nGenerating instance variables...");
         iVars = new InstanceVariables(aMeta);
-        if(debug)System.out.println("Variables done.\nGenerating constructors...");
+        if(debug)logger.info("Variables done.\nGenerating constructors...");
         iConstr = new Constructors(aMeta);
-        if(debug)System.out.println("Constructors done.\nGenerating Getters and Setters...");
+        if(debug)logger.info("Constructors done.\nGenerating Getters and Setters...");
         iGetSet = new GettersAndSetters(aMeta);
-        if(debug)System.out.println("Getters and Setters done.\nGenerating Deleteable implementation...");
+        if(debug)logger.info("Getters and Setters done.\nGenerating Deleteable implementation...");
         iDeleteable = new DeleteableCode(aMeta);
-        if(debug)System.out.println("Deleteable implementation done.\nGenerating Retrievable implementation...");
+        if(debug)logger.info("Deleteable implementation done.\nGenerating Retrievable implementation...");
         iRetrieveable = new RetrievableCode(aMeta);
-        if(debug)System.out.println("Retrievable implementation done.\nGenerating Updateable implementation...");
+        if(debug)logger.info("Retrievable implementation done.\nGenerating Updateable implementation...");
         iUpdateable = new UpdateableCode(aMeta);
-        if(debug)System.out.println("Updateable implementation done.\nGenerating Persistable implementation...");
+        if(debug)logger.info("Updateable implementation done.\nGenerating Persistable implementation...");
         iPersistable = new PersistableCode(aMeta);
-        if(debug)System.out.println("Persistable implementation done.\n\nGeneration process complete!.");
+        if(debug)logger.info("Persistable implementation done.\n\nGeneration process complete!.");
     }
 
     /**
@@ -142,6 +145,7 @@ public class DBAccessor {
         lsb.append("\n/**\n * This class is a generated accessor for the " + iName.substring(0, location) + " table.\n *\n * @author DBAccessor generator class (Lennart Martens).\n */\n");
         // Class name + extensions/interfaces.
         lsb.append("public class " + iName + " implements Deleteable, Retrievable, Updateable, Persistable {\n");
+
         // Class components.
         lsb.append(iVars.toString());
         lsb.append(iConstr.toString());

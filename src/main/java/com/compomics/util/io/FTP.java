@@ -11,6 +11,7 @@
  * Time: 13:40:47
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -34,6 +35,8 @@ import java.util.Vector;
  * @author Lennart Martens + someone on the net...
  */
 public class FTP {
+	// Class specific log4j logger for FTP instances.
+	Logger logger = Logger.getLogger(FTP.class);
     /**
      * FTP port to use for connection.
      */
@@ -269,7 +272,7 @@ public class FTP {
                 }
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         // Store the response for later reference.
         return lastReplyCode = code;
@@ -344,7 +347,7 @@ public class FTP {
         if(replyPending) {
 
             if(readReply() == FTP_ERROR) {
-                System.out.print("Error reading pending reply\n");
+                logger.info("Error reading pending reply\n");
             }
         }
         replyPending = false;
@@ -451,7 +454,7 @@ public class FTP {
                         nums[i] = st.nextToken();
                         i++;
                     } catch(Exception a) {
-                        a.printStackTrace();
+                        logger.error(a.getMessage(), a);
                     }
                 }
                 // Reconstruct the IP address.
@@ -462,7 +465,7 @@ public class FTP {
                     // Reconstruct the port from the information in the header.
                     port = firstbits + lastbits;
                 } catch(Exception b) {
-                    b.printStackTrace();
+                    logger.error(b.getMessage(), b);
                 }
                 // If we were successful in reconstituting IP and port information,
                 // create a socket to this port.
@@ -506,7 +509,7 @@ public class FTP {
                 // Set-up a local port for the communication.
                 portSocket = new ServerSocket(0, 1, myAddress);
             } catch(Exception b) {
-                b.printStackTrace();
+                logger.error(b.getMessage(), b);
             }
             portCmd = "PORT ";
             // Append host address.

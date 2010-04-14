@@ -11,6 +11,7 @@
  * Time: 18:42:27
  */
 package com.compomics.util.general;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.nucleotide.NucleotideSequenceImpl;
 import com.compomics.util.protein.AASequenceImpl;
@@ -28,10 +29,12 @@ import com.compomics.util.protein.AASequenceImpl;
  * @author Lennart Martens
  */
 public class Translate {
+	// Class specific log4j logger for Translate instances.
+	static Logger logger = Logger.getLogger(Translate.class);
 
     public static void main(String[] args) {
         if(args == null || args.length == 0) {
-            System.err.println("\n\nUsage:\n\tTranslate <DNA_sequence>");
+            logger.error("\n\nUsage:\n\tTranslate <DNA_sequence>");
             System.exit(1);
         }
         // Create a NucleotideSequenceImpl.
@@ -39,7 +42,7 @@ public class Translate {
         AASequenceImpl[] seqs = nsi.translate();
         for(int i = 0; i < seqs.length; i++) {
             AASequenceImpl lSeq = seqs[i];
-            System.out.println(lSeq.getSequence());
+            logger.info(lSeq.getSequence());
         }
     }
 }

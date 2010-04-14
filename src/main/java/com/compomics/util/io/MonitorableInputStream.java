@@ -11,6 +11,7 @@
  * Time: 12:11:35
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.interfaces.Monitorable;
 
@@ -34,6 +35,8 @@ import java.io.InputStream;
  * @author Lennart Martens
  */
 public class MonitorableInputStream extends FilterInputStream implements Monitorable {
+	// Class specific log4j logger for MonitorableInputStream instances.
+	Logger logger = Logger.getLogger(MonitorableInputStream.class);
 
     /**
      * The total length to be read from the specified InputStream.

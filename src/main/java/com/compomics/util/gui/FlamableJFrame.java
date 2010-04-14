@@ -11,6 +11,7 @@
  * Time: 12:35:46
  */
 package com.compomics.util.gui;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.interfaces.Flamable;
 
@@ -30,6 +31,8 @@ import java.awt.*;
  * @author Lennart
  */
 public abstract class FlamableJFrame extends JFrame implements Flamable {
+    	// Class specific log4j logger for TestFTPClient2 instances.
+	Logger logger = Logger.getLogger(FlamableJFrame.class);
 
     /**
      * Wrapper constructor for that of the superclass.
@@ -87,25 +90,25 @@ public abstract class FlamableJFrame extends JFrame implements Flamable {
      */
     public void passHotPotato(Throwable aThrowable, String aMessage) {
         String[] messages = null;
-        if(aMessage != null) {
-            messages = new String[] {"Fatal error encountered in application!", aMessage, aThrowable.getMessage(), "\n"};
+        if (aMessage != null) {
+            messages = new String[]{"Fatal error encountered in application!", aMessage, aThrowable.getMessage(), "\n"};
         } else {
             messages = new String[]{"Fatal error encountered in application!", aThrowable.getMessage(), "\n"};
         }
-        aThrowable.printStackTrace();
+        logger.error(aThrowable.getMessage(), aThrowable);
         JFrame tempFrame = new JFrame();
         JOptionPane.showMessageDialog(tempFrame, messages, "Application unexpectedly terminated!", JOptionPane.ERROR_MESSAGE);
         tempFrame.dispose();
         // Attempt to clean up, regardless of the error.
         try {
-            if(this != null) {
+            if (this != null) {
                 this.setVisible(false);
                 this.dispose();
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             // Whatever.
         }
-        if(isStandAlone()) {
+        if (isStandAlone()) {
             System.exit(1);
         }
     }

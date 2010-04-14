@@ -11,6 +11,7 @@
  * Time: 13:54:53
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -27,6 +28,8 @@ import java.io.IOException;
  * @author Lennart
  */
 public class FtpProtocolException extends IOException {
+	// Class specific log4j logger for FtpProtocolException instances.
+	Logger logger = Logger.getLogger(FtpProtocolException.class);
     FtpProtocolException(String s) {
         super(s);
     }

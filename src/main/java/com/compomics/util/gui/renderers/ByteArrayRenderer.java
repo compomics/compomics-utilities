@@ -11,6 +11,7 @@
  * Time: 7:48:16
  */
 package com.compomics.util.gui.renderers;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -29,6 +30,8 @@ import java.awt.*;
  * @author Lennart
  */
 public class ByteArrayRenderer extends DefaultTableCellRenderer {
+	// Class specific log4j logger for ByteArrayRenderer instances.
+	Logger logger = Logger.getLogger(ByteArrayRenderer.class);
 
     /**
      * This byte[] is the actual data cached by the renderer.

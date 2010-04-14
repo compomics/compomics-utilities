@@ -11,6 +11,7 @@
  * Time: 14:29:16
  */
 package com.compomics.util.db;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -25,6 +26,8 @@ package com.compomics.util.db;
  * @author Lennart Martens
  */
 public class GeneratorException extends Exception {
+	// Class specific log4j logger for GeneratorException instances.
+	Logger logger = Logger.getLogger(GeneratorException.class);
 
     /**
      * The nested exception.

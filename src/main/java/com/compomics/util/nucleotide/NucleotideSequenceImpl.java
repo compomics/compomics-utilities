@@ -11,6 +11,7 @@
  * Time: 9:48:16
  */
 package com.compomics.util.nucleotide;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.general.MassCalc;
@@ -36,6 +37,8 @@ import java.io.IOException;
  * @author Lennart Martens
  */
 public class NucleotideSequenceImpl implements Sequence {
+	// Class specific log4j logger for NucleotideSequenceImpl instances.
+	Logger logger = Logger.getLogger(NucleotideSequenceImpl.class);
 
     /**
      * The sequence.
@@ -136,7 +139,7 @@ public class NucleotideSequenceImpl implements Sequence {
             try {
                 this.iMass = new MassCalc(MassCalc.MONONUCLEOTIDES).calculateMass(iSequence);
             } catch(UnknownElementMassException ueme) {
-                ueme.printStackTrace();
+                logger.error(ueme.getMessage(), ueme);
             }
         }
 
@@ -358,7 +361,7 @@ public class NucleotideSequenceImpl implements Sequence {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         return seqs;
@@ -379,8 +382,8 @@ public class NucleotideSequenceImpl implements Sequence {
 		try {
 			p.load(this.getClass().getClassLoader().getResourceAsStream(aPropFileName));
 		} catch(IOException ioe) {
-			System.err.println("\nProperties file ("+aPropFileName+") not found in classpath!");
-			System.err.println("All resultant values will be computed to 0.0!!\n");
+			logger.error("\nProperties file ("+aPropFileName+") not found in classpath!");
+			logger.error("All resultant values will be computed to 0.0!!\n");
 		}
 		return p;
 	}

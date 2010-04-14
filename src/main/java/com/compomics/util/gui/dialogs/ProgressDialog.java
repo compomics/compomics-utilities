@@ -5,6 +5,7 @@
  * Time: 14:20:25
  */
 package com.compomics.util.gui.dialogs;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,8 @@ import java.awt.*;
  * @version $Id: ProgressDialog.java,v 1.1 2009/08/02 13:23:46 lennart Exp $
  */
 public class ProgressDialog extends JDialog {
+	// Class specific log4j logger for ProgressDialog instances.
+	Logger logger = Logger.getLogger(ProgressDialog.class);
 
     private JProgressBar iProgress = new JProgressBar(JProgressBar.HORIZONTAL);
 

@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.test.general;
+import org.apache.log4j.Logger;
 
 
 import java.util.*;
@@ -28,6 +29,8 @@ import junit.TestCaseLM;
  * @author	Lennart Martens
  */
 public class TestMassCalc extends TestCaseLM {
+	// Class specific log4j logger for TestMassCalc instances.
+	Logger logger = Logger.getLogger(TestMassCalc.class);
 	
 	public TestMassCalc() {
 		this("Test for the MassCalc class.");
@@ -51,8 +54,8 @@ public class TestMassCalc extends TestCaseLM {
                 Assert.assertEquals(mass, mc.calculateMass(formula), 1e-10);
             }
         } catch(UnknownElementMassException uem) {
-            uem.printStackTrace();
-			fail(uem.getMessage());
+            logger.error(uem.getMessage(), uem);
+            fail(uem.getMessage());
         }
 	}
 	
@@ -80,9 +83,9 @@ public class TestMassCalc extends TestCaseLM {
 			Assert.assertEquals(1042.508345, new MassCalc(MassCalc.MONOAA).calculateMass("YSFVATAER"), Double.MIN_VALUE*2);
             Assert.assertEquals(5523.659513, new MassCalc(MassCalc.MONONUCLEOTIDES).calculateMass("AGCTAGCTAGCTAGCTAG"), Double.MIN_VALUE*2);
 		} catch(UnknownElementMassException uem) {
-			uem.printStackTrace();
-			fail(uem.getMessage());
-		}
+            logger.error(uem.getMessage(), uem);
+            fail(uem.getMessage());
+        }
 	}
 	
 	/**
@@ -99,9 +102,9 @@ public class TestMassCalc extends TestCaseLM {
 			Assert.assertEquals(1.0, mc.calculateMass("X"), Double.MIN_VALUE*2);
 			Assert.assertEquals(3.0, mc.calculateMass("WX"), Double.MIN_VALUE*2);
 		} catch(UnknownElementMassException uem) {
-			uem.printStackTrace();
-			fail(uem.getMessage());
-		}
+            logger.error(uem.getMessage(), uem);
+            fail(uem.getMessage());
+        }
 	}
 	
 	/**
@@ -122,9 +125,9 @@ public class TestMassCalc extends TestCaseLM {
 			Assert.assertEquals(1.0, mc.calculateMass("X"), Double.MIN_VALUE*2);
 			Assert.assertEquals(3.0, mc.calculateMass("WX"), Double.MIN_VALUE*2);
 		} catch(UnknownElementMassException uem) {
-			uem.printStackTrace();
-			fail(uem.getMessage());
-		}
+            logger.error(uem.getMessage(), uem);
+            fail(uem.getMessage());
+        }
 	}
 	
 	/**
@@ -164,9 +167,9 @@ public class TestMassCalc extends TestCaseLM {
 			Assert.assertEquals(1120.511725, mc.calculateMass("YSFVMoTAER"), 0.00001);
 			Assert.assertEquals(1159.550545, mc.calculateMass("YSFVWTAER"), 0.00001);
 		} catch(UnknownElementMassException uem) {
-			uem.printStackTrace();
-			fail(uem.getMessage());
-		}
+            logger.error(uem.getMessage(), uem);
+            fail(uem.getMessage());
+        }
 	}
 	
 	/**

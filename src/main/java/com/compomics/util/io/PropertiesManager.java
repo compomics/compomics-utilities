@@ -1,4 +1,5 @@
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.enumeration.CompomicsTools;
 
@@ -18,6 +19,8 @@ import static java.util.logging.Logger.global;
  * This class
  */
 public class PropertiesManager {
+	// Class specific log4j logger for PropertiesManager instances.
+	Logger logger = Logger.getLogger(PropertiesManager.class);
 
 
 /**
@@ -108,7 +111,11 @@ public class PropertiesManager {
 
             Object lVersion = lClassPathProperties.get("version");
             String lClassPathVersion = null;
-            if(lVersion != null){
+
+            if(lVersion == null){
+               logger.warn("ms-lims.properties in classpath lacks a version number!!");
+                lClassPathVersion = "NA";
+            } else{
                 lClassPathVersion = lVersion.toString();
             }
 
@@ -153,21 +160,27 @@ public class PropertiesManager {
                     FileOutputStream fos = new FileOutputStream(lOutput);
                     lClassPathProperties.store(fos, aPropertiesFileName + " properties file");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
-            
-            Object lPropertiesVersion = lProperties.get("version");
-            if(lPropertiesVersion != null && lClassPathVersion != null && lPropertiesFound == true){
-                // If a version variable is in the classpathfile,
-                // make sure it is udpated anyhow in the users local properties.
-                if(lClassPathVersion != lPropertiesVersion.toString()){
+
+            // During updates, for each property that was is in the classpathversion,
+            // but not in the local properties - store the entry to the local file.
+
+            Set lClassPathPropertyKeySet = lClassPathProperties.keySet();
+            for (Iterator lIterator = lClassPathPropertyKeySet.iterator(); lIterator.hasNext();) {
+                Object lClasspathKey = lIterator.next();
+                if(lProperties.get(lClasspathKey) == null){
+                    lProperties.put(lClasspathKey, lClassPathProperties.get(lClasspathKey));
+                }
+                if(lClassPathVersion != null){
+                    // Always keep the version up to date with the classpathversion.
                     lProperties.put("version", lClassPathVersion);
                 }
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return lProperties;
     }
@@ -200,7 +213,7 @@ public class PropertiesManager {
             FileOutputStream fos = new FileOutputStream(lOutput);
             lProperties.store(fos, aPropertiesFileName + " properties file");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 }

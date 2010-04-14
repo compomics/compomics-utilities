@@ -11,8 +11,8 @@
  * Time: 15:32:28
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
-import com.compomics.util.interfaces.Logger;
 import com.compomics.util.interfaces.PickUp;
 import com.compomics.util.general.DefaultOutputLoggerImplementation;
 
@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat;
  * @author Lennart Martens
  */
 public class FolderMonitor implements Runnable {
+	// Class specific log4j logger for FolderMonitor instances.
+	static Logger logger = Logger.getLogger(FolderMonitor.class);
 
     public static final String HOST = "HOST";
     public static final String USER = "USER";
@@ -278,7 +280,7 @@ public class FolderMonitor implements Runnable {
                         iToMonitor.add(lFile);
                         if(iLogger != null) {
                             String time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date());
-                            iLogger.logNormalEvent(" - Added file: '" + lFile.getName() + "' to the monitoring list (" + time + ").");
+                            iLogger.info(" - Added file: '" + lFile.getName() + "' to the monitoring list (" + time + ").");
                         }
                     }
                 }
@@ -324,7 +326,7 @@ public class FolderMonitor implements Runnable {
                 iToMonitor.remove(lFile);
                 if(iLogger != null) {
                     String time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date());
-                    iLogger.logNormalEvent(" # Removed file '" + lFile.getName() + "' from the monitoring list since it was deleted (" + time + ").");
+                    iLogger.info(" # Removed file '" + lFile.getName() + "' from the monitoring list since it was deleted (" + time + ").");
                 }
             }
             toRemove = null;
@@ -341,8 +343,8 @@ public class FolderMonitor implements Runnable {
                     } catch(IOException ioe) {
                         if(iLogger != null) {
                             String time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date());
-                            iLogger.logExceptionalEvent(" IOException occurred while attempting to process files, message: " + ioe.getMessage() + "(" + time + ")!");
-                            ioe.printStackTrace();
+                            iLogger.error(" IOException occurred while attempting to process files, message: " + ioe.getMessage() + "(" + time + ")!");
+                            logger.error(ioe.getMessage(), ioe);
                         }
                         processSuccessful = false;
                     }
@@ -368,7 +370,7 @@ public class FolderMonitor implements Runnable {
                     File lFile = (File)toProcess.elementAt(i);
                     if(iLogger != null) {
                         String time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date());
-                        iLogger.logNormalEvent(" * Processed file '" + lFile.getName() + "' (" + time + ").");
+                        iLogger.info(" * Processed file '" + lFile.getName() + "' (" + time + ").");
                     }
                     iProcessed.add(lFile);
                     iToMonitor.remove(lFile);
@@ -384,7 +386,7 @@ public class FolderMonitor implements Runnable {
                 Thread.sleep(iDelay);
             } catch(Exception e) {
                 if(iLogger != null) {
-                    iLogger.logTime("FolderMonitor Thread interrupted.");
+                    iLogger.info("FolderMonitor Thread interrupted.");
                 }
             }
         }
@@ -494,16 +496,16 @@ public class FolderMonitor implements Runnable {
                     File[] files = (File[])aObject;
                     for(int i = 0; i < files.length; i++) {
                         File lFile = files[i];
-                        System.out.println("File sent: " + lFile.getCanonicalPath());
+                        logger.info("File sent: " + lFile.getCanonicalPath());
                     }
                 } catch(IOException ioe) {
-                    ioe.printStackTrace();
+                    logger.error(ioe.getMessage(), ioe);
                 }
             }
         });
         params2.put(FolderMonitor.LIMIT, new Integer(5));
 
-        FolderMonitor fm = new FolderMonitor(new File("f:/temp"), 1000, FolderMonitor.GATHER_FILES_FOR_PICKUP, params2, new DefaultOutputLoggerImplementation());
+        FolderMonitor fm = new FolderMonitor(new File("f:/temp"), 1000, FolderMonitor.GATHER_FILES_FOR_PICKUP, params2, null);
         Thread t = new Thread(fm);
         t.start();
     }

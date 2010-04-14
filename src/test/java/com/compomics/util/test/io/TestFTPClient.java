@@ -11,6 +11,7 @@
  * Time: 11:21:52
  */
 package com.compomics.util.test.io;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 
@@ -34,6 +35,8 @@ import junit.framework.*;
  * @see com.compomics.util.io.FTPClient
  */
 public class TestFTPClient extends TestCaseLM {
+	// Class specific log4j logger for TestFTPClient instances.
+	Logger logger = Logger.getLogger(TestFTPClient.class);
 
     private String iServer = null;
     private String iUser = null;
@@ -100,7 +103,7 @@ public class TestFTPClient extends TestCaseLM {
                 while(!f.delete()) {
                 }
             } catch(IOException ioe) {
-                ioe.printStackTrace();
+                logger.error(ioe.getMessage(), ioe);
                 fail("IOException thrown when attempting to send a single text file: " + ioe.getMessage());
             }
         }
@@ -141,7 +144,7 @@ public class TestFTPClient extends TestCaseLM {
                 while(!f.delete()) {
                 }
             } catch(IOException ioe) {
-                ioe.printStackTrace();
+                logger.error(ioe.getMessage(), ioe);
                 fail("IOException thrown when attempting to send a single binary file: " + ioe.getMessage());
             }
         }
@@ -186,7 +189,7 @@ public class TestFTPClient extends TestCaseLM {
                     }
                 }
             } catch(IOException ioe) {
-                ioe.printStackTrace();
+                logger.error(ioe.getMessage(), ioe);
                 fail("IOException thrown when attempting to send a few text files: " + ioe.getMessage());
             }
         }
@@ -231,7 +234,7 @@ public class TestFTPClient extends TestCaseLM {
                     }
                 }
             } catch(IOException ioe) {
-                ioe.printStackTrace();
+                logger.error(ioe.getMessage(), ioe);
                 fail("IOException thrown when attempting to send a few binary files: " + ioe.getMessage());
             }
         }
@@ -300,7 +303,7 @@ public class TestFTPClient extends TestCaseLM {
                 while(!f.delete()) {
                 }
             } catch(IOException ioe) {
-                ioe.printStackTrace();
+                logger.error(ioe.getMessage(), ioe);
                 fail("IOException thrown when attempting to send mixed files: " + ioe.getMessage());
             }
         }

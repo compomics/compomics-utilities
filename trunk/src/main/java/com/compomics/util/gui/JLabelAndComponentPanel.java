@@ -11,6 +11,7 @@
  * Time: 10:45:37
  */
 package com.compomics.util.gui;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,8 @@ import java.awt.*;
  * @author Lennart Martens
  */
 public class JLabelAndComponentPanel extends JPanel {
+	// Class specific log4j logger for JLabelAndComponentPanel instances.
+	Logger logger = Logger.getLogger(JLabelAndComponentPanel.class);
 
     /**
      * Constructor which allows the specification of the labels and components

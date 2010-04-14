@@ -11,6 +11,7 @@
  * Time: 15:28:41
  */
 package com.compomics.util.test.nucleotide;
+import org.apache.log4j.Logger;
 
 import junit.framework.*;
 import com.compomics.util.protein.Header;
@@ -36,6 +37,8 @@ import junit.TestCaseLM;
  * @see com.compomics.util.nucleotide.NucleotideSequence
  */
 public class TestNucleotideSequence extends TestCaseLM {
+	// Class specific log4j logger for TestNucleotideSequence instances.
+	Logger logger = Logger.getLogger(TestNucleotideSequence.class);
 
     public TestNucleotideSequence() {
         this("The test scenario for the NucleotideSequence class.");

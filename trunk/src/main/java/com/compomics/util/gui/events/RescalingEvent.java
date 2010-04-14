@@ -5,6 +5,7 @@
  * Time: 7:26:12
  */
 package com.compomics.util.gui.events;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 
@@ -23,6 +24,8 @@ import javax.swing.*;
  * @version $Id: RescalingEvent.java,v 1.1 2007/10/22 10:09:02 lennart Exp $
  */
 public class RescalingEvent {
+	// Class specific log4j logger for RescalingEvent instances.
+	Logger logger = Logger.getLogger(RescalingEvent.class);
 
     /**
      * The minimal mass to display after rescaling.

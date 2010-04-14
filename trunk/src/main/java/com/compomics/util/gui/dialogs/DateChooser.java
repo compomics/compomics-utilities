@@ -5,6 +5,7 @@
  * Time: 16:23:59
  */
 package com.compomics.util.gui.dialogs;
+import org.apache.log4j.Logger;
 /*
  * CVS information:
  *
@@ -26,6 +27,8 @@ import javax.swing.border.BevelBorder;
  * @version $Id: DateChooser.java,v 1.1 2009/07/28 15:25:52 lennart Exp $
  */
 public class DateChooser extends JDialog {
+	// Class specific log4j logger for DateChooser instances.
+	static Logger logger = Logger.getLogger(DateChooser.class);
 
     private Calendar iSelectedCalendar = null;
 
@@ -285,9 +288,9 @@ public class DateChooser extends JDialog {
         dc.setVisible(true);
         Calendar c = dc.getSelectedDate();
         if(c != null) {
-            System.out.println("\n\nSelected date was: " + new SimpleDateFormat("dd-MM-yyyy").format(c.getTime()) + "\n\n");
+            logger.info("\n\nSelected date was: " + new SimpleDateFormat("dd-MM-yyyy").format(c.getTime()) + "\n\n");
         } else {
-            System.out.println("\n\nNo date selected!\n\n");
+            logger.info("\n\nNo date selected!\n\n");
         }
         System.exit(0);
     }

@@ -1,4 +1,5 @@
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA. User: kenny Date: Feb 23, 2010 Time: 4:02:21 PM
@@ -6,6 +7,8 @@ package com.compomics.util.io;
  * This class starts a browser for the given URL.
  */
 public class StartBrowser {
+	// Class specific log4j logger for StartBrowser instances.
+	Logger logger = Logger.getLogger(StartBrowser.class);
 
     /**
      * Empty constructor.

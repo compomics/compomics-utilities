@@ -11,6 +11,7 @@
  * Time: 16:46:16
  */
 package com.compomics.util.test.protein;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 import com.compomics.util.protein.Header;
@@ -30,6 +31,8 @@ import junit.framework.*;
  * @see com.compomics.util.protein.Header
  */
 public class TestHeader extends TestCaseLM {
+	// Class specific log4j logger for TestHeader instances.
+	Logger logger = Logger.getLogger(TestHeader.class);
 
     public TestHeader() {
         this("This is the test scenario for the Header class.");

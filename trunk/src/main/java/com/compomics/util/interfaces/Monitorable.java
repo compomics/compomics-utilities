@@ -11,6 +11,7 @@
  * Time: 13:38:49
  */
 package com.compomics.util.interfaces;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:

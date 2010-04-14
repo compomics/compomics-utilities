@@ -11,6 +11,7 @@
  * Time: 14:18:50
  */
 package com.compomics.util.test.io;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 import com.compomics.util.io.PushBackStringReader;
@@ -30,6 +31,8 @@ import junit.framework.*;
  * @see com.compomics.util.io.PushBackStringReader
  */
 public class TestPushBackStringReader extends TestCaseLM {
+	// Class specific log4j logger for TestPushBackStringReader instances.
+	Logger logger = Logger.getLogger(TestPushBackStringReader.class);
 
     public TestPushBackStringReader() {
         this("Test scenario for the PushBackStringReader");

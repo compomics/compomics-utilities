@@ -5,6 +5,7 @@
  * Time: 15:41:18
  */
 package com.compomics.util.gui.dialogs;
+import org.apache.log4j.Logger;
 
 
 import com.compomics.util.enumeration.CompomicsTools;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
  * @author Lennart Martens
  */
 public class ConnectionDialog extends JDialog {
+	// Class specific log4j logger for ConnectionDialog instances.
+	Logger logger = Logger.getLogger(ConnectionDialog.class);
 
     /***
      * ArrayList that holds all the preconfigured connections.
@@ -390,7 +393,7 @@ public class ConnectionDialog extends JDialog {
                         // Leave it at that.
                         return;
                     }
-                    System.out.println("local classloader.");
+                    logger.info("local classloader.");
                 }
                 p.load(is);
                 parseConnectionProperties(p);
@@ -398,7 +401,7 @@ public class ConnectionDialog extends JDialog {
                 is.close();
             } catch(Exception e) {
                 // Do nothing.
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }

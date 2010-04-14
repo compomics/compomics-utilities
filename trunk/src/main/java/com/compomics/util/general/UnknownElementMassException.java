@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.general;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -21,6 +22,8 @@ package com.compomics.util.general;
  * @author	Lennart Martens
  */
 public class UnknownElementMassException extends Exception {
+	// Class specific log4j logger for UnknownElementMassException instances.
+	Logger logger = Logger.getLogger(UnknownElementMassException.class);
 	
 	/**
 	 * The element symbol that was not recognized.

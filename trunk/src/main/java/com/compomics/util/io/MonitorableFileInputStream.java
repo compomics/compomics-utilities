@@ -11,6 +11,7 @@
  * Time: 22:34:59
  */
 package com.compomics.util.io;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.File;
@@ -32,6 +33,8 @@ import java.io.FilterInputStream;
  * @author Lennart Martens
  */
 public class MonitorableFileInputStream extends MonitorableInputStream {
+	// Class specific log4j logger for MonitorableFileInputStream instances.
+	Logger logger = Logger.getLogger(MonitorableFileInputStream.class);
 
     /**
      * The maximum readable size.

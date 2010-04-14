@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.sun;
+import org.apache.log4j.Logger;
 
 /**
  * In a chain of data manipulators some behaviour is common. TableMap
@@ -22,9 +23,11 @@ import javax.swing.table.*;
 import javax.swing.event.TableModelListener; 
 import javax.swing.event.TableModelEvent; 
 
-public class TableMap extends AbstractTableModel 
-                      implements TableModelListener {
-    protected TableModel model; 
+public class TableMap extends AbstractTableModel
+        implements TableModelListener {
+    // Class specific log4j logger for TableMap instances.
+    Logger logger = Logger.getLogger(TableMap.class);
+    protected TableModel model;
 
     public TableModel getModel() {
         return model;

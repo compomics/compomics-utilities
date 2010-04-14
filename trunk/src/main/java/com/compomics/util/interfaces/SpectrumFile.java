@@ -5,6 +5,7 @@
  * Time: 9:50:10
  */
 package com.compomics.util.interfaces;
+import org.apache.log4j.Logger;
 
 
 import java.io.File;

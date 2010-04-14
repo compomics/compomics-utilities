@@ -11,6 +11,7 @@
  * Time: 15:03:58
  */
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 
 import java.util.*;
@@ -30,6 +31,8 @@ import java.util.*;
  * @author Lennart Martens
  */
 public class ModificationTemplate {
+	// Class specific log4j logger for ModificationTemplate instances.
+	Logger logger = Logger.getLogger(ModificationTemplate.class);
     /**
      * This HashMap will contain the following 'key-value' mappings: (key --> value) <br />
      * (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA})
@@ -283,7 +286,7 @@ public class ModificationTemplate {
         try {
             clone = super.clone();
         } catch(CloneNotSupportedException cnse) {
-            cnse.printStackTrace();
+            logger.error(cnse.getMessage(), cnse);
         }
         return clone;
     }

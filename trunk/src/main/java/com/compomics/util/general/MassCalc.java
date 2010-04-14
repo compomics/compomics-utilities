@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.general;
+import org.apache.log4j.Logger;
 
 
 import java.io.*;
@@ -46,6 +47,8 @@ import java.text.StringCharacterIterator;
  * @author	Lennart Martens
  */
 public class MassCalc {
+	// Class specific log4j logger for MassCalc instances.
+	static Logger logger = Logger.getLogger(MassCalc.class);
 	
 	/**
 	 * This variable highlights which map was chosen for the elementmasses.
@@ -511,8 +514,8 @@ public class MassCalc {
 			}
 			
 		} catch(IOException ioe) {
-			System.err.println("\n**********************\nUnable to load file '" + aFilename + "' from the classpath.");
-			System.err.println("All mass calculations based on these masses will throw Exceptions!\n**********************\n");
+			logger.error("\n**********************\nUnable to load file '" + aFilename + "' from the classpath.");
+			logger.error("All mass calculations based on these masses will throw Exceptions!\n**********************\n");
 		}
 		
 		return lMasses;
@@ -531,7 +534,7 @@ public class MassCalc {
 	public static void main(String[] args) {
 		
 		if(args == null || args.length == 0) {
-			System.err.println("\nUsage: MassCalc [-a|n] <formula1> [<formula2> ...]\n");
+			logger.error("\nUsage: MassCalc [-a|n] <formula1> [<formula2> ...]\n");
 		} else {
 			int start = 0;
 			int elementlist = MassCalc.MONOELEMENTS;
@@ -539,24 +542,24 @@ public class MassCalc {
 				start = 1;
 				elementlist = MassCalc.MONOAA;
 				if(args.length < 2) {
-					System.err.println("\nUsage: MassCalc [-a] <formula1> [<formula2> ...]\n");
+					logger.error("\nUsage: MassCalc [-a] <formula1> [<formula2> ...]\n");
 				}
 			} else if(args[0].equals("-n")) {
 				start = 1;
 				elementlist = MassCalc.MONONUCLEOTIDES;
 				if(args.length < 2) {
-					System.err.println("\nUsage: MassCalc [-n] <formula1> [<formula2> ...]\n");
+					logger.error("\nUsage: MassCalc [-n] <formula1> [<formula2> ...]\n");
 				}
 			}
 			MassCalc mc = new MassCalc(elementlist);
 		
 			try {
 				for(int i=start;i<args.length;i++) {
-					System.out.println("\nMass for '" + args[i] + "': " + mc.calculateMass(args[i]) + ".");
+					logger.info("\nMass for '" + args[i] + "': " + mc.calculateMass(args[i]) + ".");
 				}
 			} catch(Exception e) {
-				e.printStackTrace();
-			}
+                logger.error(e.getMessage(), e);
+            }
 		}
 	}
 }

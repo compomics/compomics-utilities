@@ -11,6 +11,7 @@
  * Time: 13:54:36
  */
 package com.compomics.util.db;
+import org.apache.log4j.Logger;
 
 import javax.swing.table.AbstractTableModel;
 import java.sql.ResultSet;
@@ -33,6 +34,8 @@ import java.io.IOException;
  * @author Lennart Martens
  */
 public class DBResultSet extends AbstractTableModel {
+	// Class specific log4j logger for DBResultSet instances.
+	Logger logger = Logger.getLogger(DBResultSet.class);
 
     /**
      * The number of columns in this resultset.

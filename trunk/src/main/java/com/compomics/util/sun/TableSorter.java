@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.sun;
+import org.apache.log4j.Logger;
 
 /**
  * A sorter for TableModels. The sorter has a model (conforming to TableModel) 
@@ -48,6 +49,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 public class TableSorter extends TableMap {
+	// Class specific log4j logger for TableSorter instances.
+	Logger logger = Logger.getLogger(TableSorter.class);
     int             indexes[];
     Vector          sortingColumns = new Vector();
     boolean         ascending = true;
@@ -205,7 +208,7 @@ public class TableSorter extends TableMap {
     }
 
     public void tableChanged(TableModelEvent e) {
-        //System.out.println("Sorter: tableChanged"); 
+        //logger.info("Sorter: tableChanged");
         reallocateIndexes();
 
         super.tableChanged(e);
@@ -213,7 +216,7 @@ public class TableSorter extends TableMap {
 
     public void checkModel() {
         if (indexes.length != model.getRowCount()) {
-            System.err.println("Sorter not informed of a change in model.");
+            logger.error("Sorter not informed of a change in model.");
         }
     }
 
@@ -224,7 +227,7 @@ public class TableSorter extends TableMap {
         // n2sort();
         // qsort(0, indexes.length-1);
         shuttlesort((int[])indexes.clone(), indexes, 0, indexes.length);
-        //System.out.println("Compares: "+compares);
+        //logger.info("Compares: "+compares);
     }
 
     public void n2sort() {
@@ -367,7 +370,7 @@ public class TableSorter extends TableMap {
                     }
                 } else {
                     if (column != -1) {
-                        //System.out.println("Sorting ...");
+                        //logger.info("Sorting ...");
                         int shiftPressed = e.getModifiers()&InputEvent.SHIFT_MASK;
                         boolean ascending = (shiftPressed == 0);
                         sorter.sortByColumn(column, ascending);

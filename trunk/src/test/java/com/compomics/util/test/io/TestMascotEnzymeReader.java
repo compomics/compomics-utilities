@@ -11,6 +11,7 @@
  * Time: 18:55:02
  */
 package com.compomics.util.test.io;
+import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
 
@@ -39,6 +40,8 @@ import junit.framework.*;
  * @see com.compomics.util.io.MascotEnzymeReader
  */
 public class TestMascotEnzymeReader extends TestCaseLM {
+	// Class specific log4j logger for TestMascotEnzymeReader instances.
+	Logger logger = Logger.getLogger(TestMascotEnzymeReader.class);
 
     public TestMascotEnzymeReader() {
         this("Test scenario for the MascotEnzymeReader class.");

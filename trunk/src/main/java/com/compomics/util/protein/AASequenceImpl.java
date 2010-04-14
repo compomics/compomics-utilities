@@ -5,6 +5,7 @@
  */
 
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 
 import java.io.IOException;
@@ -31,6 +32,8 @@ import com.compomics.util.general.UnknownElementMassException;
  * @author	Lennart Martens
  */
 public class AASequenceImpl implements Sequence {
+	// Class specific log4j logger for AASequenceImpl instances.
+	Logger logger = Logger.getLogger(AASequenceImpl.class);
 	
 	/**
 	 * The Kyte & Doolittle score for AA residus.
@@ -203,8 +206,8 @@ public class AASequenceImpl implements Sequence {
 					}
 				}
 			} catch(UnknownElementMassException ume) {
-				ume.printStackTrace();
-			}
+                logger.error(ume.getMessage(), ume);
+            }
 		}
 		return this.iMass;
 	}
@@ -685,8 +688,8 @@ public class AASequenceImpl implements Sequence {
 		try {
 			p.load(this.getClass().getClassLoader().getResourceAsStream(aPropFileName));
 		} catch(IOException ioe) {
-			System.err.println("\nProperties file ("+aPropFileName+") not found in classpath!");
-			System.err.println("All resultant values will be computed to 0.0!!\n");
+			logger.error("\nProperties file ("+aPropFileName+") not found in classpath!");
+			logger.error("All resultant values will be computed to 0.0!!\n");
 		}
 		return p;
 	}

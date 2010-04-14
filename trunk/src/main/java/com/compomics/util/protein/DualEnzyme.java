@@ -11,6 +11,7 @@
  * Time: 20:51:50
  */
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
@@ -31,6 +32,8 @@ import java.util.*;
  * @author Lennart Martens
  */
 public class DualEnzyme extends Enzyme {
+	// Class specific log4j logger for DualEnzyme instances.
+	static Logger logger = Logger.getLogger(DualEnzyme.class);
 
     /**
      * The HashMap with the cleavables for the N-terminal side of the
@@ -670,8 +673,8 @@ public class DualEnzyme extends Enzyme {
 
         for(int i = 0; i < p.length; i++) {
             Protein lProtein = p[i];
-            System.out.println(lProtein.getHeader().getFullHeaderWithAddenda());
-            System.out.println(lProtein.getSequence().getSequence());
+            logger.info(lProtein.getHeader().getFullHeaderWithAddenda());
+            logger.info(lProtein.getSequence().getSequence());
         }
     }
 }

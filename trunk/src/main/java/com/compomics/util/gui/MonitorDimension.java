@@ -1,4 +1,5 @@
 package com.compomics.util.gui;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,8 @@ import java.awt.*;
  * <br>This Class </br>
  */
 public class MonitorDimension {
+	// Class specific log4j logger for MonitorDimension instances.
+	Logger logger = Logger.getLogger(MonitorDimension.class);
     /**
      * This dimension is used by all the methods.
      */

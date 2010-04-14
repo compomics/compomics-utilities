@@ -1,4 +1,5 @@
 package com.compomics.util.enumeration;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.

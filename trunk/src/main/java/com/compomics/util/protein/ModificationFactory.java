@@ -11,6 +11,7 @@
  * Time: 15:08:17
  */
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 
 import java.io.*;
@@ -32,6 +33,8 @@ import java.util.*;
  * @author Lennart Martens
  */
 public class ModificationFactory {
+	// Class specific log4j logger for ModificationFactory instances.
+	static Logger logger = Logger.getLogger(ModificationFactory.class);
 
     /**
      * Constant for a key in the ModificationFactory.properties file.
@@ -305,7 +308,7 @@ public class ModificationFactory {
                 }
             }
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -371,7 +374,7 @@ public class ModificationFactory {
             br.close();
             in.close();
         } catch(IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -480,7 +483,7 @@ public class ModificationFactory {
                         // Note that we check whether the title is unique!
                         Object found = titleToCode.put(title, code);
                         if(found != null) {
-                            System.err.println("Duplicate title for modification: " + found);
+                            logger.error("Duplicate title for modification: " + found);
                         }
                         // The inverse mapping is somewhat more difficult, since code need not be unique.
                         // If the code is already present, we need to do some complex stuff.
@@ -699,7 +702,7 @@ public class ModificationFactory {
                     }
                     iInitialized = true;
                 } catch(IOException ioe) {
-                    ioe.printStackTrace();
+                    logger.error(ioe.getMessage(), ioe);
                 }
             }
         }

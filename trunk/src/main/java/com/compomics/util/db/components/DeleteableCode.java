@@ -11,6 +11,7 @@
  * Time: 13:25:54
  */
 package com.compomics.util.db.components;
+import org.apache.log4j.Logger;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -27,6 +28,8 @@ import com.compomics.util.db.DBMetaData;
  * @author Lennart Martens
  */
 public class DeleteableCode {
+	// Class specific log4j logger for DeleteableCode instances.
+	Logger logger = Logger.getLogger(DeleteableCode.class);
 
     /**
      * This String will hold the generated code for this component.

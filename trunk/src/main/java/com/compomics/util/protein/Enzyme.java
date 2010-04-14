@@ -11,6 +11,7 @@
  * Time: 18:38:53
  */
 package com.compomics.util.protein;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -35,6 +36,8 @@ import java.util.Vector;
  * @author Lennart Martens.
  */
 public class Enzyme implements Cloneable {
+	// Class specific log4j logger for Enzyme instances.
+	Logger logger = Logger.getLogger(Enzyme.class);
 
     public static final int CTERM = 0;
     public static final int NTERM = 1;
@@ -504,7 +507,7 @@ public class Enzyme implements Cloneable {
             e.iRestrictors = this.iRestrictors;
             e.iTitle = this.iTitle;
         } catch(CloneNotSupportedException cnse) {
-            cnse.printStackTrace();
+            logger.error(cnse.getMessage(), cnse);
         }
         return e;
     }

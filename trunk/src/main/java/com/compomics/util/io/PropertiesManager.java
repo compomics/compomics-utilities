@@ -1,16 +1,15 @@
 package com.compomics.util.io;
+
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.compomics.util.enumeration.CompomicsTools;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.io.*;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
-
-import static java.util.logging.Logger.global;
 
 
 /**
@@ -19,8 +18,8 @@ import static java.util.logging.Logger.global;
  * This class
  */
 public class PropertiesManager {
-	// Class specific log4j logger for PropertiesManager instances.
-	Logger logger = Logger.getLogger(PropertiesManager.class);
+    // Class specific log4j logger for PropertiesManager instances.
+    Logger logger = Logger.getLogger(PropertiesManager.class);
 
 
 /**
@@ -102,20 +101,14 @@ public class PropertiesManager {
 
             // Always get the properties from the classpath. the requested properties are not found,
             // we will try to read the properties from the the classpath.
-            is = ClassLoader.getSystemResourceAsStream(aPropertiesFileName);
-            if (is == null) {
-                is = this.getClass().getClassLoader().getResourceAsStream(aPropertiesFileName);
-            }
+            is = getResource(aPropertiesFileName);
             Properties lClassPathProperties = new Properties();
             lClassPathProperties.load(is);
 
             Object lVersion = lClassPathProperties.get("version");
             String lClassPathVersion = null;
 
-            if(lVersion == null){
-               logger.warn("ms-lims.properties in classpath lacks a version number!!");
-                lClassPathVersion = "NA";
-            } else{
+            if (lVersion != null) {
                 lClassPathVersion = lVersion.toString();
             }
 
@@ -170,10 +163,10 @@ public class PropertiesManager {
             Set lClassPathPropertyKeySet = lClassPathProperties.keySet();
             for (Iterator lIterator = lClassPathPropertyKeySet.iterator(); lIterator.hasNext();) {
                 Object lClasspathKey = lIterator.next();
-                if(lProperties.get(lClasspathKey) == null){
+                if (lProperties.get(lClasspathKey) == null) {
                     lProperties.put(lClasspathKey, lClassPathProperties.get(lClasspathKey));
                 }
-                if(lClassPathVersion != null){
+                if (lClassPathVersion != null) {
                     // Always keep the version up to date with the classpathversion.
                     lProperties.put("version", lClassPathVersion);
                 }
@@ -183,6 +176,20 @@ public class PropertiesManager {
             logger.error(e.getMessage(), e);
         }
         return lProperties;
+    }
+
+    /**
+     * Private method that attempts to return an inputstream resource for a given filename.
+     * @param aResourceFilename
+     * @return InputStream (null if not found)
+     */
+    private InputStream getResource(final String aResourceFilename) {
+        InputStream is;
+        is = ClassLoader.getSystemResourceAsStream(aResourceFilename);
+        if (is == null) {
+            is = this.getClass().getClassLoader().getResourceAsStream(aResourceFilename);
+        }
+        return is;
     }
 
     /**
@@ -214,6 +221,29 @@ public class PropertiesManager {
             lProperties.store(fos, aPropertiesFileName + " properties file");
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
+        }
+    }
+
+
+    public void updateLog4jConfiguration(CompomicsTools aCompomicsTools) {
+        Properties props = new Properties();
+        try {
+            InputStream configStream = getResource("log4j.properties");
+            props.load(configStream);
+            configStream.close();
+        } catch (IOException e) {
+            System.out.println("Error: Cannot load configuration file ");
+        }
+        String lFileKey = "log4j.appender.file.File";
+        String lOldLogFileName = props.getProperty(lFileKey);
+        String lNewLogFileName = getApplicationFolder(aCompomicsTools).getAbsolutePath() + File.separator + aCompomicsTools.getName() + "-log4j.log";
+        props.setProperty(lFileKey, lNewLogFileName);
+        PropertyConfigurator.configure(props);
+        //System.setProperty("log4j.appender.file.File",lNewLogFile);
+        LogManager.resetConfiguration();
+        File lOldLogFile = new File(lOldLogFileName);
+        if(lOldLogFile.exists()){
+            lOldLogFile.delete();
         }
     }
 }

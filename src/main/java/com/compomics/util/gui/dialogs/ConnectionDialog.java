@@ -357,7 +357,7 @@ public class ConnectionDialog extends JDialog {
                 lLastUsedProperties.put("url_" + iLastInitiatedConfiguration, url);
             }
             
-            PropertiesManager.getInstance().updateProperties(CompomicsTools.MSLIMS, "ms_lims.properties", lLastUsedProperties);
+            PropertiesManager.getInstance().updateProperties(CompomicsTools.MSLIMS, "ms-lims.properties", lLastUsedProperties);
 
             // Now continue into ms_lims.
             JOptionPane.showMessageDialog(this, new String[]{"Connection to '" + url + "' established!", "\n"}, "Connection established!", JOptionPane.INFORMATION_MESSAGE);

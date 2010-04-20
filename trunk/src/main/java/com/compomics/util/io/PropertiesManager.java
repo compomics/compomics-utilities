@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 import com.compomics.util.enumeration.CompomicsTools;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.*;
 
 import java.io.*;
 import java.util.Iterator;
@@ -47,7 +48,6 @@ public class PropertiesManager {
     private PropertiesManager() {
         // Get the user home directory.
         File lHome = FileSystemAccessor.getHomeFolder();
-        ;
         iHomeFolder = new File(lHome, ".compomics");
         if (!iHomeFolder.exists()) {
             iHomeFolder.mkdir();
@@ -224,7 +224,11 @@ public class PropertiesManager {
         }
     }
 
-
+    /**
+     * This method will delete the log4j log file in the folder of the package and will create
+     * a log file in the CompomicsTools specific .compomics folder
+     * @param aCompomicsTools The tool
+     */
     public void updateLog4jConfiguration(CompomicsTools aCompomicsTools) {
         Properties props = new Properties();
         try {
@@ -237,10 +241,9 @@ public class PropertiesManager {
         String lFileKey = "log4j.appender.file.File";
         String lOldLogFileName = props.getProperty(lFileKey);
         String lNewLogFileName = getApplicationFolder(aCompomicsTools).getAbsolutePath() + File.separator + aCompomicsTools.getName() + "-log4j.log";
-        props.setProperty(lFileKey, lNewLogFileName);
-        PropertyConfigurator.configure(props);
-        //System.setProperty("log4j.appender.file.File",lNewLogFile);
-        LogManager.resetConfiguration();
+        RollingFileAppender lApp = (RollingFileAppender) logger.getParent().getAppender("file");
+        lApp.setFile(lNewLogFileName);
+        lApp.activateOptions();
         File lOldLogFile = new File(lOldLogFileName);
         if(lOldLogFile.exists()){
             lOldLogFile.delete();

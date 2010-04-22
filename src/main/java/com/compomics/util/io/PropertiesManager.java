@@ -1,10 +1,6 @@
 package com.compomics.util.io;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 import com.compomics.util.enumeration.CompomicsTools;
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.*;
 
 import java.io.*;
@@ -98,12 +94,12 @@ public class PropertiesManager {
         Properties lProperties = new Properties();
         InputStream is;
         try {
-
             // Always get the properties from the classpath. the requested properties are not found,
             // we will try to read the properties from the the classpath.
             is = getResource(aPropertiesFileName);
             Properties lClassPathProperties = new Properties();
             lClassPathProperties.load(is);
+            is.close();
 
             Object lVersion = lClassPathProperties.get("version");
             String lClassPathVersion = null;
@@ -141,7 +137,7 @@ public class PropertiesManager {
                 // Create the properties via a file inputstream.
                 is = new FileInputStream(lRequestedPropertiesFile);
                 lProperties.load(is);
-
+                is.close();
             } else {
                 // And, write the content of this properties file to the user home directory for the next request.
                 try {
@@ -152,8 +148,10 @@ public class PropertiesManager {
                     }
                     FileOutputStream fos = new FileOutputStream(lOutput);
                     lClassPathProperties.store(fos, aPropertiesFileName + " properties file");
+                    fos.flush();
+                    fos.close();
                 } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+                    System.out.println(e.getMessage());
                 }
             }
 
@@ -173,13 +171,14 @@ public class PropertiesManager {
             }
         }
         catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            System.out.println(e.getMessage());
         }
         return lProperties;
     }
 
     /**
      * Private method that attempts to return an inputstream resource for a given filename.
+     *
      * @param aResourceFilename
      * @return InputStream (null if not found)
      */
@@ -219,17 +218,20 @@ public class PropertiesManager {
             }
             FileOutputStream fos = new FileOutputStream(lOutput);
             lProperties.store(fos, aPropertiesFileName + " properties file");
+            fos.flush();
+            fos.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            System.out.println(e.getMessage());
         }
     }
 
     /**
-     * This method will delete the log4j log file in the folder of the package and will create
-     * a log file in the CompomicsTools specific .compomics folder
+     * This method will delete the log4j log file in the folder of the package and will create a log file in the
+     * CompomicsTools specific .compomics folder
+     *
      * @param aCompomicsTools The tool
      */
-    public void updateLog4jConfiguration(CompomicsTools aCompomicsTools) {
+    public void updateLog4jConfiguration(final org.apache.log4j.Logger aLogger, CompomicsTools aCompomicsTools) {
         Properties props = new Properties();
         try {
             InputStream configStream = getResource("log4j.properties");
@@ -241,11 +243,11 @@ public class PropertiesManager {
         String lFileKey = "log4j.appender.file.File";
         String lOldLogFileName = props.getProperty(lFileKey);
         String lNewLogFileName = getApplicationFolder(aCompomicsTools).getAbsolutePath() + File.separator + aCompomicsTools.getName() + "-log4j.log";
-        RollingFileAppender lApp = (RollingFileAppender) logger.getParent().getAppender("file");
-        lApp.setFile(lNewLogFileName);
-        lApp.activateOptions();
+        RollingFileAppender lRollingFileAppender = (RollingFileAppender) aLogger.getParent().getAppender("file");
+        lRollingFileAppender.setFile(lNewLogFileName);
+        lRollingFileAppender.activateOptions();
         File lOldLogFile = new File(lOldLogFileName);
-        if(lOldLogFile.exists()){
+        if (lOldLogFile.exists()) {
             lOldLogFile.delete();
         }
     }

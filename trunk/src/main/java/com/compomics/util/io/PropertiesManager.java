@@ -250,5 +250,21 @@ public class PropertiesManager {
         if (lOldLogFile.exists()) {
             lOldLogFile.delete();
         }
+
+        // Make all remaining System.err go into the logger as well.
+        PrintStream stderrStream = System.err;
+        PrintStream newStderrStream = new PrintStream(stderrStream) {
+
+            @Override
+            public void println(Object x) {
+                if (x instanceof Throwable) {
+                    Throwable t = (Throwable) x;
+                    aLogger.error(t.getMessage());
+                    aLogger.error(t.getStackTrace());
+                }
+                super.println(x);
+            }
+        };
+        System.setErr(newStderrStream);
     }
 }

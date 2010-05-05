@@ -77,7 +77,7 @@ public class TestFolderMonitor extends TestCaseLM {
             hm.put(FolderMonitor.USER,  "user");
             hm.put(FolderMonitor.PASSWORD,  "password");
 
-            FolderMonitor fm = new FolderMonitor(new File("f:/no_such_fodler_does_in_fact_exist"), 1000, FolderMonitor.FTP_TO_SPECIFIED_DESTINATION, hm);
+            FolderMonitor fm = new FolderMonitor(new File("no_such_fodler_does_in_fact_exist"), 1000, FolderMonitor.FTP_TO_SPECIFIED_DESTINATION, hm);
             fail("No IllegalArgumentException thrown by FolderMonitor constructor when confronted by a non-existant folder!");
         } catch(IllegalArgumentException iae) {
             // We want this to happen.

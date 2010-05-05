@@ -167,7 +167,7 @@ public class PersistableCode {
             if(pkColType == Types.INTEGER) {
                 // Generate the code that checks whether we have exactly one auto-generated key.
                 lsb.append("\t\t// Verify that we have a single, generated key.\n");
-                lsb.append("\t\tif(iKeys != null && iKeys.length == 1) {\n");
+                lsb.append("\t\tif(iKeys != null && iKeys.length == 1 && iKeys[0] != null) {\n");
                 lsb.append("\t\t\t// Since we have exactly one key specified, and only\n" +
                            "\t\t\t// one Primary Key column, we can infer that this was the\n" +
                            "\t\t\t// generated column, and we can therefore initialize it here.\n");

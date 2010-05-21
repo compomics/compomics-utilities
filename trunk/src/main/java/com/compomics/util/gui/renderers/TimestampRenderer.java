@@ -55,24 +55,15 @@ public class TimestampRenderer extends DefaultTableCellRenderer {
            this.setForeground(table.getSelectionForeground());
            this.setBackground(table.getSelectionBackground());
         } else {
+            this.setForeground(table.getForeground());
             this.setBackground(table.getBackground());
         }
 
         if (hasFocus) {
             setBorder( UIManager.getBorder("Table.focusCellHighlightBorder") );
-            if (table.isCellEditable(row, column)) {
-                this.setForeground( UIManager.getColor("Table.focusCellForeground") );
-                this.setBackground( UIManager.getColor("Table.focusCellBackground") );
-            }
         } else {
             setBorder(noFocusBorder);
         }
-
-        // ---- begin optimization to avoid painting background ----
-        Color back = this.getBackground();
-        boolean colorMatch = (back != null) && ( back.equals(table.getBackground()) ) && table.isOpaque();
-            setOpaque(!colorMatch);
-        // ---- end optimization to aviod painting background ----
 
         return this;
     }

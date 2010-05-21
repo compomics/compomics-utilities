@@ -260,7 +260,13 @@ public class PropertiesManager {
                 if (x instanceof Throwable) {
                     Throwable t = (Throwable) x;
                     aLogger.error(t.getMessage());
-                    aLogger.error(t.getStackTrace());
+                    StackTraceElement[] lElements = t.getStackTrace();
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < lElements.length; i++) {
+                        StackTraceElement lElement = lElements[i];
+                        sb.append(lElement+"\n");
+                    }
+                    aLogger.error(sb.toString());
                 }
                 super.println(x);
             }

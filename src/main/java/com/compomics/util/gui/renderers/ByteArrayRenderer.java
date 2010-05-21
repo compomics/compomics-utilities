@@ -48,26 +48,18 @@ public class ByteArrayRenderer extends DefaultTableCellRenderer {
         }
 
         if (isSelected) {
-           this.setBackground(table.getSelectionBackground());
+            this.setBackground(table.getSelectionBackground());
         } else {
+            this.setForeground(table.getForeground());
             this.setBackground(table.getBackground());
-        }
-
-        if (hasFocus) {
-            setBorder( UIManager.getBorder("Table.focusCellHighlightBorder") );
-            if (table.isCellEditable(row, column)) {
-                this.setBackground( UIManager.getColor("Table.focusCellBackground") );
-            }
-        } else {
-            setBorder(noFocusBorder);
         }
         this.setForeground(Color.blue);
 
-        // ---- begin optimization to avoid painting background ----
-        Color back = this.getBackground();
-        boolean colorMatch = (back != null) && ( back.equals(table.getBackground()) ) && table.isOpaque();
-            setOpaque(!colorMatch);
-        // ---- end optimization to aviod painting background ----
+        if (hasFocus) {
+            setBorder( UIManager.getBorder("Table.focusCellHighlightBorder") );
+        } else {
+            setBorder(noFocusBorder);
+        }
 
         return this;
     }

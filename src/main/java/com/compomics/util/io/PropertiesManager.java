@@ -114,6 +114,7 @@ public class PropertiesManager {
                     return name.endsWith(".properties");
                 }
             };
+
             // Get the application folder.
             File lApplicationFolder = getApplicationFolder(aTool);
 
@@ -142,7 +143,7 @@ public class PropertiesManager {
                 // And, write the content of this properties file to the user home directory for the next request.
                 try {
                     File lOutput;
-                    lOutput = new File(getApplicationFolder(aTool), aPropertiesFileName);
+                    lOutput = getFile(aTool, aPropertiesFileName);
                     if (!lOutput.exists()) {
                         lOutput.createNewFile();
                     }
@@ -159,15 +160,24 @@ public class PropertiesManager {
             // but not in the local properties - store the entry to the local file.
 
             Set lClassPathPropertyKeySet = lClassPathProperties.keySet();
+            boolean lRequireDiskUpdate = false;
             for (Iterator lIterator = lClassPathPropertyKeySet.iterator(); lIterator.hasNext();) {
                 Object lClasspathKey = lIterator.next();
                 if (lProperties.get(lClasspathKey) == null) {
                     lProperties.put(lClasspathKey, lClassPathProperties.get(lClasspathKey));
+                    lRequireDiskUpdate = true;
                 }
-                if (lClassPathVersion != null) {
-                    // Always keep the version up to date with the classpathversion.
-                    lProperties.put("version", lClassPathVersion);
-                }
+
+            }
+            if (lClassPathVersion != null) {
+                // Always keep the version up to date with the classpathversion.
+                lProperties.put("version", lClassPathVersion);
+                lRequireDiskUpdate = true;
+            }
+
+            // If required, then update the properties file on disk!
+            if(lRequireDiskUpdate){
+                storeProperties(aPropertiesFileName, aTool, lProperties);
             }
         }
         catch (IOException e) {
@@ -192,14 +202,12 @@ public class PropertiesManager {
     }
 
     /**
-     * Store the content of a user properties instance to the ms_lims properties directory.
+     * Update the content of a user properties instance to the ms_lims properties directory.
      *
      * @param aNewProperties      The Properties instance.
      * @param aPropertiesFileName The properties filename (e.g., dbconnection.properties)
      */
     public void updateProperties(final CompomicsTools aTool, final String aPropertiesFileName, final Properties aNewProperties) {
-        File lOutput;
-        lOutput = new File(getApplicationFolder(aTool), aPropertiesFileName);
 
         // First get the existing properties.
         Properties lProperties = getProperties(aTool, aPropertiesFileName);
@@ -212,6 +220,28 @@ public class PropertiesManager {
             lProperties.put(aKey, aNewProperties.get(aKey));
         }
 
+        storeProperties(aPropertiesFileName, aTool, lProperties);
+    }
+
+    /**
+     * Returns the File handler for the given compomics tool and filename.
+     * @param aTool
+     * @param aPropertiesFileName
+     * @return
+     */
+    private File getFile(CompomicsTools aTool, String aPropertiesFileName) {
+        return new File(getApplicationFolder(aTool), aPropertiesFileName);
+    }
+
+    /**
+     * Store the given Properties instance to the given direction.
+     * @param aPropertiesFileName
+     * @param aTool
+     * @param lProperties
+     */
+    private void storeProperties(String aPropertiesFileName, CompomicsTools aTool, Properties lProperties) {
+        File lOutput = null;
+        lOutput = getFile(aTool, aPropertiesFileName);
         try {
             if (!lOutput.exists()) {
                 lOutput.createNewFile();
@@ -264,7 +294,7 @@ public class PropertiesManager {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < lElements.length; i++) {
                         StackTraceElement lElement = lElements[i];
-                        sb.append(lElement+"\n");
+                        sb.append(lElement.toString() +"\n");
                     }
                     aLogger.error(sb.toString());
                 }

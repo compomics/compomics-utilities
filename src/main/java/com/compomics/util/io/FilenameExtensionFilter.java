@@ -13,6 +13,7 @@
 package com.compomics.util.io;
 import org.apache.log4j.Logger;
 
+import javax.swing.filechooser.FileFilter;
 import java.io.FilenameFilter;
 import java.io.File;
 
@@ -28,7 +29,7 @@ import java.io.File;
  *
  * @author Lennart Martens
  */
-public class FilenameExtensionFilter implements FilenameFilter {
+public class FilenameExtensionFilter extends FileFilter implements FilenameFilter {
 	// Class specific log4j logger for FilenameExtensionFilter instances.
 	Logger logger = Logger.getLogger(FilenameExtensionFilter.class);
 
@@ -38,6 +39,11 @@ public class FilenameExtensionFilter implements FilenameFilter {
     private String iExtension = null;
 
     /**
+     * This is the description for the FileFilter.
+     */
+    private String iDescription = "";
+
+    /**
      * This constructor takes an extension to filter on. It doesn't care about
      * a leading dot, so specifying '.class' is identical to 'class'.
      *
@@ -45,6 +51,20 @@ public class FilenameExtensionFilter implements FilenameFilter {
      *                      '.class' is identical to 'class'.
      */
     public FilenameExtensionFilter(String aExtension) {
+        this(aExtension, null);
+    }
+
+    /**
+     * This constructor takes an extension to filter on. It doesn't care about
+     * a leading dot, so specifying '.class' is identical to 'class'.
+     *
+     * @param   aExtension  String with the extension to filter. Note that
+     *                      '.class' is identical to 'class'.
+     * @param aDescription String with the description for the FileFilter.
+     *                     Can be null in which case the description will be an empty String.
+     *
+     */
+    public FilenameExtensionFilter(String aExtension, String aDescription) {
         // Removing leading '*', if present.
         if(aExtension.startsWith("*")) {
             aExtension = aExtension.substring(1);
@@ -56,6 +76,9 @@ public class FilenameExtensionFilter implements FilenameFilter {
         }
 
         this.iExtension = aExtension;
+        if(aDescription != null){
+            this.iDescription = aDescription;
+        }
     }
 
     /**
@@ -74,5 +97,15 @@ public class FilenameExtensionFilter implements FilenameFilter {
         }
 
         return result;
+    }
+
+    @Override
+    public boolean accept(File f) {
+        return accept(f.getParentFile(), f.getName());  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -10,7 +10,7 @@
 
 <!-- Set the version number for the whole project -->
 	<properties>
-		<version.number>3.0.7</version.number>
+		<version.number>3.0.8</version.number>
 		<logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
@@ -249,12 +249,6 @@
             <version>1.2.12</version>
         </dependency>
 
- <!--       <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>3.0.16</version>
-            <type>jar</type>
-        </dependency>-->
 
     </dependencies>
 

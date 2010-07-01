@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.compomics</groupId>
-	<artifactId>utilities</artifactId>
-	<packaging>jar</packaging>
-	<version>${version.number}</version>
-	<name>computational omics utilities</name>
-	<url>compomics_utilities.googlecode.com</url>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.compomics</groupId>
+    <artifactId>utilities</artifactId>
+    <packaging>jar</packaging>
+    <version>${version.number}</version>
+    <name>computational omics utilities</name>
+    <url>compomics_utilities.googlecode.com</url>
 
 <!-- Set the version number for the whole project -->
-	<properties>
-		<version.number>3.0.9</version.number>
-		<logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
+    <properties>
+        <version.number>3.0.9</version.number>
+        <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
         <logging.level.default>DEBUG</logging.level.default>
-	</properties>
+    </properties>
     
 <!-- Licence -->
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -37,7 +37,7 @@
                 <role>Documentation</role>
             </roles>
         </developer>
-	  <developer>
+        <developer>
             <name>Harald Barsnes</name>
             <id>harald</id>
             <email>harald.barsnes AT ii.uib.no</email>
@@ -67,49 +67,49 @@
     </developers>
 
 <!-- Build -->
-	<build>
+    <build>
         <!-- Plugins -->
         <plugins>
             <!-- Compiler plugin -->
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<showDeprecation>true</showDeprecation>
-					<debug>true</debug>
-				</configuration>
-			</plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <showDeprecation>true</showDeprecation>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
 
             <!-- Jar plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<outputDirectory>${project.build.directory}/utilities-${project.version}</outputDirectory>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/utilities-${project.version}</outputDirectory>
+                </configuration>
+            </plugin>
 
             <!-- Dependency plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/utilities-${project.version}/lib</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>false</excludeTransitive>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/utilities-${project.version}/lib</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <excludeTransitive>false</excludeTransitive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- Resources plugin - classes -->
             <plugin>
@@ -137,11 +137,11 @@
             </plugin>
 
             <!-- Resources plugin -->
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.3</version>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.3</version>
                 <!-- Copy resources into appropriate folder upon packaging -->
-				<executions>
+                <executions>
                     <!-- Copy main resources into test classpath when running the tests -->
                     <execution>
                         <id>copy-test-resources</id>
@@ -159,8 +159,8 @@
                             </resources>
                         </configuration>
                     </execution>
-				</executions>
-			</plugin>
+                </executions>
+            </plugin>
 
              <!-- Create javadoc on build -->
             <plugin>
@@ -193,10 +193,10 @@
                 </executions>
             </plugin>
 
-		</plugins>
-	</build>    
+        </plugins>
+    </build>
 
-	<!-- Repositories -->
+<!-- Repositories -->
     <repositories>
         <!-- UGent Genesis Maven 1 repository -->
         <repository>
@@ -216,8 +216,8 @@
 
     </repositories>
 
-    <!-- Dependencies -->
-	<dependencies>
+<!-- Dependencies -->
+    <dependencies>
         <!-- This project depends on the junit JAR file.
           -->
         <dependency>
@@ -249,11 +249,10 @@
             <version>1.2.12</version>
         </dependency>
 
-
     </dependencies>
 
-      <!-- The deployment maven2 repository-->
-      <distributionManagement>
+<!-- The deployment maven2 repository-->
+    <distributionManagement>
         <repository>
             <id>genesis-maven2-repo</id>
             <name>Genesis Maven Repository</name>

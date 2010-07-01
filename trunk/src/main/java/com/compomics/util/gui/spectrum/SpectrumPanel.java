@@ -186,6 +186,14 @@ public class SpectrumPanel extends JPanel {
      */
     private boolean showFileName = true;
     /**
+     * The boolean is set to 'true' if the precursor details is to be shown in the panel.
+     */
+    private boolean showPrecursorDetails = true;
+    /**
+     * The boolean is set to 'true' if the resolution is to be shown in the panel.
+     */
+    private boolean showResolution = true;
+    /**
      * The double[] with all the masses. Should at all times be sorted from
      * high to low.
      */
@@ -323,7 +331,7 @@ public class SpectrumPanel extends JPanel {
      * @param aSpecFile SpectrumFile with the information about masses and intensities
      *                  that will be copied here. Note that mass-sorting will take place
      *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It shoudl be one of the constants
+     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
      *                      defined on this class.
      * @param aEnableInteraction    boolean that specifies whether user-derived events should
      *                              be caught and dealt with.
@@ -339,7 +347,7 @@ public class SpectrumPanel extends JPanel {
      * @param aSpecFile SpectrumFile with the information about masses and intensities
      *                  that will be copied here. Note that mass-sorting will take place
      *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It shoudl be one of the constants
+     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
      *                      defined on this class.
      * @param aEnableInteraction    boolean that specifies whether user-derived events should
      *                              be caught and dealt with.
@@ -347,7 +355,7 @@ public class SpectrumPanel extends JPanel {
      *                                  can be 'null' for default coloring.
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true);
+        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true, true, true);
     }
 
     /**
@@ -357,7 +365,7 @@ public class SpectrumPanel extends JPanel {
      * @param aSpecFile SpectrumFile with the information about masses and intensities
      *                  that will be copied here. Note that mass-sorting will take place
      *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It shoudl be one of the constants
+     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
      *                      defined on this class.
      * @param aEnableInteraction    boolean that specifies whether user-derived events should
      *                              be caught and dealt with.
@@ -367,9 +375,33 @@ public class SpectrumPanel extends JPanel {
      * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
      */
+    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
+            int aMaxPadding, boolean aHideDecimals, boolean aShowFileName) {
+        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aHideDecimals, aShowFileName, true, true);
+    }
+
+    /**
+     * This constructor creates a SpectrumPanel based on the spectrum information in
+     * the specified SpectrumFile with the specified drawing style.
+     *
+     * @param aSpecFile SpectrumFile with the information about masses and intensities
+     *                  that will be copied here. Note that mass-sorting will take place
+     *                  in this step as well.
+     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
+     *                      defined on this class.
+     * @param aEnableInteraction    boolean that specifies whether user-derived events should
+     *                              be caught and dealt with.
+     * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
+     *                                  can be 'null' for default coloring.
+     * @param aMaxPadding   int the sets the maximum padding size.
+     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
+     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be shown in the panel
+     */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction,
             Color aSpectrumFilenameColor, int aMaxPadding, boolean aHideDecimals,
-            boolean aShowFileName) {
+            boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution) {
         this.iDrawStyle = aDrawStyle;
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -384,6 +416,23 @@ public class SpectrumPanel extends JPanel {
         this.maxPadding = aMaxPadding;
         this.hideDecimals = aHideDecimals;
         this.showFileName = aShowFileName;
+        this.showPrecursorDetails = aShowPrecursorDetails;
+        this.showResolution = aShowResolution;
+    }
+
+    /**
+     * This constructor creates a SpectrumPanel based on the passed parameters. This constructor will be used to annotate matched ions on the spectrumpannels.
+     * @param aMZ                   double[] with all the masses to anotate.
+     * @param aIntensity            double[] with all the intensity of the peaks.
+     * @param aPrecursorMZ          double with the precursor mass.
+     * @param aPrecursorCharge      String with the precursor intensity.
+     * @param aFileName             String with the title of the Query.
+     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
+     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
+     */
+    public SpectrumPanel(double[] aMZ, double[] aIntensity, double aPrecursorMZ, String aPrecursorCharge, String aFileName,
+            boolean aHideDecimals, boolean aShowFileName) {
+        this(aMZ, aIntensity, aPrecursorMZ, aPrecursorCharge, aFileName, 50, aHideDecimals, aShowFileName, true, true);
     }
 
     /**
@@ -395,7 +444,7 @@ public class SpectrumPanel extends JPanel {
      * @param aFileName             String with the title of the Query.
      */
     public SpectrumPanel(double[] aMZ, double[] aIntensity, double aPrecursorMZ, String aPrecursorCharge, String aFileName) {
-        this(aMZ, aIntensity, aPrecursorMZ, aPrecursorCharge, aFileName, 50, false, true);
+        this(aMZ, aIntensity, aPrecursorMZ, aPrecursorCharge, aFileName, 50, false, true, true, true);
     }
 
     /**
@@ -408,9 +457,12 @@ public class SpectrumPanel extends JPanel {
      * @param aMaxPadding   int the sets the maximum padding size.
      * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be shown in the panel
      */
     public SpectrumPanel(double[] aMZ, double[] aIntensity, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName) {
+            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName,
+            boolean aShowPrecursorDetails, boolean aShowResolution) {
         this.iDrawStyle = LINES;
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -422,6 +474,8 @@ public class SpectrumPanel extends JPanel {
         this.maxPadding = aMaxPadding;
         this.hideDecimals = aHideDecimals;
         this.showFileName = aShowFileName;
+        this.showPrecursorDetails = aShowPrecursorDetails;
+        this.showResolution = aShowResolution;
         this.addListeners();
     }
 
@@ -1004,9 +1058,15 @@ public class SpectrumPanel extends JPanel {
         iXScaleUnit = delta / aXAxisWidth;
         // Since we know the scale unit, we also know the resolution.
         // This will be displayed on the bottom line.
-        String resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        String resolution = "";
+        if(showResolution){
+            resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        }
         // Also print the precursor MZ and charge (if known, '?' otherwise).
-        String precursor = "Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
+        String precursor = "";
+        if(showPrecursorDetails){
+            precursor = "Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
+        }
         // Finally, we also want the filename.
         String filename = "";
         if (showFileName) {

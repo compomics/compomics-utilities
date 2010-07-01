@@ -5,10 +5,10 @@
  * Time: 13:04:56
  */
 package com.compomics.util.gui.spectrum;
+
 import org.apache.log4j.Logger;
 
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
-
 import java.awt.*;
 
 /*
@@ -17,7 +17,6 @@ import java.awt.*;
  * $Revision: 1.1 $
  * $Date: 2007/10/22 10:09:02 $
  */
-
 /**
  * This class provideds a default implementation of the SpectrumAnnotation interface.
  * 
@@ -25,17 +24,22 @@ import java.awt.*;
  * @version $Id: DefaultSpectrumAnnotation.java,v 1.1 2007/10/22 10:09:02 lennart Exp $
  */
 public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
-	// Class specific log4j logger for DefaultSpectrumAnnotation instances.
-	Logger logger = Logger.getLogger(DefaultSpectrumAnnotation.class);
 
+    // Class specific log4j logger for DefaultSpectrumAnnotation instances.
+    Logger logger = Logger.getLogger(DefaultSpectrumAnnotation.class);
     private Color iColor = null;
-
     private double iErrorMargin = 0.0;
-
     private double iMZ = 0.0;
-
     private String iLabel = null;
 
+    /**
+     * Constructor creating a DefaultSpectrumAnnotation object.
+     *
+     * @param aMZ   the mz value to annotate
+     * @param aErrorMargin  the mz error margin
+     * @param aColor    the color to use for the annotation
+     * @param aLabel    the label to use for the annotation
+     */
     public DefaultSpectrumAnnotation(double aMZ, double aErrorMargin, Color aColor, String aLabel) {
         this.iMZ = aMZ;
         this.iErrorMargin = aErrorMargin;

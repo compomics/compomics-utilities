@@ -479,6 +479,22 @@ public class SpectrumPanel extends JPanel {
         this.addListeners();
     }
 
+   /**
+     * This constructor creates a SpectrumPanel based on the passed parameters. This constructor will be used to annotate matched ions on the spectrumpannels.
+     * @param aMZ                   double[] with all the masses to anotate.
+     * @param aIntensity            double[] with all the intensity of the peaks.
+     * @param aPrecursorMZ          double with the precursor mass.
+     * @param aPrecursorCharge      String with the precursor intensity.
+     * @param aFileName             String with the title of the Query.
+     * @param aMaxPadding   int the sets the maximum padding size.
+     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
+     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
+     */
+    public SpectrumPanel(double[] aMZ, double[] aIntensity, double aPrecursorMZ, String aPrecursorCharge,
+            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName) {
+        this(aMZ, aIntensity, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding, aHideDecimals, aShowFileName, true, true);
+    }
+
     /**
      * This method sets the start value of the mz axis to zero.
      */

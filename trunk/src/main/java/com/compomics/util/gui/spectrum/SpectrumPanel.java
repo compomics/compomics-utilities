@@ -29,10 +29,17 @@ import java.util.*;
  */
 public class SpectrumPanel extends GraphicsPanel {
 
-    // Class specific log4j logger for SpectrumPanel instances.
+    /**
+     * Class specific log4j logger for SpectrumPanel instances.
+     */
     static Logger logger = Logger.getLogger(SpectrumPanel.class);
-    
+    /**
+     * The color used for the peaks. Default to red.
+     */
     private Color aSpectrumPeakColor = Color.RED;
+    /**
+     * The color used for the profile mode spectra. Defaults to pink.
+     */
     private Color aSpectrumProfileModeLineColor = Color.PINK;
 
     /**

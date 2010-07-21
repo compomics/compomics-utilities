@@ -5,7 +5,6 @@
  * Time: 11:09:20
  */
 package com.compomics.util.gui.interfaces;
-import org.apache.log4j.Logger;
 
 import java.awt.*;
 

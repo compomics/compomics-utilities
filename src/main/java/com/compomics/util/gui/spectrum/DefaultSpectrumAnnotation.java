@@ -25,11 +25,25 @@ import java.awt.*;
  */
 public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
 
-    // Class specific log4j logger for DefaultSpectrumAnnotation instances.
+    /**
+     * Class specific log4j logger for DefaultSpectrumAnnotation instances.
+     */
     Logger logger = Logger.getLogger(DefaultSpectrumAnnotation.class);
+    /**
+     * The color to use for the annotation.
+     */
     private Color iColor = null;
+    /**
+     * The x-axis error margin.
+     */
     private double iErrorMargin = 0.0;
+    /**
+     * The mz value to annotate.
+     */
     private double iMZ = 0.0;
+    /**
+     * The label to use for the annotation.
+     */
     private String iLabel = null;
 
     /**
@@ -53,7 +67,7 @@ public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
      * @return Color with the color for the annotation.
      */
     public Color getColor() {
-        return iColor;  //To change body of implemented methods use File | Settings | File Templates.
+        return iColor;
     }
 
     /**
@@ -64,7 +78,7 @@ public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
      * @return double  with the error margin.
      */
     public double getErrorMargin() {
-        return iErrorMargin;  //To change body of implemented methods use File | Settings | File Templates.
+        return iErrorMargin;
     }
 
     /**
@@ -74,7 +88,7 @@ public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
      *         for this annotation.
      */
     public String getLabel() {
-        return iLabel;  //To change body of implemented methods use File | Settings | File Templates.
+        return iLabel;
     }
 
     /**
@@ -83,6 +97,6 @@ public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
      * @return double with the M/Z.
      */
     public double getMZ() {
-        return iMZ;  //To change body of implemented methods use File | Settings | File Templates.
+        return iMZ;
     }
 }

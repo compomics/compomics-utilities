@@ -5,7 +5,6 @@
  * Time: 7:23:04
  */
 package com.compomics.util.gui.interfaces;
-import org.apache.log4j.Logger;
 
 import com.compomics.util.gui.events.RescalingEvent;
 

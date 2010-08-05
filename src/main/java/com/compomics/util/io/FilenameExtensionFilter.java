@@ -106,6 +106,6 @@ public class FilenameExtensionFilter extends FileFilter implements FilenameFilte
 
     @Override
     public String getDescription() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return iDescription;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

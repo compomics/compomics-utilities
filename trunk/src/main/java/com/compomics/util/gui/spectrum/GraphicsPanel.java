@@ -603,13 +603,20 @@ abstract class GraphicsPanel extends JPanel {
                 if (iXAxisData != null && iXAxisDataInPixels != null) {
                     int x = e.getX();
                     int y = e.getY();
+
+                    // this variable is used make sure that the most intense peak within range is highlighted
+                    int highestPeakInRange = 0;
+
                     for (int i = 0; i < iXAxisDataInPixels.length; i++) {
                         int delta = iXAxisDataInPixels[i] - x;
                         if (Math.abs(delta) < iPointDetectionTolerance) {
                             int deltaYPixels = y - iYAxisDataInPixels[i];
-                            if (deltaYPixels < 0 && Math.abs(deltaYPixels) < (getHeight() - iYAxisDataInPixels[i])) {
+                            if (deltaYPixels < 0 
+                                    && Math.abs(deltaYPixels) < (getHeight() - iYAxisDataInPixels[i])
+                                    && highestPeakInRange < (getHeight() - iYAxisDataInPixels[i])) {
                                 iHighLight = true;
                                 iHighLightIndex = i;
+                                highestPeakInRange = (getHeight() - iYAxisDataInPixels[i]);
                                 repaint();
                             }
                         } else if (delta >= iPointDetectionTolerance) {

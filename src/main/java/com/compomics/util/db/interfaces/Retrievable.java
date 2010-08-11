@@ -40,7 +40,7 @@ public interface Retrievable {
      * @param   aConn   The Connection on which to execute SQL statements.
      *                  It should be an open connection and the implementation
      *                  should refrain from closing it, so the caller can reuse it.
-     * @param   ahmKeys HashMap with the 'key-value' pairs necessary for the
+     * @param   aHMKeys HashMap with the 'key-value' pairs necessary for the
      *                  construction of the primary key to be retrieved.
      * @exception   SQLException    When the retrieve fails (e.g.: PK not found).
      */

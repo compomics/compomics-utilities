@@ -147,7 +147,7 @@ public class FTP {
     /**
      * This method sets the name of the file to up- or download.
      *
-     * @param   aFile   String with the filename.
+     * @param   strFile   String with the filename.
      */
     public void setFilename(String strFile) {
         strFileNameAndPath = strFile;

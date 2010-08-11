@@ -30,8 +30,9 @@ import java.io.File;
  * @author Lennart Martens
  */
 public class FilenameExtensionFilter extends FileFilter implements FilenameFilter {
-	// Class specific log4j logger for FilenameExtensionFilter instances.
-	Logger logger = Logger.getLogger(FilenameExtensionFilter.class);
+
+    // Class specific log4j logger for FilenameExtensionFilter instances.
+    Logger logger = Logger.getLogger(FilenameExtensionFilter.class);
 
     /**
      * This is the extension to filter on.
@@ -101,11 +102,11 @@ public class FilenameExtensionFilter extends FileFilter implements FilenameFilte
 
     @Override
     public boolean accept(File f) {
-        return accept(f.getParentFile(), f.getName());  //To change body of implemented methods use File | Settings | File Templates.
+        return accept(f.getParentFile(), f.getName());
     }
 
     @Override
     public String getDescription() {
-        return iDescription;  //To change body of implemented methods use File | Settings | File Templates.
+        return iDescription;
     }
 }

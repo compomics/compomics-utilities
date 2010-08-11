@@ -8,7 +8,8 @@
     <name>computational omics utilities</name>
     <url>compomics_utilities.googlecode.com</url>
 
-<!-- Set the version number for the whole project -->
+
+    <!-- Set the version number for the whole project -->
     <properties>
         <version.number>3.0.13</version.number>
         <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
@@ -16,8 +17,9 @@
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
         <logging.level.default>DEBUG</logging.level.default>
     </properties>
-    
-<!-- Licence -->
+
+
+    <!-- Licence -->
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -25,6 +27,8 @@
         </license>
     </licenses>
 
+
+    <!-- Developers -->
     <developers>
         <developer>
             <name>Lennart Martens</name>
@@ -40,7 +44,7 @@
         <developer>
             <name>Harald Barsnes</name>
             <id>harald</id>
-            <email>harald.barsnes AT ii.uib.no</email>
+            <email>harald.barsnes AT biomed.uib.no</email>
             <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>
@@ -66,10 +70,13 @@
         </developer>
     </developers>
 
-<!-- Build -->
+
+    <!-- Build -->
     <build>
+
         <!-- Plugins -->
         <plugins>
+
             <!-- Compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -196,7 +203,8 @@
         </plugins>
     </build>
 
-<!-- Repositories -->
+
+    <!-- Repositories -->
     <repositories>
         <!-- UGent Genesis Maven 1 repository -->
         <repository>
@@ -216,7 +224,8 @@
 
     </repositories>
 
-<!-- Dependencies -->
+
+    <!-- Dependencies -->
     <dependencies>
         <!-- This project depends on the junit JAR file.
           -->
@@ -226,6 +235,7 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
         <!-- This project depends on the JAR file "lmjunit-1.0.2.jar" (TestCaseLM)
              the remote repository root of which is 'http://genesis.UGent.be/maven'.
           -->
@@ -243,7 +253,8 @@
             <version>2.2</version>
         </dependency>
 
-        <dependency><!-- The log4j logging framework -->
+        <!-- The log4j logging framework -->
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.12</version>
@@ -251,7 +262,8 @@
 
     </dependencies>
 
-<!-- The deployment maven2 repository-->
+
+    <!-- The deployment maven2 repository-->
     <distributionManagement>
         <repository>
             <id>genesis-maven2-repo</id>

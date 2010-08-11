@@ -43,7 +43,7 @@ public enum CompomicsTools {
 
     /**
      * Return the package name of the tool.
-     * @return
+     * @return The package name of the tool.
      */
     public String getPackageName() {
         return iPackageName;

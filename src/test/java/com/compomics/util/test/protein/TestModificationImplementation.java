@@ -34,8 +34,9 @@ import com.compomics.util.protein.ModificationImplementation;
  * @author Lennart Martens
  */
 public class TestModificationImplementation extends TestCase {
-	// Class specific log4j logger for TestModificationImplementation instances.
-	Logger logger = Logger.getLogger(TestModificationImplementation.class);
+
+    // Class specific log4j logger for TestModificationImplementation instances.
+    Logger logger = Logger.getLogger(TestModificationImplementation.class);
 
     public TestModificationImplementation() {
         this("Test Scenario for the ModificationImplementation class.");

@@ -14,8 +14,9 @@ import java.io.*;
  * @since 2.9
  */
 public class TestRegExEnzyme  extends TestCaseLM {
-	// Class specific log4j logger for TestRegExEnzyme instances.
-	Logger logger = Logger.getLogger(TestRegExEnzyme.class);
+
+    // Class specific log4j logger for TestRegExEnzyme instances.
+    Logger logger = Logger.getLogger(TestRegExEnzyme.class);
 
     private static final boolean recordResult = false;
     private static final String resultFileName = "regExEmzymeTest1.fas";
@@ -371,7 +372,7 @@ public class TestRegExEnzyme  extends TestCaseLM {
             Assert.assertEquals(controlCleave[i], cloneCleave[i]);
         }
 
-        // Noow change the clone and see if the original changes.
+        // Now change the clone and see if the original changes.
         clone.setCleavage("GH");
         clone.setMiscleavages(1);
         clone.setPosition(Enzyme.NTERM);
@@ -584,9 +585,8 @@ public class TestRegExEnzyme  extends TestCaseLM {
     }
 
 
-
     private void writeResults(Protein[] proteins, String filename) throws IOException {
-        //
+
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
 
         for (int i = 0; i < proteins.length; i++) {
@@ -600,6 +600,4 @@ public class TestRegExEnzyme  extends TestCaseLM {
         writer.flush();
         writer.close();
     }
-
-
 }

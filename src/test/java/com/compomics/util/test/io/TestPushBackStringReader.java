@@ -31,8 +31,9 @@ import junit.framework.*;
  * @see com.compomics.util.io.PushBackStringReader
  */
 public class TestPushBackStringReader extends TestCaseLM {
-	// Class specific log4j logger for TestPushBackStringReader instances.
-	Logger logger = Logger.getLogger(TestPushBackStringReader.class);
+
+    // Class specific log4j logger for TestPushBackStringReader instances.
+    Logger logger = Logger.getLogger(TestPushBackStringReader.class);
 
     public TestPushBackStringReader() {
         this("Test scenario for the PushBackStringReader");

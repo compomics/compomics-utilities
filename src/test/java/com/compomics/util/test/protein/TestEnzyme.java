@@ -35,8 +35,9 @@ import junit.TestCaseLM;
  * @see com.compomics.util.protein.Enzyme
  */
 public class TestEnzyme extends TestCaseLM {
-	// Class specific log4j logger for TestEnzyme instances.
-	Logger logger = Logger.getLogger(TestEnzyme.class);
+
+    // Class specific log4j logger for TestEnzyme instances.
+    Logger logger = Logger.getLogger(TestEnzyme.class);
 
     public TestEnzyme() {
         this("Test scenario for the Enzyme class.");
@@ -367,7 +368,7 @@ public class TestEnzyme extends TestCaseLM {
             Assert.assertEquals(controlCleave[i], cloneCleave[i]);
         }
 
-        // Noow change the clone and see if the original changes.
+        // Now change the clone and see if the original changes.
         clone.setCleavage("GH");
         clone.setMiscleavages(1);
         clone.setPosition(Enzyme.NTERM);

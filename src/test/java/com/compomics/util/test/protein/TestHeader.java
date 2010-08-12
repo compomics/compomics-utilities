@@ -31,8 +31,9 @@ import junit.framework.*;
  * @see com.compomics.util.protein.Header
  */
 public class TestHeader extends TestCaseLM {
-	// Class specific log4j logger for TestHeader instances.
-	Logger logger = Logger.getLogger(TestHeader.class);
+
+    // Class specific log4j logger for TestHeader instances.
+    Logger logger = Logger.getLogger(TestHeader.class);
 
     public TestHeader() {
         this("This is the test scenario for the Header class.");
@@ -314,8 +315,6 @@ public class TestHeader extends TestCaseLM {
         Assert.assertTrue(h.getForeignDescription() == null);
         Assert.assertTrue(h.getForeignID() == null);
         Assert.assertTrue(h.getRest() == null);
-
-
 
 
         // Now do the standard NCBI header.
@@ -1318,7 +1317,6 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(h.getScore(), clone.getScore());
         Assert.assertEquals(h.getStartLocation(), clone.getStartLocation());
         Assert.assertEquals(h.getFullHeaderWithAddenda(), clone.getFullHeaderWithAddenda());
-
 
 
         // Finally, see that changing 'clone' does not change 'h'.

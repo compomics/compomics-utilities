@@ -38,8 +38,9 @@ import com.compomics.util.interfaces.Modification;
  * @author Lennart Martens
  */
 public class TestModificationFactory extends TestCaseLM {
-	// Class specific log4j logger for TestModificationFactory instances.
-	Logger logger = Logger.getLogger(TestModificationFactory.class);
+
+    // Class specific log4j logger for TestModificationFactory instances.
+    Logger logger = Logger.getLogger(TestModificationFactory.class);
 
     public TestModificationFactory() {
         this("Test scenario for the ModificationFactory class.");

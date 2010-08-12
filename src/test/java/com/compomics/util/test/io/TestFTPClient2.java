@@ -35,8 +35,9 @@ import junit.framework.*;
  * @see com.compomics.util.io.FTPClient
  */
 public class TestFTPClient2 extends TestCaseLM {
-	// Class specific log4j logger for TestFTPClient2 instances.
-	Logger logger = Logger.getLogger(TestFTPClient2.class);
+
+    // Class specific log4j logger for TestFTPClient2 instances.
+    Logger logger = Logger.getLogger(TestFTPClient2.class);
 
     private String iServer = null;
     private String iUser = null;
@@ -277,7 +278,6 @@ public class TestFTPClient2 extends TestCaseLM {
                 // Delete the destination file.
                 while(!f.delete()) {
                 }
-
 
                 // Check the text file.
                 // Find the file on the server.

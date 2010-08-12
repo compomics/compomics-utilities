@@ -34,8 +34,9 @@ import junit.framework.*;
  * @see com.compomics.util.io.FilenameExtensionFilter
  */
 public class TestFilenameExtensionFilter extends TestCaseLM {
-	// Class specific log4j logger for TestFilenameExtensionFilter instances.
-	Logger logger = Logger.getLogger(TestFilenameExtensionFilter.class);
+
+    // Class specific log4j logger for TestFilenameExtensionFilter instances.
+    Logger logger = Logger.getLogger(TestFilenameExtensionFilter.class);
 
     public TestFilenameExtensionFilter() {
         this("Test for the FilenameExtensionFilter class.");
@@ -81,6 +82,5 @@ public class TestFilenameExtensionFilter extends TestCaseLM {
         fef = new FilenameExtensionFilter("*" + filter.substring(1));
         names = f.list(fef);
         Assert.assertEquals(counter, names.length);
-
     }
 }

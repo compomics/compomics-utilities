@@ -31,22 +31,23 @@ import com.compomics.util.test.nucleotide.TestNucleotideSequence;
  * @author	Lennart Martens
  */
 public class FullSuite extends TestCase {
-	// Class specific log4j logger for FullSuite instances.
-	Logger logger = Logger.getLogger(FullSuite.class);
-	
-	public FullSuite() {
-		super("Full test suite for Utilities project.");
-	}
-	
-	public static Test suite() {
-		TestSuite ts = new TestSuite("Test suite for the 'Utilities' project.");
-		
-		ts.addTest(new TestSuite(TestMassCalc.class));
-		ts.addTest(new TestSuite(TestModificationFactory.class));
+
+    // Class specific log4j logger for FullSuite instances.
+    Logger logger = Logger.getLogger(FullSuite.class);
+
+    public FullSuite() {
+        super("Full test suite for Utilities project.");
+    }
+
+    public static Test suite() {
+        TestSuite ts = new TestSuite("Test suite for the 'Utilities' project.");
+
+        ts.addTest(new TestSuite(TestMassCalc.class));
+        ts.addTest(new TestSuite(TestModificationFactory.class));
         ts.addTest(new TestSuite(TestModificationImplementation.class));
         ts.addTest(new TestSuite(TestAASequenceImpl.class));
-		//ts.addTest(new TestSuite(TstMassCalcServlet.class));
-		ts.addTest(new TestSuite(TestCommandLineParser.class));
+        //ts.addTest(new TestSuite(TstMassCalcServlet.class));
+        ts.addTest(new TestSuite(TestCommandLineParser.class));
         ts.addTest(new TestSuite(TestPushBackStringReader.class));
         ts.addTest(new TestSuite(TestHeader.class));
         ts.addTest(new TestSuite(TestProtein.class));
@@ -63,6 +64,6 @@ public class FullSuite extends TestCase {
         ts.addTest(new TestSuite(TestNucleotideSequenceImpl.class));
         ts.addTest(new TestSuite(TestNucleotideSequence.class));
 
-		return ts;
-	}
+        return ts;
+    }
 }

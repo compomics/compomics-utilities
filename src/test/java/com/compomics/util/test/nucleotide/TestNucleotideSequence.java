@@ -37,8 +37,9 @@ import junit.TestCaseLM;
  * @see com.compomics.util.nucleotide.NucleotideSequence
  */
 public class TestNucleotideSequence extends TestCaseLM {
-	// Class specific log4j logger for TestNucleotideSequence instances.
-	Logger logger = Logger.getLogger(TestNucleotideSequence.class);
+
+    // Class specific log4j logger for TestNucleotideSequence instances.
+    Logger logger = Logger.getLogger(TestNucleotideSequence.class);
 
     public TestNucleotideSequence() {
         this("The test scenario for the NucleotideSequence class.");

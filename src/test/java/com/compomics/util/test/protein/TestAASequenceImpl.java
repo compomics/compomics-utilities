@@ -34,147 +34,148 @@ import com.compomics.util.interfaces.Modification;
  * @author	Lennart Martens
  */
 public class TestAASequenceImpl extends TestCase {
-	// Class specific log4j logger for TestAASequenceImpl instances.
-	Logger logger = Logger.getLogger(TestAASequenceImpl.class);
-	
-	public TestAASequenceImpl() {
-		this("Test for the AASequenceImpl class.");
-	}
-	
-	public TestAASequenceImpl(String aMsg) {
-		super(aMsg);
-	}
-	
-	/**
-	 * This method test the correct behaviour of the constructor
-	 * and in the same time that of the setSequence method, since
-	 * it is called from the constructor. <br />
-	 * It also test the setSequence method separately for safety.
-	 */
-	public void testConstructor() {
-		String seqString = "YSFVATAER";
-		String replaceSeq = "LENNARTMARTENS";
-		// Plain constructor.
-		AASequenceImpl seq = new AASequenceImpl(seqString);
-		Assert.assertEquals(seqString, seq.getSequence());
-		Assert.assertTrue(seq.getModifications() == null);
-		seq.setSequence(replaceSeq);
-		Assert.assertEquals(replaceSeq, seq.getSequence());
-    }
-	
-	/**
-	 * This method test the mass calculation method.
-	 */
-	public void testMassCalculation() {
-		// Plain one.
-		String seqString = "YSFVATAER";
-		Sequence seq = new AASequenceImpl(seqString);
-		Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE*2);
-		
-		// Now one with modifications.
 
-		// See if the cache is correctly emptied!
-		seqString = "YSFVATAER";
-		seq = new AASequenceImpl(seqString);
-		Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE*2);
-		seq.setSequence("LENNARTMARTENS");
-		Assert.assertEquals(1605.752915, seq.getMass(), Double.MIN_VALUE*2);
+    // Class specific log4j logger for TestAASequenceImpl instances.
+    Logger logger = Logger.getLogger(TestAASequenceImpl.class);
+
+    public TestAASequenceImpl() {
+        this("Test for the AASequenceImpl class.");
+    }
+
+    public TestAASequenceImpl(String aMsg) {
+        super(aMsg);
+    }
+
+    /**
+     * This method test the correct behaviour of the constructor
+     * and in the same time that of the setSequence method, since
+     * it is called from the constructor. <br />
+     * It also test the setSequence method separately for safety.
+     */
+    public void testConstructor() {
+        String seqString = "YSFVATAER";
+        String replaceSeq = "LENNARTMARTENS";
+        // Plain constructor.
+        AASequenceImpl seq = new AASequenceImpl(seqString);
+        Assert.assertEquals(seqString, seq.getSequence());
+        Assert.assertTrue(seq.getModifications() == null);
+        seq.setSequence(replaceSeq);
+        Assert.assertEquals(replaceSeq, seq.getSequence());
+    }
+
+    /**
+     * This method test the mass calculation method.
+     */
+    public void testMassCalculation() {
+        // Plain one.
+        String seqString = "YSFVATAER";
+        Sequence seq = new AASequenceImpl(seqString);
+        Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE * 2);
+
+        // Now one with modifications.
+
+        // See if the cache is correctly emptied!
+        seqString = "YSFVATAER";
+        seq = new AASequenceImpl(seqString);
+        Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE * 2);
+        seq.setSequence("LENNARTMARTENS");
+        Assert.assertEquals(1605.752915, seq.getMass(), Double.MIN_VALUE * 2);
 
         // See if the '_' is correctly interpreted (no errors thrown)!
-		seqString = "YSFV_ATAER";
-		seq = new AASequenceImpl(seqString);
-		Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE*2);
-		seq.setSequence("LENNART_MARTENS");
-		Assert.assertEquals(1605.752915, seq.getMass(), Double.MIN_VALUE*2);
-	}
-	
-	/**
-	 * This method test whether the AASequenceImpl Object
-	 * correctly throws a NullPointerException when presented
-	 * with a 'null' sequence String. And this for both the
-	 * constructor and the setSequence method.
-	 */
-	public void testNullPointerException() {
-		try {
-			new AASequenceImpl(null);
-			fail("NullPointerException should have been thrown in the constructor!\n");
-		} catch(NullPointerException npe) {
-			// Expected behaviour. Do nothing.
-		}
-		
-		try {
-			Sequence s = new AASequenceImpl("YSFVATAER");
-			s.setSequence(null);
-			fail("NullPointerException should have been thrown in the setSequence method!\n");
-		} catch(NullPointerException npe) {
-			// Expected behaviour. Do nothing.
-		}
-	}
-	
-	/**
-	 * This method test whether the AASequenceImpl Object
-	 * correctly throws an IllegalArgumentException when presented
-	 * with an '""' (empty String) sequence String. And this for both the
-	 * constructor and the setSequence method.
-	 */
-	public void testIllegalArgumentException() {
-		try {
-			new AASequenceImpl("");
-			fail("IllegalArgumentException should have been thrown in the constructor!\n");
-		} catch(IllegalArgumentException iae) {
-			// Expected behaviour. Do nothing.
-		}
-		
-		try {
-			new AASequenceImpl("   	   ");
-			fail("IllegalArgumentException should have been thrown in the constructor (trimming case)!\n");
-		} catch(IllegalArgumentException iae) {
-			// Expected behaviour. Do nothing.
-		}
-		
-		try {
-			Sequence s = new AASequenceImpl("YSFVATAER");
-			s.setSequence("");
-			fail("IllegalArgumentException should have been thrown in the setSequence method!\n");
-		} catch(IllegalArgumentException iae) {
-			// Expected behaviour. Do nothing.
-		}
-		
-		try {
-			Sequence s = new AASequenceImpl("YSFVATAER");
-			s.setSequence(" 	   ");
-			fail("IllegalArgumentException should have been thrown in the setSequence method (trimming case)!\n");
-		} catch(IllegalArgumentException iae) {
-			// Expected behaviour. Do nothing.
-		}
-	}
-	
-	/**
-	 * This method test the trimming behaviour of both the constructor
-	 * and the setSequence method.
-	 */
-	public void testTrimmingBehaviour() {
-		String sequence1 = "YSFVATAER 	 ";
-		String sequence2 = "	 YSFVATAER";
-		String sequence3 = "	 YSFVATAER 	 	";
-		String sequence = "YSFVATAER";
-		Assert.assertEquals(sequence, new AASequenceImpl(sequence1).getSequence());
-		Assert.assertEquals(sequence, new AASequenceImpl(sequence2).getSequence());
-		Assert.assertEquals(sequence, new AASequenceImpl(sequence3).getSequence());
-		
-		Sequence asi1 = new AASequenceImpl(sequence1);
-		Sequence asi2 = new AASequenceImpl(sequence2);
-		Sequence asi3 = new AASequenceImpl(sequence3);
-		
-		Assert.assertEquals(sequence, asi1.getSequence());
-		Assert.assertEquals(sequence, asi2.getSequence());
-		Assert.assertEquals(sequence, asi3.getSequence());
-	}
-	
-	/**
-	 * This method test the generation of the annotated sequence.
-	 */
-	public void testModifiedSequence() {
+        seqString = "YSFV_ATAER";
+        seq = new AASequenceImpl(seqString);
+        Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE * 2);
+        seq.setSequence("LENNART_MARTENS");
+        Assert.assertEquals(1605.752915, seq.getMass(), Double.MIN_VALUE * 2);
+    }
+
+    /**
+     * This method test whether the AASequenceImpl Object
+     * correctly throws a NullPointerException when presented
+     * with a 'null' sequence String. And this for both the
+     * constructor and the setSequence method.
+     */
+    public void testNullPointerException() {
+        try {
+            new AASequenceImpl(null);
+            fail("NullPointerException should have been thrown in the constructor!\n");
+        } catch (NullPointerException npe) {
+            // Expected behaviour. Do nothing.
+        }
+
+        try {
+            Sequence s = new AASequenceImpl("YSFVATAER");
+            s.setSequence(null);
+            fail("NullPointerException should have been thrown in the setSequence method!\n");
+        } catch (NullPointerException npe) {
+            // Expected behaviour. Do nothing.
+        }
+    }
+
+    /**
+     * This method test whether the AASequenceImpl Object
+     * correctly throws an IllegalArgumentException when presented
+     * with an '""' (empty String) sequence String. And this for both the
+     * constructor and the setSequence method.
+     */
+    public void testIllegalArgumentException() {
+        try {
+            new AASequenceImpl("");
+            fail("IllegalArgumentException should have been thrown in the constructor!\n");
+        } catch (IllegalArgumentException iae) {
+            // Expected behaviour. Do nothing.
+        }
+
+        try {
+            new AASequenceImpl("   	   ");
+            fail("IllegalArgumentException should have been thrown in the constructor (trimming case)!\n");
+        } catch (IllegalArgumentException iae) {
+            // Expected behaviour. Do nothing.
+        }
+
+        try {
+            Sequence s = new AASequenceImpl("YSFVATAER");
+            s.setSequence("");
+            fail("IllegalArgumentException should have been thrown in the setSequence method!\n");
+        } catch (IllegalArgumentException iae) {
+            // Expected behaviour. Do nothing.
+        }
+
+        try {
+            Sequence s = new AASequenceImpl("YSFVATAER");
+            s.setSequence(" 	   ");
+            fail("IllegalArgumentException should have been thrown in the setSequence method (trimming case)!\n");
+        } catch (IllegalArgumentException iae) {
+            // Expected behaviour. Do nothing.
+        }
+    }
+
+    /**
+     * This method test the trimming behaviour of both the constructor
+     * and the setSequence method.
+     */
+    public void testTrimmingBehaviour() {
+        String sequence1 = "YSFVATAER 	 ";
+        String sequence2 = "	 YSFVATAER";
+        String sequence3 = "	 YSFVATAER 	 	";
+        String sequence = "YSFVATAER";
+        Assert.assertEquals(sequence, new AASequenceImpl(sequence1).getSequence());
+        Assert.assertEquals(sequence, new AASequenceImpl(sequence2).getSequence());
+        Assert.assertEquals(sequence, new AASequenceImpl(sequence3).getSequence());
+
+        Sequence asi1 = new AASequenceImpl(sequence1);
+        Sequence asi2 = new AASequenceImpl(sequence2);
+        Sequence asi3 = new AASequenceImpl(sequence3);
+
+        Assert.assertEquals(sequence, asi1.getSequence());
+        Assert.assertEquals(sequence, asi2.getSequence());
+        Assert.assertEquals(sequence, asi3.getSequence());
+    }
+
+    /**
+     * This method test the generation of the annotated sequence.
+     */
+    public void testModifiedSequence() {
         // First go is without modifications.
         AASequenceImpl seq = new AASequenceImpl("LENNARTMARTENS");
         String withMods = seq.getModifiedSequence();
@@ -199,7 +200,7 @@ public class TestAASequenceImpl extends TestCase {
         seq = new AASequenceImpl("LENNARTMARTENS", mods);
         withMods = seq.getModifiedSequence();
         Assert.assertEquals("Ace-LENNAR<Ace>TM<Ox>ARTENS<Spe>-Met", withMods);
-	}
+    }
 
     /**
      * This method test adding a modification.
@@ -256,97 +257,96 @@ public class TestAASequenceImpl extends TestCase {
             annotated = "Ace-<Pyr>MPLHGM<Mox>TSR-Met";
             p = AASequenceImpl.parsePeptideFromAnnotatedSequence(annotated);
             fail("No IllegalArgumentException thrown when attempting to parse an annotated String starting with <Pyr>!");
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             // This is correct.
         }
         try {
             annotated = "Ace-MPLHGM<Mox>TS<R-Met";
             p = AASequenceImpl.parsePeptideFromAnnotatedSequence(annotated);
             fail("No IllegalArgumentException thrown when attempting to parse an annotated String with an unclosed '<'!");
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             // This is correct.
         }
         try {
             annotated = "Ace-MPLHGM<Mox>TS>R-Met";
             p = AASequenceImpl.parsePeptideFromAnnotatedSequence(annotated);
             fail("No IllegalArgumentException thrown when attempting to parse an annotated String with unbalanced '>'!");
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             // This is correct.
         }
         try {
             annotated = "Ace-MPLHGM<Mox>TS<zwazwa>R-Met";
             p = AASequenceImpl.parsePeptideFromAnnotatedSequence(annotated);
             fail("No IllegalArgumentException thrown when attempting to parse an annotated String with unknown modification code 'zwazwa'!");
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             // This is correct.
         }
     }
 
+    /**
+     * This method test the calculation of the Kyte & Doolittle
+     * GRAVY coefficient. It also test the caching behaviour.
+     */
+    public void testGravy() {
+        AASequenceImpl seq = new AASequenceImpl("LENNART", null);
+        Assert.assertEquals(-1.443, seq.getGravy(), Double.MIN_VALUE * 2);
+        // Get it from cache. I would be MOST surprised to see this fail,
+        // yet one never knows.
+        Assert.assertEquals(-1.443, seq.getGravy(), Double.MIN_VALUE * 2);
 
-	/**
-	 * This method test the calculation of the Kyte & Doolittle
-	 * GRAVY coefficient. It also test the caching behaviour.
-	 */
-	public void testGravy() {
-		AASequenceImpl seq = new AASequenceImpl("LENNART", null);
-		Assert.assertEquals(-1.443, seq.getGravy(), Double.MIN_VALUE*2);
-		// Get it from cache. I would be MOST surprised to see this fail,
-		// yet one never knows.
-		Assert.assertEquals(-1.443, seq.getGravy(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("MARTENS");
-		Assert.assertEquals(-1.329, seq.getGravy(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("LENNARTMARTENS");
-		Assert.assertEquals(-1.386, seq.getGravy(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("KRISGEVAERT");
-		Assert.assertEquals(-1.027, seq.getGravy(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("ARNDCQEGHILKMFPSTWYV");
-		Assert.assertEquals(-0.490, seq.getGravy(), Double.MIN_VALUE*2);
-	}
-	
-		/**
-	 * This method test the calculation of the Meek HPLC retention
-	 * time coefficient. It also test the caching behaviour.
-	 */
-	public void testMeek() {
-		AASequenceImpl seq = new AASequenceImpl("LENNARTMARTENSKRISGEVAERT", null);
-		Assert.assertEquals(-0.520, seq.getMeek(), Double.MIN_VALUE*2);
-		// Get it from cache. I would be MOST surprised to see this fail,
-		// yet one never knows.
-		Assert.assertEquals(-0.520, seq.getMeek(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("LENNARTMARTENSGEVAERT");
-		Assert.assertEquals(-0.390, seq.getMeek(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("ARNDCQEGHILKMFPSTWYV");
-		Assert.assertEquals(2.52, seq.getMeek(), Double.MIN_VALUE*2);
-		
-		seq.setSequence("ARNDCQEGHILKMFPSTWYVK");
-		Assert.assertEquals(2.224, seq.getMeek(), Double.MIN_VALUE*2);
-	}
+        seq.setSequence("MARTENS");
+        Assert.assertEquals(-1.329, seq.getGravy(), Double.MIN_VALUE * 2);
+
+        seq.setSequence("LENNARTMARTENS");
+        Assert.assertEquals(-1.386, seq.getGravy(), Double.MIN_VALUE * 2);
+
+        seq.setSequence("KRISGEVAERT");
+        Assert.assertEquals(-1.027, seq.getGravy(), Double.MIN_VALUE * 2);
+
+        seq.setSequence("ARNDCQEGHILKMFPSTWYV");
+        Assert.assertEquals(-0.490, seq.getGravy(), Double.MIN_VALUE * 2);
+    }
+
+    /**
+     * This method test the calculation of the Meek HPLC retention
+     * time coefficient. It also test the caching behaviour.
+     */
+    public void testMeek() {
+        AASequenceImpl seq = new AASequenceImpl("LENNARTMARTENSKRISGEVAERT", null);
+        Assert.assertEquals(-0.520, seq.getMeek(), Double.MIN_VALUE * 2);
+        // Get it from cache. I would be MOST surprised to see this fail,
+        // yet one never knows.
+        Assert.assertEquals(-0.520, seq.getMeek(), Double.MIN_VALUE * 2);
+
+        seq.setSequence("LENNARTMARTENSGEVAERT");
+        Assert.assertEquals(-0.390, seq.getMeek(), Double.MIN_VALUE * 2);
+
+        seq.setSequence("ARNDCQEGHILKMFPSTWYV");
+        Assert.assertEquals(2.52, seq.getMeek(), Double.MIN_VALUE * 2);
+
+        seq.setSequence("ARNDCQEGHILKMFPSTWYVK");
+        Assert.assertEquals(2.224, seq.getMeek(), Double.MIN_VALUE * 2);
+    }
 
     /**
      * This method test the mass calculation.
      */
     public void testMassCalc() {
         AASequenceImpl seq = new AASequenceImpl("YSFVATAER");
-        Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE*2);
+        Assert.assertEquals(1042.508345, seq.getMass(), Double.MIN_VALUE * 2);
 
         // Add a modification.
         seq.addModification(ModificationFactory.getModification("Ace", Modification.NTERMINUS, 0));
-        Assert.assertEquals(1085.526735, seq.getMass(), Double.MIN_VALUE*2);
+        Assert.assertEquals(1085.526735, seq.getMass(), Double.MIN_VALUE * 2);
 
         // Add a different modification.
         seq = new AASequenceImpl("YSMVATAER");
         seq.addModification(ModificationFactory.getModification("Mox", "M", 3));
-        Assert.assertEquals(1042.4753349999999, seq.getMass(), Double.MIN_VALUE*2);
+        Assert.assertEquals(1042.4753349999999, seq.getMass(), Double.MIN_VALUE * 2);
         seq.addModification(ModificationFactory.getModification("Ace", Modification.NTERMINUS, 0));
-        Assert.assertEquals(1085.4937249999999, seq.getMass(), Double.MIN_VALUE*2);
-        seq.addModification(ModificationFactory.getModification("Amide (C-term)", seq.getLength()+1));
-        Assert.assertEquals(1101.5124489999999, seq.getMass(), Double.MIN_VALUE*2);
+        Assert.assertEquals(1085.4937249999999, seq.getMass(), Double.MIN_VALUE * 2);
+        seq.addModification(ModificationFactory.getModification("Amide (C-term)", seq.getLength() + 1));
+        Assert.assertEquals(1101.5124489999999, seq.getMass(), Double.MIN_VALUE * 2);
     }
 
     /**
@@ -415,11 +415,11 @@ public class TestAASequenceImpl extends TestCase {
 
         int liSize = modifs.size();
         Assert.assertEquals(3, liSize);
-        for(int i=0;i<liSize;i++) {
-            int loc = ((Modification)modifs.get(i)).getLocation();
-            for(int j=0;j<ints.size();j++) {
-                int control = ((Integer)ints.get(j)).intValue();
-                if(control == loc) {
+        for (int i = 0; i < liSize; i++) {
+            int loc = ((Modification) modifs.get(i)).getLocation();
+            for (int j = 0; j < ints.size(); j++) {
+                int control = ((Integer) ints.get(j)).intValue();
+                if (control == loc) {
                     ints.remove(j);
                     break;
                 }
@@ -486,11 +486,11 @@ public class TestAASequenceImpl extends TestCase {
 
         int liSize = modifs.size();
         Assert.assertEquals(3, liSize);
-        for(int i=0;i<liSize;i++) {
-            int loc = ((Modification)modifs.get(i)).getLocation();
-            for(int j=0;j<ints.size();j++) {
-                int control = ((Integer)ints.get(j)).intValue();
-                if(control == loc) {
+        for (int i = 0; i < liSize; i++) {
+            int loc = ((Modification) modifs.get(i)).getLocation();
+            for (int j = 0; j < ints.size(); j++) {
+                int control = ((Integer) ints.get(j)).intValue();
+                if (control == loc) {
                     ints.remove(j);
                     break;
                 }

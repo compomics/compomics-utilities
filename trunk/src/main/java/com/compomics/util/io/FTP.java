@@ -35,8 +35,10 @@ import java.util.Vector;
  * @author Lennart Martens + someone on the net...
  */
 public class FTP {
-	// Class specific log4j logger for FTP instances.
-	Logger logger = Logger.getLogger(FTP.class);
+
+    // Class specific log4j logger for FTP instances.
+    Logger logger = Logger.getLogger(FTP.class);
+
     /**
      * FTP port to use for connection.
      */
@@ -78,12 +80,10 @@ public class FTP {
      * Pre-defined state.
      */
     public static int FILE_PUT = 2;
-
     /**
      * socket for data transfer to and from the server.
      */
     private Socket dataSocket = null;
-
     /**
      * Flag that indicates that we need to process a previous commands
      * reply first.

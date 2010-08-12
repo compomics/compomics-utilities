@@ -14,17 +14,33 @@ import java.util.*;
  * @since 2.9
  */
 public class RegExEnzyme extends Enzyme {
-	// Class specific log4j logger for RegExEnzyme instances.
-	Logger logger = Logger.getLogger(RegExEnzyme.class);
 
+    // Class specific log4j logger for RegExEnzyme instances.
+    Logger logger = Logger.getLogger(RegExEnzyme.class);
 
     private Pattern iCleavagePattern = null;
 
-
+    /**
+     * Create a new RegExEnzyme.
+     *
+     * @param aTitle
+     * @param aCleavage
+     * @param aRestrict
+     * @param aPosition
+     */
     public RegExEnzyme(String aTitle, String aCleavage, String aRestrict, String aPosition) {
         this(aTitle, aCleavage, aRestrict, aPosition, 1);
     }
 
+    /**
+     * Create a new RegExEnzyme.
+     *
+     * @param aTitle
+     * @param aCleavage
+     * @param aRestrict
+     * @param aPosition
+     * @param aMiscleavages
+     */
     public RegExEnzyme(String aTitle, String aCleavage, String aRestrict, String aPosition, int aMiscleavages) {
         // since the cleavage/restriction pattern for this class are expected to be a
         // regular expression, we don't want to use the default implementation
@@ -245,7 +261,6 @@ public class RegExEnzyme extends Enzyme {
             headerStart = 0;
         }
 
-
         int startPos = 0; // the start position of the current peptide
         int currEnd;  // the end position of the current peptide
         char after; // the amino acid after the cleavage site (where we have to check for restrictions)
@@ -329,7 +344,6 @@ public class RegExEnzyme extends Enzyme {
                         aProtein.getHeader().getFullHeaderWithAddenda());
             }
         }
-
     }
 
     /**
@@ -370,6 +384,4 @@ public class RegExEnzyme extends Enzyme {
             }
         }
     }
-
-
 }

@@ -44,8 +44,9 @@ import java.awt.event.KeyEvent;
  * @author Lennart Martens
  */
 public class JTableForDB extends AlternateRowColoursJTable {
-	// Class specific log4j logger for JTableForDB instances.
-	Logger logger = Logger.getLogger(JTableForDB.class);
+
+    // Class specific log4j logger for JTableForDB instances.
+    Logger logger = Logger.getLogger(JTableForDB.class);
 
     /**
      *  This String contains the date and time format.
@@ -289,7 +290,8 @@ public class JTableForDB extends AlternateRowColoursJTable {
                             Runtime.getRuntime().exec("startIexplore.cmd " + url);
                         } catch(Exception exc) {
                             logger.error(exc.getMessage(), exc);
-                            JOptionPane.showMessageDialog((Component) comp, "Unable to open internet view of selected entry: " + exc.getMessage() + ".", "Unable to open browser window", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog((Component) comp, "Unable to open internet view of selected entry: " + exc.getMessage()
+                                    + ".", "Unable to open browser window", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }

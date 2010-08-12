@@ -31,8 +31,10 @@ import java.util.*;
  * @author Lennart Martens
  */
 public class ModificationTemplate {
-	// Class specific log4j logger for ModificationTemplate instances.
-	Logger logger = Logger.getLogger(ModificationTemplate.class);
+
+    // Class specific log4j logger for ModificationTemplate instances.
+    Logger logger = Logger.getLogger(ModificationTemplate.class);
+
     /**
      * This HashMap will contain the following 'key-value' mappings: (key --> value) <br />
      * (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA})
@@ -111,7 +113,6 @@ public class ModificationTemplate {
         this.iMassDeltas = aMassDeltas;
         this.iArtifact = aArtifact;
     }
-
 
     /**
      * This method returns a double with the average mass difference
@@ -268,7 +269,8 @@ public class ModificationTemplate {
             } else if(lResidue.equals(com.compomics.util.interfaces.Modification.CTERMINUS)) {
                 lResidue = "Cterm";
             }
-            sb.append("\n\tResidue: " + lResidue + " " + deltas[com.compomics.util.interfaces.Modification.MONOISOTOPIC] + " Da [MONOISOTOPIC] " + deltas[com.compomics.util.interfaces.Modification.AVERAGE] + " Da [AVERAGE]");
+            sb.append("\n\tResidue: " + lResidue + " " + deltas[com.compomics.util.interfaces.Modification.MONOISOTOPIC]
+                    + " Da [MONOISOTOPIC] " + deltas[com.compomics.util.interfaces.Modification.AVERAGE] + " Da [AVERAGE]");
         }
 
         return sb.toString();

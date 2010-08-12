@@ -28,8 +28,9 @@ import com.compomics.util.db.DBMetaData;
  * @author Lennart Martens
  */
 public class InstanceVariables {
-	// Class specific log4j logger for InstanceVariables instances.
-	Logger logger = Logger.getLogger(InstanceVariables.class);
+
+    // Class specific log4j logger for InstanceVariables instances.
+    Logger logger = Logger.getLogger(InstanceVariables.class);
 
     /**
      * The Strings that contain the code for the instance variables that will
@@ -62,8 +63,12 @@ public class InstanceVariables {
             String type = aMeta.getConvertedColumnType(i);
             String name = aMeta.getColumnName(i);
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-            iVars[i+lCount] = "\t/**\n\t * This variable represents the key for the '" + aMeta.getColumnName(i) + "' column.\n\t */\n\tpublic static final String " + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + " = \"" + name.toUpperCase() + "\";";
-            StringBuffer lsb = new StringBuffer("\t/**\n\t * This variable represents the contents for the '" + aMeta.getColumnName(i) + "' column.\n\t */\n\tprotected " + type + " i" + name + " = ");
+            iVars[i+lCount] = "\t/**\n\t * This variable represents the key for the '"
+                    + aMeta.getColumnName(i) + "' column.\n\t */\n\tpublic static final String "
+                    + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase())
+                    + " = \"" + name.toUpperCase() + "\";";
+            StringBuffer lsb = new StringBuffer("\t/**\n\t * This variable represents the contents for the '"
+                    + aMeta.getColumnName(i) + "' column.\n\t */\n\tprotected " + type + " i" + name + " = ");
             if(Character.isUpperCase(type.charAt(0)) || type.endsWith("[]") || type.indexOf(".") >= 0) {
                 lsb.append("null;\n");
             } else {
@@ -89,7 +94,8 @@ public class InstanceVariables {
      * @return  String  with the code.
      */
     public String toString() {
-        StringBuffer lsb = new StringBuffer("\n\t/**\n\t * This variable tracks changes to the object.\n\t */\n\tprotected boolean iUpdated = false;\n\n");
+        StringBuffer lsb = new StringBuffer(
+                "\n\t/**\n\t * This variable tracks changes to the object.\n\t */\n\tprotected boolean iUpdated = false;\n\n");
         lsb.append("\t/**\n\t * This variable can hold generated primary key columns.\n\t */\n\tprotected Object[] iKeys = null;\n\n");
 
         for(int i=0;i<iVars.length;i++) {

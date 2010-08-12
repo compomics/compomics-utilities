@@ -37,8 +37,9 @@ import java.text.SimpleDateFormat;
  * @author Lennart Martens
  */
 public class FolderMonitor implements Runnable {
-	// Class specific log4j logger for FolderMonitor instances.
-	static Logger logger = Logger.getLogger(FolderMonitor.class);
+
+    // Class specific log4j logger for FolderMonitor instances.
+    static Logger logger = Logger.getLogger(FolderMonitor.class);
 
     public static final String HOST = "HOST";
     public static final String USER = "USER";
@@ -132,7 +133,6 @@ public class FolderMonitor implements Runnable {
      * Can remain '-1' to indicate no limits.
      */
     private long iLimit = -1l;
-
 
     /**
      * This constructor allows the creation of a FolderMonitor that will take care
@@ -472,6 +472,11 @@ public class FolderMonitor implements Runnable {
         }
     }
 
+    /**
+     * TODO: JavaDoc missing.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         /*
         // FTP funtionality.

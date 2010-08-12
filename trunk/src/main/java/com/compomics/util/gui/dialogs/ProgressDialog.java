@@ -23,8 +23,9 @@ import java.awt.*;
  * @version $Id: ProgressDialog.java,v 1.1 2009/08/02 13:23:46 lennart Exp $
  */
 public class ProgressDialog extends JDialog {
-	// Class specific log4j logger for ProgressDialog instances.
-	Logger logger = Logger.getLogger(ProgressDialog.class);
+
+    // Class specific log4j logger for ProgressDialog instances.
+    Logger logger = Logger.getLogger(ProgressDialog.class);
 
     private JProgressBar iProgress = new JProgressBar(JProgressBar.HORIZONTAL);
 
@@ -114,7 +115,8 @@ public class ProgressDialog extends JDialog {
      */
     public void setProgress(int aValue, String aMessage) {
         if(aValue < iProgress.getMinimum() || aValue > iProgress.getMaximum()) {
-            throw new IllegalArgumentException("Your value (" + aValue + ") was out of bounds (" + iProgress.getMinimum() + "-" + iProgress.getMaximum() + ")!");
+            throw new IllegalArgumentException("Your value (" + aValue + ") was out of bounds ("
+                    + iProgress.getMinimum() + "-" + iProgress.getMaximum() + ")!");
         }
         iProgress.setValue(aValue);
         if(aMessage != null) {

@@ -34,8 +34,9 @@ import java.io.IOException;
  * @author Lennart Martens
  */
 public class DBResultSet extends AbstractTableModel {
-	// Class specific log4j logger for DBResultSet instances.
-	Logger logger = Logger.getLogger(DBResultSet.class);
+
+    // Class specific log4j logger for DBResultSet instances.
+    Logger logger = Logger.getLogger(DBResultSet.class);
 
     /**
      * The number of columns in this resultset.

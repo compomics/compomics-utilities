@@ -31,8 +31,9 @@ import java.sql.Types;
  * @author Lennart Martens
  */
 public class PersistableCode {
-	// Class specific log4j logger for PersistableCode instances.
-	Logger logger = Logger.getLogger(PersistableCode.class);
+
+    // Class specific log4j logger for PersistableCode instances.
+    Logger logger = Logger.getLogger(PersistableCode.class);
 
     /**
      * This variable holds the generated code.
@@ -80,7 +81,8 @@ public class PersistableCode {
         query.append(")");
 
         // Now to generate the code.
-        StringBuffer lsb = new StringBuffer("\t/**\n\t * This method allows the caller to insert the data represented by this\n\t * object in a persistent store.\n");
+        StringBuffer lsb = new StringBuffer(
+                "\t/**\n\t * This method allows the caller to insert the data represented by this\n\t * object in a persistent store.\n");
         lsb.append("\t *\n\t * @param   aConn Connection to the persitent store.\n\t */\n");
         lsb.append("\tpublic int persist(Connection aConn) throws SQLException {\n");
         lsb.append("\t\tPreparedStatement lStat = aConn.prepareStatement(\"" + query.toString() + "\");\n");
@@ -176,7 +178,6 @@ public class PersistableCode {
             }
         }
 
-
         lsb.append("\t\tthis.iUpdated = false;\n");
         lsb.append("\t\treturn result;\n");
         lsb.append("\t}\n");
@@ -199,5 +200,4 @@ public class PersistableCode {
     public String toString() {
         return "\n" + iCode + "\n";
     }
-
 }

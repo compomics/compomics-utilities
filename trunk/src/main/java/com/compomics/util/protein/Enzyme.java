@@ -23,21 +23,15 @@ import java.util.Vector;
  * $Date: 2008/11/18 11:39:11 $
  */
 
-/*
- * CVS information:
- *
- * $Revision: 1.5 $
- * $Date: 2008/11/18 11:39:11 $
- */
-
 /**
  * This class implements the functionality for an Enzyme.
  *
  * @author Lennart Martens.
  */
 public class Enzyme implements Cloneable {
-	// Class specific log4j logger for Enzyme instances.
-	Logger logger = Logger.getLogger(Enzyme.class);
+
+    // Class specific log4j logger for Enzyme instances.
+    Logger logger = Logger.getLogger(Enzyme.class);
 
     public static final int CTERM = 0;
     public static final int NTERM = 1;
@@ -175,7 +169,6 @@ public class Enzyme implements Cloneable {
         } else {
             iCleavables = new HashMap();
         }
-
     }
 
     /**

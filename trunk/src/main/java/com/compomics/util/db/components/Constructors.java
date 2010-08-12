@@ -23,14 +23,15 @@ import com.compomics.util.db.DBMetaData;
  */
 
 /**
- * This class will generate the code for a default and full constructor for a DBAccessor, defined by the
- * metadata passed in via the constructor.
+ * This class will generate the code for a default and full constructor for a DBAccessor, 
+ * defined by the metadata passed in via the constructor.
  *
  * @author Lennart Martens
  */
 public class Constructors {
-	// Class specific log4j logger for Constructors instances.
-	Logger logger = Logger.getLogger(Constructors.class);
+
+    // Class specific log4j logger for Constructors instances.
+    Logger logger = Logger.getLogger(Constructors.class);
 
     /**
      * This String will contain the constructors code.
@@ -51,39 +52,51 @@ public class Constructors {
         table = table.substring(0, 1).toUpperCase() + table.substring(1).toLowerCase();
 
         // Default constructor.
-        StringBuffer lsb = new StringBuffer("\t/**\n\t * Default constructor.\n\t */\n\tpublic " + table + "TableAccessor() {\n\t}\n\n");
+        StringBuffer lsb = new StringBuffer(
+                "\t/**\n\t * Default constructor.\n\t */\n\tpublic "
+                + table + "TableAccessor() {\n\t}\n\n");
 
         // The code in progress.
-        lsb.append("\t/**\n\t * This constructor allows the creation of the '" + table + "TableAccessor' object based on a set of values in the HashMap.\n\t *\n");
-        lsb.append("\t * @param\taParams\tHashMap with the parameters to initialize this object with.\n\t *\t\t<i>Please use only constants defined on this class as keys in the HashMap!</i>\n\t */\n");
+        lsb.append("\t/**\n\t * This constructor allows the creation of the '"
+                + table + "TableAccessor' object based on a set of values in the HashMap.\n\t *\n");
+        lsb.append("\t * @param\taParams\tHashMap with the parameters to initialize this object with.\n"
+                + "\t *\t\t<i>Please use only constants defined on this class as keys in the HashMap!</i>\n\t */\n");
         lsb.append("\tpublic " + table + "TableAccessor(HashMap aParams) {\n");
         // The loop to generate all code.
         for(int i=0;i<lCount;i++) {
             String name = aMeta.getColumnName(i);
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-            lsb.append("\t\tif(aParams.containsKey(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")) {\n\t\t\tthis.i" + name);
+            lsb.append("\t\tif(aParams.containsKey(" +
+                    (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")) {\n\t\t\tthis.i" + name);
 
             // Check the type. If it is Object or array, a cast suffices. If it is a primitive, we'll have to accommodate.
             String type = aMeta.getConvertedColumnType(i);
             if(Character.isLowerCase(type.charAt(0)) && !type.endsWith("[]")) {
                 // Primitive. Let's accommodate.
                 if(type.equals("int")) {
-                    lsb.append(" = ((Integer)aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).intValue();");
+                    lsb.append(" = ((Integer)aParams.get(" +
+                            (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).intValue();");
                 } else if(type.equals("long")) {
-                    lsb.append(" = ((Long)aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).longValue();");
+                    lsb.append(" = ((Long)aParams.get(" +
+                            (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).longValue();");
                 } else if(type.equals("double")) {
-                    lsb.append(" = ((Double)aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).doubleValue();");
+                    lsb.append(" = ((Double)aParams.get(" +
+                            (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).doubleValue();");
                 } else if(type.equals("char")) {
-                    lsb.append(" = ((Character)aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).charValue();");
+                    lsb.append(" = ((Character)aParams.get(" +
+                            (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).charValue();");
                 } else if(type.equals("boolean")) {
-                    lsb.append(" = ((Boolean)aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).booleanValue();");
+                    lsb.append(" = ((Boolean)aParams.get(" +
+                            (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ")).booleanValue();");
                 } else {
                     // Do an object cast as well. Better then nothing...
-                    lsb.append(" = (" + aMeta.getConvertedColumnType(i) + ")aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ");");
+                    lsb.append(" = (" + aMeta.getConvertedColumnType(i) + ")aParams.get(" +
+                            (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ");");
                 }
             } else {
                 // Object type, cast directly.
-                lsb.append(" = (" + aMeta.getConvertedColumnType(i) + ")aParams.get(" + (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ");");
+                lsb.append(" = (" + aMeta.getConvertedColumnType(i) + ")aParams.get(" +
+                        (Character.isDigit(name.charAt(0))?"i"+name.toUpperCase():name.toUpperCase()) + ");");
             }
 
             lsb.append("\n\t\t}\n");
@@ -91,7 +104,8 @@ public class Constructors {
         }
         lsb.append("\t\tthis.iUpdated = true;\n\t}\n");
 
-        lsb.append("\n\n\t/**\n\t * This constructor allows the creation of the '" + table + "TableAccessor' object based on a resultset\n\t * obtained by a 'select * from " + table + "' query.\n\t *\n");
+        lsb.append("\n\n\t/**\n\t * This constructor allows the creation of the '" + table
+                + "TableAccessor' object based on a resultset\n\t * obtained by a 'select * from " + table + "' query.\n\t *\n");
         lsb.append("\t * @param\taResultSet\tResultSet with the required columns to initialize this object with.\n");
         lsb.append("\t * @exception\tSQLException\twhen the ResultSet could not be read.\n\t */\n");
         lsb.append("\tpublic " + table + "TableAccessor(ResultSet aResultSet) throws SQLException {\n");

@@ -36,8 +36,9 @@ import java.io.PrintWriter;
  * @author Lennart Martens
  */
 public class NucleotideSequence {
-	// Class specific log4j logger for NucleotideSequence instances.
-	Logger logger = Logger.getLogger(NucleotideSequence.class);
+
+    // Class specific log4j logger for NucleotideSequence instances.
+    Logger logger = Logger.getLogger(NucleotideSequence.class);
 
     /**
      * This variable contains the nucleotide sequence.
@@ -48,7 +49,6 @@ public class NucleotideSequence {
      * This variable contains the header for the sequence.
      */
     private Header iHeader = null;
-
 
     /**
      * This constructor requires a NucleotideSequenceImpl as argument.

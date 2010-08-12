@@ -9,8 +9,6 @@
  * User: Lennart
  * Date: 17-jun-02
  * Time: 16:26:33
- * To change template for new interface use 
- * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.compomics.util.db.interfaces;
 import org.apache.log4j.Logger;
@@ -26,7 +24,6 @@ import java.util.HashMap;
  * $Date: 2007/07/06 09:41:54 $
  */
 
-
 /**
  * This interface indicates that the implementing class can be stored, manipulated and deleted in a
  * permanent storage (typically a RDBMS).
@@ -34,6 +31,7 @@ import java.util.HashMap;
  * @author  Lennart Martens
  */
 public interface DBElement {
+
     /**
      * This method should be called to fill the DBElement with current data
      * as present in the database.

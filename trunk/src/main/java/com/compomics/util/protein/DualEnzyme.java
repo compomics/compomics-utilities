@@ -32,8 +32,9 @@ import java.util.*;
  * @author Lennart Martens
  */
 public class DualEnzyme extends Enzyme {
-	// Class specific log4j logger for DualEnzyme instances.
-	static Logger logger = Logger.getLogger(DualEnzyme.class);
+
+    // Class specific log4j logger for DualEnzyme instances.
+    static Logger logger = Logger.getLogger(DualEnzyme.class);
 
     /**
      * The HashMap with the cleavables for the N-terminal side of the
@@ -51,6 +52,7 @@ public class DualEnzyme extends Enzyme {
      * The code for N-terminal position in the resultant peptide.
      */
     public static final int NTERMINAL = 0;
+
     /**
      * The code for C-terminal position in the resultant peptide.
      */
@@ -121,7 +123,6 @@ public class DualEnzyme extends Enzyme {
             iNtermCleavables = new HashMap();
             iCtermCleavables = new HashMap();
         }
-
     }
 
     /**
@@ -169,7 +170,6 @@ public class DualEnzyme extends Enzyme {
             default:
                 throw new IllegalArgumentException("You specified " + aTerminus + " as the terminus code, while it should be " + DualEnzyme.NTERMINAL + " (NTERMINAL) or " + DualEnzyme.CTERMINAL + " (CTERMINAL)!");
         }
-
     }
 
     /**
@@ -513,7 +513,6 @@ public class DualEnzyme extends Enzyme {
         return result;
     }
 
-
     /**
      * This method reports on the possibility that the presented subsequence
      * (represented by the start and end location in the parent) is the result
@@ -667,6 +666,11 @@ public class DualEnzyme extends Enzyme {
         return cleavable;
     }
 
+    /**
+     * TODO: JavaDoc missing.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Enzyme dual = new DualEnzyme("TestDualEnzyme", "D", "R", "P", "Cterm", 0);
         Protein[] p = dual.cleave(new Protein(">sw|Q55645 (15-45)|TEST_HUMAN Test Protein for the cleave() method.", "FGHDKLMDTGKRVWRGHF"));

@@ -22,29 +22,29 @@ import org.apache.log4j.Logger;
  * @author	Lennart Martens
  */
 public interface Sequence {
-	
-	/**
-	 * This method will set the sequence. <br />
-	 * Note that most implementations will also allow you 
-	 * to set this via the constructor.
-	 *
-	 * @param	aSequence	String with the sequence.
-	 */
-	public void setSequence(String aSequence);
-	
-	/**
-	 * This method will retrieve the sequence.
-	 *
-	 * @return	String	with the sequence.
-	 */
-	public String getSequence();
-	
-	/**
-	 * This method will return the mass for the sequence.
-	 *
-	 * @return	double	with the mass.
-	 */
-	public double getMass();
+
+    /**
+     * This method will set the sequence. <br />
+     * Note that most implementations will also allow you
+     * to set this via the constructor.
+     *
+     * @param	aSequence	String with the sequence.
+     */
+    public void setSequence(String aSequence);
+
+    /**
+     * This method will retrieve the sequence.
+     *
+     * @return	String	with the sequence.
+     */
+    public String getSequence();
+
+    /**
+     * This method will return the mass for the sequence.
+     *
+     * @return	double	with the mass.
+     */
+    public double getMass();
 
     /**
      * This method reports on the length of the current sequence.

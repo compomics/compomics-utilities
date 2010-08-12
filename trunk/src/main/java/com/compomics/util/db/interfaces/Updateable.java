@@ -9,8 +9,7 @@
  * User: Lennart
  * Date: 17-jun-02
  * Time: 16:23:17
- * To change template for new interface use 
- * Code Style | Class Templates options (Tools | IDE Options).
+
  */
 package com.compomics.util.db.interfaces;
 import org.apache.log4j.Logger;
@@ -24,7 +23,6 @@ import java.sql.SQLException;
  * $Revision: 1.3 $
  * $Date: 2007/07/06 09:41:54 $
  */
-
 
 /**
  * This interface indicates that the implementing class can be updated in permanent storage.

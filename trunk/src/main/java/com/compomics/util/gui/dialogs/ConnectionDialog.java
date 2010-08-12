@@ -36,8 +36,9 @@ import java.util.ArrayList;
  * @author Lennart Martens
  */
 public class ConnectionDialog extends JDialog {
-	// Class specific log4j logger for ConnectionDialog instances.
-	Logger logger = Logger.getLogger(ConnectionDialog.class);
+
+    // Class specific log4j logger for ConnectionDialog instances.
+    Logger logger = Logger.getLogger(ConnectionDialog.class);
 
     /***
      * ArrayList that holds all the preconfigured connections.
@@ -406,6 +407,11 @@ public class ConnectionDialog extends JDialog {
         }
     }
 
+    /**
+     * TODO: JavaDoc missing.
+     *
+     * @param aConnectionProperties
+     */
     private void parseConnectionProperties(final Properties aConnectionProperties) {
         // Two options here - old-fashioned, single predefined configuration,
         // or hot new multiple predefined configurations.
@@ -456,23 +462,41 @@ public class ConnectionDialog extends JDialog {
         }
     }
 
+    /**
+     * TODO: JavaDoc missing.
+     */
     private class InnerConfigParams {
+
         private String iUser = null;
         private String iName = null;
         private String iDriver = null;
         private String iUrl = null;
 
+        /**
+         * TODO: JavaDoc missing.
+         *
+         * @param aName
+         * @param aDriver
+         * @param aUrl
+         */
         private InnerConfigParams(String aName, String aDriver, String aUrl) {
             iName = aName;
             iDriver = aDriver;
             iUrl = aUrl;
         }
 
+        /**
+         * TODO: JavaDoc missing.
+         *
+         * @param aUser
+         * @param aName
+         * @param aDriver
+         * @param aUrl
+         */
         private InnerConfigParams(String aUser, String aName, String aDriver, String aUrl) {
             this(aName, aDriver, aUrl);
             iUser = aUser;
         }
-
 
         public String getUser() {
             return iUser;

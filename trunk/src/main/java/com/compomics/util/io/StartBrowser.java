@@ -13,6 +13,11 @@ public class StartBrowser {
     public StartBrowser() {
     }
 
+    /**
+     * Opens the given URL in the default browser.
+     *
+     * @param aURL the URL to open
+     */
     public static void start(String aURL) {
         String url = aURL;
         String os = System.getProperty("os.name").toLowerCase();
@@ -42,5 +47,4 @@ public class StartBrowser {
             return;
         }
     }
-
 }

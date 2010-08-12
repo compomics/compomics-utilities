@@ -29,8 +29,9 @@ import com.compomics.util.db.DBMetaData;
  * @author Lennart Martens
  */
 public class RetrievableCode {
-	// Class specific log4j logger for RetrievableCode instances.
-	Logger logger = Logger.getLogger(RetrievableCode.class);
+
+    // Class specific log4j logger for RetrievableCode instances.
+    Logger logger = Logger.getLogger(RetrievableCode.class);
 
     /**
      * This String will hold the generated code.
@@ -66,13 +67,15 @@ public class RetrievableCode {
         query.append("\"");
 
         // Now generate the code.
-        StringBuffer lsb = new StringBuffer("\t/**\n\t * This method allows the caller to read data for this\n\t * object from a persistent store based on the specified keys.\n");
+        StringBuffer lsb = new StringBuffer(
+                "\t/**\n\t * This method allows the caller to read data for this\n\t * object from a persistent store based on the specified keys.\n");
         lsb.append("\t *\n\t * @param   aConn Connection to the persitent store.\n\t */\n");
         lsb.append("\tpublic void retrieve(Connection aConn, HashMap aKeys) throws SQLException {\n");
         lsb.append("\t\t// First check to see whether all PK fields are present.\n");
         for(int i=0;i<pkCols.length;i++) {
             lsb.append("\t\tif(!aKeys.containsKey(" + (Character.isDigit(pkCols[i].charAt(0))?"i"+pkCols[i].toUpperCase():pkCols[i].toUpperCase()) + ")) {\n");
-            lsb.append("\t\t\tthrow new IllegalArgumentException(\"Primary key field '" + (Character.isDigit(pkCols[i].charAt(0))?"i"+pkCols[i].toUpperCase():pkCols[i].toUpperCase()) + "' is missing in HashMap!\");\n");
+            lsb.append("\t\t\tthrow new IllegalArgumentException(\"Primary key field '" + (Character.isDigit(pkCols[i].charAt(0))?"i"+pkCols[i].toUpperCase():pkCols[i].toUpperCase())
+                    + "' is missing in HashMap!\");\n");
             lsb.append("\t\t} else {\n");
             String lCol = pkCols[i];
             String name = "i" + lCol.substring(0,1).toUpperCase() + lCol.substring(1).toLowerCase();
@@ -180,9 +183,11 @@ public class RetrievableCode {
         lsb.append("\t\tlRS.close();\n");
         lsb.append("\t\tlStat.close();\n");
         lsb.append("\t\tif(hits>1) {\n");
-        lsb.append("\t\t\tthrow new SQLException(\"More than one hit found for the specified primary keys in the '" + table + "' table! Object is initialized to last row returned.\");\n");
+        lsb.append("\t\t\tthrow new SQLException(\"More than one hit found for the specified primary keys in the '"
+                + table + "' table! Object is initialized to last row returned.\");\n");
         lsb.append("\t\t} else if(hits == 0) {\n");
-        lsb.append("\t\t\tthrow new SQLException(\"No hits found for the specified primary keys in the '" + table + "' table! Object is not initialized correctly!\");\n");
+        lsb.append("\t\t\tthrow new SQLException(\"No hits found for the specified primary keys in the '"
+                + table + "' table! Object is not initialized correctly!\");\n");
         lsb.append("\t\t}\n");
         lsb.append("\t}\n");
 

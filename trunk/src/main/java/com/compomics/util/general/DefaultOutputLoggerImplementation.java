@@ -13,7 +13,6 @@
 package com.compomics.util.general;
 import org.apache.log4j.Logger;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.PrintStream;
@@ -31,8 +30,9 @@ import java.io.PrintStream;
  * @author Lennart Martens
  */
 public class DefaultOutputLoggerImplementation implements com.compomics.util.interfaces.Logger {
-	// Class specific log4j logger for DefaultOutputLoggerImplementation instances.
-	org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DefaultOutputLoggerImplementation.class);
+
+    // Class specific log4j logger for DefaultOutputLoggerImplementation instances.
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DefaultOutputLoggerImplementation.class);
 
     /**
      * The output writer for normal and timed messages.

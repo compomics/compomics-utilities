@@ -49,11 +49,13 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 public class TableSorter extends TableMap {
-	// Class specific log4j logger for TableSorter instances.
-	Logger logger = Logger.getLogger(TableSorter.class);
-    int             indexes[];
-    Vector          sortingColumns = new Vector();
-    boolean         ascending = true;
+
+    // Class specific log4j logger for TableSorter instances.
+    Logger logger = Logger.getLogger(TableSorter.class);
+
+    int indexes[];
+    Vector sortingColumns = new Vector();
+    boolean ascending = true;
     int compares;
     MouseAdapter listMouseListener = null;
 
@@ -113,7 +115,6 @@ public class TableSorter extends TableMap {
          * Number might want to do this to save space and avoid
          * unnecessary heap allocation.
          */
-
         if (type.getSuperclass() == java.lang.Number.class) {
             Number n1 = (Number)o1;
             double d1 = n1.doubleValue();

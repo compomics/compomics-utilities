@@ -36,11 +36,12 @@ import java.io.File;
  * @author Lennart Martens
  */
 public class DBAccessorGenerator {
-	// Class specific log4j logger for DBAccessorGenerator instances.
-	private static Logger logger = Logger.getLogger(DBAccessorGenerator.class);
+
+    // Class specific log4j logger for DBAccessorGenerator instances.
+    private static Logger logger = Logger.getLogger(DBAccessorGenerator.class);
 
     /**
-     * Defailt constructor.
+     * Default constructor.
      */
     public DBAccessorGenerator() {
     }

@@ -32,8 +32,9 @@ import java.text.SimpleDateFormat;
  * @author Lennart Martens
  */
 public class DBAccessor {
-	// Class specific log4j logger for DBAccessor instances.
-	Logger logger = Logger.getLogger(DBAccessor.class);
+
+    // Class specific log4j logger for DBAccessor instances.
+    Logger logger = Logger.getLogger(DBAccessor.class);
 
     /**
      * The name for the generated class.
@@ -79,7 +80,6 @@ public class DBAccessor {
      * The generated code to implement Persistable.
      */
     private PersistableCode iPersistable = null;
-
 
     /**
      * This constructor creates all code for the accessor,
@@ -128,7 +128,9 @@ public class DBAccessor {
         SimpleDateFormat lsdTime = new SimpleDateFormat("HH:mm:ss");
         String lDate = lsdDate.format(date);
         String time = lsdTime.format(date);
-        StringBuffer lsb = new StringBuffer("/*\n * Created by the DBAccessor generator.\n * Programmer: Lennart Martens\n * Date: " + lDate + "\n * Time: " + time + "\n */\n");
+        StringBuffer lsb = new StringBuffer(
+                "/*\n * Created by the DBAccessor generator.\n * Programmer: Lennart Martens\n * Date: "
+                + lDate + "\n * Time: " + time + "\n */\n");
         // Package (if any).
         if(iPackage != null && !iPackage.equals("")) {
             lsb.append("package " + iPackage + ";\n");
@@ -142,7 +144,8 @@ public class DBAccessor {
         lsb.append("\n/*\n * CVS information:\n *\n * $Revision: 1.4 $\n * $Date: 2007/07/06 09:41:53 $\n */\n");
         // Class documentation.
         int location = iName.indexOf("Table");
-        lsb.append("\n/**\n * This class is a generated accessor for the " + iName.substring(0, location) + " table.\n *\n * @author DBAccessor generator class (Lennart Martens).\n */\n");
+        lsb.append("\n/**\n * This class is a generated accessor for the " + iName.substring(0, location)
+                + " table.\n *\n * @author DBAccessor generator class (Lennart Martens).\n */\n");
         // Class name + extensions/interfaces.
         lsb.append("public class " + iName + " implements Deleteable, Retrievable, Updateable, Persistable {\n");
 

@@ -35,8 +35,9 @@ import java.io.PrintWriter;
  * @see com.compomics.util.protein.AASequenceImpl
  */
 public class Protein {
-	// Class specific log4j logger for Protein instances.
-	Logger logger = Logger.getLogger(Protein.class);
+
+    // Class specific log4j logger for Protein instances.
+    Logger logger = Logger.getLogger(Protein.class);
 
     /**
      * The sequence is a very important element in a Protein instance.

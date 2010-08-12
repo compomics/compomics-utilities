@@ -33,8 +33,9 @@ import java.io.FilterInputStream;
  * @author Lennart Martens
  */
 public class MonitorableFileInputStream extends MonitorableInputStream {
-	// Class specific log4j logger for MonitorableFileInputStream instances.
-	Logger logger = Logger.getLogger(MonitorableFileInputStream.class);
+
+    // Class specific log4j logger for MonitorableFileInputStream instances.
+    Logger logger = Logger.getLogger(MonitorableFileInputStream.class);
 
     /**
      * The maximum readable size.
@@ -51,7 +52,6 @@ public class MonitorableFileInputStream extends MonitorableInputStream {
      * to yield an integer scale.
      */
     private int iFactor = 0;
-
 
     /**
      * This constructor takes a file to load the FileInputStream from.
@@ -221,5 +221,4 @@ public class MonitorableFileInputStream extends MonitorableInputStream {
         super.reset();
         iCurrent = 0l;
     }
-
 }

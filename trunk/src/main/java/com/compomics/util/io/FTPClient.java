@@ -32,8 +32,9 @@ import java.io.*;
  * @author Lennart Martens
  */
 public class FTPClient {
-	// Class specific log4j logger for FTPClient instances.
-	Logger logger = Logger.getLogger(FTPClient.class);
+
+    // Class specific log4j logger for FTPClient instances.
+    Logger logger = Logger.getLogger(FTPClient.class);
 
     /**
      * The String with the hostname for the FTP server.
@@ -141,7 +142,6 @@ public class FTPClient {
                 pw.flush();
                 pw.close();
             }
-
 
             // Flush and close the streams.
             tos.flush();

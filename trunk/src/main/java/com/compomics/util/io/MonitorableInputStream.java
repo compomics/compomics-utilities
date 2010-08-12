@@ -35,8 +35,9 @@ import java.io.InputStream;
  * @author Lennart Martens
  */
 public class MonitorableInputStream extends FilterInputStream implements Monitorable {
-	// Class specific log4j logger for MonitorableInputStream instances.
-	Logger logger = Logger.getLogger(MonitorableInputStream.class);
+
+    // Class specific log4j logger for MonitorableInputStream instances.
+    Logger logger = Logger.getLogger(MonitorableInputStream.class);
 
     /**
      * The total length to be read from the specified InputStream.
@@ -84,7 +85,6 @@ public class MonitorableInputStream extends FilterInputStream implements Monitor
         this(aIn, false);
         iMaxSet = true;
     }
-
 
     /**
      * A MonitorableInputStream can only be constructed around an existing InputStream.

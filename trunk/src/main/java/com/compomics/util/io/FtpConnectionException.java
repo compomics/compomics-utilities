@@ -21,13 +21,20 @@ import org.apache.log4j.Logger;
  */
 
 /**
- * This class 
+ * This class handles an FTP connection exception.
  *
  * @author Lennart
  */
 public class FtpConnectionException extends FtpProtocolException {
-	// Class specific log4j logger for FtpConnectionException instances.
-	Logger logger = Logger.getLogger(FtpConnectionException.class);
+
+    // Class specific log4j logger for FtpConnectionException instances.
+    Logger logger = Logger.getLogger(FtpConnectionException.class);
+    
+    /**
+     * Creates a new FtpConnectionException from the given string.
+     *
+     * @param s the FTP connection exception as a string
+     */
     FtpConnectionException(String s) {
         super(s);
     }

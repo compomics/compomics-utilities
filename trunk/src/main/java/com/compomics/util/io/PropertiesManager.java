@@ -8,17 +8,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-
-/**
- * Created by IntelliJ IDEA. User: kenny Date: Feb 23, 2010 Time: 10:03:33 AM
- * <p/>
- * This class
- */
-public class PropertiesManager {
-    // Class specific log4j logger for PropertiesManager instances.
-    Logger logger = Logger.getLogger(PropertiesManager.class);
-
-
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -27,6 +16,10 @@ public class PropertiesManager {
  * <p/>
  * This class holds all user properties for ms_lims.
  */
+public class PropertiesManager {
+
+    // Class specific log4j logger for PropertiesManager instances.
+    Logger logger = Logger.getLogger(PropertiesManager.class);
 
     /**
      * The singleton instance of the ms properties.

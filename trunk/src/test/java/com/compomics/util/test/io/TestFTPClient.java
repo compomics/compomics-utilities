@@ -35,8 +35,9 @@ import junit.framework.*;
  * @see com.compomics.util.io.FTPClient
  */
 public class TestFTPClient extends TestCaseLM {
-	// Class specific log4j logger for TestFTPClient instances.
-	Logger logger = Logger.getLogger(TestFTPClient.class);
+
+    // Class specific log4j logger for TestFTPClient instances.
+    Logger logger = Logger.getLogger(TestFTPClient.class);
 
     private String iServer = null;
     private String iUser = null;

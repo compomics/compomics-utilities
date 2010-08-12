@@ -38,8 +38,9 @@ import junit.framework.*;
  * @see com.compomics.util.io.MonitorableInputStream
  */
 public class TestMonitorableInputStream extends TestCaseLM {
-	// Class specific log4j logger for TestMonitorableInputStream instances.
-	Logger logger = Logger.getLogger(TestMonitorableInputStream.class);
+
+    // Class specific log4j logger for TestMonitorableInputStream instances.
+    Logger logger = Logger.getLogger(TestMonitorableInputStream.class);
 
     public TestMonitorableInputStream() {
         this("Test scenario for the MonitorableInputStream.");

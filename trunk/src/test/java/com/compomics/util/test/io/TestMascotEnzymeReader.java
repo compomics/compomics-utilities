@@ -40,8 +40,9 @@ import junit.framework.*;
  * @see com.compomics.util.io.MascotEnzymeReader
  */
 public class TestMascotEnzymeReader extends TestCaseLM {
-	// Class specific log4j logger for TestMascotEnzymeReader instances.
-	Logger logger = Logger.getLogger(TestMascotEnzymeReader.class);
+
+    // Class specific log4j logger for TestMascotEnzymeReader instances.
+    Logger logger = Logger.getLogger(TestMascotEnzymeReader.class);
 
     public TestMascotEnzymeReader() {
         this("Test scenario for the MascotEnzymeReader class.");
@@ -360,6 +361,5 @@ public class TestMascotEnzymeReader extends TestCaseLM {
         } catch(IOException ioe) {
             fail("IOException while testing whether a received Enzyme is in fact a copy: '" + ioe.getMessage() + "'.");
         }
-
     }
 }

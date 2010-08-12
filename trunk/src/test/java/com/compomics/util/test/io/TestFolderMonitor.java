@@ -33,8 +33,9 @@ import java.util.HashMap;
  * @see com.compomics.util.io.FolderMonitor
  */
 public class TestFolderMonitor extends TestCaseLM {
-	// Class specific log4j logger for TestFolderMonitor instances.
-	Logger logger = Logger.getLogger(TestFolderMonitor.class);
+
+    // Class specific log4j logger for TestFolderMonitor instances.
+    Logger logger = Logger.getLogger(TestFolderMonitor.class);
 
     public TestFolderMonitor() {
         this("Test scenario for the FolderMonitor class.");

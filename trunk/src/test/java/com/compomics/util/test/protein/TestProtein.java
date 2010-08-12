@@ -36,8 +36,9 @@ import junit.TestCaseLM;
  * @see com.compomics.util.protein.Protein
  */
 public class TestProtein extends TestCaseLM {
-	// Class specific log4j logger for TestProtein instances.
-	Logger logger = Logger.getLogger(TestProtein.class);
+
+    // Class specific log4j logger for TestProtein instances.
+    Logger logger = Logger.getLogger(TestProtein.class);
 
     public TestProtein() {
         this("The test scenario for the Protein class.");

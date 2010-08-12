@@ -32,8 +32,9 @@ import com.compomics.util.protein.Enzyme;
  * @author Lennart Martens
  */
 public class TestDualEnzyme extends TestCaseLM {
-	// Class specific log4j logger for TestDualEnzyme instances.
-	Logger logger = Logger.getLogger(TestDualEnzyme.class);
+
+    // Class specific log4j logger for TestDualEnzyme instances.
+    Logger logger = Logger.getLogger(TestDualEnzyme.class);
 
     public TestDualEnzyme() {
         this("Test scenario for the DualEnzyme class.");
@@ -550,7 +551,7 @@ public class TestDualEnzyme extends TestCaseLM {
         }
         */
 
-        // Noow change the clone and see if the original changes.
+        // Now change the clone and see if the original changes.
         clone.setCleavage("G", DualEnzyme.NTERMINAL);
         clone.setCleavage("W", DualEnzyme.CTERMINAL);
         clone.setMiscleavages(1);

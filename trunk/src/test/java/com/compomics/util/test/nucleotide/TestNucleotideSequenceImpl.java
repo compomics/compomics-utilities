@@ -38,8 +38,9 @@ import java.util.HashMap;
  * @see com.compomics.util.nucleotide.NucleotideSequenceImpl
  */
 public class TestNucleotideSequenceImpl extends TestCaseLM {
-	// Class specific log4j logger for TestNucleotideSequenceImpl instances.
-	Logger logger = Logger.getLogger(TestNucleotideSequenceImpl.class);
+
+    // Class specific log4j logger for TestNucleotideSequenceImpl instances.
+    Logger logger = Logger.getLogger(TestNucleotideSequenceImpl.class);
 
     public TestNucleotideSequenceImpl() {
         this("Test scenario for the NucleotideSequenceImpl class.");
@@ -116,8 +117,8 @@ public class TestNucleotideSequenceImpl extends TestCaseLM {
         Assert.assertEquals("XTLQRERGY", aas[1].getSequence());
 
         Assert.assertEquals(1054.043115, aas[0].getMass(),0.0);
-
     }
+
     /**
      * Test translation of DNA sequence.
      */
@@ -180,8 +181,6 @@ public class TestNucleotideSequenceImpl extends TestCaseLM {
         Assert.assertEquals("TATCCCCTCTACTCTCTGTACTTATCTAAT", lNucleicSequence);
 
     }
-
-    
 
     /**
      * Test generation of complementary sequence.

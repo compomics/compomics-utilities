@@ -22,32 +22,33 @@ import org.apache.log4j.Logger;
  * @author	Lennart Martens
  */
 public class UnknownElementMassException extends Exception {
-	// Class specific log4j logger for UnknownElementMassException instances.
-	Logger logger = Logger.getLogger(UnknownElementMassException.class);
-	
-	/**
-	 * The element symbol that was not recognized.
-	 */
-	private String element = null;
-	
-	/**
-	 * The constructor requires the caller to specify the element
-	 * which was not recognized.
-	 * 
-	 * @param	aElement	String with the symbol of the
-	 *						unrecognized element.
-	 */
-	public UnknownElementMassException(String aElement) {
-		super("Unknown mass for element '" + aElement + "'.\n");
-		element = aElement;
-	}
-	
-	/**
-	 * Simple getter for the element variable.
-	 *
-	 * @return	String	the symbol for the unknown element.
-	 */
-	public String getElement() {
-		return element;
-	}
+
+    // Class specific log4j logger for UnknownElementMassException instances.
+    Logger logger = Logger.getLogger(UnknownElementMassException.class);
+    
+    /**
+     * The element symbol that was not recognized.
+     */
+    private String element = null;
+
+    /**
+     * The constructor requires the caller to specify the element
+     * which was not recognized.
+     *
+     * @param	aElement	String with the symbol of the
+     *						unrecognized element.
+     */
+    public UnknownElementMassException(String aElement) {
+        super("Unknown mass for element '" + aElement + "'.\n");
+        element = aElement;
+    }
+
+    /**
+     * Simple getter for the element variable.
+     *
+     * @return	String	the symbol for the unknown element.
+     */
+    public String getElement() {
+        return element;
+    }
 }

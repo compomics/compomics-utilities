@@ -31,8 +31,9 @@ import java.util.Hashtable;
  * @author Lennart Martens
  */
 public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable, Serializable {
-	// Class specific log4j logger for ModificationImplementation instances.
-	Logger logger = Logger.getLogger(ModificationImplementation.class);
+
+    // Class specific log4j logger for ModificationImplementation instances.
+    Logger logger = Logger.getLogger(ModificationImplementation.class);
 
     /**
      * The ModificationTemplate which holds all the shared information for a modification.

@@ -33,8 +33,9 @@ import java.util.*;
  * @author Lennart Martens
  */
 public class ModificationFactory {
-	// Class specific log4j logger for ModificationFactory instances.
-	static Logger logger = Logger.getLogger(ModificationFactory.class);
+
+    // Class specific log4j logger for ModificationFactory instances.
+    static Logger logger = Logger.getLogger(ModificationFactory.class);
 
     /**
      * Constant for a key in the ModificationFactory.properties file.

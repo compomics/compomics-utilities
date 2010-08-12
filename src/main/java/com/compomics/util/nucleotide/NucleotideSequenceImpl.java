@@ -37,8 +37,9 @@ import java.io.IOException;
  * @author Lennart Martens
  */
 public class NucleotideSequenceImpl implements Sequence {
-	// Class specific log4j logger for NucleotideSequenceImpl instances.
-	Logger logger = Logger.getLogger(NucleotideSequenceImpl.class);
+
+    // Class specific log4j logger for NucleotideSequenceImpl instances.
+    Logger logger = Logger.getLogger(NucleotideSequenceImpl.class);
 
     /**
      * The sequence.
@@ -239,6 +240,7 @@ public class NucleotideSequenceImpl implements Sequence {
 
         return allSeqs;
     }
+
     /**
      * This method returns the reverse complementary strand for the
      * sequence.
@@ -368,23 +370,23 @@ public class NucleotideSequenceImpl implements Sequence {
     }
 
     /**
-	 * This method loads a Properties instance from the classpath.
-	 * It returns an empty instance and displays an error message
-	 * if the Properties instance was not found.
-	 *
-	 * @param	aPropFileName	String with the filename for the
-	 *							properties file.
-	 * @return	Properties	with the props from the file, or an empty
-	 *						instance if the file was not found.
-	 */
-	private Properties loadProps(String aPropFileName) {
-		Properties p = new Properties();
-		try {
-			p.load(this.getClass().getClassLoader().getResourceAsStream(aPropFileName));
-		} catch(IOException ioe) {
-			logger.error("\nProperties file ("+aPropFileName+") not found in classpath!");
-			logger.error("All resultant values will be computed to 0.0!!\n");
-		}
-		return p;
-	}
+    * This method loads a Properties instance from the classpath.
+    * It returns an empty instance and displays an error message
+    * if the Properties instance was not found.
+    *
+    * @param	aPropFileName	String with the filename for the
+    *							properties file.
+    * @return	Properties	with the props from the file, or an empty
+    *						instance if the file was not found.
+    */
+    private Properties loadProps(String aPropFileName) {
+        Properties p = new Properties();
+        try {
+            p.load(this.getClass().getClassLoader().getResourceAsStream(aPropFileName));
+        } catch(IOException ioe) {
+            logger.error("\nProperties file ("+aPropFileName+") not found in classpath!");
+            logger.error("All resultant values will be computed to 0.0!!\n");
+        }
+        return p;
+    }
 }

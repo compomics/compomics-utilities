@@ -22,9 +22,8 @@ import javax.swing.SwingUtilities;
  * creating it.
  */
 public abstract class SwingWorker {
+
     private Object value;  // see getValue(), setValue()
-
-
 
     /** 
      * Class to maintain reference to current worker thread
@@ -100,7 +99,6 @@ public abstract class SwingWorker {
             }
         }
     }
-
 
     /**
      * Start a thread that will call the <code>construct</code> method

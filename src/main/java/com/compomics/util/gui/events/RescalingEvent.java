@@ -24,8 +24,9 @@ import javax.swing.*;
  * @version $Id: RescalingEvent.java,v 1.1 2007/10/22 10:09:02 lennart Exp $
  */
 public class RescalingEvent {
-	// Class specific log4j logger for RescalingEvent instances.
-	Logger logger = Logger.getLogger(RescalingEvent.class);
+
+    // Class specific log4j logger for RescalingEvent instances.
+    Logger logger = Logger.getLogger(RescalingEvent.class);
 
     /**
      * The minimal mass to display after rescaling.
@@ -55,14 +56,29 @@ public class RescalingEvent {
         this.iMaxMass = aMaxMass;
     }
 
+    /**
+     * Returns the maximum mass.
+     *
+     * @return the maximum mass
+     */
     public double getMaxMass() {
         return iMaxMass;
     }
 
+    /**
+     * Returns the minimum mass.
+     *
+     * @return the minimum mass
+     */
     public double getMinMass() {
         return iMinMass;
     }
 
+    /**
+     * Returns the JPanel source.
+     *
+     * @return the JPanel source
+     */
     public JPanel getSource() {
         return iSource;
     }

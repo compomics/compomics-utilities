@@ -28,8 +28,9 @@ import java.util.Vector;
  * @author Lennart Martens
  */
 public class DBMetaData {
-	// Class specific log4j logger for DBMetaData instances.
-	Logger logger = Logger.getLogger(DBMetaData.class);
+
+    // Class specific log4j logger for DBMetaData instances.
+    Logger logger = Logger.getLogger(DBMetaData.class);
 
     /**
      * The table name for which the metadata has been gathered.
@@ -298,7 +299,6 @@ public class DBMetaData {
         return result;
     }
 
-
     /**
      * This method returns the coded columntype for the specified column index.
      *
@@ -371,7 +371,9 @@ public class DBMetaData {
      * @return  String  with the String representation for this object.
      */
     public String toString() {
-        StringBuffer lsb = new StringBuffer("---------------------------------------------------\n  This is the metadata for the table '" + iTable + "':\n\n");
+        StringBuffer lsb = new StringBuffer(
+                "---------------------------------------------------\n  "
+                + "This is the metadata for the table '" + iTable + "':\n\n");
         for(int i = 0; i < iColumns.length; i++) {
             lsb.append("\t- " + iColumns[i] + " : ");
             lsb.append(iColTypes[i] + " (" + iConColTypes[i] + ")\n");

@@ -7,18 +7,19 @@ import java.awt.*;
 /**
  * <b>Created by IntelliJ IDEA.</b> User: Kenni Date: 9-jul-2006 Time: 12:31:49
  * <p/>
- * <br>This Class </br>
+ * TODO: JavaDoc missing.
  */
 public class MonitorDimension {
-	// Class specific log4j logger for MonitorDimension instances.
-	Logger logger = Logger.getLogger(MonitorDimension.class);
+
+    // Class specific log4j logger for MonitorDimension instances.
+    Logger logger = Logger.getLogger(MonitorDimension.class);
+
     /**
      * This dimension is used by all the methods.
      */
     private static Dimension lDimension;
     private static double lWidth;
     private static double lHeight;
-    private static double percentage;
 
     /**
      * This method returns a Dimension with a percentual width and height in relation to the JFrame.
@@ -46,12 +47,21 @@ public class MonitorDimension {
         return lDimension;
     }
 
+    /**
+     * Set the size to a given percentage.
+     *
+     * @param tlkt reference to the toolkit
+     * @param aPercentage the percentage screen size
+     */
     private static void setDimension(Toolkit tlkt, double aPercentage){
         lWidth = tlkt.getScreenSize().getWidth() * aPercentage;
         lHeight = tlkt.getScreenSize().getHeight() * aPercentage;
         lDimension.setSize(lWidth, lHeight);
     }
 
+    /**
+     * Clears the dimmension settings.
+     */
     private static void clearDimension(){
         lWidth = 0;
         lHeight = 0;

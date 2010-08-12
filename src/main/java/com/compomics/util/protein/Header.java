@@ -24,8 +24,9 @@ import java.util.StringTokenizer;
  * @author Lennart Martens
  */
 public class Header implements Cloneable {
-	// Class specific log4j logger for Header instances.
-	static Logger logger = Logger.getLogger(Header.class);
+
+    // Class specific log4j logger for Header instances.
+    static Logger logger = Logger.getLogger(Header.class);
 
     /**
      * Private constructor to force use of factory methods.
@@ -234,7 +235,6 @@ public class Header implements Cloneable {
                             result.iDescription = temp.substring(location+1);
                         }
                     }
-
                 } else if(aFASTAHeader.startsWith("IPI:") || aFASTAHeader.startsWith("ipi:") || aFASTAHeader.startsWith("IPI|") || aFASTAHeader.startsWith("ipi|")) {
                         // An IPI header looks like:
                         // >IPI:IPIxxxxxx.y|REFSEQ_XP:XP_aaaaa[|many more like this can be present] Tax_Id=9606 descr
@@ -771,7 +771,6 @@ public class Header implements Cloneable {
                     // Proprietary PSB A. thaliana entry
                     result.append(" " + this.iDescription);
                 }
-
             } else if(this.iID.equals("")) {
                 if(iAccession.startsWith("HIT")) {
                     result.append("|" + this.iDescription);

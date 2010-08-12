@@ -19,7 +19,6 @@ import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-
 /**
  * This class provides a simple date chooser.
  *
@@ -27,8 +26,9 @@ import javax.swing.border.BevelBorder;
  * @version $Id: DateChooser.java,v 1.1 2009/07/28 15:25:52 lennart Exp $
  */
 public class DateChooser extends JDialog {
-	// Class specific log4j logger for DateChooser instances.
-	static Logger logger = Logger.getLogger(DateChooser.class);
+
+    // Class specific log4j logger for DateChooser instances.
+    static Logger logger = Logger.getLogger(DateChooser.class);
 
     private Calendar iSelectedCalendar = null;
 
@@ -45,7 +45,11 @@ public class DateChooser extends JDialog {
 
     private final static SimpleDateFormat iSDFCurrentMonthyear = new SimpleDateFormat("MMMM yyyy");
 
-
+    /**
+     * Creates a new DataChooser object.
+     *
+     * @param aParent the JFrame parent
+     */
     public DateChooser(JFrame aParent) {
         this(aParent, null);
     }
@@ -169,6 +173,12 @@ public class DateChooser extends JDialog {
         this.setSize(new Dimension(this.getSize().width+100, this.getSize().height+100));
     }
 
+    /**
+     * Sets the color of the labels according to the type of day.
+     *
+     * @param aZeroBaseDayIndex the index of the day, zero based
+     * @param aLabel the label used for the date
+     */
     private void setColour(int aZeroBaseDayIndex, JLabel aLabel) {
         switch(aZeroBaseDayIndex) {
             case 0:
@@ -180,6 +190,12 @@ public class DateChooser extends JDialog {
         }
     }
 
+    /**
+     * Changes the text on the day label according to wether it has the mouse focus.
+     *
+     * @param aLblIndex
+     * @param aHasFocus
+     */
     private void mouseFocus(int aLblIndex, boolean aHasFocus) {
         String nbr = (iDays[aLblIndex] == null)?"":""+iDays[aLblIndex];
         if(aHasFocus) {
@@ -189,6 +205,9 @@ public class DateChooser extends JDialog {
         }
     }
 
+    /**
+     * Initiates the dates.
+     */
     private void initDates() {
         iShownCalendar.set(Calendar.DATE, 1);
         int dayOfWeek = iShownCalendar.get(Calendar.DAY_OF_WEEK);
@@ -221,6 +240,11 @@ public class DateChooser extends JDialog {
         this.setTitle(iCoreTitle + " (" + currentMonthYear + ")");
     }
 
+    /**
+     * Creates and returns the button panel.
+     *
+     * @return the button panel
+     */
     private JPanel getButtonPanel() {
 
         JButton btnOK = new JButton("OK");
@@ -248,6 +272,9 @@ public class DateChooser extends JDialog {
         return jpanButtons;
     }
 
+    /**
+     * Called if the OK button is pressed.
+     */
     private void btnOKPressed() {
         if(iSelectedCalendar != null) {
             close();
@@ -256,11 +283,19 @@ public class DateChooser extends JDialog {
         }
     }
 
+    /**
+     * Called if the cancel button is pressed.
+     */
     private void btnCancelPressed() {
         iSelectedCalendar = null;
         close();
     }
 
+    /**
+     * Called if a date is clicked.
+     *
+     * @param aCounter the index if the clicked day
+     */
     private void dateClicked(int aCounter) {
         iSelectedDayIndex = aCounter;
         int currentDay = iDays[iSelectedDayIndex].intValue();
@@ -277,11 +312,19 @@ public class DateChooser extends JDialog {
         }
     }
 
+    /**
+     * Closes the DataChooser.
+     */
     private void close() {
         DateChooser.this.setVisible(false);
         DateChooser.this.dispose();
     }
 
+    /**
+     * Creates and opens a new DateChooser dialog.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         JFrame temp = new JFrame();
         DateChooser dc = new DateChooser(temp);

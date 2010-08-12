@@ -30,8 +30,9 @@ import java.awt.*;
  * @author Lennart
  */
 public class ByteArrayRenderer extends DefaultTableCellRenderer {
-	// Class specific log4j logger for ByteArrayRenderer instances.
-	Logger logger = Logger.getLogger(ByteArrayRenderer.class);
+
+    // Class specific log4j logger for ByteArrayRenderer instances.
+    Logger logger = Logger.getLogger(ByteArrayRenderer.class);
 
     /**
      * This byte[] is the actual data cached by the renderer.

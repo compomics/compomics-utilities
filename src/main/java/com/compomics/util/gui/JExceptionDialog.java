@@ -34,8 +34,9 @@ import java.io.PrintWriter;
  * @author Lennart Martens
  */
 public class JExceptionDialog extends JDialog {
-	// Class specific log4j logger for JExceptionDialog instances.
-	Logger logger = Logger.getLogger(JExceptionDialog.class);
+
+    // Class specific log4j logger for JExceptionDialog instances.
+    Logger logger = Logger.getLogger(JExceptionDialog.class);
 
     private String[] iMessages = null;
     private Throwable iThrowable = null;

@@ -30,8 +30,9 @@ import java.io.*;
  * @author Lennart Martens
  */
 public class FTPClient2 {
-	// Class specific log4j logger for FTPClient2 instances.
-	Logger logger = Logger.getLogger(FTPClient2.class);
+
+    // Class specific log4j logger for FTPClient2 instances.
+    Logger logger = Logger.getLogger(FTPClient2.class);
 
     /**
      * The String with the hostname for the FTP server.

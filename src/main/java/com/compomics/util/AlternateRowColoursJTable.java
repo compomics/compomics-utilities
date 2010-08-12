@@ -32,37 +32,9 @@ import java.util.Vector;
  * @version $Id: AlternateRowColoursJTable.java,v 1.1 2009/08/02 13:23:46 lennart Exp $
  */
 public class AlternateRowColoursJTable extends JTable {
-	// Class specific log4j logger for AlternateRowColoursJTable instances.
-	Logger logger = Logger.getLogger(AlternateRowColoursJTable.class);
 
-    public AlternateRowColoursJTable() {}
-
-    public AlternateRowColoursJTable(int aRows, int aCols){
-        super(aRows, aCols);
-    }
-
-    public AlternateRowColoursJTable(TableModel dm, TableColumnModel cm) {
-        super(dm, cm);
-    }
-
-
-    public AlternateRowColoursJTable(TableModel dm) {
-        super(dm);
-    }
-
-    public AlternateRowColoursJTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
-        super(dm, cm, sm);
-    }
-
-    public AlternateRowColoursJTable(Vector rowData, Vector columnNames) {
-        super(rowData, columnNames);
-    }
-
-    public AlternateRowColoursJTable(Object[][] rowData, Object[] columnNames) {
-        super(rowData, columnNames);
-    }
-
-
+    // Class specific log4j logger for AlternateRowColoursJTable instances.
+    Logger logger = Logger.getLogger(AlternateRowColoursJTable.class);
 
     /**
      * The background colour for the even rows.
@@ -87,7 +59,84 @@ public class AlternateRowColoursJTable extends JTable {
      */
     public static final Color LIGHT_AQUA = new Color(219, 238, 244);
 
+    /**
+     * Default empty constructor.
+     */
+    public AlternateRowColoursJTable() {}
 
+    /**
+     * Creates a new AlternateRowColoursJTable.
+     *
+     * @param aRows the number of rows
+     * @param aCols the number of columns
+     */
+    public AlternateRowColoursJTable(int aRows, int aCols){
+        super(aRows, aCols);
+    }
+
+    /**
+     * Creates a new AlternateRowColoursJTable.
+     *
+     * @param dm the table model
+     * @param cm the table column model
+     */
+    public AlternateRowColoursJTable(TableModel dm, TableColumnModel cm) {
+        super(dm, cm);
+    }
+
+    /**
+     * Creates a new AlternateRowColoursJTable.
+     *
+     * @param dm the table model
+     */
+    public AlternateRowColoursJTable(TableModel dm) {
+        super(dm);
+    }
+
+    /**
+     * Creates a new AlternateRowColoursJTable.
+     *
+     * @param dm the table model
+     * @param cm the table column model
+     * @param sm the list selection mocel
+     */
+    public AlternateRowColoursJTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
+        super(dm, cm, sm);
+    }
+
+    /**
+     * Creates a new AlternateRowColoursJTable.
+     *
+     * @param rowData the row data vector
+     * @param columnNames the column name vector
+     */
+    public AlternateRowColoursJTable(Vector rowData, Vector columnNames) {
+        super(rowData, columnNames);
+    }
+
+    /**
+     * Creates a new AlternateRowColoursJTable.
+     *
+     * @param rowData the row data vector
+     * @param columnNames the column name vector
+     */
+    public AlternateRowColoursJTable(Object[][] rowData, Object[] columnNames) {
+        super(rowData, columnNames);
+    }
+
+    /**
+     * Prepares the renderer by querying the data model for the
+     * value and selection state
+     * of the cell at <code>row</code>, <code>column</code>.
+     * Returns the component (may be a <code>Component</code>
+     * or a <code>JComponent</code>) under the event location.
+     *
+     * @param renderer  the <code>TableCellRenderer</code> to prepare
+     * @param rowIndex  the row of the cell to render, where 0 is the first row
+     * @param vColIndex the column of the cell to render,
+     *			where 0 is the first column
+     * @return          the <code>Component</code> under the event location
+     */
     public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
         Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
         if(!isCellSelected(rowIndex, vColIndex)) {

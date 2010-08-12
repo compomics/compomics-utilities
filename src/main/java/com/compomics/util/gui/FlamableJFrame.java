@@ -31,8 +31,9 @@ import java.awt.*;
  * @author Lennart
  */
 public abstract class FlamableJFrame extends JFrame implements Flamable {
-    	// Class specific log4j logger for TestFTPClient2 instances.
-	Logger logger = Logger.getLogger(FlamableJFrame.class);
+
+    // Class specific log4j logger for TestFTPClient2 instances.
+    Logger logger = Logger.getLogger(FlamableJFrame.class);
 
     /**
      * Wrapper constructor for that of the superclass.
@@ -113,5 +114,10 @@ public abstract class FlamableJFrame extends JFrame implements Flamable {
         }
     }
 
+    /**
+     * Returns true if frame is stand alone.
+     *
+     * @return true if frame is stand alone
+     */
     public abstract boolean isStandAlone();
 }

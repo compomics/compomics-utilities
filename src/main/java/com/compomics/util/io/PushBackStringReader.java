@@ -31,8 +31,9 @@ import java.util.StringTokenizer;
  * @author Lennart Martens
  */
 public class PushBackStringReader {
-	// Class specific log4j logger for PushBackStringReader instances.
-	Logger logger = Logger.getLogger(PushBackStringReader.class);
+
+    // Class specific log4j logger for PushBackStringReader instances.
+    Logger logger = Logger.getLogger(PushBackStringReader.class);
 
     /**
      * This Vector caches the entire String in memory, separating the elements through

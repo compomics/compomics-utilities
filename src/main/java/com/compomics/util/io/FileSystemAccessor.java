@@ -14,8 +14,9 @@ import java.io.File;
  * This class serves as a fast OS independent access point to the file system.
  */
 public class FileSystemAccessor {
-	// Class specific log4j logger for FileSystemAccessor instances.
-	Logger logger = Logger.getLogger(FileSystemAccessor.class);
+
+    // Class specific log4j logger for FileSystemAccessor instances.
+    Logger logger = Logger.getLogger(FileSystemAccessor.class);
 
     /**
      * Empty constructor.
@@ -38,7 +39,11 @@ public class FileSystemAccessor {
         }else return null;
     }
 
-
+    /**
+     * Returns the user home folder.
+     *
+     * @return the user home folder
+     */
     public static File getHomeFolder(){
         File lFile = null;
         String lHomeDirectory = System.getProperty("user.home");

@@ -9,8 +9,6 @@
  * User: Lennart
  * Date: 15-jul-02
  * Time: 11:33:12
- * To change template for new interface use 
- * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.compomics.util.db.interfaces;
 import org.apache.log4j.Logger;

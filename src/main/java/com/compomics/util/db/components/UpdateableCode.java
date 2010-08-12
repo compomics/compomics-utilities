@@ -29,8 +29,9 @@ import com.compomics.util.db.DBMetaData;
  * @author Lennart Martens
  */
 public class UpdateableCode {
-	// Class specific log4j logger for UpdateableCode instances.
-	Logger logger = Logger.getLogger(UpdateableCode.class);
+
+    // Class specific log4j logger for UpdateableCode instances.
+    Logger logger = Logger.getLogger(UpdateableCode.class);
 
     /**
      * This vraiable holds the generated code.
@@ -75,7 +76,8 @@ public class UpdateableCode {
         }
 
         // And now the code itself.
-        StringBuffer lsb = new StringBuffer("\t/**\n\t * This method allows the caller to update the data represented by this\n\t * object in a persistent store.\n");
+        StringBuffer lsb = new StringBuffer(
+                "\t/**\n\t * This method allows the caller to update the data represented by this\n\t * object in a persistent store.\n");
         lsb.append("\t *\n\t * @param   aConn Connection to the persitent store.\n\t */\n");
         lsb.append("\tpublic int update(Connection aConn) throws SQLException {\n");
         lsb.append("\t\tif(!this.iUpdated) {\n");

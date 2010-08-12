@@ -40,8 +40,9 @@ import java.io.*;
  * @author Lennart Martens
  */
 public class MascotEnzymeReader {
-	// Class specific log4j logger for MascotEnzymeReader instances.
-	Logger logger = Logger.getLogger(MascotEnzymeReader.class);
+
+    // Class specific log4j logger for MascotEnzymeReader instances.
+    Logger logger = Logger.getLogger(MascotEnzymeReader.class);
 
     /**
      * This HashMap will hold all the Enzyme entries we've found in the file.
@@ -116,7 +117,8 @@ public class MascotEnzymeReader {
                             } else {
                                 error = "out the ";
                             }
-                            logger.error("Dual enzyme detected (title starts with 'dual', regardless of case) but with" + error + "'X' separator between N-terminal cleavables and C-terminal cleavables.\nTreating it as a regular enzyme.");
+                            logger.error("Dual enzyme detected (title starts with 'dual', regardless of case) but with" + error
+                                    + "'X' separator between N-terminal cleavables and C-terminal cleavables.\nTreating it as a regular enzyme.");
                             entries.put(title, new Enzyme(title, cleavage, restrict, position));
                         } else {
                             String ntermCleavage = st.nextToken().trim();

@@ -28,8 +28,9 @@ import com.compomics.util.db.DBMetaData;
  * @author Lennart Martens
  */
 public class DeleteableCode {
-	// Class specific log4j logger for DeleteableCode instances.
-	Logger logger = Logger.getLogger(DeleteableCode.class);
+
+    // Class specific log4j logger for DeleteableCode instances.
+    Logger logger = Logger.getLogger(DeleteableCode.class);
 
     /**
      * This String will hold the generated code for this component.
@@ -61,10 +62,12 @@ public class DeleteableCode {
         query.append("\"");
 
         // Now generate the code.
-        StringBuffer lsb = new StringBuffer("\t/**\n\t * This method allows the caller to delete the data represented by this\n\t * object in a persistent store.\n");
+        StringBuffer lsb = new StringBuffer(
+                "\t/**\n\t * This method allows the caller to delete the data represented by this\n\t * object in a persistent store.\n");
         lsb.append("\t *\n\t * @param   aConn Connection to the persitent store.\n\t */\n");
         lsb.append("\tpublic int delete(Connection aConn) throws SQLException {\n");
         lsb.append("\t\tPreparedStatement lStat = aConn.prepareStatement(" + query.toString() + ");\n");
+
         for(int i = 0; i < pkCols.length; i++) {
             String lCol = pkCols[i];
             String name = "i" + lCol.substring(0,1).toUpperCase() + lCol.substring(1).toLowerCase();

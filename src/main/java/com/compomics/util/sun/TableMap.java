@@ -23,10 +23,11 @@ import javax.swing.table.*;
 import javax.swing.event.TableModelListener; 
 import javax.swing.event.TableModelEvent; 
 
-public class TableMap extends AbstractTableModel
-        implements TableModelListener {
+public class TableMap extends AbstractTableModel implements TableModelListener {
+
     // Class specific log4j logger for TableMap instances.
     Logger logger = Logger.getLogger(TableMap.class);
+
     protected TableModel model;
 
     public TableModel getModel() {
@@ -68,9 +69,7 @@ public class TableMap extends AbstractTableModel
     public boolean isCellEditable(int row, int column) { 
          return model.isCellEditable(row, column); 
     }
-//
-// Implementation of the TableModelListener interface, 
-//
+
     // By default forward all events to all the listeners. 
     public void tableChanged(TableModelEvent e) {
         fireTableChanged(e);

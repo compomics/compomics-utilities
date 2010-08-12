@@ -23,13 +23,20 @@ import java.io.IOException;
  */
 
 /**
- * This class 
+ * This class handles an FTP protocol exception.
  *
  * @author Lennart
  */
 public class FtpProtocolException extends IOException {
-	// Class specific log4j logger for FtpProtocolException instances.
-	Logger logger = Logger.getLogger(FtpProtocolException.class);
+
+    // Class specific log4j logger for FtpProtocolException instances.
+    Logger logger = Logger.getLogger(FtpProtocolException.class);
+
+    /**
+     * Creates a new FtpProtocolException from the given string.
+     *
+     * @param s the FTP protocol exception as a string
+     */
     FtpProtocolException(String s) {
         super(s);
     }

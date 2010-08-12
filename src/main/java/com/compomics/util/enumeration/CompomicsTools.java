@@ -9,6 +9,7 @@ package com.compomics.util.enumeration;
  * This enum types all computational omics tools and libraries that make use of the utilities library.
  */
 public enum CompomicsTools {
+
     MSLIMS("mslims", "com.compomics.lims"),
     PEPTIZER("peptizer", "com.compomics.peptizer"),
     ROVER("rover", "com.compomics.rover"),
@@ -26,7 +27,9 @@ public enum CompomicsTools {
 
     /**
      * Private constructor to initialize variables for each type.
+     *
      * @param aName The identifying name for the enum type.
+     * @param aPackageName The package name
      */
     private CompomicsTools(String aName, String aPackageName) {
         iName = aName;
@@ -35,6 +38,7 @@ public enum CompomicsTools {
 
     /**
      * Getter for the name of the tool or library.
+     *
      * @return The name of the tool or library.
      */
     public String getName() {
@@ -43,6 +47,7 @@ public enum CompomicsTools {
 
     /**
      * Return the package name of the tool.
+     * 
      * @return The package name of the tool.
      */
     public String getPackageName() {

@@ -26,8 +26,9 @@ import org.apache.log4j.Logger;
  * @author Lennart Martens
  */
 public class GeneratorException extends Exception {
-	// Class specific log4j logger for GeneratorException instances.
-	Logger logger = Logger.getLogger(GeneratorException.class);
+
+    // Class specific log4j logger for GeneratorException instances.
+    Logger logger = Logger.getLogger(GeneratorException.class);
 
     /**
      * The nested exception.

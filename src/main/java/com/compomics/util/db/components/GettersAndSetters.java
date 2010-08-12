@@ -29,8 +29,9 @@ import com.compomics.util.db.DBMetaData;
  * @author Lennart Martens
  */
 public class GettersAndSetters {
-	// Class specific log4j logger for GettersAndSetters instances.
-	Logger logger = Logger.getLogger(GettersAndSetters.class);
+
+    // Class specific log4j logger for GettersAndSetters instances.
+    Logger logger = Logger.getLogger(GettersAndSetters.class);
 
     /**
      * This variable holds all the getters for the DBAccessor object.
@@ -68,7 +69,10 @@ public class GettersAndSetters {
             name = name.substring(0, 1).toUpperCase() + name.toLowerCase().substring(1);
             String type = aMeta.getConvertedColumnType(i);
 
-            this.iGetters[i] = "\t/**\n\t * This method returns the value for the '" + name + "' column\n\t * \n\t * @return\t" + type + "\twith the value for the " + name + " column.\n\t */\n\tpublic " + type + " get" + name + "() {\n\t\treturn this.i" + name + ";\n\t}";
+            this.iGetters[i] = "\t/**\n\t * This method returns the value for the '" + name
+                    + "' column\n\t * \n\t * @return\t" + type + "\twith the value for the "
+                    + name + " column.\n\t */\n\tpublic " + type + " get" + name
+                    + "() {\n\t\treturn this.i" + name + ";\n\t}";
         }
     }
 
@@ -87,7 +91,11 @@ public class GettersAndSetters {
             name = name.substring(0, 1).toUpperCase() + name.toLowerCase().substring(1);
             String type = aMeta.getConvertedColumnType(i);
 
-            this.iSetters[i] = "\t/**\n\t * This method sets the value for the '" + name + "' column\n\t * \n\t * @param\ta" + name + "\t" + type + " with the value for the " + name + " column.\n\t */\n\tpublic void set" + name + "(" + type + " a" + name + ") {\n\t\tthis.i" + name + " = a" + name + ";\n\t\tthis.iUpdated = true;\n\t}";
+            this.iSetters[i] = "\t/**\n\t * This method sets the value for the '" + name 
+                    + "' column\n\t * \n\t * @param\ta" + name + "\t" + type
+                    + " with the value for the " + name + " column.\n\t */\n\tpublic void set"
+                    + name + "(" + type + " a" + name + ") {\n\t\tthis.i" + name
+                    + " = a" + name + ";\n\t\tthis.iUpdated = true;\n\t}";
         }
     }
 

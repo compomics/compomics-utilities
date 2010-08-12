@@ -33,8 +33,9 @@ import java.util.Date;
  * @author Lennart Martens
  */
 public class FileLoggerImplementation implements com.compomics.util.interfaces.Logger {
-	// Class specific log4j logger for FileLoggerImplementation instances.
-	org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(FileLoggerImplementation.class);
+
+    // Class specific log4j logger for FileLoggerImplementation instances.
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(FileLoggerImplementation.class);
 
     /**
      * The BufferedWriter connected to the logfile.
@@ -72,8 +73,6 @@ public class FileLoggerImplementation implements com.compomics.util.interfaces.L
         iOut = new BufferedWriter(new FileWriter(aFilename));
         iSdf = new SimpleDateFormat(aFormat);
     }
-
-
 
     /**
      * This method allows the caller to have the logger record a timestamp (implementation

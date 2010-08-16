@@ -5,9 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * <b>Created by IntelliJ IDEA.</b> User: Kenni Date: 9-jul-2006 Time: 12:31:49
- * <p/>
- * TODO: JavaDoc missing.
+ * This class makes it possible to set the dimmensions of a JFrame of JPanel
+ * to a certain percentage of the screen size.
  */
 public class MonitorDimension {
 
@@ -23,6 +22,7 @@ public class MonitorDimension {
 
     /**
      * This method returns a Dimension with a percentual width and height in relation to the JFrame.
+     *
      * @param frame         Source dimension
      * @param aPercentage   Percentual width and height of the returning dimension.
      * @return              A Dimension instance with a percentual Dimension in relation to the JFrame.
@@ -36,6 +36,7 @@ public class MonitorDimension {
 
     /**
      * This method returns a Dimension with a percentual width and height in realtion to the JPanel.
+     *
      * @param jpan          Source Dimension
      * @param aPercentage   Percentual width and height of the returning dimension.
      * @return              A Dimension instance with a percentual Dimension in relation to the JPanel.

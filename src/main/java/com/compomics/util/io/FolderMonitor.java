@@ -491,11 +491,12 @@ public class FolderMonitor implements Runnable {
 
         HashMap params2 = new HashMap(2);
         params2.put(FolderMonitor.PICKUP, new PickUp(){
+
             /**
-             * This method should be called by the notifier when appropriate.
-             *
-             * @param   aObject Object with the data that should be sent.
-             */
+                 * This method should be called by the notifier when appropriate.
+                 *
+                 * @param   aObject Object with the data that should be sent.
+                 */
             public void sendIncoming(Object aObject) {
                 try {
                     File[] files = (File[])aObject;

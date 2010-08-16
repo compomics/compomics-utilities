@@ -667,7 +667,7 @@ public class DualEnzyme extends Enzyme {
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * Tests the DualEnzyme by digesting a hardcoded protein.
      *
      * @param args
      */

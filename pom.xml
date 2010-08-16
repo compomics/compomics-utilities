@@ -68,6 +68,15 @@
                 <role>Java Developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>Marc Vaudel</name>
+            <id>marc</id>
+            <email>marc.vaudel AT isas.de</email>
+            <organization>University of Jena</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
     </developers>
 
 
@@ -93,6 +102,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.compomics.util.examples.UtilitiesDemo</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib</classpathPrefix>
+                        </manifest>
+                    </archive>
                     <outputDirectory>${project.build.directory}/utilities-${project.version}</outputDirectory>
                 </configuration>
             </plugin>

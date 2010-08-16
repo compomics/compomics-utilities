@@ -13,6 +13,9 @@ package com.compomics.util.examples;
 import java.lang.reflect.Method;
 import javax.swing.JOptionPane;
 
+/**
+ * Class that makes it possible to open a URL in the default browser.
+ */
 public class BareBonesBrowserLaunch {
 
     private static final String errMsg = "Error attempting to launch web browser";

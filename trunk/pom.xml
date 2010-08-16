@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>${version.number}</version>
     <name>computational omics utilities</name>
-    <url>compomics_utilities.googlecode.com</url>
+    <url>http://compomics-utilities.googlecode.com</url>
 
 
     <!-- Set the version number for the whole project -->

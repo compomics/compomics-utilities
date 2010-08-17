@@ -59,7 +59,6 @@ public class FullSuite extends TestCase {
         ts.addTest(new TestSuite(TestMonitorableInputStream.class));
         ts.addTest(new TestSuite(TestMonitorableFileInputStream.class));
         ts.addTest(new TestSuite(TestFTPClient.class));
-        ts.addTest(new TestSuite(TestFTPClient2.class));
         ts.addTest(new TestSuite(TestFolderMonitor.class));
         ts.addTest(new TestSuite(TestFilenameExtensionFilter.class));
         ts.addTest(new TestSuite(TestNucleotideSequenceImpl.class));

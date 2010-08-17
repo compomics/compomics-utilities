@@ -29,10 +29,10 @@ import java.io.*;
  *
  * @author Lennart Martens
  */
-public class FTPClient2 {
+public class FTPClient {
 
-    // Class specific log4j logger for FTPClient2 instances.
-    Logger logger = Logger.getLogger(FTPClient2.class);
+    // Class specific log4j logger for FTPClient instances.
+    Logger logger = Logger.getLogger(FTPClient.class);
 
     /**
      * The String with the hostname for the FTP server.
@@ -58,7 +58,7 @@ public class FTPClient2 {
      * @param   aUser   String with the username to connect with.
      * @param   aPassword   String with the password for the specified user.
      */
-    public FTPClient2(String aHost, String aUser, String aPassword) {
+    public FTPClient(String aHost, String aUser, String aPassword) {
         this.iHost = aHost;
         this.iUser = aUser;
         this.iPassword = aPassword;

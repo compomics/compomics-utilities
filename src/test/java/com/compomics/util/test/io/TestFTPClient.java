@@ -11,6 +11,7 @@
  * Time: 11:21:52
  */
 package com.compomics.util.test.io;
+import com.compomics.util.io.FTPClient;
 import org.apache.log4j.Logger;
 
 import junit.TestCaseLM;
@@ -18,7 +19,6 @@ import junit.TestCaseLM;
 import java.util.Properties;
 import java.io.*;
 
-import com.compomics.util.io.FTPClient2;
 import junit.framework.*;
 
 /*
@@ -78,8 +78,8 @@ public class TestFTPClient extends TestCaseLM {
                 // First get a textfile to send.
                 String file = super.getFullFilePath("FTPClient.properties");
 
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, this.iPassword);
-                ftpClient.sendTextFile(file);
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
+                lFtpClient.sendTextFile(file);
 
                 // Now find the file on the server.
                 File f = new File(iDestination + new File(file).getName());
@@ -119,8 +119,8 @@ public class TestFTPClient extends TestCaseLM {
                 // First get a binary file to send.
                 String file = super.getFullFilePath("testFile.jpg");
 
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, this.iPassword);
-                ftpClient.sendBinaryFile(file);
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
+                lFtpClient.sendBinaryFile(file);
 
                 // Now find the file on the server.
                 File f = new File(iDestination + new File(file).getName());
@@ -162,8 +162,8 @@ public class TestFTPClient extends TestCaseLM {
                 files[0] = super.getFullFilePath("FTPClient.properties");
                 files[1] = super.getFullFilePath("enzymes.txt");
 
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, this.iPassword);
-                ftpClient.sendFiles(files, false);
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
+                lFtpClient.sendFiles(files, false);
 
                 for(int i=0;i<files.length;i++) {
                     // Now find the file on the server.
@@ -207,8 +207,8 @@ public class TestFTPClient extends TestCaseLM {
                 files[0] = super.getFullFilePath("testFile.jpg");
                 files[1] = super.getFullFilePath("TestMonitor.zip");
 
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, this.iPassword);
-                ftpClient.sendFiles(files, true);
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
+                lFtpClient.sendFiles(files, true);
 
                 for(int i=0;i<files.length;i++) {
                     // Now find the file on the server.
@@ -252,8 +252,8 @@ public class TestFTPClient extends TestCaseLM {
                 files[0] = super.getFullFilePath("testFile.jpg");
                 files[1] = super.getFullFilePath("FTPClient.properties");
 
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, this.iPassword);
-                ftpClient.sendFiles(files, new boolean[]{true, false});
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
+                lFtpClient.sendFiles(files, new boolean[]{true, false});
 
                 // Check the binary file.
                 // Now find the file on the server.
@@ -317,32 +317,32 @@ public class TestFTPClient extends TestCaseLM {
         if(iDoTest) {
             // This one should work!
             try {
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, this.iPassword);
-                ftpClient.testFTPConnection();
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
+                lFtpClient.testFTPConnection();
             } catch(IOException ioe) {
                 fail("IOException thrown when testing the connection with correct data: " + ioe.getMessage());
             }
 
             // These should fail.
             try {
-                FTPClient2 ftpClient = new FTPClient2("I_DO_NOT_EXIST_" + this.iServer, this.iUser, this.iPassword);
-                ftpClient.testFTPConnection();
+                FTPClient lFtpClient = new FTPClient("I_DO_NOT_EXIST_" + this.iServer, this.iUser, this.iPassword);
+                lFtpClient.testFTPConnection();
                 fail("IOException NOT thrown when testing the connection to a non-existing server!");
             } catch(IOException ioe) {
                 // We want this to happen.
             }
 
             try {
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, "I_DO_NOT_EXIST_" + this.iUser, this.iPassword);
-                ftpClient.testFTPConnection();
+                FTPClient lFtpClient = new FTPClient(this.iServer, "I_DO_NOT_EXIST_" + this.iUser, this.iPassword);
+                lFtpClient.testFTPConnection();
                 fail("IOException NOT thrown when testing the connection to a non-existing user!");
             } catch(IOException ioe) {
                 // We want this to happen.
             }
 
             try {
-                FTPClient2 ftpClient = new FTPClient2(this.iServer, this.iUser, "I_DO_NOT_EXIST_" + this.iPassword);
-                ftpClient.testFTPConnection();
+                FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, "I_DO_NOT_EXIST_" + this.iPassword);
+                lFtpClient.testFTPConnection();
                 fail("IOException NOT thrown when testing the connection to a non-existing password!");
             } catch(IOException ioe) {
                 // We want this to happen.

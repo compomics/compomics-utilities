@@ -14,7 +14,6 @@ package com.compomics.util.io;
 import org.apache.log4j.Logger;
 
 import com.compomics.util.interfaces.PickUp;
-import com.compomics.util.general.DefaultOutputLoggerImplementation;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -110,7 +109,7 @@ public class FolderMonitor implements Runnable {
     /**
      * The FTPClient we'll be using for transmitting files if we are in FTP_TRANSFER mode.
      */
-    private FTPClient2 iFTP = null;
+    private FTPClient iFTP = null;
 
     /**
      * This boolean is 'true' while the FolderMonitor is running.
@@ -210,7 +209,7 @@ public class FolderMonitor implements Runnable {
                     throw new IllegalArgumentException("You did not specify all necessary parameters for the FTP operation (I need host, user AND password)!");
                 } else {
                     this.iParams = aParams;
-                    iFTP = new FTPClient2((String)iParams.get(HOST), (String)iParams.get(USER), (String)iParams.get(PASSWORD));
+                    iFTP = new FTPClient((String)iParams.get(HOST), (String)iParams.get(USER), (String)iParams.get(PASSWORD));
                 }
                 break;
             case GATHER_FILES_FOR_PICKUP:

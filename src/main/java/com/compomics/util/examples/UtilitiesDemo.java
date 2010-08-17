@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -61,7 +62,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // create and add two spectra to the view
 
             // get the peaks for the first spectrum
-            File spectrumFile = new File(this.getClass().getResource("/exampleFiles/exampleSpectrumA.pkl").getFile());
+
+
+            File spectrumFile = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumA.pkl");
             PklFile pklFileA = new PklFile(spectrumFile);
 
             // create the first spectrum panel
@@ -102,7 +105,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
 
             // get the peaks for the second spectrum
-            spectrumFile = new File(this.getClass().getResource("/exampleFiles/exampleSpectrumB.pkl").getFile());
+            spectrumFile = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumB.pkl");
             PklFile pklFileB = new PklFile(spectrumFile);
 
             // create the first spectrum panel
@@ -267,6 +270,21 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         return currentColor;
     }
+
+    /**
+     * Returns the path to the jar file.
+     *
+     * @return
+     */
+    private String getJarFilePath(){
+        String path = this.getClass().getResource("UtilitiesDemo.class").getPath();
+
+        path = path.substring(5, path.lastIndexOf("/utilities-"));
+        path = path.replace("%20", " ");
+
+        return path;
+    }
+
 
     /** This method is called from within the constructor to
      * initialize the form.

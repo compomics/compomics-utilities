@@ -196,6 +196,9 @@
                                     <directory>./</directory>
                                     <includes>
                                         <include>exampleFiles/</include>
+                                        <include>compomics-utilities.ico</include>
+                                        <include>LICENSE-2.0.txt</include>
+                                        <include>README.txt</include>
                                     </includes>
                                 </resource>
                             </resources>

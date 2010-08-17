@@ -7,44 +7,6 @@
         <Property name="text" type="java.lang.String" value="jRadioButton1"/>
       </Properties>
     </Component>
-    <Menu class="javax.swing.JMenuBar" name="jMenuBar">
-      <SubComponents>
-        <Menu class="javax.swing.JMenu" name="fileJMenu">
-          <Properties>
-            <Property name="mnemonic" type="int" value="70"/>
-            <Property name="text" type="java.lang.String" value="File"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="exitJMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Exit"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exitJMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="helpJMenu">
-          <Properties>
-            <Property name="mnemonic" type="int" value="72"/>
-            <Property name="text" type="java.lang.String" value="Help"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="helpJMenuItem">
-              <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="F1"/>
-                </Property>
-                <Property name="mnemonic" type="int" value="72"/>
-                <Property name="text" type="java.lang.String" value="Help"/>
-              </Properties>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
-      </SubComponents>
-    </Menu>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -54,7 +16,6 @@
     </Property>
   </Properties>
   <SyntheticProperties>
-    <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
   <AuxValues>
@@ -77,7 +38,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane" alignment="0" pref="608" max="32767" attributes="0"/>
+          <Component id="jTabbedPane" alignment="0" pref="619" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -114,7 +75,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="informationJScrollPane" pref="552" max="32767" attributes="0"/>
+                      <Component id="informationJScrollPane" pref="563" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -132,9 +93,9 @@
                   <Properties>
                     <Property name="contentType" type="java.lang.String" value="text/html"/>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xa;  &lt;/head&gt;&#xd;&#xa;  &lt;body&gt;&#xd;&#xa;&#x9;&#xa;&lt;h1&gt;Compomics-Utilities&lt;/h1&gt;&#xa;&#xa;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#xd;&#xa;      &#xd;&#x9;The &lt;a href=&quot;http://www.compomics.com&quot;&gt;Computational Omics Group&lt;/a&gt; at the &lt;a href=&quot;http://www.ugent.be/en&quot;&gt;University of Ghent&lt;/a&gt; develops various bioinformatics tools for analyzing omics data.&#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;Compomics-utilities is a library containing code shared by many of our research projects, amongst others containing panels &lt;br&gt;&#xa;&#x9;for visualizing spectra and chromatograms  and objects for representing peptides and proteins etc.  We believe that this library&lt;br&gt;&#xa;&#x9;can be of use to other research groups doing computational proteomics, and have therefore made it available as open source.&#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;This demo contains four examples of how the library can be used. For the complete source code of the examples, see the&lt;br&gt;&#xa;&#x9;&lt;i&gt;com.compomics.util.examples&lt;/i&gt; package. Click the tabs at the top to select one of the demos. &#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;Additional info can be found at the project&apos;s &lt;a href=&quot;http://googlecode.com&quot;&gt;Google Code&lt;/a&gt; home page: &lt;a href=&quot;http://compomics-utilities.googlecode.com&quot;&gt;http://compomics-utilities.googlecode.com&lt;/a&gt;.&#xa;    &lt;/p&gt;&#xd;&#xa;&#x9;&lt;br&gt;&lt;br&gt;&lt;br&gt;&#xa;&#x9;&lt;b&gt;The Computational Omics Group is grateful to be supported by:&lt;b&gt;&#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;&lt;a href=&quot;http://www.compomics.com&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/compomics.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.ugent.be/en&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/ugent.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.vib.be&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/vib.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://java.com/en&quot;&gt;&lt;img src=&quot; http://genesis.ugent.be/public_data/image/java.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://maven.apache.org&quot;&gt;&lt;img src=&quot; http://genesis.ugent.be/public_data/image/maven.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.jetbrains.com/idea/&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/intelliJ.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.yourkit.com/&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/yourkit.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xa;  &lt;/head&gt;&#xd;&#xa;  &lt;body&gt;&#xd;&#xa;&#x9;&#xa;&lt;h1&gt;Compomics-Utilities&lt;/h1&gt;&#xa;&#xa;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#xd;&#xa;      &#xd;&#x9;The &lt;a href=&quot;http://www.compomics.com&quot;&gt;Computational Omics Group&lt;/a&gt; at the &lt;a href=&quot;http://www.ugent.be/en&quot;&gt;University of Ghent&lt;/a&gt; develops various bioinformatics tools for analyzing omics data.&#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;Compomics-utilities is a library containing code shared by many of our research projects, amongst others containing panels &lt;br&gt;&#xa;&#x9;for visualizing spectra and chromatograms  and objects for representing peptides and proteins etc.  We believe that this library&lt;br&gt;&#xa;&#x9;can be of use to other research groups doing computational proteomics, and have therefore made it available as open source.&#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;This demo contains four examples of how the library can be used. For the complete source code of the examples, see the&lt;br&gt;&#xa;&#x9;&lt;i&gt;com.compomics.util.examples&lt;/i&gt; package. Click the tabs at the top to select one of the demos. &#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;Additional info can be found at the project&apos;s &lt;a href=&quot;http://googlecode.com&quot;&gt;Google Code&lt;/a&gt; home page: &lt;a href=&quot;http://compomics-utilities.googlecode.com&quot;&gt;http://compomics-utilities.googlecode.com&lt;/a&gt;.&#xa;    &lt;/p&gt;&#xd;&#xa;&#x9;&lt;br&gt;&lt;br&gt;&lt;br&gt;&#xa;&#x9;&lt;b&gt;The Computational Omics Group is grateful to be supported by:&lt;b&gt;&#xa;&#x9;&lt;br&gt;&lt;br&gt;&#xa;&#x9;&lt;a href=&quot;http://www.compomics.com&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/compomics.png&quot; border=&quot;0&quot; width=&quot;222&quot; height=&quot;111&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.ugent.be/en&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/ugent.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.vib.be&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/vib.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://java.com/en&quot;&gt;&lt;img src=&quot; http://genesis.ugent.be/public_data/image/java.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://maven.apache.org&quot;&gt;&lt;img src=&quot; http://genesis.ugent.be/public_data/image/maven.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.jetbrains.com/idea/&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/intelliJ.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;&#x9;&lt;a href=&quot;http://www.yourkit.com/&quot;&gt;&lt;img src=&quot;http://genesis.ugent.be/public_data/image/yourkit.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
                     <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[20, 20, 10, 20]"/>
+                      <Insets value="[30, 20, 10, 20]"/>
                     </Property>
                     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[10, 10]"/>
@@ -149,6 +110,9 @@
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="spectrumJPanel">
+          <Properties>
+            <Property name="requestFocusEnabled" type="boolean" value="false"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Spectrum Panel - Demo">
@@ -162,65 +126,62 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="spectrumPanelInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="spectrumJPanelA" pref="516" max="32767" attributes="0"/>
-                                  <Component id="spectrumAJTextField" alignment="1" pref="516" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="spectrumBJTextField" pref="517" max="32767" attributes="0"/>
-                                  <Component id="spectrumJPanelB" alignment="0" pref="517" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="spectrumPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="135" max="32767" attributes="0"/>
+                              <Component id="spectrumPanelHelpJLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="spectrumAJPanel" pref="1059" max="32767" attributes="0"/>
+                          <Component id="spectrumBJTextField" alignment="1" pref="1059" max="32767" attributes="1"/>
+                          <Component id="spectrumAJTextField" alignment="0" pref="1059" max="32767" attributes="0"/>
+                          <Component id="spectrumBJPanel" alignment="0" pref="1059" max="32767" attributes="2"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
-                              <Component id="jPanel5" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                          <Component id="jPanel4" alignment="1" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="profileSelectionJPanel" alignment="1" max="32767" attributes="1"/>
+                          <Component id="ionSelectionJPanel" alignment="1" max="32767" attributes="1"/>
+                          <Component id="linkedSelectionJPanel" alignment="1" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="1"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jPanel4" min="-2" max="-2" attributes="1"/>
+                              <Component id="ionSelectionJPanel" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                              <Component id="profileSelectionJPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                              <Component id="linkedSelectionJPanel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="spectrumAJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="spectrumBJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="spectrumJPanelB" alignment="1" pref="500" max="32767" attributes="2"/>
-                                  <Component id="spectrumJPanelA" alignment="0" pref="500" max="32767" attributes="2"/>
-                              </Group>
+                              <Component id="spectrumAJTextField" min="-2" pref="22" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="spectrumAJPanel" pref="234" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                              <Component id="spectrumBJTextField" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="spectrumBJPanel" pref="235" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="spectrumPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="spectrumPanelInfoJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="spectrumPanelHelpJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel4">
+            <Container class="javax.swing.JPanel" name="ionSelectionJPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -236,7 +197,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="NH3IonsJCheckBox" linkSize="1" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="H2OIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
@@ -254,7 +215,7 @@
                               <Component id="bIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="aIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -542,44 +503,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="spectrumJPanelA">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-                    <EtchetBorder/>
-                  </Border>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-              </Properties>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
-                <Property name="axis" type="int" value="0"/>
-              </Layout>
-            </Container>
-            <Container class="javax.swing.JPanel" name="spectrumJPanelB">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-                    <EtchetBorder/>
-                  </Border>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-              </Properties>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
-                <Property name="axis" type="int" value="0"/>
-              </Layout>
-            </Container>
             <Component class="javax.swing.JLabel" name="spectrumPanelInfoJLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
@@ -587,10 +510,10 @@
                     <Font component="spectrumPanelInfoJLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Spectrum Panel can be used to easily visualize spectra in both profile and centroid mode. Both of which the users can interact with. "/>
+                <Property name="text" type="java.lang.String" value="Spectrum Panel makes is easy to visualize spectra with annotations. It supports zooming and calculation of distances representing amino acids."/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JPanel" name="jPanel1">
+            <Container class="javax.swing.JPanel" name="profileSelectionJPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -607,7 +530,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="profileSpectrumJCheckBox" pref="96" max="32767" attributes="0"/>
+                          <Component id="profileSpectrumJCheckBox" pref="77" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -640,7 +563,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel5">
+            <Container class="javax.swing.JPanel" name="linkedSelectionJPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -657,7 +580,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="linkedSpectraJCheckBox" pref="96" max="32767" attributes="0"/>
+                          <Component id="linkedSpectraJCheckBox" pref="77" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -717,6 +640,47 @@
                 <Property name="text" type="java.lang.String" value="NH2-FQNALLVR-COOH"/>
               </Properties>
             </Component>
+            <Container class="javax.swing.JPanel" name="spectrumAJPanel">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+            </Container>
+            <Container class="javax.swing.JPanel" name="spectrumBJPanel">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+            </Container>
+            <Component class="javax.swing.JLabel" name="spectrumPanelHelpJLabel">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;a href=\&quot;dummy_link&quot;&gt;Click here for Help&lt;/a&gt;&lt;/html&gt;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spectrumPanelHelpJLabelMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spectrumPanelHelpJLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spectrumPanelHelpJLabelMouseExited"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="chromatogramJPanel">
@@ -747,7 +711,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="spectrumJPanel3" pref="529" max="32767" attributes="2"/>
+                      <Component id="spectrumJPanel3" pref="540" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="chromatogramPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -787,7 +751,7 @@
                     <Font component="chromatogramPanelInfoJLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Chromatogram Panel can be used to easily visualize chromatograms which the users can interact with. "/>
+                <Property name="text" type="java.lang.String" value="Chromatogram Panel makes it easy to visualize chromatograms. It supports zooming and other user interactions. "/>
               </Properties>
             </Component>
           </SubComponents>
@@ -854,12 +818,12 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="536" max="32767" attributes="0"/>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace min="0" pref="254" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -880,7 +844,7 @@
                     <Font component="isotopicDistributionCalculatorInfoJLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="The Isotopic Distribution Calculator calculates the isotopic distribution for a given peptide and displays a visual representation of the results."/>
+                <Property name="text" type="java.lang.String" value="Isotopic Distribution Calculator calculates and visualizes the isotopic distribution for a given peptide."/>
               </Properties>
             </Component>
           </SubComponents>
@@ -947,12 +911,12 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="536" max="32767" attributes="0"/>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="0" pref="254" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -973,7 +937,7 @@
                     <Font component="proteinDigestionJLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="In Silico Protein Digestion can be used to cleave a protein sequence and test the number of peptides, the maximum protein coverage etc, before doing the experiment."/>
+                <Property name="text" type="java.lang.String" value="In Silico Protein Digestion theoretically cleaves a protein sequence to calculate the number of peptides, the maximum protein coverage etc."/>
               </Properties>
             </Component>
           </SubComponents>

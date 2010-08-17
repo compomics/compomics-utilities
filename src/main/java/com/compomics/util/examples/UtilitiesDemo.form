@@ -162,16 +162,29 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="spectrumPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="spectrumJPanel1" pref="1071" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="spectrumPanelInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="spectrumJPanelA" pref="516" max="32767" attributes="0"/>
+                                  <Component id="spectrumAJTextField" alignment="1" pref="516" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="spectrumBJTextField" pref="517" max="32767" attributes="0"/>
+                                  <Component id="spectrumJPanelB" alignment="0" pref="517" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jPanel1" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
+                              <Component id="jPanel5" alignment="0" max="32767" attributes="1"/>
+                          </Group>
                           <Component id="jPanel4" alignment="1" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -179,13 +192,25 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jPanel4" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="spectrumJPanel1" pref="529" max="32767" attributes="2"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="spectrumAJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="spectrumBJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="spectrumJPanelB" alignment="1" pref="500" max="32767" attributes="2"/>
+                                  <Component id="spectrumJPanelA" alignment="0" pref="500" max="32767" attributes="2"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="spectrumPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
@@ -210,30 +235,26 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chargeOverTwoJCheckBox" linkSize="1" alignment="2" min="-2" pref="44" max="-2" attributes="1"/>
-                              <Component id="chargeTwoJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="chargeOneJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="zIonsJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="yIonsJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="xIonsJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="cIonsJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="bIonsJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
-                              <Component id="aIonsJCheckBox" linkSize="1" alignment="2" pref="58" max="32767" attributes="1"/>
+                              <Component id="NH3IonsJCheckBox" linkSize="1" alignment="2" min="-2" max="-2" attributes="1"/>
+                              <Component id="H2OIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="otherIonsJCheckBox" linkSize="1" alignment="2" min="-2" pref="65" max="-2" attributes="1"/>
+                              <Component id="jSeparator3" linkSize="4" alignment="2" min="-2" pref="48" max="-2" attributes="1"/>
+                              <Component id="chargeOverTwoJCheckBox" linkSize="1" alignment="2" min="-2" max="-2" attributes="1"/>
+                              <Component id="chargeTwoJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="chargeOneJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="jSeparator2" linkSize="4" alignment="2" min="-2" pref="37" max="-2" attributes="1"/>
+                              <Component id="zIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="yIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="xIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="jSeparator1" linkSize="4" alignment="2" min="-2" pref="69" max="-2" attributes="1"/>
+                              <Component id="cIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="bIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
+                              <Component id="aIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="12" pref="12" max="12" attributes="0"/>
-                          <Component id="jSeparator2" pref="57" max="32767" attributes="1"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="12" pref="12" max="12" attributes="0"/>
-                          <Component id="jSeparator1" pref="57" max="32767" attributes="1"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -241,28 +262,36 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aIonsJCheckBox" pref="26" max="32767" attributes="0"/>
+                          <Component id="aIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="bIonsJCheckBox" pref="27" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cIonsJCheckBox" pref="27" max="32767" attributes="0"/>
+                          <Component id="bIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="cIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                          <Component id="xIonsJCheckBox" pref="27" max="32767" attributes="0"/>
+                          <Component id="jSeparator1" min="-2" pref="2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="xIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="yIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="yIonsJCheckBox" pref="27" max="32767" attributes="0"/>
+                          <Component id="zIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="jSeparator2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                          <Component id="chargeOneJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="chargeTwoJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="chargeOverTwoJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                          <Component id="jSeparator3" min="-2" pref="2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="otherIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="zIonsJCheckBox" pref="26" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Component id="jSeparator2" min="-2" pref="8" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chargeOneJCheckBox" pref="26" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chargeTwoJCheckBox" pref="31" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chargeOverTwoJCheckBox" pref="28" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="H2OIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="NH3IonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -273,7 +302,6 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="a"/>
                     <Property name="toolTipText" type="java.lang.String" value="Show a-ions"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -317,7 +345,6 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="c"/>
                     <Property name="toolTipText" type="java.lang.String" value="Show c-ions"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -363,7 +390,6 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="x"/>
                     <Property name="toolTipText" type="java.lang.String" value="Show x-ions"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -385,7 +411,6 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="z"/>
                     <Property name="toolTipText" type="java.lang.String" value="Show z-ions"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -431,7 +456,6 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="++"/>
                     <Property name="toolTipText" type="java.lang.String" value="Show ions with charge 2"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -453,7 +477,6 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="&gt;2"/>
                     <Property name="toolTipText" type="java.lang.String" value="Show ions with charge &gt;2"/>
                   </Properties>
@@ -461,9 +484,65 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chargeOverTwoJCheckBoxActionPerformed"/>
                   </Events>
                 </Component>
+                <Component class="javax.swing.JSeparator" name="jSeparator3">
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="otherIonsJCheckBox">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Other"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Show other ions"/>
+                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[39, 23]"/>
+                    </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[39, 23]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[39, 23]"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="otherIonsJCheckBoxActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="H2OIonsJCheckBox">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="H2O"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Show ions with H2O loss"/>
+                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[39, 23]"/>
+                    </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[39, 23]"/>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[39, 23]"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="H2OIonsJCheckBoxActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="NH3IonsJCheckBox">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="NH3"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Show ions with NH3 loss"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NH3IonsJCheckBoxActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="spectrumJPanel1">
+            <Container class="javax.swing.JPanel" name="spectrumJPanelA">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -481,13 +560,25 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
                 <Property name="axis" type="int" value="0"/>
               </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel1">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="                                                                                                             Not yet implemented..."/>
-                  </Properties>
-                </Component>
-              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="spectrumJPanelB">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+              </Properties>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+                <Property name="axis" type="int" value="0"/>
+              </Layout>
             </Container>
             <Component class="javax.swing.JLabel" name="spectrumPanelInfoJLabel">
               <Properties>
@@ -515,8 +606,8 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="profileSpectrumJCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="profileSpectrumJCheckBox" pref="96" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -537,14 +628,95 @@
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
+                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Profile"/>
-                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;If selected the spectrum is displayed in &lt;br&gt;&#xa;profile mode, i.e., connecting the peaks. &lt;br&gt;&#xa;Otherwise only the peaks are shown.&#xa;&lt;/html&gt;"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;If selected the spectra are displayed in &lt;br&gt;&#xa;profile mode, i.e., connecting the peaks. &lt;br&gt;&#xa;Otherwise only the peaks are shown.&#xa;&lt;/html&gt;"/>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="horizontalTextPosition" type="int" value="4"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profileSpectrumJCheckBoxActionPerformed"/>
+                  </Events>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel5">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="linkedSpectraJCheckBox" pref="96" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="linkedSpectraJCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JCheckBox" name="linkedSpectraJCheckBox">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" value="Linked"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;If selected the two spectra are linked, &lt;br&gt;&#xa;meaning that zooming in one spectrum &lt;br&gt;&#xa;results in zooming in both spectra.&#xa;&lt;/html&gt;"/>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="horizontalTextPosition" type="int" value="4"/>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JTextField" name="spectrumAJTextField">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font bold="true" component="spectrumAJTextField" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="NH2-LC&lt;Cmm*&gt;TVATLR-COOH"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="spectrumBJTextField">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font bold="true" component="spectrumBJTextField" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="NH2-FQNALLVR-COOH"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="chromatogramJPanel">
@@ -713,11 +885,11 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="searchEngineJPanel">
+        <Container class="javax.swing.JPanel" name="proteinDigestionJPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Search Engine Modeller - Demo">
-                <Property name="tabTitle" type="java.lang.String" value="Search Engine Modeller - Demo"/>
+              <JTabbedPaneConstraints tabName="In Silico Protein Digestion - Demo">
+                <Property name="tabTitle" type="java.lang.String" value="In Silico Protein Digestion - Demo"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -729,7 +901,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                          <Component id="searchEngineInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="proteinDigestionJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -741,7 +913,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel3" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="searchEngineInfoJLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="proteinDigestionJLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -794,14 +966,14 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="searchEngineInfoJLabel">
+            <Component class="javax.swing.JLabel" name="proteinDigestionJLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
-                    <Font component="searchEngineInfoJLabel" italic="true" property="font" relativeSize="true" size="0"/>
+                    <Font component="proteinDigestionJLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="The generic Search Engine Modeller makes it possible to handle results form different proteomics search engines as if the results all came from the same tool."/>
+                <Property name="text" type="java.lang.String" value="In Silico Protein Digestion can be used to cleave a protein sequence and test the number of peptides, the maximum protein coverage etc, before doing the experiment."/>
               </Properties>
             </Component>
           </SubComponents>

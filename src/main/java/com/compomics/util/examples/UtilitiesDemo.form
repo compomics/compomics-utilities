@@ -127,23 +127,22 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="spectrumPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="135" max="32767" attributes="0"/>
-                              <Component id="spectrumPanelHelpJLabel" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="spectrumAJPanel" pref="1059" max="32767" attributes="0"/>
-                          <Component id="spectrumBJTextField" alignment="1" pref="1059" max="32767" attributes="1"/>
-                          <Component id="spectrumAJTextField" alignment="0" pref="1059" max="32767" attributes="0"/>
-                          <Component id="spectrumBJPanel" alignment="0" pref="1059" max="32767" attributes="2"/>
+                          <Component id="spectrumPanelInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="spectrumAJPanel" pref="1053" max="32767" attributes="0"/>
+                          <Component id="spectrumBJTextField" alignment="1" pref="1053" max="32767" attributes="1"/>
+                          <Component id="spectrumAJTextField" alignment="0" pref="1053" max="32767" attributes="0"/>
+                          <Component id="spectrumBJPanel" alignment="0" pref="1053" max="32767" attributes="2"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="profileSelectionJPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="ionSelectionJPanel" alignment="1" max="32767" attributes="1"/>
-                          <Component id="linkedSelectionJPanel" alignment="1" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="profileSelectionJPanel" alignment="1" max="32767" attributes="1"/>
+                              <Component id="ionSelectionJPanel" alignment="1" max="32767" attributes="1"/>
+                              <Component id="linkedSelectionJPanel" alignment="1" max="32767" attributes="1"/>
+                          </Group>
+                          <Component id="spectrumPanelHelpJLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -171,11 +170,11 @@
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="spectrumPanelInfoJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="spectrumPanelHelpJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="spectrumPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="spectrumPanelHelpJLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -698,12 +697,14 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="spectrumJPanel3" alignment="0" pref="1163" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="spectrumJPanel3" pref="1163" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="chromatogramPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="407" max="-2" attributes="0"/>
+                              <Component id="chromatogramPanelHelpJLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="chromatogramPanelInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -713,7 +714,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="spectrumJPanel3" pref="540" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chromatogramPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="chromatogramPanelInfoJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="chromatogramPanelHelpJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -754,6 +758,19 @@
                 <Property name="text" type="java.lang.String" value="Chromatogram Panel makes it easy to visualize chromatograms. It supports zooming and other user interactions. "/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JLabel" name="chromatogramPanelHelpJLabel">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;a href=\&quot;dummy_link&quot;&gt;Click here for Help&lt;/a&gt;&lt;/html&gt;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="chromatogramPanelHelpJLabelMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="chromatogramPanelHelpJLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="chromatogramPanelHelpJLabelMouseExited"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="isotopicDistributionJPanel">
@@ -772,7 +789,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="isotopicDistributionCalculatorInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="isotopicDistributionCalculatorInfoJLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="491" max="32767" attributes="0"/>
+                              <Component id="isotopicDistributionCalculatorHelpJLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -784,7 +805,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel2" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="isotopicDistributionCalculatorInfoJLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="isotopicDistributionCalculatorInfoJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="isotopicDistributionCalculatorHelpJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -847,6 +871,19 @@
                 <Property name="text" type="java.lang.String" value="Isotopic Distribution Calculator calculates and visualizes the isotopic distribution for a given peptide."/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JLabel" name="isotopicDistributionCalculatorHelpJLabel">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;a href=\&quot;dummy_link&quot;&gt;Click here for Help&lt;/a&gt;&lt;/html&gt;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="isotopicDistributionCalculatorHelpJLabelMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="isotopicDistributionCalculatorHelpJLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="isotopicDistributionCalculatorHelpJLabelMouseExited"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="proteinDigestionJPanel">
@@ -865,7 +902,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                          <Component id="proteinDigestionJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="proteinDigestionJLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="264" max="32767" attributes="0"/>
+                              <Component id="inSilicoDigestionHelpJLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -877,7 +918,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel3" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="proteinDigestionJLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="proteinDigestionJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="inSilicoDigestionHelpJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -939,6 +983,19 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="In Silico Protein Digestion theoretically cleaves a protein sequence to calculate the number of peptides, the maximum protein coverage etc."/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="inSilicoDigestionHelpJLabel">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;a href=\&quot;dummy_link&quot;&gt;Click here for Help&lt;/a&gt;&lt;/html&gt;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inSilicoDigestionHelpJLabelMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inSilicoDigestionHelpJLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inSilicoDigestionHelpJLabelMouseExited"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -329,14 +329,17 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         spectrumJPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         chromatogramPanelInfoJLabel = new javax.swing.JLabel();
+        chromatogramPanelHelpJLabel = new javax.swing.JLabel();
         isotopicDistributionJPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         isotopicDistributionCalculatorInfoJLabel = new javax.swing.JLabel();
+        isotopicDistributionCalculatorHelpJLabel = new javax.swing.JLabel();
         proteinDigestionJPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         proteinDigestionJLabel = new javax.swing.JLabel();
+        inSilicoDigestionHelpJLabel = new javax.swing.JLabel();
 
         jRadioButton1.setText("jRadioButton1");
 
@@ -693,19 +696,18 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(spectrumJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(spectrumJPanelLayout.createSequentialGroup()
-                        .add(spectrumPanelInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 135, Short.MAX_VALUE)
-                        .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
-                    .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
-                    .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE))
+                    .add(spectrumPanelInfoJLabel)
+                    .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+                    .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+                    .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(profileSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(linkedSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(profileSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(linkedSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         spectrumJPanelLayout.setVerticalGroup(
@@ -729,7 +731,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                         .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                         .add(7, 7, 7)))
                 .add(0, 0, 0)
-                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(spectrumPanelInfoJLabel)
                     .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -748,6 +750,20 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         chromatogramPanelInfoJLabel.setFont(chromatogramPanelInfoJLabel.getFont().deriveFont((chromatogramPanelInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         chromatogramPanelInfoJLabel.setText("Chromatogram Panel makes it easy to visualize chromatograms. It supports zooming and other user interactions. ");
 
+        chromatogramPanelHelpJLabel.setForeground(new java.awt.Color(0, 0, 255));
+        chromatogramPanelHelpJLabel.setText("<html> <a href=\\\"dummy_link\">Click here for Help</a></html>");
+        chromatogramPanelHelpJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chromatogramPanelHelpJLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                chromatogramPanelHelpJLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                chromatogramPanelHelpJLabelMouseExited(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout chromatogramJPanelLayout = new org.jdesktop.layout.GroupLayout(chromatogramJPanel);
         chromatogramJPanel.setLayout(chromatogramJPanelLayout);
         chromatogramJPanelLayout.setHorizontalGroup(
@@ -755,10 +771,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(spectrumJPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
                     .add(chromatogramJPanelLayout.createSequentialGroup()
-                        .add(spectrumJPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .add(chromatogramPanelInfoJLabel)))
+                        .add(chromatogramPanelInfoJLabel)
+                        .add(407, 407, 407)
+                        .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         chromatogramJPanelLayout.setVerticalGroup(
             chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -766,7 +784,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(spectrumJPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(chromatogramPanelInfoJLabel)
+                .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(chromatogramPanelInfoJLabel)
+                    .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -801,6 +821,20 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         isotopicDistributionCalculatorInfoJLabel.setFont(isotopicDistributionCalculatorInfoJLabel.getFont().deriveFont((isotopicDistributionCalculatorInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         isotopicDistributionCalculatorInfoJLabel.setText("Isotopic Distribution Calculator calculates and visualizes the isotopic distribution for a given peptide.");
 
+        isotopicDistributionCalculatorHelpJLabel.setForeground(new java.awt.Color(0, 0, 255));
+        isotopicDistributionCalculatorHelpJLabel.setText("<html> <a href=\\\"dummy_link\">Click here for Help</a></html>");
+        isotopicDistributionCalculatorHelpJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                isotopicDistributionCalculatorHelpJLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                isotopicDistributionCalculatorHelpJLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                isotopicDistributionCalculatorHelpJLabelMouseExited(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout isotopicDistributionJPanelLayout = new org.jdesktop.layout.GroupLayout(isotopicDistributionJPanel);
         isotopicDistributionJPanel.setLayout(isotopicDistributionJPanelLayout);
         isotopicDistributionJPanelLayout.setHorizontalGroup(
@@ -809,7 +843,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(isotopicDistributionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(isotopicDistributionCalculatorInfoJLabel))
+                    .add(isotopicDistributionJPanelLayout.createSequentialGroup()
+                        .add(isotopicDistributionCalculatorInfoJLabel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 491, Short.MAX_VALUE)
+                        .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         isotopicDistributionJPanelLayout.setVerticalGroup(
@@ -818,7 +855,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(isotopicDistributionCalculatorInfoJLabel)
+                .add(isotopicDistributionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(isotopicDistributionCalculatorInfoJLabel)
+                    .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -853,6 +892,20 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         proteinDigestionJLabel.setFont(proteinDigestionJLabel.getFont().deriveFont((proteinDigestionJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         proteinDigestionJLabel.setText("In Silico Protein Digestion theoretically cleaves a protein sequence to calculate the number of peptides, the maximum protein coverage etc.");
 
+        inSilicoDigestionHelpJLabel.setForeground(new java.awt.Color(0, 0, 255));
+        inSilicoDigestionHelpJLabel.setText("<html> <a href=\\\"dummy_link\">Click here for Help</a></html>");
+        inSilicoDigestionHelpJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inSilicoDigestionHelpJLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                inSilicoDigestionHelpJLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                inSilicoDigestionHelpJLabelMouseExited(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout proteinDigestionJPanelLayout = new org.jdesktop.layout.GroupLayout(proteinDigestionJPanel);
         proteinDigestionJPanel.setLayout(proteinDigestionJPanelLayout);
         proteinDigestionJPanelLayout.setHorizontalGroup(
@@ -861,7 +914,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(proteinDigestionJLabel))
+                    .add(proteinDigestionJPanelLayout.createSequentialGroup()
+                        .add(proteinDigestionJLabel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 264, Short.MAX_VALUE)
+                        .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         proteinDigestionJPanelLayout.setVerticalGroup(
@@ -870,7 +926,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(proteinDigestionJLabel)
+                .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(proteinDigestionJLabel)
+                    .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1040,6 +1098,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @param evt
      */
     private void spectrumPanelHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumPanelHelpJLabelMouseClicked
+        // @TODO: implement...
         JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_spectrumPanelHelpJLabelMouseClicked
 
@@ -1060,6 +1119,90 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void spectrumPanelHelpJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumPanelHelpJLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_spectrumPanelHelpJLabelMouseExited
+
+    /**
+     * Opens the help dialog.
+     *
+     * @param evt
+     */
+    private void chromatogramPanelHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chromatogramPanelHelpJLabelMouseClicked
+        // @TODO: implement...
+        JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_chromatogramPanelHelpJLabelMouseClicked
+
+    /**
+     * Changes the cursor to the hand cursor when over the help link.
+     *
+     * @param evt
+     */
+    private void chromatogramPanelHelpJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chromatogramPanelHelpJLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_chromatogramPanelHelpJLabelMouseEntered
+
+    /**
+     * Changes the cursor back to the default cursor when leaving the help link.
+     *
+     * @param evt
+     */
+    private void chromatogramPanelHelpJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chromatogramPanelHelpJLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_chromatogramPanelHelpJLabelMouseExited
+
+    /**
+     * Opens the help dialog.
+     *
+     * @param evt
+     */
+    private void isotopicDistributionCalculatorHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_isotopicDistributionCalculatorHelpJLabelMouseClicked
+        // @TODO: implement...
+        JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_isotopicDistributionCalculatorHelpJLabelMouseClicked
+
+    /**
+     * Changes the cursor to the hand cursor when over the help link.
+     *
+     * @param evt
+     */
+    private void isotopicDistributionCalculatorHelpJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_isotopicDistributionCalculatorHelpJLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_isotopicDistributionCalculatorHelpJLabelMouseEntered
+
+    /**
+     * Changes the cursor back to the default cursor when leaving the help link.
+     *
+     * @param evt
+     */
+    private void isotopicDistributionCalculatorHelpJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_isotopicDistributionCalculatorHelpJLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_isotopicDistributionCalculatorHelpJLabelMouseExited
+
+    /**
+     * Opens the help dialog.
+     *
+     * @param evt
+     */
+    private void inSilicoDigestionHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inSilicoDigestionHelpJLabelMouseClicked
+        // @TODO: implement...
+        JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_inSilicoDigestionHelpJLabelMouseClicked
+
+    /**
+     * Changes the cursor to the hand cursor when over the help link.
+     *
+     * @param evt
+     */
+    private void inSilicoDigestionHelpJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inSilicoDigestionHelpJLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_inSilicoDigestionHelpJLabelMouseEntered
+
+    /**
+     * Changes the cursor back to the default cursor when leaving the help link.
+     *
+     * @param evt
+     */
+    private void inSilicoDigestionHelpJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inSilicoDigestionHelpJLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_inSilicoDigestionHelpJLabelMouseExited
 
     /**
      * Filters the annotations and returns the annotations matching the currently selected list.
@@ -1182,11 +1325,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JCheckBox chargeOverTwoJCheckBox;
     private javax.swing.JCheckBox chargeTwoJCheckBox;
     private javax.swing.JPanel chromatogramJPanel;
+    private javax.swing.JLabel chromatogramPanelHelpJLabel;
     private javax.swing.JLabel chromatogramPanelInfoJLabel;
+    private javax.swing.JLabel inSilicoDigestionHelpJLabel;
     private javax.swing.JEditorPane informationJEditorPane;
     private javax.swing.JPanel informationJPanel;
     private javax.swing.JScrollPane informationJScrollPane;
     private javax.swing.JPanel ionSelectionJPanel;
+    private javax.swing.JLabel isotopicDistributionCalculatorHelpJLabel;
     private javax.swing.JLabel isotopicDistributionCalculatorInfoJLabel;
     private javax.swing.JPanel isotopicDistributionJPanel;
     private javax.swing.JLabel jLabel2;

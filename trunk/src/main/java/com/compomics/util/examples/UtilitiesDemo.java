@@ -5,17 +5,33 @@
  */
 package com.compomics.util.examples;
 
+import com.compomics.util.gui.events.RescalingEvent;
+import com.compomics.util.gui.interfaces.SpectrumPanelListener;
+import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
+import com.compomics.util.gui.spectrum.SpectrumPanel;
+import com.compomics.util.io.PklFile;
+import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * This class serves as a demo of how the compomics-utilities library can be
- * used in other projetcs. It contains four demos, and is also the frame shown 
+ * used in other projects. It contains four demos, and is also the frame shown
  * if the compomics-utilities jar file is double clicked or ran from the command 
  * line.
  *
  * @author Harald Barsnes
  */
 public class UtilitiesDemo extends javax.swing.JFrame {
+
+    private HashMap<Integer, SpectrumPanel> linkedSpectrumPanels;
+    private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations;
+    private SpectrumPanel spectrumPanelA;
+    private SpectrumPanel spectrumPanelB;
 
     /** 
      * Creates a new UtilitiesDemo frame and makes it visible.
@@ -27,8 +43,229 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().
                 getResource("/icons/compomics-utilities.png")));
 
+        setUpSpectrumPanelDemo();
+
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    /**
+     * Sets up the spectrum panel demo.
+     */
+    private void setUpSpectrumPanelDemo() {
+
+        linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
+        allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
+
+        try {
+            // create and add two spectra to the view
+
+            // get the peaks for the first spectrum
+            File spectrumFile = new File(this.getClass().getResource("/exampleFiles/exampleSpectrumA.pkl").getFile());
+            PklFile pklFileA = new PklFile(spectrumFile);
+
+            // create the first spectrum panel
+            spectrumPanelA = getSpectrumPanel(pklFileA, profileSpectrumJCheckBox.isSelected());
+
+            // add the fragment ions annotations for the first spectrum
+            Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
+            currentAnnotations.add(new DefaultSpectrumAnnotation(175.119495, -0.006822999999997137, determineColorOfPeak("y1"), "y1"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(389.251235, 4.6299999996790575E-4, determineColorOfPeak("y3"), "y3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(460.288345, -0.003290999999990163, determineColorOfPeak("y4"), "y4"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(559.356755, -2.4200000007112976E-4, determineColorOfPeak("y5"), "y5"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(660.404435, -0.002686000000039712, determineColorOfPeak("y6"), "y6"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(820.4350840000001, 8.09999999091815E-5, determineColorOfPeak("y7"), "y7"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(271.177006, -0.003444999999999254, determineColorOfPeak("y[2]-NH3"), "y[2]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(288.203555, -0.002484999999978754, determineColorOfPeak("y2"), "y2"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(158.092946, -5.020000000115488E-4, determineColorOfPeak("y[1]-NH3"), "y[1]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(372.224686, 0.001030999999954929, determineColorOfPeak("y[3]-NH3"), "y[3]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(443.261796, 0.0025039999999876272, determineColorOfPeak("y[4]-NH3"), "y[4]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(274.12253400000003, 0.00181899999995494, determineColorOfPeak("b2"), "b2"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(458.20561749999996, 0.05911150000002863, determineColorOfPeak("Prec-H2O 2+"), "Prec-H2O 2+"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(129.000000, 0.10726900000000228, determineColorOfPeak("iR"), "iR"));
+
+            // store the annotations for later use
+            allAnnotations.put(new Integer(0), currentAnnotations);
+            spectrumPanelA.setAnnotations(currentAnnotations);
+
+            // store a unique reference to each spectrum panel for linking purposes
+            linkedSpectrumPanels.put(new Integer(0), spectrumPanelA);
+
+            // remove the default spectrum panel border, given that our
+            // spectrum panel already have a border
+            spectrumPanelA.setBorder(null);
+
+            // add the spectrum panel to the frame
+            spectrumJPanelA.add(spectrumPanelA);
+            spectrumJPanelA.validate();
+            spectrumJPanelA.repaint();
+
+
+            // get the peaks for the second spectrum
+            spectrumFile = new File(this.getClass().getResource("/exampleFiles/exampleSpectrumB.pkl").getFile());
+            PklFile pklFileB = new PklFile(spectrumFile);
+
+            // create the first spectrum panel
+            spectrumPanelB = getSpectrumPanel(pklFileB, profileSpectrumJCheckBox.isSelected());
+
+            // add the fragment ions annotations for the first spectrum
+            currentAnnotations = new Vector();
+            currentAnnotations.add(new DefaultSpectrumAnnotation(175.119495, -0.010621000000014647, determineColorOfPeak("y1"), "y1"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(387.27196499999997, -0.0044499999999629836, determineColorOfPeak("y3"), "y3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(500.356025, -0.002353999999968437, determineColorOfPeak("y4"), "y4"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(571.393135, -0.004269000000022061, determineColorOfPeak("y5"), "y5"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(685.436065, -0.013534999999933461, determineColorOfPeak("y6"), "y6"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(813.494645, 0.005993999999986954, determineColorOfPeak("y7"), "y7"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(257.161356, -0.007209999999986394, determineColorOfPeak("y[2]-NH3"), "y[2]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(370.245416, -9.159999999610591E-4, determineColorOfPeak("y[3]-NH3"), "y[3]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(796.468096, 0.0018540000000939472, determineColorOfPeak("y[7]-NH3"), "y[7]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(274.187905, -0.004702000000008866, determineColorOfPeak("y2"), "y2"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(158.092946, -0.008444000000025653, determineColorOfPeak("y[1]-NH3"), "y[1]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(668.4095159999999, 0.0019680000000334985, determineColorOfPeak("y[6]-NH3"), "y[6]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(276.134815, -0.002712000000030912, determineColorOfPeak("b2"), "b2"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(259.108266, -0.004803000000038082, determineColorOfPeak("b[2]-NH3"), "b[2]-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(242.164738, -0.08587800000000811, determineColorOfPeak("y[4]++-NH3"), "y[4]++-NH3"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(129, 0.09981500000000665, determineColorOfPeak("iR"), "iR"));
+            currentAnnotations.add(new DefaultSpectrumAnnotation(120, 0.08159999999999457, determineColorOfPeak("iF"), "iF"));
+
+            // store the annotations for later use
+            allAnnotations.put(new Integer(1), currentAnnotations);
+            spectrumPanelB.setAnnotations(currentAnnotations);
+
+            // store a unique reference to each spectrum panel for linking purposes
+            linkedSpectrumPanels.put(new Integer(1), spectrumPanelB);
+
+            // remove the default spectrum panel border, given that our
+            // spectrum panel already have a border
+            spectrumPanelB.setBorder(null);
+
+            // add the spectrum panel to the frame
+            spectrumJPanelB.add(spectrumPanelB);
+            spectrumJPanelB.validate();
+            spectrumJPanelB.repaint();
+
+            // update the fragment ions
+            aIonsJCheckBoxActionPerformed(null);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns a spectrum panel containing the provided data.
+     *
+     * @param pklFile the pkl file containing the spectrum
+     * @param profileMode if true the spectrum is drawn in profile mode
+     * @return the created spectrum panel
+     * @throws IOException
+     */
+    private SpectrumPanel getSpectrumPanel(PklFile pklFile, boolean profileMode) throws IOException {
+
+        SpectrumPanel spectrumPanel = new SpectrumPanel(
+                pklFile.getMzValues(), pklFile.getIntensityValues(),
+                pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(),
+                "" + pklFile.getFileName(),
+                60, false, false, false, false, 2, profileMode);
+
+        spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
+
+            public void rescaled(RescalingEvent rescalingEvent) {
+                SpectrumPanel source = (SpectrumPanel) rescalingEvent.getSource();
+                double minMass = rescalingEvent.getMinMass();
+                double maxMass = rescalingEvent.getMaxMass();
+
+                Iterator<Integer> iterator = linkedSpectrumPanels.keySet().iterator();
+
+                while (iterator.hasNext()) {
+                    SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(iterator.next());
+                    if (currentSpectrumPanel != source && linkedSpectraJCheckBox.isSelected()) {
+                        currentSpectrumPanel.rescale(minMass, maxMass, false);
+                        currentSpectrumPanel.repaint();
+                    }
+                }
+            }
+        });
+
+        return spectrumPanel;
+    }
+
+    /**
+     * Returns the peak color to be used for the given peak label. The
+     * colors used are based on the color coding used in MascotDatfile.
+     *
+     * @param peakLabel
+     * @return the peak color
+     */
+    public static Color determineColorOfPeak(String peakLabel) {
+
+        Color currentColor = Color.GRAY;
+
+        if (peakLabel.startsWith("a")) {
+
+            // turquoise
+            currentColor = new Color(153, 0, 0);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                // light purple-blue
+                currentColor = new Color(171, 161, 255);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                // ugly purple pink
+                currentColor = new Color(248, 151, 202);
+            }
+
+        } else if (peakLabel.startsWith("b")) {
+
+            // dark blue
+            currentColor = new Color(0, 0, 255);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                // nice blue
+                currentColor = new Color(0, 125, 200);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                // another purple
+                currentColor = new Color(153, 0, 255);
+            }
+
+        } else if (peakLabel.startsWith("c")) {
+
+            // purple blue
+            currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("x")) {
+
+            // green
+            currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("y")) {
+
+            // black
+            currentColor = new Color(0, 0, 0);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                // navy blue
+                currentColor = new Color(0, 70, 135);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                // another purple
+                currentColor = new Color(155, 0, 155);
+            }
+
+        } else if (peakLabel.startsWith("z")) {
+
+            // dark green
+            currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("Prec")) { // precursor
+
+            // red
+            currentColor = Color.gray; // Color.red is used in MascotDatFile
+
+        } else if (peakLabel.startsWith("i")) { // immonimum ion
+            // grey
+            currentColor = Color.gray;
+        }
+
+        return currentColor;
     }
 
     /** This method is called from within the constructor to
@@ -58,11 +295,19 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         chargeOneJCheckBox = new javax.swing.JCheckBox();
         chargeTwoJCheckBox = new javax.swing.JCheckBox();
         chargeOverTwoJCheckBox = new javax.swing.JCheckBox();
-        spectrumJPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        otherIonsJCheckBox = new javax.swing.JCheckBox();
+        H2OIonsJCheckBox = new javax.swing.JCheckBox();
+        NH3IonsJCheckBox = new javax.swing.JCheckBox();
+        spectrumJPanelA = new javax.swing.JPanel();
+        spectrumJPanelB = new javax.swing.JPanel();
         spectrumPanelInfoJLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         profileSpectrumJCheckBox = new javax.swing.JCheckBox();
+        jPanel5 = new javax.swing.JPanel();
+        linkedSpectraJCheckBox = new javax.swing.JCheckBox();
+        spectrumAJTextField = new javax.swing.JTextField();
+        spectrumBJTextField = new javax.swing.JTextField();
         chromatogramJPanel = new javax.swing.JPanel();
         spectrumJPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -71,10 +316,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         isotopicDistributionCalculatorInfoJLabel = new javax.swing.JLabel();
-        searchEngineJPanel = new javax.swing.JPanel();
+        proteinDigestionJPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        searchEngineInfoJLabel = new javax.swing.JLabel();
+        proteinDigestionJLabel = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         fileJMenu = new javax.swing.JMenu();
         exitJMenuItem = new javax.swing.JMenuItem();
@@ -124,7 +369,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         aIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        aIonsJCheckBox.setSelected(true);
         aIonsJCheckBox.setText("a");
         aIonsJCheckBox.setToolTipText("Show a-ions");
         aIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
@@ -150,7 +394,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
 
         cIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        cIonsJCheckBox.setSelected(true);
         cIonsJCheckBox.setText("c");
         cIonsJCheckBox.setToolTipText("Show c-ions");
         cIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
@@ -176,7 +419,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
 
         xIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        xIonsJCheckBox.setSelected(true);
         xIonsJCheckBox.setText("x");
         xIonsJCheckBox.setToolTipText("Show x-ions");
         xIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
@@ -189,7 +431,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
 
         zIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        zIonsJCheckBox.setSelected(true);
         zIonsJCheckBox.setText("z");
         zIonsJCheckBox.setToolTipText("Show z-ions");
         zIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
@@ -215,7 +456,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
 
         chargeTwoJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        chargeTwoJCheckBox.setSelected(true);
         chargeTwoJCheckBox.setText("++");
         chargeTwoJCheckBox.setToolTipText("Show ions with charge 2");
         chargeTwoJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
@@ -228,7 +468,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
 
         chargeOverTwoJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        chargeOverTwoJCheckBox.setSelected(true);
         chargeOverTwoJCheckBox.setText(">2");
         chargeOverTwoJCheckBox.setToolTipText("Show ions with charge >2");
         chargeOverTwoJCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -237,70 +476,115 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
+        otherIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
+        otherIonsJCheckBox.setText("Other");
+        otherIonsJCheckBox.setToolTipText("Show other ions");
+        otherIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
+        otherIonsJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
+        otherIonsJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
+        otherIonsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                otherIonsJCheckBoxActionPerformed(evt);
+            }
+        });
+
+        H2OIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
+        H2OIonsJCheckBox.setText("H2O");
+        H2OIonsJCheckBox.setToolTipText("Show ions with H2O loss");
+        H2OIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
+        H2OIonsJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
+        H2OIonsJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
+        H2OIonsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                H2OIonsJCheckBoxActionPerformed(evt);
+            }
+        });
+
+        NH3IonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
+        NH3IonsJCheckBox.setText("NH3");
+        NH3IonsJCheckBox.setToolTipText("Show ions with NH3 loss");
+        NH3IonsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NH3IonsJCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
+                .add(22, 22, 22)
                 .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
-                    .add(chargeOverTwoJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 44, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(zIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(yIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(xIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(cIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(bIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                    .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE))
-                .add(2, 2, 2))
-            .add(jPanel4Layout.createSequentialGroup()
-                .add(12, 12, 12)
-                .add(jSeparator2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                .addContainerGap())
-            .add(jPanel4Layout.createSequentialGroup()
-                .add(12, 12, 12)
-                .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                .addContainerGap())
+                    .add(NH3IonsJCheckBox)
+                    .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(chargeOverTwoJCheckBox)
+                    .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(zIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(yIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(xIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 69, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(cIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(bIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))
+                .add(21, 21, 21))
         );
 
-        jPanel4Layout.linkSize(new java.awt.Component[] {aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+        jPanel4Layout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, otherIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
+        jPanel4Layout.linkSize(new java.awt.Component[] {jSeparator1, jSeparator2, jSeparator3}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
 
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(bIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .add(bIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .add(cIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(13, 13, 13)
-                .add(xIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(xIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(yIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .add(yIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(zIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                .add(12, 12, 12)
-                .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(zIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(11, 11, 11)
+                .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                .add(chargeOverTwoJCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(chargeOverTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                .addContainerGap())
+                .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(NH3IonsJCheckBox)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        spectrumJPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        spectrumJPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        spectrumJPanel1.setForeground(new java.awt.Color(255, 255, 255));
-        spectrumJPanel1.setLayout(new javax.swing.BoxLayout(spectrumJPanel1, javax.swing.BoxLayout.X_AXIS));
+        jPanel4Layout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, otherIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
 
-        jLabel1.setText("                                                                                                             Not yet implemented...");
-        spectrumJPanel1.add(jLabel1);
+        spectrumJPanelA.setBackground(new java.awt.Color(255, 255, 255));
+        spectrumJPanelA.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        spectrumJPanelA.setForeground(new java.awt.Color(255, 255, 255));
+        spectrumJPanelA.setLayout(new javax.swing.BoxLayout(spectrumJPanelA, javax.swing.BoxLayout.X_AXIS));
+
+        spectrumJPanelB.setBackground(new java.awt.Color(255, 255, 255));
+        spectrumJPanelB.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        spectrumJPanelB.setForeground(new java.awt.Color(255, 255, 255));
+        spectrumJPanelB.setLayout(new javax.swing.BoxLayout(spectrumJPanelB, javax.swing.BoxLayout.X_AXIS));
 
         spectrumPanelInfoJLabel.setFont(spectrumPanelInfoJLabel.getFont().deriveFont((spectrumPanelInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         spectrumPanelInfoJLabel.setText("Spectrum Panel can be used to easily visualize spectra in both profile and centroid mode. Both of which the users can interact with. ");
@@ -309,18 +593,24 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         profileSpectrumJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
+        profileSpectrumJCheckBox.setSelected(true);
         profileSpectrumJCheckBox.setText("Profile");
-        profileSpectrumJCheckBox.setToolTipText("<html>\nIf selected the spectrum is displayed in <br>\nprofile mode, i.e., connecting the peaks. <br>\nOtherwise only the peaks are shown.\n</html>");
+        profileSpectrumJCheckBox.setToolTipText("<html>\nIf selected the spectra are displayed in <br>\nprofile mode, i.e., connecting the peaks. <br>\nOtherwise only the peaks are shown.\n</html>");
         profileSpectrumJCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         profileSpectrumJCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        profileSpectrumJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileSpectrumJCheckBoxActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(profileSpectrumJCheckBox)
+                .addContainerGap()
+                .add(profileSpectrumJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -331,18 +621,66 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        linkedSpectraJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
+        linkedSpectraJCheckBox.setSelected(true);
+        linkedSpectraJCheckBox.setText("Linked");
+        linkedSpectraJCheckBox.setToolTipText("<html>\nIf selected the two spectra are linked, <br>\nmeaning that zooming in one spectrum <br>\nresults in zooming in both spectra.\n</html>");
+        linkedSpectraJCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        linkedSpectraJCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        org.jdesktop.layout.GroupLayout jPanel5Layout = new org.jdesktop.layout.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(linkedSpectraJCheckBox)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        spectrumAJTextField.setBackground(new java.awt.Color(255, 255, 255));
+        spectrumAJTextField.setEditable(false);
+        spectrumAJTextField.setFont(spectrumAJTextField.getFont().deriveFont(spectrumAJTextField.getFont().getStyle() | java.awt.Font.BOLD));
+        spectrumAJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        spectrumAJTextField.setText("NH2-LC<Cmm*>TVATLR-COOH");
+
+        spectrumBJTextField.setBackground(new java.awt.Color(255, 255, 255));
+        spectrumBJTextField.setEditable(false);
+        spectrumBJTextField.setFont(spectrumBJTextField.getFont().deriveFont(spectrumBJTextField.getFont().getStyle() | java.awt.Font.BOLD));
+        spectrumBJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        spectrumBJTextField.setText("NH2-FQNALLVR-COOH");
+
         org.jdesktop.layout.GroupLayout spectrumJPanelLayout = new org.jdesktop.layout.GroupLayout(spectrumJPanel);
         spectrumJPanel.setLayout(spectrumJPanelLayout);
         spectrumJPanelLayout.setHorizontalGroup(
             spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(spectrumJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(spectrumPanelInfoJLabel)
-                    .add(spectrumJPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE))
+                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, spectrumPanelInfoJLabel)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, spectrumJPanelLayout.createSequentialGroup()
+                        .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(spectrumJPanelA, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                            .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                            .add(spectrumJPanelB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE))))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jPanel5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -350,12 +688,21 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(spectrumJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, spectrumJPanelLayout.createSequentialGroup()
+                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(spectrumJPanelLayout.createSequentialGroup()
                         .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(spectrumJPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE))
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(spectrumJPanelLayout.createSequentialGroup()
+                        .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(spectrumBJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumJPanelB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .add(spectrumJPanelA, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(spectrumPanelInfoJLabel)
                 .addContainerGap())
@@ -476,31 +823,31 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(0, 255, Short.MAX_VALUE)))
         );
 
-        searchEngineInfoJLabel.setFont(searchEngineInfoJLabel.getFont().deriveFont((searchEngineInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        searchEngineInfoJLabel.setText("The generic Search Engine Modeller makes it possible to handle results form different proteomics search engines as if the results all came from the same tool.");
+        proteinDigestionJLabel.setFont(proteinDigestionJLabel.getFont().deriveFont((proteinDigestionJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        proteinDigestionJLabel.setText("In Silico Protein Digestion can be used to cleave a protein sequence and test the number of peptides, the maximum protein coverage etc, before doing the experiment.");
 
-        org.jdesktop.layout.GroupLayout searchEngineJPanelLayout = new org.jdesktop.layout.GroupLayout(searchEngineJPanel);
-        searchEngineJPanel.setLayout(searchEngineJPanelLayout);
-        searchEngineJPanelLayout.setHorizontalGroup(
-            searchEngineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(searchEngineJPanelLayout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout proteinDigestionJPanelLayout = new org.jdesktop.layout.GroupLayout(proteinDigestionJPanel);
+        proteinDigestionJPanel.setLayout(proteinDigestionJPanelLayout);
+        proteinDigestionJPanelLayout.setHorizontalGroup(
+            proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(proteinDigestionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(searchEngineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(searchEngineInfoJLabel))
+                    .add(proteinDigestionJLabel))
                 .addContainerGap())
         );
-        searchEngineJPanelLayout.setVerticalGroup(
-            searchEngineJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, searchEngineJPanelLayout.createSequentialGroup()
+        proteinDigestionJPanelLayout.setVerticalGroup(
+            proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, proteinDigestionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(searchEngineInfoJLabel)
+                .add(proteinDigestionJLabel)
                 .addContainerGap())
         );
 
-        jTabbedPane.addTab("Search Engine Modeller - Demo", searchEngineJPanel);
+        jTabbedPane.addTab("In Silico Protein Digestion - Demo", proteinDigestionJPanel);
 
         fileJMenu.setMnemonic('F');
         fileJMenu.setText("File");
@@ -554,22 +901,26 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_exitJMenuItemActionPerformed
 
     /**
-     * Updates the ion coverage annotations
+     * Updates the ion coverage annotations.
      *
      * @param evt
      */
     private void aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aIonsJCheckBoxActionPerformed
 
-        // @TODO not yet implemented...
+        Iterator<Integer> iterator = linkedSpectrumPanels.keySet().iterator();
 
-//        Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(
-//                identificationsJXTable.getValueAt(selectedRow, 1) + "_"
-//                + identificationsJXTable.getValueAt(selectedRow, 8));
-//
-//        // update the ion coverage annotations
-//        spectrumPanel.setAnnotations(filterAnnotations(currentAnnotations));
-//        spectrumPanel.validate();
-//        spectrumPanel.repaint();
+        while (iterator.hasNext()) {
+
+            Integer key = iterator.next();
+            SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(key);
+            Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
+
+            // update the ion coverage annotations
+            currentSpectrumPanel.setAnnotations(filterAnnotations(currentAnnotations));
+            currentSpectrumPanel.validate();
+            currentSpectrumPanel.repaint();
+        }
+
 }//GEN-LAST:event_aIonsJCheckBoxActionPerformed
 
     /**
@@ -653,18 +1004,155 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_informationJEditorPaneHyperlinkUpdate
 
     /**
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
+     */
+    private void NH3IonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NH3IonsJCheckBoxActionPerformed
+        aIonsJCheckBoxActionPerformed(null);
+    }//GEN-LAST:event_NH3IonsJCheckBoxActionPerformed
+
+    /**
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
+     */
+    private void H2OIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_H2OIonsJCheckBoxActionPerformed
+        aIonsJCheckBoxActionPerformed(null);
+    }//GEN-LAST:event_H2OIonsJCheckBoxActionPerformed
+
+    /**
+     * @see #aIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent)
+     */
+    private void otherIonsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otherIonsJCheckBoxActionPerformed
+        aIonsJCheckBoxActionPerformed(null);
+    }//GEN-LAST:event_otherIonsJCheckBoxActionPerformed
+
+    /**
+     * Turns the profile spectrum mode on or off.
+     * 
+     * @param evt
+     */
+    private void profileSpectrumJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileSpectrumJCheckBoxActionPerformed
+        spectrumPanelA.setProfileMode(profileSpectrumJCheckBox.isSelected());
+        spectrumPanelA.validate();
+        spectrumPanelA.repaint();
+
+        spectrumPanelB.setProfileMode(profileSpectrumJCheckBox.isSelected());
+        spectrumPanelB.validate();
+        spectrumPanelB.repaint();
+    }//GEN-LAST:event_profileSpectrumJCheckBoxActionPerformed
+
+    /**
+     * Filters the annotations and returns the annotations matching the currently selected list.
+     *
+     * @param annotations the annotations to be filtered
+     * @return the filtered annotations
+     */
+    private Vector<DefaultSpectrumAnnotation> filterAnnotations(Vector<DefaultSpectrumAnnotation> annotations) {
+
+        // ToDo: This method could be moved into the PlotUtil class?
+
+        Vector<DefaultSpectrumAnnotation> filteredAnnotations = new Vector();
+
+        for (int i = 0; i < annotations.size(); i++) {
+            String currentLabel = annotations.get(i).getLabel();
+
+            boolean useAnnotation = true;
+
+            // check ion type
+            if (currentLabel.startsWith("a")) {
+                if (!aIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("b")) {
+                if (!bIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("c")) {
+                if (!cIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("x")) {
+                if (!xIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("y")) {
+                if (!yIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("z")) {
+                if (!zIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("z")) {
+                if (!zIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            } else {
+                if (!otherIonsJCheckBox.isSelected()) {
+                    useAnnotation = false;
+                }
+            }
+
+            // check neutral losses
+            if (useAnnotation) {
+                if (currentLabel.lastIndexOf("-H2O") != -1 || currentLabel.lastIndexOf("-H20") != -1) {
+                    if (!H2OIonsJCheckBox.isSelected()) {
+                        useAnnotation = false;
+                    }
+                }
+
+                if (currentLabel.lastIndexOf("-NH3") != -1) {
+                    if (!NH3IonsJCheckBox.isSelected()) {
+                        useAnnotation = false;
+                    }
+                }
+            }
+
+
+            // check ion charge
+            if (useAnnotation) {
+                if (currentLabel.lastIndexOf("+") == -1) {
+
+                    // test needed to be able to show ions in the "other" group
+                    if (currentLabel.startsWith("a") || currentLabel.startsWith("b") || currentLabel.startsWith("c")
+                            || currentLabel.startsWith("x") || currentLabel.startsWith("y") || currentLabel.startsWith("z")) {
+                        if (!chargeOneJCheckBox.isSelected()) {
+                            useAnnotation = false;
+                        }
+                    }
+                } else if (currentLabel.lastIndexOf("+++") != -1) {
+                    if (!chargeOverTwoJCheckBox.isSelected()) {
+                        useAnnotation = false;
+                    }
+                } else if (currentLabel.lastIndexOf("++") != -1) {
+                    if (!chargeTwoJCheckBox.isSelected()) {
+                        useAnnotation = false;
+                    }
+                }
+            }
+
+            if (useAnnotation) {
+                filteredAnnotations.add(annotations.get(i));
+            }
+        }
+
+        return filteredAnnotations;
+    }
+
+    /**
      * Starts the UtilitiesDemo.
      *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new UtilitiesDemo();
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox H2OIonsJCheckBox;
+    private javax.swing.JCheckBox NH3IonsJCheckBox;
     private javax.swing.JCheckBox aIonsJCheckBox;
     private javax.swing.JCheckBox bIonsJCheckBox;
     private javax.swing.JCheckBox cIonsJCheckBox;
@@ -682,7 +1170,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JScrollPane informationJScrollPane;
     private javax.swing.JLabel isotopicDistributionCalculatorInfoJLabel;
     private javax.swing.JPanel isotopicDistributionJPanel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -691,16 +1178,23 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane;
+    private javax.swing.JCheckBox linkedSpectraJCheckBox;
+    private javax.swing.JCheckBox otherIonsJCheckBox;
     private javax.swing.JCheckBox profileSpectrumJCheckBox;
-    private javax.swing.JLabel searchEngineInfoJLabel;
-    private javax.swing.JPanel searchEngineJPanel;
+    private javax.swing.JLabel proteinDigestionJLabel;
+    private javax.swing.JPanel proteinDigestionJPanel;
+    private javax.swing.JTextField spectrumAJTextField;
+    private javax.swing.JTextField spectrumBJTextField;
     private javax.swing.JPanel spectrumJPanel;
-    private javax.swing.JPanel spectrumJPanel1;
     private javax.swing.JPanel spectrumJPanel3;
+    private javax.swing.JPanel spectrumJPanelA;
+    private javax.swing.JPanel spectrumJPanelB;
     private javax.swing.JLabel spectrumPanelInfoJLabel;
     private javax.swing.JCheckBox xIonsJCheckBox;
     private javax.swing.JCheckBox yIonsJCheckBox;

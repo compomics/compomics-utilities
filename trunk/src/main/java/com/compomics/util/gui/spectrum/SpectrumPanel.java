@@ -370,6 +370,19 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
+     * Change the drawing type of the spectrum. Profile or centroid mode.
+     *
+     * @param aProfileMode if true, the spectrum is drawn in profile mode
+     */
+    public void setProfileMode(boolean aProfileMode){
+        if(aProfileMode){
+            this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
+        } else {
+            this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
+        }
+    }
+
+    /**
      * This method initializes a SpectrumPanel based on the spectrum information in
      * the specified SpectrumFile.
      *

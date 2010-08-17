@@ -23,10 +23,11 @@ public class GlyconFactoryTest extends TestCase {
 
     public void testImport() {
         GlyconFactory glyconFactory = GlyconFactory.getInstance();
-        File ptmFile = new File("resources/glycons.xml");
+        File ptmFile = new File("resources/experiment/glycons.xml");
         try {
             glyconFactory.importGlycons(ptmFile);
             ArrayList<Glycon> glycons = glyconFactory.getGlycons();
+            Glycon testGlycon = glycons.get(0);
         } catch (Exception e) {
             String report = e.getLocalizedMessage();
         }

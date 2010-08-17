@@ -29,7 +29,7 @@ public class FileImportTest extends TestCase {
 
 
     public void testReading() {
-
+        /*
         File modificationFile = new File(MODIFICATION_FILE);
         try {
         ptmFactory.importModifications(modificationFile);
@@ -46,7 +46,7 @@ public class FileImportTest extends TestCase {
         matches = mascotReader.getAllSpectrumMatches();
 
 
-        /*
+
 
         FileReader mascotReader = fileReaderFactory.getFileReader(mascotFile);
         FileReader omssaReader = fileReaderFactory.getFileReader(omssaFile);

@@ -22,7 +22,7 @@ public class PTMFactoryTest extends TestCase {
 
     public void testImport() {
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        File ptmFile = new File("resources/mods.xml");
+        File ptmFile = new File("resources/experiment/mods.xml");
         try {
             ptmFactory.importModifications(ptmFile);
             Iterator<PTM> ptmIt = ptmFactory.getPtmIterator();

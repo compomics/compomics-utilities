@@ -1,10 +1,11 @@
 /*
  * Copyright (C) Lennart Martens
- * 
+ *
  * Contact: lennart.martens AT UGent.be (' AT ' to be replaced with '@')
  */
 
 package com.compomics.util.test;
+import com.compomics.util.test.general.TestIsotopicDistributionCalculator;
 import org.apache.log4j.Logger;
 
 
@@ -63,6 +64,7 @@ public class FullSuite extends TestCase {
         ts.addTest(new TestSuite(TestFilenameExtensionFilter.class));
         ts.addTest(new TestSuite(TestNucleotideSequenceImpl.class));
         ts.addTest(new TestSuite(TestNucleotideSequence.class));
+        ts.addTest(new TestSuite(TestIsotopicDistributionCalculator.class));
 
         return ts;
     }

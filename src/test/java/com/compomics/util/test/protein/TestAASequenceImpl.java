@@ -1,10 +1,11 @@
 /*
  * Copyright (C) Lennart Martens
- * 
+ *
  * Contact: lennart.martens AT UGent.be (' AT ' to be replaced with '@')
  */
 
 package com.compomics.util.test.protein;
+import com.compomics.util.enumeration.MolecularElement;
 import org.apache.log4j.Logger;
 
 
@@ -61,6 +62,18 @@ public class TestAASequenceImpl extends TestCase {
         Assert.assertTrue(seq.getModifications() == null);
         seq.setSequence(replaceSeq);
         Assert.assertEquals(replaceSeq, seq.getSequence());
+    }
+
+    /**
+     * This method test the isotopic distribution method.
+     */
+    public void testIsotopicDistribution() {
+        String seqString = "YSFVATAER";
+        // Plain constructor.
+        AASequenceImpl seq = new AASequenceImpl(seqString);
+        Assert.assertEquals(71, seq.getMolecularFormula().getElementCount(MolecularElement.H));
+        Assert.assertEquals(47, seq.getMolecularFormula().getElementCount(MolecularElement.C));
+        Assert.assertEquals(0.10799336006817781, seq.getIsotopicDistribution().getPercTot()[2]);
     }
 
     /**

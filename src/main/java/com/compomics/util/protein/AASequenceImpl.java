@@ -1,10 +1,11 @@
 /*
  * Copyright (C) Lennart Martens
- * 
+ *
  * Contact: lennart.martens AT UGent.be (' AT ' to be replaced with '@')
  */
 
 package com.compomics.util.protein;
+import com.compomics.util.general.IsotopicDistribution;
 import org.apache.log4j.Logger;
 
 
@@ -97,6 +98,9 @@ public class AASequenceImpl implements Sequence {
      * Constant for internal use.
      */
     private static final int MEEK = 1;
+
+
+    private HashMap<String, MolecularFormula> iElements;
 
     /**
      * Constructor that allows the initialization of the sequence
@@ -672,6 +676,26 @@ public class AASequenceImpl implements Sequence {
     }
 
     /**
+     * This method calculates the molecular formula based on the sequence
+     * @return MolecularFormula
+     */
+    public MolecularFormula getMolecularFormula(){
+        MolecularFormula lResult = new MolecularFormula(this);
+        return lResult;
+    }
+
+    /**
+     * This method gives the IsotopicDistribution for the sequence
+     * @return IsotopicDistribution
+     */
+     public IsotopicDistribution getIsotopicDistribution(){
+         MolecularFormula lForm = getMolecularFormula();
+         IsotopicDistribution lCalc = new IsotopicDistribution(lForm);
+         return lCalc;
+     }
+
+
+	/**
      * This method loads a Properties instance from the classpath.
      * It returns an empty instance and displays an error message
      * if the Properties instance was not found.

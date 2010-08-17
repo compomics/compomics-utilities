@@ -11,7 +11,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>3.0.13</version.number>
+        <version.number>3.0.14</version.number>
         <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
@@ -295,6 +295,21 @@
             <groupId>com.compomics</groupId>
             <artifactId>mascotdatfile</artifactId>
             <version>3.0</version>
+            <type>jar</type>
+        </dependency>
+
+       <!-- This project depends on the commons-math JAR file-->
+        <dependency>
+            <groupId>commons-math</groupId>
+            <artifactId>commons-math</artifactId>
+            <version>1.2</version>
+            <type>jar</type>
+        </dependency>
+        <!-- This project depends on the jgoodies JAR file.-->
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>looks</artifactId>
+            <version>2.2.2</version>
             <type>jar</type>
         </dependency>
 

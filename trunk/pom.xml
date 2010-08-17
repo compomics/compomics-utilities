@@ -284,7 +284,7 @@
         <dependency>
             <groupId>de.proteinms.omxparser</groupId>
             <artifactId>omssa-parser</artifactId>
-            <version>1.3.6</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>de.proteinms.xtandemparser</groupId>

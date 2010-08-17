@@ -539,8 +539,6 @@ public class TestDualEnzyme extends TestCaseLM {
         Assert.assertEquals(e.getTitle(), clone.getTitle());
 
         // Get a cleaved set of peptides from a sequence.
-        //@TODO Cleavage test needs to be uncommented!!!
-        /*
         final Protein p = new Protein(">Test protein.\nLEDNARTMARTENS");
         Protein[] controlCleave = e.cleave(p);
         // Get a cleaved set from the clone.
@@ -549,7 +547,6 @@ public class TestDualEnzyme extends TestCaseLM {
         for(int i = 0; i < cloneCleave.length; i++) {
             Assert.assertEquals(controlCleave[i], cloneCleave[i]);
         }
-        */
 
         // Now change the clone and see if the original changes.
         clone.setCleavage("G", DualEnzyme.NTERMINAL);

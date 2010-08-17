@@ -473,9 +473,9 @@ public class FolderMonitor implements Runnable {
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * Main method starting the foldermonitor that looks for changes to a monitored folder.
      *
-     * @param args
+     * @param args start-up arguments
      */
     public static void main(String[] args) {
         /*

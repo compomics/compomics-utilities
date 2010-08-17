@@ -51,20 +51,24 @@ public class MassCalcServlet extends HttpServlet {
     private static final int ADD_SELF = 2;
 
     /**
-     * TODO: JavaDoc missing.
+     * Override of parent class, implemented here as a simple forward to the
+     * 'doPost' method.
      *
-     * @param req
-     * @param res
+     * @param req  HttpServletRequest with the request
+     * @param res  HttpServletResponse with the response
      */
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         this.doPost(req, res);
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * Override of parent class; this method handles post requests, and through
+     * forwarding also get requests. The function of this servlet is to read a
+     * sequence from the request object, and write the resulting mass
+     * to the response object.
      *
-     * @param req
-     * @param res
+     * @param req  HttpServletRequest with the request
+     * @param res  HttpServletResponse with the response
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) {
         try {
@@ -166,11 +170,12 @@ public class MassCalcServlet extends HttpServlet {
     }
 
     /**
-     * ToDO: JavaDoc missing
+     * THis method generates the submission form that users will employ to enter the
+     * sequence for which they want to obtain a mass.
      *
-     * @param res
-     * @param error
-     * @throws IOException
+     * @param res HttpServletResponse with the servlet response object
+     * @param error int with the error status
+     * @throws IOException if the form could not be written to stream
      */
     private void generateSubmissionForm(HttpServletResponse res, int error) throws IOException {
         PrintWriter out = res.getWriter();
@@ -253,12 +258,12 @@ public class MassCalcServlet extends HttpServlet {
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * This method generates the HTML output for the calculated mass.
      *
-     * @param aRes
-     * @param aSequence
-     * @param aMass
-     * @throws IOException
+     * @param aRes   HttpServletResponse  to write the output to
+     * @param aSequence String with the original query sequence
+     * @param aMass double with the calculated mass
+     * @throws IOException if the output could not be written to stream
      */
     private void writeOutput(HttpServletResponse aRes, String aSequence, double aMass) throws IOException {
         PrintWriter out = aRes.getWriter();
@@ -278,12 +283,12 @@ public class MassCalcServlet extends HttpServlet {
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * This method writes the HTML code to show the user when an error has occurred.
      *
-     * @param aRes
-     * @param aSequence
-     * @param aUem
-     * @throws IOException
+     * @param aRes   HttpServletResponse  to write the output to
+     * @param aSequence String with the original query sequence
+     * @param aUem  UnknownElementMassException thrown when a residue with unknown mass was entered
+     * @throws IOException if the output could not be written to stream
      */
     private void handleError(HttpServletResponse aRes, String aSequence, UnknownElementMassException aUem) throws IOException {
         PrintWriter out = aRes.getWriter();

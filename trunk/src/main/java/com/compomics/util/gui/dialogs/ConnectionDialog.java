@@ -408,9 +408,9 @@ public class ConnectionDialog extends JDialog {
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * This method reads the predefined connection properties from a Properties instance.
      *
-     * @param aConnectionProperties
+     * @param aConnectionProperties Properties instance with the information for the connection(s)
      */
     private void parseConnectionProperties(final Properties aConnectionProperties) {
         // Two options here - old-fashioned, single predefined configuration,
@@ -463,7 +463,7 @@ public class ConnectionDialog extends JDialog {
     }
 
     /**
-     * TODO: JavaDoc missing.
+     * This class represents a wrapper object for connection properties
      */
     private class InnerConfigParams {
 
@@ -473,11 +473,11 @@ public class ConnectionDialog extends JDialog {
         private String iUrl = null;
 
         /**
-         * TODO: JavaDoc missing.
+         * Constructor to create an InnerConfigParams object.
          *
-         * @param aName
-         * @param aDriver
-         * @param aUrl
+         * @param aName String with the connection name
+         * @param aDriver String with the driver classname
+         * @param aUrl String with the DB URL
          */
         private InnerConfigParams(String aName, String aDriver, String aUrl) {
             iName = aName;
@@ -486,12 +486,12 @@ public class ConnectionDialog extends JDialog {
         }
 
         /**
-         * TODO: JavaDoc missing.
+         * Constructor to create an InnerConfigParams object.
          *
-         * @param aUser
-         * @param aName
-         * @param aDriver
-         * @param aUrl
+         * @param aUser String with the username
+         * @param aName String with the connection name
+         * @param aDriver String with the driver classname
+         * @param aUrl String with the DB URL
          */
         private InnerConfigParams(String aUser, String aName, String aDriver, String aUrl) {
             this(aName, aDriver, aUrl);

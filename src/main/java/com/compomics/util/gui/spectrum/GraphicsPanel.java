@@ -171,6 +171,7 @@ abstract class GraphicsPanel extends JPanel {
     protected int padding = 20;
     /**
      * The maximum padding (distance between the axes and the border of the panel).
+     * Increase if font size on the y-axis becomes too small.
      */
     protected int maxPadding = 50;
     /**
@@ -307,9 +308,29 @@ abstract class GraphicsPanel extends JPanel {
 
     /**
      * This method sets the start value of the x-axis to zero.
+     *
+     * @param aXAxisStartAtZero if true the x axis starts at zero
      */
     public void setXAxisStartAtZero(boolean aXAxisStartAtZero) {
         iXAxisStartAtZero = aXAxisStartAtZero;
+    }
+
+    /**
+     * Set the max padding (distance between the axes and the border of the panel).
+     *
+     * @param aMaxPadding the new max padding
+     */
+    public void setMaxPadding(int aMaxPadding) {
+        maxPadding = aMaxPadding;
+    }
+
+    /**
+     * Returns the max padding (distance between the axes and the border of the panel).
+     *
+     * @return the max padding
+     */
+    public int getMaxPadding() {
+        return maxPadding;
     }
 
     /**

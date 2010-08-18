@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import java.util.Vector;
 
 /**
+ * This class calculates the isotopic distribution based on a molecular formula.
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 11-Aug-2010

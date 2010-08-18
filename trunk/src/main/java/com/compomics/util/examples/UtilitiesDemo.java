@@ -7,13 +7,18 @@ package com.compomics.util.examples;
 
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.io.PklFile;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -33,6 +38,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations;
     private SpectrumPanel spectrumAPanel;
     private SpectrumPanel spectrumBPanel;
+    /**
+     * The maximum padding allowed in the spectrum panels.
+     * Increase if font size on the y-axis becomes too small.
+     */
+    private int spectrumPanelMaxPadding = 50;
+    /**
+     * The maximum padding allowed in the chromatogram panels.
+     * Increase if font size on the y-axis becomes too small.
+     */
+    private int chromatogramPanelMaxPadding = 65;
 
     /** 
      * Creates a new UtilitiesDemo frame and makes it visible.
@@ -45,13 +60,78 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 getResource("/icons/compomics-utilities.png")));
 
         setUpSpectrumPanelDemo();
+        setUpChromatogramPanelDemo();
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
     /**
-     * Sets up the spectrum panel demo.
+     * Sets up the Chromatogram Panel demo.
+     */
+    private void setUpChromatogramPanelDemo() {
+
+        // get data for the chromatogram
+        File chromatogramFile = new File(getJarFilePath() + "/exampleFiles/exampleChromatogram.txt");
+
+        ArrayList<Double> xValuesAsArray = new ArrayList<Double>();
+        ArrayList<Double> yValuesAsArray = new ArrayList<Double>();
+
+        try {
+            FileReader f = new FileReader(chromatogramFile);
+            BufferedReader b = new BufferedReader(f);
+
+            String currentLine = b.readLine();
+
+            while (currentLine != null) {
+
+                System.out.println("currentLine: " + currentLine);
+
+                String[] peakDetails = currentLine.split(" ");
+
+                if (peakDetails.length != 2) {
+                    throw new IOException("Error reading chromatogram file - incorrect number of peak paramaters!");
+                }
+
+                xValuesAsArray.add(new Double(peakDetails[0]));
+                yValuesAsArray.add(new Double(peakDetails[1]));
+
+                currentLine = b.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error Reading Chromatogram Data", "Error reading chromatogram data:\n" + e.toString(), WIDTH);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error Reading Chromatogram Data", "Error reading chromatogram data:\n" + e.toString(), WIDTH);
+            e.printStackTrace();
+        }
+
+        // convert the data to the required Chromatogram Panel format
+        double[] xValues = new double[xValuesAsArray.size()];
+        double[] yValues = new double[yValuesAsArray.size()];
+
+        for (int i = 0; i < xValuesAsArray.size(); i++) {
+            xValues[i] = xValuesAsArray.get(i);
+            yValues[i] = yValuesAsArray.get(i);
+        }
+
+        // create the chromatogram
+        ChromatogramPanel chromatogramPanel = new ChromatogramPanel(
+                xValues, yValues, "Time (minutes)", "Intensity (number of counts)");
+        chromatogramPanel.setMaxPadding(chromatogramPanelMaxPadding);
+
+        // remove the default spectrum panel border, given that our
+        // spectrum panel already have a border
+        chromatogramPanel.setBorder(null);
+
+        // add the spectrum panel to the frame
+        chromatogramAJPanel.add(chromatogramPanel);
+        chromatogramAJPanel.validate();
+        chromatogramAJPanel.repaint();
+    }
+
+    /**
+     * Sets up the Spectrum Panel demo.
      */
     private void setUpSpectrumPanelDemo() {
 
@@ -62,8 +142,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // create and add two spectra to the view
 
             // get the peaks for the first spectrum
-
-
             File spectrumFile = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumA.pkl");
             PklFile pklFileA = new PklFile(spectrumFile);
 
@@ -152,6 +230,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         } catch (IOException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error Reading Spectrum Data", "Error reading spectrum data:\n" + e.toString(), WIDTH);
         }
     }
 
@@ -169,7 +248,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 pklFile.getMzValues(), pklFile.getIntensityValues(),
                 pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(),
                 "" + pklFile.getFileName(),
-                60, false, false, false, false, 2, profileMode);
+                spectrumPanelMaxPadding, false, false, false, false, 2, profileMode);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
 
@@ -276,13 +355,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      *
      * @return
      */
-    private String getJarFilePath(){
+    private String getJarFilePath() {
         String path = this.getClass().getResource("UtilitiesDemo.class").getPath();
         path = path.substring(5, path.lastIndexOf("/utilities-"));
         path = path.replace("%20", " ");
         return path;
     }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -312,9 +390,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         chargeTwoJCheckBox = new javax.swing.JCheckBox();
         chargeOverTwoJCheckBox = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
-        otherIonsJCheckBox = new javax.swing.JCheckBox();
         H2OIonsJCheckBox = new javax.swing.JCheckBox();
         NH3IonsJCheckBox = new javax.swing.JCheckBox();
+        otherIonsJCheckBox = new javax.swing.JCheckBox();
         spectrumPanelInfoJLabel = new javax.swing.JLabel();
         profileSelectionJPanel = new javax.swing.JPanel();
         profileSpectrumJCheckBox = new javax.swing.JCheckBox();
@@ -326,8 +404,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         spectrumBJPanel = new javax.swing.JPanel();
         spectrumPanelHelpJLabel = new javax.swing.JLabel();
         chromatogramJPanel = new javax.swing.JPanel();
-        spectrumJPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        chromatogramAJPanel = new javax.swing.JPanel();
         chromatogramPanelInfoJLabel = new javax.swing.JLabel();
         chromatogramPanelHelpJLabel = new javax.swing.JLabel();
         isotopicDistributionJPanel = new javax.swing.JPanel();
@@ -493,18 +570,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
-        otherIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        otherIonsJCheckBox.setText("Other");
-        otherIonsJCheckBox.setToolTipText("Show other ions");
-        otherIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
-        otherIonsJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
-        otherIonsJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
-        otherIonsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                otherIonsJCheckBoxActionPerformed(evt);
-            }
-        });
-
         H2OIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
         H2OIonsJCheckBox.setText("H2O");
         H2OIonsJCheckBox.setToolTipText("Show ions with H2O loss");
@@ -526,6 +591,18 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
+        otherIonsJCheckBox.setBackground(new java.awt.Color(255, 255, 255));
+        otherIonsJCheckBox.setText("Other");
+        otherIonsJCheckBox.setToolTipText("Show other ions");
+        otherIonsJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
+        otherIonsJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
+        otherIonsJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
+        otherIonsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                otherIonsJCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout ionSelectionJPanelLayout = new org.jdesktop.layout.GroupLayout(ionSelectionJPanel);
         ionSelectionJPanel.setLayout(ionSelectionJPanelLayout);
         ionSelectionJPanelLayout.setHorizontalGroup(
@@ -533,9 +610,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(ionSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(ionSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
-                    .add(NH3IonsJCheckBox)
-                    .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(chargeOverTwoJCheckBox)
                     .add(chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
@@ -547,7 +621,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 69, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(cIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(bIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))
+                    .add(aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(NH3IonsJCheckBox)
+                    .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -583,12 +660,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(NH3IonsJCheckBox)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         ionSelectionJPanelLayout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, otherIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
@@ -731,7 +808,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                         .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                         .add(7, 7, 7)))
                 .add(0, 0, 0)
-                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(spectrumPanelInfoJLabel)
                     .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -739,13 +816,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         jTabbedPane.addTab("Spectrum Panel - Demo", spectrumJPanel);
 
-        spectrumJPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        spectrumJPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        spectrumJPanel3.setForeground(new java.awt.Color(255, 255, 255));
-        spectrumJPanel3.setLayout(new javax.swing.BoxLayout(spectrumJPanel3, javax.swing.BoxLayout.LINE_AXIS));
-
-        jLabel2.setText("                                                                                                                                 Not yet implemented...");
-        spectrumJPanel3.add(jLabel2);
+        chromatogramAJPanel.setBackground(new java.awt.Color(255, 255, 255));
+        chromatogramAJPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        chromatogramAJPanel.setForeground(new java.awt.Color(255, 255, 255));
+        chromatogramAJPanel.setLayout(new javax.swing.BoxLayout(chromatogramAJPanel, javax.swing.BoxLayout.LINE_AXIS));
 
         chromatogramPanelInfoJLabel.setFont(chromatogramPanelInfoJLabel.getFont().deriveFont((chromatogramPanelInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         chromatogramPanelInfoJLabel.setText("Chromatogram Panel makes it easy to visualize chromatograms. It supports zooming and other user interactions. ");
@@ -771,8 +845,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(spectrumJPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
-                    .add(chromatogramJPanelLayout.createSequentialGroup()
+                    .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, chromatogramJPanelLayout.createSequentialGroup()
                         .add(chromatogramPanelInfoJLabel)
                         .add(407, 407, 407)
                         .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
@@ -782,7 +856,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(spectrumJPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(chromatogramPanelInfoJLabel)
@@ -1324,6 +1398,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JCheckBox chargeOneJCheckBox;
     private javax.swing.JCheckBox chargeOverTwoJCheckBox;
     private javax.swing.JCheckBox chargeTwoJCheckBox;
+    private javax.swing.JPanel chromatogramAJPanel;
     private javax.swing.JPanel chromatogramJPanel;
     private javax.swing.JLabel chromatogramPanelHelpJLabel;
     private javax.swing.JLabel chromatogramPanelInfoJLabel;
@@ -1335,7 +1410,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JLabel isotopicDistributionCalculatorHelpJLabel;
     private javax.swing.JLabel isotopicDistributionCalculatorInfoJLabel;
     private javax.swing.JPanel isotopicDistributionJPanel;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel2;
@@ -1357,7 +1431,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JPanel spectrumBJPanel;
     private javax.swing.JTextField spectrumBJTextField;
     private javax.swing.JPanel spectrumJPanel;
-    private javax.swing.JPanel spectrumJPanel3;
     private javax.swing.JLabel spectrumPanelHelpJLabel;
     private javax.swing.JLabel spectrumPanelInfoJLabel;
     private javax.swing.JCheckBox xIonsJCheckBox;

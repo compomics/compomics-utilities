@@ -65,7 +65,7 @@ public class PklFile {
         while (peakLine != null) {
             String[] peakDetails = peakLine.split("\t");
 
-            if(precursorDetails.length != 3){
+            if(peakDetails.length != 2){
                 throw new IOException("File is not a PKL file - incorrect number of peak paramaters!");
             }
             

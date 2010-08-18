@@ -42,8 +42,7 @@ import java.util.Hashtable;
 public class IsotopeDistributionGui extends JFrame {
     // Class specific log4j logger for MolecularFormula instances.
     Logger logger = Logger.getLogger(MolecularFormula.class);
-
-
+    //gui objects
     private JTextArea txtSequence;
     private JLabel lblComp;
     private JLabel lblMass;
@@ -53,9 +52,19 @@ public class IsotopeDistributionGui extends JFrame {
     private JPanel headerTable;
     private JPanel spectrumPanel;
 
+    /**
+     * The amino acid sequence
+     */
     private AASequenceImpl iSequence = null;
+    /**
+     * HashMap with the molecular formula for all the aminoacids
+     */
     private HashMap<String, MolecularFormula> iElements;
 
+    /**
+     * The constructor
+     * @param lStandAlone Boolean that indicates if this is a standalone JFrame
+     */
     public IsotopeDistributionGui(boolean lStandAlone) {
         super("Isotopic distribution calculator");
         $$$setupUI$$$();
@@ -206,8 +215,7 @@ public class IsotopeDistributionGui extends JFrame {
 
     /**
      * Main method
-     *
-     * @param Args
+     * @param Args The arguments
      */
     public static void main(String[] Args) {
         new IsotopeDistributionGui(true);
@@ -357,36 +365,68 @@ public class IsotopeDistributionGui extends JFrame {
         return jpanContent;
     }
 
-
+    /**
+     * This is an imagepane class
+     * It paint a given image in its panel
+     */
     class ImagePanel extends JPanel {
 
+        /**
+         * The image
+         */
         private BufferedImage image;
 
+        /**
+         * Constructor
+         * @param lFilename String with the filename that has to be in the classpath
+         */
         public ImagePanel(String lFilename) {
             try {
                 image = ImageIO.read(getClass().getResource("/" + lFilename));
             } catch (IOException ex) {
-                // handle exception...
+                logger.error(ex);
             }
         }
 
         @Override
+        /**
+         * Paint method
+         */
         public void paintComponent(Graphics g) {
-            g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters
-
+            g.drawImage(image, 0, 0, null);
         }
     }
 
+    /**
+     * This is a table model extension
+     */
     class SparseTableModel extends AbstractTableModel {
 
+        /**
+         * The lookup hashtable
+         */
         private Hashtable lookup;
 
+        /**
+         * number of rows
+         */
         private final int rows;
 
+        /**
+         * number of columns
+         */
         private final int columns;
 
+        /**
+         * The colum headers
+         */
         private final String headers[];
 
+        /**
+         * Constructor
+         * @param rows number of rows
+         * @param columnHeaders the column headers
+         */
         public SparseTableModel(int rows, String columnHeaders[]) {
             if ((rows < 0) || (columnHeaders == null)) {
                 throw new IllegalArgumentException("Invalid row count/columnHeaders");
@@ -397,22 +437,47 @@ public class IsotopeDistributionGui extends JFrame {
             lookup = new Hashtable();
         }
 
+        /**
+         * Getter for the number of columns
+         * @return int with the number of columns
+         */
         public int getColumnCount() {
             return columns;
         }
 
+        /**
+         * Getter for the number of rows
+         * @return int with the number of rows
+         */
         public int getRowCount() {
             return rows;
         }
 
+        /**
+         * Getter for the column title
+         * @param column int with the column number
+         * @return String with the column title
+         */
         public String getColumnName(int column) {
             return headers[column];
         }
 
+        /**
+         * Getter for the element on the given position
+         * @param row int with the row number
+         * @param column int with the column number
+         * @return Object with the element at that position
+         */
         public Object getValueAt(int row, int column) {
             return lookup.get(new Point(row, column));
         }
 
+        /**
+         * Setter for the element on the given position
+         * @param value The object that has to be set
+         * @param row int with the row number
+         * @param column int with the column number
+         */
         public void setValueAt(Object value, int row, int column) {
             if ((rows < 0) || (columns < 0)) {
                 throw new IllegalArgumentException("Invalid row/column setting");

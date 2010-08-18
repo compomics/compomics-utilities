@@ -1172,8 +1172,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @param evt
      */
     private void spectrumPanelHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumPanelHelpJLabelMouseClicked
-        // @TODO: implement...
-        JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
+        openHelpDialog("/helpFiles/SpectrumPanel.html");
     }//GEN-LAST:event_spectrumPanelHelpJLabelMouseClicked
 
     /**
@@ -1200,8 +1199,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @param evt
      */
     private void chromatogramPanelHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chromatogramPanelHelpJLabelMouseClicked
-        // @TODO: implement...
-        JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
+        openHelpDialog("/helpFiles/ChromatogramPanel.html");
     }//GEN-LAST:event_chromatogramPanelHelpJLabelMouseClicked
 
     /**
@@ -1277,6 +1275,15 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void inSilicoDigestionHelpJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inSilicoDigestionHelpJLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_inSilicoDigestionHelpJLabelMouseExited
+
+    /**
+     * Openes the help dialog.
+     *
+     * @param urlAsString the URL (as a String) of the help file to display
+     */
+    private void openHelpDialog(String urlAsString){
+        new HelpWindow(this, getClass().getResource(urlAsString));
+    }
 
     /**
      * Filters the annotations and returns the annotations matching the currently selected list.

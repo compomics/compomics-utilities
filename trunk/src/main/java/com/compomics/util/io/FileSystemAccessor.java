@@ -6,12 +6,12 @@ import com.compomics.util.enumeration.OperatingSystemEnum;
 import java.io.File;
 
 /**
+ * This class serves as a fast OS independent access point to the file system.
+ *
  * Created by IntelliJ IDEA.
  * User: kenny
  * Date: Feb 22, 2010
  * Time: 1:39:58 PM
- * <p/>
- * This class serves as a fast OS independent access point to the file system.
  */
 public class FileSystemAccessor {
 

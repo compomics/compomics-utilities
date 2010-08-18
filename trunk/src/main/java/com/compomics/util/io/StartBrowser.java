@@ -1,9 +1,9 @@
 package com.compomics.util.io;
 
 /**
- * Created by IntelliJ IDEA. User: kenny Date: Feb 23, 2010 Time: 4:02:21 PM
- * <p/>
  * This class starts a browser for the given URL.
+ *
+ * Created by IntelliJ IDEA. User: kenny Date: Feb 23, 2010 Time: 4:02:21 PM
  */
 public class StartBrowser {
 

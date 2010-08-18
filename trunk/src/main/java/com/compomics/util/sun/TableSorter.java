@@ -7,18 +7,30 @@
 package com.compomics.util.sun;
 import org.apache.log4j.Logger;
 
+import com.compomics.util.interfaces.TableValueWrapper;
+import java.util.*;
+import javax.swing.table.TableModel;
+import javax.swing.event.TableModelEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.InputEvent;
+import java.awt.*;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+
 /**
- * A sorter for TableModels. The sorter has a model (conforming to TableModel) 
- * and itself implements TableModel. TableSorter does not store or copy 
- * the data in the TableModel, instead it maintains an array of 
- * integers which it keeps the same size as the number of rows in its 
- * model. When the model changes it notifies the sorter that something 
- * has changed eg. "rowsAdded" so that its internal array of integers 
- * can be reallocated. As requests are made of the sorter (like 
+ * A sorter for TableModels. The sorter has a model (conforming to TableModel)
+ * and itself implements TableModel. TableSorter does not store or copy
+ * the data in the TableModel, instead it maintains an array of
+ * integers which it keeps the same size as the number of rows in its
+ * model. When the model changes it notifies the sorter that something
+ * has changed eg. "rowsAdded" so that its internal array of integers
+ * can be reallocated. As requests are made of the sorter (like
  * getValueAt(row, col) it redirects them to its model via the mapping 
- * array. That way the TableSorter appears to hold another copy of the table 
- * with the rows in a different order. The sorting algorthm used is stable 
- * which means that it does not move around rows when its comparison 
+ * array. That way the TableSorter appears to hold another copy of the table
+ * with the rows in a different order. The sorting algorthm used is stable
+ * which means that it does not move around rows when its comparison
  * function returns 0 to denote that they are equivalent.
  * <br />
  * <b>LM addition</b> <br />
@@ -30,24 +42,6 @@ import org.apache.log4j.Logger;
  * @version 1.6 21/02/2003
  * @author Philip Milne, Lennart Martens
  */
-
-import com.compomics.util.interfaces.TableValueWrapper;
-
-import java.util.*;
-
-import javax.swing.table.TableModel;
-import javax.swing.event.TableModelEvent;
-
-// Imports for picking up mouse events from the JTable. 
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.InputEvent;
-import java.awt.*;
-import javax.swing.JTable;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-
 public class TableSorter extends TableMap {
 
     // Class specific log4j logger for TableSorter instances.

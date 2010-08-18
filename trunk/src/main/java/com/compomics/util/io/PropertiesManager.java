@@ -9,12 +9,12 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
+ * This class holds all user properties for ms_lims.
+ *
  * Created by IntelliJ IDEA.
  * User: kenny
  * Date: Feb 22, 2010
  * Time: 1:27:41 PM
- * <p/>
- * This class holds all user properties for ms_lims.
  */
 public class PropertiesManager {
 

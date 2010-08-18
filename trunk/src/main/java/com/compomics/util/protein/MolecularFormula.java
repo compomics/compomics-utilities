@@ -5,21 +5,21 @@ import com.compomics.util.interfaces.Sequence;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Properties;
 
 /**
  * This class represents the molecular formula. Basically it count the number of atoms. 
  * Created by IntelliJ IDEA.
+ *
  * User: Niklaas
  * Date: 16-Aug-2010
  * Time: 08:25:22
  */
 public class MolecularFormula {
+
     // Class specific log4j logger for MolecularFormula instances.
-	Logger logger = Logger.getLogger(MolecularFormula.class);
+    Logger logger = Logger.getLogger(MolecularFormula.class);
 
     /**
      * The hashmap collecting all the MolecularElements
@@ -27,12 +27,17 @@ public class MolecularFormula {
     private HashMap<MolecularElement,Integer> iFormula = new HashMap<MolecularElement,Integer>();
 
     /**
-     * Constructor
+     * Default constructor
      */
     public MolecularFormula(){
 
     }
 
+    /**
+     * Constructor.
+     *
+     * @param lSequence
+     */
     public MolecularFormula(Sequence lSequence){
         HashMap<String, MolecularFormula> iElements = new HashMap<String, MolecularFormula>();
         try {
@@ -59,13 +64,11 @@ public class MolecularFormula {
                         }
                     }
                     iElements.put(lAa, lAaFormula);
-
                 }
             }
         } catch(Exception e){
             logger.error(e);
         }
-
 
         //add the N-terminus
         this.addElement(MolecularElement.H, 2);
@@ -75,6 +78,7 @@ public class MolecularFormula {
             MolecularFormula lFormula = iElements.get(lAa);
             this.addMolecularFormula(lFormula);
         }
+
         //add the C-terminus
         this.addElement(MolecularElement.H, 1);
         this.addElement(MolecularElement.O, 1);

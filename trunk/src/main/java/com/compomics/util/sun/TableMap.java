@@ -7,6 +7,10 @@
 package com.compomics.util.sun;
 import org.apache.log4j.Logger;
 
+import javax.swing.table.*; 
+import javax.swing.event.TableModelListener; 
+import javax.swing.event.TableModelEvent; 
+
 /**
  * In a chain of data manipulators some behaviour is common. TableMap
  * provides most of this behavour and can be subclassed by filters
@@ -17,12 +21,8 @@ import org.apache.log4j.Logger;
  * should have no effect.
  *
  * @version 1.4 12/17/97
- * @author Philip Milne */
-
-import javax.swing.table.*; 
-import javax.swing.event.TableModelListener; 
-import javax.swing.event.TableModelEvent; 
-
+ * @author Philip Milne 
+ */
 public class TableMap extends AbstractTableModel implements TableModelListener {
 
     // Class specific log4j logger for TableMap instances.

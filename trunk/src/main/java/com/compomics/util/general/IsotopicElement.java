@@ -7,16 +7,19 @@ import java.io.*;
 import java.util.Vector;
 
 /**
- * This class represents the isotopically different element with the occurrence and the dalton difference between this and the
- * natural variant.
+ * This class represents the isotopically different element with the occurrence 
+ * and the dalton difference between this and the natural variant.
+ *
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010
  * Time: 09:59:12
  */
 public class IsotopicElement {
-	// Class specific log4j logger for AASequenceImpl instances.
-	Logger logger = Logger.getLogger(IsotopicElement.class);
+
+    // Class specific log4j logger for AASequenceImpl instances.
+    Logger logger = Logger.getLogger(IsotopicElement.class);
+
     /**
      * The element
      */

@@ -1,12 +1,12 @@
 package com.compomics.util.enumeration;
 
 /**
+ * This enum types all computational omics tools and libraries that make use of the utilities library.
+ * 
  * Created by IntelliJ IDEA.
  * User: kenny
  * Date: Feb 23, 2010
  * Time: 12:58:32 PM
- * <p/>
- * This enum types all computational omics tools and libraries that make use of the utilities library.
  */
 public enum CompomicsTools {
 

@@ -1,6 +1,8 @@
 package com.compomics.util.enumeration;
 
 /**
+ * This ENUM types the distinct molecular elements.
+ *
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010

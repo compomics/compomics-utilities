@@ -9,15 +9,16 @@ import java.util.Vector;
 
 /**
  * This class calculates the isotopic distribution based on a molecular formula.
+ *
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 11-Aug-2010
  * Time: 09:13:06
- * To change this template use File | Settings | File Templates.
  */
 public class IsotopicDistribution {
+
     // Class specific log4j logger for AASequenceImpl instances.
-	Logger logger = Logger.getLogger(IsotopicDistribution.class);
+    Logger logger = Logger.getLogger(IsotopicDistribution.class);
 
     /**
      * The result of the isotopic distributions calculation. Percentage of the total contribution
@@ -78,7 +79,6 @@ public class IsotopicDistribution {
                 } else {
                     lPercElement.add(lBinom.probability(i)*lNumbers.get(p));
                 }
-
             }
         }
 
@@ -139,7 +139,6 @@ public class IsotopicDistribution {
         iMolecularFormula.addElement(MolecularElement.H, lH);
         iMolecularFormula.addElement(MolecularElement.O, lO);
         iMolecularFormula.addElement(MolecularElement.S, lS);
-
     }
 
     /**

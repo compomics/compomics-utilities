@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 /**
+ * This class represents the molecular formula. Basically it count the number of atoms. 
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
+ * This class is an implementation of the SpectrumFile specific for the isotopic distribution
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010

@@ -33,11 +33,11 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
+ * This class is a GUI that visualizes the isotopic calculator.
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010
  * Time: 13:24:41
- * To change this template use File | Settings | File Templates.
  */
 public class IsotopeDistributionGui extends JFrame {
     // Class specific log4j logger for MolecularFormula instances.

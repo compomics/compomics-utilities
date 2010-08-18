@@ -99,9 +99,6 @@ public class AASequenceImpl implements Sequence {
      */
     private static final int MEEK = 1;
 
-
-    private HashMap<String, MolecularFormula> iElements;
-
     /**
      * Constructor that allows the initialization of the sequence
      * with a String variable representing that sequence.

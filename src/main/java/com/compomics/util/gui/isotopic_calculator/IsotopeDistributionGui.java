@@ -351,7 +351,7 @@ public class IsotopeDistributionGui extends JFrame {
     }
 
     /**
-     * @noinspection ALL
+     * Auto generated code by the GUI designer
      */
     public JComponent $$$getRootComponent$$$() {
         return jpanContent;

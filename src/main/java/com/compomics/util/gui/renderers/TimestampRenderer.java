@@ -26,7 +26,9 @@ import java.text.SimpleDateFormat;
  */
 
 /**
- * This class 
+ * This class
+ *
+ * @TODO: JavaDoc missing.
  *
  * @author Lennart
  */

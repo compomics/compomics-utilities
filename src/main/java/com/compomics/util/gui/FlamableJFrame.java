@@ -26,7 +26,9 @@ import java.awt.*;
  */
 
 /**
- * This class 
+ * This class
+ *
+ * @TODO: JavaDoc missing.
  *
  * @author Lennart
  */

@@ -34,14 +34,17 @@ import java.util.Hashtable;
 
 /**
  * This class is a GUI that visualizes the isotopic calculator.
+ *
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010
  * Time: 13:24:41
  */
 public class IsotopeDistributionGui extends JFrame {
+
     // Class specific log4j logger for MolecularFormula instances.
     Logger logger = Logger.getLogger(MolecularFormula.class);
+
     //gui objects
     private JTextArea txtSequence;
     private JLabel lblComp;
@@ -92,7 +95,7 @@ public class IsotopeDistributionGui extends JFrame {
                 PlasticLookAndFeel.setPlasticTheme(new Silver());
                 UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
             } catch (UnsupportedLookAndFeelException e) {
-                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -198,7 +201,6 @@ public class IsotopeDistributionGui extends JFrame {
         return jpanContent;
     }
 
-
     /**
      * Method that checks if a given string is an element we can calculate an isotopic distribution for
      *
@@ -243,8 +245,6 @@ public class IsotopeDistributionGui extends JFrame {
         spectrumPanel.add(new ImagePanel("icons/compomics.png"));
         //spectrumPanel.add(Box.createVerticalStrut(1));
         spectrumPanel.add(Box.createVerticalGlue());
-
-
     }
 
     /**

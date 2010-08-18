@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 /**
  * This class is an implementation of the SpectrumFile specific for the isotopic distribution
+ * 
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010
@@ -19,6 +20,7 @@ import java.util.Iterator;
  */
 
 public class IsotopicDistributionSpectrum implements SpectrumFile {
+
     /**
      * The charge
      */
@@ -178,5 +180,4 @@ public class IsotopicDistributionSpectrum implements SpectrumFile {
         BigDecimal bd = new BigDecimal(aTotalIntensity).setScale(2, RoundingMode.UP);
         return bd.doubleValue();
     }
-
 }

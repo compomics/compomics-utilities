@@ -37,7 +37,7 @@ import java.util.Hashtable;
 
 /**
  * This class is a GUI that visualizes the isotopic calculator.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010
@@ -79,6 +79,7 @@ public class IsotopeDistributionGui extends JFrame {
 
     /**
      * The constructor
+     *
      * @param lStandAlone Boolean that indicates if this is a standalone JFrame
      */
     public IsotopeDistributionGui(boolean lStandAlone) {
@@ -188,7 +189,7 @@ public class IsotopeDistributionGui extends JFrame {
         iCharge = (Double) spinCharge.getValue();
         //set the labels
         lblComp.setText(iSequence.getMolecularFormula().toString());
-        double lMz = (iSequence.getMass()  + (iCharge*iHMass) )/ iCharge;
+        double lMz = (iSequence.getMass() + (iCharge * iHMass)) / iCharge;
         lblMass.setText(String.valueOf(Math.floor(lMz * 10000.0) / 10000.0) + " Da");
         lblPeptide.setText("NH2-" + lSeq + "-COOH (" + iCharge + "+)");
         //calculate the distribution
@@ -199,7 +200,7 @@ public class IsotopeDistributionGui extends JFrame {
             table1.setValueAt(i, i, 0);
             table1.setValueAt(Math.floor(lIso.getPercTot()[i] * 10000.0) / 100.0, i, 1);
             table1.setValueAt(Math.floor(lIso.getPercMax()[i] * 10000.0) / 100.0, i, 2);
-            lPeaks.put(lMz + (i*(iHMass/iCharge)), lIso.getPercMax()[i]);
+            lPeaks.put(lMz + (i * (iHMass / iCharge)), lIso.getPercMax()[i]);
         }
         //do gui updates an add the spectrum panel
         table1.updateUI();
@@ -209,7 +210,7 @@ public class IsotopeDistributionGui extends JFrame {
         lSpecFile.setPeaks(lPeaks);
         spectrumPanel.removeAll();
         SpectrumPanel lSpecPanel = new SpectrumPanel(lSpecFile, false);
-        lSpecPanel.rescale(lMz - (0.5/iCharge), lMz + (0.5/iCharge) + (10.0/iCharge));
+        lSpecPanel.rescale(lMz - (0.5 / iCharge), lMz + (0.5 / iCharge) + (10.0 / iCharge));
         spectrumPanel.add(lSpecPanel);
         spectrumPanel.updateUI();
     }
@@ -239,6 +240,7 @@ public class IsotopeDistributionGui extends JFrame {
 
     /**
      * Main method
+     *
      * @param Args The arguments
      */
     public static void main(String[] Args) {
@@ -289,17 +291,17 @@ public class IsotopeDistributionGui extends JFrame {
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.ipadx = 30;
         gbc.insets = new Insets(10, 10, 10, 10);
         jpanContent.add(label1, gbc);
         final JLabel label2 = new JLabel();
         label2.setHorizontalAlignment(11);
-        label2.setText("Mass:");
+        label2.setText("M/Z");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(10, 10, 10, 10);
         jpanContent.add(label2, gbc);
@@ -307,8 +309,9 @@ public class IsotopeDistributionGui extends JFrame {
         lblComp.setFont(new Font(lblComp.getFont().getName(), lblComp.getFont().getStyle(), 16));
         lblComp.setText("/");
         gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridx = 4;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(10, 10, 10, 10);
         jpanContent.add(lblComp, gbc);
@@ -316,31 +319,23 @@ public class IsotopeDistributionGui extends JFrame {
         lblMass.setFont(new Font(lblMass.getFont().getName(), lblMass.getFont().getStyle(), 16));
         lblMass.setText("/");
         gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridx = 4;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(10, 10, 10, 10);
         jpanContent.add(lblMass, gbc);
-        calculateButton = new JButton();
-        calculateButton.setText("Calculate");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        jpanContent.add(calculateButton, gbc);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridy = 7;
+        gbc.gridwidth = 6;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 10, 10, 10);
         jpanContent.add(table1, gbc);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
+        gbc.gridy = 6;
+        gbc.gridwidth = 6;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 0, 10);
@@ -351,7 +346,7 @@ public class IsotopeDistributionGui extends JFrame {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 6;
         gbc.weighty = 0.5;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -373,18 +368,61 @@ public class IsotopeDistributionGui extends JFrame {
         scrollPane1.setViewportView(txtSequence);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
+        gbc.gridy = 8;
+        gbc.gridwidth = 6;
         gbc.gridheight = 6;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 10, 10);
         jpanContent.add(spectrumPanel, gbc);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        jpanContent.add(spinCharge, gbc);
+        final JLabel label3 = new JLabel();
+        label3.setHorizontalAlignment(11);
+        label3.setText("Charge:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.ipadx = 30;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        jpanContent.add(label3, gbc);
+        calculateButton = new JButton();
+        calculateButton.setText("Calculate");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        jpanContent.add(calculateButton, gbc);
+        final JSeparator separator1 = new JSeparator();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 6;
+        gbc.fill = GridBagConstraints.BOTH;
+        jpanContent.add(separator1, gbc);
+        lblPeptide = new JLabel();
+        lblPeptide.setFont(new Font(lblPeptide.getFont().getName(), Font.ITALIC, 18));
+        lblPeptide.setHorizontalAlignment(0);
+        lblPeptide.setHorizontalTextPosition(0);
+        lblPeptide.setText(" ");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 6;
+        jpanContent.add(lblPeptide, gbc);
     }
 
     /**
-     * Auto generated code by the GUI designer
+     * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$() {
         return jpanContent;
@@ -403,6 +441,7 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Constructor
+         *
          * @param lFilename String with the filename that has to be in the classpath
          */
         public ImagePanel(String lFilename) {
@@ -449,7 +488,8 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Constructor
-         * @param rows number of rows
+         *
+         * @param rows          number of rows
          * @param columnHeaders the column headers
          */
         public SparseTableModel(int rows, String columnHeaders[]) {
@@ -464,6 +504,7 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Getter for the number of columns
+         *
          * @return int with the number of columns
          */
         public int getColumnCount() {
@@ -472,6 +513,7 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Getter for the number of rows
+         *
          * @return int with the number of rows
          */
         public int getRowCount() {
@@ -480,6 +522,7 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Getter for the column title
+         *
          * @param column int with the column number
          * @return String with the column title
          */
@@ -489,7 +532,8 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Getter for the element on the given position
-         * @param row int with the row number
+         *
+         * @param row    int with the row number
          * @param column int with the column number
          * @return Object with the element at that position
          */
@@ -499,8 +543,9 @@ public class IsotopeDistributionGui extends JFrame {
 
         /**
          * Setter for the element on the given position
-         * @param value The object that has to be set
-         * @param row int with the row number
+         *
+         * @param value  The object that has to be set
+         * @param row    int with the row number
          * @param column int with the column number
          */
         public void setValueAt(Object value, int row, int column) {

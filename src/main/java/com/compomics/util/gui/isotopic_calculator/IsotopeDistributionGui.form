@@ -9,7 +9,7 @@
     <children>
       <component id="cee97" class="javax.swing.JLabel">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="10" left="10" bottom="10" right="10" weightx="0.0" weighty="0.0" ipadx="30"/>
         </constraints>
         <properties>
@@ -19,7 +19,7 @@
       </component>
       <component id="8ed1e" class="javax.swing.JLabel">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="10" left="10" bottom="10" right="10" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -29,7 +29,7 @@
       </component>
       <component id="9a46d" class="javax.swing.JLabel" binding="lblComp">
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="10" left="10" bottom="10" right="10" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -39,7 +39,7 @@
       </component>
       <component id="38544" class="javax.swing.JLabel" binding="lblMass">
         <constraints>
-          <grid row="3" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="10" left="10" bottom="10" right="10" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -49,7 +49,7 @@
       </component>
       <component id="1302a" class="com.compomics.util.AlternateRowColoursJTable" binding="table1" custom-create="true" default-binding="true">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="7" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
           <gridbag top="0" left="10" bottom="10" right="10" weightx="0.0" weighty="0.0"/>
@@ -58,7 +58,7 @@
       </component>
       <grid id="3ec66" binding="headerTable" custom-create="true" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag top="10" left="10" bottom="0" right="10" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -99,7 +99,7 @@
       </grid>
       <grid id="81d6e" binding="spectrumPanel" custom-create="true" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="6" column="0" row-span="6" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="0" row-span="6" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag top="10" left="10" bottom="10" right="10" weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties/>
@@ -130,6 +130,25 @@
         </constraints>
         <properties>
           <text value="Calculate"/>
+        </properties>
+      </component>
+      <component id="994d8" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="22e43" class="javax.swing.JLabel" binding="lblPeptide">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font size="18" style="2"/>
+          <horizontalAlignment value="0"/>
+          <horizontalTextPosition value="0"/>
+          <text value=" "/>
         </properties>
       </component>
     </children>

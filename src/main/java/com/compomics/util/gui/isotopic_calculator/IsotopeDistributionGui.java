@@ -58,6 +58,7 @@ public class IsotopeDistributionGui extends JFrame {
     private JPanel headerTable;
     private JPanel spectrumPanel;
     private JSpinner spinCharge;
+    private JLabel lblPeptide;
 
     /**
      * The amino acid sequence
@@ -189,6 +190,7 @@ public class IsotopeDistributionGui extends JFrame {
         lblComp.setText(iSequence.getMolecularFormula().toString());
         double lMz = (iSequence.getMass()  + (iCharge*iHMass) )/ iCharge;
         lblMass.setText(String.valueOf(Math.floor(lMz * 10000.0) / 10000.0) + " Da");
+        lblPeptide.setText("NH2-" + lSeq + "-COOH (" + iCharge + "+)");
         //calculate the distribution
         IsotopicDistribution lIso = iSequence.getIsotopicDistribution();
         HashMap lPeaks = new HashMap();

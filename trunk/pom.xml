@@ -109,7 +109,7 @@
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
                     </archive>
-                    <outputDirectory>${project.build.directory}/utilities-${project.version}</outputDirectory>
+                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}</outputDirectory>
                 </configuration>
             </plugin>
 
@@ -125,7 +125,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/utilities-${project.version}/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/lib</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>false</excludeTransitive>
@@ -190,7 +190,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/utilities-${project.version}</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>./</directory>

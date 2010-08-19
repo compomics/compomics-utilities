@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -26,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,6 +57,7 @@ public class IsotopeDistributionGui extends JFrame {
     private JPanel jpanContent;
     private JPanel headerTable;
     private JPanel spectrumPanel;
+    private JSpinner spinCharge;
 
     /**
      * The amino acid sequence
@@ -63,6 +67,14 @@ public class IsotopeDistributionGui extends JFrame {
      * HashMap with the molecular formula for all the aminoacids
      */
     private HashMap<String, MolecularFormula> iElements;
+    /**
+     * The charge
+     */
+    private double iCharge;
+    /**
+     * The mass of hydrogen
+     */
+    private double iHMass = 1.007825;
 
     /**
      * The constructor
@@ -137,6 +149,11 @@ public class IsotopeDistributionGui extends JFrame {
                 calculate();
             }
         });
+        spinCharge.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                calculate();
+            }
+        });
     }
 
     /**
@@ -166,9 +183,12 @@ public class IsotopeDistributionGui extends JFrame {
         }
         //create the sequence
         iSequence = new AASequenceImpl(lSeq);
+        //get the charge
+        iCharge = (Double) spinCharge.getValue();
         //set the labels
         lblComp.setText(iSequence.getMolecularFormula().toString());
-        lblMass.setText(String.valueOf(Math.floor(iSequence.getMass() * 10000.0) / 10000.0) + " Da");
+        double lMz = (iSequence.getMass()  + (iCharge*iHMass) )/ iCharge;
+        lblMass.setText(String.valueOf(Math.floor(lMz * 10000.0) / 10000.0) + " Da");
         //calculate the distribution
         IsotopicDistribution lIso = iSequence.getIsotopicDistribution();
         HashMap lPeaks = new HashMap();
@@ -177,17 +197,17 @@ public class IsotopeDistributionGui extends JFrame {
             table1.setValueAt(i, i, 0);
             table1.setValueAt(Math.floor(lIso.getPercTot()[i] * 10000.0) / 100.0, i, 1);
             table1.setValueAt(Math.floor(lIso.getPercMax()[i] * 10000.0) / 100.0, i, 2);
-            lPeaks.put(iSequence.getMass() + Double.valueOf(String.valueOf(i)), lIso.getPercMax()[i]);
+            lPeaks.put(lMz + (i*(iHMass/iCharge)), lIso.getPercMax()[i]);
         }
         //do gui updates an add the spectrum panel
         table1.updateUI();
         IsotopicDistributionSpectrum lSpecFile = new IsotopicDistributionSpectrum();
-        lSpecFile.setCharge(1);
-        lSpecFile.setPrecursorMZ(iSequence.getMass());
+        lSpecFile.setCharge(Integer.valueOf(String.valueOf(iCharge).substring(0, String.valueOf(iCharge).indexOf("."))));
+        lSpecFile.setPrecursorMZ(lMz);
         lSpecFile.setPeaks(lPeaks);
         spectrumPanel.removeAll();
         SpectrumPanel lSpecPanel = new SpectrumPanel(lSpecFile, false);
-        lSpecPanel.rescale(iSequence.getMass() - 0.5, iSequence.getMass() + 10.5);
+        lSpecPanel.rescale(lMz - (0.5/iCharge), lMz + (0.5/iCharge) + (10.0/iCharge));
         spectrumPanel.add(lSpecPanel);
         spectrumPanel.updateUI();
     }
@@ -245,6 +265,9 @@ public class IsotopeDistributionGui extends JFrame {
         spectrumPanel.add(new ImagePanel("icons/compomics.png"));
         //spectrumPanel.add(Box.createVerticalStrut(1));
         spectrumPanel.add(Box.createVerticalGlue());
+
+        spinCharge = new JSpinner();
+        spinCharge.setModel(new SpinnerNumberModel(1.0, 1.0, 20.0, 1.0));
     }
 
     /**

@@ -66,7 +66,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="informationJScrollPane" pref="1163" max="32767" attributes="0"/>
+                      <Component id="informationJScrollPane" pref="1167" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -75,7 +75,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="informationJScrollPane" pref="563" max="32767" attributes="0"/>
+                      <Component id="informationJScrollPane" pref="569" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -128,10 +128,10 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="spectrumPanelInfoJLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="spectrumAJPanel" pref="1053" max="32767" attributes="0"/>
-                          <Component id="spectrumBJTextField" alignment="1" pref="1053" max="32767" attributes="1"/>
-                          <Component id="spectrumAJTextField" alignment="0" pref="1053" max="32767" attributes="0"/>
-                          <Component id="spectrumBJPanel" alignment="0" pref="1053" max="32767" attributes="2"/>
+                          <Component id="spectrumAJPanel" pref="1068" max="32767" attributes="0"/>
+                          <Component id="spectrumBJTextField" alignment="1" pref="1068" max="32767" attributes="1"/>
+                          <Component id="spectrumAJTextField" alignment="0" pref="1068" max="32767" attributes="0"/>
+                          <Component id="spectrumBJPanel" alignment="0" pref="1068" max="32767" attributes="2"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
@@ -161,11 +161,11 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="spectrumAJTextField" min="-2" pref="22" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="spectrumAJPanel" pref="234" max="32767" attributes="0"/>
+                              <Component id="spectrumAJPanel" pref="241" max="32767" attributes="0"/>
                               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                               <Component id="spectrumBJTextField" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="spectrumBJPanel" pref="235" max="32767" attributes="0"/>
+                              <Component id="spectrumBJPanel" pref="242" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -611,9 +611,6 @@
             </Container>
             <Component class="javax.swing.JTextField" name="spectrumAJTextField">
               <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
@@ -626,9 +623,6 @@
             </Component>
             <Component class="javax.swing.JTextField" name="spectrumBJTextField">
               <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
@@ -697,10 +691,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="chromatogramAJPanel" alignment="0" pref="1163" max="32767" attributes="0"/>
+                          <Component id="chromatogramAJPanel" alignment="0" pref="1167" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="chromatogramPanelInfoJLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="407" max="-2" attributes="0"/>
+                              <EmptySpace pref="537" max="32767" attributes="0"/>
                               <Component id="chromatogramPanelHelpJLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -712,11 +706,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chromatogramAJPanel" pref="540" max="32767" attributes="2"/>
+                      <Component id="chromatogramAJPanel" pref="549" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="chromatogramPanelInfoJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="chromatogramPanelHelpJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="chromatogramPanelInfoJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -784,7 +778,7 @@
                           <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="isotopicDistributionCalculatorInfoJLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="491" max="32767" attributes="0"/>
+                              <EmptySpace pref="603" max="32767" attributes="0"/>
                               <Component id="isotopicDistributionCalculatorHelpJLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -823,24 +817,24 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="1159" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="1163" max="32767" attributes="0"/>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace min="0" pref="514" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="526" max="32767" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="515" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="526" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="536" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="545" max="32767" attributes="0"/>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="265" max="32767" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="266" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -897,7 +891,7 @@
                           <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="proteinDigestionJLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="264" max="32767" attributes="0"/>
+                              <EmptySpace pref="414" max="32767" attributes="0"/>
                               <Component id="inSilicoDigestionHelpJLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -936,24 +930,24 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="1159" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="1163" max="32767" attributes="0"/>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="0" pref="514" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="526" max="32767" attributes="0"/>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="515" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="526" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="536" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="545" max="32767" attributes="0"/>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="265" max="32767" attributes="0"/>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="260" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="266" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>

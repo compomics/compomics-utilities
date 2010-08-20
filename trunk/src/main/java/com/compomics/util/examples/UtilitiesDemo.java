@@ -11,6 +11,9 @@ import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.io.PklFile;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+import com.jgoodies.looks.plastic.theme.SkyKrupp;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -23,6 +26,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * This class serves as a demo of how the compomics-utilities library can be
@@ -444,14 +449,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             informationJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(informationJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
+                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
                 .addContainerGap())
         );
         informationJPanelLayout.setVerticalGroup(
             informationJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(informationJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
+                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -732,13 +737,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        spectrumAJTextField.setBackground(new java.awt.Color(255, 255, 255));
         spectrumAJTextField.setEditable(false);
         spectrumAJTextField.setFont(spectrumAJTextField.getFont().deriveFont(spectrumAJTextField.getFont().getStyle() | java.awt.Font.BOLD));
         spectrumAJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         spectrumAJTextField.setText("NH2-LC<Cmm*>TVATLR-COOH");
 
-        spectrumBJTextField.setBackground(new java.awt.Color(255, 255, 255));
         spectrumBJTextField.setEditable(false);
         spectrumBJTextField.setFont(spectrumBJTextField.getFont().deriveFont(spectrumBJTextField.getFont().getStyle() | java.awt.Font.BOLD));
         spectrumBJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -774,10 +777,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(spectrumPanelInfoJLabel)
-                    .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
-                    .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
-                    .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE))
+                    .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
+                    .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
+                    .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
@@ -801,11 +804,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(spectrumJPanelLayout.createSequentialGroup()
                         .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                        .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(spectrumBJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                        .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                         .add(7, 7, 7)))
                 .add(0, 0, 0)
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -845,10 +848,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
+                    .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, chromatogramJPanelLayout.createSequentialGroup()
                         .add(chromatogramPanelInfoJLabel)
-                        .add(407, 407, 407)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 537, Short.MAX_VALUE)
                         .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -856,11 +859,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(chromatogramPanelInfoJLabel)
-                    .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(chromatogramPanelInfoJLabel))
                 .addContainerGap())
         );
 
@@ -875,21 +878,21 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1159, Short.MAX_VALUE)
+            .add(0, 1163, Short.MAX_VALUE)
             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel2Layout.createSequentialGroup()
-                    .add(0, 514, Short.MAX_VALUE)
+                    .add(0, 526, Short.MAX_VALUE)
                     .add(jLabel3)
-                    .add(0, 515, Short.MAX_VALUE)))
+                    .add(0, 526, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 536, Short.MAX_VALUE)
+            .add(0, 545, Short.MAX_VALUE)
             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel2Layout.createSequentialGroup()
-                    .add(0, 260, Short.MAX_VALUE)
+                    .add(0, 265, Short.MAX_VALUE)
                     .add(jLabel3)
-                    .add(0, 260, Short.MAX_VALUE)))
+                    .add(0, 266, Short.MAX_VALUE)))
         );
 
         isotopicDistributionCalculatorInfoJLabel.setFont(isotopicDistributionCalculatorInfoJLabel.getFont().deriveFont((isotopicDistributionCalculatorInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
@@ -919,7 +922,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(isotopicDistributionJPanelLayout.createSequentialGroup()
                         .add(isotopicDistributionCalculatorInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 491, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 603, Short.MAX_VALUE)
                         .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -946,21 +949,21 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1159, Short.MAX_VALUE)
+            .add(0, 1163, Short.MAX_VALUE)
             .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel3Layout.createSequentialGroup()
-                    .add(0, 514, Short.MAX_VALUE)
+                    .add(0, 526, Short.MAX_VALUE)
                     .add(jLabel4)
-                    .add(0, 515, Short.MAX_VALUE)))
+                    .add(0, 526, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 536, Short.MAX_VALUE)
+            .add(0, 545, Short.MAX_VALUE)
             .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel3Layout.createSequentialGroup()
-                    .add(0, 260, Short.MAX_VALUE)
+                    .add(0, 265, Short.MAX_VALUE)
                     .add(jLabel4)
-                    .add(0, 260, Short.MAX_VALUE)))
+                    .add(0, 266, Short.MAX_VALUE)))
         );
 
         proteinDigestionJLabel.setFont(proteinDigestionJLabel.getFont().deriveFont((proteinDigestionJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
@@ -990,7 +993,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(proteinDigestionJPanelLayout.createSequentialGroup()
                         .add(proteinDigestionJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 264, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 414, Short.MAX_VALUE)
                         .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1392,6 +1395,15 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
+
+                try {
+                    PlasticLookAndFeel.setPlasticTheme(new SkyKrupp());
+                    UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+                } catch (UnsupportedLookAndFeelException e) {
+                    //e.printStackTrace();
+                    // ignore error
+                }
+
                 new UtilitiesDemo();
             }
         });

@@ -85,9 +85,7 @@ public class ChromatogramPanel extends GraphicsPanel {
 
         this.currentGraphicsPanelType = GraphicsPanelType.chromatogram;
 
-        this.setChromatogramLineColor(iChromatogramColor);
-        this.setDataPointColor(iChromatogramPointColor);
-
+        dataSetCounter = 0;
         initData(aXAxisData, aYAxisData, aXAxisLabel, aYAxisLabel);
         this.iSpecPanelListeners = new ArrayList();
         this.addListeners();
@@ -106,9 +104,27 @@ public class ChromatogramPanel extends GraphicsPanel {
     private void initData(double[] aXAxisData, double[] aYAxisData, String aXAxisLabel, String aYAxisLabel) {
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
-        processXAndYData(aXAxisData, aYAxisData);
+        processXAndYData(aXAxisData, aYAxisData, iChromatogramColor, iChromatogramPointColor);
         this.iXAxisLabel = (aXAxisLabel == null ? "unknown" : aXAxisLabel);
         this.iYAxisLabel = (aYAxisLabel == null ? "unknown" : aYAxisLabel);
+    }
+
+    /**
+     * Adds an additional chromatogram dataset to be displayed in the same Chromatogram 
+     * Panel. Remember to use different colors for the different datasets.
+     *
+     * @param aXAxisData            double[] with all the x-axis values.
+     * @param aYAxisData            double[] with all the y-axis values
+     * @param dataPointAndLineColor the color to use for the data points and lines
+     * @param areaUnderCurveColor   the color to use for the area under the curve
+     */
+    public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColorColor) {
+
+        processXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColorColor);
+
+        this.showFileName = false;
+        this.showPrecursorDetails = false;
+        this.showResolution = false;
     }
 
     /**

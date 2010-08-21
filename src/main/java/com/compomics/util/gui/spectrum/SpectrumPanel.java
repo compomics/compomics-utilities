@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.*;
+import java.util.ArrayList;
 
 /*
  * CVS information:
@@ -203,7 +204,8 @@ public class SpectrumPanel extends GraphicsPanel {
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
         if (aSpecFile != null) {
-            this.processSpectrumFile(aSpecFile);
+            dataSetCounter = 0;
+            this.processSpectrumFile(aSpecFile, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
         }
         if (aEnableInteraction) {
             this.addListeners();
@@ -221,10 +223,6 @@ public class SpectrumPanel extends GraphicsPanel {
         } else {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
         }
-
-        
-        this.iDataPointColor = aSpectrumPeakColor;
-        this.iChromatogramLineColor = aSpectrumProfileModeLineColor;
     }
 
     /**
@@ -346,7 +344,9 @@ public class SpectrumPanel extends GraphicsPanel {
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
-        processXAndYData(aXAxisData, aYAxisData);
+        dataSetCounter = 0;
+        processXAndYData(aXAxisData, aYAxisData,
+                aSpectrumPeakColor, aSpectrumProfileModeLineColor);
         iPrecursorMZ = aPrecursorMZ;
         iPrecursorCharge = aPrecursorCharge;
         iFilename = aFileName;
@@ -363,10 +363,26 @@ public class SpectrumPanel extends GraphicsPanel {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
         }
 
-        this.iDataPointColor = aSpectrumPeakColor;
-        this.iChromatogramLineColor = aSpectrumProfileModeLineColor;
-
         this.addListeners();
+    }
+
+
+    /**
+     * Adds an additional spectrum dataset to be displayed in the same Spectrum 
+     * Panel. Remember to use different colors for the different datasets.
+     *
+     * @param aXAxisData            double[] with all the x-axis values.
+     * @param aYAxisData            double[] with all the y-axis values
+     * @param dataPointAndLineColor the color to use for the data points and lines
+     * @param areaUnderCurveColor   the color to use for the area under the curve
+     */
+    public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+
+        processXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColor);
+
+        this.showFileName = false;
+        this.showPrecursorDetails = false;
+        this.showResolution = false;
     }
 
     /**
@@ -391,7 +407,7 @@ public class SpectrumPanel extends GraphicsPanel {
      *                  in this step as well.
      */
     public void setSpectrumFile(SpectrumFile aSpecFile) {
-        this.processSpectrumFile(aSpecFile);
+        this.processSpectrumFile(aSpecFile, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
     }
 
     /**
@@ -400,18 +416,35 @@ public class SpectrumPanel extends GraphicsPanel {
      * in this step.
      *
      * @param aSpecFile SpectrumFile from which the peaks and intensities will be copied.
+     * @param dataPointAndLineColor the color to use for the data points and line
+     * @param areaUnderCurveColor the color to use for the area under the curve
      */
-    private void processSpectrumFile(SpectrumFile aSpecFile) {
+    private void processSpectrumFile(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+
+        if(dataSetCounter == 0) {
+            iXAxisData = new ArrayList<double[]>();
+            iYAxisData = new ArrayList<double[]>();
+        }
+
+        iDataPointAndLineColor.add(dataPointAndLineColor);
+        iAreaUnderCurveColor.add(areaUnderCurveColor);
+
         HashMap peaks = aSpecFile.getPeaks();
-        iXAxisData = new double[peaks.size()];
-        iYAxisData = new double[peaks.size()];
+
+        iXAxisData.add(new double[peaks.size()]);
+        iYAxisData.add(new double[peaks.size()]);
+
         iFilename = aSpecFile.getFilename();
+
         // Maximum intensity of the peaks.
         double maxInt = 0.0;
+
         // TreeSets are sorted.
         TreeSet masses = new TreeSet(peaks.keySet());
         Iterator iter = masses.iterator();
+
         int count = 0;
+
         while (iter.hasNext()) {
             Double key = (Double) iter.next();
             double mass = key.doubleValue();
@@ -419,22 +452,27 @@ public class SpectrumPanel extends GraphicsPanel {
             if (intensity > maxInt) {
                 maxInt = intensity;
             }
-            iXAxisData[count] = mass;
-            iYAxisData[count] = intensity;
+            iXAxisData.get(dataSetCounter)[count] = mass;
+            iYAxisData.get(dataSetCounter)[count] = intensity;
             count++;
         }
+
         if (iXAxisStartAtZero) {
-            this.rescale(0.0, iXAxisData[iXAxisData.length - 1]);
+            this.rescale(0.0, getMaxXAxisValue());
         } else {
-            this.rescale(iXAxisData[0], iXAxisData[iXAxisData.length - 1]);
+            this.rescale(getMinXAxisValue(), getMaxXAxisValue());
         }
+
         this.iPrecursorMZ = aSpecFile.getPrecursorMZ();
         int liTemp = aSpecFile.getCharge();
+
         if (liTemp == 0) {
             iPrecursorCharge = "?";
         } else {
             iPrecursorCharge = Integer.toString(liTemp);
             iPrecursorCharge += (liTemp > 0 ? "+" : "-");
         }
+
+        dataSetCounter++;
     }
 }

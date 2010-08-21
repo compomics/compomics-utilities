@@ -31,7 +31,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * This class serves as a demo of how the compomics-utilities library can be
- * used in other projects. It contains four demos, and is also the frame shown
+ * used in other projects. It contains several demos, and is also the frame shown
  * if the compomics-utilities jar file is double clicked or ran from the command 
  * line.
  *
@@ -89,8 +89,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             String currentLine = b.readLine();
 
             while (currentLine != null) {
-
-                System.out.println("currentLine: " + currentLine);
 
                 String[] peakDetails = currentLine.split(" ");
 
@@ -170,6 +168,26 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             currentAnnotations.add(new DefaultSpectrumAnnotation(458.20561749999996, 0.05911150000002863, determineColorOfPeak("Prec-H2O 2+"), "Prec-H2O 2+"));
             currentAnnotations.add(new DefaultSpectrumAnnotation(129.000000, 0.10726900000000228, determineColorOfPeak("iR"), "iR"));
 
+//            // ------------test: annotation second spectrum--------------
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(175.119495, -0.010621000000014647, determineColorOfPeak("y1"), "y1*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(387.27196499999997, -0.0044499999999629836, determineColorOfPeak("y3"), "y3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(500.356025, -0.002353999999968437, determineColorOfPeak("y4"), "y4*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(571.393135, -0.004269000000022061, determineColorOfPeak("y5"), "y5*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(685.436065, -0.013534999999933461, determineColorOfPeak("y6"), "y6*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(813.494645, 0.005993999999986954, determineColorOfPeak("y7"), "y7*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(257.161356, -0.007209999999986394, determineColorOfPeak("y[2]-NH3"), "y[2]-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(370.245416, -9.159999999610591E-4, determineColorOfPeak("y[3]-NH3"), "y[3]-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(796.468096, 0.0018540000000939472, determineColorOfPeak("y[7]-NH3"), "y[7]-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(274.187905, -0.004702000000008866, determineColorOfPeak("y2"), "y2*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(158.092946, -0.008444000000025653, determineColorOfPeak("y[1]-NH3"), "y[1]-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(668.4095159999999, 0.0019680000000334985, determineColorOfPeak("y[6]-NH3"), "y[6]-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(276.134815, -0.002712000000030912, determineColorOfPeak("b2"), "b2*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(259.108266, -0.004803000000038082, determineColorOfPeak("b[2]-NH3"), "b[2]-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(242.164738, -0.08587800000000811, determineColorOfPeak("y[4]++-NH3"), "y[4]++-NH3*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(129, 0.09981500000000665, determineColorOfPeak("iR"), "iR*"));
+//            currentAnnotations.add(new DefaultSpectrumAnnotation(120, 0.08159999999999457, determineColorOfPeak("iF"), "iF*"));
+//            // ------------test: annotation second spectrum--------------
+
             // store the annotations for later use
             allAnnotations.put(new Integer(0), currentAnnotations);
             spectrumAPanel.setAnnotations(currentAnnotations);
@@ -186,15 +204,28 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             spectrumAJPanel.validate();
             spectrumAJPanel.repaint();
 
-
             // get the peaks for the second spectrum
             spectrumFile = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumB.pkl");
             PklFile pklFileB = new PklFile(spectrumFile);
 
-            // create the first spectrum panel
+
+//            // ------------test multiple spectra ---------------
+//
+//            spectrumAPanel.addAdditionalDataset(pklFileB.getMzValues(), pklFileB.getIntensityValues(), Color.BLUE, Color.BLUE);
+//
+//
+//            // add the spectrum panel to the frame
+//            spectrumAJPanel.add(spectrumAPanel);
+//            spectrumAJPanel.validate();
+//            spectrumAJPanel.repaint();
+//
+//            // ------------test multiple spectra ---------------
+
+
+            // create the second spectrum panel
             spectrumBPanel = getSpectrumPanel(pklFileB, profileSpectrumJCheckBox.isSelected());
 
-            // add the fragment ions annotations for the first spectrum
+            // add the fragment ions annotations for the second spectrum
             currentAnnotations = new Vector();
             currentAnnotations.add(new DefaultSpectrumAnnotation(175.119495, -0.010621000000014647, determineColorOfPeak("y1"), "y1"));
             currentAnnotations.add(new DefaultSpectrumAnnotation(387.27196499999997, -0.0044499999999629836, determineColorOfPeak("y3"), "y3"));
@@ -449,14 +480,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             informationJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(informationJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
+                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
                 .addContainerGap())
         );
         informationJPanelLayout.setVerticalGroup(
             informationJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(informationJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -699,7 +730,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             profileSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, profileSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(profileSpectrumJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                .add(profileSpectrumJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
                 .addContainerGap())
         );
         profileSelectionJPanelLayout.setVerticalGroup(
@@ -726,7 +757,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             linkedSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, linkedSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
                 .addContainerGap())
         );
         linkedSelectionJPanelLayout.setVerticalGroup(
@@ -777,16 +808,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(spectrumPanelInfoJLabel)
-                    .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
-                    .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
-                    .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE))
+                    .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+                    .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+                    .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                         .add(profileSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(linkedSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, linkedSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, ionSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -804,11 +835,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(spectrumJPanelLayout.createSequentialGroup()
                         .add(spectrumAJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                        .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(spectrumBJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                        .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                         .add(7, 7, 7)))
                 .add(0, 0, 0)
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -848,10 +879,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
+                    .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1163, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, chromatogramJPanelLayout.createSequentialGroup()
                         .add(chromatogramPanelInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 537, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 407, Short.MAX_VALUE)
                         .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -859,7 +890,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, chromatogramJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -878,21 +909,21 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1163, Short.MAX_VALUE)
+            .add(0, 1159, Short.MAX_VALUE)
             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel2Layout.createSequentialGroup()
-                    .add(0, 526, Short.MAX_VALUE)
+                    .add(0, 515, Short.MAX_VALUE)
                     .add(jLabel3)
-                    .add(0, 526, Short.MAX_VALUE)))
+                    .add(0, 514, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 545, Short.MAX_VALUE)
+            .add(0, 536, Short.MAX_VALUE)
             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel2Layout.createSequentialGroup()
-                    .add(0, 265, Short.MAX_VALUE)
+                    .add(0, 260, Short.MAX_VALUE)
                     .add(jLabel3)
-                    .add(0, 266, Short.MAX_VALUE)))
+                    .add(0, 260, Short.MAX_VALUE)))
         );
 
         isotopicDistributionCalculatorInfoJLabel.setFont(isotopicDistributionCalculatorInfoJLabel.getFont().deriveFont((isotopicDistributionCalculatorInfoJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
@@ -922,7 +953,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(isotopicDistributionJPanelLayout.createSequentialGroup()
                         .add(isotopicDistributionCalculatorInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 603, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 491, Short.MAX_VALUE)
                         .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -949,21 +980,21 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1163, Short.MAX_VALUE)
+            .add(0, 1159, Short.MAX_VALUE)
             .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel3Layout.createSequentialGroup()
-                    .add(0, 526, Short.MAX_VALUE)
+                    .add(0, 515, Short.MAX_VALUE)
                     .add(jLabel4)
-                    .add(0, 526, Short.MAX_VALUE)))
+                    .add(0, 514, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 545, Short.MAX_VALUE)
+            .add(0, 536, Short.MAX_VALUE)
             .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(jPanel3Layout.createSequentialGroup()
-                    .add(0, 265, Short.MAX_VALUE)
+                    .add(0, 260, Short.MAX_VALUE)
                     .add(jLabel4)
-                    .add(0, 266, Short.MAX_VALUE)))
+                    .add(0, 260, Short.MAX_VALUE)))
         );
 
         proteinDigestionJLabel.setFont(proteinDigestionJLabel.getFont().deriveFont((proteinDigestionJLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
@@ -993,7 +1024,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(proteinDigestionJPanelLayout.createSequentialGroup()
                         .add(proteinDigestionJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 414, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 264, Short.MAX_VALUE)
                         .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );

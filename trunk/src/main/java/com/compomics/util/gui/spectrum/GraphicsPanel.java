@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.ArrayList;
 
 /**
  * This class presents a JPanel that will hold and display a
@@ -21,6 +22,15 @@ import java.util.*;
  */
 abstract class GraphicsPanel extends JPanel {
 
+    /**
+     * The opacity of the spectra. 0 means completely see-through, 1 means
+     * opaque.
+     */
+    float alphaLevel = 0.3f;
+    /**
+     * The number of datasets currently displayed in the panel.
+     */
+    protected static int dataSetCounter = 0;
     /**
      * This status indicates that no annotation will be displayed,
      * but the user will have a fully functional interface (point clicking, selecting,
@@ -82,13 +92,13 @@ abstract class GraphicsPanel extends JPanel {
      */
     protected Color iFilenameColor = null;
     /**
-     * Color in which the data points and peaks are rendered. Defaults to red.
+     * Colors in which the data points and peaks are rendered. Indexed by dataset.
      */
-    protected Color iDataPointColor = Color.red;
+    protected ArrayList<Color> iDataPointAndLineColor = new ArrayList<Color>();
     /**
-     * Color in which the chromatogram polyline is rendered. Defaults to gray.
+     * Colors in which the chromatogram polyline is rendered. Indexed by dataset.
      */
-    protected Color iChromatogramLineColor = Color.GRAY;
+    protected ArrayList<Color> iAreaUnderCurveColor = new ArrayList<Color>();
     /**
      * Size for the point on a chromatogram.
      */
@@ -191,10 +201,11 @@ abstract class GraphicsPanel extends JPanel {
      */
     protected boolean showResolution = true;
     /**
-     * The double[] with all the x-axis data points. Should at all times be sorted from
-     * high to low.
+     * All the x-axis data points. Indexed by dataset (one double[] per dataset). 
+     * First dataset is the first double[], second dataset is the second double[] 
+     * etc.Should at all times be sorted from high to low.
      */
-    protected double[] iXAxisData = null;
+    protected ArrayList<double[]> iXAxisData = null;
     /**
      * The minimum x-axis value to display.
      */
@@ -218,11 +229,13 @@ abstract class GraphicsPanel extends JPanel {
      */
     protected double iAnnotationYAxisThreshold = 0.0;
     /**
-     * The double[] with all the y-axis values. Related to the x-axis values by index.
-     * So the first y-axis value is the value for the first x-axis value in the 'iXAxisData'
-     * variable.
+     * All the y-axis values. Indexed by dataset (one double[] per dataset). First
+     * dataset is the first double[], second dataset is the second double[] etc.
+     * Y-axis valuea are related to the x-axis values by the table index. So the first
+     * y-axis value of the first dataset is the value for the first x-axis value in
+     * the first dataset etc.
      */
-    protected double[] iYAxisData = null;
+    protected ArrayList<double[]> iYAxisData = null;
     /**
      * This variable holds the precursor M/Z.
      */
@@ -233,14 +246,16 @@ abstract class GraphicsPanel extends JPanel {
     protected String iPrecursorCharge = null;
     /**
      * This array will hold the x-coordinates in pixels for
-     * all the x-axis values. Link is through index.
+     * all the x-axis values. Link is through index. Again
+     * indexed by dataset (one double[] per dataset).
      */
-    protected int[] iXAxisDataInPixels = null;
+    protected ArrayList<int[]> iXAxisDataInPixels = null;
     /**
      * This array will hold the y-coordinates in pixels for
-     * all the y-axis values. Link is through index.
+     * all the y-axis values. Link is through index. Again
+     * indexed by dataset (one double[] per dataset).
      */
-    protected int[] iYAxisDataInPixels = null;
+    protected ArrayList<int[]> iYAxisDataInPixels = null;
     /**
      * Boolean that will be 'true' when a point needs highlighting.
      */
@@ -250,6 +265,10 @@ abstract class GraphicsPanel extends JPanel {
      */
     protected int iHighLightIndex = 0;
     /**
+     * Index of the dataset containing the point that needs to be highlighted.
+     */
+    protected int iHighLightDatasetIndex = 0;
+    /**
      * Boolean that indicates whether a point has been marked by clicking.
      */
     protected boolean iClicked = false;
@@ -258,13 +277,26 @@ abstract class GraphicsPanel extends JPanel {
      */
     protected int iClickedIndex = 0;
     /**
+     * Int that indicates which dataset contains the clicked point.
+     */
+    protected int iClickedDataSetIndex = 0;
+    /**
      * The Vector that holds all points clicked up to now.
      */
     protected Vector iClickedList = new Vector(15, 5);
     /**
+     * The Vector that holds the dataset indices of all points clicked up to now.
+     */
+    protected Vector iClickedListDatasetIndices = new Vector(15, 5);
+    /**
      * The Vector that holds a set of stored points from a previously established list.
      */
     protected Vector iStoredSequence = new Vector(15, 5);
+    /**
+     * The Vector that holds the dataset indices of stored points from a
+     * previously established list.
+     */
+    protected Vector iStoredSequenceDatasetIndices = new Vector(15, 5);
     /**
      * The Vector that holds a set of Annotation instances.
      */
@@ -420,45 +452,59 @@ abstract class GraphicsPanel extends JPanel {
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
             if(currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram) ||
                     currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)){
-                drawChromatogram(g);
+                drawFilledPolygon(g);
             } else {
                 drawPeaks(g);
             }
             if (iClicked && iHighLight && iClickedIndex != iHighLightIndex) {
                 // Now we should calculate the distance based on the real values and
                 // draw a line to show this.
-                this.drawMeasurementLine(iClickedIndex, iHighLightIndex, g, Color.blue, 0);
+                this.drawMeasurementLine(iClickedIndex, iClickedDataSetIndex,
+                        iHighLightIndex, iHighLightDatasetIndex, g, Color.blue, 0);
             }
             if (iHighLight) {
-                this.highLightPeak(iHighLightIndex, g);
+                this.highLightPeak(iHighLightIndex, iHighLightDatasetIndex, g);
                 iHighLight = false;
             }
             if (iClicked) {
-                this.highlightClicked(iClickedIndex, g);
+                this.highlightClicked(iClickedIndex, iHighLightDatasetIndex, g);
             }
+
             // See if there is a daisychain to display.
             int liClickedSize = iClickedList.size();
+            
             if (liClickedSize > 0) {
                 for (int i = 0; i < liClickedSize; i++) {
                     // The last one should be connected to iClicked.
                     int first = ((Integer) iClickedList.get(i)).intValue();
+                    int firstDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i)).intValue();
+
                     int second = -1;
+                    int secondDataSetIndex = -1;
                     if ((i + 1) == liClickedSize) {
                         second = iClickedIndex;
+                        secondDataSetIndex = iClickedDataSetIndex;
                     } else {
                         second = ((Integer) iClickedList.get(i + 1)).intValue();
+                        secondDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i + 1)).intValue();
                     }
-                    this.drawMeasurementLine(first, second, g, Color.black, 0);
+                    this.drawMeasurementLine(first, firstDataSetIndex,
+                            second, secondDataSetIndex, g, Color.black, 0);
                 }
             }
+
             // See if there is a secondary daisychain to display.
             if (iStoredSequence.size() > 0) {
                 for (int i = 1; i < iStoredSequence.size(); i++) {
                     int first = ((Integer) iStoredSequence.get(i - 1)).intValue();
                     int second = ((Integer) iStoredSequence.get(i)).intValue();
-                    this.drawMeasurementLine(first, second, g, Color.red, g.getFontMetrics().getAscent() + 15);
+                    int firstDataSetIndex = ((Integer) iStoredSequenceDatasetIndices.get(i - 1)).intValue();
+                    int secondDataSetIndex = ((Integer) iStoredSequenceDatasetIndices.get(i)).intValue();
+                    this.drawMeasurementLine(first, firstDataSetIndex,
+                            second, secondDataSetIndex, g, Color.red, g.getFontMetrics().getAscent() + 15);
                 }
             }
+
             // See if we should annotate and if any are present.
             if (iAnnotations != null && iAnnotations.size() > 0) {
                 // This HashMap will contain the indices of the points that already carry
@@ -476,21 +522,41 @@ abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method reports on the largest x-axis value in the point collection.
+     * This method reports on the largest x-axis value in the point collection
+     * accross all datasets.
      *
      * @return double with the largest x-axis value in the point collection.
      */
     public double getMaxXAxisValue() {
-        return iXAxisData[iXAxisData.length - 1];
+
+        double maxValue = Double.MIN_VALUE;
+
+        for(int i=0; i < iXAxisData.size(); i++) {
+            if(iXAxisData.get(i)[iXAxisData.get(i).length - 1] > maxValue){
+                maxValue = iXAxisData.get(i)[iXAxisData.get(i).length - 1];
+            }
+        }
+
+        return maxValue;
     }
 
     /**
-     * This method reports on the smallest x-axis value in the point collection.
+     * This method reports on the smallest x-axis value in the point collection
+     * across all datasets.
      *
      * @return double with the smallest x-axis value in the point collection.
      */
     public double getMinXAxisValue() {
-        return iXAxisData[0];
+
+        double minValue = Double.MAX_VALUE;
+
+        for(int i=0; i < iXAxisData.size(); i++) {
+            if(iXAxisData.get(i)[0] < minValue){
+                minValue = iXAxisData.get(i)[0];
+            }
+        }
+
+        return minValue;
     }
 
     /**
@@ -517,9 +583,9 @@ abstract class GraphicsPanel extends JPanel {
                 if (iXAxisData != null) {
                     if (e.getButton() == MouseEvent.BUTTON3 || e.getButton() == MouseEvent.BUTTON2) {
                         if (iXAxisStartAtZero) {
-                            rescale(0.0, iXAxisData[iXAxisData.length - 1]);
+                            rescale(0.0, getMaxXAxisValue());
                         } else {
-                            rescale(iXAxisData[0], iXAxisData[iXAxisData.length - 1]);
+                            rescale(getMinXAxisValue(), getMaxXAxisValue());
                         }
                         iDragged = false;
                         repaint();
@@ -549,10 +615,12 @@ abstract class GraphicsPanel extends JPanel {
                 if (iXAxisData != null) {
                     if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == (MouseEvent.CTRL_DOWN_MASK | MouseEvent.ALT_DOWN_MASK)) {
                         iStoredSequence = new Vector(15, 5);
+                        iStoredSequenceDatasetIndices = new Vector(15, 5);
                         repaint();
                     } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.CTRL_DOWN_MASK) {
                         iClicked = false;
                         iClickedList = new Vector(15, 5);
+                        iClickedListDatasetIndices = new Vector(15, 5);
                         repaint();
                     } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.SHIFT_DOWN_MASK) {
                         // If the clicked point is the last one in the list of previously clicked points,
@@ -561,8 +629,10 @@ abstract class GraphicsPanel extends JPanel {
                             // Retrieve the previously clicked index from the list and set the currently clicked
                             // one to that value.
                             iClickedIndex = ((Integer) iClickedList.get(iClickedList.size() - 1)).intValue();
+                            iClickedDataSetIndex = ((Integer) iClickedListDatasetIndices.get(iClickedListDatasetIndices.size() - 1)).intValue();
                             // Remove the previously clicked index from the list.
                             iClickedList.remove(iClickedList.size() - 1);
+                            iClickedListDatasetIndices.remove(iClickedListDatasetIndices.size() - 1);
                             // Repaint.
                             repaint();
                         }
@@ -572,9 +642,12 @@ abstract class GraphicsPanel extends JPanel {
                             // Copy the current clickedlist into the stored sequence.
                             iStoredSequence = (Vector) iClickedList.clone();
                             iStoredSequence.add(new Integer(iClickedIndex));
+                            iStoredSequenceDatasetIndices = (Vector) iClickedListDatasetIndices.clone();
+                            iStoredSequenceDatasetIndices.add(new Integer(iClickedDataSetIndex));
                             iClicked = false;
                             // Reset the clicked list.
                             iClickedList = new Vector(15, 5);
+                            iClickedListDatasetIndices = new Vector(15, 5);
                             repaint();
                         }
                     } else if (e.getButton() == MouseEvent.BUTTON1) {
@@ -582,9 +655,11 @@ abstract class GraphicsPanel extends JPanel {
                             // We need the current point to be stored in the previously clicked
                             // Vector and set the current one as clicked.
                             iClickedList.add(new Integer(iClickedIndex));
+                            iClickedListDatasetIndices.add(new Integer(iClickedDataSetIndex));
                         }
                         iClicked = true;
                         iClickedIndex = iHighLightIndex;
+                        iClickedDataSetIndex = iHighLightDatasetIndex;
                         repaint();
                     }
                 }
@@ -628,20 +703,23 @@ abstract class GraphicsPanel extends JPanel {
                     // this variable is used make sure that the most intense peak within range is highlighted
                     int highestPeakInRange = 0;
 
-                    for (int i = 0; i < iXAxisDataInPixels.length; i++) {
-                        int delta = iXAxisDataInPixels[i] - x;
-                        if (Math.abs(delta) < iPointDetectionTolerance) {
-                            int deltaYPixels = y - iYAxisDataInPixels[i];
-                            if (deltaYPixels < 0 
-                                    && Math.abs(deltaYPixels) < (getHeight() - iYAxisDataInPixels[i])
-                                    && highestPeakInRange < (getHeight() - iYAxisDataInPixels[i])) {
-                                iHighLight = true;
-                                iHighLightIndex = i;
-                                highestPeakInRange = (getHeight() - iYAxisDataInPixels[i]);
-                                repaint();
+                    for(int j=0; j<iXAxisDataInPixels.size(); j++) {
+                        for (int i = 0; i < iXAxisDataInPixels.get(j).length; i++) {
+                            int delta = iXAxisDataInPixels.get(j)[i] - x;
+                            if (Math.abs(delta) < iPointDetectionTolerance) {
+                                int deltaYPixels = y - iYAxisDataInPixels.get(j)[i];
+                                if (deltaYPixels < 0
+                                        && Math.abs(deltaYPixels) < (getHeight() - iYAxisDataInPixels.get(j)[i])
+                                        && highestPeakInRange < (getHeight() - iYAxisDataInPixels.get(j)[i])) {
+                                    iHighLight = true;
+                                    iHighLightIndex = i;
+                                    iHighLightDatasetIndex = j;
+                                    highestPeakInRange = (getHeight() - iYAxisDataInPixels.get(j)[i]);
+                                    repaint();
+                                }
+                            } else if (delta >= iPointDetectionTolerance) {
+                                break;
                             }
-                        } else if (delta >= iPointDetectionTolerance) {
-                            break;
                         }
                     }
                     repaint();
@@ -661,21 +739,29 @@ abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method sets the color in which the peaks or data points will be rendered.
+     * Sets the color of data points and line for the dataset with the
+     * given dataset index.
      *
-     * @param aColor Color to render the peaks or data points in.
+     * @param aColor the color to use
+     * @param index the index of the dataset
      */
-    public void setDataPointColor(Color aColor) {
-        this.iDataPointColor = aColor;
+    public void setDataPointAndLineColor(Color aColor, int index) {
+        if(index < iDataPointAndLineColor.size() && index >= 0){
+            iDataPointAndLineColor.set(index, aColor);
+        }
     }
     
     /**
-     * This method sets the color in which the line of the chromatogram will be rendered.
+     * Sets the color of the area under the curve for chromatograms and
+     * profile spectra for the dataset with the given dataset index.
      *
-     * @param aColor Color to render the line of the chromatogram in.
+     * @param aColor the color to use
+     * @param index the index of the dataset
      */
-    public void setChromatogramLineColor(Color aColor) {
-        this.iChromatogramLineColor = aColor;
+    public void setAreaUnderCurveColor(Color aColor, int index) {
+        if(index < iAreaUnderCurveColor.size() && index >= 0){
+            iAreaUnderCurveColor.set(index, aColor);
+        }
     }
 
     /**
@@ -687,20 +773,25 @@ abstract class GraphicsPanel extends JPanel {
      * @param aNotifyListeners  boolean to indicate whether the observers should be notified.
      */
     public void rescale(double aMinXAxisValue, double aMaxXAxisValue, boolean aNotifyListeners) {
+
         // Calculate the new max y-axis value.
         double maxInt = 1.0;
-        for (int i = 0; i < iXAxisData.length; i++) {
-            double lMass = iXAxisData[i];
-            if (lMass < aMinXAxisValue) {
-                continue;
-            } else if (lMass > aMaxXAxisValue) {
-                break;
-            } else {
-                if (iYAxisData[i] > maxInt) {
-                    maxInt = iYAxisData[i];
+
+        for (int j=0; j <iXAxisData.size(); j++) {
+            for (int i = 0; i < iXAxisData.get(j).length; i++) {
+                double lMass = iXAxisData.get(j)[i];
+                if (lMass < aMinXAxisValue) {
+                    continue;
+                } else if (lMass > aMaxXAxisValue) {
+                    break;
+                } else {
+                    if (iYAxisData.get(j)[i] > maxInt) {
+                        maxInt = iYAxisData.get(j)[i];
+                    }
                 }
             }
         }
+
         // Init the new params.
         double delta = aMaxXAxisValue - aMinXAxisValue;
 
@@ -714,8 +805,8 @@ abstract class GraphicsPanel extends JPanel {
         iXAxisMin = aMinXAxisValue - (aMinXAxisValue % power);
         iXAxisMax = aMaxXAxisValue + (power-(aMaxXAxisValue % power));
 
-//@TODO just some helpful printouts for when this is refined further.
-//logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
+        //@TODO just some helpful printouts for when this is refined further.
+        //logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
 
         iYAxisMax = maxInt + (maxInt / 10);
         int liSize = iSpecPanelListeners.size();
@@ -733,16 +824,35 @@ abstract class GraphicsPanel extends JPanel {
      *
      * @param aXAxisData double[] with the x-axis values.
      * @param aYAxisData double[] with the corresponding y-axis values.
+     * @param dataPointAndLineColor the color to use for the data points and line
+     * @param areaUnderCurveColor the color to use for the area under the curve
      */
-    protected void processXAndYData(double[] aXAxisData, double[] aYAxisData) {
+    protected void processXAndYData(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+
+        // if first dataset, create the dataset array lists
+        if(dataSetCounter == 0) {
+            iXAxisData = new ArrayList<double[]>();
+            iYAxisData = new ArrayList<double[]>();   
+        }
+
+        // set the data colors
+        iDataPointAndLineColor.add(dataPointAndLineColor);
+        iAreaUnderCurveColor.add(areaUnderCurveColor);
+
+        // add the new dataset
+        iXAxisData.add(new double[aXAxisData.length]);
+        iYAxisData.add(new double[aYAxisData.length]);
+
         HashMap peaks = new HashMap(aXAxisData.length);
-        iXAxisData = new double[aXAxisData.length];
-        iYAxisData = new double[aXAxisData.length];
+
+        // add the peaks to the dataset
         for (int i = 0; i < aXAxisData.length; i++) {
             peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));
         }
+
         // Maximum y-axis value.
         double maxYAxisValue = 0.0;
+
         // TreeSets are sorted.
         TreeSet masses = new TreeSet(peaks.keySet());
         Iterator iter = masses.iterator();
@@ -754,15 +864,19 @@ abstract class GraphicsPanel extends JPanel {
             if (yValue > maxYAxisValue) {
                 maxYAxisValue = yValue;
             }
-            iXAxisData[count] = xValue;
-            iYAxisData[count] = yValue;
+            iXAxisData.get(dataSetCounter)[count] = xValue;
+            iYAxisData.get(dataSetCounter)[count] = yValue;
             count++;
         }
+
+        // rescale the added dataset
         if (iXAxisStartAtZero) {
-            this.rescale(0.0, iXAxisData[iXAxisData.length - 1]);
+            this.rescale(0.0, getMaxXAxisValue());
         } else {
-            this.rescale(iXAxisData[0], iXAxisData[iXAxisData.length - 1]);
+            this.rescale(getMinXAxisValue(), getMaxXAxisValue());
         }
+
+        dataSetCounter++;
     }
 
     /**
@@ -778,6 +892,7 @@ abstract class GraphicsPanel extends JPanel {
      * @return int[] with the length of the X axis and Y axis respectively.
      */
     protected int[] drawAxes(Graphics g, double aXMin, double aXMax, int aXScale, double aYMin, double aYMax) {
+
         // Recalibrate padding so that it holds the axis labels.
         FontMetrics fm = g.getFontMetrics();
         int xAxisLabelWidth = fm.stringWidth(iXAxisLabel);
@@ -786,6 +901,7 @@ abstract class GraphicsPanel extends JPanel {
         int maxWidth = fm.stringWidth(Double.toString(aYMax));
         int max = Math.max(Math.max(xAxisLabelWidth, yAxisLabelWidth), Math.max(minWidth, maxWidth));
         int tempPadding = padding;
+
         if ((padding - max) < 0) {
             tempPadding += max;
             if (tempPadding > maxPadding) {
@@ -794,27 +910,33 @@ abstract class GraphicsPanel extends JPanel {
         } else {
             tempPadding *= 2;
         }
+
         // X-axis.
         int xAxis = (this.getWidth() - (2 * tempPadding));
         g.drawLine(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, this.getHeight() - tempPadding);
+
         // Arrowhead on X-axis.
         g.fillPolygon(new int[]{this.getWidth() - tempPadding - 5, this.getWidth() - tempPadding - 5, this.getWidth() - tempPadding},
                 new int[]{this.getHeight() - tempPadding + 5, this.getHeight() - tempPadding - 5, this.getHeight() - tempPadding},
                 3);
+
         // X-axis label
         if(iXAxisLabel.equalsIgnoreCase("m/z")){
             g.drawString(iXAxisLabel, this.getWidth() - (tempPadding - (padding / 2)), this.getHeight() - tempPadding + 4);
         } else {
             g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (tempPadding / 2));
         }
+
         // Y-axis.
         g.drawLine(tempPadding, this.getHeight() - tempPadding, tempPadding, tempPadding / 2);
         iXPadding = tempPadding;
         int yAxis = this.getHeight() - tempPadding - (tempPadding / 2);
+
         // Arrowhead on Y axis.
         g.fillPolygon(new int[]{tempPadding - 5, tempPadding + 5, tempPadding},
                 new int[]{(tempPadding / 2) + 5, (tempPadding / 2) + 5, tempPadding / 2},
                 3);
+
         // Y-axis label
         if(iYAxisLabel.equalsIgnoreCase("Int")){
             g.drawString(iYAxisLabel, tempPadding - yAxisLabelWidth, (tempPadding / 2) - 4);
@@ -825,9 +947,11 @@ abstract class GraphicsPanel extends JPanel {
         // Now the tags along the axes.
         this.drawXTags(g, aXMin, aXMax, aXScale, xAxis, tempPadding);
         int yTemp = yAxis;
+
         if (iAnnotations != null && iAnnotations.size() > 0) {
             yTemp -= 20;
         }
+
         iTopPadding = this.getHeight() - yTemp - 5;
         this.drawYTags(g, aYMin, aYMax, yTemp, tempPadding);
 
@@ -845,19 +969,24 @@ abstract class GraphicsPanel extends JPanel {
      * @param aPadding      int with the amount of padding to take into account.
      */
     protected void drawXTags(Graphics g, double aMin, double aMax, int aXScale, int aXAxisWidth, int aPadding) {
+
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
+
         // Find out how many tags we will have. At most, we'll have xTagCount tags, and if the resolution
         // of the screen is too small, we'll have less.
         int tagWidthEstimate = fm.stringWidth("1545.99") + 15;
         int numberTimes = (aXAxisWidth / tagWidthEstimate);
+
         if (numberTimes > xTagCount) {
             numberTimes = xTagCount;
         } else if (numberTimes == 0) {
             numberTimes = 1;
         }
+
         // Calculate the graphical unit, ...
         iXUnit = aXAxisWidth / numberTimes;
+
         // ... as well as the scale unit.
         double delta = aMax - aMin;
         double scaleUnit = delta / numberTimes;
@@ -866,12 +995,14 @@ abstract class GraphicsPanel extends JPanel {
         // The next section will only be drawn for spectra.
         if (currentGraphicsPanelType.equals(GraphicsPanelType.centroidSpectrum) ||
                 currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)) {
+
             // Since we know the scale unit, we also know the resolution.
             // This will be displayed on the bottom line.
             String resolution = "";
             if(showResolution){
                 resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
             }
+
             // Also print the MS level and precursor MZ and charge (if known, '?' otherwise).
             String msLevel_and_optional_precursor = "";
             if(showPrecursorDetails){
@@ -884,11 +1015,13 @@ abstract class GraphicsPanel extends JPanel {
                     msLevel_and_optional_precursor = "Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
                 }
             }
+
             // Finally, we also want the filename.
             String filename = "";
             if (showFileName) {
                 filename = "Filename: " + iFilename;
             }
+
             int precLength = fm.stringWidth(msLevel_and_optional_precursor);
             int resLength = fm.stringWidth(resolution);
             int xDistance = ((this.getWidth() - (iXPadding * 2)) / 4) - (precLength / 2);
@@ -899,6 +1032,7 @@ abstract class GraphicsPanel extends JPanel {
             int yHeight = this.getHeight() - fromBottom;
             int xAdditionForResolution = precLength + 15;
             int xAdditionForFilename = xAdditionForResolution + resLength + 15;
+
             if (precLength + resLength + 45 + fm.stringWidth(filename) > aXAxisWidth) {
                 g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - 2));
                 smallFontCorrection = g.getFontMetrics().getAscent();
@@ -906,22 +1040,28 @@ abstract class GraphicsPanel extends JPanel {
                 xAdditionForResolution = g.getFontMetrics().stringWidth(msLevel_and_optional_precursor) / 2;
                 xDistance = aPadding;
             }
+
             g.drawString(msLevel_and_optional_precursor, xDistance, yHeight - smallFontCorrection);
             g.drawString(resolution, xDistance + xAdditionForResolution, yHeight);
             Color foreground = null;
+
             if (iFilenameColor != null) {
                 foreground = g.getColor();
                 g.setColor(iFilenameColor);
             }
+
             g.drawString(filename, xDistance + xAdditionForFilename, yHeight - smallFontCorrection);
+
             if (foreground != null) {
                 g.setColor(foreground);
             }
+
             // Restore original font.
             g.setFont(oldFont);
         }
 
         int labelHeight = fm.getAscent() + 5;
+
         // Now mark each unit.
         for (int i = 0; i < numberTimes; i++) {
             int xLoc = (iXUnit * i) + aPadding;
@@ -949,9 +1089,11 @@ abstract class GraphicsPanel extends JPanel {
      * @param aPadding      int with the amount of padding to take into account.
      */
     protected void drawYTags(Graphics g, double aMin, double aMax, int aYAxisHeight, int aPadding) {
+
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
         int labelHeight = fm.getAscent();
+
         // Find out how many tags we will have. At most, we'll have xTagCount tags, and if the resolution
         // of the screen is too small, we'll have less.
         int tagHeightEstimate = labelHeight + 10;
@@ -961,8 +1103,10 @@ abstract class GraphicsPanel extends JPanel {
         } else if (numberTimes == 0) {
             numberTimes = 1;
         }
+
         // Calculate the graphical unit, ...
         iYUnit = aYAxisHeight / numberTimes;
+
         // ... as well as the scale unit.
         double delta = aMax - aMin;
         double scaleUnit = delta / numberTimes;
@@ -978,6 +1122,7 @@ abstract class GraphicsPanel extends JPanel {
         }
 
         int largestWidth = 0;
+
         // Old font storage.
         Font oldFont = g.getFont();
         int sizeCounter = 0;
@@ -1002,6 +1147,7 @@ abstract class GraphicsPanel extends JPanel {
             int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
             g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
         }
+
         // Restore original font.
         g.setFont(oldFont);
     }
@@ -1010,20 +1156,22 @@ abstract class GraphicsPanel extends JPanel {
      * This method will draw a highlighting triangle + x-value on top of the marked point.
      *
      * @param aIndex int with the index of the point to highlight.
+     * @param dataSetIndex the index of the dataset
      * @param g Graphics object to draw the highlighting on.
      */
-    protected void highLightPeak(int aIndex, Graphics g) {
-        this.highLight(aIndex, g, Color.blue, null, 0, true);
+    protected void highLightPeak(int aIndex, int dataSetIndex, Graphics g) {
+        this.highLight(aIndex, dataSetIndex, g, Color.blue, null, 0, true);
     }
 
     /**
      * This method will draw a highlighting triangle + x-value on top of the clicked marked point.
      *
      * @param aIndex int with the index of the clicked point to highlight.
+     * @param dataSetIndex the index of the dataset
      * @param g Graphics object to draw the highlighting on.
      */
-    protected void highlightClicked(int aIndex, Graphics g) {
-        this.highLight(aIndex, g, Color.BLACK, null, 0, true);
+    protected void highlightClicked(int aIndex, int dataSetIndex, Graphics g) {
+        this.highLight(aIndex, dataSetIndex, g, Color.BLACK, null, 0, true);
     }
 
     /**
@@ -1031,6 +1179,7 @@ abstract class GraphicsPanel extends JPanel {
      * drawing a floating triangle + x-value above it.
      *
      * @param aIndex    int with the index.
+     * @param dataSetIndex the index of the dataset
      * @param g Graphics object to draw on
      * @param aColor    Color to draw the highlighting in.
      * @param aComment  String with an optional comment. Can be 'null' in which case
@@ -1039,21 +1188,25 @@ abstract class GraphicsPanel extends JPanel {
      * @param aShowArrow boolean that indicates whether a downward-pointing arrow and dotted line
      *                           should be drawn over the point.
      */
-    protected void highLight(int aIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow) {
-        int x = iXAxisDataInPixels[aIndex];
+    protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow) {
+
+        int x = iXAxisDataInPixels.get(dataSetIndex)[aIndex];
         int y = 0;
+
         if (aPixelsSpacer < 0) {
             y = iTopPadding;
         } else {
-            y = iYAxisDataInPixels[aIndex] - aPixelsSpacer;
+            y = iYAxisDataInPixels.get(dataSetIndex)[aIndex] - aPixelsSpacer;
             // Correct for absurd heights.
             if (y < iTopPadding / 3) {
                 y = iTopPadding / 3;
             }
         }
+
         // Temporarily change the color to blue.
         Color originalColor = g.getColor();
         g.setColor(aColor);
+
         // Draw the triangle first, if appropriate.
         int arrowSpacer = 6;
         if (aShowArrow) {
@@ -1062,6 +1215,7 @@ abstract class GraphicsPanel extends JPanel {
                     3);
             arrowSpacer = 9;
         }
+
         // Now the x-value.
         // If there is any, print the comment instead of the x-value.
         if (aComment != null && !aComment.trim().equals("")) {
@@ -1069,14 +1223,16 @@ abstract class GraphicsPanel extends JPanel {
             g.drawString(aComment, x - g.getFontMetrics().stringWidth(aComment) / 2, y - arrowSpacer);
         } else {
             // No comment, so print the x-value.
-            String xValue = Double.toString(iXAxisData[aIndex]);
+            String xValue = Double.toString(iXAxisData.get(dataSetIndex)[aIndex]);
             int halfWayMass = g.getFontMetrics().stringWidth(xValue) / 2;
             g.drawString(xValue, x - halfWayMass, y - arrowSpacer);
         }
+
         // If we drew above the point, drop a dotted line.
         if (aPixelsSpacer != 0 && aShowArrow) {
-            dropDottedLine(aIndex, y + 2, g);
+            dropDottedLine(aIndex, dataSetIndex, y + 2, g);
         }
+
         // Restore original color.
         g.setColor(originalColor);
     }
@@ -1085,33 +1241,38 @@ abstract class GraphicsPanel extends JPanel {
      * This method draws a line, measuring the distance between two points in real mass units.
      *
      * @param aFirstIndex int with the first point index to draw from.
+     * @param aFirstDatasetIndex the dataset index of the first data point
      * @param aSecondIndex int with the second point index to draw to.
+     * @param aSecondDatasetIndex the dataset index of the second data point
      * @param g Graphics object on which to draw.
      * @param aColor Color object with the color for all the drawing.
      * @param aExtraPadding int with an optional amount of extra padding (lower on the graph
      *                      if positive, higher on the graph if negative)
      */
-    protected void drawMeasurementLine(int aFirstIndex, int aSecondIndex, Graphics g, Color aColor, int aExtraPadding) {
+    protected void drawMeasurementLine(int aFirstIndex, int aFirstDatasetIndex, int aSecondIndex, int aSecondDatasetIndex, Graphics g, Color aColor, int aExtraPadding) {
+
         // First get the x coordinates of the two points.
-        int x1 = iXAxisDataInPixels[aFirstIndex];
-        int x2 = iXAxisDataInPixels[aSecondIndex];
+        int x1 = iXAxisDataInPixels.get(aFirstDatasetIndex)[aFirstIndex];
+        int x2 = iXAxisDataInPixels.get(aSecondDatasetIndex)[aSecondIndex];
+
         if (x1 == 0 && x2 == 0) {
             return;
         } else if (x1 == 0) {
-            if (iXAxisData[aFirstIndex] < iXAxisMin) {
+            if (iXAxisData.get(aFirstDatasetIndex)[aFirstIndex] < iXAxisMin) {
                 x1 = iXPadding + 1;
             } else {
                 x1 = this.getWidth() - iXPadding - 1;
             }
         } else if (x2 == 0) {
-            if (iXAxisData[aSecondIndex] < iXAxisMin) {
+            if (iXAxisData.get(aSecondDatasetIndex)[aSecondIndex] < iXAxisMin) {
                 x2 = iXPadding + 1;
             } else {
                 x2 = this.getWidth() - iXPadding - 1;
             }
         }
+
         // Now the real x-value difference as a String.
-        double delta = Math.abs(iXAxisData[aFirstIndex] - iXAxisData[aSecondIndex]);
+        double delta = Math.abs(iXAxisData.get(aFirstDatasetIndex)[aFirstIndex] - iXAxisData.get(aSecondDatasetIndex)[aSecondIndex]);
         String deltaMass = new BigDecimal(delta).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
         String matches = this.findDeltaMassMatches(delta, deltaMassWindow);
         int width = g.getFontMetrics().stringWidth(deltaMass);
@@ -1127,13 +1288,14 @@ abstract class GraphicsPanel extends JPanel {
         g.drawLine(x2, y - 3, x2, y + 3);
 
         // Drop a dotted line down to the peaks.
-        dropDottedLine(aFirstIndex, y - 3, g);
-        dropDottedLine(aSecondIndex, y - 3, g);
+        dropDottedLine(aFirstIndex, aFirstDatasetIndex, y - 3, g);
+        dropDottedLine(aSecondIndex,aSecondDatasetIndex, y - 3, g);
         int xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (width / 2);
         g.drawString(deltaMass, xPosText, y - 5);
         if (!matches.trim().equals("")) {
             g.drawString(" (" + matches + ")", xPosText + width, y - 5);
         }
+
         // Return original color.
         g.setColor(originalColor);
     }
@@ -1143,12 +1305,14 @@ abstract class GraphicsPanel extends JPanel {
      * top of the indicated point.
      *
      * @param aPeakIndex    int with the index of the point to draw the dotted line for.
+     * @param dataSetIndex  the index of the dataset
      * @param aTotalHeight  int with the height (in pixels) to drop the dotted line from.
      * @param g Graphics object to draw the dotted line on.
      */
-    protected void dropDottedLine(int aPeakIndex, int aTotalHeight, Graphics g) {
-        int x = iXAxisDataInPixels[aPeakIndex];
-        int y = iYAxisDataInPixels[aPeakIndex];
+    protected void dropDottedLine(int aPeakIndex, int aDatasetIndex, int aTotalHeight, Graphics g) {
+
+        int x = iXAxisDataInPixels.get(aDatasetIndex)[aPeakIndex];
+        int y = iYAxisDataInPixels.get(aDatasetIndex)[aPeakIndex];
 
         // Draw the dotted line.
         if ((y - aTotalHeight) > 10) {
@@ -1206,32 +1370,40 @@ abstract class GraphicsPanel extends JPanel {
 
         // Only do those that fall within the current visual range.
         if (!(xValue < iXAxisMin || xValue > iXAxisMax)) {
+
             // See if any match is to be found.
             boolean foundMatch = false;
             int peakIndex = -1;
-            for (int i = 0; i < iXAxisData.length; i++) {
-                double delta = iXAxisData[i] - xValue;
-                if (Math.abs(delta) <= error) {
-                    if (!foundMatch) {
-                        foundMatch = true;
-                        peakIndex = i;
-                    } else {
-                        // Oops, we already had one...
-                        // Take the one with the largest intensity.
-                        if (iYAxisData[i] > iYAxisData[peakIndex]) {
+            int dataSetIndex = -1;
+
+            for (int j=0; j<iXAxisData.size(); j++) {
+                for (int i = 0; i < iXAxisData.get(j).length; i++) {
+                    double delta = iXAxisData.get(j)[i] - xValue;
+                    if (Math.abs(delta) <= error) {
+                        if (!foundMatch) {
+                            foundMatch = true;
                             peakIndex = i;
+                            dataSetIndex = j;
+                        } else {
+                            // Oops, we already had one...
+                            // Take the one with the largest intensity.
+                            if (iYAxisData.get(j)[i] > iYAxisData.get(j)[peakIndex]) {
+                                peakIndex = i;
+                                dataSetIndex = j;
+                            }
                         }
+                    } else if (delta > error) {
+                        break;
                     }
-                } else if (delta > error) {
-                    break;
                 }
             }
+
             // If a match was found and it qualifies against the minimal intensity,
             // we now have a peak index so we can annotate.
-            if (foundMatch && iYAxisData[peakIndex] > iAnnotationYAxisThreshold) {
+            if (foundMatch && iYAxisData.get(dataSetIndex)[peakIndex] > iAnnotationYAxisThreshold) {
                 //String label = aSA.getLabel() + " (" + new BigDecimal(mz-iMasses[peakIndex]).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")";
                 String label = aSA.getLabel();
-                int spacer = (int) ((iYAxisData[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
+                int spacer = (int) ((iYAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
                 boolean showArrow = true;
                 Integer key = new Integer(peakIndex);
                 if (aAlReadyAnnotated.containsKey(key)) {
@@ -1242,145 +1414,199 @@ abstract class GraphicsPanel extends JPanel {
                 } else {
                     aAlReadyAnnotated.put(key, new Integer(1));
                 }
-                this.highLight(peakIndex, g, aSA.getColor(), label, spacer, showArrow);
+                this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow);
             }
         }
     }
 
     /**
-     * This method draws all of the peaks in the current x-axis range
-     * on the panel.
+     * This method draws all of the peaks for all datasets in the current
+     * x-axis range on the panel.
      *
      * @param g Graphics object to draw on.
      */
     protected void drawPeaks(Graphics g) {
-        // Switch the color to red for the time being.
-        Color originalColor = g.getColor();
-        g.setColor(iDataPointColor);
 
-        // Cycle the x-axis values and corresponding y-axis values.
-        // Each peak is a line.
-        // We also init an array that holds pixel coordinates for each peak.
-        iXAxisDataInPixels = new int[iXAxisData.length];
-        iYAxisDataInPixels = new int[iXAxisData.length];
-        for (int i = 0; i < iXAxisData.length; i++) {
-            double lXAxisValue = iXAxisData[i];
-            // Only draw those x values within the ('low x value', 'high x value') window.
-            if (lXAxisValue < iXAxisMin) {
-                continue;
-            } else if (lXAxisValue > iXAxisMax) {
-                break;
-            } else {
-                double lYAxisValue = iYAxisData[i];
-                // Calculate pixel coordinates for x and y values.
-                // X value first.
-                double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
-                int temp = (int) tempDouble;
-                if ((tempDouble - temp) >= 0.5) {
-                    temp++;
-                }
-                int xAxisPxl = temp + iXPadding;
-                iXAxisDataInPixels[i] = xAxisPxl;
-                // Now intensity.
-                tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
-                temp = (int) tempDouble;
-                if ((tempDouble - temp) >= 0.5) {
-                    temp++;
-                }
-                int yValuePxl = this.getHeight() - (temp + iXPadding);
-                iYAxisDataInPixels[i] = yValuePxl;
-                if (iDrawStyle == LINES) {
-                    // Draw the line.
-                    g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
-                } else if (iDrawStyle == DOTS) {
-                    // Draw the dot.
-                    g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
+        Color originalColor = g.getColor();
+
+        // Init an array that holds pixel coordinates for each peak.
+        iXAxisDataInPixels = new ArrayList<int[]>();
+        iYAxisDataInPixels = new ArrayList<int[]>();
+
+        // cycle the datasets
+        for(int j=0;j < iXAxisData.size();j++) {
+
+            // set the color
+            g.setColor(iDataPointAndLineColor.get(j));
+
+            iXAxisDataInPixels.add(new int[iXAxisData.get(j).length]);
+            iYAxisDataInPixels.add(new int[iYAxisData.get(j).length]);
+
+            // cycle the peaks for the dataset
+            for (int i = 0; i < iXAxisData.get(j).length; i++) {
+
+                double lXAxisValue = iXAxisData.get(j)[i];
+
+                // Only draw those x values within the ('low x value', 'high x value') window.
+                if (lXAxisValue < iXAxisMin) {
+                    continue;
+                } else if (lXAxisValue > iXAxisMax) {
+                    break;
+                } else {
+                    double lYAxisValue = iYAxisData.get(j)[i];
+
+                    // Calculate pixel coordinates for x and y values.
+                    // X value first.
+                    double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
+                    int temp = (int) tempDouble;
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+                    int xAxisPxl = temp + iXPadding;
+                    iXAxisDataInPixels.get(j)[i] = xAxisPxl;
+
+                    // Now intensity.
+                    tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
+                    temp = (int) tempDouble;
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+                    int yValuePxl = this.getHeight() - (temp + iXPadding);
+                    iYAxisDataInPixels.get(j)[i] = yValuePxl;
+                    if (iDrawStyle == LINES) {
+                        // Draw the line.
+                        g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
+                    } else if (iDrawStyle == DOTS) {
+                        // Draw the dot.
+                        g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
+                    }
                 }
             }
         }
+        
         // Change the color back to its original setting.
         g.setColor(originalColor);
     }
 
     /**
-     * This method draws the chromatogram in the current x-axis range
-     * on the panel.
+     * This method draws filled polygons for all of the peaks for all datasets
+     * in the current x-axis range on the panel.
      *
      * @param g Graphics object to draw on.
      */
-    protected void drawChromatogram(Graphics g) {
-        // Switch the color to red for the time being.
-        Color originalColor = g.getColor();
+    protected void drawFilledPolygon(Graphics g) {
 
-        // Cycle the masses and corresponding intensities.
-        // Each point is rendered.
-        // We also init an array that holds pixel coordinates for each point.
-        iXAxisDataInPixels = new int[iXAxisData.length];
-        iYAxisDataInPixels = new int[iXAxisData.length];
-        // These arrays only contain the visible points.
-        ArrayList<Integer> xAxisPointsShown = new ArrayList<Integer>();
-        ArrayList<Integer> yAxisPointsShown = new ArrayList<Integer>();
+        // switch to 2D graphics
+        Graphics2D g2d = (Graphics2D) g;
 
-        // Cycle all points.
-        for (int i = 0; i < iXAxisData.length; i++) {
-            double xMeasurement = iXAxisData[i];
-            // Only draw those x-axis measurements within the ('low x', 'high x') window.
-            if (xMeasurement < iXAxisMin) {
-                continue;
-            } else if (xMeasurement > iXAxisMax) {
-                break;
-            } else {
-                // See if we need to initialize the start index.
-                double yMeasurement = iYAxisData[i];
-                // Calculate pixel coordinates for X and Y.
-                // X first.
-                double tempDouble = (xMeasurement - iXAxisMin) / iXScaleUnit;
-                int temp = (int) tempDouble;
-                if ((tempDouble - temp) >= 0.5) {
-                    temp++;
+        // store the original color
+        Color originalColor = g2d.getColor();
+        Composite originalComposite = g2d.getComposite();
+
+        // init an array that holds pixel coordinates for each point.
+        iXAxisDataInPixels = new ArrayList<int[]>();
+        iYAxisDataInPixels = new ArrayList<int[]>();
+
+        // cycle the datasets
+        for(int j=0; j<iXAxisData.size(); j++) {
+
+            iXAxisDataInPixels.add(new int[iXAxisData.get(j).length]);
+            iYAxisDataInPixels.add(new int[iYAxisData.get(j).length]);
+
+            // These arrays only contain the visible points.
+            ArrayList<Integer> xAxisPointsShown = new ArrayList<Integer>();
+            ArrayList<Integer> yAxisPointsShown = new ArrayList<Integer>();
+
+            // cycle the datapoints
+            for (int i = 0; i < iXAxisData.get(j).length; i++) {
+
+                double xMeasurement = iXAxisData.get(j)[i];
+
+                // Only draw those x-axis measurements within the ('low x', 'high x') window.
+                if (xMeasurement < iXAxisMin) {
+                    continue;
+                } else if (xMeasurement > iXAxisMax) {
+                    break;
+                } else {
+                    // See if we need to initialize the start index.
+                    double yMeasurement = iYAxisData.get(j)[i];
+
+                    // Calculate pixel coordinates for X and Y.
+                    // X first.
+                    double tempDouble = (xMeasurement - iXAxisMin) / iXScaleUnit;
+                    int temp = (int) tempDouble;
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+                    int xAxisPxl = temp + iXPadding;
+                    iXAxisDataInPixels.get(j)[i] = xAxisPxl;
+
+                    // Now intensity.
+                    tempDouble = (yMeasurement - iYAxisMin) / iYScaleUnit;
+                    temp = (int) tempDouble;
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+                    int yAxisPxl = this.getHeight() - (temp + iXPadding);
+                    iYAxisDataInPixels.get(j)[i] = yAxisPxl;
+
+                    // Add to the list of points shwon.
+                    xAxisPointsShown.add(xAxisPxl);
+                    yAxisPointsShown.add(yAxisPxl);
                 }
-                int xAxisPxl = temp + iXPadding;
-                iXAxisDataInPixels[i] = xAxisPxl;
-                // Now intensity.
-                tempDouble = (yMeasurement - iYAxisMin) / iYScaleUnit;
-                temp = (int) tempDouble;
-                if ((tempDouble - temp) >= 0.5) {
-                    temp++;
-                }
-                int yAxisPxl = this.getHeight() - (temp + iXPadding);
-                iYAxisDataInPixels[i] = yAxisPxl;
-                // Add to the list of points shwon.
-                xAxisPointsShown.add(xAxisPxl);
-                yAxisPointsShown.add(yAxisPxl);
             }
-        }
-        // First draw the filled polygon.
-        g.setColor(iChromatogramLineColor);
-        int[] xTemp = new int[xAxisPointsShown.size() + 2];
-        int[] yTemp = new int[yAxisPointsShown.size() + 2];
-        xTemp[0] = xAxisPointsShown.get(0).intValue();
-        yTemp[0] = this.getHeight() - iXPadding;
-        for (int i = 0; i < xAxisPointsShown.size(); i++) {
-            xTemp[i + 1] = xAxisPointsShown.get(i).intValue();
-            yTemp[i + 1] = yAxisPointsShown.get(i).intValue();
-        }
-        xTemp[xTemp.length - 1] = xAxisPointsShown.get(xAxisPointsShown.size() - 1).intValue();
-        yTemp[xTemp.length - 1] = this.getHeight() - iXPadding;
-        // Fill out the chromatogram.
-        g.fillPolygon(xTemp, yTemp, xTemp.length);
 
-        // Now draw the points, and a line connecting them.
-        g.setColor(iDataPointColor);
-        g.drawPolyline(xTemp, yTemp, xTemp.length);
-        // Skip the point for the first and last element;
-        // these are just there to nicely fill the polygon.
-        for (int i = 1; i < xTemp.length - 1; i++) {
-            int x = xTemp[i] - (iPointSize / 2);
-            int y = yTemp[i] - (iPointSize / 2);
-            g.fillOval(x, y, iPointSize, iPointSize);
+            // set the color and opacity level
+            g.setColor(iDataPointAndLineColor.get(j));
+
+            if(j != 0){
+                g2d.setComposite(makeComposite(alphaLevel));
+            }
+
+            // First draw the filled polygon.
+            int[] xTemp = new int[xAxisPointsShown.size() + 2];
+            int[] yTemp = new int[yAxisPointsShown.size() + 2];
+            xTemp[0] = xAxisPointsShown.get(0).intValue();
+            yTemp[0] = this.getHeight() - iXPadding;
+            for (int i = 0; i < xAxisPointsShown.size(); i++) {
+                xTemp[i + 1] = xAxisPointsShown.get(i).intValue();
+                yTemp[i + 1] = yAxisPointsShown.get(i).intValue();
+            }
+            xTemp[xTemp.length - 1] = xAxisPointsShown.get(xAxisPointsShown.size() - 1).intValue();
+            yTemp[xTemp.length - 1] = this.getHeight() - iXPadding;
+
+            // Fill out the chromatogram.
+            g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+
+            // set the color
+            g.setColor(iDataPointAndLineColor.get(j));
+
+            // Now draw the points, and a line connecting them.
+            g2d.drawPolyline(xTemp, yTemp, xTemp.length);
+
+            // Skip the point for the first and last element;
+            // these are just there to nicely fill the polygon.
+            for (int i = 1; i < xTemp.length - 1; i++) {
+                int x = xTemp[i] - (iPointSize / 2);
+                int y = yTemp[i] - (iPointSize / 2);
+                g2d.fillOval(x, y, iPointSize, iPointSize);
+            }
+
+            g2d.setComposite(originalComposite);
         }
 
         // Change the color back to its original setting.
-        g.setColor(originalColor);
+        g2d.setColor(originalColor);
+    }
+
+    /**
+     * Helper method for setting the opacity.
+     *
+     * @param alpha the opacity value, 0 means completely see-through, 1 means opaque.
+     * @return an AlphaComposite object
+     */
+    private AlphaComposite makeComposite(float alpha) {
+        int type = AlphaComposite.SRC_OVER;
+        return(AlphaComposite.getInstance(type, alpha));
     }
 }

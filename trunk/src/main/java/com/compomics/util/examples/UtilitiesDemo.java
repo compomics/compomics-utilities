@@ -1183,14 +1183,18 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         peptideAJScrollPane.setViewportView(peptideAJXTable);
 
         jLabel12.setText("m/z:");
+        jLabel12.setToolTipText("The mass over charge ratio of the peptide");
 
         peptideACompositionJTextField.setEditable(false);
         peptideACompositionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        peptideACompositionJTextField.setToolTipText("The elemental composition of the peptide");
 
         jLabel13.setText("Comp.:");
+        jLabel13.setToolTipText("The elemental composition of the peptide");
 
         peptideAMzJTextField.setEditable(false);
         peptideAMzJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        peptideAMzJTextField.setToolTipText("The mass over charge ratio of the peptide");
 
         peptideAColorJPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         peptideAColorJPanel.setToolTipText("The color used for Peptide A");
@@ -1286,14 +1290,18 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         peptideBJScrollPane.setViewportView(peptideBJXTable);
 
         jLabel14.setText("m/z:");
+        jLabel14.setToolTipText("The mass over charge ratio of the peptide");
 
         peptideBCompositionJTextField.setEditable(false);
         peptideBCompositionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        peptideBCompositionJTextField.setToolTipText("The elemental composition of the peptide");
 
         jLabel15.setText("Comp.:");
+        jLabel15.setToolTipText("The elemental composition of the peptide");
 
         peptideBMzJTextField.setEditable(false);
         peptideBMzJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        peptideBMzJTextField.setToolTipText("The mass over charge ratio of the peptide");
 
         peptideBColorJPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         peptideBColorJPanel.setToolTipText("The color used for Peptide B");
@@ -1319,8 +1327,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(org.jdesktop.layout.GroupLayout.LEADING, peptideBJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                     .add(jPanel4Layout.createSequentialGroup()
                         .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel14)
-                            .add(jLabel15))
+                            .add(jLabel15)
+                            .add(jLabel14))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -1338,8 +1346,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                     .add(peptideBColorJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(peptideBMzJTextField)
-                    .add(jLabel14))
+                    .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(peptideBMzJTextField)
+                        .add(jLabel14)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(peptideBCompositionJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)

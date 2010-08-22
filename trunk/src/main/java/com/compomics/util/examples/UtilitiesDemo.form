@@ -1154,23 +1154,27 @@
                 <Component class="javax.swing.JLabel" name="jLabel12">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="m/z:"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The mass over charge ratio of the peptide"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="peptideACompositionJTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The elemental composition of the peptide"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel13">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Comp.:"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The elemental composition of the peptide"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="peptideAMzJTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The mass over charge ratio of the peptide"/>
                   </Properties>
                 </Component>
                 <Container class="javax.swing.JPanel" name="peptideAColorJPanel">
@@ -1219,10 +1223,10 @@
                               <Component id="peptideBJScrollPane" alignment="0" pref="273" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel15" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel14" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="peptideBMzJTextField" pref="194" max="32767" attributes="1"/>
@@ -1245,8 +1249,10 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="peptideBColorJPanel" linkSize="14" max="32767" attributes="1"/>
-                              <Component id="peptideBMzJTextField" linkSize="14" alignment="1" max="32767" attributes="1"/>
-                              <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                  <Component id="peptideBMzJTextField" linkSize="14" alignment="3" max="32767" attributes="1"/>
+                                  <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -1283,23 +1289,27 @@
                 <Component class="javax.swing.JLabel" name="jLabel14">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="m/z:"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The mass over charge ratio of the peptide"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="peptideBCompositionJTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The elemental composition of the peptide"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel15">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Comp.:"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The elemental composition of the peptide"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="peptideBMzJTextField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="toolTipText" type="java.lang.String" value="The mass over charge ratio of the peptide"/>
                   </Properties>
                 </Component>
                 <Container class="javax.swing.JPanel" name="peptideBColorJPanel">

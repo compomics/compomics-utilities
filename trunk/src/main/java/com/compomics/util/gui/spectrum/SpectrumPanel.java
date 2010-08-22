@@ -475,4 +475,82 @@ public class SpectrumPanel extends GraphicsPanel {
 
         dataSetCounter++;
     }
+
+    /**
+     * Returns the peak color to be used for the given peak label. The
+     * colors used are based on the color coding used in MascotDatfile.
+     *
+     * @param peakLabel
+     * @return the peak color
+     */
+    public static Color determineColorOfPeak(String peakLabel) {
+
+        Color currentColor = Color.GRAY;
+
+        if (peakLabel.startsWith("a")) {
+
+            // turquoise
+            currentColor = new Color(153, 0, 0);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                // light purple-blue
+                currentColor = new Color(171, 161, 255);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                // ugly purple pink
+                currentColor = new Color(248, 151, 202);
+            }
+
+        } else if (peakLabel.startsWith("b")) {
+
+            // dark blue
+            currentColor = new Color(0, 0, 255);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                // nice blue
+                currentColor = new Color(0, 125, 200);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                // another purple
+                currentColor = new Color(153, 0, 255);
+            }
+
+        } else if (peakLabel.startsWith("c")) {
+
+            // purple blue
+            currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("x")) {
+
+            // green
+            currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("y")) {
+
+            // black
+            currentColor = new Color(0, 0, 0);
+
+            if (peakLabel.lastIndexOf("H2O") != -1 || peakLabel.lastIndexOf("H20") != -1) {
+                // navy blue
+                currentColor = new Color(0, 70, 135);
+            } else if (peakLabel.lastIndexOf("NH3") != -1) {
+                // another purple
+                currentColor = new Color(155, 0, 155);
+            }
+
+        } else if (peakLabel.startsWith("z")) {
+
+            // dark green
+            currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
+
+        } else if (peakLabel.startsWith("Prec")) { // precursor
+
+            // red
+            currentColor = Color.gray; // Color.red is used in MascotDatFile
+
+        } else if (peakLabel.startsWith("i")) { // immonimum ion
+            // grey
+            currentColor = Color.gray;
+        }
+
+        return currentColor;
+    }
 }

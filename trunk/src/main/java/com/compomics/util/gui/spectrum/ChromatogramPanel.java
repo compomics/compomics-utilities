@@ -118,9 +118,9 @@ public class ChromatogramPanel extends GraphicsPanel {
      * @param dataPointAndLineColor the color to use for the data points and lines
      * @param areaUnderCurveColor   the color to use for the area under the curve
      */
-    public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColorColor) {
+    public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
-        processXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColorColor);
+        processXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColor);
 
         this.showFileName = false;
         this.showPrecursorDetails = false;

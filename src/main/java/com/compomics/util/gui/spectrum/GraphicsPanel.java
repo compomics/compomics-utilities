@@ -1,6 +1,7 @@
 
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.Util;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
@@ -26,7 +27,7 @@ abstract class GraphicsPanel extends JPanel {
      * The opacity of the spectra. 0 means completely see-through, 1 means
      * opaque.
      */
-    float alphaLevel = 0.3f;
+    protected float alphaLevel = 0.3f;
     /**
      * The number of datasets currently displayed in the panel.
      */
@@ -81,10 +82,12 @@ abstract class GraphicsPanel extends JPanel {
     protected double deltaMassWindow = 0.2;
     /**
      * The label (and unit between brackets, if available) for the x-axis.
+     * Defaults to "m/z".
      */
     protected String iXAxisLabel = "m/z";
     /**
      * The label (and unit between brackets, if available) for the y-axis.
+     * Defaults to "Int".
      */
     protected String iYAxisLabel = "Int";
     /**
@@ -331,13 +334,50 @@ abstract class GraphicsPanel extends JPanel {
      * An enumerator of the possible GraphicsPanel types
      */
     protected enum GraphicsPanelType {
-        profileSpectrum, centroidSpectrum, chromatogram
+        profileSpectrum, centroidSpectrum, chromatogram,
+        isotopicDistributionCentroid, isotopicDistributionProfile
     }
     /**
      * Sets the current GraphicsPanel type, default to centroid spectrum
      */
     protected GraphicsPanelType currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
 
+    /**
+     * Returns the x-axis data.
+     *
+     * @return the x-axis data
+     */
+    public ArrayList<double[]> getXAxisData() {
+        return iXAxisData;
+    }
+
+    /**
+     * Returns the y-axis data.
+     *
+     * @return the y-axis data
+     */
+    public ArrayList<double[]> getYAxisData() {
+        return iYAxisData;
+    }
+
+    /**
+     * Returns the alpha level.
+     *
+     * @return the alphaLevel
+     */
+    public float getAlphaLevel() {
+        return alphaLevel;
+    }
+
+    /**
+     * Sets the alpha level
+     *
+     * @param alphaLevel the alphaLevel to set
+     */
+    public void setAlphaLevel(float alphaLevel) {
+        this.alphaLevel = alphaLevel;
+    }
+    
     /**
      * This method sets the start value of the x-axis to zero.
      *
@@ -451,7 +491,8 @@ abstract class GraphicsPanel extends JPanel {
             // @TODO scale.
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
             if(currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram) ||
-                    currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)){
+                    currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum) ||
+                    currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)){
                 drawFilledPolygon(g);
             } else {
                 drawPeaks(g);
@@ -507,9 +548,9 @@ abstract class GraphicsPanel extends JPanel {
 
             // See if we should annotate and if any are present.
             if (iAnnotations != null && iAnnotations.size() > 0) {
-                // This HashMap will contain the indices of the points that already carry
-                // an annotation as keys, and the number of annotations as values.
-                HashMap annotatedPeaks = new HashMap();
+                // This HashMap will contain the indices of the points that already carry an annotation
+                // as keys (datasetIndex_peakIndex), and the number of annotations as values.
+                HashMap<String, Integer>  annotatedPeaks = new HashMap<String, Integer>();
                 for (int i = 0; i < iAnnotations.size(); i++) {
                     Object o = iAnnotations.get(i);
                     if (o instanceof SpectrumAnnotation) {
@@ -585,7 +626,21 @@ abstract class GraphicsPanel extends JPanel {
                         if (iXAxisStartAtZero) {
                             rescale(0.0, getMaxXAxisValue());
                         } else {
-                            rescale(getMinXAxisValue(), getMaxXAxisValue());
+
+                            double tempMinXValue = getMinXAxisValue();
+
+                            // if isotopic distribution add a little padding on the left side
+                            // to make sure that the first peak is not too close to the y-axis
+                            if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile) ||
+                                    currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionCentroid)) {
+                                tempMinXValue -= 1;
+
+                                if (tempMinXValue < 0) {
+                                    tempMinXValue = 0;
+                                }
+                            }
+
+                            rescale(tempMinXValue, getMaxXAxisValue());
                         }
                         iDragged = false;
                         repaint();
@@ -762,6 +817,15 @@ abstract class GraphicsPanel extends JPanel {
         if(index < iAreaUnderCurveColor.size() && index >= 0){
             iAreaUnderCurveColor.set(index, aColor);
         }
+    }
+
+    /**
+     * Returns the list of colors used for the datasets. Index on dataset.
+     *
+     * @return the the list of colors used for the datasets
+     */
+    public ArrayList<Color> getAreaUnderCurveColors() {
+        return iAreaUnderCurveColor;
     }
 
     /**
@@ -1203,7 +1267,7 @@ abstract class GraphicsPanel extends JPanel {
             }
         }
 
-        // Temporarily change the color to blue.
+        // Temporarily change the color
         Color originalColor = g.getColor();
         g.setColor(aColor);
 
@@ -1222,10 +1286,14 @@ abstract class GraphicsPanel extends JPanel {
             aComment = aComment.trim();
             g.drawString(aComment, x - g.getFontMetrics().stringWidth(aComment) / 2, y - arrowSpacer);
         } else {
-            // No comment, so print the x-value.
-            String xValue = Double.toString(iXAxisData.get(dataSetIndex)[aIndex]);
-            int halfWayMass = g.getFontMetrics().stringWidth(xValue) / 2;
-            g.drawString(xValue, x - halfWayMass, y - arrowSpacer);
+            // No comment, so print the x- and y-value. Note: both are rounded to four decimals
+            String xValue = Double.toString(Util.roundDouble(iXAxisData.get(dataSetIndex)[aIndex], 4));
+            String yValue = Double.toString(Util.roundDouble(iYAxisData.get(dataSetIndex)[aIndex], 4));
+
+            String label = "(" + xValue + ", " + yValue + ")";
+
+            int halfWayMass = g.getFontMetrics().stringWidth(label) / 2;
+            g.drawString(label, x - halfWayMass, y - arrowSpacer);
         }
 
         // If we drew above the point, drop a dotted line.
@@ -1305,9 +1373,9 @@ abstract class GraphicsPanel extends JPanel {
      * top of the indicated point.
      *
      * @param aPeakIndex    int with the index of the point to draw the dotted line for.
-     * @param dataSetIndex  the index of the dataset
+     * @param aDatasetIndex the index of the dataset
      * @param aTotalHeight  int with the height (in pixels) to drop the dotted line from.
-     * @param g Graphics object to draw the dotted line on.
+     * @param g Graphics    object to draw the dotted line on.
      */
     protected void dropDottedLine(int aPeakIndex, int aDatasetIndex, int aTotalHeight, Graphics g) {
 
@@ -1364,7 +1432,8 @@ abstract class GraphicsPanel extends JPanel {
      *                          of times it has been annotated as value (or 'null' if not
      *                          yet annotated).
      */
-    protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap aAlReadyAnnotated) {
+    protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap<String, Integer> aAlReadyAnnotated) {
+
         double xValue = aSA.getMZ();
         double error = Math.abs(aSA.getErrorMargin());
 
@@ -1405,7 +1474,7 @@ abstract class GraphicsPanel extends JPanel {
                 String label = aSA.getLabel();
                 int spacer = (int) ((iYAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
                 boolean showArrow = true;
-                Integer key = new Integer(peakIndex);
+                String key = dataSetIndex + "_" + peakIndex;
                 if (aAlReadyAnnotated.containsKey(key)) {
                     int count = ((Integer) aAlReadyAnnotated.get(key)).intValue();
                     spacer += count * (g.getFontMetrics().getAscent() + 2);
@@ -1556,43 +1625,47 @@ abstract class GraphicsPanel extends JPanel {
                 }
             }
 
-            // set the color and opacity level
-            g.setColor(iDataPointAndLineColor.get(j));
+            // check if there are any data points to draw
+            if (!xAxisPointsShown.isEmpty()) {
+                
+                // set the color and opacity level
+                g.setColor(iAreaUnderCurveColor.get(j));
 
-            if(j != 0){
-                g2d.setComposite(makeComposite(alphaLevel));
+                if(j != 0){
+                    g2d.setComposite(makeComposite(alphaLevel));
+                }
+
+                // First draw the filled polygon.
+                int[] xTemp = new int[xAxisPointsShown.size() + 2];
+                int[] yTemp = new int[yAxisPointsShown.size() + 2];
+                xTemp[0] = xAxisPointsShown.get(0).intValue();
+                yTemp[0] = this.getHeight() - iXPadding;
+                for (int i = 0; i < xAxisPointsShown.size(); i++) {
+                    xTemp[i + 1] = xAxisPointsShown.get(i).intValue();
+                    yTemp[i + 1] = yAxisPointsShown.get(i).intValue();
+                }
+                xTemp[xTemp.length - 1] = xAxisPointsShown.get(xAxisPointsShown.size() - 1).intValue();
+                yTemp[xTemp.length - 1] = this.getHeight() - iXPadding;
+
+                // Fill out the chromatogram.
+                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+
+                // set the color
+                g.setColor(iDataPointAndLineColor.get(j));
+
+                // Now draw the points, and a line connecting them.
+                g2d.drawPolyline(xTemp, yTemp, xTemp.length);
+
+                // Skip the point for the first and last element;
+                // these are just there to nicely fill the polygon.
+                for (int i = 1; i < xTemp.length - 1; i++) {
+                    int x = xTemp[i] - (iPointSize / 2);
+                    int y = yTemp[i] - (iPointSize / 2);
+                    g2d.fillOval(x, y, iPointSize, iPointSize);
+                }
+
+                g2d.setComposite(originalComposite);
             }
-
-            // First draw the filled polygon.
-            int[] xTemp = new int[xAxisPointsShown.size() + 2];
-            int[] yTemp = new int[yAxisPointsShown.size() + 2];
-            xTemp[0] = xAxisPointsShown.get(0).intValue();
-            yTemp[0] = this.getHeight() - iXPadding;
-            for (int i = 0; i < xAxisPointsShown.size(); i++) {
-                xTemp[i + 1] = xAxisPointsShown.get(i).intValue();
-                yTemp[i + 1] = yAxisPointsShown.get(i).intValue();
-            }
-            xTemp[xTemp.length - 1] = xAxisPointsShown.get(xAxisPointsShown.size() - 1).intValue();
-            yTemp[xTemp.length - 1] = this.getHeight() - iXPadding;
-
-            // Fill out the chromatogram.
-            g2d.fillPolygon(xTemp, yTemp, xTemp.length);
-
-            // set the color
-            g.setColor(iDataPointAndLineColor.get(j));
-
-            // Now draw the points, and a line connecting them.
-            g2d.drawPolyline(xTemp, yTemp, xTemp.length);
-
-            // Skip the point for the first and last element;
-            // these are just there to nicely fill the polygon.
-            for (int i = 1; i < xTemp.length - 1; i++) {
-                int x = xTemp[i] - (iPointSize / 2);
-                int y = yTemp[i] - (iPointSize / 2);
-                g2d.fillOval(x, y, iPointSize, iPointSize);
-            }
-
-            g2d.setComposite(originalComposite);
         }
 
         // Change the color back to its original setting.

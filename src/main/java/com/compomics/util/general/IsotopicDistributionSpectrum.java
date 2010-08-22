@@ -18,7 +18,6 @@ import java.util.Iterator;
  * Date: 16-Aug-2010
  * Time: 14:36:23
  */
-
 public class IsotopicDistributionSpectrum implements SpectrumFile {
 
     /**

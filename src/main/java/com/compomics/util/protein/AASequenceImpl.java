@@ -173,6 +173,28 @@ public class AASequenceImpl implements Sequence {
     }
 
     /**
+     * This method calculates the mass over charge ratio for a given charge
+     * for the current sequence. Returns -1, if the mass could not be calculated.
+     *
+     * @param   charge the charge to use for the m/z ratio calculation
+     * @return	double with the m/z ratio for this sequence with the given charge,
+     *          -1 if the mass could not be calculated.
+     */
+    public double getMz(int charge) {
+
+        double tempMz = -1;
+
+        try {
+            // calculate the m/z ratio
+            tempMz = (getMass() + (((double) charge) * new MassCalc().calculateMass("H"))) / charge;
+        } catch (UnknownElementMassException ume) {
+            logger.error(ume.getMessage(), ume);
+        }
+
+        return tempMz;
+    }
+
+    /**
      * This method calculates the mass for the current sequence. <br />
      * Mass cached lazily, so after the first calculation it comes from
      * memory.

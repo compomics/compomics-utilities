@@ -4,6 +4,8 @@ import com.compomics.util.AlternateRowColoursJTable;
 import com.compomics.util.enumeration.MolecularElement;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.general.IsotopicDistributionSpectrum;
+import com.compomics.util.general.MassCalc;
+import com.compomics.util.general.UnknownElementMassException;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.MolecularFormula;
@@ -28,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -72,10 +73,6 @@ public class IsotopeDistributionGui extends JFrame {
      * The charge
      */
     private double iCharge;
-    /**
-     * The mass of hydrogen
-     */
-    private double iHMass = 1.007825;
 
     /**
      * The constructor
@@ -89,6 +86,7 @@ public class IsotopeDistributionGui extends JFrame {
             //set the frame parameters
             this.setContentPane(jpanContent);
             this.setSize(800, 800);
+            this.setLocationRelativeTo(null);
             this.setVisible(true);
             this.setIconImage(new ImageIcon(getClass().getResource("/icons/compomics-utilities.png")).getImage());
             //add a closing window listener
@@ -140,7 +138,6 @@ public class IsotopeDistributionGui extends JFrame {
                         }
                     }
                     iElements.put(lAa, lAaFormula);
-
                 }
             }
         } catch (Exception e) {
@@ -189,7 +186,7 @@ public class IsotopeDistributionGui extends JFrame {
         iCharge = (Double) spinCharge.getValue();
         //set the labels
         lblComp.setText(iSequence.getMolecularFormula().toString());
-        double lMz = (iSequence.getMass() + (iCharge * iHMass)) / iCharge;
+        double lMz = iSequence.getMz((int) iCharge);
         lblMass.setText(String.valueOf(Math.floor(lMz * 10000.0) / 10000.0) + " Da");
         lblPeptide.setText("NH2-" + lSeq + "-COOH (" + iCharge + "+)");
         //calculate the distribution
@@ -200,7 +197,11 @@ public class IsotopeDistributionGui extends JFrame {
             table1.setValueAt(i, i, 0);
             table1.setValueAt(Math.floor(lIso.getPercTot()[i] * 10000.0) / 100.0, i, 1);
             table1.setValueAt(Math.floor(lIso.getPercMax()[i] * 10000.0) / 100.0, i, 2);
-            lPeaks.put(lMz + (i * (iHMass / iCharge)), lIso.getPercMax()[i]);
+            try {
+                lPeaks.put(lMz + (i * (new MassCalc().calculateMass("H") / iCharge)), lIso.getPercMax()[i]);
+            } catch (UnknownElementMassException ume) {
+                logger.error(ume.getMessage(), ume);
+            }
         }
         //do gui updates an add the spectrum panel
         table1.updateUI();

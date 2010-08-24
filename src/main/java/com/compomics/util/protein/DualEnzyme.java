@@ -168,7 +168,10 @@ public class DualEnzyme extends Enzyme {
                 iCtermCleavables = cleavables;
                 break;
             default:
-                throw new IllegalArgumentException("You specified " + aTerminus + " as the terminus code, while it should be " + DualEnzyme.NTERMINAL + " (NTERMINAL) or " + DualEnzyme.CTERMINAL + " (CTERMINAL)!");
+                throw new IllegalArgumentException("You specified " + aTerminus
+                        + " as the terminus code, while it should be "
+                        + DualEnzyme.NTERMINAL + " (NTERMINAL) or "
+                        + DualEnzyme.CTERMINAL + " (CTERMINAL)!");
         }
     }
 
@@ -210,7 +213,10 @@ public class DualEnzyme extends Enzyme {
                 keys = iCtermCleavables.keySet();
                 break;
             default:
-                throw new IllegalArgumentException("You specified " + aTerminus + " as the terminus code, while it should be " + DualEnzyme.NTERMINAL + " (NTERMINAL) or " + DualEnzyme.CTERMINAL + " (CTERMINAL)!");
+                throw new IllegalArgumentException("You specified " + aTerminus
+                        + " as the terminus code, while it should be "
+                        + DualEnzyme.NTERMINAL + " (NTERMINAL) or "
+                        + DualEnzyme.CTERMINAL + " (CTERMINAL)!");
         }
         
         ArrayList lList = new ArrayList(keys);

@@ -80,6 +80,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     public UtilitiesDemo() {
         initComponents();
 
+        // insert the text in the information tab
+        insertInformationTabText();
+
         // centrally align the comboboxes
         silacLabelPeptideAJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         silacLabelPeptideBJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
@@ -95,6 +98,44 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    /**
+     * Inserts the html text into the information tab.
+     */
+    private void insertInformationTabText() {
+
+        String htmlText = "<html><head></head><body>"
+                + "<h1>Compomics-Utilities</h1>"
+                + "<p style=\"margin-top: 0\">"
+                + "The <a href=\"http://www.compomics.com\">Computational Omics Group</a> at the <a href=\"http://www.ugent.be/en\">University of Ghent</a> "
+                + "develops various bioinformatics tools for analyzing omics data."
+                + "<br><br>"
+                + "Compomics-utilities is a library containing code shared by many of our research projects, amongst others containing panels <br>"
+                + "for visualizing spectra and chromatograms  and objects for representing peptides and proteins etc.  We believe that this library<br>"
+                + "can be of use to other research groups doing computational proteomics, and have therefore made it available as open source."
+                + "<br><br>"
+                + "This demo contains four examples of how the library can be used. For the complete source code of the examples, see the<br>"
+                + "<i>com.compomics.util.examples</i> package. Click the tabs at the top to select one of the demos."
+                + "<br><br>"
+                + "Additional info can be found at the project's <a href=\"http://googlecode.com\">Google Code</a> home page: "
+                + "<a href=\"http://compomics-utilities.googlecode.com\">http://compomics-utilities.googlecode.com</a>."
+                + "</p>"
+                + "<br><br><br><br>"
+                + "<b>The Computational Omics Group is grateful to be supported by:<b>"
+                + "<br><br>"
+                + "<a href=\"http://www.compomics.com\"><img src=\"" + getClass().getResource("/icons/compomics.png") + "\" border=\"0\" width=\"222\" height=\"111\"></a>"
+                + "<a href=\"http://www.ugent.be/en\"><img src=\"" + getClass().getResource("/icons/ugent.png") + "\" border=\"0\"></a>"
+                + "<a href=\"http://www.vib.be\"><img src=\"" + getClass().getResource("/icons/vib.png") + "\" border=\"0\"></a>"
+                + "<a href=\"http://java.com/en\"><img src=\"" + getClass().getResource("/icons/java.png") + "\" border=\"0\"></a>"
+                + "<a href=\"http://maven.apache.org\"><img src=\"" + getClass().getResource("/icons/maven.png") + "\" border=\"0\"></a>"
+                + "<a href=\"http://www.jetbrains.com/idea/\"><img src=\"" + getClass().getResource("/icons/intelliJ.png") + "\" border=\"0\"></a>"
+                + "<a href=\"http://www.yourkit.com/\"><img src=\"" + getClass().getResource("/icons/yourkit.png") + "\" border=\"0\"></a>"
+                + "</body>"
+                + "</html>";
+
+        informationJEditorPane.setText(htmlText);
+
     }
 
     /**
@@ -544,7 +585,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         informationJEditorPane.setContentType("text/html");
         informationJEditorPane.setEditable(false);
-        informationJEditorPane.setText("<html>\r\n  <head>\r\n\n  </head>\r\n  <body>\r\n\t\n<h1>Compomics-Utilities</h1>\n\n    <p style=\"margin-top: 0\">\r\n      \r\tThe <a href=\"http://www.compomics.com\">Computational Omics Group</a> at the <a href=\"http://www.ugent.be/en\">University of Ghent</a> develops various bioinformatics tools for analyzing omics data.\n\t<br><br>\n\tCompomics-utilities is a library containing code shared by many of our research projects, amongst others containing panels <br>\n\tfor visualizing spectra and chromatograms  and objects for representing peptides and proteins etc.  We believe that this library<br>\n\tcan be of use to other research groups doing computational proteomics, and have therefore made it available as open source.\n\t<br><br>\n\tThis demo contains four examples of how the library can be used. For the complete source code of the examples, see the<br>\n\t<i>com.compomics.util.examples</i> package. Click the tabs at the top to select one of the demos. \n\t<br><br>\n\tAdditional info can be found at the project's <a href=\"http://googlecode.com\">Google Code</a> home page: <a href=\"http://compomics-utilities.googlecode.com\">http://compomics-utilities.googlecode.com</a>.\n    </p>\r\n\t<br><br><br><br>\n\t<b>The Computational Omics Group is grateful to be supported by:<b>\n\t<br><br>\n\t<a href=\"http://www.compomics.com\"><img src=\"http://genesis.ugent.be/public_data/image/compomics.png\" border=\"0\" width=\"222\" height=\"111\"></a>\n\t<a href=\"http://www.ugent.be/en\"><img src=\"http://genesis.ugent.be/public_data/image/ugent.png\" border=\"0\"></a>\n\t<a href=\"http://www.vib.be\"><img src=\"http://genesis.ugent.be/public_data/image/vib.png\" border=\"0\"></a>\n\t<a href=\"http://java.com/en\"><img src=\" http://genesis.ugent.be/public_data/image/java.png\" border=\"0\"></a>\n\t<a href=\"http://maven.apache.org\"><img src=\" http://genesis.ugent.be/public_data/image/maven.png\" border=\"0\"></a>\n\t<a href=\"http://www.jetbrains.com/idea/\"><img src=\"http://genesis.ugent.be/public_data/image/intelliJ.png\" border=\"0\"></a>\n\t<a href=\"http://www.yourkit.com/\"><img src=\"http://genesis.ugent.be/public_data/image/yourkit.png\" border=\"0\"></a>\n  </body>\r\n</html>\r\n");
         informationJEditorPane.setMargin(new java.awt.Insets(30, 20, 10, 20));
         informationJEditorPane.setMinimumSize(new java.awt.Dimension(10, 10));
         informationJEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {

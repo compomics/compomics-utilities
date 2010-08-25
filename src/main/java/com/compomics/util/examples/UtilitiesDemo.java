@@ -86,6 +86,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * Used to read the enzyme details from file.
      */
     private MascotEnzymeReader mascotEnzymeReader = null;
+    /**
+     * Used for the in silico digestion example.
+     */
+    private String cleanProteinSequence = null;
 
     /** 
      * Creates a new UtilitiesDemo frame and makes it visible.
@@ -112,7 +116,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         setUpSpectrumPanelDemo();
         setUpChromatogramPanelDemo();
         setUpIsotopicDistributionPanelDemo();
-        setUpInSilicoDigestion();
+        setUpInSilicoDigestionDemo();
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -168,7 +172,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * Set up the in silico digestion demo.
      */
-    private void setUpInSilicoDigestion() {
+    private void setUpInSilicoDigestionDemo() {
 
         try {
             // locate the file with the enzyme details
@@ -205,7 +209,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // create the first isotopic distribution
             IsotopicDistributionPanel isotopicDistributionPanel =
                     new IsotopicDistributionPanel(peptideSequenceAJTextField.getText(),
-                    (Integer) chargePeptideAJSpinner.getValue(), false); // @TODO: change to profile mode when this has been implemented
+                    (Integer) chargePeptideAJSpinner.getValue(), false); // @TODO: change to profile mode when this has been implemented?
 
             // add the distribution to the table as well
             AASequenceImpl peptideSequence = isotopicDistributionPanel.getPeptideSequences().get(0);
@@ -651,6 +655,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         proteinCoverageJScrollPane = new javax.swing.JScrollPane();
         proteinSequenceCoverageJEditorPane = new javax.swing.JEditorPane();
+        jLabel23 = new javax.swing.JLabel();
+        sequenceCoverageJLabel = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
 
         jRadioButton1.setText("jRadioButton1");
 
@@ -1695,7 +1702,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         proteinSequenceJScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         proteinSequenceJEditorPane.setText(">sp|P02769|ALBU_BOVIN Serum albumin OS=Bos taurus GN=ALB PE=1 SV=4\nMKWVTFISLLLLFSSAYSRGVFRRDTHKSEIAHRFKDLGEEHFKGLVLIAFSQYLQQCPF\nDEHVKLVNELTEFAKTCVADESHAGCEKSLHTLFGDELCKVASLRETYGDMADCCEKQEP\nERNECFLSHKDDSPDLPKLKPDPNTLCDEFKADEKKFWGKYLYEIARRHPYFYAPELLYY\nANKYNGVFQECCQAEDKGACLLPKIETMREKVLASSARQRLRCASIQKFGERALKAWSVA\nRLSQKFPKAEFVEVTKLVTDLTKVHKECCHGDLLECADDRADLAKYICDNQDTISSKLKE\nCCDKPLLEKSHCIAEVEKDAIPENLPPLTADFAEDKDVCKNYQEAKDAFLGSFLYEYSRR\nHPEYAVSVLLRLAKEYEATLEECCAKDDPHACYSTVFDKLKHLVDEPQNLIKQNCDQFEK\nLGEYGFQNALIVRYTRKVPQVSTPTLVEVSRSLGKVGTRCCTKPESERMPCTEDYLSLIL\nNRLCVLHEKTPVSEKVTKCCTESLVNRRPCFSALTPDETYVPKAFDEKLFTFHADICTLP\nDTEKQIKKQTALVELLKHKPKATEEQLKTVMENFVAFVDKCCAADDKEACFAVEGPKLVV\nSTQTALA");
-        proteinSequenceJEditorPane.setCaretPosition(0);
         proteinSequenceJEditorPane.setMinimumSize(new java.awt.Dimension(20, 20));
         proteinSequenceJEditorPane.setPreferredSize(new java.awt.Dimension(20, 20));
         proteinSequenceJEditorPane.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1749,6 +1755,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
         peptidesJXTable.setOpaque(false);
+        peptidesJXTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                peptidesJXTableMouseClicked(evt);
+            }
+        });
+        peptidesJXTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                peptidesJXTableKeyReleased(evt);
+            }
+        });
         peptidesJScrollPane.setViewportView(peptidesJXTable);
 
         jLabel22.setText("Number of Peptides:");
@@ -1794,20 +1810,39 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         proteinSequenceCoverageJEditorPane.setPreferredSize(new java.awt.Dimension(22, 22));
         proteinCoverageJScrollPane.setViewportView(proteinSequenceCoverageJEditorPane);
 
+        jLabel23.setText("Sequence Coverage:");
+
+        sequenceCoverageJLabel.setText("-");
+
+        jLabel24.setFont(jLabel24.getFont().deriveFont((jLabel24.getFont().getStyle() | java.awt.Font.ITALIC)));
+        jLabel24.setText("The covered part of the sequence is in blue, and the selected peptide is in red.");
+
         org.jdesktop.layout.GroupLayout jPanel9Layout = new org.jdesktop.layout.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
+                .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
+                    .add(jPanel9Layout.createSequentialGroup()
+                        .add(jLabel23)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(sequenceCoverageJLabel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 195, Short.MAX_VALUE)
+                        .add(jLabel24)))
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel9Layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel23)
+                    .add(sequenceCoverageJLabel)
+                    .add(jLabel24))
                 .addContainerGap())
         );
 
@@ -2082,8 +2117,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @param evt
      */
     private void inSilicoDigestionHelpJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inSilicoDigestionHelpJLabelMouseClicked
-        // @TODO: implement...
-        JOptionPane.showMessageDialog(this, "Sorry, the help text is not yet available.", "Not Implemented...", JOptionPane.INFORMATION_MESSAGE);
+        openHelpDialog("/helpFiles/InSilicoProteinDigestion.html");
     }//GEN-LAST:event_inSilicoDigestionHelpJLabelMouseClicked
 
     /**
@@ -2207,12 +2241,13 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_enzymesJComboBoxPopupMenuWillBecomeVisible
 
     /**
-     * @TODO: JavaDoc missing...
+     * Performs the cleaving of the sequence and displays the results.
      *
      * @param evt
      */
     private void enzymesJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesJComboBoxActionPerformed
 
+        // update the enzyme selection
         Enzyme selectedEnzyme = mascotEnzymeReader.getEnzyme(enzymesJComboBox.getSelectedItem().toString());
 
         if (selectedEnzyme.getCleavage() != null) {
@@ -2229,31 +2264,61 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         positionJTextField.setText(selectedEnzyme.getPosition() == Enzyme.CTERM ? "C-terminal" : "N-terminal");
 
+        // perform the digestion and display the results
+        updateInSilicoDigestion();
+    }//GEN-LAST:event_enzymesJComboBoxActionPerformed
+
+    /**
+     * Cleaves the current sequence according to the currently selected parameters 
+     * and displays the results.
+     */
+    private void updateInSilicoDigestion () {
+
+         // clear previous results from the peptide table
         while (peptidesJXTable.getRowCount() > 0) {
             ((DefaultTableModel) peptidesJXTable.getModel()).removeRow(0);
         }
 
-        selectedEnzyme.setMiscleavages((Integer) missedCleavagesJSpinner.getValue());
+        // and clear the peptide sequence coverage details
+        proteinSequenceCoverageJEditorPane.setText("");
+        sequenceCoverageJLabel.setText("-");
 
+        // set the default enzyme to trypsin
+        enzymesJComboBox.setSelectedItem("Trypsin");
+
+        // get the sequence and perform the digestion
         if (proteinSequenceJEditorPane.getText().length() > 0) {
 
+            // scroll to to up sequence
+            proteinSequenceJEditorPane.setCaretPosition(0);
+
+            // this will contain the sequence without indices, white space etc
+            cleanProteinSequence = "";
+
             try {
+                // get the currently selected enzyme
+                Enzyme selectedEnzyme = mascotEnzymeReader.getEnzyme(enzymesJComboBox.getSelectedItem().toString());
+                selectedEnzyme.setMiscleavages((Integer) missedCleavagesJSpinner.getValue());
+
                 Protein[] cleavedPeptides;
 
+                // if sequence starts with a > assume FASTA format
                 if (proteinSequenceJEditorPane.getText().startsWith(">")) {
-                    cleavedPeptides = selectedEnzyme.cleave(new Protein(proteinSequenceJEditorPane.getText()));
+                    Protein protein = new Protein(proteinSequenceJEditorPane.getText());
+                    cleavedPeptides = selectedEnzyme.cleave(protein);
+                    cleanProteinSequence = protein.getSequence().getSequence();
                 } else {
-
-                    // remove white space and line shifts
-                    String tempSequence = proteinSequenceJEditorPane.getText();
-                    tempSequence = tempSequence.replaceAll("\\W", "");
-                    tempSequence = tempSequence.replaceAll("\n", "");
-
-                    cleavedPeptides = selectedEnzyme.cleave(new Protein(new String("no header"), tempSequence));
+                    // not FASTA format, assume sequence only, but remove white space and line shifts
+                    cleanProteinSequence = proteinSequenceJEditorPane.getText();
+                    cleanProteinSequence = cleanProteinSequence.replaceAll("\\W", "");
+                    cleanProteinSequence = cleanProteinSequence.replaceAll("\n", "");
+                    cleavedPeptides = selectedEnzyme.cleave(new Protein(new String("no header"), cleanProteinSequence));
                 }
 
+                // cycle the peptides and add them to the peptide table
                 for (int i = 0; i < cleavedPeptides.length; i++) {
 
+                    // only add peptides within the current lower and upper mass limits
                     if (cleavedPeptides[i].getMass() >= ((Integer) lowerMassJSpinner.getValue()).intValue()
                             && cleavedPeptides[i].getMass() <= ((Integer) upperMassJSpinner.getValue()).intValue()) {
                         ((DefaultTableModel) peptidesJXTable.getModel()).addRow(new Object[]{
@@ -2263,50 +2328,64 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                                     cleavedPeptides[i].getHeader().getEndLocation()});
                     }
                 }
+
+                // display the sequence coverage in the sequence coverage panel
+                formatProteinSequence();
+
             } catch (IllegalArgumentException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "Error Parsing Protein Sequence", JOptionPane.ERROR_MESSAGE);
             }
         }
 
+        // update the number of peptides in the peptide table count
         numberOfPeptidesJLabel.setText("" + peptidesJXTable.getRowCount());
-
-    }//GEN-LAST:event_enzymesJComboBoxActionPerformed
+    }
 
     /**
-     * @TODO: JavaDoc missing....
-     *
-     * @param evt
+     * @see #updateInSilicoDigestion()
      */
     private void missedCleavagesJSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_missedCleavagesJSpinnerStateChanged
-        enzymesJComboBoxActionPerformed(null);
+        updateInSilicoDigestion();
     }//GEN-LAST:event_missedCleavagesJSpinnerStateChanged
 
     /**
-     * @TODO: JavaDoc missing....
-     *
-     * @param evt
+     * @see #updateInSilicoDigestion()
      */
     private void lowerMassJSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_lowerMassJSpinnerStateChanged
-        enzymesJComboBoxActionPerformed(null);
+        updateInSilicoDigestion();
     }//GEN-LAST:event_lowerMassJSpinnerStateChanged
 
     /**
-     * @TODO: JavaDoc missing....
-     *
-     * @param evt
+     * @see #updateInSilicoDigestion()
      */
     private void upperMassJSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_upperMassJSpinnerStateChanged
-        enzymesJComboBoxActionPerformed(null);
+        updateInSilicoDigestion();
     }//GEN-LAST:event_upperMassJSpinnerStateChanged
 
     /**
-     * @TODO: JavaDoc missing....
-     *
-     * @param evt
+     * @see #updateInSilicoDigestion()
      */
     private void proteinSequenceJEditorPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proteinSequenceJEditorPaneKeyReleased
-        enzymesJComboBoxActionPerformed(null);
+        updateInSilicoDigestion();
     }//GEN-LAST:event_proteinSequenceJEditorPaneKeyReleased
+
+    /**
+     * @see #formatProteinSequence(java.lang.String)
+     */
+    private void peptidesJXTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peptidesJXTableMouseClicked
+        if (peptidesJXTable.getSelectedRow() != -1) {
+            formatProteinSequence();
+        }
+    }//GEN-LAST:event_peptidesJXTableMouseClicked
+
+    /**
+     * @see #formatProteinSequence(java.lang.String)
+     */
+    private void peptidesJXTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_peptidesJXTableKeyReleased
+        if (peptidesJXTable.getSelectedRow() != -1) {
+            formatProteinSequence();
+        }
+    }//GEN-LAST:event_peptidesJXTableKeyReleased
 
     /**
      * Openes the help dialog.
@@ -2315,6 +2394,107 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private void openHelpDialog(String urlAsString) {
         new HelpWindow(this, getClass().getResource(urlAsString));
+    }
+
+    /**
+     * Formats the protein sequence such that both the covered parts of the sequence
+     * and the peptide selected in the peptide table is highlighted.
+     */
+    public void formatProteinSequence() {
+
+        int selectedPeptideStart = -1;
+        int selectedPeptideEnd = -1;
+
+        // find the start end end indices for the currently selected peptide, if any
+        if (peptidesJXTable.getSelectedRow() != -1) {
+            selectedPeptideStart = ((Integer) peptidesJXTable.getValueAt(peptidesJXTable.getSelectedRow(), 2)).intValue();
+            selectedPeptideEnd = ((Integer) peptidesJXTable.getValueAt(peptidesJXTable.getSelectedRow(), 3)).intValue();
+        }
+
+        // an array containing the coverage index for each residue
+        int[] coverage = new int[cleanProteinSequence.length() + 1];
+
+        // iterate the peptide table and store the coverage for each peptide
+        for (int i = 0; i < peptidesJXTable.getRowCount(); i++) {
+
+            int tempPeptideStart = ((Integer) peptidesJXTable.getValueAt(i, 2)).intValue();
+            int tempPeptideEnd = ((Integer) peptidesJXTable.getValueAt(i, 3)).intValue();
+
+            for (int j = tempPeptideStart; j <= tempPeptideEnd; j++) {
+                coverage[j]++;
+            }
+        }
+
+        String sequenceTable = "", currentCellSequence = "";
+        boolean selectedPeptide = false, coveredPeptide = false;
+        double sequenceCoverage = 0;
+
+        // iterate the coverage table and create the formatted sequence string
+        for (int i = 1; i < coverage.length; i++) {
+
+            // add indices per 50 residues
+            if (i % 50 == 1 || i == 1) {
+                sequenceTable += "</tr><tr><td height='20'><font size=2><a name=\"" + i + ".\"></a>" + i + ".</td>";
+
+                int currentCharIndex = i;
+
+                while (currentCharIndex + 10 < cleanProteinSequence.length() && currentCharIndex + 10 < (i + 50)) {
+                    sequenceTable += "<td height='20'><font size=2><a name=\"" +
+                            (currentCharIndex + 10) + ".\"></a>" + (currentCharIndex + 10) + ".</td>";
+                    currentCharIndex += 10;
+                }
+
+                sequenceTable += "</tr><tr>";
+            }
+
+            // check if the current residues is covered
+            if (coverage[i] > 0) {
+                sequenceCoverage++;
+                coveredPeptide = true;
+            } else {
+                coveredPeptide = false;
+            }
+
+            // check if the current residue is contained in the selected peptide
+            if (i == selectedPeptideStart) {
+                selectedPeptide = true;
+            } else if (i == selectedPeptideEnd + 1) {
+                selectedPeptide = false;
+            }
+
+            // highlight the covered and selected peptides
+            if (selectedPeptide) {
+                currentCellSequence += "<font color=red>" + cleanProteinSequence.charAt(i-1) + "</font>";
+            } else if (coveredPeptide) {
+                currentCellSequence += "<font color=blue>" + cleanProteinSequence.charAt(i-1) + "</font>";
+            } else {
+                currentCellSequence += "<font color=black>" + cleanProteinSequence.charAt(i-1) + "</font>";
+            }
+
+            // add the sequence to the formatted sequence
+            if (i % 10 == 0) {
+                sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td>";
+                currentCellSequence = "";
+            }
+        }
+
+        // add remaining tags and complete the formatted sequence
+        sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td></table><font color=black>";
+        String formattedSequence = "<html><body><table cellspacing='2'>" + sequenceTable + "</html></body>";
+
+        // calculte and display the percent sequence coverage
+        sequenceCoverageJLabel.setText(Util.roundDouble(sequenceCoverage / cleanProteinSequence.length(), 2) + "%");
+
+        // display the formatted sequence
+        proteinSequenceCoverageJEditorPane.setText(formattedSequence);
+        proteinSequenceCoverageJEditorPane.updateUI();
+
+        // make sure that the currently selected peptide is visible
+        if (selectedPeptideStart != -1) {
+            proteinSequenceCoverageJEditorPane.scrollToReference((selectedPeptideStart - selectedPeptideStart % 10 + 1) + ".");
+        } else {
+            proteinSequenceCoverageJEditorPane.setCaretPosition(0);
+        }
     }
 
     /**
@@ -2503,6 +2683,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2557,6 +2739,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JEditorPane proteinSequenceCoverageJEditorPane;
     private javax.swing.JEditorPane proteinSequenceJEditorPane;
     private javax.swing.JScrollPane proteinSequenceJScrollPane;
+    private javax.swing.JLabel sequenceCoverageJLabel;
     private javax.swing.JComboBox silacLabelPeptideAJComboBox;
     private javax.swing.JComboBox silacLabelPeptideBJComboBox;
     private javax.swing.JTextField siteJTextField;

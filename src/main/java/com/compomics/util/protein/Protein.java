@@ -82,7 +82,7 @@ public class Protein {
 
     /**
      * This constructor requires an AASequenceImpl as argument.
-     * THis will be the sequence around which the protein will be built.
+     * This will be the sequence around which the protein will be built.
      *
      * @param   aSequence   AASequenceImpl around which this protein will be built.
      */

@@ -87,7 +87,7 @@ public class Enzyme implements Cloneable {
      * @param   aTitle  String with the title (or name) for this enzyme.
      * @param   aCleavage   String composed of the rersidus after which cleavage
      *                      will occur.
-     * @param   aRestrict   String comosed of the residus which inhibit cleavage
+     * @param   aRestrict   String composed of the residus which inhibit cleavage
      *                      if present behind of cleavable residus.
      * @param   aPosition   String which should correspond to "Cterm" or "Nterm"
      *                      for each position respectively.
@@ -104,7 +104,7 @@ public class Enzyme implements Cloneable {
      * @param   aTitle  String with the title (or name) for this enzyme.
      * @param   aCleavage   String composed of the rersidus after which cleavage
      *                      will occur (this String will be uppercased).
-     * @param   aRestrict   String comosed of the residus which inhibit cleavage
+     * @param   aRestrict   String composed of the residus which inhibit cleavage
      *                      if present behind of cleavable residus (this String will be uppercased).
      * @param   aPosition   String which should correspond to "Cterm" or "Nterm"
      *                      for each position respectively.
@@ -335,7 +335,7 @@ public class Enzyme implements Cloneable {
         // Check for a header that contains locations.
         int headerStart = aProtein.getHeader().getStartLocation()-1;
         if(headerStart < 0) {
-            headerStart = 0;
+           headerStart = 0;
         }
 
         // Okay, I guess we've set the stage now.

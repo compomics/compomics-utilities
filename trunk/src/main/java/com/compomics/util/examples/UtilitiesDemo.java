@@ -657,7 +657,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         proteinSequenceCoverageJEditorPane = new javax.swing.JEditorPane();
         jLabel23 = new javax.swing.JLabel();
         sequenceCoverageJLabel = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
 
         jRadioButton1.setText("jRadioButton1");
 
@@ -1814,9 +1813,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         sequenceCoverageJLabel.setText("-");
 
-        jLabel24.setFont(jLabel24.getFont().deriveFont((jLabel24.getFont().getStyle() | java.awt.Font.ITALIC)));
-        jLabel24.setText("The covered part of the sequence is in blue, and the selected peptide is in red.");
-
         org.jdesktop.layout.GroupLayout jPanel9Layout = new org.jdesktop.layout.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
@@ -1828,9 +1824,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jPanel9Layout.createSequentialGroup()
                         .add(jLabel23)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(sequenceCoverageJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 195, Short.MAX_VALUE)
-                        .add(jLabel24)))
+                        .add(sequenceCoverageJLabel)))
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
@@ -1841,8 +1835,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel23)
-                    .add(sequenceCoverageJLabel)
-                    .add(jLabel24))
+                    .add(sequenceCoverageJLabel))
                 .addContainerGap())
         );
 
@@ -2684,7 +2677,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

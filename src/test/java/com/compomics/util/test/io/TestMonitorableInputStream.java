@@ -55,7 +55,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoring() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("fastaFile.fas");
+        final String input = super.getFullFilePath("fastaFile.fas").replace("%20", " ");
         try {
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input));
             int full = mis.getMaximum();
@@ -77,7 +77,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoringWithMaxSet() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("fastaFile.fas");
+        final String input = super.getFullFilePath("fastaFile.fas").replace("%20", " ");
         try {
             File inputFile = new File(input);
             int max = (int)inputFile.length();
@@ -102,7 +102,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoringZipfile() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("testMonitor.zip");
+        final String input = super.getFullFilePath("testMonitor.zip").replace("%20", " ");
         try {
             File inputFile = new File(input);
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input), true);
@@ -127,7 +127,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoringGZIPfile() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("test.spr.gz");
+        final String input = super.getFullFilePath("test.spr.gz").replace("%20", " ");
         try {
             File inputFile = new File(input);
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input), true);

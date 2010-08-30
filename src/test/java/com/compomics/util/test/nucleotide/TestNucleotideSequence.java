@@ -107,7 +107,7 @@ public class TestNucleotideSequence extends TestCaseLM {
      */
     public void testPrintToFASTAFile() {
         final String inputFile = "fastaNucleotideFile.fas";
-        final String input = super.getFullFilePath(inputFile);
+        final String input = super.getFullFilePath(inputFile).replace("%20", " ");
         try {
             NucleotideSequence p1 = new NucleotideSequence(">sw|O95229|ZWIN_HUMAN ZW10 interactor (ZW10 interacting NucleotideSequence-1) (Zwint-1).\nAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAG");
             NucleotideSequence p2 = new NucleotideSequence(">sw|O95230|ZWIN_HUMAN ZW10 interactor (ZW10 interacting NucleotideSequence-2) (Zwint-2).\nAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAG");

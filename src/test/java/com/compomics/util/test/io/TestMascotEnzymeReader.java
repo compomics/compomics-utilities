@@ -56,7 +56,7 @@ public class TestMascotEnzymeReader extends TestCaseLM {
      * This method test the creation and reading behaviour of a MascotEnzymeReader instance.
      */
     public void testCreationAndReading() {
-        final String inputFile = super.getFullFilePath("enzymes_test.txt");
+        final String inputFile = super.getFullFilePath("enzymes_test.txt").replace("%20", " ");
         final Vector control = new Vector(5);
         control.add("Trypsin");
         control.add("Trypsin/P");
@@ -290,7 +290,7 @@ public class TestMascotEnzymeReader extends TestCaseLM {
      * enzyme instance.
      */
     public void testCopyOfEnzyme() {
-        final String inputFile = super.getFullFilePath("enzymes_test.txt");
+        final String inputFile = super.getFullFilePath("enzymes_test.txt").replace("%20", " ");
         // Try it for a regular Enzyme.
         try {
             MascotEnzymeReader mer = new MascotEnzymeReader(inputFile);

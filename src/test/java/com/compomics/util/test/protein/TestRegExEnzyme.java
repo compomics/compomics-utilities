@@ -103,7 +103,7 @@ public class TestRegExEnzyme  extends TestCaseLM {
      */
     public void testCleave() {
         final String inputFile = "testCleave.fas";
-        final String input = super.getFullFilePath(inputFile);
+        final String input = super.getFullFilePath(inputFile).replace("%20", " ");
 
         try {
             // We need to obtain a pointer the control file before anything else.

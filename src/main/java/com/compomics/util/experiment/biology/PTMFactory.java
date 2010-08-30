@@ -4,10 +4,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +42,10 @@ public class PTMFactory {
 
     public PTM getPTM(int index) {
         return indexToPTMMap.get(index);
+    }
+
+    public HashMap<Integer, PTM> getPtmMap() {
+        return indexToPTMMap;
     }
 
     public PTM getPTM(double mass, String location, String sequence) {
@@ -153,13 +155,6 @@ public class PTMFactory {
         // Right, we should be on the right start tag, so get the value.
         parser.next();
         String name = parser.getText().trim();
-        type = parser.next();
-        while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MascotShortType"))) {
-            type = parser.next();
-        }
-        // Right, we should be on the right start tag, so get the value.
-        parser.next();
-        String mascotName = parser.getText().trim();
         // Mass
         type = parser.next();
         while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_monomass"))) {
@@ -207,7 +202,7 @@ public class PTMFactory {
         // Create and implement modification.
         PTM currentPTM = new PTM(getIndex(modType), name, new Double(mass), residuesArray);
         ptmSet.add(currentPTM);
-        mascotNameToPTMMap.put(mascotName, currentPTM);
+        mascotNameToPTMMap.put("", currentPTM);
         indexToPTMMap.put(number, currentPTM);
     }
 
@@ -240,5 +235,35 @@ public class PTMFactory {
             return PTM.MODCAA;
         }
         return -1;
+    }
+
+
+    /**
+     * Write the OMSSA modification files to the given folder.
+     *
+     * @param aFolder the folder to write the modification files to
+     * @param utilitiesModFile the utilities corresponding mod file
+     * @param utilitiesUserModFile the utilities corresponding usermod file
+     * @throws IOException an IOException is thrown in case an issue is encountered while reading or writing a file.
+     */
+    public void writeOmssaModificationsFiles(File aFolder, File utilitiesModFile, File utilitiesUserModFile) throws IOException {
+            int c;
+            BufferedReader br = new BufferedReader(new FileReader(utilitiesModFile));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(aFolder, "mods.xml")));
+            while ((c = br.read()) != -1) {
+                    bw.write(c);
+            }
+            bw.flush();
+            bw.close();
+            br.close();
+
+            br = new BufferedReader(new FileReader(utilitiesUserModFile));
+            bw = new BufferedWriter(new FileWriter(new File(aFolder, "usermods.xml")));
+            while ((c = br.read()) != -1) {
+                    bw.write(c);
+            }
+            bw.flush();
+            bw.close();
+            br.close();
     }
 }

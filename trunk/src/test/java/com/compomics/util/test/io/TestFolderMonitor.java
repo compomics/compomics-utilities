@@ -55,7 +55,7 @@ public class TestFolderMonitor extends TestCaseLM {
             params.put(FolderMonitor.HOST,  "host");
             params.put(FolderMonitor.USER,  "user");
             params.put(FolderMonitor.PASSWORD,  "password");
-            FolderMonitor fm = new FolderMonitor(new File(super.getFullFilePath("FTPClient.properties")).getParentFile(), 1000, FolderMonitor.FTP_TO_SPECIFIED_DESTINATION, params);
+            FolderMonitor fm = new FolderMonitor(new File(super.getFullFilePath("FTPClient.properties").replace("%20", " ")).getParentFile(), 1000, FolderMonitor.FTP_TO_SPECIFIED_DESTINATION, params);
         } catch(IllegalArgumentException iae) {
             fail("The constructor for FolderMonitor threw an IllegalArgumentException when confronted with correct data! " + iae.getMessage());
         }
@@ -66,7 +66,7 @@ public class TestFolderMonitor extends TestCaseLM {
             params.put(FolderMonitor.HOST,  "host");
             params.put(FolderMonitor.USER,  "user");
             params.put(FolderMonitor.PASSWORD,  "password");
-            FolderMonitor fm = new FolderMonitor(new File(super.getFullFilePath("FTPClient.properties")).getParentFile(), 1000, ".whatever", FolderMonitor.FTP_TO_SPECIFIED_DESTINATION, params);
+            FolderMonitor fm = new FolderMonitor(new File(super.getFullFilePath("FTPClient.properties").replace("%20", " ")).getParentFile(), 1000, ".whatever", FolderMonitor.FTP_TO_SPECIFIED_DESTINATION, params);
         } catch(IllegalArgumentException iae) {
             fail("The constructor for FolderMonitor threw an IllegalArgumentException when confronted with correct data! " + iae.getMessage());
         }

@@ -59,7 +59,7 @@ public class TestModificationFactory extends TestCaseLM {
 
             StringReader sr = new StringReader(result);
             BufferedReader test = new BufferedReader(sr);
-            BufferedReader control = new BufferedReader(new FileReader(super.getFullFilePath("testModificationParser_control.txt")));
+            BufferedReader control = new BufferedReader(new FileReader(super.getFullFilePath("testModificationParser_control.txt").replace("%20", " ")));
             String line = null;
             while((line = test.readLine()) != null) {
                 Assert.assertEquals(control.readLine(), line);
@@ -84,7 +84,7 @@ public class TestModificationFactory extends TestCaseLM {
 
             StringReader sr = new StringReader(result);
             BufferedReader test = new BufferedReader(sr);
-            BufferedReader control = new BufferedReader(new FileReader(super.getFullFilePath("testModificationConversionParser_control.txt")));
+            BufferedReader control = new BufferedReader(new FileReader(super.getFullFilePath("testModificationConversionParser_control.txt").replace("%20", " ")));
             String line = null;
             while((line = test.readLine()) != null) {
                 Assert.assertEquals(control.readLine(), line);

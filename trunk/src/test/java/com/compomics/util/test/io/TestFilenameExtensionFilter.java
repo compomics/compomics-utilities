@@ -54,7 +54,7 @@ public class TestFilenameExtensionFilter extends TestCaseLM {
         int counter = 0;
 
         // First get the data we need to verify the results afterwards.
-        File f = new File(super.getFullFilePath("FTPClient.properties")).getParentFile();
+        File f = new File(super.getFullFilePath("FTPClient.properties").replace("%20", " ")).getParentFile();
         String[] names = f.list();
         for(int i = 0; i < names.length; i++) {
             String lName = names[i];

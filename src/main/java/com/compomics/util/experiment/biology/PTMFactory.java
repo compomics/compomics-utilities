@@ -98,7 +98,7 @@ public class PTMFactory {
             // If we find a 'MSModSpec' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec")) {
-                parseMSModSpec(parser);
+                parseMSModSpec();
             }
             type = parser.next();
         }
@@ -110,32 +110,29 @@ public class PTMFactory {
      * It expects the XmlPullParser to be set on the starting 'MSModSpec' tag, and upon completion,
      * the parser will be set on the closing 'MSModSpec' tag.
      *
-     * @param aParser XmlPullParser to parse the tag's content from. Should be set on
-     *                the starting 'MSModSpec' tag
-     * @return SearchFreeModification  with the parsed modification.
      * @throws XmlPullParserException when the pull parser failed.
      * @throws IOException            when the pull parser could not access the underlying file.
      */
-    private void parseMSModSpec(XmlPullParser aParser) throws XmlPullParserException, IOException {
+    private void parseMSModSpec() throws XmlPullParserException, IOException {
         // Check whether the XmlPullParser is correctly positioned (i.e. directly on the 'MSModSpec' start tag)
-        if (!(aParser.getName().equals("MSModSpec") && aParser.getEventType() == XmlPullParser.START_TAG)) {
-            throw new IllegalArgumentException("XmlPullParser should have been on the start tag for 'MSModSpec', but was on '" + aParser.getName() + "' instead!");
+        if (!(parser.getName().equals("MSModSpec") && parser.getEventType() == XmlPullParser.START_TAG)) {
+            throw new IllegalArgumentException("XmlPullParser should have been on the start tag for 'MSModSpec', but was on '" + parser.getName() + "' instead!");
         }
         // Structure now is: tag, whitespace, tag, NUMBER (which we need).
         // Start tag.
-        aParser.nextTag();
+        parser.nextTag();
         // Validate correctness.
-        if (!aParser.getName().equals("MSModSpec_mod")) {
+        if (!parser.getName().equals("MSModSpec_mod")) {
             throw new XmlPullParserException("Found tag '" + parser.getName() + "' where 'MSModSpec_mod' was expected on line " + parser.getLineNumber() + "!");
         }
-        aParser.nextTag();
+        parser.nextTag();
         // Validate correctness.
-        if (!aParser.getName().equals("MSMod")) {
+        if (!parser.getName().equals("MSMod")) {
             throw new XmlPullParserException("Found tag '" + parser.getName() + "' where 'MSMod' was expected on line " + parser.getLineNumber() + "!");
         }
         // We need the value here.
-        aParser.next();
-        String numberString = aParser.getText();
+        parser.next();
+        String numberString = parser.getText();
         int number = -1;
         try {
             number = Integer.parseInt(numberString);
@@ -143,35 +140,35 @@ public class PTMFactory {
             throw new XmlPullParserException("Found non-parseable text '" + numberString + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + "!");
         }
         // Modification type
-        int type = aParser.next();
-        while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("MSModType"))) {
-            type = aParser.next();
+        int type = parser.next();
+        while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModType"))) {
+            type = parser.next();
         }
-        String modType = aParser.getAttributeValue(0);
+        String modType = parser.getAttributeValue(0);
         // OK, we got the number. Progress to the user-readable name.
-        type = aParser.next();
-        while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("MSModSpec_name"))) {
-            type = aParser.next();
+        type = parser.next();
+        while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_name"))) {
+            type = parser.next();
         }
         // Right, we should be on the right start tag, so get the value.
-        aParser.next();
-        String name = aParser.getText().trim();
-        type = aParser.next();
-        while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("MascotShortType"))) {
-            type = aParser.next();
+        parser.next();
+        String name = parser.getText().trim();
+        type = parser.next();
+        while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MascotShortType"))) {
+            type = parser.next();
         }
         // Right, we should be on the right start tag, so get the value.
-        aParser.next();
-        String mascotName = aParser.getText().trim();
+        parser.next();
+        String mascotName = parser.getText().trim();
         // Mass
-        type = aParser.next();
-        while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("MSModSpec_monomass"))) {
-            type = aParser.next();
+        type = parser.next();
+        while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_monomass"))) {
+            type = parser.next();
         }
-        aParser.next();
-        String mass = aParser.getText().trim();
+        parser.next();
+        String mass = parser.getText().trim();
         // Residue
-        type = aParser.next();
+        type = parser.next();
         ArrayList<String> residues = new ArrayList();
         if (modType.compareTo("modc") == 0 || modType.compareTo("modcp") == 0 || modType.compareTo("modcaa") == 0 || modType.compareTo("modcpaa") == 0) {
             residues.add("]");
@@ -180,16 +177,16 @@ public class PTMFactory {
             residues.add("[");
         }
         if (modType.compareTo("modcaa") == 0 || modType.compareTo("modcpaa") == 0 || modType.compareTo("modnaa") == 0 || modType.compareTo("modnpaa") == 0 || modType.compareTo("modaa") == 0) {
-            while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("MSModSpec_residues_E"))) {
-                type = aParser.next();
+            while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_residues_E"))) {
+                type = parser.next();
             }
             ArrayList<String> aminoAcids = new ArrayList();
-            while (type == XmlPullParser.START_TAG && aParser.getName().equals("MSModSpec_residues_E")) {
-                aParser.next();
-                aminoAcids.add(aParser.getText().trim());
-                aParser.next();
-                type = aParser.next();
-                type = aParser.next();
+            while (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_residues_E")) {
+                parser.next();
+                aminoAcids.add(parser.getText().trim());
+                parser.next();
+                type = parser.next();
+                type = parser.next();
             }
             if (aminoAcids.size() > 1) {
                 residues.add("[");
@@ -202,9 +199,9 @@ public class PTMFactory {
         String[] residuesArray = new String[residues.size()];
         residues.toArray(residuesArray);
         // Move the parser to the end tag of this modification.
-        type = aParser.next();
-        while (!(type == XmlPullParser.END_TAG && aParser.getName().equals("MSModSpec"))) {
-            type = aParser.next();
+        type = parser.next();
+        while (!(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
+            type = parser.next();
         }
 
         // Create and implement modification.

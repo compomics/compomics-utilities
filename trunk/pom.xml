@@ -11,7 +11,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>3.0.17</version.number>
+        <version.number>3.0.18</version.number>
         <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
@@ -72,7 +72,7 @@
             <name>Marc Vaudel</name>
             <id>marc</id>
             <email>marc.vaudel AT isas.de</email>
-            <organization>University of Jena</organization>
+            <organization>ISAS</organization>
             <roles>
                 <role>Java Developer</role>
             </roles>

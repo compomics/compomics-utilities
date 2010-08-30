@@ -535,8 +535,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private String getJarFilePath() {
         String path = this.getClass().getResource("UtilitiesDemo.class").getPath();
-        path = path.substring(5, path.lastIndexOf("/utilities-"));
-        path = path.replace("%20", " ");
+
+        if (path.lastIndexOf("/utilities-") != -1) {
+            path = path.substring(5, path.lastIndexOf("/utilities-"));
+            path = path.replace("%20", " ");
+        } else {
+            path = ".";
+        }
+
         return path;
     }
 

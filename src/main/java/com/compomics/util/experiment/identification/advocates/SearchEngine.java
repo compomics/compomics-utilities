@@ -13,25 +13,31 @@ import java.io.Serializable;
  */
 public class SearchEngine implements Advocate, Serializable {
 
-
-    // Attributes
-
+    /**
+     * index of the search engine
+     */
     private int id;
 
-
-    // constructor
-
+    /**
+     * constructor for a search engine
+      */
     public SearchEngine() {
 
     }
 
+    /**
+     * constructor for a search engine
+     * @param searchEngineId    the search engine index
+     */
     public SearchEngine(int searchEngineId) {
         id = searchEngineId;
     }
 
 
-    // methods
-
+    /**
+     * getter for the search engine name
+     * @return the search engine name
+     */
     public String getName() {
         switch (id) {
             case MASCOT:
@@ -45,6 +51,10 @@ public class SearchEngine implements Advocate, Serializable {
         }
     }
 
+    /**
+     * getter for the search engine index
+     * @return
+     */
     public int getId() {
         return id;
     }

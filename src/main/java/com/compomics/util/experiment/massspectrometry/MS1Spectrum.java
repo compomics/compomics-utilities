@@ -13,20 +13,38 @@ import java.util.Iterator;
  */
 public abstract class MS1Spectrum implements Serializable {
 
-    // Attributes
 
+    /**
+     * spectrum title
+     */
     protected String spectrumTitle;
+    /**
+     * peak list
+     */
     protected HashSet<Peak> peakList;
+    /**
+     * spectrum file name
+     */
     protected String fileName;
+    /**
+     * retention time
+     */
     protected double rt;
 
-
-    // Constructor
-
+    /**
+     * Constructor for an MS1 spectrum
+     */
     public MS1Spectrum() {
 
     }
 
+    /**
+     * constructor for an MS1 spectrum
+     * @param spectrumTitle title of the spectrum
+     * @param spectrum      Set of peaks
+     * @param fileName      name of the file
+     * @param rt            retention time
+     */
     public MS1Spectrum(String spectrumTitle, HashSet<Peak> spectrum, String fileName, double rt) {
         this.spectrumTitle = spectrumTitle;
         this.peakList = spectrum;
@@ -35,20 +53,34 @@ public abstract class MS1Spectrum implements Serializable {
     }
 
 
-    // Attributes
-
+    /**
+     * returns an iterator on the peaks
+     * @return iterator on the peaks
+     */
     public Iterator<Peak> iterator() {
         return peakList.iterator();
     }
 
+    /**
+     * returns the spectrum title
+     * @return spectrum title
+     */
     public String getSpectrumTitle() {
         return spectrumTitle;
     }
 
+    /**
+     * returns the retention time
+     * @return retention time
+     */
     public double getRT() {
         return rt;
     }
 
+    /**
+     * format the peaks so they can be plot in JFreeChart
+     * @return a table containing the peaks
+     */
     public double[][] getJFreePeakList() {
         double[] mz = new double[peakList.size()];
         double[] intensity = new double[peakList.size()];

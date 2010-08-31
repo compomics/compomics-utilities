@@ -82,22 +82,39 @@ public class PeptideFragmentIon extends Ion {
      */
     public final static int PRECURSOR_LOSS = 16;
 
-
-    // Attributes
-
+    /**
+     * Type of ion
+     */
     private int type;
+
+    /**
+     * position of the ion in the peptide for peptide ions
+     */
     private int number;
+
+    /**
+     * Ion charge
+     */
     private Charge charge;
 
 
-    // Constructors
-
+    /**
+     * Construction for a peptide fragment.
+     * @param type  the type of ion according to static fields
+     * @param mz    the ion m/z
+     */
     public PeptideFragmentIon(int type, double mz) {
         this.type = type;
         this.theoreticMass = mz;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }
 
+    /**
+     * Constructor for a theoretic peptide fragment with ion number in the sequence
+     * @param type      the type of ion according to static fields
+     * @param number    the ion number
+     * @param charge    the ion charge
+     */
     public PeptideFragmentIon(int type, int number, Charge charge) {
         this.type = type;
         this.number = number;
@@ -105,8 +122,11 @@ public class PeptideFragmentIon extends Ion {
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }
 
-    // Methods
 
+    /**
+     * Getter for the ion type
+     * @return the ion type according to the static fields
+     */
     public int getType() {
         return type;
     }

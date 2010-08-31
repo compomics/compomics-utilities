@@ -11,16 +11,30 @@ import com.compomics.util.experiment.identification.Advocate;
  */
 public class PostProcessor implements Advocate {
 
+    /**
+     * index of the post-processor
+     */
     private int id;
 
+    /**
+     * contructor for a post-processor
+     */
     public PostProcessor() {
 
     }
 
+    /**
+     * constructor for a post-processor
+     * @param id    index of the post-processor
+     */
     public PostProcessor(int id) {
         this.id=id;
     }
 
+    /**
+     * getter for the name of the post-processor
+     * @return the name of the post-processor
+     */
     public String getName() {
         switch (id) {
             case Advocate.PEPTIZER:
@@ -30,6 +44,10 @@ public class PostProcessor implements Advocate {
         }
     }
 
+    /**
+     * getter for the post-processor's index
+     * @return
+     */
     public int getId() {
         return id;
     }

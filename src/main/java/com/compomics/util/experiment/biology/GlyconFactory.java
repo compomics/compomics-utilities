@@ -20,19 +20,28 @@ import java.util.ArrayList;
  */
 public class GlyconFactory {
 
-    // Attributes
-
+    /**
+     * The instance of the factory
+     */
     private static GlyconFactory instance = null;
 
+    /**
+     * The glycons
+     */
     private ArrayList<Glycon> glycons = new ArrayList<Glycon>();
 
 
-    // Constructors
-
+    /**
+     * Constructor for the glycon factory
+     */
     private GlyconFactory() {
 
     }
 
+    /**
+     * Static method to get the factory instance.
+     * @return the instance of the factory
+     */
     public static GlyconFactory getInstance() {
         if (instance == null) {
             instance = new GlyconFactory();
@@ -40,13 +49,21 @@ public class GlyconFactory {
         return instance;
     }
 
-
-    // Methods
-
+    /**
+     * A getter to access the glycons
+     * @return all glycons imported
+     */
     public ArrayList<Glycon> getGlycons() {
         return glycons;
     }
 
+    /**
+     * Import glycons from an xml file
+     *
+     * @param aFile                     xml file to parse
+     * @throws XmlPullParserException   exception thrown if a parsing issue is encountered
+     * @throws IOException              exception thrown if an issue with the file is encountered
+     */
     public void importGlycons(File aFile) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
@@ -71,6 +88,12 @@ public class GlyconFactory {
         br.close();
     }
 
+    /**
+     * Method which parses a glycon in the xml file
+     * @param parser                    The xml parser
+     * @throws XmlPullParserException   Exception thrown whenever a parsing issue is encountered
+     * @throws IOException              Exception thrown whenever an issue is encountered with the file
+     */
     private void parseGlycon(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();
 

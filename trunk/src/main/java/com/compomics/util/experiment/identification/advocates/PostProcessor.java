@@ -3,11 +3,12 @@ package com.compomics.util.experiment.identification.advocates;
 import com.compomics.util.experiment.identification.Advocate;
 
 /**
+ * This object models a tool which post-processed identifications.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 25, 2010
  * Time: 7:58:55 PM
- * This object modelizes a tool which post-processed identifications.
  */
 public class PostProcessor implements Advocate {
 
@@ -25,6 +26,7 @@ public class PostProcessor implements Advocate {
 
     /**
      * constructor for a post-processor
+     *
      * @param id    index of the post-processor
      */
     public PostProcessor(int id) {
@@ -33,6 +35,7 @@ public class PostProcessor implements Advocate {
 
     /**
      * getter for the name of the post-processor
+     *
      * @return the name of the post-processor
      */
     public String getName() {
@@ -46,7 +49,8 @@ public class PostProcessor implements Advocate {
 
     /**
      * getter for the post-processor's index
-     * @return
+     * 
+     * @return the post-processor's index
      */
     public int getId() {
         return id;

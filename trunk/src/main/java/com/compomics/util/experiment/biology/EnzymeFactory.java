@@ -11,11 +11,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
+ * This factory will provide the implemented enzymes.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Aug 23, 2010
  * Time: 7:30:55 PM
- * This factory will provide the implemented enzymes.
  */
 public class EnzymeFactory {
 
@@ -38,7 +39,8 @@ public class EnzymeFactory {
 
     /**
      * Static method to get an instance of the factory
-     * @return
+     *
+     * @return the factory instance
      */
     public static EnzymeFactory getInstance() {
         if (instance == null) {
@@ -146,5 +148,4 @@ public class EnzymeFactory {
         restrictionAfter = aParser.getText().trim();
         enzymes.add(new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter));
     }
-
 }

@@ -1,27 +1,27 @@
 package com.compomics.util.experiment.massspectrometry;
 
 /**
+ * This class models a charge.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
  * Time: 10:01:29 AM
- * This class will modelize a charge.
  */
 public class Charge {
 
     /**
-     * static int to modelize a positive charge
+     * static int to modele a positive charge
      */
     public final static int PLUS = +1;
     /**
-     * static int to modelize a negative charge
+     * static int to modele a negative charge
      */
     public final static int MINUS = -1;
     /**
-     * static int to modelize a neutral component
+     * static int to modele a neutral component
      */
     public final static int NEUTRAL = 0;
-
     /**
      * sign of the charge according to the static fields
      */
@@ -33,6 +33,7 @@ public class Charge {
 
     /**
      * constructor for a charge
+     *
      * @param sign  sign of the charge as specified in static fields
      * @param value value of the charge
      */
@@ -43,6 +44,7 @@ public class Charge {
 
     /**
      * returns a string representing the charge
+     * 
      * @return charge as a string
      */
     public String toString() {

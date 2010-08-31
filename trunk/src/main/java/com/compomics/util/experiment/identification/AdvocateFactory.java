@@ -6,11 +6,12 @@ import com.compomics.util.experiment.identification.advocates.PostProcessor;
 import java.util.ArrayList;
 
 /**
+ * This factory will provide adapted advocates when requested.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 25, 2010
  * Time: 5:39:12 PM
- * This factory will provide adapted advocates when requested.
  */
 public class AdvocateFactory {
 
@@ -28,6 +29,7 @@ public class AdvocateFactory {
 
     /**
      * A static method to retrieve the factory instance
+     *
      * @return the factory instance
      */
     public static AdvocateFactory getInstance() {
@@ -39,6 +41,7 @@ public class AdvocateFactory {
 
     /**
      * Returns an advocate of the specified index
+     *
      * @param index an advocate index
      * @return an advocate of the specified index
      */
@@ -59,6 +62,7 @@ public class AdvocateFactory {
 
     /**
      * returns all implemented advocates
+     *
      * @return all implemented advocates
      */
     public ArrayList<Advocate> getPossibilities() {
@@ -72,6 +76,7 @@ public class AdvocateFactory {
 
     /**
      * returns the index of an advocate base on its name
+     * 
      * @param aName the name of an advocate
      * @return the corresponding index
      */

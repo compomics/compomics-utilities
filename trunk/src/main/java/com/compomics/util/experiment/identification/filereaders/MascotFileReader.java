@@ -31,14 +31,14 @@ import java.util.HashSet;
 import java.util.Vector;
 
 /**
+ * This reader will import identifications from a Mascot dat file.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
  * Time: 9:45:35 AM
- * This reader will import identifications from a Mascot dat file.
  */
 public class MascotFileReader implements FileReader {
-
 
     /**
      * The inspected file
@@ -61,6 +61,7 @@ public class MascotFileReader implements FileReader {
 
     /**
      * Constructor for the MascotFilereader
+     *
      * @param aFile a file to read
      */
     public MascotFileReader(File aFile) {
@@ -68,17 +69,14 @@ public class MascotFileReader implements FileReader {
         try {
             iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.INDEX); //getPath might have to be changed into getcanonicalPath
         }
-        catch (
-                IOException e
-                )
-
-        {
+        catch (IOException e) {
             System.exit(1);
         }
     }
 
     /**
      * get the spectrum file name
+     *
      * @return the spectrum file name
      */
     public String getMgfFileName() {
@@ -88,6 +86,7 @@ public class MascotFileReader implements FileReader {
 
     /**
      * getter for the file name
+     *
      * @return the file name
      */
     public String getFileName() {
@@ -96,6 +95,7 @@ public class MascotFileReader implements FileReader {
 
     /**
      * a method to get all the spectrum matches
+     *
      * @return a set containing all spectrum matches
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
@@ -134,7 +134,6 @@ public class MascotFileReader implements FileReader {
                     SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, false);
                     assignedPeptideHits.add(currentMatch);
                 }
-
             } else if (mascotDecoyPeptideHits != null) {
                 boolean singleBestHit = true;
                 if (mascotDecoyPeptideHits.size() > 1) {
@@ -155,6 +154,7 @@ public class MascotFileReader implements FileReader {
 
     /**
      * parses a spectrum match out of a peptideHit
+     *
      * @param aPeptideHit   the peptide hit to parse
      * @param query         the corresponding query
      * @param decoySection  is it in the decoy section?
@@ -229,6 +229,7 @@ public class MascotFileReader implements FileReader {
 
     /**
      * add the annotation on a peptide assumption based on the parser informations
+     *
      * @param currentMatch  the peptide assumption concerned
      * @param aPeptideHit   the peptideHit associated
      * @param query         the query number
@@ -389,7 +390,6 @@ public class MascotFileReader implements FileReader {
             }
         }
     }
-
 }
 
 

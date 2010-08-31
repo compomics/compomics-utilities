@@ -5,11 +5,12 @@ import com.compomics.util.experiment.identification.Advocate;
 import java.io.Serializable;
 
 /**
+ * This class models a search engine. For now only Mascot, OMSSA and X!Tandem are implemented.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 22, 2010
  * Time: 1:56:59 PM
- * This class modelizes a search engine. For now only Mascot, OMSSA and X!Tandem are implemented.
  */
 public class SearchEngine implements Advocate, Serializable {
 
@@ -27,15 +28,16 @@ public class SearchEngine implements Advocate, Serializable {
 
     /**
      * constructor for a search engine
+     *
      * @param searchEngineId    the search engine index
      */
     public SearchEngine(int searchEngineId) {
         id = searchEngineId;
     }
 
-
     /**
      * getter for the search engine name
+     *
      * @return the search engine name
      */
     public String getName() {
@@ -53,10 +55,10 @@ public class SearchEngine implements Advocate, Serializable {
 
     /**
      * getter for the search engine index
-     * @return
+     *
+     * @return the search engine index
      */
     public int getId() {
         return id;
     }
-
 }

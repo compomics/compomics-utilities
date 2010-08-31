@@ -24,11 +24,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
+ * This reader will import identifications from an X!Tandem xml result file.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
  * Time: 9:45:54 AM
- * This reader will import identifications from an X!Tandem xml result file.
  */
 public class XTandemFileReader implements FileReader {
 
@@ -61,6 +62,7 @@ public class XTandemFileReader implements FileReader {
 
     /**
      * constructor for the reader
+     *
      * @param aFile the inspected file
      */
     public XTandemFileReader(File aFile) {
@@ -76,9 +78,9 @@ public class XTandemFileReader implements FileReader {
         }
     }
 
-
     /**
      * getter for the file name
+     *
      * @return the file name
      */
     public String getFileName() {
@@ -88,6 +90,7 @@ public class XTandemFileReader implements FileReader {
 
     /**
      * method which returns all spectrum matches found in the file
+     *
      * @return a set containing all spectrum matches
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
@@ -125,7 +128,6 @@ public class XTandemFileReader implements FileReader {
                     }
                 }
                 if (!conflict) {
-
                     reverseHit = true;
                     for (int i = 0; i < spectrumPeptides.size(); i++) {
                         if (spectrumPeptides.get(i).getDomainSequence().compareTo(bestPeptide.getDomainSequence()) == 0) {
@@ -184,6 +186,7 @@ public class XTandemFileReader implements FileReader {
 
     /**
      * Attach annotations to the current match
+     *
      * @param currentMatch The inspected match
      * @param peptide      The corresponding peptide
      */
@@ -204,6 +207,7 @@ public class XTandemFileReader implements FileReader {
 
     /**
      * Get the peakList corresponding to a spectrum
+     *
      * @param supportData   the corresponding suppportData
      * @return a set containing all peaks
      */
@@ -219,6 +223,7 @@ public class XTandemFileReader implements FileReader {
 
     /**
      * returns the ion type depending on the X!Tandem parser indications
+     * 
      * @param ion   the concerned ion
      * @return the ion type
      */

@@ -3,11 +3,12 @@ package com.compomics.util.experiment.identification;
 import java.io.Serializable;
 
 /**
+ * The advocate of a hit can be a search engine, a rescoring algorithm, etc.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 22, 2010
  * Time: 1:55:22 PM
- * The advocate of a hit can be a search engine, a rescoring algorithm, etc.
  */
 public interface Advocate extends Serializable {
 
@@ -30,12 +31,14 @@ public interface Advocate extends Serializable {
 
     /**
      * getter for the name of the Advocate
+     *
      * @return the name of the advocate
      */
     public String getName();
 
     /**
      * getter for the index of the advocate
+     * 
      * @return the index of the advocate
      */
     public int getId();

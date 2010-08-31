@@ -1,11 +1,12 @@
 package com.compomics.util.experiment.biology;
 
 /**
+ * This class models a protein.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:56:22 AM
- * This class modelizes a protein.
  */
 public class Protein {
 
@@ -18,7 +19,6 @@ public class Protein {
      */
     private String description = "";
 
-
     /**
      * Constructor for a protein
      */
@@ -27,6 +27,7 @@ public class Protein {
 
     /**
      * Constructor for a protein
+     *
      * @param accession The protein accession
      */
     public Protein(String accession) {
@@ -35,6 +36,7 @@ public class Protein {
 
     /**
      * Constructor for a protein
+     *
      * @param accession     The protein accession
      * @param description   The protein description
      */
@@ -46,6 +48,7 @@ public class Protein {
 
     /**
      * Getter for the protein accession
+     *
      * @return the protein accession
      */
     public String getAccession() {
@@ -54,6 +57,7 @@ public class Protein {
 
     /**
      * Getter for the protein description
+     *
      * @return the protein description
      */
     public String getDescription() {
@@ -62,6 +66,7 @@ public class Protein {
 
     /**
      * A method to compare proteins. For now accession based.
+     * 
      * @param anotherProtein    an other protein
      * @return a boolean indicating if the proteins are identical
      */

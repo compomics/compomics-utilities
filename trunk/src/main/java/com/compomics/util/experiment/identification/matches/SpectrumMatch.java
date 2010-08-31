@@ -8,11 +8,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
+ * This class models a spectrum match.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:58:26 AM
- * This class modelizes a spectrum match.
  */
 public class SpectrumMatch {
 
@@ -42,6 +43,7 @@ public class SpectrumMatch {
 
     /**
      * Constructor for the spectrum match
+     *
      * @param spectrum      The matched spectrum
      * @param assumption    The matching peptide assumption
      */
@@ -55,6 +57,7 @@ public class SpectrumMatch {
 
     /**
      * Getter for the spectrum
+     *
      * @return the matched spectrum
      */
    public MSnSpectrum getSpectrum() {
@@ -63,6 +66,7 @@ public class SpectrumMatch {
 
     /**
      * Add a secondary hit
+     *
      * @param secondaryHit  a secondary hit
      */
     public void addSecondaryHit(PeptideAssumption secondaryHit) {
@@ -71,6 +75,7 @@ public class SpectrumMatch {
 
     /**
      * Return all assumptions
+     *
      * @return all assumptions
      */
     public HashSet<PeptideAssumption> getAllAssumptions() {
@@ -79,6 +84,7 @@ public class SpectrumMatch {
 
     /**
      * add a first hit
+     *
      * @param otherAdvocateId   The index of the new advocate
      * @param otherAssumption   The new peptide assumption
      */
@@ -90,6 +96,7 @@ public class SpectrumMatch {
 
     /**
      * Returns the first hit obtained using the specified advocate
+     *
      * @param advocateId    the specified advocate index
      * @return the first hit
      */
@@ -99,6 +106,7 @@ public class SpectrumMatch {
 
     /**
      * Returns all advocates used referenced by their index
+     * 
      * @return all advocates used
      */
     public ArrayList<Integer> getAdvocates() {

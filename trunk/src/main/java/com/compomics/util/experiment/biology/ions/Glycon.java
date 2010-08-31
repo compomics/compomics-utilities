@@ -5,11 +5,12 @@ import com.compomics.util.experiment.biology.Ion;
 import java.util.HashMap;
 
 /**
+ * This class will models a glycon fragment.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 1:36:49 PM
- * This class will modelize a glycon fragment.
  */
 public class Glycon extends Ion {
 
@@ -33,17 +34,14 @@ public class Glycon extends Ion {
      * Final index for deuteroacetylated masses
      */
     public final static int DEUTEROACETYLATED_MASS = 4;
-
     /**
      * Masses of this glycon.
      */
     private HashMap<Integer, Double> theoreticMasses = new HashMap<Integer, Double>();
-
     /**
      * Name of the glycon
      */
     private String name;
-
     /**
      * Short name of the glycon
      */
@@ -52,6 +50,7 @@ public class Glycon extends Ion {
 
     /**
      * Constructor for a glycon
+     *
      * @param aName         The name of the glycon
      * @param aShortName    A shortened name for the glycon
      */
@@ -63,6 +62,7 @@ public class Glycon extends Ion {
 
     /**
      * Add a mass for this glycon
+     *
      * @param massType  mass type indexed according to the static field
      * @param value     Value of the mass
      */
@@ -72,6 +72,7 @@ public class Glycon extends Ion {
 
     /**
      * Get the glycon mass
+     *
      * @param aType Type of mass requested indexed according to static int.
      * @return the requested mass
      */
@@ -81,6 +82,7 @@ public class Glycon extends Ion {
 
     /**
      * Getter for the glycons name
+     *
      * @return the glycons name
      */
     public String getName() {
@@ -89,10 +91,10 @@ public class Glycon extends Ion {
 
     /**
      * Getter for the glycons short name
+     *
      * @return the glycon short name
      */
     public String getShortName() {
         return shortName;
     }
-
 }

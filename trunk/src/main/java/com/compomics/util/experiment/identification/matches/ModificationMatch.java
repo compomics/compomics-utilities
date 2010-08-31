@@ -1,16 +1,15 @@
 package com.compomics.util.experiment.identification.matches;
 
-
 import com.compomics.util.experiment.biology.PTM;
 
-import java.util.ArrayList;
 
 /**
+ * This class models the match between theoretic ptm and identification results.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
  * Time: 1:23:45 PM
- * This class modelizes the match between theoretic ptm and identification results.
  */
 public class ModificationMatch {
 
@@ -30,6 +29,7 @@ public class ModificationMatch {
 
     /**
      * constructor for a modification match
+     *
      * @param theoreticPtm  the theoretic PTM
      * @param variable      true for variable modifications, false otherwise
      * @param modifiedSite  the position of the modification in the sequence
@@ -40,9 +40,9 @@ public class ModificationMatch {
         this.modifiedSite = modifiedSite;
     }
 
-
     /**
      * returns a boolean indicating if the modification is variable
+     *
      * @return a boolean indicating if the modification is variable
      */
     public boolean isVariable() {
@@ -51,6 +51,7 @@ public class ModificationMatch {
 
     /**
      * getter for the theoretic PTM
+     *
      * @return the theoretic PTM
      */
     public PTM getTheoreticPtm() {
@@ -59,11 +60,10 @@ public class ModificationMatch {
 
     /**
      * getter for the modification site
+     *
      * @return the index of the modification in the sequence
      */
     public int getModificationSites() {
         return modifiedSite;
     }
-
-
 }

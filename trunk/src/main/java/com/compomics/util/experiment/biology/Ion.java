@@ -1,11 +1,12 @@
 package com.compomics.util.experiment.biology;
 
 /**
+ * This class models an ion.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:57:33 AM
- * This class modelizes an ion.
  */
 public abstract class Ion {
 

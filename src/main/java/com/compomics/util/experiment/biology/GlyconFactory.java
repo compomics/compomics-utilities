@@ -12,11 +12,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
+ * This factory will provide theoretic glycons.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 29, 2010
  * Time: 6:55:51 PM
- * This factory will provide theoretic glycons.
  */
 public class GlyconFactory {
 
@@ -30,7 +31,6 @@ public class GlyconFactory {
      */
     private ArrayList<Glycon> glycons = new ArrayList<Glycon>();
 
-
     /**
      * Constructor for the glycon factory
      */
@@ -40,6 +40,7 @@ public class GlyconFactory {
 
     /**
      * Static method to get the factory instance.
+     *
      * @return the instance of the factory
      */
     public static GlyconFactory getInstance() {
@@ -51,6 +52,7 @@ public class GlyconFactory {
 
     /**
      * A getter to access the glycons
+     *
      * @return all glycons imported
      */
     public ArrayList<Glycon> getGlycons() {
@@ -90,6 +92,7 @@ public class GlyconFactory {
 
     /**
      * Method which parses a glycon in the xml file
+     *
      * @param parser                    The xml parser
      * @throws XmlPullParserException   Exception thrown whenever a parsing issue is encountered
      * @throws IOException              Exception thrown whenever an issue is encountered with the file
@@ -140,6 +143,4 @@ public class GlyconFactory {
         currentGlycon.addMass(Glycon.DEUTEROACETYLATED_MASS, mass);
         glycons.add(currentGlycon);
     }
-
-
 }

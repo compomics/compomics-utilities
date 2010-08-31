@@ -3,11 +3,12 @@ package com.compomics.util.experiment.biology;
 import java.io.Serializable;
 
 /**
+ * This class models a post-translational modification.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 22, 2010
  * Time: 8:02:00 PM
- * This class modelizes a post-translational modification.
  */
 public class PTM  implements Serializable {
 
@@ -51,7 +52,6 @@ public class PTM  implements Serializable {
      * the max number of modification types
      */
     public static final int MODMAX = 9;
-
     /**
      * the modification type according to static field
      */
@@ -78,6 +78,7 @@ public class PTM  implements Serializable {
 
     /**
      * Constructor for a reference modification
+     *
      * @param type              Type of modification according to static attributes
      * @param name              Name of the modification
      * @param mass              Mass difference produced by the modification
@@ -90,9 +91,9 @@ public class PTM  implements Serializable {
         this.residuesArray = residuesArray;
     }
 
-
     /**
      * getter for the modification type
+     *
      * @return the modification type
      */
     public int getType() {
@@ -101,6 +102,7 @@ public class PTM  implements Serializable {
 
     /**
      * getter for the modification name
+     *
      * @return the modification name
      */
     public String getName() {
@@ -109,6 +111,7 @@ public class PTM  implements Serializable {
 
     /**
      * getter for the mass difference induced by this modification
+     *
      * @return the mass difference induced by the modification
      */
     public double getMass() {
@@ -117,6 +120,7 @@ public class PTM  implements Serializable {
 
     /**
      * getter for the residues affected by this modification
+     * 
      * @return an array containing potentially modified residues
      */
     public String[] getResiduesArray() {

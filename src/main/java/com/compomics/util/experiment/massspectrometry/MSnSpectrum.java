@@ -5,11 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
+ * This class models an MSn spectrum.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 9:00:36 AM
- * This class modelizes an MSn spectrum.
  */
 public class MSnSpectrum implements Serializable {
 
@@ -52,6 +53,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * constructor for the spectrum
+     *
      * @param level              MS level
      * @param precursorMass      pecursor mass
      * @param precursorCharge    precursor charge
@@ -70,9 +72,9 @@ public class MSnSpectrum implements Serializable {
         this.rt = rt;
     }
 
-
     /**
      * return the MS level of the spectrum
+     *
      * @return ms level
      */
     public int getLevel() {
@@ -81,6 +83,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * returns the name of the spectrum file
+     *
      * @return name of the file
      */
     public String getFileName() {
@@ -89,6 +92,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * returns an iterator on the peaks
+     *
      * @return iterator on the peaks
      */
     public Iterator<Peak> iterator() {
@@ -97,6 +101,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * returns the charge of the precursor
+     *
      * @return precursor charge
      */
     public Charge getCharge() {
@@ -105,6 +110,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * returns the mass of the precursor
+     *
      * @return precursor mass
      */
     public double getPrecursorMass() {
@@ -113,6 +119,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * returns the title of the spectrum
+     *
      * @return spectrum title
      */
     public String getSpectrumTitle() {
@@ -121,6 +128,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * return the retention time when the spectrum was acquired
+     *
      * @return retention time
      */
     public double getRT() {
@@ -129,6 +137,7 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * return the peak list in a format readable by JFreeChart
+     *
      * @return peak list
      */
     public double[][] getJFreePeakList() {
@@ -157,7 +166,8 @@ public class MSnSpectrum implements Serializable {
 
     /**
      * return the peak list as mgf bloc
-     * @return
+     * 
+     * @return the peak list as mgf bloc
      */
     public String asMgf() {
         String result = "BEGIN IONS\n\n";

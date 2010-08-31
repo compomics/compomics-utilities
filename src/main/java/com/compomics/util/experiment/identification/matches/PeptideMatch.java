@@ -7,11 +7,12 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.util.ArrayList;
 
 /**
+ * This class models a peptide match.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:58:46 AM
- * This class modelizes a peptide match.
  */
 public class PeptideMatch {
 
@@ -42,6 +43,7 @@ public class PeptideMatch {
 
     /**
      * Constructor for the peptide match
+     *
      * @param peptide   the matching peptide
      */
     public PeptideMatch(Peptide peptide) {
@@ -50,6 +52,7 @@ public class PeptideMatch {
 
     /**
      * Constructor for the peptide match
+     *
      * @param peptide           The matching peptide
      * @param spectrumMatch     The main spectrum match
      */
@@ -59,9 +62,9 @@ public class PeptideMatch {
         spectrumMatches.add(spectrumMatch);
     }
 
-
     /**
      * getter for the theoretic peptide
+     *
      * @return the theoretic peptide
      */
     public Peptide getTheoreticPeptide() {
@@ -70,6 +73,7 @@ public class PeptideMatch {
 
     /**
      * setter for the theoretic peptide
+     *
      * @param theoreticPeptide  a theoretic peptide
      */
     public void setTheoreticPeptide(Peptide theoreticPeptide) {
@@ -78,6 +82,7 @@ public class PeptideMatch {
 
     /**
      * method returns the main match
+     *
      * @return the main match
      */
     public SpectrumMatch getMainMatch() {
@@ -86,6 +91,7 @@ public class PeptideMatch {
 
     /**
      * methods sets the main match
+     *
      * @param spectrumMatch the main match
      */
     public void setMainMatch(SpectrumMatch spectrumMatch) {
@@ -94,6 +100,7 @@ public class PeptideMatch {
 
     /**
      * methods which returns the main spectrum matched
+     *
      * @return main spectrum matched
      */
     public MSnSpectrum getMainSpectrum() {
@@ -102,6 +109,7 @@ public class PeptideMatch {
 
     /**
      * methods which returns all spectrum matched
+     *
      * @return all spectrum matches
      */
     public ArrayList<SpectrumMatch> getSpectrumMatches() {
@@ -110,6 +118,7 @@ public class PeptideMatch {
 
     /**
      * add a spectrum match
+     *
      * @param spectrumMatch a spectrum match
      */
     public void addSpectrumMatch(SpectrumMatch spectrumMatch) {
@@ -118,6 +127,7 @@ public class PeptideMatch {
 
     /**
      * returns the number of spectra matched
+     *
      * @return spectrum count
      */
     public int getSpectrumCount() {
@@ -126,7 +136,8 @@ public class PeptideMatch {
 
     /**
      * inspects wether the peptide match is a decoy hit
-     * @return
+     * 
+     * @return true if the peptide match is a decoy hit
      */
     public boolean isDecoy() {
         if (isDecoy == null) {

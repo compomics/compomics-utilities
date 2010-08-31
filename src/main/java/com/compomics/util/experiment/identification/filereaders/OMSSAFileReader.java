@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-
 /**
+ * This reader will import identifications from an OMSSA omx file.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
  * Time: 9:45:45 AM
- * This reader will import identifications from an OMSSA omx file.
  */
 public class OMSSAFileReader implements FileReader {
 
@@ -61,6 +61,7 @@ public class OMSSAFileReader implements FileReader {
 
     /**
      * Constructor for the reader
+     *
      * @param idFile    the inspected file
      */
     public OMSSAFileReader(File idFile) {
@@ -84,9 +85,9 @@ public class OMSSAFileReader implements FileReader {
         this.userModsFile = userModsFile;
     }
 
-
     /**
      * get the file name
+     *
      * @return the file name
      */
     public String getFileName() {
@@ -103,6 +104,7 @@ public class OMSSAFileReader implements FileReader {
 
     /**
      * returns all spectrum matches found in the inspected file
+     *
      * @return a set of all spectrum matches
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
@@ -212,6 +214,7 @@ public class OMSSAFileReader implements FileReader {
 
     /**
      * parses omssa description to have the accession
+     *
      * @param description   the protein description
      * @return the protein accession
      */
@@ -228,6 +231,7 @@ public class OMSSAFileReader implements FileReader {
 
     /**
      * get the annotations of the current match (not implemented yet)
+     *
      * @param currentMatch  the peptide assumption under inspection
      */
     private void addAnnotation(PeptideAssumption currentMatch) {
@@ -236,6 +240,7 @@ public class OMSSAFileReader implements FileReader {
 
     /**
      * gives the parser instance
+     *
      * @return an omssa omx file
      */
     private OmssaOmxFile getParserInstance() {
@@ -254,14 +259,12 @@ public class OMSSAFileReader implements FileReader {
 
     /**
      * get the peak list from a spectrum (not implemented yet)
+     *
      * @param spectrumName  the name of the spectrum
      * @return the peaks contained in the spectrum
      */
     private HashSet<Peak> getPeakList(String spectrumName) {
         // Not implemented yet
         return new HashSet<Peak>();
-
-
     }
-
 }

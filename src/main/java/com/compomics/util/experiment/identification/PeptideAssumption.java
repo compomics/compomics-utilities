@@ -8,11 +8,12 @@ import java.util.HashSet;
 import java.util.ArrayList;
 
 /**
+ * This object will models the assumption made by an advocate.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 25, 2010
  * Time: 2:45:46 PM
- * This object will modelize the assumption made by an advocate.
  */
 public class PeptideAssumption {
 
@@ -67,6 +68,7 @@ public class PeptideAssumption {
 
     /**
      * Constructor for a peptide assumption
+     *
      * @param aPeptide              the theoretic peptide
      * @param rank                  the identification rank
      * @param advocate              the advocate used
@@ -96,6 +98,7 @@ public class PeptideAssumption {
 
     /**
      * returns if a precursor mass error of 1Da has been detected
+     *
      * @return boolean showing if a mass error of 1Da was detected
      */
     public boolean isC13() {
@@ -104,6 +107,7 @@ public class PeptideAssumption {
 
     /**
      * returns the score
+     *
      * @return the advocate score
      */
     public double getScore() {
@@ -112,6 +116,7 @@ public class PeptideAssumption {
 
     /**
      * sets the score
+     *
      * @param score the advocate score
      */
     public void setScore(double score) {
@@ -120,6 +125,7 @@ public class PeptideAssumption {
 
     /**
      * Get the identification rank
+     *
      * @return the identification rank
      */
     public int getRank() {
@@ -128,6 +134,7 @@ public class PeptideAssumption {
 
     /**
      * get the theoretic peptide
+     *
      * @return the peptide
      */
     public Peptide getPeptide() {
@@ -136,6 +143,7 @@ public class PeptideAssumption {
 
     /**
      * get the used advocate
+     *
      * @return the advocate index
      */
     public int getAdvocate() {
@@ -144,6 +152,7 @@ public class PeptideAssumption {
 
     /**
      * returns the precursor mass error (in ppm)
+     *
      * @return the precursor mass error (in ppm)
      */
     public double getDeltaMass() {
@@ -152,6 +161,7 @@ public class PeptideAssumption {
 
     /**
      * returns the e-value assigned by the advocate
+     *
      * @return the e-value
      */
     public double getEValue() {
@@ -160,6 +170,7 @@ public class PeptideAssumption {
 
     /**
      * add a fragment ion annotation
+     *
      * @param ionMatch an ion match
      */
     public void addAnnotation(IonMatch ionMatch) {
@@ -168,6 +179,7 @@ public class PeptideAssumption {
 
     /**
      * retrieves all fragment ion annotation
+     *
      * @return all fragment ion annotations
      */
     public HashSet<IonMatch> getAnnotations() {
@@ -176,6 +188,7 @@ public class PeptideAssumption {
 
     /**
      * returns all modifications
+     *
      * @return modifications
      */
     public ArrayList<ModificationMatch> getModifications() {
@@ -184,6 +197,7 @@ public class PeptideAssumption {
 
     /**
      * returns the file
+     *
      * @return the idenitfication file
      */
     public String getFile() {
@@ -192,6 +206,7 @@ public class PeptideAssumption {
 
     /**
      * is the identification decoy?
+     *
      * @return a boolean indicating if the identification is a decoy one
      */
     public boolean isDecoy() {
@@ -200,6 +215,7 @@ public class PeptideAssumption {
 
     /**
      * sets the probability attached to this identification
+     *
      * @param probability   the probability
      */
     public void setProbability(double probability) {
@@ -208,6 +224,7 @@ public class PeptideAssumption {
 
     /**
      * get the probability attached to this identification
+     * 
      * @return the probability
      */
     public double getProbability() {

@@ -4,14 +4,14 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**
+ * This class models a peptide fragment ion.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:58:02 AM
- * This class modelizes a peptide fragment ion.
  */
 public class PeptideFragmentIon extends Ion {
-
 
     /**
      * This int is the identifier for an a ion.
@@ -81,17 +81,14 @@ public class PeptideFragmentIon extends Ion {
      * This int is the identifier for a precursor ion. The nature of the loss is not coded yet.
      */
     public final static int PRECURSOR_LOSS = 16;
-
     /**
      * Type of ion
      */
     private int type;
-
     /**
      * position of the ion in the peptide for peptide ions
      */
     private int number;
-
     /**
      * Ion charge
      */
@@ -100,6 +97,7 @@ public class PeptideFragmentIon extends Ion {
 
     /**
      * Construction for a peptide fragment.
+     *
      * @param type  the type of ion according to static fields
      * @param mz    the ion m/z
      */
@@ -111,6 +109,7 @@ public class PeptideFragmentIon extends Ion {
 
     /**
      * Constructor for a theoretic peptide fragment with ion number in the sequence
+     *
      * @param type      the type of ion according to static fields
      * @param number    the ion number
      * @param charge    the ion charge
@@ -122,9 +121,9 @@ public class PeptideFragmentIon extends Ion {
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }
 
-
     /**
      * Getter for the ion type
+     * 
      * @return the ion type according to the static fields
      */
     public int getType() {

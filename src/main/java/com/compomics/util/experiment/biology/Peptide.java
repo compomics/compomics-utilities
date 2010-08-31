@@ -7,11 +7,12 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
+ * This class models a peptide.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:56:40 AM
- * This class modelizes a peptide.
  */
 public class Peptide {
 
@@ -40,6 +41,7 @@ public class Peptide {
 
     /**
      * Constructor for the peptide
+     *
      * @param aSequence         The peptide sequence
      * @param mass              The peptide mass
      * @param parentProteins    The parent proteins
@@ -52,6 +54,7 @@ public class Peptide {
 
     /**
      * getter for the mass
+     *
      * @return the peptide mass
      */
     public Double getMass() {
@@ -60,6 +63,7 @@ public class Peptide {
 
     /**
      * getter for the sequence
+     *
      * @return the peptide sequence
      */
     public String getSequence() {
@@ -68,6 +72,7 @@ public class Peptide {
 
     /**
      * method to add a fragmentIon
+     *
      * @param fragment  a fragment ion of this peptide
      */
     public void addFragmentIon(PeptideFragmentIon fragment) {
@@ -76,6 +81,7 @@ public class Peptide {
 
     /**
      * Method which returns an iterator on the fragment ions
+     *
      * @return an iterator on implemented fragment ions
      */
     public Iterator<PeptideFragmentIon> fragmentIterator() {
@@ -84,6 +90,7 @@ public class Peptide {
 
     /**
      * Getter for the parent proteins
+     *
      * @return the parent proteins
      */
     public ArrayList<Protein> getParentProteins() {
@@ -92,6 +99,7 @@ public class Peptide {
 
     /**
      * a method which compares to peptides. For now sequence-based.
+     * 
      * @param anOtherPeptide    an other peptide
      * @return a boolean indicating if the other peptide is the same.
      */

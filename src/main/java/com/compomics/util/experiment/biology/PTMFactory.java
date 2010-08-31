@@ -4,7 +4,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +11,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
+ * This factory will load PTM from an XML file and provide them on demand as standard class.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 22, 2010
  * Time: 8:26:09 PM
- * This factory will load PTM from an XML file and provide them on demand as standard class.
  */
 public class PTMFactory {
 
@@ -24,12 +24,10 @@ public class PTMFactory {
      * Instance of the factory
      */
     private static PTMFactory instance = null;
-
     /**
      * Parser used to parse modification files
      */
     private XmlPullParser parser;
-
     /**
      * A map linking mascot names with modifications
      */
@@ -38,12 +36,10 @@ public class PTMFactory {
      * A map linking indexes with modifications
      */
     private HashMap<Integer, PTM> indexToPTMMap = new HashMap<Integer, PTM>();
-
     /**
      * The set of imported PTM
      */
     private HashSet<PTM> ptmSet = new HashSet<PTM>();
-
 
     /**
      * Constructor for the factory
@@ -53,6 +49,7 @@ public class PTMFactory {
 
     /**
      * Static method to get the instance of the factory
+     *
      * @return the instance of the factory
      */
     public static PTMFactory getInstance() {
@@ -64,6 +61,7 @@ public class PTMFactory {
 
     /**
      * get a PTM according to its index
+     *
      * @param index the PTM index
      * @return the selected PTM
      */
@@ -73,6 +71,7 @@ public class PTMFactory {
 
     /**
      * getter for the index to PTM map
+     *
      * @return the index to ptem map
      */
     public HashMap<Integer, PTM> getPtmMap() {
@@ -81,6 +80,7 @@ public class PTMFactory {
 
     /**
      * getter for a ptm according to its measured characteristics
+     *
      * @param mass      the measured mass induced by the modification
      * @param location  the modification location
      * @param sequence  the peptide sequence
@@ -115,6 +115,7 @@ public class PTMFactory {
 
     /**
      * returns a ptm referenced by its mascot name
+     *
      * @param aMascotName   The Mascot name of a protein
      * @return the candidate PTM
      */
@@ -124,6 +125,7 @@ public class PTMFactory {
 
     /**
      * returns an iterator on the imported PTM
+     *
      * @return an iterator on imported PTM
      */
     public Iterator<PTM> getPtmIterator() {
@@ -132,6 +134,7 @@ public class PTMFactory {
 
     /**
      * Import modifications from a modification file
+     *
      * @param modificationsFile         A file containing modifications
      * @throws XmlPullParserException   exception thrown whenever an error is encountered while parsing
      * @throws IOException              exception thrown whenever an error is encountered reading the file
@@ -261,6 +264,7 @@ public class PTMFactory {
 
     /**
      * get the index of a file
+     *
      * @param modType   modification type found
      * @return corresponding static index
      */
@@ -294,7 +298,6 @@ public class PTMFactory {
         }
         return -1;
     }
-
 
     /**
      * Write the OMSSA modification files to the given folder.

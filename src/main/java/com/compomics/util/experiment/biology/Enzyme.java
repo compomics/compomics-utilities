@@ -3,14 +3,14 @@ package com.compomics.util.experiment.biology;
 import java.util.ArrayList;
 
 /**
+ * This class models an enzyme.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Aug 23, 2010
  * Time: 1:44:12 PM
- * This class modelizes an enzyme.
  */
 public class Enzyme {
-
 
     /*
      * The enzyme id
@@ -62,6 +62,7 @@ public class Enzyme {
 
     /**
      * Constructor for an Enzyme
+     *
      * @param id                    the enzyme id which should be OMSSA compatible.
      * @param name                  the name of the enzyme
      * @param aminoAcidBefore       the amino-acids which can be found before the cleavage
@@ -120,5 +121,4 @@ public class Enzyme {
         }
         return result;
     }
-
 }

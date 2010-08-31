@@ -5,11 +5,12 @@ import com.compomics.util.experiment.biology.Protein;
 import java.util.ArrayList;
 
 /**
+ * This class models a protein match.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 8:59:02 AM
- * This class modelizes a protein match.
  */
 public class ProteinMatch {
 
@@ -36,6 +37,7 @@ public class ProteinMatch {
 
     /**
      * Constructor for the protein match
+     *
      * @param protein   the matching protein
      */
     public ProteinMatch(Protein protein) {
@@ -44,6 +46,7 @@ public class ProteinMatch {
 
     /**
      * Constructor for the protein match
+     *
      * @param protein       The matching protein
      * @param peptideMatch  The corresponding peptide matches
      */
@@ -54,6 +57,7 @@ public class ProteinMatch {
 
     /**
      * getter for the matching protein
+     *
      * @return the matching protein
      */
     public Protein getTheoreticProtein() {
@@ -62,6 +66,7 @@ public class ProteinMatch {
 
     /**
      * setter for the matching protein
+     *
      * @param theoreticProtein  the matching protein
      */
     public void setTheoreticProtein(Protein theoreticProtein) {
@@ -70,6 +75,7 @@ public class ProteinMatch {
 
     /**
      * getter for the peptide matches
+     *
      * @return subordinated peptide matches
      */
     public ArrayList<PeptideMatch> getPeptideMatches() {
@@ -78,6 +84,7 @@ public class ProteinMatch {
 
     /**
      * add a subordinated peptide match
+     *
      * @param peptideMatch  a peptide match
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) {
@@ -86,6 +93,7 @@ public class ProteinMatch {
 
     /**
      * method to get the spectrum count for this protein match
+     *
      * @return the spectrum count for this protein match
      */
     public int getSpectrumCount() {
@@ -98,6 +106,7 @@ public class ProteinMatch {
 
     /**
      * methods indicates if the protein match is a decoy one
+     * 
      * @return boolean indicating if the protein match is a decoy one
      */
     public boolean isDecoy() {

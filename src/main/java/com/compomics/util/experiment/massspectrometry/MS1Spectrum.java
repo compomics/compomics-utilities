@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
+ * This class models an MS1 spectrum.
+ *
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
  * Time: 9:04:58 AM
- * This class modelizes an MS1 spectrum.
  */
 public abstract class MS1Spectrum implements Serializable {
-
 
     /**
      * spectrum title
@@ -40,6 +40,7 @@ public abstract class MS1Spectrum implements Serializable {
 
     /**
      * constructor for an MS1 spectrum
+     *
      * @param spectrumTitle title of the spectrum
      * @param spectrum      Set of peaks
      * @param fileName      name of the file
@@ -52,9 +53,9 @@ public abstract class MS1Spectrum implements Serializable {
         this.rt = rt;
     }
 
-
     /**
      * returns an iterator on the peaks
+     *
      * @return iterator on the peaks
      */
     public Iterator<Peak> iterator() {
@@ -63,6 +64,7 @@ public abstract class MS1Spectrum implements Serializable {
 
     /**
      * returns the spectrum title
+     *
      * @return spectrum title
      */
     public String getSpectrumTitle() {
@@ -71,6 +73,7 @@ public abstract class MS1Spectrum implements Serializable {
 
     /**
      * returns the retention time
+     *
      * @return retention time
      */
     public double getRT() {
@@ -79,6 +82,7 @@ public abstract class MS1Spectrum implements Serializable {
 
     /**
      * format the peaks so they can be plot in JFreeChart
+     * 
      * @return a table containing the peaks
      */
     public double[][] getJFreePeakList() {

@@ -39,18 +39,30 @@ import java.util.Vector;
  */
 public class MascotFileReader implements FileReader {
 
-    // Attributes
 
+    /**
+     * The inspected file
+     */
     private File inspectedFile;
+    /**
+     * Instance of the mascotdatfile parser
+     */
     private MascotDatfileInf iMascotDatfile;
+    /**
+     * the PTM factory
+     */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
-
-    // Constructors
-
+    /**
+     * constructor for the mascotFileReader
+     */
     public MascotFileReader() {
     }
 
+    /**
+     * Constructor for the MascotFilereader
+     * @param aFile a file to read
+     */
     public MascotFileReader(File aFile) {
         inspectedFile = aFile;
         try {
@@ -65,18 +77,27 @@ public class MascotFileReader implements FileReader {
         }
     }
 
-
-    // Methods
-
+    /**
+     * get the spectrum file name
+     * @return the spectrum file name
+     */
     public String getMgfFileName() {
         File temp = new File(iMascotDatfile.getParametersSection().getFile());
         return temp.getName();
     }
 
+    /**
+     * getter for the file name
+     * @return the file name
+     */
     public String getFileName() {
         return iMascotDatfile.getFileName();
     }
 
+    /**
+     * a method to get all the spectrum matches
+     * @return a set containing all spectrum matches
+     */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
 
         HashSet<SpectrumMatch> assignedPeptideHits = new HashSet<SpectrumMatch>();
@@ -132,6 +153,13 @@ public class MascotFileReader implements FileReader {
         return assignedPeptideHits;
     }
 
+    /**
+     * parses a spectrum match out of a peptideHit
+     * @param aPeptideHit   the peptide hit to parse
+     * @param query         the corresponding query
+     * @param decoySection  is it in the decoy section?
+     * @return a spectrum match
+     */
     private SpectrumMatch getSpectrumMatch(PeptideHit aPeptideHit, int query, boolean decoySection) {
         boolean c13 = false;
         double deltaMass;
@@ -199,6 +227,12 @@ public class MascotFileReader implements FileReader {
         return currentMatch;
     }
 
+    /**
+     * add the annotation on a peptide assumption based on the parser informations
+     * @param currentMatch  the peptide assumption concerned
+     * @param aPeptideHit   the peptideHit associated
+     * @param query         the query number
+     */
     private void addAnnotation(PeptideAssumption currentMatch, PeptideHit aPeptideHit, int query) {
 
         PeptideHitAnnotation pha =

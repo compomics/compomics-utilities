@@ -20,19 +20,41 @@ import java.util.Iterator;
  */
 public class PTMFactory {
 
+    /**
+     * Instance of the factory
+     */
     private static PTMFactory instance = null;
 
+    /**
+     * Parser used to parse modification files
+     */
     private XmlPullParser parser;
 
+    /**
+     * A map linking mascot names with modifications
+     */
     private HashMap<String, PTM> mascotNameToPTMMap = new HashMap<String, PTM>();
+    /**
+     * A map linking indexes with modifications
+     */
     private HashMap<Integer, PTM> indexToPTMMap = new HashMap<Integer, PTM>();
 
+    /**
+     * The set of imported PTM
+     */
     private HashSet<PTM> ptmSet = new HashSet<PTM>();
 
 
+    /**
+     * Constructor for the factory
+     */
     private PTMFactory() {
     }
 
+    /**
+     * Static method to get the instance of the factory
+     * @return the instance of the factory
+     */
     public static PTMFactory getInstance() {
         if (instance == null) {
             instance = new PTMFactory();
@@ -40,14 +62,30 @@ public class PTMFactory {
         return instance;
     }
 
+    /**
+     * get a PTM according to its index
+     * @param index the PTM index
+     * @return the selected PTM
+     */
     public PTM getPTM(int index) {
         return indexToPTMMap.get(index);
     }
 
+    /**
+     * getter for the index to PTM map
+     * @return the index to ptem map
+     */
     public HashMap<Integer, PTM> getPtmMap() {
         return indexToPTMMap;
     }
 
+    /**
+     * getter for a ptm according to its measured characteristics
+     * @param mass      the measured mass induced by the modification
+     * @param location  the modification location
+     * @param sequence  the peptide sequence
+     * @return the candidate modification, null if none is found
+     */
     public PTM getPTM(double mass, String location, String sequence) {
         for (PTM currentPTM : ptmSet) {
             if (currentPTM.getType() == PTM.MODAA
@@ -75,14 +113,29 @@ public class PTMFactory {
         return null;
     }
 
+    /**
+     * returns a ptm referenced by its mascot name
+     * @param aMascotName   The Mascot name of a protein
+     * @return the candidate PTM
+     */
     public PTM getPTMFromMascotName(String aMascotName) {
         return mascotNameToPTMMap.get(aMascotName);
     }
 
+    /**
+     * returns an iterator on the imported PTM
+     * @return an iterator on imported PTM
+     */
     public Iterator<PTM> getPtmIterator() {
         return ptmSet.iterator();
     }
 
+    /**
+     * Import modifications from a modification file
+     * @param modificationsFile         A file containing modifications
+     * @throws XmlPullParserException   exception thrown whenever an error is encountered while parsing
+     * @throws IOException              exception thrown whenever an error is encountered reading the file
+     */
     public void importModifications(File modificationsFile) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
@@ -206,6 +259,11 @@ public class PTMFactory {
         indexToPTMMap.put(number, currentPTM);
     }
 
+    /**
+     * get the index of a file
+     * @param modType   modification type found
+     * @return corresponding static index
+     */
     private int getIndex(String modType) {
         if (modType.compareTo("modaa") == 0) {
             return PTM.MODAA;

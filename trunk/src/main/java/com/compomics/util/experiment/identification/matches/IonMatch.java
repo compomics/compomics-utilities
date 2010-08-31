@@ -13,27 +13,43 @@ import com.compomics.util.experiment.biology.Ion;
  */
 public class IonMatch {
 
-    // Attributes
-
+    /**
+     * The matched peak
+     */
     public Peak peak;
+    /**
+     * The matching ion
+     */
     public Ion ion;
-    private double error; // in Da
+    /**
+     * The error made (in Da)
+     */
+    private double error;
 
 
-    // Constructors
-
+    /**
+     * Constructor for an ion peak
+     * @param aPeak the matched peak
+     * @param anIon the corresponding ion
+     */
     public IonMatch(Peak aPeak, Ion anIon) {
         peak = aPeak;
         ion = anIon;
     }
 
 
-    // Attributes
-
+    /**
+     * set the matching error
+     * @param error the matching error in Da
+     */
     public void setError(double error) {
         this.error = error;
     }
 
+    /**
+     * get the matching error
+     * @return the matching error
+     */
     public double getError() {
         return error;
     }

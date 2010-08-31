@@ -32,21 +32,37 @@ import java.util.Iterator;
  */
 public class XTandemFileReader implements FileReader {
 
-
-    // Attributes
-
+    /**
+     * the instance of the X!Tandem parser
+     */
     private XTandemFile xTandemFile = null;
+    /**
+     * the modification map
+     */
     private ModificationMap modificationMap;
+    /**
+     * the protein map
+     */
     private ProteinMap proteinMap;
+    /**
+     * the peptide map
+     */
     private PeptideMap peptideMap;
+    /**
+     * the PTM factory
+     */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
-
-    // Constructor
-
+    /**
+     * Constructor for the reader
+     */
     public XTandemFileReader() {
     }
 
+    /**
+     * constructor for the reader
+     * @param aFile the inspected file
+     */
     public XTandemFileReader(File aFile) {
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
             try {
@@ -61,13 +77,19 @@ public class XTandemFileReader implements FileReader {
     }
 
 
-    // Methods
-
+    /**
+     * getter for the file name
+     * @return the file name
+     */
     public String getFileName() {
         File tempFile = new File(xTandemFile.getFileName());
         return tempFile.getName();
     }
 
+    /**
+     * method which returns all spectrum matches found in the file
+     * @return a set containing all spectrum matches
+     */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
         HashSet<SpectrumMatch> foundPeptides = new HashSet();
         Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
@@ -160,6 +182,11 @@ public class XTandemFileReader implements FileReader {
         return foundPeptides;
     }
 
+    /**
+     * Attach annotations to the current match
+     * @param currentMatch The inspected match
+     * @param peptide      The corresponding peptide
+     */
     private void attachAnnotations(PeptideAssumption currentMatch, Peptide peptide) {
         ArrayList<FragmentIon[]> ions = new ArrayList(xTandemFile.getFragmentIonsForPeptide(peptide));
         for (FragmentIon[] aaIons : ions) {
@@ -175,6 +202,11 @@ public class XTandemFileReader implements FileReader {
         }
     }
 
+    /**
+     * Get the peakList corresponding to a spectrum
+     * @param supportData   the corresponding suppportData
+     * @return a set containing all peaks
+     */
     private HashSet<Peak> getPeakList(SupportData supportData) {
         HashSet<Peak> peakList = new HashSet();
             ArrayList<Double> mzValues = supportData.getXValuesFragIonMass2Charge();
@@ -185,6 +217,11 @@ public class XTandemFileReader implements FileReader {
         return peakList;
     }
 
+    /**
+     * returns the ion type depending on the X!Tandem parser indications
+     * @param ion   the concerned ion
+     * @return the ion type
+     */
     private int getIonType(Ion ion) {
         switch(ion.getType()) {
             case Ion.A_ION:

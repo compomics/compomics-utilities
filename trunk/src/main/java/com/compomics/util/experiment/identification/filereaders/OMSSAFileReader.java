@@ -31,21 +31,38 @@ import java.util.List;
  */
 public class OMSSAFileReader implements FileReader {
 
-
-    // Attributes
-
+    /**
+     * the inspected OMSSA omx file
+     */
     private File identificationFile;
+    /**
+     * the modification file mods.xml
+     */
     private File modsFile;
+    /**
+     * the modification file usermods.xml
+     */
     private File userModsFile;
+    /**
+     * the scale used in OMSSA response
+     */
     private Integer msResponseScale;
+    /**
+     * the PTM factory
+     */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
 
-    // Constructors
-
+    /**
+     * constructor for the reader
+     */
     public OMSSAFileReader() {
     }
 
+    /**
+     * Constructor for the reader
+     * @param idFile    the inspected file
+     */
     public OMSSAFileReader(File idFile) {
         this.identificationFile = idFile;
 
@@ -68,8 +85,10 @@ public class OMSSAFileReader implements FileReader {
     }
 
 
-    // Methods
-
+    /**
+     * get the file name
+     * @return the file name
+     */
     public String getFileName() {
         if (modsFile != null && userModsFile != null) {
             return identificationFile.getName().concat(", ").concat(modsFile.getName()).concat(", ").concat(userModsFile.getName());
@@ -82,6 +101,10 @@ public class OMSSAFileReader implements FileReader {
         }
     }
 
+    /**
+     * returns all spectrum matches found in the inspected file
+     * @return a set of all spectrum matches
+     */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
         HashSet<SpectrumMatch> assignedSpectra = new HashSet<SpectrumMatch>();
 
@@ -187,6 +210,11 @@ public class OMSSAFileReader implements FileReader {
         return assignedSpectra;
     }
 
+    /**
+     * parses omssa description to have the accession
+     * @param description   the protein description
+     * @return the protein accession
+     */
     private String getProteinAccession(String description) {
         try {
             int start = description.indexOf("|");
@@ -198,10 +226,18 @@ public class OMSSAFileReader implements FileReader {
         }
     }
 
+    /**
+     * get the annotations of the current match (not implemented yet)
+     * @param currentMatch  the peptide assumption under inspection
+     */
     private void addAnnotation(PeptideAssumption currentMatch) {
         // not implemented yet
     }
 
+    /**
+     * gives the parser instance
+     * @return an omssa omx file
+     */
     private OmssaOmxFile getParserInstance() {
         OmssaOmxFile omxFile;
         if (modsFile != null && userModsFile != null) {
@@ -216,6 +252,11 @@ public class OMSSAFileReader implements FileReader {
         return omxFile;
     }
 
+    /**
+     * get the peak list from a spectrum (not implemented yet)
+     * @param spectrumName  the name of the spectrum
+     * @return the peaks contained in the spectrum
+     */
     private HashSet<Peak> getPeakList(String spectrumName) {
         // Not implemented yet
         return new HashSet<Peak>();

@@ -19,17 +19,27 @@ import java.io.IOException;
  */
 public class EnzymeFactory {
 
-    /*
+    /**
      * The imported enzymes
      */
     private ArrayList<Enzyme> enzymes = null;
 
+    /**
+     * The instance of the factory
+     */
     private static EnzymeFactory instance = null;
 
+    /**
+     * the factory constructor
+     */
     private EnzymeFactory() {
 
     }
 
+    /**
+     * Static method to get an instance of the factory
+     * @return
+     */
     public static EnzymeFactory getInstance() {
         if (instance == null) {
             instance = new EnzymeFactory();

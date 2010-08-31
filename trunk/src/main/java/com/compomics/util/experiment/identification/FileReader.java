@@ -13,6 +13,10 @@ import java.util.HashSet;
  */
 public interface FileReader {
 
+    /**
+     * This methods retrieves all the identifications from an identification file as a list of spectrum matches
+     * @return a list of spectrum matches
+     */
     public HashSet<SpectrumMatch> getAllSpectrumMatches();
 
 }

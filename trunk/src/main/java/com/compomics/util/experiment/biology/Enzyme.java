@@ -60,6 +60,15 @@ public class Enzyme {
         return id;
     }
 
+    /**
+     * Constructor for an Enzyme
+     * @param id                    the enzyme id which should be OMSSA compatible.
+     * @param name                  the name of the enzyme
+     * @param aminoAcidBefore       the amino-acids which can be found before the cleavage
+     * @param restrictionBefore     the amino-acids which should not be found before the cleavage
+     * @param aminoAcidAfter        the amino-acids which should be found after the cleavage
+     * @param restrictionAfter      the amino-acids which should not be found after the cleavage
+     */
     public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
         this.id = id;
         this.name = name;

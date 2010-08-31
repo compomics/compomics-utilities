@@ -9,21 +9,30 @@ package com.compomics.util.experiment.biology;
  */
 public abstract class Ion {
 
-    // Ion family types
-
+    /**
+     * Ion family type
+     * static index for peptide fragments
+     */
     public static final int PEPTIDE_FRAGMENT = 0;
+    /**
+     * Ion family type
+     * static index for glycons
+     */
     public static final int GLYCON_FRAGMENT = 1;
 
-    // Attributes
+    /**
+     * Ion attribute - the theoretic mass
+     */
     public double theoreticMass;
+    /**
+     * Ion attribute - the ion family name
+     */
     protected int familyType;
 
-    // Constructors
-    public Ion() {
-    }
-
-    // Methods
-
+    /**
+     * getter for the ion family name
+     * @return the ion family name as indexed in static field
+     */
     public int getIonFamilyType() {
         return familyType;
     }

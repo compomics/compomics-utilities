@@ -14,12 +14,22 @@ import java.util.ArrayList;
  */
 public class AdvocateFactory {
 
+    /**
+     * The instance of the factory
+     */
     private static AdvocateFactory instance = null;
 
+    /**
+     * The constructor of the factory
+     */
     private AdvocateFactory() {
 
     }
 
+    /**
+     * A static method to retrieve the factory instance
+     * @return the factory instance
+     */
     public static AdvocateFactory getInstance() {
         if (instance == null) {
             instance = new AdvocateFactory();
@@ -27,33 +37,47 @@ public class AdvocateFactory {
         return instance;
     }
 
-    public com.compomics.util.experiment.identification.Advocate getAdvocate(int index) {
+    /**
+     * Returns an advocate of the specified index
+     * @param index an advocate index
+     * @return an advocate of the specified index
+     */
+    public Advocate getAdvocate(int index) {
         switch (index) {
-            case com.compomics.util.experiment.identification.Advocate.MASCOT:
-                return new SearchEngine(com.compomics.util.experiment.identification.Advocate.MASCOT);
-            case com.compomics.util.experiment.identification.Advocate.OMSSA:
-                return new SearchEngine(com.compomics.util.experiment.identification.Advocate.OMSSA);
-            case com.compomics.util.experiment.identification.Advocate.XTANDEM:
-                return new SearchEngine(com.compomics.util.experiment.identification.Advocate.XTANDEM);
-            case com.compomics.util.experiment.identification.Advocate.PEPTIZER:
-                return new PostProcessor(com.compomics.util.experiment.identification.Advocate.PEPTIZER);
+            case Advocate.MASCOT:
+                return new SearchEngine(Advocate.MASCOT);
+            case Advocate.OMSSA:
+                return new SearchEngine(Advocate.OMSSA);
+            case Advocate.XTANDEM:
+                return new SearchEngine(Advocate.XTANDEM);
+            case Advocate.PEPTIZER:
+                return new PostProcessor(Advocate.PEPTIZER);
             default:
                 return null;
         }
     }
 
-    public ArrayList<com.compomics.util.experiment.identification.Advocate> getPossibilities() {
-        ArrayList<com.compomics.util.experiment.identification.Advocate> possibilities = new ArrayList<com.compomics.util.experiment.identification.Advocate>();
-        possibilities.add(new SearchEngine(com.compomics.util.experiment.identification.Advocate.MASCOT));
-        possibilities.add(new SearchEngine(com.compomics.util.experiment.identification.Advocate.OMSSA));
-        possibilities.add(new SearchEngine(com.compomics.util.experiment.identification.Advocate.XTANDEM));
-        possibilities.add(new PostProcessor(com.compomics.util.experiment.identification.Advocate.PEPTIZER));
+    /**
+     * returns all implemented advocates
+     * @return all implemented advocates
+     */
+    public ArrayList<Advocate> getPossibilities() {
+        ArrayList<Advocate> possibilities = new ArrayList<Advocate>();
+        possibilities.add(new SearchEngine(Advocate.MASCOT));
+        possibilities.add(new SearchEngine(Advocate.OMSSA));
+        possibilities.add(new SearchEngine(Advocate.XTANDEM));
+        possibilities.add(new PostProcessor(Advocate.PEPTIZER));
         return possibilities;
     }
 
+    /**
+     * returns the index of an advocate base on its name
+     * @param aName the name of an advocate
+     * @return the corresponding index
+     */
     public int getAdvocate(String aName) {
-        ArrayList<com.compomics.util.experiment.identification.Advocate> possibilities = getPossibilities();
-        for (com.compomics.util.experiment.identification.Advocate advocate : possibilities) {
+        ArrayList<Advocate> possibilities = getPossibilities();
+        for (Advocate advocate : possibilities) {
             if (advocate.getName().compareTo(aName)==0) {
                 return advocate.getId();
             }

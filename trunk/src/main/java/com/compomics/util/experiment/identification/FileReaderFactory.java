@@ -15,17 +15,22 @@ import java.io.File;
  */
 public class FileReaderFactory {
 
-    // Attributes
-
+    /**
+     * The factory instance
+     */
     private static FileReaderFactory singleton = null;
 
-
-    // Constructors
-
+    /**
+     * the factory constructor
+     */
     private FileReaderFactory() {
 
     }
 
+    /**
+     * A static method to retrieve the instance of the factory
+     * @return the factory instance
+     */
     public static FileReaderFactory getInstance() {
         if (singleton == null) {
             singleton = new FileReaderFactory();
@@ -34,9 +39,12 @@ public class FileReaderFactory {
     }
 
 
-    // Methods
-
-    public com.compomics.util.experiment.identification.FileReader getFileReader(File aFile) {
+    /**
+     * This method returns the proper file reader depending on the format of the provided file
+     * @param aFile the file to parse
+     * @return an adapted file reader
+     */
+    public FileReader getFileReader(File aFile) {
         String name = aFile.getName().toLowerCase();
         if (name.endsWith("dat")) {
             return new MascotFileReader(aFile);

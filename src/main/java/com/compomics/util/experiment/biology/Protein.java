@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 /**
  * This class models a protein.
  *
@@ -8,7 +10,7 @@ package com.compomics.util.experiment.biology;
  * Date: Jun 18, 2010
  * Time: 8:56:22 AM
  */
-public class Protein {
+public class Protein extends ExperimentObject {
 
     /**
      * The protein accession

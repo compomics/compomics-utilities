@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * Date: Jun 18, 2010
  * Time: 8:58:46 AM
  */
-public class PeptideMatch {
+public class PeptideMatch extends ExperimentObject {
 
     /**
      * the theoretic peptide mathing

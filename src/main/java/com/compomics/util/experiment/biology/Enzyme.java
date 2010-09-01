@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 import java.util.ArrayList;
 
 /**
@@ -10,7 +12,7 @@ import java.util.ArrayList;
  * Date: Aug 23, 2010
  * Time: 1:44:12 PM
  */
-public class Enzyme {
+public class Enzyme extends ExperimentObject {
 
     /*
      * The enzyme id

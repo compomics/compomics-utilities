@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * Date: Jun 18, 2010
  * Time: 8:59:02 AM
  */
-public class ProteinMatch {
+public class ProteinMatch extends ExperimentObject {
 
     /**
      * The matching protein

@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 /**
  * This class models an ion.
  *
@@ -8,7 +10,7 @@ package com.compomics.util.experiment.biology;
  * Date: Jun 18, 2010
  * Time: 8:57:33 AM
  */
-public abstract class Ion {
+public abstract class Ion extends ExperimentObject {
 
     /**
      * Ion family type
@@ -20,6 +22,11 @@ public abstract class Ion {
      * static index for glycons
      */
     public static final int GLYCON_FRAGMENT = 1;
+    /**
+     * Ion family type
+     * static index for glycons
+     */
+    public static final int REPORTER_ION = 2;
 
     /**
      * Ion attribute - the theoretic mass

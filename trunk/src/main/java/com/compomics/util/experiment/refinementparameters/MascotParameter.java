@@ -18,7 +18,6 @@ public class MascotParameter implements UrParameter {
      * the index of Mascot score
      */
     public static final int SCORE = 1;
-
     /**
      * The parameter index
      */

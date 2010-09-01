@@ -3,7 +3,7 @@ package com.compomics.util.experiment.quantification;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
 /**
- * This class will modelize a quantification method.
+ * This class will models a quantification method.
  * User: Marc
  * Date: Sep 1, 2010
  * Time: 3:10:48 PM
@@ -22,7 +22,6 @@ public abstract class QuantificationMethod extends ExperimentObject {
      * Index for TMT
      */
     public final static int TMT = 2;
-
     /**
      * the method index
      */

@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.quantification;
+package com.compomics.util.experiment.quantification.msms;
 
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.identification.matches.IonMatch;

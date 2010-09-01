@@ -1,11 +1,8 @@
-package com.compomics.util.experiment.quantification;
+package com.compomics.util.experiment.quantification.msms;
 
-import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Sample;
-import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.utils.ExperimentObject;
 import com.compomics.util.experiment.quantification.QuantificationMethod;
+import com.compomics.util.experiment.quantification.msms.ProteinQuantification;
 
 import java.util.HashMap;
 import java.util.ArrayList;

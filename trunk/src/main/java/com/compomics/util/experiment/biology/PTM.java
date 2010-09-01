@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 import java.io.Serializable;
 
 /**
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * Date: Jun 22, 2010
  * Time: 8:02:00 PM
  */
-public class PTM  implements Serializable {
+public class PTM extends ExperimentObject {
 
     /**
      * modification at particular amino acids

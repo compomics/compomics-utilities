@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.HashSet;
  * Date: Jun 18, 2010
  * Time: 8:58:26 AM
  */
-public class SpectrumMatch {
+public class SpectrumMatch extends ExperimentObject {
 
     /**
      * The matched spectrum

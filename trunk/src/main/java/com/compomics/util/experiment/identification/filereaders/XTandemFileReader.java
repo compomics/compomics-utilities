@@ -13,6 +13,8 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.utils.ExperimentObject;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.interfaces.Ion;
 import de.proteinms.xtandemparser.xtandem.*;
@@ -31,7 +33,7 @@ import java.util.Iterator;
  * Date: Jun 23, 2010
  * Time: 9:45:54 AM
  */
-public class XTandemFileReader implements FileReader {
+public class XTandemFileReader extends ExperimentObject implements FileReader {
 
     /**
      * the instance of the X!Tandem parser
@@ -94,17 +96,18 @@ public class XTandemFileReader implements FileReader {
      * @return a set containing all spectrum matches
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
-        HashSet<SpectrumMatch> foundPeptides = new HashSet();
+        HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
         Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
         while (spectraIt.hasNext()) {
             // informations to provide
             File tempFile = new File(xTandemFile.getInputParameters().getSpectrumPath());
             String filename = tempFile.getName();
-            ArrayList<Protein> proteins = new ArrayList();
+            ArrayList<Protein> proteins = new ArrayList<Protein>();
             double measuredMass, eValue, deltaMass;
             Boolean reverseHit;
             MSnSpectrum spectrum;
             com.compomics.util.experiment.biology.Peptide peptide;
+            Precursor precursor;
 
             Spectrum currentSpectrum = spectraIt.next();
 
@@ -150,7 +153,8 @@ public class XTandemFileReader implements FileReader {
                     peptide = new com.compomics.util.experiment.biology.Peptide(bestPeptide.getDomainSequence(), bestPeptide.getDomainMh(), proteins);
                     eValue = bestPeptide.getDomainExpect();
                     measuredMass = bestPeptide.getDomainMh() + bestPeptide.getDomainDeltaMh();
-                    spectrum = new MSnSpectrum(2, measuredMass, charge, spectrumName, peakList, filename, -1);
+                    precursor = new Precursor(-1, measuredMass, charge); // The retention time is not known at this stage
+                    spectrum = new MSnSpectrum(2, precursor, spectrumName, peakList, filename);
                     ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(bestPeptide.getDomainID());
                     PTM currentPTM;
                     ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();
@@ -191,7 +195,7 @@ public class XTandemFileReader implements FileReader {
      * @param peptide      The corresponding peptide
      */
     private void attachAnnotations(PeptideAssumption currentMatch, Peptide peptide) {
-        ArrayList<FragmentIon[]> ions = new ArrayList(xTandemFile.getFragmentIonsForPeptide(peptide));
+        ArrayList<FragmentIon[]> ions = new ArrayList<FragmentIon[]>(xTandemFile.getFragmentIonsForPeptide(peptide));
         for (FragmentIon[] aaIons : ions) {
             for (FragmentIon ion:aaIons) {
                 int ionType = getIonType(ion);
@@ -212,7 +216,7 @@ public class XTandemFileReader implements FileReader {
      * @return a set containing all peaks
      */
     private HashSet<Peak> getPeakList(SupportData supportData) {
-        HashSet<Peak> peakList = new HashSet();
+        HashSet<Peak> peakList = new HashSet<Peak>();
             ArrayList<Double> mzValues = supportData.getXValuesFragIonMass2Charge();
             ArrayList<Double> intensityValues = supportData.getYValuesFragIonMass2Charge();
             for (int i=0 ; i < mzValues.size() ; i++) {

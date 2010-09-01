@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.advocates;
 
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.io.Serializable;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * Date: Jun 22, 2010
  * Time: 1:56:59 PM
  */
-public class SearchEngine implements Advocate, Serializable {
+public class SearchEngine extends ExperimentObject implements Advocate {
 
     /**
      * index of the search engine

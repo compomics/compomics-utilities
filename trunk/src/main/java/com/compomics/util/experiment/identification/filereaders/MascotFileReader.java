@@ -23,6 +23,9 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.refinementparameters.MascotParameter;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +41,7 @@ import java.util.Vector;
  * Date: Jun 23, 2010
  * Time: 9:45:35 AM
  */
-public class MascotFileReader implements FileReader {
+public class MascotFileReader extends ExperimentObject implements FileReader {
 
     /**
      * The inspected file
@@ -200,7 +203,8 @@ public class MascotFileReader implements FileReader {
         for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
             peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
         }
-        MSnSpectrum spectrum = new MSnSpectrum(2, measuredMass, charge, spectrumId, peakList, getMgfFileName(), -1);
+        Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
+        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, peakList, getMgfFileName());
         ArrayList<Protein> proteins = new ArrayList();
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
             proteins.add(new Protein(((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession()));
@@ -217,14 +221,13 @@ public class MascotFileReader implements FileReader {
 
         Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins);
         PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, deltaMass, mascotEValue, foundModifications, getFileName(), reverse);
-        if (c13) {
-            currentAssumption.setC13();
-        }
-        currentAssumption.setScore(aPeptideHit.getIonsScore());
+        MascotParameter refinedParam = new MascotParameter(MascotParameter.C13);
+            currentAssumption.addUrParam(refinedParam, c13);
+        refinedParam = new MascotParameter(MascotParameter.SCORE);
+        currentAssumption.addUrParam(refinedParam, aPeptideHit.getIonsScore());
   //      addAnnotation(currentAssumption, aPeptideHit, query);
         // Secondary hits are not implemented yet
-        SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);
-        return currentMatch;
+        return new SpectrumMatch(spectrum, currentAssumption);
     }
 
     /**

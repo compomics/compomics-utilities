@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 /**
  * This class models a charge.
  *
@@ -8,7 +10,7 @@ package com.compomics.util.experiment.massspectrometry;
  * Date: Jun 23, 2010
  * Time: 10:01:29 AM
  */
-public class Charge {
+public class Charge extends ExperimentObject {
 
     /**
      * static int to modele a positive charge

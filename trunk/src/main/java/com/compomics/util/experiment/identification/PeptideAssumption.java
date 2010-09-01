@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.HashSet;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * Date: Jun 25, 2010
  * Time: 2:45:46 PM
  */
-public class PeptideAssumption {
+public class PeptideAssumption extends ExperimentObject {
 
     /**
      * The rank of the peptide assumption for the concerned spectrum
@@ -53,18 +54,6 @@ public class PeptideAssumption {
      * is it a decoy identification?
      */
     private boolean isDecoy;
-    /**
-     * The probability assigned to this identification
-     */
-    private double probability;
-    /**
-     * The score assigned to this idenitification
-     */
-    private double score;
-    /**
-     * Was there a 1Da shift between the precursor mass and the measured mass?
-     */
-    private boolean c13 = false;
 
     /**
      * Constructor for a peptide assumption
@@ -87,40 +76,6 @@ public class PeptideAssumption {
         this.modifications = modifications;
         this.file = identificationFile;
         this.isDecoy = isDecoy;
-    }
-
-    /**
-     * Flag that a precursor mass error of 1Da was detected
-     */
-    public void setC13() {
-        c13 = true;
-    }
-
-    /**
-     * returns if a precursor mass error of 1Da has been detected
-     *
-     * @return boolean showing if a mass error of 1Da was detected
-     */
-    public boolean isC13() {
-        return c13;
-    }
-
-    /**
-     * returns the score
-     *
-     * @return the advocate score
-     */
-    public double getScore() {
-        return score;
-    }
-
-    /**
-     * sets the score
-     *
-     * @param score the advocate score
-     */
-    public void setScore(double score) {
-        this.score = score;
     }
 
     /**
@@ -211,23 +166,5 @@ public class PeptideAssumption {
      */
     public boolean isDecoy() {
         return isDecoy;
-    }
-
-    /**
-     * sets the probability attached to this identification
-     *
-     * @param probability   the probability
-     */
-    public void setProbability(double probability) {
-        this.probability = probability;
-    }
-
-    /**
-     * get the probability attached to this identification
-     * 
-     * @return the probability
-     */
-    public double getProbability() {
-        return probability;
     }
 }

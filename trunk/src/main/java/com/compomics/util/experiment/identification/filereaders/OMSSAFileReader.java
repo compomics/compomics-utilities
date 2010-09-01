@@ -12,6 +12,8 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.utils.ExperimentObject;
 import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.*;
 
@@ -29,7 +31,7 @@ import java.util.List;
  * Date: Jun 23, 2010
  * Time: 9:45:45 AM
  */
-public class OMSSAFileReader implements FileReader {
+public class OMSSAFileReader extends ExperimentObject implements FileReader {
 
     /**
      * the inspected OMSSA omx file
@@ -154,7 +156,8 @@ public class OMSSAFileReader implements FileReader {
                         }
 
                         Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
-                        MSnSpectrum spectrum = new MSnSpectrum(2, expMass, charge, name, getPeakList(name), tempFile.getName(), -1);
+                        Precursor precursor = new Precursor(-1, expMass, charge);     // RT is not known at the stage of the development
+                        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, getPeakList(name), tempFile.getName());
 
                         Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, calcMass, proteins);
                         List<MSModHit> msModHits = currentMsHit.MSHits_mods.MSModHit;

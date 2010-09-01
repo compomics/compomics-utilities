@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * Date: Jun 18, 2010
  * Time: 8:56:40 AM
  */
-public class Peptide {
+public class Peptide extends ExperimentObject {
 
     /**
      * The peptide sequence

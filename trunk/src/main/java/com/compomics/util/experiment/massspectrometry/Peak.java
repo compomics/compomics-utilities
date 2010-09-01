@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 import java.io.Serializable;
 
 /**
@@ -10,12 +12,16 @@ import java.io.Serializable;
  * Date: Jun 18, 2010
  * Time: 9:00:58 AM
  */
-public class Peak implements Serializable {
+public class Peak extends ExperimentObject {
 
     /**
      * The mass over charge ratio of the peak.
      */
     public double mz;
+    /**
+     * The retention time when the peak was recorded.
+     */
+    public double rt;
     /**
      * The intensity of the peak.
      */
@@ -30,6 +36,18 @@ public class Peak implements Serializable {
     public Peak(double mz, double intensity) {
         this.mz = mz;
         this.intensity = intensity;
+    }
+    /**
+     * Constructor for a peak.
+     *
+     * @param mz the mz value of the peak
+     * @param intensity the intensity of the peak
+     * @param rt the retention time when the peak was recorded
+     */
+    public Peak(double mz, double intensity, double rt) {
+        this.mz = mz;
+        this.intensity = intensity;
+        this.rt = rt;
     }
 
     /**

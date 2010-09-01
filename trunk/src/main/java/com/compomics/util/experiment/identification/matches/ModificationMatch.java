@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 
 /**
@@ -11,7 +12,7 @@ import com.compomics.util.experiment.biology.PTM;
  * Date: Jun 23, 2010
  * Time: 1:23:45 PM
  */
-public class ModificationMatch {
+public class ModificationMatch extends ExperimentObject {
 
     /**
      * the theoretic modiffication

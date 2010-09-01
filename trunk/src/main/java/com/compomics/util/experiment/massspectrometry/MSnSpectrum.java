@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.massspectrometry;
 
-import java.io.Serializable;
+import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.massspectrometry.Precursor;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -12,20 +14,16 @@ import java.util.Iterator;
  * Date: Jun 18, 2010
  * Time: 9:00:36 AM
  */
-public class MSnSpectrum implements Serializable {
+public class MSnSpectrum extends ExperimentObject {
 
     /**
      * The MS level
      */
     private int level;
     /**
-     * the precursor mass
+     * the precursor
      */
-    private double precursorMass;
-    /**
-     * the precursor charge
-     */
-    private Charge precursorCharge;
+    private Precursor precursor;
     /**
      * the spectrum title
      */
@@ -38,11 +36,6 @@ public class MSnSpectrum implements Serializable {
      * the file name
      */
     private String fileName;
-    /**
-     * the retention time
-     */
-    private double rt;
-
 
     /**
      * Constructor for the spectrum
@@ -55,21 +48,17 @@ public class MSnSpectrum implements Serializable {
      * constructor for the spectrum
      *
      * @param level              MS level
-     * @param precursorMass      pecursor mass
-     * @param precursorCharge    precursor charge
+     * @param precursor          precursor
      * @param spectrumTitle      spectrum title
      * @param spectrum           set of peaks
      * @param fileName           file name
-     * @param rt                 retention time
      */
-    public MSnSpectrum(int level, double precursorMass, Charge precursorCharge, String spectrumTitle, HashSet<Peak> spectrum, String fileName, double rt) {
+    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashSet<Peak> spectrum, String fileName) {
         this.level = level;
-        this.precursorMass = precursorMass;
-        this.precursorCharge = precursorCharge;
+        this.precursor = precursor;
         this.spectrumTitle = spectrumTitle;
         this.peakList = spectrum;
         this.fileName = fileName;
-        this.rt = rt;
     }
 
     /**
@@ -100,21 +89,12 @@ public class MSnSpectrum implements Serializable {
     }
 
     /**
-     * returns the charge of the precursor
+     * returns the precursor
      *
      * @return precursor charge
      */
-    public Charge getCharge() {
-        return precursorCharge;
-    }
-
-    /**
-     * returns the mass of the precursor
-     *
-     * @return precursor mass
-     */
-    public double getPrecursorMass() {
-        return precursorMass;
+    public Precursor getPrecursor() {
+        return precursor;
     }
 
     /**
@@ -124,15 +104,6 @@ public class MSnSpectrum implements Serializable {
      */
     public String getSpectrumTitle() {
         return spectrumTitle;
-    }
-
-    /**
-     * return the retention time when the spectrum was acquired
-     *
-     * @return retention time
-     */
-    public double getRT() {
-        return rt;
     }
 
     /**
@@ -170,11 +141,12 @@ public class MSnSpectrum implements Serializable {
      * @return the peak list as mgf bloc
      */
     public String asMgf() {
+        double mass = (precursor.getMz()+precursor.getCharge().value)/precursor.getCharge().value;
         String result = "BEGIN IONS\n\n";
         result += "TITLE=" + spectrumTitle + "\n";
-        result += "PEPMASS=" + precursorMass + "\n";
-        result += "RTINSECONDS=" + rt + "\n";
-        result += "CHARGE=" + precursorCharge.toString() + "\n\n";
+        result += "PEPMASS=" + mass + "\n";
+        result += "RTINSECONDS=" + precursor.getRt() + "\n";
+        result += "CHARGE=" + precursor.getCharge().toString() + "\n\n";
 
         Iterator<Peak> peakIt = peakList.iterator();
         Peak currentPeak;

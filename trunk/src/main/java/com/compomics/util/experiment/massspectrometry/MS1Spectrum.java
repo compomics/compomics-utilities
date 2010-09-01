@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.utils.ExperimentObject;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,7 +14,7 @@ import java.util.Iterator;
  * Date: Jun 18, 2010
  * Time: 9:04:58 AM
  */
-public abstract class MS1Spectrum implements Serializable {
+public abstract class MS1Spectrum extends ExperimentObject {
 
     /**
      * spectrum title

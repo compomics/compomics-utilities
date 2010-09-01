@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.advocates;
 
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 /**
  * This object models a tool which post-processed identifications.
@@ -10,7 +11,7 @@ import com.compomics.util.experiment.identification.Advocate;
  * Date: Jun 25, 2010
  * Time: 7:58:55 PM
  */
-public class PostProcessor implements Advocate {
+public class PostProcessor extends ExperimentObject implements Advocate {
 
     /**
      * index of the post-processor

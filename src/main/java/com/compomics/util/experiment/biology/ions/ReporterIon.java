@@ -45,7 +45,6 @@ public class ReporterIon extends Ion {
      * iTRAQ 121
      */
     public static final int ITRAQ_121 = 120;
-
     /**
      * Reporter ion index
      * TMT 0
@@ -76,7 +75,6 @@ public class ReporterIon extends Ion {
      * TMT 5
      */
     public static final int TMT5 = 131;
-
     /**
      * ion index according to the static fields
      */
@@ -190,5 +188,4 @@ public class ReporterIon extends Ion {
         this.theoreticMass = 131;
         }
     }
-
 }

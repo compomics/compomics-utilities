@@ -2,7 +2,6 @@ package com.compomics.util.experiment.quantification.msms;
 
 import com.compomics.util.experiment.biology.Sample;
 import com.compomics.util.experiment.quantification.QuantificationMethod;
-import com.compomics.util.experiment.quantification.msms.ProteinQuantification;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -80,5 +79,4 @@ public class ReporterIonQuantification extends QuantificationMethod {
     public void addProteinQuantification(ProteinQuantification aProteinQuantification) {
         proteinQuantification.add(aProteinQuantification);
     }
-
 }

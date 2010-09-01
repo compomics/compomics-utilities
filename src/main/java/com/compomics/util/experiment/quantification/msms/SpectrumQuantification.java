@@ -18,12 +18,10 @@ public class SpectrumQuantification {
      * The corresponding spectrum
      */
     private MSnSpectrum spectrum;
-
     /**
      * The matches of the reporter ions
      */
     private HashMap<Integer, IonMatch> reporterMatches = new HashMap<Integer, IonMatch>();
-
     /**
      * The estimated ratios
      */

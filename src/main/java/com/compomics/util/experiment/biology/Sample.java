@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
 /**
- * This class modelizes a proteomic sample.
+ * This class models a proteomic sample.
  * User: Marc
  * Date: Sep 1, 2010
  * Time: 10:07:52 AM

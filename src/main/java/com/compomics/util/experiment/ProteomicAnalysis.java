@@ -3,7 +3,7 @@ package com.compomics.util.experiment;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
 /**
- * This class modelizes a proteomic analysis.
+ * This class models a proteomic analysis.
  * User: Marc
  * Date: Sep 1, 2010
  * Time: 10:11:18 AM

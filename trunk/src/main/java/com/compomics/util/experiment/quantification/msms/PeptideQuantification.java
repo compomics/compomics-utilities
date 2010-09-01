@@ -1,7 +1,8 @@
-package com.compomics.util.experiment.quantification;
+package com.compomics.util.experiment.quantification.msms;
 
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.quantification.Ratio;
+import com.compomics.util.experiment.quantification.msms.SpectrumQuantification;
 
 import java.util.HashMap;
 import java.util.ArrayList;

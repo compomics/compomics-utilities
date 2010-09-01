@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.quantification;
+package com.compomics.util.experiment.quantification.msms;
 
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.utils.ExperimentObject;

@@ -1,4 +1,5 @@
 #summary Short summary of changes for each version of compomics-utilities.
+#labels Featured
 
 ----
 

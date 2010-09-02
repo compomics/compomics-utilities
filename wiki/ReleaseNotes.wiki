@@ -1,0 +1,6 @@
+#summary Short summary of changes for each version of compomics-utilities.
+
+----
+
+*Changes in compomics-utilties 3.0.18 (Sept. 2. 2010):*
+ * First release of the revised compomics-utilties. Now including demos of some of the main features of the library.

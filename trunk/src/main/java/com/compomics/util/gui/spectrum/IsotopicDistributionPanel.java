@@ -60,7 +60,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param peptideCharge     the charge of the peptide
      * @param profileMode       if true the area under the curve is filled, if false only the peaks are shown
      */
-    public IsotopicDistributionPanel(String peptideSequence, Integer peptideCharge, boolean profileMode) throws IOException {
+    public IsotopicDistributionPanel(String peptideSequence, Integer peptideCharge, boolean profileMode, int labelDifference) throws IOException {
 
         if (profileMode) {
             this.currentGraphicsPanelType = GraphicsPanelType.isotopicDistributionProfile;
@@ -82,7 +82,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
 
         // calculate the isotopic distribution
         IsotopicDistributionSpectrum isotopicDistributionSpectrum =
-                calculateIsotopicDistribution(validatedPeptideSequence, peptideCharge);
+                calculateIsotopicDistribution(validatedPeptideSequence, peptideCharge, labelDifference);
 
         dataSetCounter = 0;
         this.processIsotopicDistribution(isotopicDistributionSpectrum, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
@@ -106,7 +106,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param peptideCharge             the charge of the peptide
      * @return                          the isotopic distribution as a spectrum
      */
-    private IsotopicDistributionSpectrum calculateIsotopicDistribution(AASequenceImpl validatedPeptideSequence, Integer peptideCharge) {
+    private IsotopicDistributionSpectrum calculateIsotopicDistribution(AASequenceImpl validatedPeptideSequence, Integer peptideCharge, int labedDifference) {
 
         // calculate the m/z value of the peptide
         double mzValue = validatedPeptideSequence.getMz(peptideCharge);
@@ -114,11 +114,15 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         // calculate the distribution
         IsotopicDistribution lIso = validatedPeptideSequence.getIsotopicDistribution();
 
+        //set the label difference if necessary
+        if(labedDifference>0){
+            lIso.setLabelDifference(labedDifference);
+        }
         // add the peaks to the dataset
         HashMap lPeaks = new HashMap();
 
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 15; i++) {
 
 //                @TODO: remove when propper profile isotopic distribution has been implemented
 //
@@ -163,7 +167,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param dataPointAndLineColor the color to use for the data points and lines
      * @param areaUnderCurveColor   the color to use for the area under the curve
      */
-    public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor) throws IOException {
+    public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor, int labedDifference) throws IOException {
 
         // validate the peptide sequence
         AASequenceImpl validatedPeptideSequence = validatePeptideSequence(peptideSequence);
@@ -172,7 +176,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         peptideCharges.add(peptideCharge);
 
         IsotopicDistributionSpectrum isotopicDistributionSpectrum =
-                calculateIsotopicDistribution(validatedPeptideSequence, peptideCharge);
+                calculateIsotopicDistribution(validatedPeptideSequence, peptideCharge, labedDifference);
 
         this.processIsotopicDistribution(isotopicDistributionSpectrum, dataPointAndLineColor, areaUnderCurveColor);
 

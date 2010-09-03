@@ -32,14 +32,40 @@ public class IsotopicDistribution {
      * The molecular formula
      */
     private MolecularFormula iMolecularFormula;
-
-
+    /**
+     * boolean that indicates if a LABEL isotopic distribution must be used
+     */
+    private boolean iLabel = false;
+    /**
+     * int with the dalton difference
+     */
+    private int iLabelDaltonDifference;
     /**
      * Constructor
      * @param lFormula MolecularFormula
      */
     public IsotopicDistribution(MolecularFormula lFormula){
         this.iMolecularFormula = lFormula;
+    }
+
+    /**
+     * Constructor
+     * @param lFormula MolecularFormula
+     * @param lDaltonDifference The label dalton difference
+     */
+    public IsotopicDistribution(MolecularFormula lFormula, int lDaltonDifference){
+        this.iMolecularFormula = lFormula;
+        this.iLabel = true;
+        this.iLabelDaltonDifference = lDaltonDifference;
+    }
+
+    /**
+     * This method set the label dalton difference
+     * @param lLabelDifference The label dalton difference
+     */
+    public void setLabelDifference(int lLabelDifference){
+        this.iLabel = true;
+        this.iLabelDaltonDifference = lLabelDifference;
     }
 
     /**
@@ -52,6 +78,7 @@ public class IsotopicDistribution {
         Vector<Integer> lDaltonDifferences = new Vector<Integer>();
         Vector<BinomialDistributionImpl> lBinomDistributions = new Vector<BinomialDistributionImpl>();
         Vector<IsotopicElement> lElements = IsotopicElement.getAllIsotopicElements(this.getClass(), logger);
+
         for(int e = 0; e<lElements.size(); e ++){
             IsotopicElement lElmnt = lElements.get(e);
             int lCount = iMolecularFormula.getElementCount(lElmnt.getElement());
@@ -65,7 +92,7 @@ public class IsotopicDistribution {
         }
 
 
-        for(int i = 0; i<10; i++){
+        for(int i = 0; i<15; i++){
             for(int p = 0; p<lPerc.size(); p ++){
                 Vector<Double> lPercElement = lPerc.get(p);
                 BinomialDistributionImpl lBinom = lBinomDistributions.get(p);
@@ -114,6 +141,25 @@ public class IsotopicDistribution {
             if(lPercTotal.get(k)>lMax){
                 lMax = lPercTotal.get(k);
             }
+        }
+        if(iLabel){
+            lMax = 0.0;
+            Vector<Double> lTempPercTotal = new Vector<Double>();
+            for(int i = 0; i<lPercTotal.size(); i ++){
+                double lTempPeak1 = lPercTotal.get(i);
+                double lTempPeak2 = 0.0;
+                if(i-iLabelDaltonDifference >= 0){
+                    lTempPeak2 = lPercTotal.get(i-iLabelDaltonDifference);
+                }
+                lTempPeak1 = lTempPeak1 + lTempPeak2;
+                lTempPercTotal.add(lTempPeak1/2.0);
+            }
+            for(int k = 0; k<lTempPercTotal.size(); k ++){
+                if(lTempPercTotal.get(k)>lMax){
+                    lMax = lTempPercTotal.get(k);
+                }
+            }
+            lPercTotal = lTempPercTotal;
         }
 
         iPercTot = lPercTotal;

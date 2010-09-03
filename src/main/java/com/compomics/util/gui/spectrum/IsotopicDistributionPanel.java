@@ -58,7 +58,10 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      *
      * @param peptideSequence   the peptide sequence to display the isotopic distribution for
      * @param peptideCharge     the charge of the peptide
-     * @param profileMode       if true the area under the curve is filled, if false only the peaks are shown
+     * @param profileMode       if true the peaks will be showned in a profile like mode where
+     *                          support peaks are added in front of and after the real peak
+     *                          (note that this is unlike the profile modes of the other graphics
+     *                          panels)
      */
     public IsotopicDistributionPanel(String peptideSequence, Integer peptideCharge, boolean profileMode, int labelDifference) throws IOException {
 
@@ -124,27 +127,27 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         try {
             for (int i = 0; i < 15; i++) {
 
-//                @TODO: remove when propper profile isotopic distribution has been implemented
-//
-//                int numberOfSidePeaks = 10;
-//
-//                // if profile mode, add some additional "profile mode looking" peaks before the peak
-//                if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
-//                    for (int j=0; j < numberOfSidePeaks; j++) {
-//                        lPeaks.put(mzValue + (i * (new MassCalc().calculateMass("H") / (double) peptideCharge)) - 0.01*(numberOfSidePeaks-j), lIso.getPercMax()[i] * j*10);
-//                    }
-//                }
+//                      @TODO: refine the adding of additional peaks
+
+                int numberOfSidePeaks = 10;
+
+                // if profile mode, add some additional "profile mode looking" peaks before the peak
+                if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
+                    for (int j=0; j < numberOfSidePeaks; j++) {
+                        lPeaks.put(mzValue + (i * (new MassCalc().calculateMass("H") / (double) peptideCharge)) - 0.01*(numberOfSidePeaks-j), lIso.getPercMax()[i] * j*10);
+                    }
+                }
 
                 lPeaks.put(mzValue + (i * (new MassCalc().calculateMass("H") / (double) peptideCharge)), lIso.getPercMax()[i] * 100);
 
-//                @TODO: remove when propper profile isotopic distribution has been implemented
-//
-//                // if profile mode, add some additional "profile mode looking" peaks before the peak
-//                if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
-//                    for (int j=1; j <= numberOfSidePeaks; j++) {
-//                        lPeaks.put(mzValue + (i * (new MassCalc().calculateMass("H") / (double) peptideCharge)) + 0.01*j, lIso.getPercMax()[i] * (100 - j*10));
-//                    }
-//                }
+//                      @TODO: refine the adding of additional peaks
+
+                // if profile mode, add some additional "profile mode looking" peaks before the peak
+                if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
+                    for (int j=1; j <= numberOfSidePeaks; j++) {
+                        lPeaks.put(mzValue + (i * (new MassCalc().calculateMass("H") / (double) peptideCharge)) + 0.01*j, lIso.getPercMax()[i] * (100 - j*10));
+                    }
+                }
             }
         } catch (UnknownElementMassException ume) {
             logger.error(ume.getMessage(), ume);

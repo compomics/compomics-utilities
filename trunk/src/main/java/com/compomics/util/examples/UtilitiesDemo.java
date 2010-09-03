@@ -208,23 +208,25 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         peptideBColorJPanel.setBackground(new JButton().getBackground());
 
         try {
-            //check if we have to use label modifiers
-            String lLabelA = (String) silacLabelPeptideAJComboBox.getSelectedItem();
-            int lDiff = 0;
-            if(lLabelA.startsWith("+")){
-                lDiff = Integer.valueOf(lLabelA.substring(1));
+            // check if we have to use label modifiers
+            String labelPeptideA = (String) silacLabelPeptideAJComboBox.getSelectedItem();
+            int labelDifferencePeptideA = 0;
+
+            if (labelPeptideA.startsWith("+")) {
+                labelDifferencePeptideA = Integer.valueOf(labelPeptideA.substring(1));
             }
+
             // create the first isotopic distribution
             IsotopicDistributionPanel isotopicDistributionPanel =
                     new IsotopicDistributionPanel(peptideSequenceAJTextField.getText(),
-                    (Integer) chargePeptideAJSpinner.getValue(), false, lDiff); // @TODO: change to profile mode when this has been implemented?
+                    (Integer) chargePeptideAJSpinner.getValue(), true, labelDifferencePeptideA);
 
             // add the distribution to the table as well
             AASequenceImpl peptideSequence = isotopicDistributionPanel.getPeptideSequences().get(0);
             IsotopicDistribution lIso = peptideSequence.getIsotopicDistribution();
 
-            if(lDiff>0){
-                lIso.setLabelDifference(lDiff);
+            if (labelDifferencePeptideA > 0) {
+                lIso.setLabelDifference(labelDifferencePeptideA);
             }
 
             while (peptideAJXTable.getRowCount() > 0) {
@@ -246,28 +248,38 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             peptideAColorJPanel.setBackground(isotopicDistributionPanel.getAreaUnderCurveColors().get(0));
 
             // display mz and molecular composition of peptide
-            peptideAMzJTextField.setText("" + Util.roundDouble(peptideSequence.getMz((Integer) chargePeptideAJSpinner.getValue()), 4));
-            peptideACompositionJTextField.setText(peptideSequence.getMolecularFormula().toString());
+            peptideAMzJTextField.setText("" + Util.roundDouble(peptideSequence.getMz((Integer) chargePeptideAJSpinner.getValue()) + labelDifferencePeptideA, 4));
+
+            if (labelDifferencePeptideA > 0) {
+                peptideACompositionJTextField.setText(peptideSequence.getMolecularFormula().toString() + " + " + labelDifferencePeptideA + "n");
+            } else {
+                peptideACompositionJTextField.setText(peptideSequence.getMolecularFormula().toString());
+            }
 
             // add the second peptide if data has been inserted
             if (peptideSequenceBJTextField.getText().length() > 0) {
                 //check if we have to use label modifiers
-                String lLabelB = (String) silacLabelPeptideBJComboBox.getSelectedItem();
-                lDiff = 0;
-                if(lLabelB.startsWith("+")){
-                    lDiff = Integer.valueOf(lLabelB.substring(1));
+                String labelPeptideB = (String) silacLabelPeptideBJComboBox.getSelectedItem();
+
+                int labelDifferencePeptideB = 0;
+
+                if (labelPeptideB.startsWith("+")) {
+                    labelDifferencePeptideB = Integer.valueOf(labelPeptideB.substring(1));
                 }
-                
+
                 isotopicDistributionPanel.addAdditionalDataset(
                         peptideSequenceBJTextField.getText(),
-                        (Integer) chargePeptideBJSpinner.getValue(), Color.BLUE, new Color(85, 85, 255), lDiff);
+                        (Integer) chargePeptideBJSpinner.getValue(), Color.BLUE, new Color(85, 85, 255), labelDifferencePeptideB);
 
                 // add the distribution to the table as well
                 peptideSequence = isotopicDistributionPanel.getPeptideSequences().get(1);
+
                 lIso = peptideSequence.getIsotopicDistribution();
-                if(lDiff>0){
-                    lIso.setLabelDifference(lDiff);
+
+                if (labelDifferencePeptideB > 0) {
+                    lIso.setLabelDifference(labelDifferencePeptideB);
                 }
+
                 while (peptideBJXTable.getRowCount() > 0) {
                     ((DefaultTableModel) peptideBJXTable.getModel()).removeRow(0);
                 }
@@ -287,8 +299,13 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 peptideBColorJPanel.setBackground(isotopicDistributionPanel.getAreaUnderCurveColors().get(1));
 
                 // display mz and molecular composition of peptide
-                peptideBMzJTextField.setText("" + Util.roundDouble(peptideSequence.getMz((Integer) chargePeptideBJSpinner.getValue()), 4));
-                peptideBCompositionJTextField.setText(peptideSequence.getMolecularFormula().toString());
+                peptideBMzJTextField.setText("" + Util.roundDouble(peptideSequence.getMz((Integer) chargePeptideBJSpinner.getValue()) + labelDifferencePeptideB, 4));
+
+                if (labelDifferencePeptideB > 0) {
+                    peptideBCompositionJTextField.setText(peptideSequence.getMolecularFormula().toString() + " + " + labelDifferencePeptideB + "n");
+                } else {
+                    peptideBCompositionJTextField.setText(peptideSequence.getMolecularFormula().toString());
+                }
             } else {
                 // clear the results for peptide B
                 peptideBMzJTextField.setText("");
@@ -1161,7 +1178,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jLabel3.setText("NH2-");
 
         peptideSequenceAJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        peptideSequenceAJTextField.setText("PEPTIDE");
+        peptideSequenceAJTextField.setText("PEPTIDERPEPTIDER");
         peptideSequenceAJTextField.setMaximumSize(new java.awt.Dimension(2147483647, 22));
         peptideSequenceAJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -1170,7 +1187,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
 
         peptideSequenceBJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        peptideSequenceBJTextField.setText("TESTTEST");
+        peptideSequenceBJTextField.setText("PEPTIDERPEPTIDER");
         peptideSequenceBJTextField.setMaximumSize(new java.awt.Dimension(2147483647, 22));
         peptideSequenceBJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -1202,23 +1219,30 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         jLabel9.setText("Charge:");
 
-        jLabel10.setText("Label:");
+        jLabel10.setText("Neutrons:");
+        jLabel10.setToolTipText("<html>\nThe number of additional neutrons. <br>\nFor example due to SILAC labeling.\n</html>");
 
-        jLabel11.setText("Label:");
+        jLabel11.setText("Neutrons:");
+        jLabel11.setToolTipText("<html>\nThe number of additional neutrons. <br>\nFor example due to SILAC labeling.\n</html>");
 
-        silacLabelPeptideAJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "+1", "+2", "+3", "+4","+5", "+6","+7", "+8","+9", "+10" }));
-        silacLabelPeptideAJComboBox.addActionListener (new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                silacLabelPeptideAJComboBoxStateChanged(evt);
+        silacLabelPeptideAJComboBox.setMaximumRowCount(20);
+        silacLabelPeptideAJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10" }));
+        silacLabelPeptideAJComboBox.setSelectedIndex(2);
+        silacLabelPeptideAJComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                silacLabelPeptideAJComboBoxActionPerformed(evt);
             }
         });
 
-        silacLabelPeptideBJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "+1", "+2", "+3", "+4","+5", "+6","+7", "+8","+9", "+10" }));
-        silacLabelPeptideBJComboBox.addActionListener (new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                silacLabelPeptideBJComboBoxStateChanged(evt);
+        silacLabelPeptideBJComboBox.setMaximumRowCount(20);
+        silacLabelPeptideBJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10" }));
+        silacLabelPeptideBJComboBox.setSelectedIndex(5);
+        silacLabelPeptideBJComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                silacLabelPeptideBJComboBoxActionPerformed(evt);
             }
         });
+
         jLabel2.setText("Peptide B:");
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
@@ -1236,8 +1260,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jLabel5))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(peptideSequenceAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
-                    .add(peptideSequenceBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE))
+                    .add(peptideSequenceAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
+                    .add(peptideSequenceBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1Layout.createSequentialGroup()
@@ -2176,9 +2200,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         chargePeptideAJSpinner.setEnabled(peptideSequenceAJTextField.getText().trim().length() != 0);
         silacLabelPeptideAJComboBox.setEnabled(peptideSequenceAJTextField.getText().length() != 0);
 
-        chargePeptideBJSpinner.setEnabled(peptideSequenceAJTextField.getText().trim().length() != 0);
-        peptideSequenceBJTextField.setEnabled(peptideSequenceAJTextField.getText().trim().length() != 0);
-        silacLabelPeptideBJComboBox.setEnabled(peptideSequenceAJTextField.getText().length() != 0);
+        chargePeptideBJSpinner.setEnabled(peptideSequenceBJTextField.getText().trim().length() != 0);
+        peptideSequenceBJTextField.setEnabled(peptideSequenceBJTextField.getText().trim().length() != 0);
+        silacLabelPeptideBJComboBox.setEnabled(peptideSequenceBJTextField.getText().length() != 0);
 
         if (peptideSequenceAJTextField.getText().trim().length() != 0) {
             setUpIsotopicDistributionPanelDemo();
@@ -2319,9 +2343,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * Cleaves the current sequence according to the currently selected parameters 
      * and displays the results.
      */
-    private void updateInSilicoDigestion () {
+    private void updateInSilicoDigestion() {
 
-         // clear previous results from the peptide table
+        // clear previous results from the peptide table
         while (peptidesJXTable.getRowCount() > 0) {
             ((DefaultTableModel) peptidesJXTable.getModel()).removeRow(0);
         }
@@ -2435,6 +2459,26 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_peptidesJXTableKeyReleased
 
     /**
+     * Updates the isotopic distributions according to the current values
+     * if the user clicks changes the peptide charge.
+     *
+     * @param evt
+     */
+    private void silacLabelPeptideAJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_silacLabelPeptideAJComboBoxActionPerformed
+        setUpIsotopicDistributionPanelDemo();
+    }//GEN-LAST:event_silacLabelPeptideAJComboBoxActionPerformed
+
+    /**
+     * Updates the isotopic distributions according to the current values
+     * if the user clicks changes the peptide charge.
+     *
+     * @param evt
+     */
+    private void silacLabelPeptideBJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_silacLabelPeptideBJComboBoxActionPerformed
+        setUpIsotopicDistributionPanelDemo();
+    }//GEN-LAST:event_silacLabelPeptideBJComboBoxActionPerformed
+
+    /**
      * Openes the help dialog.
      *
      * @param urlAsString the URL (as a String) of the help file to display
@@ -2486,8 +2530,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 int currentCharIndex = i;
 
                 while (currentCharIndex + 10 < cleanProteinSequence.length() && currentCharIndex + 10 < (i + 50)) {
-                    sequenceTable += "<td height='20'><font size=2><a name=\"" +
-                            (currentCharIndex + 10) + ".\"></a>" + (currentCharIndex + 10) + ".</td>";
+                    sequenceTable += "<td height='20'><font size=2><a name=\""
+                            + (currentCharIndex + 10) + ".\"></a>" + (currentCharIndex + 10) + ".</td>";
                     currentCharIndex += 10;
                 }
 
@@ -2511,11 +2555,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             // highlight the covered and selected peptides
             if (selectedPeptide) {
-                currentCellSequence += "<font color=red>" + cleanProteinSequence.charAt(i-1) + "</font>";
+                currentCellSequence += "<font color=red>" + cleanProteinSequence.charAt(i - 1) + "</font>";
             } else if (coveredPeptide) {
-                currentCellSequence += "<font color=blue>" + cleanProteinSequence.charAt(i-1) + "</font>";
+                currentCellSequence += "<font color=blue>" + cleanProteinSequence.charAt(i - 1) + "</font>";
             } else {
-                currentCellSequence += "<font color=black>" + cleanProteinSequence.charAt(i-1) + "</font>";
+                currentCellSequence += "<font color=black>" + cleanProteinSequence.charAt(i - 1) + "</font>";
             }
 
             // add the sequence to the formatted sequence

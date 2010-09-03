@@ -96,11 +96,15 @@ public class Enzyme extends ExperimentObject {
     */
     public String getXTandemFormat() {
         String result = "";
-        result += "[";
-        for (Character aa : aminoAcidBefore) {
-            result += aa;
+        
+        if (aminoAcidBefore.size() > 0) {
+            result += "[";
+            for (Character aa : aminoAcidBefore) {
+                result += aa;
+            }
+            result += "]";
         }
-        result += "]";
+
         if (restrictionBefore.size() > 0) {
             result += "{";
             for (Character aa : restrictionBefore) {
@@ -108,12 +112,17 @@ public class Enzyme extends ExperimentObject {
             }
             result += "}";
         }
+
         result += "|";
-        result += "[";
-        for (Character aa : aminoAcidAfter) {
-            result += aa;
+
+        if (aminoAcidAfter.size() > 0) {
+            result += "[";
+            for (Character aa : aminoAcidAfter) {
+                result += aa;
+            }
+            result += "]";
         }
-        result += "]";
+
         if (restrictionAfter.size() > 0) {
             result += "{";
             for (Character aa : restrictionAfter) {
@@ -121,6 +130,7 @@ public class Enzyme extends ExperimentObject {
             }
             result += "}";
         }
+        
         return result;
     }
 }

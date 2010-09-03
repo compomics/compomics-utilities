@@ -25,6 +25,8 @@ import com.jgoodies.looks.plastic.theme.SkyKrupp;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -206,20 +208,30 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         peptideBColorJPanel.setBackground(new JButton().getBackground());
 
         try {
+            //check if we have to use label modifiers
+            String lLabelA = (String) silacLabelPeptideAJComboBox.getSelectedItem();
+            int lDiff = 0;
+            if(lLabelA.startsWith("+")){
+                lDiff = Integer.valueOf(lLabelA.substring(1));
+            }
             // create the first isotopic distribution
             IsotopicDistributionPanel isotopicDistributionPanel =
                     new IsotopicDistributionPanel(peptideSequenceAJTextField.getText(),
-                    (Integer) chargePeptideAJSpinner.getValue(), false); // @TODO: change to profile mode when this has been implemented?
+                    (Integer) chargePeptideAJSpinner.getValue(), false, lDiff); // @TODO: change to profile mode when this has been implemented?
 
             // add the distribution to the table as well
             AASequenceImpl peptideSequence = isotopicDistributionPanel.getPeptideSequences().get(0);
             IsotopicDistribution lIso = peptideSequence.getIsotopicDistribution();
 
+            if(lDiff>0){
+                lIso.setLabelDifference(lDiff);
+            }
+
             while (peptideAJXTable.getRowCount() > 0) {
                 ((DefaultTableModel) peptideAJXTable.getModel()).removeRow(0);
             }
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 15; i++) {
                 if (Util.roundDouble(lIso.getPercTot()[i], 2) > 0) {
 
                     ((DefaultTableModel) peptideAJXTable.getModel()).addRow(
@@ -239,19 +251,28 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             // add the second peptide if data has been inserted
             if (peptideSequenceBJTextField.getText().length() > 0) {
+                //check if we have to use label modifiers
+                String lLabelB = (String) silacLabelPeptideBJComboBox.getSelectedItem();
+                lDiff = 0;
+                if(lLabelB.startsWith("+")){
+                    lDiff = Integer.valueOf(lLabelB.substring(1));
+                }
+                
                 isotopicDistributionPanel.addAdditionalDataset(
                         peptideSequenceBJTextField.getText(),
-                        (Integer) chargePeptideBJSpinner.getValue(), Color.BLUE, new Color(85, 85, 255));
+                        (Integer) chargePeptideBJSpinner.getValue(), Color.BLUE, new Color(85, 85, 255), lDiff);
 
                 // add the distribution to the table as well
                 peptideSequence = isotopicDistributionPanel.getPeptideSequences().get(1);
                 lIso = peptideSequence.getIsotopicDistribution();
-
+                if(lDiff>0){
+                    lIso.setLabelDifference(lDiff);
+                }
                 while (peptideBJXTable.getRowCount() > 0) {
                     ((DefaultTableModel) peptideBJXTable.getModel()).removeRow(0);
                 }
 
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 15; i++) {
                     if (Util.roundDouble(lIso.getPercTot()[i], 2) > 0) {
 
                         ((DefaultTableModel) peptideBJXTable.getModel()).addRow(
@@ -1181,16 +1202,23 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         jLabel9.setText("Charge:");
 
-        jLabel10.setText("SILAC:");
+        jLabel10.setText("Label:");
 
-        jLabel11.setText("SILAC:");
+        jLabel11.setText("Label:");
 
-        silacLabelPeptideAJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Heavy", "Light" }));
-        silacLabelPeptideAJComboBox.setEnabled(false);
+        silacLabelPeptideAJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "+1", "+2", "+3", "+4","+5", "+6","+7", "+8","+9", "+10" }));
+        silacLabelPeptideAJComboBox.addActionListener (new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                silacLabelPeptideAJComboBoxStateChanged(evt);
+            }
+        });
 
-        silacLabelPeptideBJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Heavy", "Light" }));
-        silacLabelPeptideBJComboBox.setEnabled(false);
-
+        silacLabelPeptideBJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "+1", "+2", "+3", "+4","+5", "+6","+7", "+8","+9", "+10" }));
+        silacLabelPeptideBJComboBox.addActionListener (new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                silacLabelPeptideBJComboBoxStateChanged(evt);
+            }
+        });
         jLabel2.setText("Peptide B:");
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
@@ -2146,11 +2174,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void peptideSequenceAJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_peptideSequenceAJTextFieldKeyReleased
 
         chargePeptideAJSpinner.setEnabled(peptideSequenceAJTextField.getText().trim().length() != 0);
-        //silacLabelPeptideAJComboBox.setEnabled(peptideSequenceAJTextField.getText().length() == 0); // @TODO: Enable when SILAC is added...
+        silacLabelPeptideAJComboBox.setEnabled(peptideSequenceAJTextField.getText().length() != 0);
 
         chargePeptideBJSpinner.setEnabled(peptideSequenceAJTextField.getText().trim().length() != 0);
         peptideSequenceBJTextField.setEnabled(peptideSequenceAJTextField.getText().trim().length() != 0);
-        //silacLabelPeptideBJComboBox.setEnabled(peptideSequenceBJTextField.getText().length() == 0); // @TODO: Enable when SILAC is added...
+        silacLabelPeptideBJComboBox.setEnabled(peptideSequenceAJTextField.getText().length() != 0);
 
         if (peptideSequenceAJTextField.getText().trim().length() != 0) {
             setUpIsotopicDistributionPanelDemo();
@@ -2179,7 +2207,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void peptideSequenceBJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_peptideSequenceBJTextFieldKeyReleased
 
         chargePeptideBJSpinner.setEnabled(peptideSequenceBJTextField.getText().trim().length() != 0);
-        //silacLabelPeptideBJComboBox.setEnabled(peptideSequenceBJTextField.getText().length() == 0); // @TODO: Enable when SILAC is added...
+        silacLabelPeptideBJComboBox.setEnabled(peptideSequenceBJTextField.getText().length() != 0);
 
         if (peptideSequenceBJTextField.getText().trim().length() == 0) {
             // clear the results for peptide B
@@ -2216,6 +2244,26 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void chargePeptideBJSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chargePeptideBJSpinnerStateChanged
         setUpIsotopicDistributionPanelDemo();
     }//GEN-LAST:event_chargePeptideBJSpinnerStateChanged
+
+    /**
+     * Updates the isotopic distributions according to the current values
+     * if the user clicks changes the peptide charge.
+     *
+     * @param evt
+     */
+    private void silacLabelPeptideAJComboBoxStateChanged(ActionEvent evt) {
+        setUpIsotopicDistributionPanelDemo();
+    }
+
+    /**
+     * Updates the isotopic distributions according to the current values
+     * if the user clicks changes the peptide charge.
+     *
+     * @param evt
+     */
+    private void silacLabelPeptideBJComboBoxStateChanged(ActionEvent evt) {
+        setUpIsotopicDistributionPanelDemo();
+    }
 
     /**
      * Turns the profile spectrum mode on or off.

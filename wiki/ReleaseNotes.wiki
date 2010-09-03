@@ -3,5 +3,14 @@
 
 ----
 
+*Changes in compomics-utilties 3.0.20 (Sept. 3. 2010):*
+ * NEW FEATURE: SILAC labeling added to the isotopicDistribution calculation.
+ * FEATURE IMPROVEMENT: Updated the Isotopic Distribution Calculator Demo.
+ * BUG FIX: Fixed a bug in the return enzyme as a string for X!Tandem method. 
+
+----
+
 *Changes in compomics-utilties 3.0.18 (Sept. 2. 2010):*
  * First release of the revised compomics-utilties. Now including demos of some of the main features of the library.
+
+Download Count: 0

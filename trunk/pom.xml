@@ -11,7 +11,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>3.0.20</version.number>
+        <version.number>3.0.21</version.number>
         <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
@@ -82,6 +82,17 @@
 
     <!-- Build -->
     <build>
+
+        <!-- Copy the resources required during building -->
+        <resources>
+            <resource>
+                <directory>./</directory>
+                <includes>
+                    <include>compomics-utilities.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
         <!-- Plugins -->
         <plugins>
@@ -360,6 +371,23 @@
                     <groupId>com.jhlabs</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Used for exporting to svg, png, gif etc.-->
+        <dependency>
+            <groupId>batik</groupId>
+            <artifactId>batik-all</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>batik</groupId>
+            <artifactId>pdf-transcoder</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
         </dependency>
     </dependencies>
 

@@ -6,6 +6,7 @@
 package com.compomics.util.examples;
 
 import com.compomics.util.Util;
+import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
@@ -26,7 +27,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,6 +47,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
+import org.apache.batik.transcoder.TranscoderException;
 
 /**
  * This class serves as a demo of how the compomics-utilities library can be
@@ -98,6 +99,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     public UtilitiesDemo() {
         initComponents();
+
+        // set the title including version number
+        this.setTitle(this.getTitle() + " " + getVersion() + " - Demo");
 
         // insert the text in the information tab
         insertInformationTabText();
@@ -189,6 +193,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 Arrays.sort(allEnzymeNames);
                 enzymesJComboBox.setModel(new javax.swing.DefaultComboBoxModel(allEnzymeNames));
                 enzymesJComboBoxActionPerformed(null);
+
+                // select the first peptide in the list
+                if (peptidesJXTable.getRowCount() > 0) {
+                    peptidesJXTable.setRowSelectionInterval(0, 0);
+                    formatProteinSequence();
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "enzymes.txt not found...", "Error Setting Up In Silico Digestion Demo", JOptionPane.ERROR_MESSAGE);
             }
@@ -705,7 +715,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jRadioButton1.setText("jRadioButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Compomics-Utilities Demo");
+        setTitle("Compomics-Utilities");
         setMinimumSize(new java.awt.Dimension(1000, 0));
 
         jTabbedPane.setMinimumSize(new java.awt.Dimension(235, 102));
@@ -1953,11 +1963,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Closes the demo and terminates the program.
-     *
-     * @param evt
-     */
-    /**
      * Updates the ion coverage annotations.
      *
      * @param evt
@@ -1977,7 +1982,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             currentSpectrumPanel.validate();
             currentSpectrumPanel.repaint();
         }
-
 }//GEN-LAST:event_aIonsJCheckBoxActionPerformed
 
     /**
@@ -2732,6 +2736,25 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 new UtilitiesDemo();
             }
         });
+    }
+
+    /**
+     * Retrieves the version number set in the pom file.
+     *
+     * @return the version number of compomics-utilities
+     */
+    public String getVersion() {
+
+        java.util.Properties p = new java.util.Properties();
+
+        try {
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("compomics-utilities.properties");
+            p.load(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return p.getProperty("compomics-utilities.version");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox H2OIonsJCheckBox;

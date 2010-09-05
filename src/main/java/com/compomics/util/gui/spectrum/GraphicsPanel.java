@@ -24,6 +24,12 @@ import java.util.ArrayList;
 abstract class GraphicsPanel extends JPanel {
 
     /**
+     * If set to true, all y data is assumed to be positive. This adds a white
+     * polygon under the y-axis hiding any polygon data lines that crosses
+     * (slightly) below the y-axis.
+     */
+    protected boolean yDataIsPositive = true;
+    /**
      * The opacity of the spectra. 0 means completely see-through, 1 means
      * opaque.
      */
@@ -103,9 +109,9 @@ abstract class GraphicsPanel extends JPanel {
      */
     protected ArrayList<Color> iAreaUnderCurveColor = new ArrayList<Color>();
     /**
-     * Size for the point on a chromatogram.
+     * Size for the point on a polygon.
      */
-    protected Integer iPointSize = 1;
+    protected Integer iPointSize = 0;
     /**
      * The spectrum or chromatogram filename.
      */
@@ -330,6 +336,25 @@ abstract class GraphicsPanel extends JPanel {
      * given.
      */
     protected int iMSLevel = 0;
+
+    /**
+     * Returns true of all the y-data is to be assumed as positive.
+     *
+     * @return true of all the y-data is to be assumed as positive
+     */
+    public boolean yDataIsPositive() {
+        return yDataIsPositive;
+    }
+
+    /**
+     * Set to true of all y data values can be assume to be positive.
+     *
+     * @param true of all y data values can be assume to be positive
+     */
+    public void setYDataIsPositive(boolean yDataIsPositive) {
+        this.yDataIsPositive = yDataIsPositive;
+    }
+
     /**
      * An enumerator of the possible GraphicsPanel types
      */
@@ -488,8 +513,7 @@ abstract class GraphicsPanel extends JPanel {
                 g.drawLine(iStartXLoc, iStartYLoc - 2, iStartXLoc, iStartYLoc + 2);
                 g.drawLine(iDragXLoc, iStartYLoc - 2, iDragXLoc, iStartYLoc + 2);
             }
-            // @TODO scale.
-            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
+            
             if(currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram) ||
                     currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum) ||
                     currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)){
@@ -559,6 +583,10 @@ abstract class GraphicsPanel extends JPanel {
                     }
                 }
             }
+
+            // @TODO scale.
+            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
+            repaint();
         }
     }
 
@@ -977,6 +1005,15 @@ abstract class GraphicsPanel extends JPanel {
 
         // X-axis.
         int xAxis = (this.getWidth() - (2 * tempPadding));
+
+        // hide any data going slightly below the y-axis
+        if (yDataIsPositive) {
+            Color currentColor = g.getColor();
+            g.setColor(Color.WHITE);
+            g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, 20);
+            g.setColor(currentColor);
+        }
+
         g.drawLine(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, this.getHeight() - tempPadding);
 
         // Arrowhead on X-axis.

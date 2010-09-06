@@ -1017,7 +1017,7 @@ abstract class GraphicsPanel extends JPanel {
         g.drawLine(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, this.getHeight() - tempPadding);
 
         // Arrowhead on X-axis.
-        g.fillPolygon(new int[]{this.getWidth() - tempPadding - 5, this.getWidth() - tempPadding - 5, this.getWidth() - tempPadding},
+        g.fillPolygon(new int[]{this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding + 2},
                 new int[]{this.getHeight() - tempPadding + 5, this.getHeight() - tempPadding - 5, this.getHeight() - tempPadding},
                 3);
 
@@ -1035,7 +1035,7 @@ abstract class GraphicsPanel extends JPanel {
 
         // Arrowhead on Y axis.
         g.fillPolygon(new int[]{tempPadding - 5, tempPadding + 5, tempPadding},
-                new int[]{(tempPadding / 2) + 5, (tempPadding / 2) + 5, tempPadding / 2},
+                new int[]{(tempPadding / 2) + 3, (tempPadding / 2) + 3, tempPadding / 2-2},
                 3);
 
         // Y-axis label

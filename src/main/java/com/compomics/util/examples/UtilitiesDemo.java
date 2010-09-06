@@ -6,7 +6,6 @@
 package com.compomics.util.examples;
 
 import com.compomics.util.Util;
-import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
@@ -47,7 +46,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
-import org.apache.batik.transcoder.TranscoderException;
 
 /**
  * This class serves as a demo of how the compomics-utilities library can be

@@ -101,12 +101,13 @@ public class Util {
     }
 
     /**
-     * Draws the selected component into the provided SVGGraphics2D object.
+     * Draws the selected component (assumed to be a Component) into the provided
+     * SVGGraphics2D object.
      *
      * @param component
      * @param bounds
      */
-    private static SVGGraphics2D drawSvgGraphics(Component component, Rectangle bounds) {
+    private static SVGGraphics2D drawSvgGraphics(Object component, Rectangle bounds) {
 
         // Get a SVGDOMImplementation and create an XML document
         DOMImplementation domImpl = SVGDOMImplementation.getDOMImplementation();
@@ -120,8 +121,8 @@ public class Util {
         // draw the panel in the SVG generator
 //        if (component instanceof JFreeChart) {    // @TODO: re-add the JFreeChart support?
 //            ((JFreeChart) component).draw(svgGenerator, bounds);
-//        } else if (component instanceof JComponent) {
-            component.paintAll(svgGenerator);
+//        } else if (component instanceof Component) {
+            ((Component) component).paintAll(svgGenerator);
 //        }
 
         return svgGenerator;

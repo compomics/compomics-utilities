@@ -14,25 +14,25 @@ import java.io.Serializable;
 public abstract class ExperimentObject implements Serializable {
 
     /**
-     * @TODO: JavaDoc Missing
+     * Map containing user refinement parameters
      */
     private HashMap<String, Object> urParams = new HashMap<String, Object>();
 
     /**
-     * @TODO: JavaDoc Missing
+     * Method to add a user refinement parameter
      *
-     * @param parameter
-     * @param value
+     * @param parameter The parameter
+     * @param value     The associated value
      */
     public void addUrParam(UrParameter parameter, Object value) {
         urParams.put(parameter.getFamilyName() + "_" + parameter.getIndex(), value);
     }
 
     /**
-     * @TODO: JavaDoc Missing
+     * Method which returns the refinement parameter
      *
-     * @param parameter
-     * @return
+     * @param parameter the desired parameter
+     * @return          the value stored. Null if not found.
      */
     public Object getUrParam(UrParameter parameter) {
         return urParams.get(parameter.getFamilyName() + "_" + parameter.getIndex());

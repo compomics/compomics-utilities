@@ -347,9 +347,9 @@ abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Set to true of all y data values can be assume to be positive.
+     * Set to true of all y data values can be assumed to be positive.
      *
-     * @param true of all y data values can be assume to be positive
+     * @param yDataIsPositive true of all y data values can be assumed to be positive
      */
     public void setYDataIsPositive(boolean yDataIsPositive) {
         this.yDataIsPositive = yDataIsPositive;

@@ -129,11 +129,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jPanel6" pref="1059" max="32767" attributes="2"/>
-                                  <Component id="jPanel7" alignment="1" pref="1059" max="32767" attributes="2"/>
-                              </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="spectraJPanel" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="ionSelectionJPanel" min="-2" max="-2" attributes="1"/>
                           </Group>
@@ -152,12 +149,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jPanel6" pref="285" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel7" pref="284" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="ionSelectionJPanel" max="32767" attributes="3"/>
+                          <Component id="spectraJPanel" max="32767" attributes="0"/>
+                          <Component id="ionSelectionJPanel" alignment="0" max="32767" attributes="3"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -182,32 +175,35 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jSeparator8" linkSize="4" alignment="2" min="-2" pref="48" max="-2" attributes="1"/>
-                              <Component id="jSeparator7" linkSize="4" alignment="2" min="-2" pref="48" max="-2" attributes="1"/>
-                              <Component id="jSeparator6" linkSize="4" alignment="2" min="-2" pref="48" max="-2" attributes="1"/>
-                              <Component id="jSeparator4" linkSize="4" alignment="2" min="-2" pref="48" max="-2" attributes="1"/>
+                              <Component id="jSeparator9" alignment="0" pref="69" max="32767" attributes="0"/>
+                              <Component id="jSeparator5" alignment="0" pref="69" max="32767" attributes="0"/>
+                              <Component id="jSeparator8" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
+                              <Component id="jSeparator7" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
+                              <Component id="jSeparator6" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
+                              <Component id="jSeparator4" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
                               <Component id="otherIonsJCheckBox" linkSize="1" alignment="2" min="-2" pref="65" max="-2" attributes="1"/>
                               <Component id="NH3IonsJCheckBox" linkSize="1" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="H2OIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
-                              <Component id="jSeparator3" linkSize="4" alignment="2" min="-2" pref="48" max="-2" attributes="1"/>
+                              <Component id="jSeparator3" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
                               <Component id="chargeOverTwoJCheckBox" linkSize="1" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="chargeTwoJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="chargeOneJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
-                              <Component id="jSeparator2" linkSize="4" alignment="2" min="-2" pref="37" max="-2" attributes="1"/>
+                              <Component id="jSeparator2" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
                               <Component id="zIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="yIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="xIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
-                              <Component id="jSeparator1" linkSize="4" alignment="2" min="-2" pref="69" max="-2" attributes="1"/>
+                              <Component id="jSeparator1" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
                               <Component id="aIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="bIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="cIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="profileSpectrumJCheckBox" linkSize="1" alignment="0" min="-2" pref="65" max="-2" attributes="1"/>
                               <Component id="linkedSpectraJCheckBox" linkSize="1" alignment="0" min="-2" pref="65" max="-2" attributes="1"/>
+                              <Component id="exportJButton" alignment="0" pref="69" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -244,19 +240,25 @@
                           <Component id="NH3IonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="otherIonsJCheckBox" linkSize="5" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Component id="jSeparator4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jSeparator6" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Component id="profileSpectrumJCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Component id="jSeparator8" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jSeparator7" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Component id="linkedSpectraJCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="79" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="jSeparator5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jSeparator9" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="exportJButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="72" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -512,6 +514,19 @@
                     </Property>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JSeparator" name="jSeparator5">
+                </Component>
+                <Component class="javax.swing.JSeparator" name="jSeparator9">
+                </Component>
+                <Component class="javax.swing.JButton" name="exportJButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Export"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Export the spectra to a PDF file."/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportJButtonActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JLabel" name="spectrumPanelInfoJLabel">
@@ -537,101 +552,123 @@
                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spectrumPanelHelpJLabelMouseExited"/>
               </Events>
             </Component>
-            <Container class="javax.swing.JPanel" name="jPanel6">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="NH2-LC&lt;Cmm*&gt;TVATLR-COOH"/>
-                  </Border>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[1050, 266]"/>
-                </Property>
-              </Properties>
+            <Container class="javax.swing.JPanel" name="spectraJPanel">
 
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spectrumAJPanel" pref="1027" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jPanel7" alignment="0" pref="1059" max="32767" attributes="2"/>
+                      <Component id="jPanel6" alignment="1" pref="1059" max="32767" attributes="2"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spectrumAJPanel" pref="236" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jPanel6" pref="285" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="jPanel7" pref="284" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="spectrumAJPanel">
+                <Container class="javax.swing.JPanel" name="jPanel7">
                   <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                    </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-                        <EtchetBorder/>
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="NH2-FQNALLVR-COOH"/>
                       </Border>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[1050, 265]"/>
                     </Property>
                   </Properties>
 
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spectrumBJPanel" pref="1027" max="32767" attributes="2"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spectrumBJPanel" pref="235" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Container class="javax.swing.JPanel" name="spectrumBJPanel">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                            <EtchetBorder/>
+                          </Border>
+                        </Property>
+                      </Properties>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                    </Container>
+                  </SubComponents>
                 </Container>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="jPanel7">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="NH2-FQNALLVR-COOH"/>
-                  </Border>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[1050, 265]"/>
-                </Property>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spectrumBJPanel" pref="1027" max="32767" attributes="2"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spectrumBJPanel" pref="235" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JPanel" name="spectrumBJPanel">
+                <Container class="javax.swing.JPanel" name="jPanel6">
                   <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                    </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-                        <EtchetBorder/>
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="NH2-LC&lt;Cmm*&gt;TVATLR-COOH"/>
                       </Border>
+                    </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[1050, 266]"/>
                     </Property>
                   </Properties>
 
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spectrumAJPanel" pref="1027" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spectrumAJPanel" pref="236" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Container class="javax.swing.JPanel" name="spectrumAJPanel">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                            <EtchetBorder/>
+                          </Border>
+                        </Property>
+                      </Properties>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                    </Container>
+                  </SubComponents>
                 </Container>
               </SubComponents>
             </Container>

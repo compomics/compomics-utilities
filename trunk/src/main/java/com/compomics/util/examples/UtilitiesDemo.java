@@ -6,6 +6,7 @@
 package com.compomics.util.examples;
 
 import com.compomics.util.Util;
+import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
@@ -14,8 +15,10 @@ import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.IsotopicDistributionPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
+import com.compomics.util.io.FilenameExtensionFilter;
 import com.compomics.util.io.MascotEnzymeReader;
 import com.compomics.util.io.PklFile;
+import com.compomics.util.io.filefilters.PdfFileFilter;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Protein;
@@ -40,12 +43,15 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.batik.transcoder.TranscoderException;
 
 /**
  * This class serves as a demo of how the compomics-utilities library can be
@@ -629,12 +635,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jSeparator8 = new javax.swing.JSeparator();
         profileSpectrumJCheckBox = new javax.swing.JCheckBox();
         linkedSpectraJCheckBox = new javax.swing.JCheckBox();
+        jSeparator5 = new javax.swing.JSeparator();
+        jSeparator9 = new javax.swing.JSeparator();
+        exportJButton = new javax.swing.JButton();
         spectrumPanelInfoJLabel = new javax.swing.JLabel();
         spectrumPanelHelpJLabel = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        spectrumAJPanel = new javax.swing.JPanel();
+        spectraJPanel = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         spectrumBJPanel = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        spectrumAJPanel = new javax.swing.JPanel();
         chromatogramJPanel = new javax.swing.JPanel();
         chromatogramPanelInfoJLabel = new javax.swing.JLabel();
         chromatogramPanelHelpJLabel = new javax.swing.JLabel();
@@ -901,34 +911,45 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         linkedSpectraJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
         linkedSpectraJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
 
+        exportJButton.setText("Export");
+        exportJButton.setToolTipText("Export the spectra to a PDF file.");
+        exportJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportJButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout ionSelectionJPanelLayout = new org.jdesktop.layout.GroupLayout(ionSelectionJPanel);
         ionSelectionJPanel.setLayout(ionSelectionJPanelLayout);
         ionSelectionJPanelLayout.setHorizontalGroup(
             ionSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, ionSelectionJPanelLayout.createSequentialGroup()
+            .add(ionSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(ionSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jSeparator9, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                    .add(jSeparator5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                    .add(jSeparator8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                    .add(jSeparator7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                    .add(jSeparator6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                    .add(jSeparator4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, NH3IonsJCheckBox)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, H2OIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jSeparator3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, chargeOverTwoJCheckBox)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, chargeTwoJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, chargeOneJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jSeparator2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, zIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, yIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, xIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.CENTER, jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 69, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, aIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, bIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, cIonsJCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .add(profileSpectrumJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(exportJButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -969,19 +990,25 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(NH3IonsJCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(profileSpectrumJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(exportJButton)
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         ionSelectionJPanelLayout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, otherIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
@@ -1002,30 +1029,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 spectrumPanelHelpJLabelMouseExited(evt);
             }
         });
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("NH2-LC<Cmm*>TVATLR-COOH"));
-        jPanel6.setPreferredSize(new java.awt.Dimension(1050, 266));
-
-        spectrumAJPanel.setBackground(new java.awt.Color(255, 255, 255));
-        spectrumAJPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        spectrumAJPanel.setLayout(new javax.swing.BoxLayout(spectrumAJPanel, javax.swing.BoxLayout.LINE_AXIS));
-
-        org.jdesktop.layout.GroupLayout jPanel6Layout = new org.jdesktop.layout.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1027, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                .addContainerGap())
-        );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("NH2-FQNALLVR-COOH"));
         jPanel7.setPreferredSize(new java.awt.Dimension(1050, 265));
@@ -1051,6 +1054,45 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("NH2-LC<Cmm*>TVATLR-COOH"));
+        jPanel6.setPreferredSize(new java.awt.Dimension(1050, 266));
+
+        spectrumAJPanel.setBackground(new java.awt.Color(255, 255, 255));
+        spectrumAJPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        spectrumAJPanel.setLayout(new javax.swing.BoxLayout(spectrumAJPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        org.jdesktop.layout.GroupLayout jPanel6Layout = new org.jdesktop.layout.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1027, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        org.jdesktop.layout.GroupLayout spectraJPanelLayout = new org.jdesktop.layout.GroupLayout(spectraJPanel);
+        spectraJPanel.setLayout(spectraJPanelLayout);
+        spectraJPanelLayout.setHorizontalGroup(
+            spectraJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
+        );
+        spectraJPanelLayout.setVerticalGroup(
+            spectraJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(spectraJPanelLayout.createSequentialGroup()
+                .add(jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout spectrumJPanelLayout = new org.jdesktop.layout.GroupLayout(spectrumJPanel);
         spectrumJPanel.setLayout(spectrumJPanelLayout);
         spectrumJPanelLayout.setHorizontalGroup(
@@ -1058,10 +1100,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(spectrumJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(spectrumJPanelLayout.createSequentialGroup()
-                        .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
-                            .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumJPanelLayout.createSequentialGroup()
+                        .add(spectraJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumJPanelLayout.createSequentialGroup()
@@ -1075,10 +1115,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(spectrumJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(spectrumJPanelLayout.createSequentialGroup()
-                        .add(jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
+                    .add(spectraJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -2481,7 +2518,58 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_silacLabelPeptideBJComboBoxActionPerformed
 
     /**
-     * Openes the help dialog.
+     * Export the spectra to a PDF file. To export to a different format see
+     * the hints in the code. Supported formats are found in the ImageType
+     * enum. To export other compoents change the input to the exportComponent
+     * method.
+     * 
+     * @param evt
+     */
+    private void exportJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportJButtonActionPerformed
+
+        JFileChooser chooser = new JFileChooser("user.home");
+        chooser.setFileFilter(new PdfFileFilter()); // change if exporting to a different format
+
+        int selection = chooser.showSaveDialog(this);
+
+        if (selection == JFileChooser.APPROVE_OPTION) {
+            try {
+                String selectedFile = chooser.getSelectedFile().getAbsolutePath();
+
+                if (!selectedFile.endsWith(ImageType.PDF.getExtension())) { // change if exporting to a different format
+                    selectedFile += ImageType.PDF.getExtension();
+                }
+
+                boolean saveFile = true;
+
+                if (new File(selectedFile).exists()) {
+                    int option = JOptionPane.showConfirmDialog(this,
+                            "The file " + selectedFile + " already exists. Overwrite?",
+                            "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                    if (option != JOptionPane.YES_OPTION) {
+                        saveFile = false;
+                    }
+                }
+
+                if (saveFile) {
+                    setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+                    Util.exportComponent(spectraJPanel, spectraJPanel.getBounds(), new File(selectedFile), ImageType.PDF); // change if exporting to a different format
+                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    JOptionPane.showMessageDialog(this, "Spectra saved to " + selectedFile, "Spectra Saved", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Unable to export spectra: " + e.getMessage(), "Error Exporting Spectra", JOptionPane.INFORMATION_MESSAGE);
+            } catch (TranscoderException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Unable to export spectra: " + e.getMessage(), "Error Exporting Spectra", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_exportJButtonActionPerformed
+
+    /**
+     * Opens the help dialog.
      *
      * @param urlAsString the URL (as a String) of the help file to display
      */
@@ -2770,6 +2858,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JLabel chromatogramPanelHelpJLabel;
     private javax.swing.JLabel chromatogramPanelInfoJLabel;
     private javax.swing.JComboBox enzymesJComboBox;
+    private javax.swing.JButton exportJButton;
     private javax.swing.JLabel inSilicoDigestionHelpJLabel;
     private javax.swing.JEditorPane informationJEditorPane;
     private javax.swing.JPanel informationJPanel;
@@ -2819,9 +2908,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JCheckBox linkedSpectraJCheckBox;
     private javax.swing.JSpinner lowerMassJSpinner;
@@ -2854,6 +2945,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JComboBox silacLabelPeptideAJComboBox;
     private javax.swing.JComboBox silacLabelPeptideBJComboBox;
     private javax.swing.JTextField siteJTextField;
+    private javax.swing.JPanel spectraJPanel;
     private javax.swing.JPanel spectrumAJPanel;
     private javax.swing.JPanel spectrumBJPanel;
     private javax.swing.JPanel spectrumJPanel;

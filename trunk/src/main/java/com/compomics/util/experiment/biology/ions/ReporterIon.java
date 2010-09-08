@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.quantification.QuantificationMethod;
 
 /**
  * This class models a reporter ion.
@@ -76,9 +77,13 @@ public class ReporterIon extends Ion {
      */
     public static final int TMT5 = 131;
     /**
-     * ion index according to the static fields
+     * ion index according to the static fields or user definition
      */
     private int index;
+    /**
+     * ion name for user defined ions
+      */
+    private String name = null;
 
     /**
      * Constructor for a reporter ion
@@ -88,6 +93,19 @@ public class ReporterIon extends Ion {
         this.index = index;
         this.familyType = Ion.REPORTER_ION;
         setReferenceMass();
+    }
+
+    /**
+     * Constructor for a user-defined reporter ion
+     * @param index index of the reporter ion (for user-defined ions avoid static fields index)
+     * @param name  name of the reporter ion
+     * @param mass  theoretic mass of the reporter ion
+     */
+    public ReporterIon(int index, String name, double mass) {
+        this.index = index;
+        this.familyType = Ion.REPORTER_ION;
+        this.name = name;
+        this.theoreticMass = mass;
     }
 
     /**
@@ -131,6 +149,9 @@ public class ReporterIon extends Ion {
             case TMT5:
                 return "TMT 5";
             default:
+                if (name != null) {
+                    return name;
+                }
                 return "unknown";
         }
     }

@@ -3,10 +3,22 @@
 
 ----
 
+*Changes in compomics-utilties 3.0.21 (Sept. 8. 2010):*
+ * NEW FEATURE: Added methods for exporting components to different figure formats (png,
+pdf, svg etc). 
+ * NEW FEATURE: Added an export to PDF example to the SpectrumPanel demo.
+ * NEW FEATURE: And added lots of proteomics related file filters.
+ * FEATURE IMPROVEMENT: Made visual improvements to the GraphicsPanel to better support exports to high resolution figure formats. 
+ * FEATURE IMPROVEMENT: Extended the isotopicDistribution demo help text. 
+
+----
+
 *Changes in compomics-utilties 3.0.20 (Sept. 3. 2010):*
  * NEW FEATURE: SILAC labeling added to the isotopicDistribution calculation.
  * FEATURE IMPROVEMENT: Updated the Isotopic Distribution Calculator Demo.
  * BUG FIX: Fixed a bug in the return enzyme as a string for X!Tandem method. 
+
+Download Count: 0
 
 ----
 

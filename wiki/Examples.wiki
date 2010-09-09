@@ -18,7 +18,7 @@
 
 (under construction)
 
-[#How_to_use_compomics-utilities Top of page]
+[#Contents: Top of page]
 
 ----
 
@@ -26,7 +26,7 @@
 
 (under construction)
 
-[#How_to_use_compomics-utilities Top of page]
+[#Contents: Top of page]
 
 ----
 
@@ -34,7 +34,7 @@
 
 (under construction)
 
-[#How_to_use_compomics-utilities Top of page]
+[#Contents: Top of page]
 
 ----
 
@@ -42,7 +42,7 @@
 
 (under construction)
 
-[#How_to_use_compomics-utilities Top of page]
+[#Contents: Top of page]
 
 ----
 

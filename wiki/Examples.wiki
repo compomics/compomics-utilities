@@ -3,7 +3,7 @@
 
 ----
 
-==Contents:==
+==Contents==
 
  * [#SpectrumPanel SpectrumPanel]
  * [#ChromatogramPanel ChromatogramPanel]
@@ -12,7 +12,6 @@
  * [#Proteomics_Experiment_Modelling Proteomics Experiment Modelling]
 
 ----
-
 
 ==SpectrumPanel==
 
@@ -52,7 +51,7 @@ To use the SpectrumPanel in your project do the following:
     parentJPanel.repaint();
 }}}
 
-[#Contents: Top of page]
+[#Contents Top of page]
 
 ----
 
@@ -79,7 +78,7 @@ To use the ChromatogramPanel in your project do the following:
             
 }}}
 
-[#Contents: Top of page]
+[#Contents Top of page]
 
 ----
 
@@ -87,7 +86,7 @@ To use the ChromatogramPanel in your project do the following:
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel_small.png]
 
-[#Contents: Top of page]
+[#Contents Top of page]
 
 ----
 
@@ -95,7 +94,7 @@ To use the ChromatogramPanel in your project do the following:
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel_small.png]
 
-[#Contents: Top of page]
+[#Contents Top of page]
 
 ----
 
@@ -103,6 +102,6 @@ To use the ChromatogramPanel in your project do the following:
 
 (under construction)
 
-[#Contents: Top of page]
+[#Contents Top of page]
 
 ----

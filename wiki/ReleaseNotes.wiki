@@ -3,12 +3,19 @@
 
 ----
 
+*Changes in compomics-utilties 3.0.22 (Sept. 9. 2010):
+ * BUG FIX: Fixed a bug in the _in silico_ digestion demo where the enzyme was always set to Trypsin.
+
+----
+
 *Changes in compomics-utilties 3.0.21 (Sept. 8. 2010):*
  * NEW FEATURE: Added methods for exporting components to different figure formats (png, pdf, svg etc). 
  * NEW FEATURE: Added an export to PDF example to the SpectrumPanel demo.
  * NEW FEATURE: And added lots of proteomics related file filters.
  * FEATURE IMPROVEMENT: Made visual improvements to the GraphicsPanel to better support exports to high resolution figure formats. 
  * FEATURE IMPROVEMENT: Extended the isotopicDistribution demo help text. 
+
+Download Count: 1
 
 ----
 

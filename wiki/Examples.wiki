@@ -5,8 +5,8 @@
 
 ==Contents:==
 
- * [#Spectrum_Panel Spectrum Panel]
- * [#Chromatogram_Panel Chromatogram Panel]
+ * [#SpectrumPanel SpectrumPanel]
+ * [#ChromatogramPanel ChromatogramPanel]
  * [#Isotopic_Distribution_Calculation Isotopic Distribution Calculation]
  * [#In_Silico_Protein_Digestion In Silico Protein Digestion]
  * [#Proteomics_Experiment_Modelling Proteomics Experiment Modelling]
@@ -14,20 +14,22 @@
 ----
 
 
-==Spectrum Panel==
+==SpectrumPanel==
 
-SpectrumPanel makes it straightforward to visualize and manipulate annotated MS spectra. Various ways of interacting with the spectra are supported, including zooming and peak picking.
+[http://compomics-utilities.googlecode.com/svn/wiki/images/SpectrumPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/SpectrumPanel_small.png]
+
+The SpectrumPanel makes it straightforward to visualize and manipulate annotated MS spectra. Various ways of interacting with the spectra are supported, including zooming and peak picking.
 
 To use the SpectrumPanel in your project do the following:
 
 {{{
     // create spectrum panel
     SpectrumPanel spectrumPanel = new SpectrumPanel(
-                "your mzValues",               // double [] of mz values 
-                "your intensity values",       // double [] of intensity values
-                "your precursor mz value",     // double with precursor mz 
-                "your precurorCharge",         // String precursor charge
-                "your file name");             // String spectrum file name  
+        "your mzValues",               // double [] of mz values 
+        "your intensity values",       // double [] of intensity values
+        "your precursor mz value",     // double with precursor mz 
+        "your precurorCharge",         // String precursor charge
+        "your file name");             // String spectrum file name  
              
 
     // set up the peak annotation
@@ -50,15 +52,27 @@ To use the SpectrumPanel in your project do the following:
     parentJPanel.repaint();
 }}}
 
-
-
 [#Contents: Top of page]
 
 ----
 
-==Chromatogram Panel==
+==ChromatogramPanel==
 
-(under construction)
+[http://compomics-utilities.googlecode.com/svn/wiki/images/ChromatogramPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/ChromatogramPanel_small.png]
+
+The ChromatogramPanel makes it straightforward to visualize and manipulate annotated chromatograms. Various ways of interacting with the chromatograms are supported, including zooming and peak picking.
+
+To use the ChromatogramPanel in your project do the following:
+
+{{{
+    // create the chromatogram panel
+    ChromatogramPanel chromatogramPanel = new ChromatogramPanel(
+        xAxisData,      // double[] with all the X axis data
+        yAxisData,      // double[] with all the y axis data
+        xAxisLabel,     // String with the label for the x-axis
+        yAxisLabel);    // String with the label for the y-axis
+            
+}}}
 
 [#Contents: Top of page]
 
@@ -66,7 +80,7 @@ To use the SpectrumPanel in your project do the following:
 
 ==Isotopic Distribution Calculation==
 
-(under construction)
+[http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel_small.png]
 
 [#Contents: Top of page]
 
@@ -74,7 +88,7 @@ To use the SpectrumPanel in your project do the following:
 
 ==In Silico Protein Digestion==
 
-(under construction)
+[http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel_small.png]
 
 [#Contents: Top of page]
 

@@ -27,8 +27,7 @@ To use the SpectrumPanl in yout project do the following:
                 "your intensity values",       // double [] of intensity values
                 "your precursor mz value",     // double with precursor mz 
                 "your precurorCharge",         // String precursor charge
-                "your file name",              // String spectrum file name
-                "max spectrum padding");       // int the sets the maximum padding size   
+                "your file name");             // String spectrum file name  
              
 
     // set up the peak annotation
@@ -36,7 +35,7 @@ To use the SpectrumPanl in yout project do the following:
     peakAnnotation.add(
         new DefaultSpectrumAnnotation(
             175.119495,                                // the mz value to annotate
-            -0.006822999999997137,                     // the mz error margin
+            -0.0068229,                                // the mz error margin
             SpectrumPanel.determineColorOfPeak("y1"),  // the annotation color
             "y1"));                                    // the annotation label
     ...

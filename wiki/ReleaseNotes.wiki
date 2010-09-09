@@ -3,7 +3,7 @@
 
 ----
 
-*Changes in compomics-utilties 3.0.22 (Sept. 9. 2010):
+*Changes in compomics-utilties 3.0.22 (Sept. 9. 2010):*
  * BUG FIX: Fixed a bug in the _in silico_ digestion demo where the enzyme was always set to Trypsin.
 
 ----

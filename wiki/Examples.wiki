@@ -16,7 +16,42 @@
 
 ==Spectrum Panel==
 
-(under construction)
+SpectrumPanel makes it straightforward to visualize and manipulate annotated MS spectra. Various ways of interacting with the spectra are supported, including zooming and peak picking.
+
+To use the SpectrumPanl in yout project do the following:
+
+{{{
+    // create spectrum panel
+    SpectrumPanel spectrumPanel = new SpectrumPanel(
+                "your mzValues",               // double [] of mz values 
+                "your intensity values",       // double [] of intensity values
+                "your precursor mz value",     // double with precursor mz 
+                "your precurorCharge",         // String precursor charge
+                "your file name",              // String spectrum file name
+                "max spectrum padding");       // int the sets the maximum padding size   
+             
+
+    // set up the peak annotation
+    Vector<DefaultSpectrumAnnotation> peakAnnotation = new Vector();
+    peakAnnotation.add(
+        new DefaultSpectrumAnnotation(
+            175.119495,                                // the mz value to annotate
+            -0.006822999999997137,                     // the mz error margin
+            SpectrumPanel.determineColorOfPeak("y1"),  // the annotation color
+            "y1"));                                    // the annotation label
+    ...
+
+
+    // add the annotations to the spectrum
+    spectrumPanel.setAnnotations(peakAnnotation);
+
+    // add the spectrum panel to the frame or dialog
+    parentJPanel.add(spectrumAPanel);
+    parentJPanel.validate();
+    parentJPanel.repaint();
+}}}
+
+
 
 [#Contents: Top of page]
 

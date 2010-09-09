@@ -3,7 +3,7 @@
 
 ----
 
-=How to use compomics-utilities=
+==How to use compomics-utilities==
 
  * [#Spectrum_Panel Spectrum Panel]
  * [#Chromatogram_Panel Chromatogram Panel]

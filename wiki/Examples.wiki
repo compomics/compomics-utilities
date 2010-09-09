@@ -11,6 +11,8 @@
  * [#In_Silico_Protein_Digestion In Silico Protein Digestion]
  * [#Proteomics_Experiment_Modelling Proteomics Experiment Modelling]
 
+For the complete source code of all demos see the [http://code.google.com/p/compomics-utilities/source/checkout Source tab]. The source of the demos are in the Examples package.
+
 ----
 
 ==Spectrum Panel==

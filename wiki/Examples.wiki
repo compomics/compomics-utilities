@@ -45,7 +45,7 @@ To use the SpectrumPanel in your project do the following:
     // add the annotations to the spectrum
     spectrumPanel.setAnnotations(peakAnnotation);
 
-    // add the spectrum panel to the frame or dialog
+    // add the spectrum panel to the parent frame or dialog
     parentJPanel.add(spectrumPanel);
     parentJPanel.validate();
     parentJPanel.repaint();
@@ -71,11 +71,10 @@ To use the ChromatogramPanel in your project do the following:
         xAxisLabel,     // String with the label for the x-axis
         yAxisLabel);    // String with the label for the y-axis
 
-    // add the chromatogram panel to the frame or dialog
+    // add the chromatogram panel to the parent frame or dialog
     parentJPanel.add(chromatogramPanel );
     parentJPanel.validate();
-    parentJPanel.repaint();
-            
+    parentJPanel.repaint();     
 }}}
 
 [#Contents Top of page]
@@ -85,6 +84,59 @@ To use the ChromatogramPanel in your project do the following:
 ==Isotopic Distribution Calculation==
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel_small.png]
+
+The Isotopic Distribution Calculation makes is simple to calculate and display the isotopic distribution of a peptide with different charges and labels.
+
+To use the ChromatogramPanel in your project do the following:
+
+{{{
+    // create an isotopic distribution panel
+    IsotopicDistributionPanel isotopicDistributionPanel =
+        new IsotopicDistributionPanel(
+            peptideSequence,       // peptide sequence 
+            charge,                // peptide charge 
+            true,                  // if true the peaks will be showned in a profile 
+                                   // like mode where support peaks are added in front 
+                                   // of and after the real peak
+            nrNeutrons);           // the number of neutrons to add due to a label
+
+    // calculate the isotopic distribution
+    AASequenceImpl peptideSequence = 
+        isotopicDistributionPanel.getPeptideSequences().get(0);
+    IsotopicDistribution lIso = peptideSequence.getIsotopicDistribution();
+
+    // add the neutrons
+    if (nrNeutrons> 0) {
+        lIso.setLabelDifference(nrNeutrons);
+    }
+
+    // display the distribution in a table
+    for (int i = 0; i < 15; i++) {
+        if (Util.roundDouble(lIso.getPercTot()[i], 2) > 0) {
+            ((DefaultTableModel) "your JTable".getModel()).addRow(
+                new Object[]{
+                    new Integer(i),
+                    Math.floor(lIso.getPercTot()[i] * 10000.0) / 100.0,
+                    Math.floor(lIso.getPercMax()[i] * 10000.0) / 100.0});
+        }
+    }
+
+    // get mz of peptide
+    peptideMz = Util.roundDouble(peptideSequence.getMz(charge + nrNeutrons, 4));
+
+    // get molecular composition of peptide
+    if (nrNeutrons > 0) {
+        peptideComposition= peptideSequence.getMolecularFormula().toString() + 
+            " + " + labelDifferencePeptideA + "n");
+    } else {
+        peptideComposition = peptideSequence.getMolecularFormula().toString());
+    }
+
+    // add the isotopic distribution panel to the parent frame or dialog
+    parentPanel.add(isotopicDistributionPanel);
+    parentPanel.validate();
+    parentPanel.repaint();
+}}}
 
 [#Contents Top of page]
 

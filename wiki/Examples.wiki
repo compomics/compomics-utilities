@@ -146,6 +146,53 @@ To use the ChromatogramPanel in your project do the following:
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel_small.png]
 
+The In Silico Protein Digestion can be used to _in silico_ digest a protein sequence, wither from a FASTA or a continous sequence of amino acids.
+
+To use the In Silico Protein Digestion in your project do the following:
+
+{{{
+    // locate the file with the enzyme details
+    InputStream in = this.getClass().getClassLoader().getResourceAsStream("enzymes.txt");
+
+    // get the enzyme details from file
+    MascotEnzymeReader mascotEnzymeReader = new MascotEnzymeReader(in);
+    String[] allEnzymeNames = mascotEnzymeReader.getEnzymeNames();
+
+    // select one of the enzymes to use
+    Enzyme selectedEnzyme = allEnzymeNames[0]; 
+    selectedEnzyme.setMiscleavages(2); // the allowed number of missed cleavages
+
+    // perform the digestion and display the results
+    Protein[] cleavedPeptides;
+
+    if (proteinSequenceJEditorPane.getText().startsWith(">")) { 
+
+        // for FASTA sequences
+        Protein protein = new Protein("your protein sequence");
+        cleavedPeptides = selectedEnzyme.cleave(protein);
+        cleanProteinSequence = protein.getSequence().getSequence();
+    } else {
+
+        // not FASTA format, assume sequence only, but remove white space and line shifts
+        String cleanProteinSequence = "your protein sequence";
+        cleanProteinSequence = cleanProteinSequence.replaceAll("\\W", "");
+        cleanProteinSequence = cleanProteinSequence.replaceAll("\n", "");
+        cleavedPeptides = selectedEnzyme.cleave(
+            new Protein(new String("no header"), cleanProteinSequence));
+    }
+
+    // cycle the peptides and add them to a peptide table
+    for (int i = 0; i < cleavedPeptides.length; i++) {
+        ((DefaultTableModel) peptidesJTable.getModel()).addRow(new Object[]{
+            cleavedPeptides[i].getSequence().getSequence(),
+            cleavedPeptides[i].getMass(),
+            cleavedPeptides[i].getHeader().getStartLocation(),
+            cleavedPeptides[i].getHeader().getEndLocation()});
+        }
+    }
+
+}}}
+
 [#Contents Top of page]
 
 ----

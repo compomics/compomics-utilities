@@ -18,7 +18,7 @@
 
 SpectrumPanel makes it straightforward to visualize and manipulate annotated MS spectra. Various ways of interacting with the spectra are supported, including zooming and peak picking.
 
-To use the SpectrumPanl in yout project do the following:
+To use the SpectrumPanel in your project do the following:
 
 {{{
     // create spectrum panel

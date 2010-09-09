@@ -5,15 +5,15 @@
 
 ==Contents==
 
- * [#SpectrumPanel SpectrumPanel]
- * [#ChromatogramPanel ChromatogramPanel]
+ * [#Spectrum_Panel Spectrum Panel]
+ * [#Chromatogram_Panel Chromatogram Panel]
  * [#Isotopic_Distribution_Calculation Isotopic Distribution Calculation]
  * [#In_Silico_Protein_Digestion In Silico Protein Digestion]
  * [#Proteomics_Experiment_Modelling Proteomics Experiment Modelling]
 
 ----
 
-==SpectrumPanel==
+==Spectrum Panel==
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/SpectrumPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/SpectrumPanel_small.png]
 
@@ -55,7 +55,7 @@ To use the SpectrumPanel in your project do the following:
 
 ----
 
-==ChromatogramPanel==
+==Chromatogram Panel==
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/ChromatogramPanel.png http://compomics-utilities.googlecode.com/svn/wiki/images/ChromatogramPanel_small.png]
 

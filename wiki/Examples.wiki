@@ -1,4 +1,6 @@
+#summary How to use compomics-utilities in your project.
 #labels Featured
+
 ----
 
 =How to use compomics-utilities=

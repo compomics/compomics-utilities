@@ -62,6 +62,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      *                          support peaks are added in front of and after the real peak
      *                          (note that this is unlike the profile modes of the other graphics
      *                          panels)
+     * @param labelDifference   the number of neutrons to add due to the label
      */
     public IsotopicDistributionPanel(String peptideSequence, Integer peptideCharge, boolean profileMode, int labelDifference) throws IOException {
 
@@ -107,6 +108,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      *
      * @param validatedPeptideSequence  the peptide to calcualte the isotopic distribution for
      * @param peptideCharge             the charge of the peptide
+     * @param labelDifference           the number of neutrons to add due to the label
      * @return                          the isotopic distribution as a spectrum
      */
     private IsotopicDistributionSpectrum calculateIsotopicDistribution(AASequenceImpl validatedPeptideSequence, Integer peptideCharge, int labedDifference) {
@@ -169,6 +171,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param peptideCharge         the charge of the peptide
      * @param dataPointAndLineColor the color to use for the data points and lines
      * @param areaUnderCurveColor   the color to use for the area under the curve
+     * @param labelDifference       the number of neutrons to add due to the label
      */
     public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor, int labedDifference) throws IOException {
 

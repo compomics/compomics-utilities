@@ -15,7 +15,6 @@ import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.IsotopicDistributionPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
-import com.compomics.util.io.FilenameExtensionFilter;
 import com.compomics.util.io.MascotEnzymeReader;
 import com.compomics.util.io.PklFile;
 import com.compomics.util.io.filefilters.PdfFileFilter;
@@ -49,7 +48,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.apache.batik.transcoder.TranscoderException;
 
@@ -196,6 +194,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 // order the enzymes and add to combobox
                 Arrays.sort(allEnzymeNames);
                 enzymesJComboBox.setModel(new javax.swing.DefaultComboBoxModel(allEnzymeNames));
+
+                // set the default enzyme to trypsin
+                enzymesJComboBox.setSelectedItem("Trypsin");
+
+                // update the results
                 enzymesJComboBoxActionPerformed(null);
 
                 // select the first peptide in the list
@@ -2392,9 +2395,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         // and clear the peptide sequence coverage details
         proteinSequenceCoverageJEditorPane.setText("");
         sequenceCoverageJLabel.setText("-");
-
-        // set the default enzyme to trypsin
-        enzymesJComboBox.setSelectedItem("Trypsin");
 
         // get the sequence and perform the digestion
         if (proteinSequenceJEditorPane.getText().length() > 0) {

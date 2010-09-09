@@ -173,7 +173,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param areaUnderCurveColor   the color to use for the area under the curve
      * @param labelDifference       the number of neutrons to add due to the label
      */
-    public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor, int labedDifference) throws IOException {
+    public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor, int labelDifference) throws IOException {
 
         // validate the peptide sequence
         AASequenceImpl validatedPeptideSequence = validatePeptideSequence(peptideSequence);
@@ -182,7 +182,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         peptideCharges.add(peptideCharge);
 
         IsotopicDistributionSpectrum isotopicDistributionSpectrum =
-                calculateIsotopicDistribution(validatedPeptideSequence, peptideCharge, labedDifference);
+                calculateIsotopicDistribution(validatedPeptideSequence, peptideCharge, labelDifference);
 
         this.processIsotopicDistribution(isotopicDistributionSpectrum, dataPointAndLineColor, areaUnderCurveColor);
 

@@ -1,13 +1,53 @@
 #summary How to use compomics-utilities.
 #labels Featured
 
-= Introduction =
+=How to use compomics-utilities=
 
-This page will contain examples of how you can use compomics-utilities in your code.
+ * [#Spectrum_Panel Spectrum Panel]
+ * [#Chromatogram_Panel Chromatogram Panel]
+ * [#Isotopic_Distribution_Calculation Isotopic Distribution Calculation]
+ * [#In_Silico_Protein_Digestion In Silico Protein Digestion]
+ * [#Proteomics_Experiment_Modelling Proteomics Experiment Modelling]
 
-(Under construction...)
+----
 
 
-= Examples =
+==Spectrum Panel==
 
-(Under construction...)
+(under construction)
+
+[#How_to_use_compomics-utilities Top of page]
+
+----
+
+==Chromatogram Panel==
+
+(under construction)
+
+[#How_to_use_compomics-utilities Top of page]
+
+----
+
+==Isotopic Distribution Calculation==
+
+(under construction)
+
+[#How_to_use_compomics-utilities Top of page]
+
+----
+
+==In Silico Protein Digestion==
+
+(under construction)
+
+[#How_to_use_compomics-utilities Top of page]
+
+----
+
+==Proteomics Experiment Modelling==
+
+(under construction)
+
+[#Spectrum_Panel Top of page]
+
+----

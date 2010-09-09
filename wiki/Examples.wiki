@@ -1,4 +1,6 @@
 #labels Featured
+----
+
 =How to use compomics-utilities=
 
  * [#Spectrum_Panel Spectrum Panel]

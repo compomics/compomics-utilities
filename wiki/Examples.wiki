@@ -153,30 +153,30 @@ The In Silico Protein Digestion can be used to _in silico_ digest a protein sequ
 To use the In Silico Protein Digestion in your project do the following:
 
 {{{
-    // locate the file with the enzyme details
-    InputStream in = this.getClass().getClassLoader().getResourceAsStream("enzymes.txt");
-
-    // get the enzyme details from file
-    MascotEnzymeReader mascotEnzymeReader = new MascotEnzymeReader(in);
-    String[] allEnzymeNames = mascotEnzymeReader.getEnzymeNames();
-
-    // select one of the enzymes to use
-    Enzyme selectedEnzyme = allEnzymeNames[0]; 
-    selectedEnzyme.setMiscleavages(2); // the allowed number of missed cleavages
+    // the protein sequence
+    String proteinSequence = "your protein sequence";
+  
+    // create the enzyme to use
+    Enzyme selectedEnzyme = new Enzyme(
+        aTitle,            // String with the title (or name) for this enzyme
+        aCleavage,         // String with the rersidus after which cleavage will occur 
+        aRestrict,         // String with the residus which inhibit cleavage
+        aPosition,         // String which should correspond to "Cterm" or "Nterm"
+        aMiscleavages);    // int with the number of supported missed cleavages
 
     // perform the digestion and display the results
     Protein[] cleavedPeptides;
 
-    if (proteinSequenceJEditorPane.getText().startsWith(">")) { 
+    if (proteinSequence.startsWith(">")) { 
 
         // for FASTA sequences
-        Protein protein = new Protein("your protein sequence");
+        Protein protein = new Protein(proteinSequence);
         cleavedPeptides = selectedEnzyme.cleave(protein);
         cleanProteinSequence = protein.getSequence().getSequence();
     } else {
 
         // not FASTA format, assume sequence only, but remove white space and line shifts
-        String cleanProteinSequence = "your protein sequence";
+        String cleanProteinSequence = proteinSequence;
         cleanProteinSequence = cleanProteinSequence.replaceAll("\\W", "");
         cleanProteinSequence = cleanProteinSequence.replaceAll("\n", "");
         cleavedPeptides = selectedEnzyme.cleave(

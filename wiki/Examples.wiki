@@ -219,7 +219,7 @@ By using this package one can easily load identifications from Mascot, OMSSA and
 }}}
 
 
-Enzymes used for OMSSA and X!TAndem are located in an external XML file and can be accessed:
+Enzymes used for OMSSA and X!Tandem are located in an external XML file and can be accessed:
 
 {{{
 	// load the enzymes
@@ -252,7 +252,7 @@ All experiment objects can be completed by user-defined parameters. They all ext
 		
 	// Get a user parameter back
 	yourObject.getUrParam(
-		theParameter);	// UrParameter, the key of the stored parameter
+		theParameter);	        // UrParameter, the key of the stored parameter
 }}}
 
 

@@ -201,7 +201,7 @@ To use the In Silico Protein Digestion in your project do the following:
 
 ==Proteomics Experiment Modelling==
 
-[http://compomics-utilities.googlecode.com/svn/wiki/images/experiment.bmp http://compomics-utilities.googlecode.com/svn/wiki/images/experiment.bmp]
+[http://compomics-utilities.googlecode.com/svn/wiki/images/experiment_small.png http://compomics-utilities.googlecode.com/svn/wiki/images/experiment_small.png]
 
 The experiment package provides a standard and adaptable model for proteomics experiment. It consists of four main parts: biology, mass spectrometry, identification and quantification.
 Using this package one can easily load identifications from Mascot, OMSSA and X!Tandem in a standard structure:

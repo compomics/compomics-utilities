@@ -1,0 +1,110 @@
+<xml>
+	<glycon>
+		<name> Deoxypentose </name>
+		<shortName> DeoxyPent </shortName>
+		<underivatisedMass> 116.04734 </underivatisedMass>
+		<permethylatedMass> 130.06299 </permethylatedMass>
+		<deuteromethylatedMass> 133.08182 </deuteromethylatedMass>
+		<peracetylatedMass> 158.05791 </peracetylatedMass>
+		<deuteroacetylatedMass> 161.07674 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Pentose </name>
+		<shortName> Pent </shortName>
+		<underivatisedMass> 132.04226 </underivatisedMass>
+		<permethylatedMass> 160.07356 </permethylatedMass>
+		<deuteromethylatedMass> 166.11122 </deuteromethylatedMass>
+		<peracetylatedMass> 216.06339 </peracetylatedMass>
+		<deuteroacetylatedMass> 222.10105 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Deoxyhexose </name>
+		<shortName> DeoxyHex </shortName>
+		<underivatisedMass> 146.05791 </underivatisedMass>
+		<permethylatedMass> 174.08921 </permethylatedMass>
+		<deuteromethylatedMass> 180.12687 </deuteromethylatedMass>
+		<peracetylatedMass> 230.07904 </peracetylatedMass>
+		<deuteroacetylatedMass> 236.11670 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Hexosamine </name>
+		<shortName> HexN </shortName>
+		<underivatisedMass> 161.06881 </underivatisedMass>
+		<permethylatedMass> 217.3141 </permethylatedMass>
+		<deuteromethylatedMass> 229.20673 </deuteromethylatedMass>
+		<peracetylatedMass> 287.10050 </peracetylatedMass>
+		<deuteroacetylatedMass> 296.15699 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Hexose </name>
+		<shortName> Hex </shortName>
+		<underivatisedMass> 162.05282 </underivatisedMass>
+		<permethylatedMass> 204.09977 </permethylatedMass>
+		<deuteromethylatedMass> 213.15626 </deuteromethylatedMass>
+		<peracetylatedMass> 288.08452 </peracetylatedMass>
+		<deuteroacetylatedMass> 297.14101 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Hexuronic acid </name>
+		<shortName> HexA </shortName>
+		<underivatisedMass> 176.03209 </underivatisedMass>
+		<permethylatedMass> 218.07904 </permethylatedMass>
+		<deuteromethylatedMass> 227.13553 </deuteromethylatedMass>
+		<peracetylatedMass> 260.05322 </peracetylatedMass>
+		<deuteroacetylatedMass> 266.09088 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Heptose </name>
+		<shortName> Hep </shortName>
+		<underivatisedMass> 192.06339 </underivatisedMass>
+		<permethylatedMass> 248.12599 </permethylatedMass>
+		<deuteromethylatedMass> 260.20131 </deuteromethylatedMass>
+		<peracetylatedMass> 360.10565 </peracetylatedMass>
+		<deuteroacetylatedMass> 372.18097 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> N-acetylhexosamine </name>
+		<shortName> HexNAc </shortName>
+		<underivatisedMass> 203.07937 </underivatisedMass>
+		<permethylatedMass> 245.12632 </permethylatedMass>
+		<deuteromethylatedMass> 254.18281 </deuteromethylatedMass>
+		<peracetylatedMass> 287.10050 </peracetylatedMass>
+		<deuteroacetylatedMass> 293.13816 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> 2-keto-3-deoxyoctonate </name>
+		<shortName> KDO </shortName>
+		<underivatisedMass> 220.05830 </underivatisedMass>
+		<permethylatedMass> 276.12090 </permethylatedMass>
+		<deuteromethylatedMass> 288.19622 </deuteromethylatedMass>
+		<peracetylatedMass> 346.09000 </peracetylatedMass>
+		<deuteroacetylatedMass> 355.14649 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> Muramic acid </name>
+		<shortName> Mur </shortName>
+		<underivatisedMass> 275.10050 </underivatisedMass>
+		<permethylatedMass> 317.14745 </permethylatedMass>
+		<deuteromethylatedMass> 326.20394 </deuteromethylatedMass>
+		<peracetylatedMass> 317.11107 </peracetylatedMass>
+		<deuteroacetylatedMass> 320.12990 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> N-acetylneuraminic acid </name>
+		<shortName> NeuAc </shortName>
+		<underivatisedMass> 291.09542 </underivatisedMass>
+		<permethylatedMass> 361.17367 </permethylatedMass>
+		<deuteromethylatedMass> 376.26782 </deuteromethylatedMass>
+		<peracetylatedMass> 417.12711 </peracetylatedMass>
+		<deuteroacetylatedMass> 426.18360 </deuteroacetylatedMass>
+	</glycon>
+	<glycon>
+		<name> N-glycolylneuraminic acid </name>
+		<shortName> NeuAc </shortName>
+		<underivatisedMass> 307.09033 </underivatisedMass>
+		<permethylatedMass> 391.18423 </permethylatedMass>
+		<deuteromethylatedMass> 409.29721 </deuteromethylatedMass>
+		<peracetylatedMass> 475.13259 </peracetylatedMass>
+		<deuteroacetylatedMass> 487.20791 </deuteroacetylatedMass>
+	</glycon>
+</xml>

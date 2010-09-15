@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.quantification.QuantificationMethod;
 
 /**
  * This class models a reporter ion.
@@ -11,6 +10,11 @@ import com.compomics.util.experiment.quantification.QuantificationMethod;
  */
 public class ReporterIon extends Ion {
 
+    /**
+     * Reporter ion index
+     * iTRAQ 113
+     */
+    public static final int ITRAQ_113 = 113;
     /**
      * Reporter ion index
      * iTRAQ 114
@@ -45,7 +49,7 @@ public class ReporterIon extends Ion {
      * Reporter ion index
      * iTRAQ 121
      */
-    public static final int ITRAQ_121 = 120;
+    public static final int ITRAQ_121 = 121;
     /**
      * Reporter ion index
      * TMT 0

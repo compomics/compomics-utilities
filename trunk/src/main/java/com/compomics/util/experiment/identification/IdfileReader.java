@@ -12,7 +12,7 @@ import java.util.HashSet;
  * Date: Jun 23, 2010
  * Time: 9:44:07 AM
  */
-public interface FileReader {
+public interface IdfileReader {
 
     /**
      * This methods retrieves all the identifications from an identification 

@@ -1,8 +1,9 @@
-package com.compomics.util.experiment.quantification.reporterion;
+package com.compomics.util.experiment.quantification.reporterion.quantification;
 
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.quantification.Ratio;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
  * Date: Sep 1, 2010
  * Time: 3:53:12 PM
  */
-public class SpectrumQuantification {
+public class SpectrumQuantification extends ExperimentObject {
 
     /**
      * The corresponding spectrum

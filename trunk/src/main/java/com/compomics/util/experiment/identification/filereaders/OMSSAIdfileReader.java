@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.FileReader;
+import com.compomics.util.experiment.identification.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -31,7 +31,7 @@ import java.util.List;
  * Date: Jun 23, 2010
  * Time: 9:45:45 AM
  */
-public class OMSSAFileReader extends ExperimentObject implements FileReader {
+public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
      * the inspected OMSSA omx file
@@ -58,7 +58,7 @@ public class OMSSAFileReader extends ExperimentObject implements FileReader {
     /**
      * constructor for the reader
      */
-    public OMSSAFileReader() {
+    public OMSSAIdfileReader() {
     }
 
     /**
@@ -66,7 +66,7 @@ public class OMSSAFileReader extends ExperimentObject implements FileReader {
      *
      * @param idFile    the inspected file
      */
-    public OMSSAFileReader(File idFile) {
+    public OMSSAIdfileReader(File idFile) {
         this.identificationFile = idFile;
 
         File modsFile = null;

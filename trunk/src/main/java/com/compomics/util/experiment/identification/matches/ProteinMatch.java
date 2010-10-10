@@ -1,9 +1,11 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class models a protein match.
@@ -22,7 +24,7 @@ public class ProteinMatch extends ExperimentObject {
     /**
      * The corresponding peptide matches
      */
-    private ArrayList<PeptideMatch> peptideMatches = new ArrayList<PeptideMatch>();
+    private HashMap<String, PeptideMatch> peptideMatches = new HashMap<String, PeptideMatch>();
     /**
      * is the match decoy?
      */
@@ -53,7 +55,7 @@ public class ProteinMatch extends ExperimentObject {
      */
     public ProteinMatch(Protein protein, PeptideMatch peptideMatch) {
         theoreticProtein = protein;
-        peptideMatches.add(peptideMatch);
+        peptideMatches.put(peptideMatch.getTheoreticPeptide().getSequence(), peptideMatch);
     }
 
     /**
@@ -79,7 +81,7 @@ public class ProteinMatch extends ExperimentObject {
      *
      * @return subordinated peptide matches
      */
-    public ArrayList<PeptideMatch> getPeptideMatches() {
+    public HashMap<String, PeptideMatch> getPeptideMatches() {
         return peptideMatches;
     }
 
@@ -87,9 +89,15 @@ public class ProteinMatch extends ExperimentObject {
      * add a subordinated peptide match
      *
      * @param peptideMatch  a peptide match
+     * @throws Exception  exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
-    public void addPeptideMatch(PeptideMatch peptideMatch) {
-        peptideMatches.add(peptideMatch);
+    public void addPeptideMatch(PeptideMatch peptideMatch) throws Exception {
+        String sequence = peptideMatch.getTheoreticPeptide().getSequence();
+        if (peptideMatches.get(sequence) == null) {
+            peptideMatches.put(sequence, peptideMatch);
+        } else {
+            peptideMatches.get(sequence).addSpectrumMatches(peptideMatch.getSpectrumMatches());
+        }
     }
 
     /**
@@ -99,7 +107,7 @@ public class ProteinMatch extends ExperimentObject {
      */
     public int getSpectrumCount() {
         int spectrumCount = 0;
-        for (PeptideMatch peptideMatch : peptideMatches) {
+        for (PeptideMatch peptideMatch : peptideMatches.values()) {
             spectrumCount += peptideMatch.getSpectrumCount();
         }
         return spectrumCount;

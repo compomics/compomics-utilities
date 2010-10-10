@@ -88,8 +88,12 @@ public class SpectrumMatch extends ExperimentObject {
      *
      * @param otherAdvocateId   The index of the new advocate
      * @param otherAssumption   The new peptide assumption
+     * @throws Exception  exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
-    public void addFirstHit(int otherAdvocateId, PeptideAssumption otherAssumption) {
+    public void addFirstHit(int otherAdvocateId, PeptideAssumption otherAssumption) throws Exception {
+        if (firstHits.get(otherAdvocateId) !=  null) {
+            throw new Exception("Two identifications by the same search engine for a single spectrum");
+        }
         firstHits.put(otherAdvocateId, otherAssumption);
         assumptions.add(otherAssumption);
         advocates.add(otherAdvocateId);

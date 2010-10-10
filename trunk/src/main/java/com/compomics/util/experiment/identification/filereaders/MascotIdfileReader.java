@@ -15,7 +15,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.FileReader;
+import com.compomics.util.experiment.identification.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -41,7 +41,7 @@ import java.util.Vector;
  * Date: Jun 23, 2010
  * Time: 9:45:35 AM
  */
-public class MascotFileReader extends ExperimentObject implements FileReader {
+public class MascotIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
      * The inspected file
@@ -57,20 +57,20 @@ public class MascotFileReader extends ExperimentObject implements FileReader {
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
     /**
-     * constructor for the mascotFileReader
+     * constructor for the mascotIdileReader
      */
-    public MascotFileReader() {
+    public MascotIdfileReader() {
     }
 
     /**
-     * Constructor for the MascotFilereader
+     * Constructor for the MascotIdilereader
      *
      * @param aFile a file to read
      */
-    public MascotFileReader(File aFile) {
+    public MascotIdfileReader(File aFile) {
         inspectedFile = aFile;
         try {
-            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.INDEX); //getPath might have to be changed into getcanonicalPath
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); //getPath might have to be changed into getcanonicalPath
         }
         catch (IOException e) {
             System.exit(1);

@@ -19,13 +19,22 @@ public abstract class QuantificationMethod extends ExperimentObject {
      */
     public final static int ITRAQ_8PLEX = 1;
     /**
-     * Index for TMT
+     * Index for TMT6
      */
-    public final static int TMT = 2;
+    public final static int TMT6 = 2;
+    /**
+     * Index for TMT2
+     */
+    public final static int TMT2 = 3;
     /**
      * the method index
      */
     protected int index;
+
+    /**
+     * the method name
+     */
+    protected String name;
 
     /**
      * getter for the method index
@@ -40,15 +49,6 @@ public abstract class QuantificationMethod extends ExperimentObject {
      * @return method name
      */
     public String getMethodName() {
-        switch(index) {
-            case ITRAQ_4PLEX:
-                return "iTRAQ 4Plex";
-            case ITRAQ_8PLEX:
-                return "iTRAQ 8Plex";
-            case TMT:
-                return "TMT";
-            default:
-                return "unknown";
-        }
+                return name;
     }
 }

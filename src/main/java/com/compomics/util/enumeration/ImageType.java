@@ -16,6 +16,11 @@ public enum ImageType {
      */
     private String extension;
 
+    /**
+     * Constructor setting the image type extension.
+     *
+     * @param extension
+     */
     ImageType(String extension) {
         this.extension = extension;
     }

@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.FileReader;
+import com.compomics.util.experiment.identification.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * Date: Jun 23, 2010
  * Time: 9:45:54 AM
  */
-public class XTandemFileReader extends ExperimentObject implements FileReader {
+public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
      * the instance of the X!Tandem parser
@@ -59,7 +59,7 @@ public class XTandemFileReader extends ExperimentObject implements FileReader {
     /**
      * Constructor for the reader
      */
-    public XTandemFileReader() {
+    public XTandemIdfileReader() {
     }
 
     /**
@@ -67,7 +67,7 @@ public class XTandemFileReader extends ExperimentObject implements FileReader {
      *
      * @param aFile the inspected file
      */
-    public XTandemFileReader(File aFile) {
+    public XTandemIdfileReader(File aFile) {
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
             try {
                 xTandemFile = new XTandemFile(aFile.getPath());

@@ -1,14 +1,8 @@
 package com.compomics.util.test.experiment;
 
 import junit.framework.TestCase;
-import com.compomics.util.experiment.identification.FileReaderFactory;
-import com.compomics.util.experiment.identification.FileReader;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.IdfileReaderFactory;
 import com.compomics.util.experiment.biology.PTMFactory;
-
-import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,17 +13,17 @@ import java.util.Iterator;
  */
 public class FileImportTest extends TestCase {
 
-    private static final String MASCOT_FILE = "testFiles/orbitrap003956.dat";
+    private static final String MASCOT_FILE = "testFiles/velos002764.dat";
     private static final String OMSSA_FILE = "testFiles/orbitrap003956.omx";
     private static final String XTANDEM_FILE = "testFiles/orbitrap003956.xml";
-    private static final String MODIFICATION_FILE = "resources/mods.xml";
+    private static final String MODIFICATION_FILE = "exampleFiles/experiment/mods.xml";
 
-    private FileReaderFactory fileReaderFactory = FileReaderFactory.getInstance();
+    private IdfileReaderFactory idfileReaderFactory = IdfileReaderFactory.getInstance();
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
 
     public void testReading() {
-        /*
+                    /*
         File modificationFile = new File(MODIFICATION_FILE);
         try {
         ptmFactory.importModifications(modificationFile);
@@ -38,19 +32,28 @@ public class FileImportTest extends TestCase {
         }
 
         File mascotFile = new File(MASCOT_FILE);
+
+        IdfileReader mascotReader = idfileReaderFactory.getFileReader(mascotFile);
+        HashSet<SpectrumMatch> matches = new HashSet();
+        try {
+        matches = mascotReader.getAllSpectrumMatches();
+        } catch (Exception e) {
+            String report = e.getLocalizedMessage();
+        }
+        for (SpectrumMatch match : matches) {
+            String sequence = match.getFirstHit(0).getPeptide().getSequence();
+        }
+
         File omssaFile = new File(OMSSA_FILE);
         File xTandemFile = new File(XTANDEM_FILE);
 
-        FileReader mascotReader = fileReaderFactory.getFileReader(mascotFile);
-        HashSet<SpectrumMatch> matches = new HashSet();
-        matches = mascotReader.getAllSpectrumMatches();
 
 
 
 
-        FileReader mascotReader = fileReaderFactory.getFileReader(mascotFile);
-        FileReader omssaReader = fileReaderFactory.getFileReader(omssaFile);
-        FileReader xTandemReader = fileReaderFactory.getFileReader(xTandemFile);
+        IdfileReader mascotReader = idfileReaderFactory.getFileReader(mascotFile);
+        IdfileReader omssaReader = idfileReaderFactory.getFileReader(omssaFile);
+        IdfileReader xTandemReader = idfileReaderFactory.getFileReader(xTandemFile);
         HashSet<SpectrumMatch> matches = new HashSet();
         matches = mascotReader.getAllSpectrumMatches();
         matches = new HashSet();

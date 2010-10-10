@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Ion;
 
 /**
  * This class models a reporter ion.
+ * Ion indexes should be the rounded mass.
  * User: Marc
  * Date: Sep 1, 2010
  * Time: 1:44:59 PM
@@ -116,7 +117,7 @@ public class ReporterIon extends Ion {
      * Getter for the ion type
      * @return the ion index according to the static fields
      */
-    public int getType() {
+    public int getIndex() {
         return index;
     }
 

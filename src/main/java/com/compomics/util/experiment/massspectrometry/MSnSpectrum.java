@@ -5,6 +5,7 @@ import com.compomics.util.experiment.massspectrometry.Precursor;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  * This class models an MSn spectrum.
@@ -88,6 +89,10 @@ public class MSnSpectrum extends ExperimentObject {
         return peakList.iterator();
     }
 
+    public HashSet<Peak> getPeakList() {
+        return peakList;
+    }
+
     /**
      * returns the precursor
      *
@@ -157,6 +162,14 @@ public class MSnSpectrum extends ExperimentObject {
 
         result += "\nEND IONS\n\n\n";
 
+        return result;
+    }
+
+    public HashMap<Double, Peak> getPeakMap() {
+        HashMap<Double, Peak> result = new HashMap<Double, Peak>();
+        for (Peak peak : peakList) {
+            result.put(peak.mz, peak);
+        }
         return result;
     }
 }

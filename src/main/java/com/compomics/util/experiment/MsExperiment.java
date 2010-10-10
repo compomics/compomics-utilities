@@ -22,9 +22,9 @@ public class MsExperiment extends ExperimentObject {
     private String reference;
 
     /**
-     * the set of sample analyzed
+     * the samples analyzed
      */
-    private ArrayList<Sample> samples;
+    private HashMap<Integer, Sample> samples = new HashMap<Integer, Sample>();
 
     /**
      * the analysis
@@ -36,9 +36,17 @@ public class MsExperiment extends ExperimentObject {
      * @param reference the reference of the experiment
      * @param samples   the samples analyzed
      */
-    public MsExperiment(String reference, ArrayList<Sample> samples) {
+    public MsExperiment(String reference, HashMap<Integer, Sample> samples) {
         this.reference = reference;
         this.samples = samples;
+    }
+
+    /**
+     * Constructor for an experiment
+     * @param reference the reference of the experiment
+     */
+    public MsExperiment(String reference) {
+        this.reference = reference;
     }
 
     /**
@@ -47,6 +55,14 @@ public class MsExperiment extends ExperimentObject {
      */
     public String getReference() {
         return reference;
+    }
+
+    /**
+     * sets the reference of the experiment
+     * @param reference the experiment reference
+     */
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     /**
@@ -66,4 +82,31 @@ public class MsExperiment extends ExperimentObject {
     public SampleAnalysisSet getAnalysisSet(Sample sample) {
         return analysis.get(sample);
     }
+
+    /**
+     * Returns the implemented samples
+     * @return map containing all samples
+     */
+    public HashMap<Integer, Sample> getSamples() {
+        return samples;
+    }
+
+    /**
+     * Returns a single sample accessed by its index
+     * @param id the index of the desired sample
+     * @return the desired sample
+     */
+    public Sample getSample(int id) {
+        return samples.get(id);
+    }
+
+    /**
+     * Set a new sample
+     * @param index     the index of the sample
+     * @param sample    the new sample
+     */
+    public void setSample(int index, Sample sample) {
+        samples.put(index, sample);
+    }
+    
 }

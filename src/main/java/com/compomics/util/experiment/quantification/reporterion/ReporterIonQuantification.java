@@ -2,12 +2,13 @@ package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.Sample;
 import com.compomics.util.experiment.quantification.QuantificationMethod;
+import com.compomics.util.experiment.quantification.reporterion.quantification.ProteinQuantification;
 
 import java.util.HashMap;
 import java.util.ArrayList;
 
 /**
- * This class will store matches of the reporter ions.
+ * This class will contain quantification results.
  * User: Marc
  * Date: Sep 1, 2010
  * Time: 1:42:21 PM
@@ -20,16 +21,24 @@ public class ReporterIonQuantification extends QuantificationMethod {
     private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
 
     /**
+     * The reference label indexed by the reporter ion index
+     */
+    private int referenceLabel;
+
+    /**
+     * The reporter method used
+     */
+    private ReporterMethod method;
+
+    /**
      * The protein quantification
      */
     private ArrayList<ProteinQuantification> proteinQuantification = new ArrayList<ProteinQuantification>();
 
     /**
      * Constructor for the reporter ion quantifiation
-     * @param methodIndex   the index of the method as specified in QuantificationMethod
      */
-    public ReporterIonQuantification(int methodIndex) {
-        this.index = methodIndex;
+    public ReporterIonQuantification() {
     }
 
     /**
@@ -78,5 +87,37 @@ public class ReporterIonQuantification extends QuantificationMethod {
      */
     public void addProteinQuantification(ProteinQuantification aProteinQuantification) {
         proteinQuantification.add(aProteinQuantification);
+    }
+
+    /**
+     * returns the method used
+     * @return the method used
+     */
+    public ReporterMethod getMethod() {
+        return method;
+    }
+
+    /**
+     * Sets the method used
+     * @param method    the reporter method used
+     */
+    public void setMethod(ReporterMethod method) {
+        this.method = method;
+    }
+
+    /**
+     * Returns the reference label indexed by the corresponding reporter ion
+     * @return the index of the reporter ion corresponding to the reference label
+     */
+    public int getReferenceLabel() {
+        return referenceLabel;
+    }
+
+    /**
+     * Sets the reference label indexed by the corresponding reporter ion index
+     * @param referenceLabel    the index of the reporter ion corresponding to the reference label
+     */
+    public void setReferenceLabel(int referenceLabel) {
+        this.referenceLabel = referenceLabel;
     }
 }

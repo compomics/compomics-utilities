@@ -177,8 +177,7 @@ public class Util {
                 jpegTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(1.0));
                 jpegTranscoder.transcode(svgInputFile, output);
 
-            }
-            if (imageType == ImageType.TIFF) {
+            } else if (imageType == ImageType.TIFF) {
 
                 // write as tiff
                 Transcoder tiffTranscoder = new TIFFTranscoder();
@@ -186,8 +185,7 @@ public class Util {
                 tiffTranscoder.addTranscodingHint(TIFFTranscoder.KEY_FORCE_TRANSPARENT_WHITE, true);
                 tiffTranscoder.transcode(svgInputFile, output);
 
-            }
-            if (imageType == ImageType.PNG) {
+            } else if (imageType == ImageType.PNG) {
 
                 // write as png
                 Transcoder pngTranscoder = new PNGTranscoder();

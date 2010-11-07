@@ -3,8 +3,17 @@
 
 ----
 
+*Changes in compomics-utilties 3.0.23 (Nov. 7. 2010):*
+ * NEW FEATURE: Experiment model extended with report ion support. 
+ * BUG FIX: Fixed a bug in GraphicsPanel that resulted in the peak mouse-over-annotations disappearing even when not moving the mouse.
+ * BUG FIX: Fixed a bug introduced when hiding the data points just below the x-axis, where the background color was always set to white. The panel's background color is now used.
+
+----
+
 *Changes in compomics-utilties 3.0.22 (Sept. 9. 2010):*
  * BUG FIX: Fixed a bug in the _in silico_ digestion demo where the enzyme was always set to Trypsin.
+
+Download Count: 7
 
 ----
 

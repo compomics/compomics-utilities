@@ -513,6 +513,11 @@ abstract class GraphicsPanel extends JPanel {
                 g.drawLine(iStartXLoc, iStartYLoc - 2, iStartXLoc, iStartYLoc + 2);
                 g.drawLine(iDragXLoc, iStartYLoc - 2, iDragXLoc, iStartYLoc + 2);
             }
+
+            // @TODO scale.
+            // @TODO: find out why the axes has to be drawn before the data points
+            //        and not just after, i.e., drawn twice
+            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
             
             if(currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram) ||
                     currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum) ||
@@ -585,8 +590,8 @@ abstract class GraphicsPanel extends JPanel {
             }
 
             // @TODO scale.
+            // (re-)draw the axes to have them appear in front of the data points
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
-            repaint();
         }
     }
 
@@ -1009,7 +1014,7 @@ abstract class GraphicsPanel extends JPanel {
         // hide any data going slightly below the y-axis
         if (yDataIsPositive) {
             Color currentColor = g.getColor();
-            g.setColor(Color.WHITE);
+            g.setColor(this.getBackground());
             g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, 20);
             g.setColor(currentColor);
         }

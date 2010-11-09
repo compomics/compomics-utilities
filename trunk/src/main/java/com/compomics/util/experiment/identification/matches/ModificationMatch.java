@@ -64,7 +64,7 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @return the index of the modification in the sequence
      */
-    public int getModificationSites() {
+    public int getModificationSite() {
         return modifiedSite;
     }
 }

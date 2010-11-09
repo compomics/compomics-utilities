@@ -92,11 +92,11 @@ public class ProteinMatch extends ExperimentObject {
      * @throws Exception  exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) throws Exception {
-        String sequence = peptideMatch.getTheoreticPeptide().getSequence();
-        if (peptideMatches.get(sequence) == null) {
-            peptideMatches.put(sequence, peptideMatch);
+        String index = peptideMatch.getTheoreticPeptide().getIndex();
+        if (peptideMatches.get(index) == null) {
+            peptideMatches.put(index, peptideMatch);
         } else {
-            peptideMatches.get(sequence).addSpectrumMatches(peptideMatch.getSpectrumMatches());
+            peptideMatches.get(index).addSpectrumMatches(peptideMatch.getSpectrumMatches());
         }
     }
 

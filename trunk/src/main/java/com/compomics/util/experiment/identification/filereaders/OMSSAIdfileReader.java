@@ -159,7 +159,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         Precursor precursor = new Precursor(-1, expMass, charge);     // RT is not known at the stage of the development
                         MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, getPeakList(name), tempFile.getName());
 
-                        Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, calcMass, proteins);
                         List<MSModHit> msModHits = currentMsHit.MSHits_mods.MSModHit;
                         ArrayList<ModificationMatch> modificationsFound = new ArrayList();
                         PTM currentPTM;
@@ -178,7 +177,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                             currentPTM = ptmFactory.getPTM(msMod);
                             String[] residuesArray = currentPTM.getResiduesArray();
                             for (String location : residuesArray) {
-                                tempSequence = thePeptide.getSequence();
+                                tempSequence = currentMsHit.MSHits_pepstring;
                                 if (location.compareTo("[") == 0) {
                                     modificationsFound.add(new ModificationMatch(currentPTM, false, 1));
                                 } else if (location.compareTo("]") == 0) {
@@ -203,7 +202,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                             }
                         }
                         double eValue = currentMsHit.MSHits_evalue;
-                        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, deltaMass, eValue, modificationsFound, getFileName(), reverse);
+                        Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, calcMass, proteins, modificationsFound);
+                        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, deltaMass, eValue, getFileName(), reverse);
                       //  addAnnotation(currentAssumption);
                         // secondary hits are not implemented yet
                         SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);

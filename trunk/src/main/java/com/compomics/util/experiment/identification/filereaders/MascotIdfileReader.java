@@ -219,8 +219,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             }
         }
 
-        Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins);
-        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, deltaMass, mascotEValue, foundModifications, getFileName(), reverse);
+        Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);
+        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, deltaMass, mascotEValue, getFileName(), reverse);
         MascotParameter refinedParam = new MascotParameter(MascotParameter.C13);
             currentAssumption.addUrParam(refinedParam, c13);
         refinedParam = new MascotParameter(MascotParameter.SCORE);

@@ -150,7 +150,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             }
                         }
                     }
-                    peptide = new com.compomics.util.experiment.biology.Peptide(bestPeptide.getDomainSequence(), bestPeptide.getDomainMh(), proteins);
                     eValue = bestPeptide.getDomainExpect();
                     measuredMass = bestPeptide.getDomainMh() + bestPeptide.getDomainDeltaMh();
                     precursor = new Precursor(-1, measuredMass, charge); // The retention time is not known at this stage
@@ -162,7 +161,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         String[] parsedName = currentModification.getName().split("@");
                         double mass = new Double(parsedName[0]);
                         String aa = parsedName[1];
-                        currentPTM = ptmFactory.getPTM(mass, aa, peptide.getSequence());
+                        currentPTM = ptmFactory.getPTM(mass, aa, bestPeptide.getDomainSequence());
                         // location not implemented yet
                         foundModifications.add(new ModificationMatch(currentPTM, false, -1));
                     }
@@ -171,12 +170,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         String[] parsedName = currentModification.getName().split("@");
                         double mass = new Double(parsedName[0]);
                         String aa = parsedName[1];
-                        currentPTM = ptmFactory.getPTM(mass, aa, peptide.getSequence());
+                        currentPTM = ptmFactory.getPTM(mass, aa, bestPeptide.getDomainSequence());
                         // location not implemented yet
                         foundModifications.add(new ModificationMatch(currentPTM, true, -1));
                     }
+                    peptide = new com.compomics.util.experiment.biology.Peptide(bestPeptide.getDomainSequence(), bestPeptide.getDomainMh(), proteins, foundModifications);
                     deltaMass = Math.abs(1000000 * (measuredMass - bestPeptide.getDomainMh()) / bestPeptide.getDomainMh());
-                    PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, deltaMass, eValue, foundModifications, getFileName(), reverseHit);
+                    PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, deltaMass, eValue, getFileName(), reverseHit);
        //             attachAnnotations(currentAssumption, bestPeptide);
                     // secondary hits are not implemented yet
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);

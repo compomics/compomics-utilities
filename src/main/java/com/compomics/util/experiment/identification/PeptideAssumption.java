@@ -43,10 +43,6 @@ public class PeptideAssumption extends ExperimentObject {
      */
     private HashSet<IonMatch> annotations = new HashSet<IonMatch>();
     /**
-     * The modification matched
-     */
-    private ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-    /**
      * the correspondig file
      */
     private String file;
@@ -63,17 +59,15 @@ public class PeptideAssumption extends ExperimentObject {
      * @param advocate              the advocate used
      * @param deltaMass             the peptide mass error
      * @param eValue                the e-value
-     * @param modifications         the modifications
      * @param identificationFile    the identification file
      * @param isDecoy               is the identification decoy?
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double deltaMass, double eValue, ArrayList<ModificationMatch> modifications, String identificationFile, boolean isDecoy) {
+    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double deltaMass, double eValue, String identificationFile, boolean isDecoy) {
         this.peptide = aPeptide;
         this.rank = rank;
         this.advocate = advocate;
         this.deltaMass = deltaMass;
         this.eValue = eValue;
-        this.modifications = modifications;
         this.file = identificationFile;
         this.isDecoy = isDecoy;
     }
@@ -139,15 +133,6 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public HashSet<IonMatch> getAnnotations() {
         return annotations;
-    }
-
-    /**
-     * returns all modifications
-     *
-     * @return modifications
-     */
-    public ArrayList<ModificationMatch> getModifications() {
-        return modifications;
     }
 
     /**

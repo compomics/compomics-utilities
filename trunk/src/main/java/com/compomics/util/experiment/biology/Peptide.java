@@ -130,7 +130,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the index of a peptide. index = SEQUENCE_mod1@aa1_mod2@aa2 with modifications ordered alphabetically.
-     * @return
+     * @return the index of a peptide
      */
     public String getIndex() {
         String[] modifications = new String[getModificationMatches().size()];

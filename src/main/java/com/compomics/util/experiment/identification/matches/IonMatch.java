@@ -1,12 +1,12 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
 /**
  * This class will model the assignement of a peak to a theoretical ion.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
@@ -50,7 +50,7 @@ public class IonMatch extends ExperimentObject {
 
     /**
      * get the matching error
-     * 
+     *
      * @return the matching error
      */
     public double getError() {

@@ -1,16 +1,15 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * This class models a peptide match.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
@@ -44,9 +43,18 @@ public class PeptideMatch extends ExperimentObject {
     }
 
     /**
+     * Convenience method to index peptideMatches on the peptide id
+     *
+     * @return the peptideMatch id
+     */
+    public String getId() {
+        return theoreticPeptide.getIndex();
+    }
+
+    /**
      * Constructor for the peptide match
      *
-     * @param peptide   the matching peptide
+     * @param peptide the matching peptide
      */
     public PeptideMatch(Peptide peptide) {
         theoreticPeptide = peptide;
@@ -55,13 +63,13 @@ public class PeptideMatch extends ExperimentObject {
     /**
      * Constructor for the peptide match
      *
-     * @param peptide           The matching peptide
-     * @param spectrumMatch     The main spectrum match
+     * @param peptide       The matching peptide
+     * @param spectrumMatch The main spectrum match
      */
     public PeptideMatch(Peptide peptide, SpectrumMatch spectrumMatch) {
         theoreticPeptide = peptide;
         mainMatch = spectrumMatch;
-        String index = spectrumMatch.getSpectrum().getFileName() + "_" + spectrumMatch.getSpectrum().getSpectrumTitle();
+        String index = spectrumMatch.getId();
         spectrumMatches.put(index, spectrumMatch);
     }
 
@@ -77,7 +85,7 @@ public class PeptideMatch extends ExperimentObject {
     /**
      * setter for the theoretic peptide
      *
-     * @param theoreticPeptide  a theoretic peptide
+     * @param theoreticPeptide a theoretic peptide
      */
     public void setTheoreticPeptide(Peptide theoreticPeptide) {
         this.theoreticPeptide = theoreticPeptide;
@@ -125,7 +133,7 @@ public class PeptideMatch extends ExperimentObject {
      * @param spectrumMatch a spectrum match
      */
     public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws Exception {
-        String index = spectrumMatch.getSpectrum().getFileName() + "_" + spectrumMatch.getSpectrum().getSpectrumTitle();
+        String index = spectrumMatch.getId();
         if (spectrumMatches.get(index) == null) {
             spectrumMatches.put(index, spectrumMatch);
         } else {
@@ -138,8 +146,8 @@ public class PeptideMatch extends ExperimentObject {
     /**
      * add spectrum matches
      *
-     * @param newMatches  matched spectra
-     * @throws Exception  exception thrown when attempting to link two identifications from the same search engine on a single spectrum
+     * @param newMatches matched spectra
+     * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
     public void addSpectrumMatches(HashMap<String, SpectrumMatch> newMatches) throws Exception {
         SpectrumMatch newMatch;
@@ -148,9 +156,9 @@ public class PeptideMatch extends ExperimentObject {
             if (spectrumMatches.get(index) == null) {
                 spectrumMatches.put(index, newMatch);
             } else {
-                 for (int searchEngine : newMatch.getAdvocates()) {
-                     spectrumMatches.get(index).addFirstHit(searchEngine, newMatch.getFirstHit(searchEngine));
-                 }
+                for (int searchEngine : newMatch.getAdvocates()) {
+                    spectrumMatches.get(index).addFirstHit(searchEngine, newMatch.getFirstHit(searchEngine));
+                }
             }
         }
     }
@@ -166,25 +174,15 @@ public class PeptideMatch extends ExperimentObject {
 
     /**
      * inspects wether the peptide match is a decoy hit
-     * 
+     *
      * @return true if the peptide match is a decoy hit
      */
     public boolean isDecoy() {
         if (isDecoy == null) {
-            for (SpectrumMatch spectrumMatch : spectrumMatches.values()) {
-                ArrayList<Integer> advocates = spectrumMatch.getAdvocates();
-                PeptideAssumption currentPeptideAssumption = spectrumMatch.getFirstHit(advocates.get(0));
-                if (currentPeptideAssumption.getPeptide().isSameAs(theoreticPeptide)) {
-                    isDecoy = currentPeptideAssumption.isDecoy();
+            for (Protein protein : theoreticPeptide.getParentProteins()) {
+                if (!protein.isDecoy()) {
+                    isDecoy = false;
                     return isDecoy;
-                } else {
-                    for (int i = 1; i < advocates.size(); i++) {
-                        currentPeptideAssumption = spectrumMatch.getFirstHit(advocates.get(i));
-                        if (currentPeptideAssumption.getPeptide().isSameAs(theoreticPeptide)) {
-                            isDecoy = currentPeptideAssumption.isDecoy();
-                            return isDecoy;
-                        }
-                    }
                 }
             }
             isDecoy = true;

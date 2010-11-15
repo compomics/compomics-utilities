@@ -1,15 +1,13 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * This class models a protein match.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
@@ -25,10 +23,6 @@ public class ProteinMatch extends ExperimentObject {
      * The corresponding peptide matches
      */
     private HashMap<String, PeptideMatch> peptideMatches = new HashMap<String, PeptideMatch>();
-    /**
-     * is the match decoy?
-     */
-    private Boolean isDecoy = null;
 
 
     /**
@@ -41,7 +35,7 @@ public class ProteinMatch extends ExperimentObject {
     /**
      * Constructor for the protein match
      *
-     * @param protein   the matching protein
+     * @param protein the matching protein
      */
     public ProteinMatch(Protein protein) {
         theoreticProtein = protein;
@@ -50,8 +44,8 @@ public class ProteinMatch extends ExperimentObject {
     /**
      * Constructor for the protein match
      *
-     * @param protein       The matching protein
-     * @param peptideMatch  The corresponding peptide matches
+     * @param protein      The matching protein
+     * @param peptideMatch The corresponding peptide matches
      */
     public ProteinMatch(Protein protein, PeptideMatch peptideMatch) {
         theoreticProtein = protein;
@@ -70,7 +64,7 @@ public class ProteinMatch extends ExperimentObject {
     /**
      * setter for the matching protein
      *
-     * @param theoreticProtein  the matching protein
+     * @param theoreticProtein the matching protein
      */
     public void setTheoreticProtein(Protein theoreticProtein) {
         this.theoreticProtein = theoreticProtein;
@@ -88,8 +82,8 @@ public class ProteinMatch extends ExperimentObject {
     /**
      * add a subordinated peptide match
      *
-     * @param peptideMatch  a peptide match
-     * @throws Exception  exception thrown when attempting to link two identifications from the same search engine on a single spectrum
+     * @param peptideMatch a peptide match
+     * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) throws Exception {
         String index = peptideMatch.getTheoreticPeptide().getIndex();
@@ -115,13 +109,10 @@ public class ProteinMatch extends ExperimentObject {
 
     /**
      * methods indicates if the protein match is a decoy one
-     * 
+     *
      * @return boolean indicating if the protein match is a decoy one
      */
     public boolean isDecoy() {
-        if (isDecoy == null) {
-            isDecoy = peptideMatches.get(0).isDecoy();
-        }
-        return isDecoy;
+        return theoreticProtein.isDecoy();
     }
 }

@@ -1,6 +1,13 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.Peak;
+
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class models an ion.
@@ -43,5 +50,27 @@ public abstract class Ion extends ExperimentObject {
      */
     public int getIonFamilyType() {
         return familyType;
+    }
+
+    public IonMatch match(MSnSpectrum spectrum, double ionTolerance) {
+        HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
+        ArrayList<Double> mzArray = new ArrayList(peakMap.keySet());
+        Collections.sort(mzArray);
+        Peak bestPeak = null;
+        double bestMz = 0;
+        for (Double mz : mzArray) {
+            if (mz > this.theoreticMass - ionTolerance && mz < this.theoreticMass + ionTolerance) {
+                if (bestPeak == null) {
+                    bestPeak = peakMap.get(mz);
+                    bestMz = mz;
+                } else if (Math.abs(mz - this.theoreticMass) < Math.abs(bestMz - this.theoreticMass)) {
+                    bestPeak = peakMap.get(mz);
+                    bestMz = mz;
+                }
+            } else if (mz > this.theoreticMass + ionTolerance) {
+                break;
+            }
+        }
+        return new IonMatch(bestPeak, this);
     }
 }

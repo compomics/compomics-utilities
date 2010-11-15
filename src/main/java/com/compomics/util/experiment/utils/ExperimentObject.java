@@ -16,16 +16,15 @@ public abstract class ExperimentObject implements Serializable {
     /**
      * Map containing user refinement parameters
      */
-    private HashMap<String, Object> urParams = new HashMap<String, Object>();
+    private HashMap<String, UrParameter> urParams = new HashMap<String, UrParameter>();
 
     /**
      * Method to add a user refinement parameter
      *
      * @param parameter The parameter
-     * @param value     The associated value
      */
-    public void addUrParam(UrParameter parameter, Object value) {
-        urParams.put(parameter.getFamilyName() + "_" + parameter.getIndex(), value);
+    public void addUrParam(UrParameter parameter) {
+        urParams.put(parameter.getFamilyName() + "_" + parameter.getIndex(), parameter);
     }
 
     /**
@@ -34,7 +33,7 @@ public abstract class ExperimentObject implements Serializable {
      * @param parameter the desired parameter
      * @return          the value stored. Null if not found.
      */
-    public Object getUrParam(UrParameter parameter) {
+    public UrParameter getUrParam(UrParameter parameter) {
         return urParams.get(parameter.getFamilyName() + "_" + parameter.getIndex());
     }
 }

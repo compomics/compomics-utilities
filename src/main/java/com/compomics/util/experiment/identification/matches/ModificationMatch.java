@@ -6,7 +6,7 @@ import com.compomics.util.experiment.utils.ExperimentObject;
 
 /**
  * This class models the match between theoretic ptm and identification results.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
@@ -31,9 +31,9 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * constructor for a modification match
      *
-     * @param theoreticPtm  the theoretic PTM
-     * @param variable      true for variable modifications, false otherwise
-     * @param modifiedSite  the position of the modification in the sequence
+     * @param theoreticPtm the theoretic PTM
+     * @param variable     true for variable modifications, false otherwise
+     * @param modifiedSite the position of the modification in the sequence
      */
     public ModificationMatch(PTM theoreticPtm, boolean variable, int modifiedSite) {
         this.theoreticPtm = theoreticPtm;

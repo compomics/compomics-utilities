@@ -7,16 +7,16 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.utils.ExperimentObject;
-import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.interfaces.Ion;
+import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
 import org.xml.sax.SAXException;
 
@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 /**
  * This reader will import identifications from an X!Tandem xml result file.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
@@ -143,11 +143,11 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             } catch (Exception e) {
                                 int end = description.indexOf(" ");
                                 accession = description.substring(0, end);
+                                if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
+                                    reverseHit = false;
+                                }
                             }
-                            proteins.add(new Protein(accession, description));
-                            if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
-                                reverseHit = false;
-                            }
+                            proteins.add(new Protein(accession, description, reverseHit));
                         }
                     }
                     eValue = bestPeptide.getDomainExpect();
@@ -157,7 +157,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(bestPeptide.getDomainID());
                     PTM currentPTM;
                     ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();
-                    for (Modification currentModification:foundFixedModifications) {
+                    for (Modification currentModification : foundFixedModifications) {
                         String[] parsedName = currentModification.getName().split("@");
                         double mass = new Double(parsedName[0]);
                         String aa = parsedName[1];
@@ -176,8 +176,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     }
                     peptide = new com.compomics.util.experiment.biology.Peptide(bestPeptide.getDomainSequence(), bestPeptide.getDomainMh(), proteins, foundModifications);
                     deltaMass = Math.abs(1000000 * (measuredMass - bestPeptide.getDomainMh()) / bestPeptide.getDomainMh());
-                    PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, deltaMass, eValue, getFileName(), reverseHit);
-       //             attachAnnotations(currentAssumption, bestPeptide);
+                    PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, deltaMass, eValue, getFileName());
+                    //             attachAnnotations(currentAssumption, bestPeptide);
                     // secondary hits are not implemented yet
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);
                     foundPeptides.add(currentMatch);
@@ -197,7 +197,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     private void attachAnnotations(PeptideAssumption currentMatch, Peptide peptide) {
         ArrayList<FragmentIon[]> ions = new ArrayList<FragmentIon[]>(xTandemFile.getFragmentIonsForPeptide(peptide));
         for (FragmentIon[] aaIons : ions) {
-            for (FragmentIon ion:aaIons) {
+            for (FragmentIon ion : aaIons) {
                 int ionType = getIonType(ion);
                 Double chargeDouble = ion.getCharge();
                 Charge charge = new Charge(Charge.PLUS, chargeDouble.intValue());
@@ -212,27 +212,27 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     /**
      * Get the peakList corresponding to a spectrum
      *
-     * @param supportData   the corresponding suppportData
+     * @param supportData the corresponding suppportData
      * @return a set containing all peaks
      */
     private HashSet<Peak> getPeakList(SupportData supportData) {
         HashSet<Peak> peakList = new HashSet<Peak>();
-            ArrayList<Double> mzValues = supportData.getXValuesFragIonMass2Charge();
-            ArrayList<Double> intensityValues = supportData.getYValuesFragIonMass2Charge();
-            for (int i=0 ; i < mzValues.size() ; i++) {
-                peakList.add(new Peak(mzValues.get(i), intensityValues.get(i)));
-            }
+        ArrayList<Double> mzValues = supportData.getXValuesFragIonMass2Charge();
+        ArrayList<Double> intensityValues = supportData.getYValuesFragIonMass2Charge();
+        for (int i = 0; i < mzValues.size(); i++) {
+            peakList.add(new Peak(mzValues.get(i), intensityValues.get(i)));
+        }
         return peakList;
     }
 
     /**
      * returns the ion type depending on the X!Tandem parser indications
-     * 
-     * @param ion   the concerned ion
+     *
+     * @param ion the concerned ion
      * @return the ion type
      */
     private int getIonType(Ion ion) {
-        switch(ion.getType()) {
+        switch (ion.getType()) {
             case Ion.A_ION:
                 return PeptideFragmentIon.A_ION;
             case Ion.AH2O_ION:

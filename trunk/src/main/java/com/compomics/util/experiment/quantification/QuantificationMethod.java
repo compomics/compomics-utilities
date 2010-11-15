@@ -8,7 +8,7 @@ import com.compomics.util.experiment.utils.ExperimentObject;
  * Date: Sep 1, 2010
  * Time: 3:10:48 PM
  */
-public abstract class QuantificationMethod extends ExperimentObject {
+public class QuantificationMethod extends ExperimentObject {
 
     /**
      * Index for ITRAQ 4Plex

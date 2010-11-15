@@ -25,6 +25,16 @@ public class SampleAnalysisSet extends ExperimentObject {
     private HashMap<Integer, ProteomicAnalysis> analysis = new HashMap<Integer, ProteomicAnalysis>();
 
     /**
+     * Contructor for an analysis of a sample without replicates
+     * @param referenceSample   the reference sample
+     * @param replicate        the analysis for this sample
+     */
+    public SampleAnalysisSet(Sample referenceSample, ProteomicAnalysis replicate) {
+        this.sample = referenceSample;
+        analysis.put(replicate.getIndex(), replicate);
+    }
+    
+    /**
      * Contructor for a set of analysis of a sample
      * @param referenceSample   the reference sample
      * @param replicates        the set of replicates for this sample
@@ -34,5 +44,14 @@ public class SampleAnalysisSet extends ExperimentObject {
         for (ProteomicAnalysis replicate : replicates) {
             analysis.put(replicate.getIndex(), replicate);
         }
+    }
+
+    /**
+     * Returns the analysis corresponding to the selected replicate
+     * @param replicateNumber   index of the replicate analyzed
+     * @return the proteomic analysis of the replicate
+     */
+    public ProteomicAnalysis getProteomicAnalysis(int replicateNumber) {
+        return analysis.get(replicateNumber);
     }
 }

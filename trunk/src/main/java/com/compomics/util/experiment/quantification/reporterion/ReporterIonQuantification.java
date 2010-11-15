@@ -2,6 +2,7 @@ package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.Sample;
 import com.compomics.util.experiment.quantification.QuantificationMethod;
+import com.compomics.util.experiment.quantification.Quantification;
 import com.compomics.util.experiment.quantification.reporterion.quantification.ProteinQuantification;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * Date: Sep 1, 2010
  * Time: 1:42:21 PM
  */
-public class ReporterIonQuantification extends QuantificationMethod {
+public class ReporterIonQuantification extends Quantification {
 
     /**
      * The sample assignement to the various ions indexed by their static indexes
@@ -26,19 +27,16 @@ public class ReporterIonQuantification extends QuantificationMethod {
     private int referenceLabel;
 
     /**
-     * The reporter method used
+     * The reporter method
      */
-    private ReporterMethod method;
+    ReporterMethod reporterMethod;
 
     /**
-     * The protein quantification
+     * Constructor for the reporter ion quantification
+     * @param methodUsed    the method used for this quantification
      */
-    private ArrayList<ProteinQuantification> proteinQuantification = new ArrayList<ProteinQuantification>();
-
-    /**
-     * Constructor for the reporter ion quantifiation
-     */
-    public ReporterIonQuantification() {
+    public ReporterIonQuantification(int methodUsed) {
+        this.methodUsed = methodUsed;
     }
 
     /**
@@ -74,35 +72,19 @@ public class ReporterIonQuantification extends QuantificationMethod {
     }
 
     /**
-     * This method retrieves the quantification result at the protein level
-     * @return quantification at the protein level
-     */
-    public ArrayList<ProteinQuantification> getProteinQuantification() {
-        return proteinQuantification;
-    }
-
-    /**
-     * This method adds a protein quanditification result
-     * @param aProteinQuantification quantification result for a protein
-     */
-    public void addProteinQuantification(ProteinQuantification aProteinQuantification) {
-        proteinQuantification.add(aProteinQuantification);
-    }
-
-    /**
-     * returns the method used
+     * returns the reporter method used
      * @return the method used
      */
-    public ReporterMethod getMethod() {
-        return method;
+    public ReporterMethod getReporterMethod() {
+        return reporterMethod;
     }
 
     /**
-     * Sets the method used
-     * @param method    the reporter method used
+     * Sets the reporter method used
+     * @param reporterMethod    the reporter method used
      */
-    public void setMethod(ReporterMethod method) {
-        this.method = method;
+    public void setMethod(ReporterMethod reporterMethod) {
+        this.reporterMethod = reporterMethod;
     }
 
     /**

@@ -10,7 +10,7 @@ import java.util.HashSet;
 
 /**
  * This class models a spectrum match.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
@@ -26,6 +26,10 @@ public class SpectrumMatch extends ExperimentObject {
      * The corresponding peptide assumptions
      */
     private HashSet<PeptideAssumption> assumptions = new HashSet<PeptideAssumption>();
+    /**
+     * The best assumption
+     */
+    private PeptideAssumption bestAssumption;
     /**
      * Map containing the first hits indexed by the Advocate index
      */
@@ -45,11 +49,11 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * Constructor for the spectrum match
      *
-     * @param spectrum      The matched spectrum
-     * @param assumption    The matching peptide assumption
+     * @param spectrum   The matched spectrum
+     * @param assumption The matching peptide assumption
      */
     public SpectrumMatch(MSnSpectrum spectrum, PeptideAssumption assumption) {
-        int advocateId  = assumption.getAdvocate();
+        int advocateId = assumption.getAdvocate();
         assumptions.add(assumption);
         firstHits.put(advocateId, assumption);
         advocates.add(advocateId);
@@ -57,18 +61,54 @@ public class SpectrumMatch extends ExperimentObject {
     }
 
     /**
+     * Constructor for the spectrum match
+     *
+     * @param spectrum The matched spectrum
+     */
+    public SpectrumMatch(MSnSpectrum spectrum) {
+        this.spectrum = spectrum;
+    }
+
+    /**
+     * Getter for the best assumption
+     *
+     * @return the best assumption for the spectrum
+     */
+    public PeptideAssumption getBestAssumption() {
+        return bestAssumption;
+    }
+
+    /**
+     * Setter for the best assumption
+     *
+     * @param bestAssumption the best assumption for the spectrum
+     */
+    public void setBestAssumption(PeptideAssumption bestAssumption) {
+        this.bestAssumption = bestAssumption;
+    }
+
+    /**
+     * returns the id of a spectrum match.
+     *
+     * @return the id of the spectrum match
+     */
+    public String getId() {
+        return spectrum.getFileName() + "_" + spectrum.getSpectrumTitle();
+    }
+
+    /**
      * Getter for the spectrum
      *
      * @return the matched spectrum
      */
-   public MSnSpectrum getSpectrum() {
-       return spectrum;
-   }
+    public MSnSpectrum getSpectrum() {
+        return spectrum;
+    }
 
     /**
      * Add a secondary hit
      *
-     * @param secondaryHit  a secondary hit
+     * @param secondaryHit a secondary hit
      */
     public void addSecondaryHit(PeptideAssumption secondaryHit) {
         assumptions.add(secondaryHit);
@@ -86,12 +126,12 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * add a first hit
      *
-     * @param otherAdvocateId   The index of the new advocate
-     * @param otherAssumption   The new peptide assumption
-     * @throws Exception  exception thrown when attempting to link two identifications from the same search engine on a single spectrum
+     * @param otherAdvocateId The index of the new advocate
+     * @param otherAssumption The new peptide assumption
+     * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
     public void addFirstHit(int otherAdvocateId, PeptideAssumption otherAssumption) throws Exception {
-        if (firstHits.get(otherAdvocateId) !=  null) {
+        if (firstHits.get(otherAdvocateId) != null) {
             throw new Exception("Two identifications by the same search engine for a single spectrum");
         }
         firstHits.put(otherAdvocateId, otherAssumption);
@@ -102,7 +142,7 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * Returns the first hit obtained using the specified advocate
      *
-     * @param advocateId    the specified advocate index
+     * @param advocateId the specified advocate index
      * @return the first hit
      */
     public PeptideAssumption getFirstHit(int advocateId) {
@@ -111,7 +151,7 @@ public class SpectrumMatch extends ExperimentObject {
 
     /**
      * Returns all advocates used referenced by their index
-     * 
+     *
      * @return all advocates used
      */
     public ArrayList<Integer> getAdvocates() {

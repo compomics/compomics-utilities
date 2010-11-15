@@ -42,8 +42,9 @@ public class MSnSpectrum extends ExperimentObject {
      * Constructor for the spectrum
      */
     public MSnSpectrum() {
-
     }
+
+
 
     /**
      * constructor for the spectrum

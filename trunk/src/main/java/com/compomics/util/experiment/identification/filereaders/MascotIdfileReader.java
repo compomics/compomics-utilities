@@ -24,8 +24,9 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.refinementparameters.C13;
+import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.util.experiment.utils.ExperimentObject;
-import com.compomics.util.experiment.refinementparameters.MascotParameter;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import java.util.Vector;
 
 /**
  * This reader will import identifications from a Mascot dat file.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 23, 2010
@@ -109,16 +110,14 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
         for (int i = 0; i < iMascotDatfile.getNumberOfQueries(); i++) {
             Vector<PeptideHit> mascotDecoyPeptideHits = null;
-            try {
+            if (lDecoyQueryToPeptideMap != null) {
                 mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
-            } catch (Exception e) {
-                // Failing would mean that no decoy section was found and the parser crashed, handled later by if (mascotDecoyPeptideHits != null)
             }
             Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
             Boolean nonDecoyHitFound = false;
             if (mascotPeptideHits != null) {                                        // There might not be an identification for every query
                 if (mascotDecoyPeptideHits != null) {
-                    if (mascotDecoyPeptideHits.get(0).getIonsScore() <= mascotPeptideHits.get(0).getIonsScore()) {
+                    if (mascotDecoyPeptideHits.get(0).getIonsScore() < mascotPeptideHits.get(0).getIonsScore()) {
                         nonDecoyHitFound = true;
                     }
                 } else {
@@ -158,9 +157,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * parses a spectrum match out of a peptideHit
      *
-     * @param aPeptideHit   the peptide hit to parse
-     * @param query         the corresponding query
-     * @param decoySection  is it in the decoy section?
+     * @param aPeptideHit  the peptide hit to parse
+     * @param query        the corresponding query
+     * @param decoySection is it in the decoy section?
      * @return a spectrum match
      */
     private SpectrumMatch getSpectrumMatch(PeptideHit aPeptideHit, int query, boolean decoySection) {
@@ -206,26 +205,29 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
         MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, peakList, getMgfFileName());
         ArrayList<Protein> proteins = new ArrayList();
-        for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
-            proteins.add(new Protein(((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession()));
-        }
         boolean reverse = true;
-        if (!decoySection) {
-            // Necessary if no decoy peptide section was available
-            for (int j = 0; j < proteins.size(); j++) {
-                if (!proteins.get(j).getAccession().startsWith("REV_") && !proteins.get(j).getAccession().endsWith("_REV") && !proteins.get(j).getAccession().endsWith("_REVERSED")) {
+        for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
+            String accession = ((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession();
+            if (accession.lastIndexOf('|') != -1) {
+                int start = accession.indexOf("|");
+                int end = accession.indexOf("|", ++start);
+                accession = accession.substring(start, end);
+            }
+            if (!decoySection) {
+                if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
                     reverse = false;
                 }
             }
+            proteins.add(new Protein(accession, reverse));
         }
 
         Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);
-        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, deltaMass, mascotEValue, getFileName(), reverse);
-        MascotParameter refinedParam = new MascotParameter(MascotParameter.C13);
-            currentAssumption.addUrParam(refinedParam, c13);
-        refinedParam = new MascotParameter(MascotParameter.SCORE);
-        currentAssumption.addUrParam(refinedParam, aPeptideHit.getIonsScore());
-  //      addAnnotation(currentAssumption, aPeptideHit, query);
+        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, deltaMass, mascotEValue, getFileName());
+        C13 c13Param = new C13(c13);
+        currentAssumption.addUrParam(c13Param);
+        MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
+        currentAssumption.addUrParam(scoreParam);
+        //      addAnnotation(currentAssumption, aPeptideHit, query);
         // Secondary hits are not implemented yet
         return new SpectrumMatch(spectrum, currentAssumption);
     }
@@ -233,9 +235,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * add the annotation on a peptide assumption based on the parser informations
      *
-     * @param currentMatch  the peptide assumption concerned
-     * @param aPeptideHit   the peptideHit associated
-     * @param query         the query number
+     * @param currentMatch the peptide assumption concerned
+     * @param aPeptideHit  the peptideHit associated
+     * @param query        the query number
      */
     private void addAnnotation(PeptideAssumption currentMatch, PeptideHit aPeptideHit, int query) {
 

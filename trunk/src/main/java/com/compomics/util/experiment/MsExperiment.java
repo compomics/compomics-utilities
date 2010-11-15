@@ -3,7 +3,6 @@ package com.compomics.util.experiment;
 import com.compomics.util.experiment.biology.Sample;
 import com.compomics.util.experiment.utils.ExperimentObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

@@ -118,18 +118,17 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         HashMap peptideToProteinMap = omxFile.getPeptideToProteinMap();
         for (int i = 0; i < msSearchResponse.size(); i++) {
             msResponseScale = msSearchResponse.get(i).MSResponse_scale;
-            List<MSHitSet> msResponseHitset = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
-            for (int j = 0; j < msResponseHitset.size(); j++) {
+            for (MSHitSet msHitSet : msSearchResponse.get(i).MSResponse_hitsets.MSHitSet) {
                 File tempFile = new File(msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile);
-                String name = msResponseHitset.get(j).MSHitSet_ids.MSHitSet_ids_E.get(0);
-                List<MSHits> hitSet = msResponseHitset.get(j).MSHitSet_hits.MSHits;
+                String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
+                List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;
                 if (hitSet.size() > 0) {
                     MSHits currentMsHit = hitSet.get(0);
                     boolean singleBestHit = true;
-                    for (int k = 1; k < hitSet.size(); k++) {  // We keep the best scoring peptide and discard ambiguous cases
-                        if (hitSet.get(k).MSHits_evalue < currentMsHit.MSHits_evalue) {
-                            currentMsHit = hitSet.get(k);
-                        } else if ((hitSet.get(k).MSHits_evalue == currentMsHit.MSHits_evalue) && (hitSet.get(k).MSHits_pepstring.compareTo(currentMsHit.MSHits_pepstring) != 0)) {
+                    for (MSHits msHits : hitSet) {  // We keep the best scoring peptide and discard ambiguous cases
+                        if (msHits.MSHits_evalue < currentMsHit.MSHits_evalue) {
+                            currentMsHit = msHits;
+                        } else if ((msHits.MSHits_evalue == currentMsHit.MSHits_evalue) && (msHits.MSHits_pepstring.compareTo(currentMsHit.MSHits_pepstring) != 0)) {
                             singleBestHit = false;
                         }
                     }
@@ -138,20 +137,23 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         Double expMass = ((double) currentMsHit.MSHits_mass) / msResponseScale;
                         double deltaMass = Math.abs(1000000 * (expMass - calcMass) / calcMass);
 
-                        List<MSPepHit> msPepHits = (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring);
                         ArrayList<Protein> proteins = new ArrayList();
-                        for (int l = 0; l < msPepHits.size(); l++) {       // There might be redundancies in the map.
+                        boolean reverse = true;
+                        for (MSPepHit msPepHit : (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring)) {       // There might be redundancies in the map.
                             Boolean taken = false;
-                            String description = msPepHits.get(l).MSPepHit_defline;
+                            String description = msPepHit.MSPepHit_defline;
                             String accession = getProteinAccession(description);
-                            for (int m = 0; m < proteins.size(); m++) {
-                                if (proteins.get(m).getAccession().compareTo(accession) == 0) {
+                            for (Protein protein : proteins) {
+                                if (protein.getAccession().compareTo(accession) == 0) {
                                     taken = true;
                                     break;
                                 }
                             }
+                            if (!accession.startsWith("REV") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
+                                reverse = false;
+                            }
                             if (!taken) {
-                                proteins.add(new Protein(accession, description));
+                                proteins.add(new Protein(accession, description, reverse));
                             }
                         }
 
@@ -172,8 +174,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         // inspect fixed modifications
                         List<Integer> fixedMods = msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_fixed.MSMod;
                         String tempSequence;
-                        for (int l = 0; l < fixedMods.size(); l++) {
-                            int msMod = fixedMods.get(l);
+                        for (int msMod : fixedMods) {
                             currentPTM = ptmFactory.getPTM(msMod);
                             String[] residuesArray = currentPTM.getResiduesArray();
                             for (String location : residuesArray) {
@@ -195,15 +196,9 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                                 }
                             }
                         }
-                        boolean reverse = true;
-                        for (int l = 0; l < proteins.size(); l++) {
-                            if (!proteins.get(l).getAccession().startsWith("REV") && !proteins.get(l).getAccession().endsWith("_REV") && !proteins.get(l).getAccession().endsWith("_REVERSED")) {
-                                reverse = false;
-                            }
-                        }
                         double eValue = currentMsHit.MSHits_evalue;
                         Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, calcMass, proteins, modificationsFound);
-                        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, deltaMass, eValue, getFileName(), reverse);
+                        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, deltaMass, eValue, getFileName());
                       //  addAnnotation(currentAssumption);
                         // secondary hits are not implemented yet
                         SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);

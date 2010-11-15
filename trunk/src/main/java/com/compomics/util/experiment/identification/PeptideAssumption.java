@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.utils.ExperimentObject;
@@ -49,7 +50,7 @@ public class PeptideAssumption extends ExperimentObject {
     /**
      * is it a decoy identification?
      */
-    private boolean isDecoy;
+    private Boolean isDecoy = null;
 
     /**
      * Constructor for a peptide assumption
@@ -60,16 +61,14 @@ public class PeptideAssumption extends ExperimentObject {
      * @param deltaMass             the peptide mass error
      * @param eValue                the e-value
      * @param identificationFile    the identification file
-     * @param isDecoy               is the identification decoy?
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double deltaMass, double eValue, String identificationFile, boolean isDecoy) {
+    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double deltaMass, double eValue, String identificationFile) {
         this.peptide = aPeptide;
         this.rank = rank;
         this.advocate = advocate;
         this.deltaMass = deltaMass;
         this.eValue = eValue;
         this.file = identificationFile;
-        this.isDecoy = isDecoy;
     }
 
     /**
@@ -150,6 +149,15 @@ public class PeptideAssumption extends ExperimentObject {
      * @return a boolean indicating if the identification is a decoy one
      */
     public boolean isDecoy() {
+        if (isDecoy == null) {
+            for (Protein protein : peptide.getParentProteins()) {
+                if (!protein.isDecoy()) {
+                    isDecoy = false;
+        return isDecoy;
+                }
+            }
+            isDecoy = true;
+        }
         return isDecoy;
     }
 }

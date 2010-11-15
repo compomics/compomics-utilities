@@ -17,6 +17,10 @@ public class Protein extends ExperimentObject {
      */
     private String accession;
     /**
+     * Boolean indicating if the protein is not existing (decoy protein for instance)
+     */
+    private boolean decoy;
+    /**
      * The protein description
      */
     private String description = "";
@@ -32,8 +36,17 @@ public class Protein extends ExperimentObject {
      *
      * @param accession The protein accession
      */
-    public Protein(String accession) {
+    public Protein(String accession, boolean isDecoy) {
         this.accession = accession;
+        this.decoy = isDecoy;
+    }
+
+    /**
+     * indicates if the protein is factice (from a decoy database for instance)
+     * @return a boolean indicating if the protein is factice
+     */
+    public boolean isDecoy() {
+        return decoy;
     }
 
     /**
@@ -42,9 +55,10 @@ public class Protein extends ExperimentObject {
      * @param accession     The protein accession
      * @param description   The protein description
      */
-    public Protein(String accession, String description) {
+    public Protein(String accession, String description, boolean isDecoy) {
         this.accession = accession;
         this.description = description;
+        this.decoy = isDecoy;
     }
 
 

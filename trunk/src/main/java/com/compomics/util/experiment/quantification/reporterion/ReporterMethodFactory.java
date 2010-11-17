@@ -24,9 +24,17 @@ public class ReporterMethodFactory extends ExperimentObject {
     private ArrayList<ReporterMethod> methods;
     private static ReporterMethodFactory instance = null;
 
+    /**
+     * @TODO: JavaDoc missing.
+     */
     private ReporterMethodFactory() {
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @return
+     */
     public static ReporterMethodFactory getInstance() {
         if (instance == null) {
             instance = new ReporterMethodFactory();
@@ -34,10 +42,20 @@ public class ReporterMethodFactory extends ExperimentObject {
         return instance;
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @return
+     */
     public ArrayList<ReporterMethod> getMethods() {
         return methods;
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @return
+     */
     public String[] getMethodsNames() {
         String[] names = new String[methods.size()];
         for (int i= 0 ; i < methods.size() ; i++) {
@@ -46,10 +64,22 @@ public class ReporterMethodFactory extends ExperimentObject {
         return names;
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @param aFile
+     */
     public void saveFile(File aFile) {
         // TODO save
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @param aFile
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
         methods = new ArrayList();
         // Create the pull parser.
@@ -74,6 +104,14 @@ public class ReporterMethodFactory extends ExperimentObject {
         br.close();
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @param parser
+     * @return
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     private ReporterMethod parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         int type = parser.next();
@@ -119,6 +157,14 @@ public class ReporterMethodFactory extends ExperimentObject {
         return new ReporterMethod(index, name, reporterIons, correctionFactors);
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @param parser
+     * @return
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     private ReporterIon parseIon(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
@@ -142,6 +188,14 @@ public class ReporterMethodFactory extends ExperimentObject {
         return new ReporterIon(id, name, mass);
     }
 
+    /**
+     * @TODO: JavaDoc missing.
+     *
+     * @param parser
+     * @return
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     private CorrectionFactor parseCorrectionFactor(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("ionId")) {

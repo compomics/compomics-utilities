@@ -44,8 +44,6 @@ public class MSnSpectrum extends ExperimentObject {
     public MSnSpectrum() {
     }
 
-
-
     /**
      * constructor for the spectrum
      *
@@ -166,6 +164,11 @@ public class MSnSpectrum extends ExperimentObject {
         return result;
     }
 
+    /**
+     * Returns the peak map.
+     *
+     * @return the peak map
+     */
     public HashMap<Double, Peak> getPeakMap() {
         HashMap<Double, Peak> result = new HashMap<Double, Peak>();
         for (Peak peak : peakList) {

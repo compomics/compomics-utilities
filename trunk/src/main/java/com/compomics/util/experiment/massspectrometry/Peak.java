@@ -2,7 +2,6 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.utils.ExperimentObject;
 
-import java.io.Serializable;
 
 /**
  * This class represents a peak.
@@ -37,6 +36,7 @@ public class Peak extends ExperimentObject {
         this.mz = mz;
         this.intensity = intensity;
     }
+    
     /**
      * Constructor for a peak.
      *

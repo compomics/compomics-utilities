@@ -17,5 +17,4 @@ public class Ms2Identification extends Identification {
     public Ms2Identification() {
         this.methodUsed = IdentificationMethod.MS2_IDENTIFICATION;
     }
-
 }

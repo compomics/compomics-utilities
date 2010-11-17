@@ -107,5 +107,4 @@ public class MsExperiment extends ExperimentObject {
     public void setSample(int index, Sample sample) {
         samples.put(index, sample);
     }
-    
 }

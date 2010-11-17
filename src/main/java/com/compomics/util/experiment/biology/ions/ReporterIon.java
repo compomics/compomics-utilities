@@ -87,7 +87,7 @@ public class ReporterIon extends Ion {
     private int index;
     /**
      * ion name for user defined ions
-      */
+     */
     private String name = null;
 
     /**
@@ -126,7 +126,7 @@ public class ReporterIon extends Ion {
      * @return name of the reporter ion
      */
     public String getName() {
-        switch(index) {
+        switch (index) {
             case ITRAQ_114:
                 return "iTRAQ 114";
             case ITRAQ_115:
@@ -175,43 +175,43 @@ public class ReporterIon extends Ion {
     private void setReferenceMass() {
         switch (index) {
             case ITRAQ_114:
-        this.theoreticMass = 114.1112;    
+                this.theoreticMass = 114.1112;
                 return;
             case ITRAQ_115:
-        this.theoreticMass = 115.1083;
+                this.theoreticMass = 115.1083;
                 return;
             case ITRAQ_116:
-        this.theoreticMass = 116.1116;
+                this.theoreticMass = 116.1116;
                 return;
             case ITRAQ_117:
-        this.theoreticMass = 117.1150;
+                this.theoreticMass = 117.1150;
                 return;
             case ITRAQ_118:
-        this.theoreticMass = 118;
+                this.theoreticMass = 118;
                 return;
             case ITRAQ_119:
-        this.theoreticMass = 119;
+                this.theoreticMass = 119;
                 return;
             case ITRAQ_121:
-        this.theoreticMass = 121;
+                this.theoreticMass = 121;
                 return;
             case TMT0:
-        this.theoreticMass = 126;
+                this.theoreticMass = 126;
                 return;
             case TMT1:
-        this.theoreticMass = 127;
+                this.theoreticMass = 127;
                 return;
             case TMT2:
-        this.theoreticMass = 128;
+                this.theoreticMass = 128;
                 return;
             case TMT3:
-        this.theoreticMass = 129;
+                this.theoreticMass = 129;
                 return;
             case TMT4:
-        this.theoreticMass = 130;
+                this.theoreticMass = 130;
                 return;
             case TMT5:
-        this.theoreticMass = 131;
+                this.theoreticMass = 131;
         }
     }
 }

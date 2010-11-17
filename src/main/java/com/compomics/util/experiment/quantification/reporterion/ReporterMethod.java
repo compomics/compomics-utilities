@@ -17,7 +17,6 @@ public class ReporterMethod extends QuantificationMethod {
      * the reporter ions of the method
      */
     private ArrayList<ReporterIon> reporterIons;
-
     /**
      * The correction factors corresponding to the ions
      */

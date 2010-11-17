@@ -61,7 +61,6 @@ public class Protein extends ExperimentObject {
         this.decoy = isDecoy;
     }
 
-
     /**
      * Getter for the protein accession
      *

@@ -12,22 +12,18 @@ public class CorrectionFactor {
      * The concerned ion index
      */
     private int ionId;
-
     /**
      * the isotope amount at -2Da
      */
     private double minus2;
-
     /**
      * the isotope amount at -1Da
      */
     private double minus1;
-
     /**
      * the isotope amount at +1Da
      */
     private double plus1;
-
     /**
      * the isotope amount at +2Da
      */
@@ -128,5 +124,4 @@ public class CorrectionFactor {
     public void setPlus2(double plus2) {
         this.plus2 = plus2;
     }
-
 }

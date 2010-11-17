@@ -1,12 +1,9 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.Sample;
-import com.compomics.util.experiment.quantification.QuantificationMethod;
 import com.compomics.util.experiment.quantification.Quantification;
-import com.compomics.util.experiment.quantification.reporterion.quantification.ProteinQuantification;
 
 import java.util.HashMap;
-import java.util.ArrayList;
 
 /**
  * This class will contain quantification results.
@@ -20,12 +17,10 @@ public class ReporterIonQuantification extends Quantification {
      * The sample assignement to the various ions indexed by their static indexes
      */
     private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
-
     /**
      * The reference label indexed by the reporter ion index
      */
     private int referenceLabel;
-
     /**
      * The reporter method
      */

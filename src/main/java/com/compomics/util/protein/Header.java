@@ -475,13 +475,34 @@ public class Header implements Cloneable {
                     String tempHeader = aFASTAHeader.substring(3);
                     result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
                     // See if there is location information.
-                    if(tempHeader.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
-                        int openBracket = tempHeader.indexOf("(");
-                        result.iAccession = tempHeader.substring(0, openBracket).trim();
-                        result.iStart = Integer.parseInt(tempHeader.substring(openBracket, tempHeader.indexOf(" ", openBracket)).trim());
-                        result.iEnd = Integer.parseInt(tempHeader.substring(tempHeader.indexOf(" ", openBracket), tempHeader.indexOf(")")).trim());
+                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket, result.iAccession.indexOf(" ", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(tempHeader.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
                     result.iID = "sw";
+                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
+                } else if(aFASTAHeader.matches("^tr\\|[POQA][^|]*\\|[^\\s]+_[^\\s]+ .*")) {
+                    // New (September 2008 and beyond) standard SwissProt header as
+                    // present in the Expasy FTP FASTA file.
+                    // Is formatted something like this:
+                    //  >sp|accession|ID descr rest (including taxonomy, if available)
+                    String tempHeader = aFASTAHeader.substring(3);
+                    result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
+                    // See if there is location information.
+                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf(" ", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(tempHeader.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    } else if(result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(tempHeader.indexOf("-", openBracket)+1, result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    }
+                    result.iID = "tr";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
                 } else if(aFASTAHeader.startsWith("dm")) {
                     // A personal D. Melanogaster header from translating the dm genome into protein sequences.
@@ -744,7 +765,7 @@ public class Header implements Cloneable {
         } else {
             // Some more appending to be done here.
             if(!this.iID.equals("")) {
-                if(this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("IPI") || this.iID.toLowerCase().startsWith("l. monocytogenes")) {
+                if(this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("tr") || this.iID.equalsIgnoreCase("IPI") || this.iID.toLowerCase().startsWith("l. monocytogenes")) {
                     // FASTA entry with pipe ('|') separating core header from description.
                     result.append("|"+this.iDescription);
                 } else if(this.iID.equalsIgnoreCase("gi")) {
@@ -825,6 +846,8 @@ public class Header implements Cloneable {
             score = 0;
         } else if(this.iID.equalsIgnoreCase("sw")) {
             score = 4;
+        } else if(this.iID.equalsIgnoreCase("tr")) {
+            score = 2;
         } else if(this.iID.equalsIgnoreCase("ipi")) {
             if(this.iDescription != null && this.iDescription.toUpperCase().indexOf("SWISS-PROT") >= 0) {
                 score = 3;

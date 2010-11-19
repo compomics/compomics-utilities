@@ -73,6 +73,7 @@ public class TestHeader extends TestCaseLM {
         final String nrAt = ">nrAt0.2_1 \t(TR:Q8HT11_ARATH) Photosystem II CP43 protein (Fragment).- Arabidopsis thaliana (Mouse-ear cress).";
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
+        final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
 
         // First of all, two trivial cases: 'null' and empty String.
         Header h = Header.parseFromFASTA(null);
@@ -316,6 +317,16 @@ public class TestHeader extends TestCaseLM {
         Assert.assertTrue(h.getForeignID() == null);
         Assert.assertTrue(h.getRest() == null);
 
+        // New TrEMBL FASTA header.
+        h = Header.parseFromFASTA(trSep2008);
+        Assert.assertEquals("tr", h.getID());
+        Assert.assertEquals("Q8KFF3", h.getAccession());
+        Assert.assertEquals("Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1", h.getDescription());
+        Assert.assertTrue(h.getForeignAccession() == null);
+        Assert.assertTrue(h.getForeignDescription() == null);
+        Assert.assertTrue(h.getForeignID() == null);
+        Assert.assertTrue(h.getRest() == null);
+
 
         // Now do the standard NCBI header.
         h = Header.parseFromFASTA(nrStandard);
@@ -392,6 +403,7 @@ public class TestHeader extends TestCaseLM {
         final String nrAt = ">nrAt0.2_1\t (TR:Q8HT11_ARATH) Photosystem II CP43 protein (Fragment).- Arabidopsis thaliana (Mouse-ear cress).";
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
+        final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
 
         Assert.assertEquals(0, Header.parseFromFASTA(unknown).getScore());
         Assert.assertEquals(4, Header.parseFromFASTA(spStandard).getScore());
@@ -416,6 +428,7 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(4, Header.parseFromFASTA(spFASTA90).getScore());
         Assert.assertEquals(0, Header.parseFromFASTA(generic).getScore());
         Assert.assertEquals(4, Header.parseFromFASTA(spSep2008).getScore());
+        Assert.assertEquals(2, Header.parseFromFASTA(trSep2008).getScore());
     }
 
     /**
@@ -442,6 +455,7 @@ public class TestHeader extends TestCaseLM {
         final String nrAt = ">nrAt0.2_1\t (TR:Q8HT11_ARATH) Photosystem II CP43 protein (Fragment).- Arabidopsis thaliana (Mouse-ear cress).";
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
+        final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
 
         Assert.assertEquals(unknown.substring(1), Header.parseFromFASTA(unknown).getCoreHeader());
         Assert.assertEquals("sw|O95229", Header.parseFromFASTA(spStandard).getCoreHeader());
@@ -463,6 +477,7 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals("nrAt0.2_1 \t(TR:Q8HT11_ARATH)", Header.parseFromFASTA(nrAt).getCoreHeader());
         Assert.assertEquals("L. monocytogenes EGD-e|LMO02333", Header.parseFromFASTA(listeria).getCoreHeader());
         Assert.assertEquals("sw|A7GKH8", Header.parseFromFASTA(spSep2008).getCoreHeader());
+        Assert.assertEquals("tr|Q8KFF3", Header.parseFromFASTA(trSep2008).getCoreHeader());
     }
 
     /**
@@ -488,6 +503,7 @@ public class TestHeader extends TestCaseLM {
         final String nrAt = ">nrAt0.2_1\t (TR:Q8HT11_ARATH) Photosystem II CP43 protein (Fragment).- Arabidopsis thaliana (Mouse-ear cress).";
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
+        final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
 
         // First the absence of addenda.
         Header h1 = Header.parseFromFASTA(unknown);
@@ -509,6 +525,7 @@ public class TestHeader extends TestCaseLM {
         Header h16 = Header.parseFromFASTA(nrAt);
         Header h17 = Header.parseFromFASTA(listeria);
         Header h18 = Header.parseFromFASTA(spSep2008);
+        Header h19 = Header.parseFromFASTA(trSep2008);
 
 
         Assert.assertFalse(h1.hasAddenda());
@@ -530,6 +547,7 @@ public class TestHeader extends TestCaseLM {
         Assert.assertFalse(h16.hasAddenda());
         Assert.assertFalse(h17.hasAddenda());
         Assert.assertFalse(h18.hasAddenda());
+        Assert.assertFalse(h19.hasAddenda());
 
         Assert.assertTrue(h1.getAddenda() == null);
         Assert.assertTrue(h2.getAddenda() == null);
@@ -551,6 +569,7 @@ public class TestHeader extends TestCaseLM {
         Assert.assertTrue(h16.getAddenda() == null);
         Assert.assertTrue(h17.getAddenda() == null);
         Assert.assertTrue(h18.getAddenda() == null);
+        Assert.assertTrue(h19.getAddenda() == null);
 
         Assert.assertEquals(h1.toString(), h1.getFullHeaderWithAddenda());
         Assert.assertEquals(h2.toString(), h2.getFullHeaderWithAddenda());
@@ -571,6 +590,7 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(h16.toString(), h16.getFullHeaderWithAddenda());
         Assert.assertEquals(h17.toString(), h17.getFullHeaderWithAddenda());
         Assert.assertEquals(h18.toString(), h18.getFullHeaderWithAddenda());
+        Assert.assertEquals(h19.toString(), h19.getFullHeaderWithAddenda());
 
         Assert.assertEquals(h1.getAbbreviatedFASTAHeader(), h1.getAbbreviatedFASTAHeaderWithAddenda());
         Assert.assertEquals(h2.getAbbreviatedFASTAHeader(), h2.getAbbreviatedFASTAHeaderWithAddenda());
@@ -591,6 +611,7 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(h16.getAbbreviatedFASTAHeader(), h16.getAbbreviatedFASTAHeaderWithAddenda());
         Assert.assertEquals(h17.getAbbreviatedFASTAHeader(), h17.getAbbreviatedFASTAHeaderWithAddenda());
         Assert.assertEquals(h18.getAbbreviatedFASTAHeader(), h18.getAbbreviatedFASTAHeaderWithAddenda());
+        Assert.assertEquals(h19.getAbbreviatedFASTAHeader(), h19.getAbbreviatedFASTAHeaderWithAddenda());
 
         // Next add some addenda.
         h2.addAddendum(h3.getCoreHeader());
@@ -683,6 +704,11 @@ public class TestHeader extends TestCaseLM {
         h18.addAddendum(h18.getCoreHeader());
         Assert.assertTrue(h18.hasAddenda());
         Assert.assertEquals(h18.toString() + "^A" + h3.getCoreHeader() + "^A" + h18.getCoreHeader(), h18.getFullHeaderWithAddenda());
+
+        h19.addAddendum(h3.getCoreHeader());
+        h19.addAddendum(h19.getCoreHeader());
+        Assert.assertTrue(h19.hasAddenda());
+        Assert.assertEquals(h19.toString() + "^A" + h3.getCoreHeader() + "^A" + h19.getCoreHeader(), h19.getFullHeaderWithAddenda());
 
 
         // Now see if we parse addenda from a FASTA header with addenda correctly.
@@ -944,6 +970,21 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(h18.getRest(), parsed.getRest());
         Assert.assertEquals(h18.getScore(), parsed.getScore());
         Assert.assertEquals(h18.getStartLocation(), parsed.getStartLocation());
+
+        parsed = Header.parseFromFASTA(h19.getFullHeaderWithAddenda());
+        Assert.assertEquals(h19.getAddenda(), parsed.getAddenda());
+        Assert.assertEquals(h19.getDescription(), parsed.getDescription());
+        Assert.assertEquals(h19.getAccession(), parsed.getAccession());
+        Assert.assertEquals(h19.getCoreHeader(), parsed.getCoreHeader());
+        Assert.assertEquals(h19.getEndLocation(), parsed.getEndLocation());
+        Assert.assertEquals(h19.getStartLocation(), parsed.getStartLocation());
+        Assert.assertEquals(h19.getForeignAccession(), parsed.getForeignAccession());
+        Assert.assertEquals(h19.getForeignDescription(), parsed.getForeignDescription());
+        Assert.assertEquals(h19.getForeignID(), parsed.getForeignID());
+        Assert.assertEquals(h19.getID(), parsed.getID());
+        Assert.assertEquals(h19.getRest(), parsed.getRest());
+        Assert.assertEquals(h19.getScore(), parsed.getScore());
+        Assert.assertEquals(h19.getStartLocation(), parsed.getStartLocation());
     }
 
     /**
@@ -969,6 +1010,7 @@ public class TestHeader extends TestCaseLM {
         final String nrAt = ">nrAt0.2_1\t (TR:Q8HT11_ARATH) Photosystem II CP43 protein (Fragment).- Arabidopsis thaliana (Mouse-ear cress).";
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
+        final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
 
 
         // Parse the headers.
@@ -991,6 +1033,7 @@ public class TestHeader extends TestCaseLM {
         Header h16 = Header.parseFromFASTA(nrAt);
         Header h17 = Header.parseFromFASTA(listeria);
         Header h18 = Header.parseFromFASTA(spSep2008);
+        Header h19 = Header.parseFromFASTA(trSep2008);
 
         h1.setLocation(10, 15);
         Assert.assertEquals("Unknown header type. (10-15)", h1.getCoreHeader());
@@ -1133,6 +1176,13 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(42, h18.getStartLocation());
         Assert.assertEquals(49, h18.getEndLocation());
 
+        h19.setLocation(42, 49);
+        Assert.assertEquals("tr|Q8KFF3 (42-49)", h19.getCoreHeader());
+        Assert.assertEquals(">tr|Q8KFF3 (42-49)|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1", h19.getAbbreviatedFASTAHeader());
+        Assert.assertEquals(">tr|Q8KFF3 (42-49)|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1", h19.toString());
+        Assert.assertEquals(42, h19.getStartLocation());
+        Assert.assertEquals(49, h19.getEndLocation());
+
 
         // Finally, test the creation of a header with location information present.
         // First SP.
@@ -1243,6 +1293,13 @@ public class TestHeader extends TestCaseLM {
         Assert.assertEquals(h18.getStartLocation(), h5.getStartLocation());
         Assert.assertEquals(h18.getEndLocation(), h5.getEndLocation());
         Assert.assertEquals(h18.toString(), h5.toString());
+
+
+        // Next TrEMBL > Sep 2008
+        h5 = Header.parseFromFASTA(h19.toString());
+        Assert.assertEquals(h19.getStartLocation(), h5.getStartLocation());
+        Assert.assertEquals(h19.getEndLocation(), h5.getEndLocation());
+        Assert.assertEquals(h19.toString(), h5.toString());
 
 
         // Now make it harder: insert '()' somewhere.

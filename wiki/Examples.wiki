@@ -269,7 +269,7 @@ Proteomics data is often stored in relational databases and to use the data the 
 Usage:
 
 {{{
-java -cp utilities-3.0.26.jar com.compomics.util.db.DBAccessorGenerator
+java -cp utilities-X.Y.Z.jar com.compomics.util.db.DBAccessorGenerator
 
 Usage:
 
@@ -280,7 +280,7 @@ Example:
 
 {{{
 java -cp
-utilities-3.0.26.jar com.compomics.util.db.DBAccessorGenerator 
+utilities-X.Y.Z.jar com.compomics.util.db.DBAccessorGenerator 
 --user TestUser --password BadPassword com.mysql.jdbc.Driver jdbc:mysql://server.com/myDb testTable com.compomics.test.db
 }}}
 

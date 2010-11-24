@@ -9,7 +9,8 @@
  * [#Chromatogram_Panel Chromatogram Panel]
  * [#Isotopic_Distribution_Calculation Isotopic Distribution Calculation]
  * [#In_Silico_Protein_Digestion In Silico Protein Digestion]
- * [#Proteomics_Experiment_Modelling Proteomics Experiment Modelling]
+ * [#Proteomics_Experiments_Standardized_Customizable_Objects Proteomics Experiments Standardized Customizable Objects]
+ * [#Automatic_Generation_of_Data_Access_Code Automatic Generation of Data Access Code]
 
 For the complete source code of all demos see the [http://code.google.com/p/compomics-utilities/source/checkout Source tab]. The source of the demos are in the com.compomics.util.examples package.
 
@@ -199,11 +200,11 @@ To use the In Silico Protein Digestion in your project do the following:
 
 ----
 
-==Proteomics Experiment Modelling==
+==Proteomics Experiments Standardized Customizable Objects==
 
 [http://compomics-utilities.googlecode.com/svn/wiki/images/experiment.bmp http://compomics-utilities.googlecode.com/svn/wiki/images/experiment_small.png]
 
-The experiment package provides a standard and adaptable model for proteomics experiments. It consists of four main parts: biology, mass spectrometry, identification and quantification.
+The experiment package provides a standardized customizable objects for proteomics experiments. It consists of four main parts: biology, mass spectrometry, identification and quantification.
 
 
 The handling of post-translational modifications is externalized allowing user specified modification processing:
@@ -257,6 +258,33 @@ All experiment objects can be completed by user-defined parameters. They all ext
 		theParameter);	        // UrParameter, the key of the stored parameter
 }}}
 
+[#Contents Top of page]
+
+----
+
+==Automatic Generation of Data Access Code==
+
+Proteomics data is often stored in relational databases and to use the data the developer has to interact with the database. To simplify this process compomics-utilities contains automatic generation of data access code to extract the wanted data.
+
+Usage:
+
+{{{
+java -cp utilities-3.0.26.jar com.compomics.util.db.DBAccessorGenerator
+
+Usage:
+
+        DBAccessGenerator [--user <username> --password <password>] <DBDriver> <DBURL> <tablename> <outputpackage>
+}}}
+
+Example:
+
+{{{
+java -cp
+utilities-3.0.26.jar com.compomics.util.db.DBAccessorGenerator 
+--user TestUser --password BadPassword com.mysql.jdbc.Driver jdbc:mysql://server.com/myDb testTable com.compomics.test.db
+}}}
+
+The above command line will create a class called TestTableAccessor in the com.compomics.test.db package that can be used to access the data in the tabled named ´testTable´, using the provided user name and password to access the database.
 
 [#Contents Top of page]
 

@@ -452,7 +452,44 @@ public class Header implements Cloneable {
                     result.iAccession = aFASTAHeader.substring(start+2, end);
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end+2);
-                } else if(aFASTAHeader.matches("^[POQA][^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
+                }  else if(aFASTAHeader.matches("^sp\\|[^|\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
+                    // New (September 2008 and beyond) standard SwissProt header as
+                    // present in the Expasy FTP FASTA file.
+                    // Is formatted something like this:
+                    //  >sp|accession|ID descr rest (including taxonomy, if available)
+                    String tempHeader = aFASTAHeader.substring(3);
+                    result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
+                    // See if there is location information.
+                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket, result.iAccession.indexOf(" ", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    }
+                    result.iID = "sw";
+                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
+                } else if(aFASTAHeader.matches("^tr\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
+                    // New (September 2008 and beyond) standard SwissProt header as
+                    // present in the Expasy FTP FASTA file.
+                    // Is formatted something like this:
+                    //  >sp|accession|ID descr rest (including taxonomy, if available)
+                    String tempHeader = aFASTAHeader.substring(3);
+                    result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
+                    // See if there is location information.
+                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf(" ", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    } else if(result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket)+1, result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    }
+                    result.iID = "tr";
+                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
+                } else if(aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
@@ -467,43 +504,6 @@ public class Header implements Cloneable {
                     }
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
-                }  else if(aFASTAHeader.matches("^sp\\|[POQA][^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
-                    // New (September 2008 and beyond) standard SwissProt header as
-                    // present in the Expasy FTP FASTA file.
-                    // Is formatted something like this:
-                    //  >sp|accession|ID descr rest (including taxonomy, if available)
-                    String tempHeader = aFASTAHeader.substring(3);
-                    result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
-                    // See if there is location information.
-                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
-                        int openBracket = result.iAccession.indexOf("(");
-                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket, result.iAccession.indexOf(" ", openBracket)).trim());
-                        result.iEnd = Integer.parseInt(result.iAccession.substring(tempHeader.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
-                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
-                    }
-                    result.iID = "sw";
-                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
-                } else if(aFASTAHeader.matches("^tr\\|[POQA][^|]*\\|[^\\s]+_[^\\s]+ .*")) {
-                    // New (September 2008 and beyond) standard SwissProt header as
-                    // present in the Expasy FTP FASTA file.
-                    // Is formatted something like this:
-                    //  >sp|accession|ID descr rest (including taxonomy, if available)
-                    String tempHeader = aFASTAHeader.substring(3);
-                    result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
-                    // See if there is location information.
-                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
-                        int openBracket = result.iAccession.indexOf("(");
-                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf(" ", openBracket)).trim());
-                        result.iEnd = Integer.parseInt(result.iAccession.substring(tempHeader.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
-                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
-                    } else if(result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
-                        int openBracket = result.iAccession.indexOf("(");
-                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf("-", openBracket)).trim());
-                        result.iEnd = Integer.parseInt(result.iAccession.substring(tempHeader.indexOf("-", openBracket)+1, result.iAccession.indexOf(")")).trim());
-                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
-                    }
-                    result.iID = "tr";
-                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
                 } else if(aFASTAHeader.startsWith("dm")) {
                     // A personal D. Melanogaster header from translating the dm genome into protein sequences.
                     // We need to find two elements, separated by a space:

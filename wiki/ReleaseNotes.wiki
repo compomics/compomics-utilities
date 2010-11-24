@@ -3,10 +3,20 @@
 
 ----
 
+*Changes in compomics-utilties 3.0.27 (Nov. 24. 2010):*
+ * NEW FEATURE: Added FASTA header parsing for TrEMBL headers.
+ * FEATURE IMPROVEMENT: Updated the Experiment package. 
+ * BUG FIX: Fixed a bug with SP FASTA header parsing. 
+ * BUG FIX: Changed logging to stdout/stderr for DB accessor generator.
+
+----
+
 *Changes in compomics-utilties 3.0.23 (Nov. 7. 2010):*
  * NEW FEATURE: Experiment model extended with report ion support. 
  * BUG FIX: Fixed a bug in GraphicsPanel that resulted in the peak mouse-over-annotations disappearing even when not moving the mouse.
  * BUG FIX: Fixed a bug introduced when hiding the data points just below the x-axis, where the background color was always set to white. The panel's background color is now used.
+
+Download Count: 2
 
 ----
 

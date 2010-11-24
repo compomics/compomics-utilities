@@ -37,9 +37,6 @@ import java.io.File;
  */
 public class DBAccessorGenerator {
 
-    // Class specific log4j logger for DBAccessorGenerator instances.
-    private static Logger logger = Logger.getLogger(DBAccessorGenerator.class);
-
     /**
      * Default constructor.
      */
@@ -77,12 +74,12 @@ public class DBAccessorGenerator {
         // Okay, we've got our connection, now get the MetaData.
         DBMetaData dbmd = this.getMetaData(lConn, aTable);
 
-        if(aDebug)logger.info("\n\n" + dbmd.toString() + "\n");
+        if(aDebug) System.out.println("\n\n" + dbmd.toString() + "\n");
         // Close the connection.
         try {
             lConn.close();
         } catch(Exception e) {
-            logger.error(e.getMessage(), e);
+            System.err.println(e.getMessage());
         }
 
         // Generate the accessor class.
@@ -120,9 +117,9 @@ public class DBAccessorGenerator {
         } else {
             try {
                 dba.startGenerator(drivername, dburl, tablename, username, password, packageName, true);
-                logger.info("\n\nGeneration complete!\n");
+                System.out.println("\n\nGeneration complete!\n");
             } catch(GeneratorException ge) {
-                logger.error("\nGenerator encountered the following exception: \n\n" + ge.getMessage() + "\n\n");
+                System.err.println("\nGenerator encountered the following exception: \n\n" + ge.getMessage() + "\n\n");
             }
         }
     }
@@ -131,8 +128,8 @@ public class DBAccessorGenerator {
      * This method prints the usage of this class to stderr.
      */
     private static void printUsage() {
-        logger.error("\n\nUsage:\n");
-        logger.error("\tDBAccessGenerator [--user <username> --password <password>] <DBDriver> <DBURL> <tablename> <outputpackage>\n");
+        System.err.println("\n\nUsage:\n");
+        System.err.println("\tDBAccessGenerator [--user <username> --password <password>] <DBDriver> <DBURL> <tablename> <outputpackage>\n");
     }
 
     /**
@@ -277,7 +274,8 @@ public class DBAccessorGenerator {
             bw.flush();
             bw.close();
         } catch(Exception e) {
-            logger.error(e.getMessage(), e);
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

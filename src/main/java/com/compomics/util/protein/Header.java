@@ -504,6 +504,18 @@ public class Header implements Cloneable {
                     }
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
+                } else if(aFASTAHeader.matches("^FB.+\\stype=.*")) {
+                    // Flybase FASTA format.
+                    // Accession number
+                    result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf("type")).trim();
+                    if(result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket)+1, result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    }
+                    result.iID = "";
+                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("type="));
                 } else if(aFASTAHeader.startsWith("dm")) {
                     // A personal D. Melanogaster header from translating the dm genome into protein sequences.
                     // We need to find two elements, separated by a space:

@@ -14,24 +14,28 @@ import java.util.Iterator;
  * Date: Jun 18, 2010
  * Time: 9:04:58 AM
  */
-public abstract class MS1Spectrum extends ExperimentObject {
+public class MS1Spectrum extends ExperimentObject {
 
     /**
      * spectrum title
      */
-    protected String spectrumTitle;
+    private String spectrumTitle;
     /**
      * peak list
      */
-    protected HashSet<Peak> peakList;
+    private HashSet<Peak> peakList;
     /**
      * spectrum file name
      */
-    protected String fileName;
+    private String fileName;
+    /**
+     * scan number
+     */
+    private int scanNumber;
     /**
      * retention time
      */
-    protected double rt;
+    private double rt;
 
     /**
      * Constructor for an MS1 spectrum
@@ -109,5 +113,13 @@ public abstract class MS1Spectrum extends ExperimentObject {
         coordinates[5] = intensity;
 
         return coordinates;
+    }
+
+    /**
+     * Getter for the scan number
+     * @return the spectrum scan number
+     */
+    public int getScanNumber() {
+        return scanNumber;
     }
 }

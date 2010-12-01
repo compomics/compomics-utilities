@@ -39,9 +39,9 @@ public class MSnSpectrum extends ExperimentObject {
     private String fileName;
 
     /**
-     * the scan number
+     * the scan number or range
      */
-    private int scanNumber;
+    private String scanNumber;
 
     /**
      * Constructor for the spectrum
@@ -75,9 +75,9 @@ public class MSnSpectrum extends ExperimentObject {
      * @param spectrumTitle      spectrum title
      * @param spectrum           set of peaks
      * @param fileName           file name
-     * @param scanNumber         the spectrum scan number
+     * @param scanNumber         the spectrum scan number or range
      */
-    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashSet<Peak> spectrum, String fileName, int scanNumber) {
+    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashSet<Peak> spectrum, String fileName, String scanNumber) {
         this.level = level;
         this.precursor = precursor;
         this.spectrumTitle = spectrumTitle;
@@ -203,18 +203,18 @@ public class MSnSpectrum extends ExperimentObject {
     }
 
     /**
-     * Getter for the scan number
-     * @return the scan number
+     * Getter for the scan number or range
+     * @return the scan number or range
      */
-    public int getScanNumber() {
+    public String getScanNumber() {
         return scanNumber;
     }
 
     /**
-     * Setter for the scan number
-     * @param scanNumber    the scan number of the spectrum
+     * Setter for the scan number or range
+     * @param scanNumber    the scan number or range of the spectrum
      */
-    public void setScanNumber(int scanNumber) {
+    public void setScanNumber(String scanNumber) {
         this.scanNumber = scanNumber;
     }
 }

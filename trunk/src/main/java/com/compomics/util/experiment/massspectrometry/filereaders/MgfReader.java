@@ -38,7 +38,7 @@ public class MgfReader {
         double precursorMass = 0;
         int precursorCharge = 0;
         double rt = -1.0;
-        int scanNumber = -1;
+        String scanNumber = "";
         String spectrumTitle = "";
         HashSet<Peak> spectrum = new HashSet<Peak>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
@@ -73,7 +73,7 @@ public class MgfReader {
                 // sequence tag not implemented
             } else if (line.startsWith("SCANS")) {
                 try {
-                    scanNumber = new Integer(line.substring(line.indexOf('=') + 1));
+                    scanNumber = line.substring(line.indexOf('=') + 1);
                 } catch (Exception e) {
                     throw new Exception("Cannot parse scan number.");
                 }

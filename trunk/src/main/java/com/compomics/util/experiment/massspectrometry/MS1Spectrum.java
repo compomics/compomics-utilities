@@ -29,9 +29,9 @@ public class MS1Spectrum extends ExperimentObject {
      */
     private String fileName;
     /**
-     * scan number
+     * scan number or range
      */
-    private int scanNumber;
+    private String scanNumber;
     /**
      * retention time
      */
@@ -119,7 +119,15 @@ public class MS1Spectrum extends ExperimentObject {
      * Getter for the scan number
      * @return the spectrum scan number
      */
-    public int getScanNumber() {
+    public String getScanNumber() {
         return scanNumber;
+    }
+
+    /**
+     * Setter for the scan number or range
+     * @param scanNumber or range
+     */
+    public void setScanNumber(String scanNumber) {
+        this.scanNumber = scanNumber;
     }
 }

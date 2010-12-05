@@ -1015,7 +1015,7 @@ abstract class GraphicsPanel extends JPanel {
         if (yDataIsPositive) {
             Color currentColor = g.getColor();
             g.setColor(this.getBackground());
-            g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, 20);
+            g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 20);
             g.setColor(currentColor);
         }
 

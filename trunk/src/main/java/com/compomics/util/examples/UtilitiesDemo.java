@@ -5,6 +5,7 @@
  */
 package com.compomics.util.examples;
 
+import com.compomics.util.Export;
 import com.compomics.util.Util;
 import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.general.IsotopicDistribution;
@@ -2554,7 +2555,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
                 if (saveFile) {
                     setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-                    Util.exportComponent(spectraJPanel, spectraJPanel.getBounds(), new File(selectedFile), ImageType.PDF); // change if exporting to a different format
+                    Export.exportComponent(spectraJPanel, spectraJPanel.getBounds(), new File(selectedFile), ImageType.PDF); // change if exporting to a different format
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                     JOptionPane.showMessageDialog(this, "Spectra saved to " + selectedFile, "Spectra Saved", JOptionPane.INFORMATION_MESSAGE);
                 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This reader will import identifications from an OMSSA omx file.
@@ -69,8 +70,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     public OMSSAIdfileReader(File idFile) {
         this.identificationFile = idFile;
 
-        File modsFile = null;
-        File userModsFile = null;
+        modsFile = null;
+        userModsFile = null;
         File currentFolder = new File(idFile.getParent());
         File[] modsResult = currentFolder.listFiles();
         if (modsResult != null) {
@@ -83,8 +84,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                 }
             }
         }
-        this.modsFile = modsFile;
-        this.userModsFile = userModsFile;
     }
 
     /**
@@ -118,7 +117,12 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         HashMap peptideToProteinMap = omxFile.getPeptideToProteinMap();
         for (int i = 0; i < msSearchResponse.size(); i++) {
             msResponseScale = msSearchResponse.get(i).MSResponse_scale;
-            for (MSHitSet msHitSet : msSearchResponse.get(i).MSResponse_hitsets.MSHitSet) {
+
+            Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
+
+            for (int j=0; j < msHitSetMap.size(); j++) {
+                MSHitSet msHitSet = msHitSetMap.get(j);
+
                 File tempFile = new File(msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile);
                 String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
                 List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;

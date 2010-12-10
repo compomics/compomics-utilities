@@ -191,6 +191,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 if (correspondingPTM != null) {
                     // Modification site not implemented yet
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
+                } else {
+                    correspondingPTM = new PTM(PTM.MODAA, handledModification.getType(), handledModification.getMass(), new String[] {"x"});
+                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
                 }
             }
         }

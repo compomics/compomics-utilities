@@ -120,8 +120,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
             Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
 
-            for (int j=0; j < msHitSetMap.size(); j++) {
-                MSHitSet msHitSet = msHitSetMap.get(j);
+            for (MSHitSet msHitSet : msHitSetMap.values()) {
 
                 File tempFile = new File(msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile);
                 String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);

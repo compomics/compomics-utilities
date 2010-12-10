@@ -143,9 +143,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             } catch (Exception e) {
                                 int end = description.indexOf(" ");
                                 accession = description.substring(0, end);
-                                if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
-                                    reverseHit = false;
-                                }
+                            }
+                            if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
+                                reverseHit = false;
                             }
                             proteins.add(new Protein(accession, description, reverseHit));
                         }

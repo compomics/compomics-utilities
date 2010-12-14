@@ -97,6 +97,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
         HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
+        try {
         Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
         while (spectraIt.hasNext()) {
             // informations to provide
@@ -184,7 +185,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 }
             }
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return foundPeptides;
     }
 

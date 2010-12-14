@@ -105,7 +105,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
 
         HashSet<SpectrumMatch> assignedPeptideHits = new HashSet<SpectrumMatch>();
-
+        try {
         QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
         QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
         for (int i = 0; i < iMascotDatfile.getNumberOfQueries(); i++) {
@@ -150,7 +150,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 }
             }
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return assignedPeptideHits;
     }
 
@@ -192,7 +194,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     // Modification site not implemented yet
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
                 } else {
-                    correspondingPTM = new PTM(PTM.MODAA, handledModification.getType(), handledModification.getMass(), new String[] {"x"});
+                    correspondingPTM = new PTM(PTM.MODMAX, handledModification.getType(), handledModification.getMass(), new String[] {"x"});
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
                 }
             }

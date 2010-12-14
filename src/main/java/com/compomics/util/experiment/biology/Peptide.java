@@ -1,17 +1,17 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.utils.ExperimentObject;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.utils.ExperimentObject;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * This class models a peptide.
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
  * Date: Jun 18, 2010
@@ -49,10 +49,10 @@ public class Peptide extends ExperimentObject {
     /**
      * Constructor for the peptide
      *
-     * @param aSequence         The peptide sequence
-     * @param mass              The peptide mass
-     * @param parentProteins    The parent proteins
-     * @param modifications     The PTM of this peptide
+     * @param aSequence      The peptide sequence
+     * @param mass           The peptide mass
+     * @param parentProteins The parent proteins
+     * @param modifications  The PTM of this peptide
      */
     public Peptide(String aSequence, Double mass, ArrayList<Protein> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
@@ -72,6 +72,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * getter for the modifications carried by this peptide
+     *
      * @return the modifications matches as found by the search engine
      */
     public ArrayList<ModificationMatch> getModificationMatches() {
@@ -90,7 +91,7 @@ public class Peptide extends ExperimentObject {
     /**
      * method to add a fragmentIon
      *
-     * @param fragment  a fragment ion of this peptide
+     * @param fragment a fragment ion of this peptide
      */
     public void addFragmentIon(PeptideFragmentIon fragment) {
         theoreticPeptideFragmentIons.add(fragment);
@@ -116,12 +117,13 @@ public class Peptide extends ExperimentObject {
 
     /**
      * This methods evaluates the number of missed cleavages
+     *
      * @return the number of missed cleavages
      */
     public int getNMissedCleavages() {
         int cpt = 0;
-        for (int i = 0 ; i < sequence.length()-1 ; i++) {
-            if ((sequence.charAt(i) == 'K' || sequence.charAt(i) == 'R') && sequence.charAt(i+1) != 'P') {
+        for (int i = 0; i < sequence.length() - 1; i++) {
+            if ((sequence.charAt(i) == 'K' || sequence.charAt(i) == 'R') && sequence.charAt(i + 1) != 'P') {
                 cpt++;
             }
         }
@@ -130,18 +132,19 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the index of a peptide. index = SEQUENCE_mod1@aa1_mod2@aa2 with modifications ordered alphabetically.
+     *
      * @return the index of a peptide
      */
     public String getIndex() {
         String[] modifications = new String[getModificationMatches().size()];
         int cpt = 0;
         for (ModificationMatch mod : getModificationMatches()) {
-            if (mod.getTheoreticPtm()!=null) {
-            modifications[cpt] = mod.getTheoreticPtm().getName() + "@" + mod.getModificationSite();
-            cpt++;
+            if (mod.getTheoreticPtm() != null && mod.isVariable()) {
+                modifications[cpt] = mod.getTheoreticPtm().getName();
+                cpt++;
             } else {
                 modifications[cpt] = "unknown-modification";
-            cpt++;
+                cpt++;
             }
         }
         Arrays.sort(modifications);
@@ -154,8 +157,8 @@ public class Peptide extends ExperimentObject {
 
     /**
      * a method which compares to peptides. Two same peptides present the same sequence and same modifications at the same place.
-     * 
-     * @param anOtherPeptide    an other peptide
+     *
+     * @param anOtherPeptide an other peptide
      * @return a boolean indicating if the other peptide is the same.
      */
     public boolean isSameAs(Peptide anOtherPeptide) {

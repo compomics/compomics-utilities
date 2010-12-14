@@ -110,7 +110,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
         HashSet<SpectrumMatch> assignedSpectra = new HashSet<SpectrumMatch>();
-
+        try {
         OmssaOmxFile omxFile = getParserInstance();
         List<MSResponse> msSearchResponse = omxFile.getParserResult().MSSearch_response.MSResponse;
         List<MSRequest> msRequest = omxFile.getParserResult().MSSearch_request.MSRequest;
@@ -209,6 +209,9 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                     }
                 }
             }
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return assignedSpectra;
     }

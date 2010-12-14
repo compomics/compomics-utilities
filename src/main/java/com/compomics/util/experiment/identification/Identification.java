@@ -93,26 +93,28 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Add a spectrum match to the model.
      *
-     * @param spectrumMatch the new spectrum match
+     * @param newMatch the new spectrum match
      * @throws Exception exception thrown when one tries to assign more than one identification per advocate to the same spectrum
      */
-    public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws Exception {
-        String proteinKey, peptideKey, spectrumKey = spectrumMatch.getId();
+    public void addSpectrumMatch(SpectrumMatch newMatch) throws Exception {
+        String proteinKey, peptideKey, spectrumKey = newMatch.getId();
         Peptide peptide;
+        SpectrumMatch oldMatch = spectrumIdentification.get(spectrumKey);
         if (!spectrumIdentification.containsKey(spectrumKey)) {
-            spectrumIdentification.put(spectrumKey, spectrumMatch);
+            spectrumIdentification.put(spectrumKey, newMatch);
+            oldMatch = newMatch;
         } else {
-            for (int searchEngine : spectrumMatch.getAdvocates()) {
-                spectrumIdentification.get(spectrumKey).addFirstHit(searchEngine, spectrumMatch.getFirstHit(searchEngine));
+            for (int searchEngine : newMatch.getAdvocates()) {
+                oldMatch.addFirstHit(searchEngine, newMatch.getFirstHit(searchEngine));
             }
         }
-        for (int searchEngine : spectrumMatch.getAdvocates()) {
-            peptideKey = spectrumMatch.getFirstHit(searchEngine).getPeptide().getIndex();
-            peptide = spectrumMatch.getFirstHit(searchEngine).getPeptide();
+        for (int searchEngine : newMatch.getAdvocates()) {
+            peptide = newMatch.getFirstHit(searchEngine).getPeptide();
+            peptideKey = peptide.getIndex();
             if (peptideIdentification.containsKey(peptideKey) && !peptideIdentification.get(peptideKey).getSpectrumMatches().containsKey(spectrumKey)) {
                 peptideIdentification.get(peptideKey).addSpectrumMatch(spectrumIdentification.get(spectrumKey));
             } else if (!peptideIdentification.containsKey(peptideKey)) {
-                peptideIdentification.put(peptideKey, new PeptideMatch(peptide, spectrumMatch));
+                peptideIdentification.put(peptideKey, new PeptideMatch(peptide, oldMatch));
             }
             for (Protein protein : peptide.getParentProteins()) {
                 proteinKey = protein.getAccession();

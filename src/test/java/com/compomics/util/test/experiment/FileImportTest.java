@@ -19,8 +19,8 @@ import java.util.HashSet;
  */
 public class FileImportTest extends TestCase {
 
-    private static final String MASCOT_FILE = "testFiles/velos002764.dat";
-    private static final String OMSSA_FILE = "testFiles/velos002764.omx";
+    private static final String MASCOT_FILE = "testFiles/orbitrap003956.dat";
+    private static final String OMSSA_FILE = "testFiles/orbitrap003956.omx";
     private static final String XTANDEM_FILE = "testFiles/velos002764.xml";
     private static final String MODIFICATION_FILE = "exampleFiles/experiment/mods.xml";
     private static final String USER_MODIFICATION_FILE = "exampleFiles/experiment/usermods.xml";
@@ -39,8 +39,8 @@ public class FileImportTest extends TestCase {
         File mascotFile = new File(MASCOT_FILE);
         File omssaFile = new File(OMSSA_FILE);
         File xTandemFile = new File(XTANDEM_FILE);
+/**
 
-                /**
         try {
             ptmFactory.importModifications(modificationFile);
             ptmFactory.importModifications(userModificationFile);
@@ -55,10 +55,24 @@ public class FileImportTest extends TestCase {
         boolean test;
         try {
             for (SpectrumMatch match : matches) {
+                if (match.getFirstHit(match.getAdvocates().get(0)).getPeptide().getSequence().equals("AAFTECCQAADKAACLLPK")) {
+                    int debug = 0;
+                }
                 identification.addSpectrumMatch(match);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }                  **/
+        }
+        matches = mascotReader.getAllSpectrumMatches();
+        try {
+            for (SpectrumMatch match : matches) {
+                if (match.getFirstHit(match.getAdvocates().get(0)).getPeptide().getSequence().equals("AAFTECCQAADKAACLLPK")) {
+                    int debug = 0;
+                }
+                identification.addSpectrumMatch(match);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }**/
     }
 }

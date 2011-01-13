@@ -21,8 +21,18 @@ import java.util.ArrayList;
  * @author Lennart Martens
  * @author Harald Barsnes
  */
-abstract class GraphicsPanel extends JPanel {
+public abstract class GraphicsPanel extends JPanel {
 
+    /**
+     * If set to true, the y-axis is removed, the y- and x-axis tags are removed, 
+     * and any annotations are hidden. All to make the graphics panel look better
+     * in a smaller version, e.g., when put into a table cell. When turning
+     * miniature mode one it is also recommended to reduce the max padding.
+     *
+     * Note that miniature and reduced max padding is set automatically by the
+     * GraphicsPanelTableCellRenderer.
+     */
+    protected boolean miniature = false;
     /**
      * If set to true, all y data is assumed to be positive. This adds a white
      * polygon under the y-axis hiding any polygon data lines that crosses
@@ -356,6 +366,24 @@ abstract class GraphicsPanel extends JPanel {
     }
 
     /**
+     * Returns true if the graphics panel is to be drawn in a minature form.
+     *
+     * @return true if the graphics panel is to be drawn in a minature form
+     */
+    public boolean isMiniature() {
+        return miniature;
+    }
+
+    /**
+     * Set if the graphics panel is to be drawn in a minature form.
+     *
+     * @param miniature if the spectrum is to be drawn in a minature form
+     */
+    public void setMiniature(boolean miniature) {
+        this.miniature = miniature;
+    }
+
+    /**
      * An enumerator of the possible GraphicsPanel types
      */
     protected enum GraphicsPanelType {
@@ -576,7 +604,7 @@ abstract class GraphicsPanel extends JPanel {
             }
 
             // See if we should annotate and if any are present.
-            if (iAnnotations != null && iAnnotations.size() > 0) {
+            if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
                 // This HashMap will contain the indices of the points that already carry an annotation
                 // as keys (datasetIndex_peakIndex), and the number of annotations as values.
                 HashMap<String, Integer>  annotatedPeaks = new HashMap<String, Integer>();
@@ -1015,46 +1043,59 @@ abstract class GraphicsPanel extends JPanel {
         if (yDataIsPositive) {
             Color currentColor = g.getColor();
             g.setColor(this.getBackground());
-            g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 20);
+
+            if (miniature) {
+                g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 2);
+            } else {
+                g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 20);
+            }
+            
             g.setColor(currentColor);
         }
 
         g.drawLine(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, this.getHeight() - tempPadding);
 
-        // Arrowhead on X-axis.
-        g.fillPolygon(new int[]{this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding + 2},
-                new int[]{this.getHeight() - tempPadding + 5, this.getHeight() - tempPadding - 5, this.getHeight() - tempPadding},
-                3);
+        if (!miniature) {
 
-        // X-axis label
-        if(iXAxisLabel.equalsIgnoreCase("m/z")){
-            g.drawString(iXAxisLabel, this.getWidth() - (tempPadding - (padding / 2)), this.getHeight() - tempPadding + 4);
-        } else {
-            g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (tempPadding / 2));
+            // Arrowhead on X-axis.
+            g.fillPolygon(new int[]{this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding + 2},
+                    new int[]{this.getHeight() - tempPadding + 5, this.getHeight() - tempPadding - 5, this.getHeight() - tempPadding}, 3);
+
+            // X-axis label
+            if(iXAxisLabel.equalsIgnoreCase("m/z")){
+                g.drawString(iXAxisLabel, this.getWidth() - (tempPadding - (padding / 2)), this.getHeight() - tempPadding + 4);
+            } else {
+                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (tempPadding / 2));
+            }
+        
+
+            // Y-axis.
+            g.drawLine(tempPadding, this.getHeight() - tempPadding, tempPadding, tempPadding / 2);
         }
 
-        // Y-axis.
-        g.drawLine(tempPadding, this.getHeight() - tempPadding, tempPadding, tempPadding / 2);
         iXPadding = tempPadding;
         int yAxis = this.getHeight() - tempPadding - (tempPadding / 2);
 
-        // Arrowhead on Y axis.
-        g.fillPolygon(new int[]{tempPadding - 5, tempPadding + 5, tempPadding},
-                new int[]{(tempPadding / 2) + 3, (tempPadding / 2) + 3, tempPadding / 2-2},
-                3);
+        if (!miniature) {
 
-        // Y-axis label
-        if(iYAxisLabel.equalsIgnoreCase("Int")){
-            g.drawString(iYAxisLabel, tempPadding - yAxisLabelWidth, (tempPadding / 2) - 4);
-        } else {
-            g.drawString(iYAxisLabel, tempPadding - (yAxisLabelWidth / 5), (tempPadding / 2) - 4);
+            // Arrowhead on Y axis.
+            g.fillPolygon(new int[]{tempPadding - 5, tempPadding + 5, tempPadding},
+                    new int[]{(tempPadding / 2) + 3, (tempPadding / 2) + 3, tempPadding / 2-2},
+                    3);
+
+            // Y-axis label
+            if(iYAxisLabel.equalsIgnoreCase("Int")){
+                g.drawString(iYAxisLabel, tempPadding - yAxisLabelWidth, (tempPadding / 2) - 4);
+            } else {
+                g.drawString(iYAxisLabel, tempPadding - (yAxisLabelWidth / 5), (tempPadding / 2) - 4);
+            }
         }
 
         // Now the tags along the axes.
         this.drawXTags(g, aXMin, aXMax, aXScale, xAxis, tempPadding);
         int yTemp = yAxis;
 
-        if (iAnnotations != null && iAnnotations.size() > 0) {
+        if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
             yTemp -= 20;
         }
 
@@ -1102,86 +1143,93 @@ abstract class GraphicsPanel extends JPanel {
         if (currentGraphicsPanelType.equals(GraphicsPanelType.centroidSpectrum) ||
                 currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)) {
 
-            // Since we know the scale unit, we also know the resolution.
-            // This will be displayed on the bottom line.
-            String resolution = "";
-            if(showResolution){
-                resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-            }
+            if (!miniature) {
 
-            // Also print the MS level and precursor MZ and charge (if known, '?' otherwise).
-            String msLevel_and_optional_precursor = "";
-            if(showPrecursorDetails){
-                msLevel_and_optional_precursor = "MS level: " + iMSLevel;
-
-                if(iMSLevel > 0) {
-                    // Also print the precursor MZ and charge (if known, '?' otherwise).
-                    msLevel_and_optional_precursor += "   Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
-                } else {
-                    msLevel_and_optional_precursor = "Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
+                // Since we know the scale unit, we also know the resolution.
+                // This will be displayed on the bottom line.
+                String resolution = "";
+                if(showResolution){
+                    resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                 }
+
+                // Also print the MS level and precursor MZ and charge (if known, '?' otherwise).
+                String msLevel_and_optional_precursor = "";
+                if(showPrecursorDetails){
+                    msLevel_and_optional_precursor = "MS level: " + iMSLevel;
+
+                    if(iMSLevel > 0) {
+                        // Also print the precursor MZ and charge (if known, '?' otherwise).
+                        msLevel_and_optional_precursor += "   Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
+                    } else {
+                        msLevel_and_optional_precursor = "Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
+                    }
+                }
+
+                // Finally, we also want the filename.
+                String filename = "";
+                if (showFileName) {
+                    filename = "Filename: " + iFilename;
+                }
+
+                int precLength = fm.stringWidth(msLevel_and_optional_precursor);
+                int resLength = fm.stringWidth(resolution);
+                int xDistance = ((this.getWidth() - (iXPadding * 2)) / 4) - (precLength / 2);
+                int fromBottom = fm.getAscent() / 2;
+                Font oldFont = this.getFont();
+
+                int smallFontCorrection = 0;
+                int yHeight = this.getHeight() - fromBottom;
+                int xAdditionForResolution = precLength + 15;
+                int xAdditionForFilename = xAdditionForResolution + resLength + 15;
+
+                if (precLength + resLength + 45 + fm.stringWidth(filename) > aXAxisWidth) {
+                    g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - 2));
+                    smallFontCorrection = g.getFontMetrics().getAscent();
+                    xAdditionForFilename = g.getFontMetrics().stringWidth(msLevel_and_optional_precursor) + 5;
+                    xAdditionForResolution = g.getFontMetrics().stringWidth(msLevel_and_optional_precursor) / 2;
+                    xDistance = aPadding;
+                }
+
+                g.drawString(msLevel_and_optional_precursor, xDistance, yHeight - smallFontCorrection);
+                g.drawString(resolution, xDistance + xAdditionForResolution, yHeight);
+
+                Color foreground = null;
+
+                if (iFilenameColor != null) {
+                    foreground = g.getColor();
+                    g.setColor(iFilenameColor);
+                }
+
+                g.drawString(filename, xDistance + xAdditionForFilename, yHeight - smallFontCorrection);
+
+                if (foreground != null) {
+                    g.setColor(foreground);
+                }
+                
+                // Restore original font.
+                g.setFont(oldFont);
             }
-
-            // Finally, we also want the filename.
-            String filename = "";
-            if (showFileName) {
-                filename = "Filename: " + iFilename;
-            }
-
-            int precLength = fm.stringWidth(msLevel_and_optional_precursor);
-            int resLength = fm.stringWidth(resolution);
-            int xDistance = ((this.getWidth() - (iXPadding * 2)) / 4) - (precLength / 2);
-            int fromBottom = fm.getAscent() / 2;
-            Font oldFont = this.getFont();
-
-            int smallFontCorrection = 0;
-            int yHeight = this.getHeight() - fromBottom;
-            int xAdditionForResolution = precLength + 15;
-            int xAdditionForFilename = xAdditionForResolution + resLength + 15;
-
-            if (precLength + resLength + 45 + fm.stringWidth(filename) > aXAxisWidth) {
-                g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - 2));
-                smallFontCorrection = g.getFontMetrics().getAscent();
-                xAdditionForFilename = g.getFontMetrics().stringWidth(msLevel_and_optional_precursor) + 5;
-                xAdditionForResolution = g.getFontMetrics().stringWidth(msLevel_and_optional_precursor) / 2;
-                xDistance = aPadding;
-            }
-
-            g.drawString(msLevel_and_optional_precursor, xDistance, yHeight - smallFontCorrection);
-            g.drawString(resolution, xDistance + xAdditionForResolution, yHeight);
-            Color foreground = null;
-
-            if (iFilenameColor != null) {
-                foreground = g.getColor();
-                g.setColor(iFilenameColor);
-            }
-
-            g.drawString(filename, xDistance + xAdditionForFilename, yHeight - smallFontCorrection);
-
-            if (foreground != null) {
-                g.setColor(foreground);
-            }
-
-            // Restore original font.
-            g.setFont(oldFont);
         }
 
-        int labelHeight = fm.getAscent() + 5;
+        if (!miniature) {
 
-        // Now mark each unit.
-        for (int i = 0; i < numberTimes; i++) {
-            int xLoc = (iXUnit * i) + aPadding;
-            g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
-            BigDecimal bd = new BigDecimal(aMin + (scaleUnit * i));
-            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-            String label = bd.toString();
+            int labelHeight = fm.getAscent() + 5;
 
-            if (hideDecimals) {
-                label = "" + bd.intValue();
+            // Now mark each unit.
+            for (int i = 0; i < numberTimes; i++) {
+                int xLoc = (iXUnit * i) + aPadding;
+                g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                BigDecimal bd = new BigDecimal(aMin + (scaleUnit * i));
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                String label = bd.toString();
+
+                if (hideDecimals) {
+                    label = "" + bd.intValue();
+                }
+
+                int labelWidth = fm.stringWidth(label);
+                g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
             }
-
-            int labelWidth = fm.stringWidth(label);
-            g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
         }
     }
 
@@ -1218,44 +1266,47 @@ abstract class GraphicsPanel extends JPanel {
         double scaleUnit = delta / numberTimes;
         iYScaleUnit = delta / aYAxisHeight;
 
-        // Find the largest display intensity.
-        BigDecimal bdLargest = new BigDecimal(aMin + (scaleUnit * (numberTimes - 1)));
-        bdLargest = bdLargest.setScale(2, BigDecimal.ROUND_HALF_UP);
-        String largestLabel = bdLargest.toString();
+        if (!miniature) {
 
-        if (hideDecimals) {
-            largestLabel = "" + bdLargest.intValue();
-        }
-
-        int largestWidth = 0;
-
-        // Old font storage.
-        Font oldFont = g.getFont();
-        int sizeCounter = 0;
-        int margin = aPadding - 10;
-        while ((largestWidth = g.getFontMetrics().stringWidth(largestLabel)) >= margin) {
-            sizeCounter++;
-            g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - sizeCounter));
-        }
-
-        // Now mark each unit.
-        for (int i = 0; i < numberTimes; i++) {
-            int yLoc = (iYUnit * i) + aPadding;
-            g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
-            BigDecimal bd = new BigDecimal(aMin + (scaleUnit * i));
-            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-            String label = bd.toString();
+            // Find the largest display intensity.
+            BigDecimal bdLargest = new BigDecimal(aMin + (scaleUnit * (numberTimes - 1)));
+            bdLargest = bdLargest.setScale(2, BigDecimal.ROUND_HALF_UP);
+            String largestLabel = bdLargest.toString();
 
             if (hideDecimals) {
-                label = "" + bd.intValue();
+                largestLabel = "" + bdLargest.intValue();
             }
 
-            int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
-            g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
-        }
+            int largestWidth = 0;
 
-        // Restore original font.
-        g.setFont(oldFont);
+            // Old font storage.
+            Font oldFont = g.getFont();
+            int sizeCounter = 0;
+            int margin = aPadding - 10;
+            while ((largestWidth = g.getFontMetrics().stringWidth(largestLabel)) >= margin) {
+                sizeCounter++;
+                g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - sizeCounter));
+            }
+
+            // Now mark each unit.
+            for (int i = 0; i < numberTimes; i++) {
+                int yLoc = (iYUnit * i) + aPadding;
+                g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
+                BigDecimal bd = new BigDecimal(aMin + (scaleUnit * i));
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                String label = bd.toString();
+
+                if (hideDecimals) {
+                    label = "" + bd.intValue();
+                }
+
+                int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
+                g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
+            }
+
+            // Restore original font.
+            g.setFont(oldFont);
+        }
     }
 
     /**

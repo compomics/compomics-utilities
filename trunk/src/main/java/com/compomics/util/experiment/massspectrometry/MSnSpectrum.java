@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.utils.ExperimentObject;
-import com.compomics.util.experiment.massspectrometry.Precursor;
 
 import java.util.HashSet;
 import java.util.Iterator;

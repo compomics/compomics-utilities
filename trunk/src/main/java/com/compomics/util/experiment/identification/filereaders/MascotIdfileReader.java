@@ -71,9 +71,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     public MascotIdfileReader(File aFile) {
         inspectedFile = aFile;
         try {
-            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); //getPath might have to be changed into getcanonicalPath
-        }
-        catch (IOException e) {
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY);
+        } catch (IOException e) {
             System.exit(1);
         }
     }
@@ -106,50 +105,50 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
         HashSet<SpectrumMatch> assignedPeptideHits = new HashSet<SpectrumMatch>();
         try {
-        QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
-        QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
-        for (int i = 0; i < iMascotDatfile.getNumberOfQueries(); i++) {
-            Vector<PeptideHit> mascotDecoyPeptideHits = null;
-            if (lDecoyQueryToPeptideMap != null) {
-                mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
-            }
-            Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
-            Boolean nonDecoyHitFound = false;
-            if (mascotPeptideHits != null) {                                        // There might not be an identification for every query
-                if (mascotDecoyPeptideHits != null) {
-                    if (mascotDecoyPeptideHits.get(0).getIonsScore() < mascotPeptideHits.get(0).getIonsScore()) {
+            QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
+            QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
+            for (int i = 0; i < iMascotDatfile.getNumberOfQueries(); i++) {
+                Vector<PeptideHit> mascotDecoyPeptideHits = null;
+                if (lDecoyQueryToPeptideMap != null) {
+                    mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
+                }
+                Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
+                Boolean nonDecoyHitFound = false;
+                if (mascotPeptideHits != null) {                                        // There might not be an identification for every query
+                    if (mascotDecoyPeptideHits != null) {
+                        if (mascotDecoyPeptideHits.get(0).getIonsScore() < mascotPeptideHits.get(0).getIonsScore()) {
+                            nonDecoyHitFound = true;
+                        }
+                    } else {
                         nonDecoyHitFound = true;
                     }
-                } else {
-                    nonDecoyHitFound = true;
                 }
-            }
-            if (nonDecoyHitFound) {
-                boolean singleBestHit = true;
-                if (mascotPeptideHits.size() > 1) {
-                    if ((mascotPeptideHits.get(0).getExpectancy() == mascotPeptideHits.get(1).getExpectancy()) && (mascotPeptideHits.get(0).getSequence().compareTo(mascotPeptideHits.get(1).getSequence()) != 0)) {
-                        singleBestHit = false;
+                if (nonDecoyHitFound) {
+                    boolean singleBestHit = true;
+                    if (mascotPeptideHits.size() > 1) {
+                        if ((mascotPeptideHits.get(0).getExpectancy() == mascotPeptideHits.get(1).getExpectancy()) && (mascotPeptideHits.get(0).getSequence().compareTo(mascotPeptideHits.get(1).getSequence()) != 0)) {
+                            singleBestHit = false;
+                        }
+                    }
+                    if (singleBestHit) {
+                        PeptideHit thisPeptideHit = mascotPeptideHits.get(0);
+                        SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, false);
+                        assignedPeptideHits.add(currentMatch);
+                    }
+                } else if (mascotDecoyPeptideHits != null) {
+                    boolean singleBestHit = true;
+                    if (mascotDecoyPeptideHits.size() > 1) {
+                        if ((mascotDecoyPeptideHits.get(0).getExpectancy() == mascotDecoyPeptideHits.get(1).getExpectancy()) && (mascotDecoyPeptideHits.get(0).getSequence().compareTo(mascotDecoyPeptideHits.get(1).getSequence()) != 0)) {
+                            singleBestHit = false;
+                        }
+                    }
+                    if (singleBestHit) {
+                        PeptideHit thisPeptideHit = mascotDecoyPeptideHits.get(0);
+                        SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, true);
+                        assignedPeptideHits.add(currentMatch);
                     }
                 }
-                if (singleBestHit) {
-                    PeptideHit thisPeptideHit = mascotPeptideHits.get(0);
-                    SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, false);
-                    assignedPeptideHits.add(currentMatch);
-                }
-            } else if (mascotDecoyPeptideHits != null) {
-                boolean singleBestHit = true;
-                if (mascotDecoyPeptideHits.size() > 1) {
-                    if ((mascotDecoyPeptideHits.get(0).getExpectancy() == mascotDecoyPeptideHits.get(1).getExpectancy()) && (mascotDecoyPeptideHits.get(0).getSequence().compareTo(mascotDecoyPeptideHits.get(1).getSequence()) != 0)) {
-                        singleBestHit = false;
-                    }
-                }
-                if (singleBestHit) {
-                    PeptideHit thisPeptideHit = mascotDecoyPeptideHits.get(0);
-                    SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, true);
-                    assignedPeptideHits.add(currentMatch);
-                }
             }
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -194,7 +193,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     // Modification site not implemented yet
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
                 } else {
-                    correspondingPTM = new PTM(PTM.MODMAX, handledModification.getType(), handledModification.getMass(), new String[] {"x"});
+                    correspondingPTM = new PTM(PTM.MODMAX, handledModification.getType(), handledModification.getMass(), new String[]{"x"});
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
                 }
             }
@@ -396,10 +395,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     currentMatch.addAnnotation(ionMatch);
                     break;
                 default:
-                    // ZH ions are not coded yet
+                // ZH ions are not coded yet
             }
         }
     }
 }
-
-

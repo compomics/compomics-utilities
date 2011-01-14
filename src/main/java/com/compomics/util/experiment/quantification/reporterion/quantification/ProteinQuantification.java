@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.quantification.reporterion.quantification;
 
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.Ratio;
 import com.compomics.util.experiment.quantification.reporterion.quantification.PeptideQuantification;
 

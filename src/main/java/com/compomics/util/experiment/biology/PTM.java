@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.utils.ExperimentObject;
-
-import java.io.Serializable;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class models a post-translational modification.

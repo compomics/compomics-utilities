@@ -3,7 +3,7 @@ package com.compomics.util.experiment.quantification.reporterion.quantification;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.quantification.Ratio;
 import com.compomics.util.experiment.quantification.reporterion.quantification.SpectrumQuantification;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashMap;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class models a proteomic sample.
@@ -21,6 +21,14 @@ public class Sample extends ExperimentObject {
      */
     public Sample(String reference) {
         this.reference = reference;
+    }
+
+    /**
+     * setter for the reference of a sample
+     * @param newReference  the new reference
+     */
+    public void setReference(String newReference) {
+         this.reference = newReference;
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.quantification;
 
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class will models a quantification method.

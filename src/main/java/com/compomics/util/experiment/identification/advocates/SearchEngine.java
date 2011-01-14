@@ -1,9 +1,7 @@
 package com.compomics.util.experiment.identification.advocates;
 
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.utils.ExperimentObject;
-
-import java.io.Serializable;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class models a search engine. For now only Mascot, OMSSA and X!Tandem are implemented.

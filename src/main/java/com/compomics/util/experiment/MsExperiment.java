@@ -1,7 +1,7 @@
 package com.compomics.util.experiment;
 
 import com.compomics.util.experiment.biology.Sample;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashMap;
 
@@ -71,6 +71,11 @@ public class MsExperiment extends ExperimentObject {
      */
     public void addAnalysisSet(Sample sample, SampleAnalysisSet analysisSet) {
         analysis.put(sample, analysisSet);
+        int index = 0;
+        while (samples.containsKey(index)) {
+            index++;
+        }
+        setSample(index, sample);
     }
 
     /**

@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class will model the assignement of a peak to a theoretical ion.

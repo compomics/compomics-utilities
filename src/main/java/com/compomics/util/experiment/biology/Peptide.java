@@ -2,12 +2,9 @@ package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * This class models a peptide.
@@ -136,18 +133,17 @@ public class Peptide extends ExperimentObject {
      * @return the index of a peptide
      */
     public String getIndex() {
-        String[] modifications = new String[getModificationMatches().size()];
-        int cpt = 0;
+        ArrayList<String> modifications = new ArrayList<String>();
         for (ModificationMatch mod : getModificationMatches()) {
-            if (mod.getTheoreticPtm() != null && mod.isVariable()) {
-                modifications[cpt] = mod.getTheoreticPtm().getName();
-                cpt++;
+            if (mod.getTheoreticPtm() != null) {
+                if (mod.isVariable()) {
+                    modifications.add(mod.getTheoreticPtm().getName());
+                }
             } else {
-                modifications[cpt] = "unknown-modification";
-                cpt++;
+                modifications.add("unknown-modification");
             }
         }
-        Arrays.sort(modifications);
+        Collections.sort(modifications);
         String result = sequence;
         for (String mod : modifications) {
             result += "_" + mod;

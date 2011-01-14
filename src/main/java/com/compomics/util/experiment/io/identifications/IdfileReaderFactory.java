@@ -1,9 +1,10 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
-import com.compomics.util.experiment.identification.filereaders.MascotIdfileReader;
-import com.compomics.util.experiment.identification.filereaders.OMSSAIdfileReader;
-import com.compomics.util.experiment.identification.filereaders.XTandemIdfileReader;
+import com.compomics.util.experiment.io.identifications.idfilereaders.MascotIdfileReader;
+import com.compomics.util.experiment.io.identifications.idfilereaders.OMSSAIdfileReader;
+import com.compomics.util.experiment.io.identifications.idfilereaders.XTandemIdfileReader;
+import com.compomics.util.experiment.io.identifications.IdfileReader;
 
 import java.io.File;
 

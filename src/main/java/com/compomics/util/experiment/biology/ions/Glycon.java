@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.utils.ExperimentObject;
 
 import java.util.HashMap;
 

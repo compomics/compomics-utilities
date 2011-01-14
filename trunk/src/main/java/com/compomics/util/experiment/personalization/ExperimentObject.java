@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.utils;
+package com.compomics.util.experiment.personalization;
 
 import java.util.HashMap;
 import java.io.Serializable;

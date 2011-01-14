@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 

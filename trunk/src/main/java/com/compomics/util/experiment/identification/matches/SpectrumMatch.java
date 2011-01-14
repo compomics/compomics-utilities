@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +132,11 @@ public class SpectrumMatch extends ExperimentObject {
      */
     public void addFirstHit(int otherAdvocateId, PeptideAssumption otherAssumption) throws Exception {
         if (firstHits.get(otherAdvocateId) != null) {
-            throw new Exception("Two identifications by the same search engine for a single spectrum");
+            if (!firstHits.get(otherAdvocateId).getPeptide().getIndex().equals(otherAssumption.getPeptide().getIndex())) {
+                throw new Exception("Two identifications by the same search engine for a single spectrum");
+            } else {
+                return;
+            }
         }
         firstHits.put(otherAdvocateId, otherAssumption);
         assumptions.add(otherAssumption);

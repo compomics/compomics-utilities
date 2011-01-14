@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.refinementparameters;
 
-import com.compomics.util.experiment.utils.UrParameter;
+import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
  * This class will contain the mascot score.

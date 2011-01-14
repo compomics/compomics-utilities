@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 
 /**

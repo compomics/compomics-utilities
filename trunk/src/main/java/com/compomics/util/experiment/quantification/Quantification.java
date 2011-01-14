@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.quantification;
 
 import com.compomics.util.experiment.quantification.reporterion.quantification.ProteinQuantification;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.ArrayList;
 

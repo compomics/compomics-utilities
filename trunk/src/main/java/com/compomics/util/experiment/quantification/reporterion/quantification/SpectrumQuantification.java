@@ -3,7 +3,7 @@ package com.compomics.util.experiment.quantification.reporterion.quantification;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.quantification.Ratio;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashMap;
 

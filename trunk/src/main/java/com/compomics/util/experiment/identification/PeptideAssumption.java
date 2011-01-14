@@ -3,11 +3,9 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashSet;
-import java.util.ArrayList;
 
 /**
  * This object will models the assumption made by an advocate.

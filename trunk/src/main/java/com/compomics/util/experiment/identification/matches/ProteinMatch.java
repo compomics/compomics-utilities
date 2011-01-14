@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashMap;
 
@@ -49,7 +49,7 @@ public class ProteinMatch extends ExperimentObject {
      */
     public ProteinMatch(Protein protein, PeptideMatch peptideMatch) {
         theoreticProtein = protein;
-        peptideMatches.put(peptideMatch.getTheoreticPeptide().getSequence(), peptideMatch);
+        peptideMatches.put(peptideMatch.getTheoreticPeptide().getIndex(), peptideMatch);
     }
 
     /**

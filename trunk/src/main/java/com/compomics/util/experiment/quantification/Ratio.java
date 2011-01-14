@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.quantification;
 
-import com.compomics.util.experiment.utils.ExperimentObject;
-import com.compomics.util.experiment.biology.Sample;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class models an object.

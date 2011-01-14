@@ -1,7 +1,7 @@
 package com.compomics.util.experiment;
 
 import com.compomics.util.experiment.biology.Sample;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -53,5 +53,13 @@ public class SampleAnalysisSet extends ExperimentObject {
      */
     public ProteomicAnalysis getProteomicAnalysis(int replicateNumber) {
         return analysis.get(replicateNumber);
+    }
+
+    /**
+     * Returns a list containing replicate numbers
+     * @return a list containing replicate numbers
+     */
+    public ArrayList<Integer> getReplicateNumberList() {
+        return new ArrayList<Integer>(analysis.keySet());
     }
 }

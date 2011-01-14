@@ -1,11 +1,11 @@
-package com.compomics.util.experiment.identification.filereaders;
+package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.IdfileReader;
+import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -14,7 +14,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import de.proteinms.xtandemparser.interfaces.Ion;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
@@ -117,7 +117,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             int nSpectrum = currentSpectrum.getSpectrumNumber();
             SupportData supportData = xTandemFile.getSupportData(nSpectrum);
             String spectrumName = supportData.getFragIonSpectrumDescription();
-            HashSet<Peak> peakList = getPeakList(supportData);
+            // Spectra are not imported at this stage to save memory
+            HashSet<Peak> peakList = peakList = new HashSet<Peak>();
             ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
             if (spectrumPeptides.size() > 0) {
                 Peptide bestPeptide = spectrumPeptides.get(0);
@@ -178,7 +179,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     peptide = new com.compomics.util.experiment.biology.Peptide(bestPeptide.getDomainSequence(), bestPeptide.getDomainMh(), proteins, foundModifications);
                     deltaMass = Math.abs(1000000 * (measuredMass - bestPeptide.getDomainMh()) / bestPeptide.getDomainMh());
                     PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, deltaMass, eValue, getFileName());
-                    //             attachAnnotations(currentAssumption, bestPeptide);
                     // secondary hits are not implemented yet
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);
                     foundPeptides.add(currentMatch);
@@ -189,85 +189,5 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             e.printStackTrace();
         }
         return foundPeptides;
-    }
-
-    /**
-     * Attach annotations to the current match
-     *
-     * @param currentMatch The inspected match
-     * @param peptide      The corresponding peptide
-     */
-    private void attachAnnotations(PeptideAssumption currentMatch, Peptide peptide) {
-        ArrayList<FragmentIon[]> ions = new ArrayList<FragmentIon[]>(xTandemFile.getFragmentIonsForPeptide(peptide));
-        for (FragmentIon[] aaIons : ions) {
-            for (FragmentIon ion : aaIons) {
-                int ionType = getIonType(ion);
-                Double chargeDouble = ion.getCharge();
-                Charge charge = new Charge(Charge.PLUS, chargeDouble.intValue());
-                currentMatch.addAnnotation(new IonMatch(
-                        new Peak(ion.getMZ(), ion.getIntensity()),
-                        new PeptideFragmentIon(ionType, ion.getNumber(), charge)
-                ));
-            }
-        }
-    }
-
-    /**
-     * Get the peakList corresponding to a spectrum
-     *
-     * @param supportData the corresponding suppportData
-     * @return a set containing all peaks
-     */
-    private HashSet<Peak> getPeakList(SupportData supportData) {
-        HashSet<Peak> peakList = new HashSet<Peak>();
-        ArrayList<Double> mzValues = supportData.getXValuesFragIonMass2Charge();
-        ArrayList<Double> intensityValues = supportData.getYValuesFragIonMass2Charge();
-        for (int i = 0; i < mzValues.size(); i++) {
-            peakList.add(new Peak(mzValues.get(i), intensityValues.get(i)));
-        }
-        return peakList;
-    }
-
-    /**
-     * returns the ion type depending on the X!Tandem parser indications
-     *
-     * @param ion the concerned ion
-     * @return the ion type
-     */
-    private int getIonType(Ion ion) {
-        switch (ion.getType()) {
-            case Ion.A_ION:
-                return PeptideFragmentIon.A_ION;
-            case Ion.AH2O_ION:
-                return PeptideFragmentIon.AH2O_ION;
-            case Ion.ANH3_ION:
-                return PeptideFragmentIon.ANH3_ION;
-            case Ion.B_ION:
-                return PeptideFragmentIon.B_ION;
-            case Ion.BH2O_ION:
-                return PeptideFragmentIon.BH2O_ION;
-            case Ion.BNH3_ION:
-                return PeptideFragmentIon.BNH3_ION;
-            case Ion.C_ION:
-                return PeptideFragmentIon.C_ION;
-            case Ion.MH_ION:
-                return PeptideFragmentIon.MH_ION;
-            case Ion.MHH2O_ION:
-                return PeptideFragmentIon.MHH2O_ION;
-            case Ion.MHNH3_ION:
-                return PeptideFragmentIon.MHNH3_ION;
-            case Ion.X_ION:
-                return PeptideFragmentIon.X_ION;
-            case Ion.Y_ION:
-                return PeptideFragmentIon.Y_ION;
-            case Ion.YH2O_ION:
-                return PeptideFragmentIon.YH2O_ION;
-            case Ion.YNH3_ION:
-                return PeptideFragmentIon.YNH3_ION;
-            case Ion.Z_ION:
-                return PeptideFragmentIon.Z_ION;
-            default:
-                return -1;
-        }
     }
 }

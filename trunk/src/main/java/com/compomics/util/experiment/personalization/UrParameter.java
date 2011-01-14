@@ -1,4 +1,6 @@
-package com.compomics.util.experiment.utils;
+package com.compomics.util.experiment.personalization;
+
+import java.io.Serializable;
 
 /**
  * This interface will be used to reference refined parameters. Utilities Refined
@@ -9,7 +11,7 @@ package com.compomics.util.experiment.utils;
  * Date: Sep 1, 2010
  * Time: 11:35:43 AM
  */
-public interface UrParameter {
+public interface UrParameter extends Serializable {
     
     /**
      * This method returns the family name of the parameter

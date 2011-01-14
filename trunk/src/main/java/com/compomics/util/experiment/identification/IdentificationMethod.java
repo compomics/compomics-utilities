@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class will contain all methods used to obtain identifications.

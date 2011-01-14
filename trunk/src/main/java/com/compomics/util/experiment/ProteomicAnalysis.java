@@ -1,6 +1,6 @@
 package com.compomics.util.experiment;
 
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.Quantification;
 import com.compomics.util.experiment.identification.Identification;
 

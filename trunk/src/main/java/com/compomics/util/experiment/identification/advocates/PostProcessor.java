@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.advocates;
 
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.utils.ExperimentObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This object models a tool which post-processed identifications.

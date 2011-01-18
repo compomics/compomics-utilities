@@ -69,7 +69,7 @@ public class PeptideMatch extends ExperimentObject {
     public PeptideMatch(Peptide peptide, SpectrumMatch spectrumMatch) {
         theoreticPeptide = peptide;
         mainMatch = spectrumMatch;
-        String index = spectrumMatch.getId();
+        String index = spectrumMatch.getSpectrumKey();
         spectrumMatches.put(index, spectrumMatch);
     }
 
@@ -110,12 +110,12 @@ public class PeptideMatch extends ExperimentObject {
     }
 
     /**
-     * methods which returns the main spectrum matched
+     * methods which returns the key of the main spectrum matched
      *
-     * @return main spectrum matched
+     * @return key of the main spectrum matched
      */
-    public MSnSpectrum getMainSpectrum() {
-        return mainMatch.getSpectrum();
+    public String getMainSpectrumKey() {
+        return mainMatch.getSpectrumKey();
     }
 
     /**
@@ -133,7 +133,7 @@ public class PeptideMatch extends ExperimentObject {
      * @param spectrumMatch a spectrum match
      */
     public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws Exception {
-        String index = spectrumMatch.getId();
+        String index = spectrumMatch.getSpectrumKey();
         if (spectrumMatches.get(index) == null) {
             spectrumMatches.put(index, spectrumMatch);
         } else {
@@ -173,7 +173,7 @@ public class PeptideMatch extends ExperimentObject {
     }
 
     /**
-     * inspects wether the peptide match is a decoy hit
+     * inspects whether the peptide match is a decoy hit
      *
      * @return true if the peptide match is a decoy hit
      */

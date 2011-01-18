@@ -129,4 +129,12 @@ public class MS1Spectrum extends ExperimentObject {
     public void setScanNumber(String scanNumber) {
         this.scanNumber = scanNumber;
     }
+
+    /**
+     * returns the key of the spectrum
+     * @return the key of the spectrum
+     */
+    public String getSpectrumKey() {
+        return fileName + "_" + spectrumTitle;
+    }
 }

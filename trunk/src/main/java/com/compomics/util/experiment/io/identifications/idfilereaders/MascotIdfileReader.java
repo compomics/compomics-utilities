@@ -1,11 +1,9 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
-import com.compomics.mascotdatfile.util.interfaces.FragmentIon;
 import com.compomics.mascotdatfile.util.interfaces.MascotDatfileInf;
 import com.compomics.mascotdatfile.util.interfaces.Modification;
 import com.compomics.mascotdatfile.util.interfaces.QueryToPeptideMapInf;
 import com.compomics.mascotdatfile.util.mascot.PeptideHit;
-import com.compomics.mascotdatfile.util.mascot.PeptideHitAnnotation;
 import com.compomics.mascotdatfile.util.mascot.ProteinHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
@@ -13,11 +11,9 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
-import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -210,8 +206,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
         }
          **/
-        Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
-        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, peakList, getMgfFileName());
+        String spectrumKey = MSnSpectrum.getSpectrumKey(getMgfFileName(), spectrumId);
         ArrayList<Protein> proteins = new ArrayList();
         boolean reverse = true;
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
@@ -236,7 +231,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
         currentAssumption.addUrParam(scoreParam);
         // Secondary hits are not implemented yet
-        return new SpectrumMatch(spectrum, currentAssumption);
+        return new SpectrumMatch(spectrumKey, currentAssumption);
     }
 }
 

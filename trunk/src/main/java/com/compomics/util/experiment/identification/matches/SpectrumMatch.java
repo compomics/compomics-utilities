@@ -19,9 +19,9 @@ import java.util.HashSet;
 public class SpectrumMatch extends ExperimentObject {
 
     /**
-     * The matched spectrum
+     * The index of the matched spectrum
      */
-    private MSnSpectrum spectrum;
+    private String spectrumKey;
     /**
      * The corresponding peptide assumptions
      */
@@ -49,24 +49,24 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * Constructor for the spectrum match
      *
-     * @param spectrum   The matched spectrum
+     * @param spectrum   The matched spectrumKey
      * @param assumption The matching peptide assumption
      */
-    public SpectrumMatch(MSnSpectrum spectrum, PeptideAssumption assumption) {
+    public SpectrumMatch(String spectrumKey, PeptideAssumption assumption) {
         int advocateId = assumption.getAdvocate();
         assumptions.add(assumption);
         firstHits.put(advocateId, assumption);
         advocates.add(advocateId);
-        this.spectrum = spectrum;
+        this.spectrumKey = spectrumKey;
     }
 
     /**
      * Constructor for the spectrum match
      *
-     * @param spectrum The matched spectrum
+     * @param spectrum The matched spectrum key
      */
-    public SpectrumMatch(MSnSpectrum spectrum) {
-        this.spectrum = spectrum;
+    public SpectrumMatch(String spectrumKey) {
+        this.spectrumKey = spectrumKey;
     }
 
     /**
@@ -88,21 +88,12 @@ public class SpectrumMatch extends ExperimentObject {
     }
 
     /**
-     * returns the id of a spectrum match.
+     * Getter for the spectrum key
      *
-     * @return the id of the spectrum match
+     * @return the matched spectrum key
      */
-    public String getId() {
-        return spectrum.getFileName() + "_" + spectrum.getSpectrumTitle();
-    }
-
-    /**
-     * Getter for the spectrum
-     *
-     * @return the matched spectrum
-     */
-    public MSnSpectrum getSpectrum() {
-        return spectrum;
+    public String getSpectrumKey() {
+        return spectrumKey;
     }
 
     /**

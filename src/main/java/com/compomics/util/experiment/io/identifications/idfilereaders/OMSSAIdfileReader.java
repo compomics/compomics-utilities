@@ -161,8 +161,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         }
 
                         Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
-                        Precursor precursor = new Precursor(-1, expMass, charge);     // RT is not known at the stage of the development
-                        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, new HashSet<Peak>(), tempFile.getName());
+                        String spectrumKey = MSnSpectrum.getSpectrumKey(tempFile.getName(), name);
 
                         List<MSModHit> msModHits = currentMsHit.MSHits_mods.MSModHit;
                         ArrayList<ModificationMatch> modificationsFound = new ArrayList();
@@ -203,7 +202,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, calcMass, proteins, modificationsFound);
                         PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, deltaMass, eValue, getFileName());
                         // secondary hits are not implemented yet
-                        SpectrumMatch currentMatch = new SpectrumMatch(spectrum, currentAssumption);
+                        SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey, currentAssumption);
                         assignedSpectra.add(currentMatch);
                     }
                 }

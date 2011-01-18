@@ -86,6 +86,16 @@ public class MSnSpectrum extends ExperimentObject {
     }
 
     /**
+     * Convenience method returning the key for a spectrum
+     * @param spectrumFile  The spectrum file
+     * @param spectrumTitle The spectrum title
+     * @return  the corresponding spectrum key
+     */
+    public static String getSpectrumKey(String spectrumFile, String spectrumTitle) {
+        return spectrumFile + "_" + spectrumTitle;
+    }
+
+    /**
      * return the MS level of the spectrum
      *
      * @return ms level
@@ -215,5 +225,13 @@ public class MSnSpectrum extends ExperimentObject {
      */
     public void setScanNumber(String scanNumber) {
         this.scanNumber = scanNumber;
+    }
+    
+    /**
+     * Returns the key of the spectrum
+     * @return the key of the spectrum
+     */
+    public String getSpectrumKey() {
+        return fileName + "_" + spectrumTitle;
     }
 }

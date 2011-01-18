@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.massspectrometry.filereaders;
+package com.compomics.util.experiment.io.massspectrometry;
 
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;

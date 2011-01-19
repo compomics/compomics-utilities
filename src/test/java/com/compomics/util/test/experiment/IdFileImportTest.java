@@ -20,7 +20,7 @@ import java.util.HashSet;
  * Time: 5:40:53 PM
  * This test will import various files and display the result of the parsing.
  */
-public class FileImportTest extends TestCase {
+public class IdFileImportTest extends TestCase {
 
     private static final String MASCOT_FILE = "testFiles/orbitrap003956_modifications.dat";
     private static final String OMSSA_FILE = "testFiles/orbitrap003956_modifications.omx";

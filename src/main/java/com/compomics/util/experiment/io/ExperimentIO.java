@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io;
 
 import com.compomics.util.experiment.MsExperiment;
+import com.compomics.util.experiment.biology.Sample;
 
 import java.io.*;
 import java.util.Date;
@@ -27,6 +28,14 @@ public class ExperimentIO {
      * @throws IOException  Exception thrown whenever an error is encountered while writing the file
      */
     public void save(File file, MsExperiment experiment) throws IOException {
+
+        // Spectra are removed to save time and space
+        for (Sample sample : experiment.getSamples().values()) {
+            for (int replicateNumber : experiment.getAnalysisSet(sample).getReplicateNumberList()) {
+                experiment.getAnalysisSet(sample).getProteomicAnalysis(replicateNumber).clearSpectrumCollection();
+            }
+        }
+
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 

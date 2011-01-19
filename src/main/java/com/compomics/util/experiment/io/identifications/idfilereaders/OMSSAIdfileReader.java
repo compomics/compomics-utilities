@@ -10,9 +10,7 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.*;
@@ -161,7 +159,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         }
 
                         Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
-                        String spectrumKey = MSnSpectrum.getSpectrumKey(tempFile.getName(), name);
+                        String spectrumKey = Spectrum.getSpectrumKey(tempFile.getName(), name);
 
                         List<MSModHit> msModHits = currentMsHit.MSHits_mods.MSModHit;
                         ArrayList<ModificationMatch> modificationsFound = new ArrayList();

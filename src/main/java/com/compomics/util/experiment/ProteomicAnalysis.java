@@ -94,4 +94,11 @@ public class ProteomicAnalysis extends ExperimentObject {
     public SpectrumCollection getSpectrumCollection() {
         return spectrumCollection;
     }
+
+    /**
+     * Clears the spectrum collection of the analysis
+     */
+    public void clearSpectrumCollection() {
+        spectrumCollection = new SpectrumCollection();
+    }
 }

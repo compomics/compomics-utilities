@@ -3,19 +3,14 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
-import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import de.proteinms.xtandemparser.interfaces.Ion;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
 import org.xml.sax.SAXException;
@@ -152,7 +147,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     }
                     eValue = bestPeptide.getDomainExpect();
                     measuredMass = bestPeptide.getDomainMh() + bestPeptide.getDomainDeltaMh();
-                    spectrumKey = MSnSpectrum.getSpectrumKey(filename, spectrumName);
+                    spectrumKey = com.compomics.util.experiment.massspectrometry.Spectrum.getSpectrumKey(filename, spectrumName);
                     ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(bestPeptide.getDomainID());
                     PTM currentPTM;
                     ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();

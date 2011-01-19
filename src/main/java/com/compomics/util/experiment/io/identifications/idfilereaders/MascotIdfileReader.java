@@ -17,9 +17,8 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.refinementparameters.C13;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -206,7 +205,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
         }
          **/
-        String spectrumKey = MSnSpectrum.getSpectrumKey(getMgfFileName(), spectrumId);
+        String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), spectrumId);
         ArrayList<Protein> proteins = new ArrayList();
         boolean reverse = true;
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {

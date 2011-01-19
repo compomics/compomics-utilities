@@ -17,8 +17,10 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Spectrum;
+import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 import com.compomics.util.experiment.refinementparameters.C13;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -53,6 +55,11 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
     /**
+     * The spectrum collection to complete
+     */
+    private SpectrumCollection spectrumCollection = null;
+
+    /**
      * constructor for the mascotIdileReader
      */
     public MascotIdfileReader() {
@@ -64,6 +71,23 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * @param aFile a file to read
      */
     public MascotIdfileReader(File aFile) {
+        inspectedFile = aFile;
+        try {
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); //getPath might have to be changed into getcanonicalPath
+        }
+        catch (IOException e) {
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Constructor for the MascotIdilereader with a spectrum collection to put spectrum information in
+     *
+     * @param aFile a file to read
+     * @param spectrumCollection the spectrum collection used
+     */
+    public MascotIdfileReader(File aFile, SpectrumCollection spectrumCollection) {
+        this.spectrumCollection = spectrumCollection;
         inspectedFile = aFile;
         try {
             iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); //getPath might have to be changed into getcanonicalPath
@@ -205,7 +229,14 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
         }
          **/
-        String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), spectrumId);
+        Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
+        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, peakList, getMgfFileName());
+        String spectrumKey = spectrum.getSpectrumKey();
+        if (spectrumCollection!=null) {
+            if (!spectrumCollection.contains(spectrumKey)) {
+                spectrumCollection.addSpectrum(spectrum);
+            }
+        }
         ArrayList<Protein> proteins = new ArrayList();
         boolean reverse = true;
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {

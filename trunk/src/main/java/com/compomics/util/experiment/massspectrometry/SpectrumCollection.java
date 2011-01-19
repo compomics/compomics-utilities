@@ -244,4 +244,21 @@ public class SpectrumCollection extends ExperimentObject {
             addSpectra(file);
         }
     }
+
+    public boolean contains(String spectrumKey) {
+        if (sourceType == MGF) {
+            for (int level : spectrumMap.keySet()) {
+                if (spectrumMap.get(level).keySet().contains(spectrumKey)) {
+                    return true;
+                }
+            }
+        } else if (sourceType == MZML) {
+            for (String file : mzMLUnmarshallerMap.keySet()) {
+                if (mzMLUnmarshallerMap.get(file).getSpectrumIDs().contains(Spectrum.getSpectrumTitle(spectrumKey))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

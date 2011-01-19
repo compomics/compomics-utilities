@@ -5,8 +5,10 @@ import com.compomics.util.experiment.io.identifications.idfilereaders.MascotIdfi
 import com.compomics.util.experiment.io.identifications.idfilereaders.OMSSAIdfileReader;
 import com.compomics.util.experiment.io.identifications.idfilereaders.XTandemIdfileReader;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
+import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 
 import java.io.File;
+import org.xml.sax.SAXException;
 
 /**
  * This factory will provide the appropriate identification file reader for each type of file.
@@ -49,7 +51,7 @@ public class IdfileReaderFactory {
      * @param aFile the file to parse
      * @return an adapted file reader
      */
-    public IdfileReader getFileReader(File aFile) {
+    public IdfileReader getFileReader(File aFile) throws SAXException {
         String name = aFile.getName().toLowerCase();
         if (name.endsWith("dat")) {
             return new MascotIdfileReader(aFile);
@@ -57,6 +59,25 @@ public class IdfileReaderFactory {
             return new OMSSAIdfileReader(aFile);
         } else if (name.endsWith("xml")) {
             return new XTandemIdfileReader(aFile);
+        }
+        return null;
+    }
+
+    /**
+     * This method returns the proper identification file reader depending on the format of the provided file. If a spectrum collection is given, basic information about the spectra will also be stored.
+     *
+     * @param aFile the file to parse
+     * @param spectrumCollection the spectrum collection where to store the spectrum information
+     * @return an adapted file reader
+     */
+    public IdfileReader getFileReader(File aFile, SpectrumCollection spectrumCollection) throws SAXException {
+        String name = aFile.getName().toLowerCase();
+        if (name.endsWith("dat")) {
+            return new MascotIdfileReader(aFile, spectrumCollection);
+        } else if (name.endsWith("omx")) {
+            return new OMSSAIdfileReader(aFile, spectrumCollection);
+        } else if (name.endsWith("xml")) {
+            return new XTandemIdfileReader(aFile, spectrumCollection);
         }
         return null;
     }

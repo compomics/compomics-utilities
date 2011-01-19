@@ -80,7 +80,9 @@ public class MgfReader {
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
             } else if (line.equals("END IONS")) {
-                spectra.add(new MSnSpectrum(2, new Precursor(rt, precursorMass, new Charge(Charge.PLUS, precursorCharge)), spectrumTitle, spectrum, aFile.getName(), scanNumber));
+                MSnSpectrum msnSpectrum = new MSnSpectrum(2, new Precursor(rt, precursorMass, new Charge(Charge.PLUS, precursorCharge)), spectrumTitle, spectrum, aFile.getName());
+                msnSpectrum.setScanNumber(scanNumber);
+                spectra.add(msnSpectrum);
             } else if (line.compareTo("") != 0) {
                 try {
                     Double mz = new Double(line.substring(0, line.indexOf(' ')));

@@ -29,9 +29,10 @@ public class SpectrumImportTest extends TestCase {
             e.printStackTrace();
         }
     }
-
+**/
     public void testMgfReading() {
         try {
+            /**
         File mgfFile = new File("testFiles/test.mgf");
         SpectrumCollection spectrumCollection = new SpectrumCollection();
         spectrumCollection.addSpectra(mgfFile);
@@ -39,12 +40,12 @@ public class SpectrumImportTest extends TestCase {
         String spectrumKey = Spectrum.getSpectrumKey(mgfFile.getName(), spectrumTitle);
 
         double precursorRT = ((MSnSpectrum) spectrumCollection.getSpectrum(spectrumKey)).getPrecursor().getRt();
-        boolean result = precursorRT == 4.731466666666666;
+        boolean result = precursorRT == 4.731466666666666;**/
         }catch (Exception e) {
             int debug = 0;
             e.printStackTrace();
         }
-    }**/
+    }
 
 
 }

@@ -74,10 +74,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      */
     public XTandemIdfileReader(File aFile) throws SAXException {
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
-                xTandemFile = new XTandemFile(aFile.getPath());
-                modificationMap = xTandemFile.getModificationMap();
-                proteinMap = xTandemFile.getProteinMap();
-                peptideMap = xTandemFile.getPeptideMap();
+            xTandemFile = new XTandemFile(aFile.getPath());
+            modificationMap = xTandemFile.getModificationMap();
+            proteinMap = xTandemFile.getProteinMap();
+            peptideMap = xTandemFile.getPeptideMap();
         }
     }
 
@@ -90,10 +90,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     public XTandemIdfileReader(File aFile, SpectrumCollection spectrumCollection) throws SAXException {
         this.spectrumCollection = spectrumCollection;
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
-                xTandemFile = new XTandemFile(aFile.getPath());
-                modificationMap = xTandemFile.getModificationMap();
-                proteinMap = xTandemFile.getProteinMap();
-                peptideMap = xTandemFile.getPeptideMap();
+            xTandemFile = new XTandemFile(aFile.getPath());
+            modificationMap = xTandemFile.getModificationMap();
+            proteinMap = xTandemFile.getProteinMap();
+            peptideMap = xTandemFile.getPeptideMap();
         }
     }
 
@@ -175,9 +175,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         spectrum = new MSnSpectrum(2, precursor, spectrumName, peakList, filename);
                         String spectrumKey = spectrum.getSpectrumKey();
                         if (spectrumCollection != null) {
-                            if (!spectrumCollection.contains(spectrumKey)) {
-                                spectrumCollection.addSpectrum(spectrum);
-                            }
+                            spectrumCollection.addSpectrum(spectrum);
                         }
                         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(bestPeptide.getDomainID());
                         PTM currentPTM;

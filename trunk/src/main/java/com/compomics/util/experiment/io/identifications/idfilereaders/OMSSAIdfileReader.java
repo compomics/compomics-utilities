@@ -195,9 +195,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                             MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, new HashSet<Peak>(), tempFile.getName());
                             String spectrumKey = spectrum.getSpectrumKey();
                             if (spectrumCollection != null) {
-                                if (!spectrumCollection.contains(spectrumKey)) {
-                                    spectrumCollection.addSpectrum(spectrum);
-                                }
+                                spectrumCollection.addSpectrum(spectrum);
                             }
                             List<MSModHit> msModHits = currentMsHit.MSHits_mods.MSModHit;
                             ArrayList<ModificationMatch> modificationsFound = new ArrayList();

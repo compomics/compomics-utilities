@@ -66,7 +66,7 @@ public class SpectrumCollection extends ExperimentObject {
         if (!spectrumMap.containsKey(level)) {
             spectrumMap.put(level, new HashMap<String, Spectrum>());
         }
-        spectrumMap.get(level).put(spectrum.getSpectrumTitle(), spectrum);
+        spectrumMap.get(level).put(spectrum.getSpectrumKey(), spectrum);
     }
 
     /**

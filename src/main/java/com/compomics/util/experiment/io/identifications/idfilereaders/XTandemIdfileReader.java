@@ -172,7 +172,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         eValue = bestPeptide.getDomainExpect();
                         measuredMass = bestPeptide.getDomainMh() + bestPeptide.getDomainDeltaMh();
                         precursor = new Precursor(-1, measuredMass, charge); // The retention time is not known at this stage
-                        spectrum = new MSnSpectrum(2, precursor, spectrumName, peakList, filename);
+                        spectrum = new MSnSpectrum(2, precursor, spectrumName, filename);
                         String spectrumKey = spectrum.getSpectrumKey();
                         if (spectrumCollection != null) {
                             spectrumCollection.addSpectrum(spectrum);

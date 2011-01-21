@@ -219,7 +219,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
         String spectrumId = iMascotDatfile.getQuery(query).getTitle();
         //com.compomics.mascotdatfile.util.mascot.Peak[] kennysPeakList = iMascotDatfile.getQuery(query).getPeakList();
-        HashSet<Peak> peakList = new HashSet<Peak>();
         /**
          * Peak lists are not imported anymore to save memory
         for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
@@ -227,7 +226,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
          **/
         Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
-        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, peakList, getMgfFileName());
+        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
         String spectrumKey = spectrum.getSpectrumKey();
         if (spectrumCollection != null) {
             spectrumCollection.addSpectrum(spectrum);

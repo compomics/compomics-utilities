@@ -27,6 +27,22 @@ public class MSnSpectrum extends Spectrum {
 
 
     /**
+     * Minimal constructor for the spectrum. The peak list is not loaded in order to reduce memory consumption.
+     *
+     * @param level              MS level
+     * @param precursor          precursor
+     * @param spectrumTitle      spectrum title
+     * @param fileName           file name
+     */
+    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, String fileName) {
+        this.level = level;
+        this.precursor = precursor;
+        this.spectrumTitle = spectrumTitle;
+        this.fileName = fileName;
+    }
+
+
+    /**
      * constructor for the spectrum
      *
      * @param level              MS level

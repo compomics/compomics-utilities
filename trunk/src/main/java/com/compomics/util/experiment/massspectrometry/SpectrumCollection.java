@@ -78,7 +78,9 @@ public class SpectrumCollection extends ExperimentObject {
      */
     public Spectrum getSpectrum(int level, String spectrumKey) throws MzMLUnmarshallerException {
         if (sourceType == MGF) {
-            return spectrumMap.get(level).get(spectrumKey);
+            if (spectrumMap.containsKey(level)) {
+                return spectrumMap.get(level).get(spectrumKey);
+            }
         } else if (sourceType == MZML) {
             return getSpectrum(spectrumKey);
         }
@@ -245,6 +247,11 @@ public class SpectrumCollection extends ExperimentObject {
         }
     }
 
+    /**
+     * Returns wheter a spectrum is contained in the collection
+     * @param spectrumKey   The spectrum Key
+     * @return  a boolean indicating whether the spectrum is contained in the collection
+     */
     public boolean contains(String spectrumKey) {
         if (sourceType == MGF) {
             for (int level : spectrumMap.keySet()) {
@@ -260,5 +267,18 @@ public class SpectrumCollection extends ExperimentObject {
             }
         }
         return false;
+    }
+
+    /**
+     * Removes all peaklists from the loaded spectra in order to save memory (useless with mzML data)
+     */
+    public void removePeaks() {
+        if (sourceType == MGF) {
+            for (int level : spectrumMap.keySet()) {
+                for (Spectrum spectrum : spectrumMap.get(level).values()) {
+                    spectrum.removePeakList();
+                }
+            }
+        }
     }
 }

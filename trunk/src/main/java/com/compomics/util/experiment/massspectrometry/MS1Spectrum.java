@@ -36,4 +36,8 @@ public class MS1Spectrum extends Spectrum {
         this.level = 1;
     }
 
+    @Override
+    public void removePeakList() {
+        this.peakList = new HashSet<Peak>();
+    }
 }

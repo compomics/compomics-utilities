@@ -32,7 +32,7 @@ public class ExperimentIO {
         // Spectra are removed to save time and space
         for (Sample sample : experiment.getSamples().values()) {
             for (int replicateNumber : experiment.getAnalysisSet(sample).getReplicateNumberList()) {
-                experiment.getAnalysisSet(sample).getProteomicAnalysis(replicateNumber).clearSpectrumCollection();
+                experiment.getAnalysisSet(sample).getProteomicAnalysis(replicateNumber).getSpectrumCollection().removePeaks();
             }
         }
 

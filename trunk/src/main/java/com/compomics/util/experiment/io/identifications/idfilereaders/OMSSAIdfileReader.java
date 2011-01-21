@@ -192,7 +192,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
                             Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
                             Precursor precursor = new Precursor(-1, expMass, charge);     // RT is not known at the stage of the development
-                            MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, new HashSet<Peak>(), tempFile.getName());
+                            MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, tempFile.getName());
                             String spectrumKey = spectrum.getSpectrumKey();
                             if (spectrumCollection != null) {
                                 spectrumCollection.addSpectrum(spectrum);

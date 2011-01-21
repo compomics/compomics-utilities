@@ -176,4 +176,11 @@ public abstract class Spectrum extends ExperimentObject {
         this.scanStartTime = scanStartTime;
     }
 
+    /**
+     * This method will remove the peak list in order to reduce memory consumption of the model
+     */
+    public void removePeakList() {
+        peakList = new HashSet<Peak>();
+    }
+
 }

@@ -7,7 +7,7 @@ import java.util.HashSet;
 /**
  * This class models a spectrum
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public abstract class Spectrum extends ExperimentObject {
 
@@ -180,7 +180,6 @@ public abstract class Spectrum extends ExperimentObject {
      * This method will remove the peak list in order to reduce memory consumption of the model
      */
     public void removePeakList() {
-        peakList = new HashSet<Peak>();
+        peakList.clear();
     }
-
 }

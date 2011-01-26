@@ -180,6 +180,8 @@ public abstract class Spectrum extends ExperimentObject {
      * This method will remove the peak list in order to reduce memory consumption of the model
      */
     public void removePeakList() {
-        peakList.clear();
+        if (peakList != null) {
+            peakList.clear();
+        }
     }
 }

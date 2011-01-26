@@ -128,19 +128,19 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the index of a peptide. index = SEQUENCE_mod1@aa1_mod2@aa2 with modifications ordered alphabetically.
+     * Returns the index of a peptide. index = SEQUENCE_mod1_mod2 with modifications ordered alphabetically.
      *
      * @return the index of a peptide
      */
     public String getIndex() {
         ArrayList<String> modifications = new ArrayList<String>();
         for (ModificationMatch mod : getModificationMatches()) {
-            if (mod.getTheoreticPtm() != null) {
-                if (mod.isVariable()) {
+            if (mod.isVariable()) {
+                if (mod.getTheoreticPtm() != null) {
                     modifications.add(mod.getTheoreticPtm().getName());
+                } else {
+                    modifications.add("unknown-modification");
                 }
-            } else {
-                modifications.add("unknown-modification");
             }
         }
         Collections.sort(modifications);

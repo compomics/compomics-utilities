@@ -256,6 +256,19 @@ Enzymes used for OMSSA and X!Tandem are located in an external XML file and can 
 	EnzymeFactory.getInstance().getEnzymes();
 }}}
 
+FASTA files can be loaded into the structure. The proteins are loaded into the SequenceDataBase class:
+
+{{{
+	// Create a new SequenceDataBase
+	SequenceDataBase db = new SequenceDataBase("SGD", "test");
+
+	// Create a FastaHeaderParser which will be used to parse the fasta header  (here the accession is given surrounded by '|')
+	FastaHeaderParser fastaHeaderParser = new FastaHeaderParser("|", "|");
+	// Import your fasta file
+	db.importDataBase(fastaHeaderParser, fastaFile);
+
+}}}
+
 
 All experiment objects can be completed by user-defined parameters. They all extend the ExperimentObject class:
 

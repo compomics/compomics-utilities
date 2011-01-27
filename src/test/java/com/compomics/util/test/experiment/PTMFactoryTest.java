@@ -31,7 +31,7 @@ public class PTMFactoryTest extends TestCase {
                 currentPtm = ptmIt.next();
             }
         } catch (Exception e) {
-            String report = e.getLocalizedMessage();
+            e.printStackTrace();
         }
     }
 

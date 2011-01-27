@@ -15,6 +15,11 @@ import java.util.HashSet;
 public interface IdfileReader {
 
     /**
+     * the flag in a protein sequence for a decoy hit. This ough not to be hard coded.
+     */
+    public static final String DECOY_FLAG = "REV";
+
+    /**
      * This methods retrieves all the identifications from an identification 
      * file as a list of spectrum matches
      *

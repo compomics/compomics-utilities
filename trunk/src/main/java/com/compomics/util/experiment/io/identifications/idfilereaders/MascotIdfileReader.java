@@ -12,18 +12,17 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinementparameters.C13;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +80,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Constructor for the MascotIdilereader with a spectrum collection to put spectrum information in
      *
-     * @param aFile a file to read
+     * @param aFile              a file to read
      * @param spectrumCollection the spectrum collection used
      */
     public MascotIdfileReader(File aFile, SpectrumCollection spectrumCollection) {
@@ -221,9 +220,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         //com.compomics.mascotdatfile.util.mascot.Peak[] kennysPeakList = iMascotDatfile.getQuery(query).getPeakList();
         /**
          * Peak lists are not imported anymore to save memory
-        for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
-        peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
-        }
+         for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
+         peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
+         }
          **/
         Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
         MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
@@ -232,7 +231,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             spectrumCollection.addSpectrum(spectrum);
         }
         ArrayList<Protein> proteins = new ArrayList();
-        boolean reverse = true;
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
             String accession = ((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession();
             if (accession.lastIndexOf('|') != -1) {
@@ -240,12 +238,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 int end = accession.indexOf("|", ++start);
                 accession = accession.substring(start, end);
             }
-            if (!decoySection) {
-                if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
-                    reverse = false;
-                }
-            }
-            proteins.add(new Protein(accession, reverse));
+            proteins.add(new Protein(accession, decoySection || accession.contains(DECOY_FLAG)));
         }
 
         Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);
@@ -257,4 +250,4 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         // Secondary hits are not implemented yet
         return new SpectrumMatch(spectrumKey, currentAssumption);
     }
-}
+        }

@@ -3,22 +3,16 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
-import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
+import com.compomics.util.experiment.io.identifications.IdfileReader;
+import com.compomics.util.experiment.massspectrometry.*;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import de.proteinms.xtandemparser.interfaces.Ion;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
+import de.proteinms.xtandemparser.xtandem.Spectrum;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -84,7 +78,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     /**
      * constructor for the reader with a spectrum collection where to put spectrum identification in
      *
-     * @param aFile the inspected file
+     * @param aFile              the inspected file
      * @param spectrumCollection the spectrum collection used
      */
     public XTandemIdfileReader(File aFile, SpectrumCollection spectrumCollection) throws SAXException {
@@ -122,7 +116,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 String filename = tempFile.getName();
                 ArrayList<Protein> proteins = new ArrayList<Protein>();
                 double measuredMass, eValue, deltaMass;
-                Boolean reverseHit;
                 MSnSpectrum spectrum;
                 com.compomics.util.experiment.biology.Peptide peptide;
                 Precursor precursor;
@@ -134,8 +127,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 int nSpectrum = currentSpectrum.getSpectrumNumber();
                 SupportData supportData = xTandemFile.getSupportData(nSpectrum);
                 String spectrumName = supportData.getFragIonSpectrumDescription();
-                // Spectra are not imported at this stage to save memory
-                HashSet<Peak> peakList = peakList = new HashSet<Peak>();
                 ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
                 if (spectrumPeptides.size() > 0) {
                     Peptide bestPeptide = spectrumPeptides.get(0);
@@ -150,7 +141,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         }
                     }
                     if (!conflict) {
-                        reverseHit = true;
                         for (int i = 0; i < spectrumPeptides.size(); i++) {
                             if (spectrumPeptides.get(i).getDomainSequence().compareTo(bestPeptide.getDomainSequence()) == 0) {
                                 String description = proteinMap.getProteinWithPeptideID(spectrumPeptides.get(i).getDomainID()).getLabel();
@@ -163,10 +153,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                     int end = description.indexOf(" ");
                                     accession = description.substring(0, end);
                                 }
-                                if (!accession.startsWith("REV_") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
-                                    reverseHit = false;
-                                }
-                                proteins.add(new Protein(accession, description, reverseHit));
+                                proteins.add(new Protein(accession, accession.contains(DECOY_FLAG)));
                             }
                         }
                         eValue = bestPeptide.getDomainExpect();
@@ -185,9 +172,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             double mass = new Double(parsedName[0]);
                             String aa = parsedName[1];
                             currentPTM = ptmFactory.getPTM(mass, aa, bestPeptide.getDomainSequence());
-                            // location not implemented yet
-                            foundModifications.add(new ModificationMatch(currentPTM, false, -1));
-                        }
+                                // location not implemented yet
+                                foundModifications.add(new ModificationMatch(currentPTM, false, -1));
+                            }
                         ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(bestPeptide.getDomainID());
                         for (Modification currentModification : foundVariableModifications) {
                             String[] parsedName = currentModification.getName().split("@");
@@ -211,4 +198,4 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
         return foundPeptides;
     }
-}
+        }

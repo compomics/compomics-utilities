@@ -11,7 +11,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -171,7 +170,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                             double deltaMass = Math.abs(1000000 * (expMass - calcMass) / calcMass);
 
                             ArrayList<Protein> proteins = new ArrayList();
-                            boolean reverse = true;
                             for (MSPepHit msPepHit : (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring)) {       // There might be redundancies in the map.
                                 Boolean taken = false;
                                 String description = msPepHit.MSPepHit_defline;
@@ -182,11 +180,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                                         break;
                                     }
                                 }
-                                if (!accession.startsWith("REV") && !accession.endsWith("_REV") && !accession.endsWith("_REVERSED")) {
-                                    reverse = false;
-                                }
                                 if (!taken) {
-                                    proteins.add(new Protein(accession, description, reverse));
+                                    proteins.add(new Protein(accession, accession.contains(DECOY_FLAG)));
                                 }
                             }
 

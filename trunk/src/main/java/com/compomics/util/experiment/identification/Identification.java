@@ -117,7 +117,7 @@ public abstract class Identification extends ExperimentObject {
                 peptideIdentification.put(peptideKey, new PeptideMatch(peptide, oldMatch));
             }
             for (Protein protein : peptide.getParentProteins()) {
-                proteinKey = protein.getAccession();
+                proteinKey = protein.getProteinKey();
                 if (proteinIdentification.containsKey(proteinKey) && !proteinIdentification.get(proteinKey).getPeptideMatches().containsKey(peptideKey)) {
                     proteinIdentification.get(proteinKey).addPeptideMatch(peptideIdentification.get(peptideKey));
                 } else if (!proteinIdentification.containsKey(proteinKey)) {

@@ -133,4 +133,37 @@ public class Enzyme extends ExperimentObject {
         
         return result;
     }
+
+    /**
+     * Getter for the amino acids potentially following the cleavage
+     * @return the amino acids potentially following the cleavage
+     */
+    public ArrayList<Character> getAminoAcidAfter() {
+        return aminoAcidAfter;
+    }
+
+    /**
+     * Getter for the amino acids potentially preceding the cleavage
+     * @return the amino acids potentially preceding the cleavage
+     */
+    public ArrayList<Character> getAminoAcidBefore() {
+        return aminoAcidBefore;
+    }
+
+    /**
+     * Getter for the amino acids restricting when following the cleavage
+     * @return the amino acids restricting when following the cleavage
+     */
+    public ArrayList<Character> getRestrictionAfter() {
+        return restrictionAfter;
+    }
+
+    /**
+     * Getter for the amino acids restricting when preceding the cleavage
+     * @return the amino acids restricting when preceding the cleavage
+     */
+    public ArrayList<Character> getRestrictionBefore() {
+        return restrictionBefore;
+    }
+
 }

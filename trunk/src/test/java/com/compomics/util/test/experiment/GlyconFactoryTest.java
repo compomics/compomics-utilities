@@ -29,7 +29,7 @@ public class GlyconFactoryTest extends TestCase {
             ArrayList<Glycon> glycons = glyconFactory.getGlycons();
             Glycon testGlycon = glycons.get(0);
         } catch (Exception e) {
-            String report = e.getLocalizedMessage();
+            e.printStackTrace();
         }
     }
 }

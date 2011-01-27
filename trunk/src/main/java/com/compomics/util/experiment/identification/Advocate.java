@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Date: Jun 22, 2010
  * Time: 1:55:22 PM
  */
-public interface Advocate {
+public interface Advocate extends Serializable {
 
     /**
      * Mascot index

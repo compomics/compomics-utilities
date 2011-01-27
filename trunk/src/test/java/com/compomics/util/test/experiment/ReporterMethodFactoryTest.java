@@ -25,7 +25,7 @@ public class ReporterMethodFactoryTest extends TestCase {
             String[] names = reporterFactory.getMethodsNames();
             int test = 0;
         } catch (Exception e) {
-            String report = e.getLocalizedMessage();
+            e.printStackTrace();
         }
     }
 

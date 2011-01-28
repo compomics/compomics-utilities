@@ -104,10 +104,6 @@ public class SequenceDataBase extends ExperimentObject {
         while (line != null) {
             line = line.trim();
             if (line.startsWith(">")) {
-                header = line;
-                accession = fastaHeaderParser.getProteinAccession(header);
-                description = fastaHeaderParser.getProteinDescription(header);
-                decoy = accession.contains(decoyFlag);
                 if (!sequence.equals("")) {
                     newProtein = new Protein(accession, description, sequence, decoy);
                     proteinMap.put(accession, newProtein);
@@ -115,6 +111,10 @@ public class SequenceDataBase extends ExperimentObject {
                         nTargetSequences++;
                     }
                 }
+                header = line;
+                accession = fastaHeaderParser.getProteinAccession(header);
+                description = fastaHeaderParser.getProteinDescription(header);
+                decoy = accession.contains(decoyFlag);
                 sequence = "";
             } else {
                 sequence += line;

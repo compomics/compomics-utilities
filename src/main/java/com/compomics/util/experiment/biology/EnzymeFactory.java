@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * This factory will provide the implemented enzymes.
@@ -23,7 +24,7 @@ public class EnzymeFactory {
     /**
      * The imported enzymes
      */
-    private ArrayList<Enzyme> enzymes = null;
+    private HashMap<String, Enzyme> enzymes = null;
 
     /**
      * The instance of the factory
@@ -55,7 +56,16 @@ public class EnzymeFactory {
      * @return          The enzymes as ArrayList
      */
     public ArrayList<Enzyme> getEnzymes() {
-        return enzymes;
+        return new ArrayList<Enzyme>(enzymes.values());
+    }
+
+    /**
+     * Returns the enzyme corresponding to the given name
+     * @param enzymeName the name of the desired enzyme
+     * @return  the corresponding enzyme
+     */
+    public Enzyme getEnzyme(String enzymeName) {
+        return enzymes.get(enzymeName);
     }
 
     /**
@@ -78,7 +88,7 @@ public class EnzymeFactory {
         // Start the parsing.
         int type = parser.next();
 
-        enzymes = new ArrayList<Enzyme>();
+        enzymes = new HashMap<String, Enzyme>();
         // Go through the whole document.
         while (type != XmlPullParser.END_DOCUMENT) {
             // If we find a 'MSModSpec' start tag,
@@ -146,6 +156,6 @@ public class EnzymeFactory {
         }
         aParser.next();
         restrictionAfter = aParser.getText().trim();
-        enzymes.add(new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter));
+        enzymes.put(name, new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter));
     }
 }

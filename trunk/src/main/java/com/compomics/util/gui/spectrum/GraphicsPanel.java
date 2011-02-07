@@ -964,16 +964,17 @@ public abstract class GraphicsPanel extends JPanel {
         iDataPointAndLineColor.add(dataPointAndLineColor);
         iAreaUnderCurveColor.add(areaUnderCurveColor);
 
-        // add the new dataset
-        iXAxisData.add(new double[aXAxisData.length]);
-        iYAxisData.add(new double[aYAxisData.length]);
-
         HashMap peaks = new HashMap(aXAxisData.length);
 
         // add the peaks to the dataset
         for (int i = 0; i < aXAxisData.length; i++) {
             peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));
         }
+
+        // add the new dataset
+        iXAxisData.add(new double[peaks.size()]);
+        iYAxisData.add(new double[peaks.size()]);
+
 
         // Maximum y-axis value.
         double maxYAxisValue = 0.0;

@@ -23,17 +23,18 @@ public abstract class Identification extends ExperimentObject {
      * The identification results as a proteine match map, indexed by protein accession.
      */
     protected HashMap<String, ProteinMatch> proteinIdentification = new HashMap<String, ProteinMatch>();
-
     /**
      * The identification results as a peptide match map, indexed by peptide index
      */
     protected HashMap<String, PeptideMatch> peptideIdentification = new HashMap<String, PeptideMatch>();
-
     /**
      * The identification results as a spectrum match map, indexed by spectrum id: FILE_TITLE
      */
     protected HashMap<String, SpectrumMatch> spectrumIdentification = new HashMap<String, SpectrumMatch>();
-
+    /**
+     * a map linking protein accessions to all their protein matches
+     */
+    protected HashMap<String, ArrayList<ProteinMatch>> proteinMap = new HashMap<String, ArrayList<ProteinMatch>>();
     /**
      * The method used.
      */
@@ -116,12 +117,17 @@ public abstract class Identification extends ExperimentObject {
             } else if (!peptideIdentification.containsKey(peptideKey)) {
                 peptideIdentification.put(peptideKey, new PeptideMatch(peptide, oldMatch));
             }
-            for (Protein protein : peptide.getParentProteins()) {
-                proteinKey = protein.getProteinKey();
-                if (proteinIdentification.containsKey(proteinKey) && !proteinIdentification.get(proteinKey).getPeptideMatches().containsKey(peptideKey)) {
-                    proteinIdentification.get(proteinKey).addPeptideMatch(peptideIdentification.get(peptideKey));
-                } else if (!proteinIdentification.containsKey(proteinKey)) {
-                    proteinIdentification.put(proteinKey, new ProteinMatch(protein, peptideIdentification.get(peptideKey)));
+            proteinKey = ProteinMatch.getProteinMatchKey(peptide);
+            if (proteinIdentification.containsKey(proteinKey) && !proteinIdentification.get(proteinKey).getPeptideMatches().containsKey(peptideKey)) {
+                proteinIdentification.get(proteinKey).addPeptideMatch(peptideIdentification.get(peptideKey));
+            } else if (!proteinIdentification.containsKey(proteinKey)) {
+                ProteinMatch proteinMatch = new ProteinMatch(peptideIdentification.get(peptideKey));
+                proteinIdentification.put(proteinKey, proteinMatch);
+                for (Protein protein : peptide.getParentProteins()) {
+                    if (!proteinMap.containsKey(protein.getAccession())) {
+                        proteinMap.put(protein.getAccession(), new ArrayList<ProteinMatch>());
+                    }
+                    proteinMap.get(protein.getAccession()).add(proteinMatch);
                 }
             }
         }
@@ -146,5 +152,13 @@ public abstract class Identification extends ExperimentObject {
      */
     public int getMethodUsed() {
         return methodUsed;
+    }
+
+    /**
+     * Returns a map of all the protein matches which can be ascribed to a protein indexed by its accession.
+     * @return a map of all the protein matches which can be ascribed to a protein indexed by its accession.
+     */
+    public HashMap<String, ArrayList<ProteinMatch>> getProteinMap() {
+        return proteinMap;
     }
 }

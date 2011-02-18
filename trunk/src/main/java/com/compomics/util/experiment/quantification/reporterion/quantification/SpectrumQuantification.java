@@ -16,9 +16,9 @@ import java.util.HashMap;
 public class SpectrumQuantification extends ExperimentObject {
 
     /**
-     * The corresponding spectrum
+     * The corresponding spectrum key
      */
-    private MSnSpectrum spectrum;
+    private String spectrumKey;
     /**
      * The matches of the reporter ions
      */
@@ -33,7 +33,7 @@ public class SpectrumQuantification extends ExperimentObject {
      * @param spectrum  the corresponding spectrum
      */
     public SpectrumQuantification(MSnSpectrum spectrum) {
-        this.spectrum = spectrum;
+        this.spectrumKey = spectrum.getSpectrumKey();
     }
 
     /**
@@ -55,11 +55,11 @@ public class SpectrumQuantification extends ExperimentObject {
     }
 
     /**
-     * Getter for the spectrum
-     * @return the corresponding spectrum
+     * Getter for the spectrum key
+     * @return the corresponding spectrum key
      */
-    public MSnSpectrum getSpectrum() {
-        return spectrum;
+    public String getSpectrumKey() {
+        return spectrumKey;
     }
 
     /**

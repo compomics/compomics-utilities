@@ -1,5 +1,8 @@
 #summary Short summary of changes for each version of compomics-utilities.
-#labels Featured
+
+----
+
+*Note:* This file is no longer updated please see  [http://code.google.com/p/compomics-utilities/updates/list Updates] for the latest changes.
 
 ----
 

@@ -27,15 +27,11 @@ public class IdFileImportTest extends TestCase {
     private static final String XTANDEM_FILE = "testFiles/orbitrap001924.xml";
     private static final String MODIFICATION_FILE = "exampleFiles/experiment/mods.xml";
     private static final String USER_MODIFICATION_FILE = "exampleFiles/experiment/usermods.xml";
-
     private Ms2Identification identification = new Ms2Identification();
-
     private IdfileReaderFactory idfileReaderFactory = IdfileReaderFactory.getInstance();
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
-
     public void testReading() {
-/**
 
         File modificationFile = new File(MODIFICATION_FILE);
         File userModificationFile = new File(USER_MODIFICATION_FILE);
@@ -43,34 +39,27 @@ public class IdFileImportTest extends TestCase {
         File omssaFile = new File(OMSSA_FILE);
         File xTandemFile = new File(XTANDEM_FILE);
 
-
+/**
         try {
             ptmFactory.importModifications(modificationFile);
             ptmFactory.importModifications(userModificationFile);
-        IdfileReader reader = idfileReaderFactory.getFileReader(xTandemFile);
-        HashSet<SpectrumMatch> matches;
-        matches = reader.getAllSpectrumMatches();
-        boolean test;
+            IdfileReader reader = idfileReaderFactory.getFileReader(omssaFile);
+            HashSet<SpectrumMatch> matches;
+            matches = reader.getAllSpectrumMatches();
+
+            boolean test;
             for (SpectrumMatch match : matches) {
-            if (match.getFirstHit(Advocate.MASCOT).getPeptide().getSequence().equals("VLAITSSSIPKNIQSLR")) {
-                int decoy = 0;
-            }
+                if (match.getFirstHit(Advocate.MASCOT).getPeptide().getSequence().equals("VLAITSSSIPKNIQSLR")) {
+                    int decoy = 0;
+                }
                 identification.addSpectrumMatch(match);
             }
-        Identification newIdentification = new Ms2Identification();
-        for (ProteinMatch proteinMatch : identification.getProteinIdentification().values()) {
-            try {
-                if (proteinMatch.getTheoreticProtein().getAccession().equals("P01111")) {
-                    int debug = 0;
-                }
-            newIdentification.addProteinMatch(proteinMatch);
-            } catch (Exception e) {
-                int debug = proteinMatch.getSpectrumCount();
+            Identification newIdentification = new Ms2Identification();
+            for (ProteinMatch proteinMatch : identification.getProteinIdentification().values()) {
             }
-        }
         } catch (Exception e) {
-
-        }**/
- 
+            int debug = 0;
+        }
+**/
     }
 }

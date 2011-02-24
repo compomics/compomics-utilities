@@ -78,7 +78,7 @@ public class PeptideFragmentIon extends Ion {
      */
     public final static int IMMONIUM = 15;
      /**
-     * This int is the identifier for a precursor ion. The nature of the loss is not coded yet.
+     * This int is the identifier for a precursor ion loss. The nature of the loss is not coded yet.
      */
     public final static int PRECURSOR_LOSS = 16;
     /**
@@ -108,6 +108,20 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
+     * Construction for a peptide fragment.
+     *
+     * @param type  the type of ion according to static fields
+     * @param number    the ion number
+     * @param mz    the ion m/z
+     */
+    public PeptideFragmentIon(int type, int number, double mz) {
+        this.type = type;
+        this.number = number;
+        this.theoreticMass = mz;
+        this.familyType = Ion.PEPTIDE_FRAGMENT;
+    }
+
+    /**
      * Constructor for a theoretic peptide fragment with ion number in the sequence
      *
      * @param type      the type of ion according to static fields
@@ -128,5 +142,13 @@ public class PeptideFragmentIon extends Ion {
      */
     public int getType() {
         return type;
+    }
+
+    /**
+     * Returns the number of the fragment in the sequence
+     * @return the number of the fragment in the sequence
+     */
+    public int getNumber() {
+        return number;
     }
 }

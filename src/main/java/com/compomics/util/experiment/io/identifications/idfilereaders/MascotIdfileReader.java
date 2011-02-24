@@ -202,15 +202,18 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         PTM correspondingPTM;
         int modificationSite;
         for (int l = 0; l < aPeptideHit.getModifications().length; l++) {
+            if (l > 0) {
+                modificationSite = l - 1;
+            } else {
+                modificationSite = l;
+            }
             handledModification = aPeptideHit.getModifications()[l];
             if (handledModification != null) {
                 correspondingPTM = ptmFactory.getPTMFromMascotName(handledModification.getShortType());
                 if (correspondingPTM != null) {
-                    // Modification site not implemented yet
-                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
+                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
                 } else {
-                    correspondingPTM = new PTM(PTM.MODMAX, handledModification.getType(), handledModification.getMass(), new String[]{"x"});
-                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), 0));
+                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
                 }
             }
         }
@@ -220,9 +223,9 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         //com.compomics.mascotdatfile.util.mascot.Peak[] kennysPeakList = iMascotDatfile.getQuery(query).getPeakList();
         /**
          * Peak lists are not imported anymore to save memory
-         for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
-         peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
-         }
+        for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
+        peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
+        }
          **/
         Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
         MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
@@ -250,4 +253,4 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         // Secondary hits are not implemented yet
         return new SpectrumMatch(spectrumKey, currentAssumption);
     }
-        }
+}

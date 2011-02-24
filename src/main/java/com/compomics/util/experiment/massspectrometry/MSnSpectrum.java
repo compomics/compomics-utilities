@@ -100,11 +100,8 @@ public class MSnSpectrum extends Spectrum {
         result += "RTINSECONDS=" + precursor.getRt() + "\n";
         result += "CHARGE=" + precursor.getCharge().toString() + "\n\n";
 
-        Iterator<Peak> peakIt = peakList.iterator();
-        Peak currentPeak;
-        while (peakIt.hasNext()) {
-            currentPeak = peakIt.next();
-            result += currentPeak.mz + " " + currentPeak.intensity + "\n";
+        for (Peak peak : peakList) {
+            result += peak.mz + " " + peak.intensity + "\n";
         }
 
         result += "\nEND IONS\n\n\n";

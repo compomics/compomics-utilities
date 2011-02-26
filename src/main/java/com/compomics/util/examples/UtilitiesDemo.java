@@ -15,6 +15,7 @@ import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.IsotopicDistributionPanel;
+import com.compomics.util.gui.spectrum.ReferenceArea;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.io.MascotEnzymeReader;
 import com.compomics.util.io.PklFile;
@@ -399,6 +400,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 xValues, yValues, "Time (minutes)", "Intensity (number of counts)");
         chromatogramPanel.setMaxPadding(chromatogramPanelMaxPadding);
 
+        // reference lines example
+//        chromatogramPanel.addReferenceAreaXAxis(new ReferenceArea("A", 40, 50, Color.yellow, 0.3f, true, true));
+//        chromatogramPanel.addReferenceAreaXAxis(new ReferenceArea("B", 70, 80, Color.yellow, 0.3f, false, true));
+
         // remove the default chromatogram panel border, given that our
         // chromatogram panel already has a border
         chromatogramPanel.setBorder(null);
@@ -474,6 +479,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // remove the default spectrum panel border, given that our
             // spectrum panel already has a border
             spectrumAPanel.setBorder(null);
+
+            // reference lines example
+//            spectrumAPanel.addReferenceAreaXAxis(new ReferenceArea("B", 400, 500, Color.blue, 0.1f, false, true));
+//            spectrumAPanel.addReferenceAreaXAxis(new ReferenceArea("A", 200, 250, Color.blue, 0.1f, false, true));
+//
+//            spectrumAPanel.addReferenceAreaYAxis(new ReferenceArea("Low", 0, 500, Color.ORANGE, 0.3f, false, true));
+//            spectrumAPanel.addReferenceAreaYAxis(new ReferenceArea("Medium", 500, 2000, Color.YELLOW, 0.3f, false, true));
+//            spectrumAPanel.addReferenceAreaYAxis(new ReferenceArea("High", 2000, 3500, Color.GREEN, 0.3f, false, true));
 
             // add the spectrum panel to the frame
             spectrumAJPanel.add(spectrumAPanel);
@@ -560,7 +573,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 pklFile.getMzValues(), pklFile.getIntensityValues(),
                 pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(),
                 "" + pklFile.getFileName(),
-                spectrumPanelMaxPadding, false, false, false, false, 2, profileMode);
+                spectrumPanelMaxPadding, false, false, false, 2, profileMode);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
 

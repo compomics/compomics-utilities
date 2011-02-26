@@ -100,7 +100,7 @@ public class SpectrumPanel extends GraphicsPanel {
      *                                  can be 'null' for default coloring.
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true, true, true);
+        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true, true);
     }
 
     /**
@@ -117,12 +117,11 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
      *                                  can be 'null' for default coloring.
      * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
-            int aMaxPadding, boolean aHideDecimals, boolean aShowFileName) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aHideDecimals, aShowFileName, true, true);
+            int aMaxPadding, boolean aShowFileName) {
+        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, true, true);
     }
 
     /**
@@ -139,14 +138,13 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
      *                                  can be 'null' for default coloring.
      * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution boolean that specifies if the resolution should be shown in the panel
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
-            int aMaxPadding, boolean aHideDecimals, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aHideDecimals, aShowFileName, aShowPrecursorDetails, aShowResolution, 0);
+            int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution) {
+        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, aShowPrecursorDetails, aShowResolution, 0);
     }
 
     /**
@@ -163,15 +161,14 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
      *                                  can be 'null' for default coloring.
      * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution boolean that specifies if the resolution should be shown in the panel
      * @param aMSLevel  int with the ms level for the spectrum
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
-            int aMaxPadding, boolean aHideDecimals, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aHideDecimals, aShowFileName, aShowPrecursorDetails, aShowResolution, aMSLevel, false);
+            int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
+        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, aShowPrecursorDetails, aShowResolution, aMSLevel, false);
     }
 
     /**
@@ -188,7 +185,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
      *                                  can be 'null' for default coloring.
      * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aHideDecimals boolean that specifies if the decimals for the axis tags should be shown
+
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution   boolean that specifies if the resolution should be shown in the panel
@@ -196,7 +193,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aProfileMode boolean if set to true the spectrum will be drawn in profile mode
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction,
-            Color aSpectrumFilenameColor, int aMaxPadding, boolean aHideDecimals,
+            Color aSpectrumFilenameColor, int aMaxPadding,
             boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution,
             int aMSLevel, boolean aProfileMode) {
         this.iDrawStyle = aDrawStyle;
@@ -212,13 +209,12 @@ public class SpectrumPanel extends GraphicsPanel {
         }
         this.iFilenameColor = aSpectrumFilenameColor;
         this.maxPadding = aMaxPadding;
-        this.hideDecimals = aHideDecimals;
         this.showFileName = aShowFileName;
         this.showPrecursorDetails = aShowPrecursorDetails;
         this.showResolution = aShowResolution;
         this.iMSLevel = aMSLevel;
 
-        if(aProfileMode){
+        if (aProfileMode) {
             this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
         } else {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
@@ -236,7 +232,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aFileName             String with the title of the Query.
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, false, true, true, true);
+        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, false, true, true);
     }
 
     /**
@@ -248,30 +244,11 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aPrecursorMZ          double with the precursor mass.
      * @param aPrecursorCharge      String with the precursor intensity.
      * @param aFileName             String with the title of the Query.
-     * @param aHideDecimals         boolean that specifies if the decimals for the axis tags should be shown.
      * @param aShowFileName         boolean that specifies if the file name should be shown in the panel.
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName,
-            boolean aHideDecimals, boolean aShowFileName) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, aHideDecimals, aShowFileName, true, true);
-    }
-
-   /**
-     * This constructor creates a SpectrumPanel based on the passed parameters.
-    * This constructor will be used to annotate matched ions on the spectrumpannels.
-    *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
-     * @param aFileName             String with the title of the Query.
-     * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aHideDecimals         boolean that specifies if the decimals for the axis tags should be shown.
-     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel.
-     */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding, aHideDecimals, aShowFileName, true, true);
+            boolean aShowFileName) {
+        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, aShowFileName, true, true);
     }
 
     /**
@@ -284,15 +261,31 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aPrecursorCharge      String with the precursor intensity.
      * @param aFileName             String with the title of the Query.
      * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aHideDecimals         boolean that specifies if the decimals for the axis tags should be shown
+     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel.
+     */
+    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
+            String aFileName, int aMaxPadding, boolean aShowFileName) {
+        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding, aShowFileName, true, true);
+    }
+
+    /**
+     * This constructor creates a SpectrumPanel based on the passed parameters.
+     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     *
+     * @param aXAxisData            double[] with all the x-axis values.
+     * @param aYAxisData            double[] with all the y-axis values.
+     * @param aPrecursorMZ          double with the precursor mass.
+     * @param aPrecursorCharge      String with the precursor intensity.
+     * @param aFileName             String with the title of the Query.
+     * @param aMaxPadding           int the sets the maximum padding size.
      * @param aShowFileName         boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution       boolean that specifies if the resolution should be shown in the panel
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName,
+            String aFileName, int aMaxPadding, boolean aShowFileName,
             boolean aShowPrecursorDetails, boolean aShowResolution) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding, aHideDecimals,
+        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding,
                 aShowFileName, aShowPrecursorDetails, aShowResolution, 0);
     }
 
@@ -306,16 +299,15 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aPrecursorCharge      String with the precursor intensity.
      * @param aFileName             String with the title of the Query.
      * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aHideDecimals         boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName         boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution       boolean that specifies if the resolution should be shown in the panel
      * @param aMSLevel              int with the ms level for the spectrum, set to 0 if ms level is unknown
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName,
+            String aFileName, int aMaxPadding, boolean aShowFileName,
             boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding, aHideDecimals,
+        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding,
                 aShowFileName, aShowPrecursorDetails, aShowResolution, aMSLevel, false);
     }
 
@@ -329,7 +321,6 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aPrecursorCharge      String with the precursor intensity.
      * @param aFileName             String with the title of the Query.
      * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aHideDecimals         boolean that specifies if the decimals for the axis tags should be shown
      * @param aShowFileName         boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution       boolean that specifies if the resolution should be shown in the panel
@@ -337,7 +328,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aProfileMode          boolean if set to true the spectrum will be drawn in profile mode
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aHideDecimals, boolean aShowFileName,
+            String aFileName, int aMaxPadding, boolean aShowFileName,
             boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel,
             boolean aProfileMode) {
         this.iDrawStyle = LINES;
@@ -351,13 +342,12 @@ public class SpectrumPanel extends GraphicsPanel {
         iPrecursorCharge = aPrecursorCharge;
         iFilename = aFileName;
         this.maxPadding = aMaxPadding;
-        this.hideDecimals = aHideDecimals;
         this.showFileName = aShowFileName;
         this.showPrecursorDetails = aShowPrecursorDetails;
         this.showResolution = aShowResolution;
         this.iMSLevel = aMSLevel;
 
-        if(aProfileMode){
+        if (aProfileMode) {
             this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
         } else {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
@@ -365,7 +355,6 @@ public class SpectrumPanel extends GraphicsPanel {
 
         this.addListeners();
     }
-
 
     /**
      * Adds an additional spectrum dataset to be displayed in the same Spectrum 
@@ -390,8 +379,8 @@ public class SpectrumPanel extends GraphicsPanel {
      *
      * @param aProfileMode if true, the spectrum is drawn in profile mode
      */
-    public void setProfileMode(boolean aProfileMode){
-        if(aProfileMode){
+    public void setProfileMode(boolean aProfileMode) {
+        if (aProfileMode) {
             this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
         } else {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
@@ -421,7 +410,7 @@ public class SpectrumPanel extends GraphicsPanel {
      */
     private void processSpectrumFile(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
-        if(dataSetCounter == 0) {
+        if (dataSetCounter == 0) {
             iXAxisData = new ArrayList<double[]>();
             iYAxisData = new ArrayList<double[]>();
         }

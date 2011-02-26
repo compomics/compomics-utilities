@@ -1,4 +1,3 @@
-
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.Util;
@@ -11,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.ArrayList;
 
@@ -23,6 +23,12 @@ import java.util.ArrayList;
  */
 public abstract class GraphicsPanel extends JPanel {
 
+    /**
+     * The list of supported tag distances for the x- and y-axis. The most
+     * detailed alternative, i.e., the smallest number, is always used.
+     */
+    protected int[] distanceAlternatives = {1, 5, 10, 25, 50, 100, 250, 500, 1000,
+        2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000};
     /**
      * If set to true, the y-axis is removed, the y- and x-axis tags are removed, 
      * and any annotations are hidden. All to make the graphics panel look better
@@ -68,7 +74,6 @@ public abstract class GraphicsPanel extends JPanel {
 
     // Static init block takes care of reading the 'SpectrumPanel.properties' file if
     // it hasn't already been done.
-
     static {
         try {
             if (iKnownMassDeltas == null) {
@@ -89,7 +94,6 @@ public abstract class GraphicsPanel extends JPanel {
             // Do nothing. So now masses will be known.
         }
     }
-
     /**
      * The size of the window to use when searcing for matches in the known masses
      * list when the user hovers over a second data point after clicking a previous
@@ -387,6 +391,7 @@ public abstract class GraphicsPanel extends JPanel {
      * An enumerator of the possible GraphicsPanel types
      */
     protected enum GraphicsPanelType {
+
         profileSpectrum, centroidSpectrum, chromatogram,
         isotopicDistributionCentroid, isotopicDistributionProfile
     }
@@ -430,7 +435,7 @@ public abstract class GraphicsPanel extends JPanel {
     public void setAlphaLevel(float alphaLevel) {
         this.alphaLevel = alphaLevel;
     }
-    
+
     /**
      * This method sets the start value of the x-axis to zero.
      *
@@ -475,7 +480,7 @@ public abstract class GraphicsPanel extends JPanel {
             for (Iterator lIterator = aAnnotations.iterator(); lIterator.hasNext();) {
                 SpectrumAnnotation annotation = (SpectrumAnnotation) lIterator.next();
                 String key = annotation.getLabel() + annotation.getMZ();
-                if(removeDupes.contains(key)) {
+                if (removeDupes.contains(key)) {
                     // Duplicate, ignore!
                 } else {
                     removeDupes.add(key);
@@ -542,14 +547,18 @@ public abstract class GraphicsPanel extends JPanel {
                 g.drawLine(iDragXLoc, iStartYLoc - 2, iDragXLoc, iStartYLoc + 2);
             }
 
-            // @TODO scale.
-            // @TODO: find out why the axes has to be drawn before the data points
-            //        and not just after, i.e., drawn twice
+            // round the range of the x- and y-axis to integer values
+            iXAxisMin = (int) Math.floor(iXAxisMin);
+            iXAxisMax = (int) Math.ceil(iXAxisMax);
+            iYAxisMin = (int) Math.floor(iYAxisMin);
+            iYAxisMax = (int) Math.ceil(iYAxisMax);
+
+            // @TODO: scale?
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
-            
-            if(currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram) ||
-                    currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum) ||
-                    currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)){
+
+            if (currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram)
+                    || currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)
+                    || currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
                 drawFilledPolygon(g);
             } else {
                 drawPeaks(g);
@@ -570,7 +579,7 @@ public abstract class GraphicsPanel extends JPanel {
 
             // See if there is a daisychain to display.
             int liClickedSize = iClickedList.size();
-            
+
             if (liClickedSize > 0) {
                 for (int i = 0; i < liClickedSize; i++) {
                     // The last one should be connected to iClicked.
@@ -607,7 +616,7 @@ public abstract class GraphicsPanel extends JPanel {
             if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
                 // This HashMap will contain the indices of the points that already carry an annotation
                 // as keys (datasetIndex_peakIndex), and the number of annotations as values.
-                HashMap<String, Integer>  annotatedPeaks = new HashMap<String, Integer>();
+                HashMap<String, Integer> annotatedPeaks = new HashMap<String, Integer>();
                 for (int i = 0; i < iAnnotations.size(); i++) {
                     Object o = iAnnotations.get(i);
                     if (o instanceof SpectrumAnnotation) {
@@ -633,8 +642,8 @@ public abstract class GraphicsPanel extends JPanel {
 
         double maxValue = Double.MIN_VALUE;
 
-        for(int i=0; i < iXAxisData.size(); i++) {
-            if(iXAxisData.get(i)[iXAxisData.get(i).length - 1] > maxValue){
+        for (int i = 0; i < iXAxisData.size(); i++) {
+            if (iXAxisData.get(i)[iXAxisData.get(i).length - 1] > maxValue) {
                 maxValue = iXAxisData.get(i)[iXAxisData.get(i).length - 1];
             }
         }
@@ -652,8 +661,8 @@ public abstract class GraphicsPanel extends JPanel {
 
         double minValue = Double.MAX_VALUE;
 
-        for(int i=0; i < iXAxisData.size(); i++) {
-            if(iXAxisData.get(i)[0] < minValue){
+        for (int i = 0; i < iXAxisData.size(); i++) {
+            if (iXAxisData.get(i)[0] < minValue) {
                 minValue = iXAxisData.get(i)[0];
             }
         }
@@ -679,8 +688,8 @@ public abstract class GraphicsPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
 
             /**
-                * Invoked when a mouse button has been released on a component.
-                */
+             * Invoked when a mouse button has been released on a component.
+             */
             public void mouseReleased(MouseEvent e) {
                 if (iXAxisData != null) {
                     if (e.getButton() == MouseEvent.BUTTON3 || e.getButton() == MouseEvent.BUTTON2) {
@@ -692,8 +701,8 @@ public abstract class GraphicsPanel extends JPanel {
 
                             // if isotopic distribution add a little padding on the left side
                             // to make sure that the first peak is not too close to the y-axis
-                            if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile) ||
-                                    currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionCentroid)) {
+                            if (currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)
+                                    || currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionCentroid)) {
                                 tempMinXValue -= 1;
 
                                 if (tempMinXValue < 0) {
@@ -725,8 +734,8 @@ public abstract class GraphicsPanel extends JPanel {
             }
 
             /**
-                * Invoked when the mouse has been clicked on a component.
-                */
+             * Invoked when the mouse has been clicked on a component.
+             */
             public void mouseClicked(MouseEvent e) {
                 if (iXAxisData != null) {
                     if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == (MouseEvent.CTRL_DOWN_MASK | MouseEvent.ALT_DOWN_MASK)) {
@@ -782,8 +791,8 @@ public abstract class GraphicsPanel extends JPanel {
             }
 
             /**
-                * Invoked when a mouse button has been pressed on a component.
-                */
+             * Invoked when a mouse button has been pressed on a component.
+             */
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     iStartXLoc = e.getX();
@@ -795,12 +804,12 @@ public abstract class GraphicsPanel extends JPanel {
         this.addMouseMotionListener(new MouseMotionAdapter() {
 
             /**
-                 * Invoked when a mouse button is pressed on a component and then
-                 * dragged.  Mouse drag events will continue to be delivered to
-                 * the component where the first originated until the mouse button is
-                 * released (regardless of whether the mouse position is within the
-                 * bounds of the component).
-                 */
+             * Invoked when a mouse button is pressed on a component and then
+             * dragged.  Mouse drag events will continue to be delivered to
+             * the component where the first originated until the mouse button is
+             * released (regardless of whether the mouse position is within the
+             * bounds of the component).
+             */
             public void mouseDragged(MouseEvent e) {
                 iDragged = true;
                 iDragXLoc = e.getX();
@@ -808,9 +817,9 @@ public abstract class GraphicsPanel extends JPanel {
             }
 
             /**
-                 * Invoked when the mouse button has been moved on a component
-                 * (with no buttons no down).
-                 */
+             * Invoked when the mouse button has been moved on a component
+             * (with no buttons no down).
+             */
             public void mouseMoved(MouseEvent e) {
                 if (iXAxisData != null && iXAxisDataInPixels != null) {
                     int x = e.getX();
@@ -819,7 +828,7 @@ public abstract class GraphicsPanel extends JPanel {
                     // this variable is used make sure that the most intense peak within range is highlighted
                     int highestPeakInRange = 0;
 
-                    for(int j=0; j<iXAxisDataInPixels.size(); j++) {
+                    for (int j = 0; j < iXAxisDataInPixels.size(); j++) {
                         for (int i = 0; i < iXAxisDataInPixels.get(j).length; i++) {
                             int delta = iXAxisDataInPixels.get(j)[i] - x;
                             if (Math.abs(delta) < iPointDetectionTolerance) {
@@ -862,11 +871,11 @@ public abstract class GraphicsPanel extends JPanel {
      * @param index the index of the dataset
      */
     public void setDataPointAndLineColor(Color aColor, int index) {
-        if(index < iDataPointAndLineColor.size() && index >= 0){
+        if (index < iDataPointAndLineColor.size() && index >= 0) {
             iDataPointAndLineColor.set(index, aColor);
         }
     }
-    
+
     /**
      * Sets the color of the area under the curve for chromatograms and
      * profile spectra for the dataset with the given dataset index.
@@ -875,7 +884,7 @@ public abstract class GraphicsPanel extends JPanel {
      * @param index the index of the dataset
      */
     public void setAreaUnderCurveColor(Color aColor, int index) {
-        if(index < iAreaUnderCurveColor.size() && index >= 0){
+        if (index < iAreaUnderCurveColor.size() && index >= 0) {
             iAreaUnderCurveColor.set(index, aColor);
         }
     }
@@ -893,8 +902,8 @@ public abstract class GraphicsPanel extends JPanel {
      * This method rescales the x-axis, allowing the caller to specify whether the
      * observers need be notified.
      *
-     * @param aMinXAxisValue  double with the new minimum x-axis value to display.
-     * @param aMaxXAxisValue  double with the new maximum x-axis value to display.
+     * @param aMinXAxisValue    double with the new minimum x-axis value to display.
+     * @param aMaxXAxisValue    double with the new maximum x-axis value to display.
      * @param aNotifyListeners  boolean to indicate whether the observers should be notified.
      */
     public void rescale(double aMinXAxisValue, double aMaxXAxisValue, boolean aNotifyListeners) {
@@ -902,7 +911,7 @@ public abstract class GraphicsPanel extends JPanel {
         // Calculate the new max y-axis value.
         double maxInt = 1.0;
 
-        for (int j=0; j <iXAxisData.size(); j++) {
+        for (int j = 0; j < iXAxisData.size(); j++) {
             for (int i = 0; i < iXAxisData.get(j).length; i++) {
                 double lMass = iXAxisData.get(j)[i];
                 if (lMass < aMinXAxisValue) {
@@ -921,14 +930,14 @@ public abstract class GraphicsPanel extends JPanel {
         double delta = aMaxXAxisValue - aMinXAxisValue;
 
         // Round to nearest order of 10, based on displayed delta.
-        double tempOoM = (Math.log(delta)/Math.log(10))-1;
-        if(tempOoM < 0) {
+        double tempOoM = (Math.log(delta) / Math.log(10)) - 1;
+        if (tempOoM < 0) {
             tempOoM--;
         }
-        int orderOfMagnitude = (int)tempOoM;
+        int orderOfMagnitude = (int) tempOoM;
         double power = Math.pow(10, orderOfMagnitude);
         iXAxisMin = aMinXAxisValue - (aMinXAxisValue % power);
-        iXAxisMax = aMaxXAxisValue + (power-(aMaxXAxisValue % power));
+        iXAxisMax = aMaxXAxisValue + (power - (aMaxXAxisValue % power));
 
         //@TODO just some helpful printouts for when this is refined further.
         //logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
@@ -947,17 +956,17 @@ public abstract class GraphicsPanel extends JPanel {
      * This method reads the x and y values from the specified arrays and stores
      * these internally for drawing. The x-axis values are sorted in this step.
      *
-     * @param aXAxisData double[] with the x-axis values.
-     * @param aYAxisData double[] with the corresponding y-axis values.
+     * @param aXAxisData            double[] with the x-axis values.
+     * @param aYAxisData            double[] with the corresponding y-axis values.
      * @param dataPointAndLineColor the color to use for the data points and line
-     * @param areaUnderCurveColor the color to use for the area under the curve
+     * @param areaUnderCurveColor   the color to use for the area under the curve
      */
     protected void processXAndYData(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
         // if first dataset, create the dataset array lists
-        if(dataSetCounter == 0) {
+        if (dataSetCounter == 0) {
             iXAxisData = new ArrayList<double[]>();
-            iYAxisData = new ArrayList<double[]>();   
+            iYAxisData = new ArrayList<double[]>();
         }
 
         // set the data colors
@@ -1009,13 +1018,13 @@ public abstract class GraphicsPanel extends JPanel {
      * This method draws the axes and their labels on the specified Graphics object,
      * taking into account the padding.
      *
-     * @param g Graphics object to draw on.
-     * @param aXMin double with the minimal x value.
-     * @param aXMax double with the maximum x value.
-     * @param aXScale int with the scale to display for the X-axis labels (as used in BigDecimal's setScale).
-     * @param aYMin double with the minimal y value.
-     * @param aYMax double with the maximum y value.
-     * @return int[] with the length of the X axis and Y axis respectively.
+     * @param g         Graphics object to draw on.
+     * @param aXMin     double with the minimal x value.
+     * @param aXMax     double with the maximum x value.
+     * @param aXScale   int with the scale to display for the X-axis labels (as used in BigDecimal's setScale).
+     * @param aYMin     double with the minimal y value.
+     * @param aYMax     double with the maximum y value.
+     * @return          int[] with the length of the X axis and Y axis respectively.
      */
     protected int[] drawAxes(Graphics g, double aXMin, double aXMax, int aXScale, double aYMin, double aYMax) {
 
@@ -1050,7 +1059,7 @@ public abstract class GraphicsPanel extends JPanel {
             } else {
                 g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 20);
             }
-            
+
             g.setColor(currentColor);
         }
 
@@ -1063,12 +1072,12 @@ public abstract class GraphicsPanel extends JPanel {
                     new int[]{this.getHeight() - tempPadding + 5, this.getHeight() - tempPadding - 5, this.getHeight() - tempPadding}, 3);
 
             // X-axis label
-            if(iXAxisLabel.equalsIgnoreCase("m/z")){
+            if (iXAxisLabel.equalsIgnoreCase("m/z")) {
                 g.drawString(iXAxisLabel, this.getWidth() - (tempPadding - (padding / 2)), this.getHeight() - tempPadding + 4);
             } else {
                 g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (tempPadding / 2));
             }
-        
+
 
             // Y-axis.
             g.drawLine(tempPadding, this.getHeight() - tempPadding, tempPadding, tempPadding / 2);
@@ -1081,11 +1090,11 @@ public abstract class GraphicsPanel extends JPanel {
 
             // Arrowhead on Y axis.
             g.fillPolygon(new int[]{tempPadding - 5, tempPadding + 5, tempPadding},
-                    new int[]{(tempPadding / 2) + 3, (tempPadding / 2) + 3, tempPadding / 2-2},
+                    new int[]{(tempPadding / 2) + 3, (tempPadding / 2) + 3, tempPadding / 2 - 2},
                     3);
 
             // Y-axis label
-            if(iYAxisLabel.equalsIgnoreCase("Int")){
+            if (iYAxisLabel.equalsIgnoreCase("Int")) {
                 g.drawString(iYAxisLabel, tempPadding - yAxisLabelWidth, (tempPadding / 2) - 4);
             } else {
                 g.drawString(iYAxisLabel, tempPadding - (yAxisLabelWidth / 5), (tempPadding / 2) - 4);
@@ -1093,7 +1102,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         // Now the tags along the axes.
-        this.drawXTags(g, aXMin, aXMax, aXScale, xAxis, tempPadding);
+        this.drawXTags(g, (int) Math.floor(aXMin), (int) Math.ceil(aXMax), aXScale, xAxis, tempPadding);
         int yTemp = yAxis;
 
         if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
@@ -1101,7 +1110,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         iTopPadding = this.getHeight() - yTemp - 5;
-        this.drawYTags(g, aYMin, aYMax, yTemp, tempPadding);
+        this.drawYTags(g, (int) Math.floor(aYMin), (int) Math.ceil(aYMax), yTemp, tempPadding);
 
         return new int[]{xAxis, yAxis};
     }
@@ -1116,49 +1125,34 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aXAxisWidth   int with the axis width in pixels.
      * @param aPadding      int with the amount of padding to take into account.
      */
-    protected void drawXTags(Graphics g, double aMin, double aMax, int aXScale, int aXAxisWidth, int aPadding) {
+    protected void drawXTags(Graphics g, int aMin, int aMax, int aXScale, int aXAxisWidth, int aPadding) {
 
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
 
-        // Find out how many tags we will have. At most, we'll have xTagCount tags, and if the resolution
-        // of the screen is too small, we'll have less.
-        int tagWidthEstimate = fm.stringWidth("1545.99") + 15;
-        int numberTimes = (aXAxisWidth / tagWidthEstimate);
-
-        if (numberTimes > xTagCount) {
-            numberTimes = xTagCount;
-        } else if (numberTimes == 0) {
-            numberTimes = 1;
-        }
-
-        // Calculate the graphical unit, ...
-        iXUnit = aXAxisWidth / numberTimes;
-
-        // ... as well as the scale unit.
+        // find the scale unit
         double delta = aMax - aMin;
-        double scaleUnit = delta / numberTimes;
-        iXScaleUnit = delta / aXAxisWidth;
+        iXScaleUnit = delta / aXAxisWidth; // note: do not alter! also used when drawing the peaks
 
         // The next section will only be drawn for spectra.
-        if (currentGraphicsPanelType.equals(GraphicsPanelType.centroidSpectrum) ||
-                currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)) {
+        if (currentGraphicsPanelType.equals(GraphicsPanelType.centroidSpectrum)
+                || currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)) {
 
             if (!miniature) {
 
                 // Since we know the scale unit, we also know the resolution.
                 // This will be displayed on the bottom line.
                 String resolution = "";
-                if(showResolution){
+                if (showResolution) {
                     resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                 }
 
                 // Also print the MS level and precursor MZ and charge (if known, '?' otherwise).
                 String msLevel_and_optional_precursor = "";
-                if(showPrecursorDetails){
+                if (showPrecursorDetails) {
                     msLevel_and_optional_precursor = "MS level: " + iMSLevel;
 
-                    if(iMSLevel > 0) {
+                    if (iMSLevel > 0) {
                         // Also print the precursor MZ and charge (if known, '?' otherwise).
                         msLevel_and_optional_precursor += "   Precursor M/Z: " + this.iPrecursorMZ + " (" + this.iPrecursorCharge + ")";
                     } else {
@@ -1206,7 +1200,7 @@ public abstract class GraphicsPanel extends JPanel {
                 if (foreground != null) {
                     g.setColor(foreground);
                 }
-                
+
                 // Restore original font.
                 g.setFont(oldFont);
             }
@@ -1216,20 +1210,44 @@ public abstract class GraphicsPanel extends JPanel {
 
             int labelHeight = fm.getAscent() + 5;
 
-            // Now mark each unit.
-            for (int i = 0; i < numberTimes; i++) {
-                int xLoc = (iXUnit * i) + aPadding;
-                g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
-                BigDecimal bd = new BigDecimal(aMin + (scaleUnit * i));
-                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-                String label = bd.toString();
+            // Find out how many tags we have room for
+            int tagWidthEstimate = fm.stringWidth("1545") + 15;
+            int numberTimes = (aXAxisWidth / tagWidthEstimate);
 
-                if (hideDecimals) {
-                    label = "" + bd.intValue();
+            // find the scale unit for the x tags
+            double scaleUnitXTags = aXAxisWidth / delta;
+
+            int distanceBetweenTags = 1;
+            boolean optimalDistanceFound = false;
+
+            // try to find the optimal distance to use between the tags
+            for (int i = 0; i < distanceAlternatives.length && !optimalDistanceFound; i++) {
+                if (delta / distanceAlternatives[i] <= numberTimes) {
+                    distanceBetweenTags = distanceAlternatives[i];
+                    optimalDistanceFound = true;
                 }
+            }
 
-                int labelWidth = fm.stringWidth(label);
-                g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+            // set up the number formatting
+            DecimalFormat numberFormat = new DecimalFormat();
+            numberFormat.setGroupingSize(3);
+            numberFormat.setGroupingUsed(true);
+
+            // now we can mark each unit
+            for (int i = 0; i < aMax; i++) {
+
+                if ((aMin + i) % distanceBetweenTags == 0) {
+
+                    int xLoc = (int) (aPadding + (i * scaleUnitXTags));
+
+                    if (xLoc < (aPadding + aXAxisWidth)) {
+                        g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                        int labelAsInt = aMin + i;
+                        String label = numberFormat.format(labelAsInt);
+                        int labelWidth = fm.stringWidth(label);
+                        g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+                    }
+                }
             }
         }
     }
@@ -1243,70 +1261,53 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aYAxisHeight  int with the axis height in pixels.
      * @param aPadding      int with the amount of padding to take into account.
      */
-    protected void drawYTags(Graphics g, double aMin, double aMax, int aYAxisHeight, int aPadding) {
+    protected void drawYTags(Graphics g, int aMin, int aMax, int aYAxisHeight, int aPadding) {
 
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
         int labelHeight = fm.getAscent();
 
-        // Find out how many tags we will have. At most, we'll have xTagCount tags, and if the resolution
-        // of the screen is too small, we'll have less.
+        // Find out how many tags we have room for
         int tagHeightEstimate = labelHeight + 10;
         int numberTimes = (aYAxisHeight / tagHeightEstimate);
-        if (numberTimes > yTagCount) {
-            numberTimes = yTagCount;
-        } else if (numberTimes == 0) {
-            numberTimes = 1;
-        }
 
-        // Calculate the graphical unit, ...
-        iYUnit = aYAxisHeight / numberTimes;
-
-        // ... as well as the scale unit.
+        // find the scale unit
         double delta = aMax - aMin;
-        double scaleUnit = delta / numberTimes;
-        iYScaleUnit = delta / aYAxisHeight;
+        iYScaleUnit = delta / aYAxisHeight; // note: do not alter! also used when drawing the peaks
 
         if (!miniature) {
 
-            // Find the largest display intensity.
-            BigDecimal bdLargest = new BigDecimal(aMin + (scaleUnit * (numberTimes - 1)));
-            bdLargest = bdLargest.setScale(2, BigDecimal.ROUND_HALF_UP);
-            String largestLabel = bdLargest.toString();
+            // find the scale unit for the x tags
+            double scaleUnitYTags = aYAxisHeight / delta;
 
-            if (hideDecimals) {
-                largestLabel = "" + bdLargest.intValue();
-            }
+            int distanceBetweenTags = 1;
+            boolean optimalDistanceFound = false;
 
-            int largestWidth = 0;
-
-            // Old font storage.
-            Font oldFont = g.getFont();
-            int sizeCounter = 0;
-            int margin = aPadding - 10;
-            while ((largestWidth = g.getFontMetrics().stringWidth(largestLabel)) >= margin) {
-                sizeCounter++;
-                g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - sizeCounter));
-            }
-
-            // Now mark each unit.
-            for (int i = 0; i < numberTimes; i++) {
-                int yLoc = (iYUnit * i) + aPadding;
-                g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
-                BigDecimal bd = new BigDecimal(aMin + (scaleUnit * i));
-                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-                String label = bd.toString();
-
-                if (hideDecimals) {
-                    label = "" + bd.intValue();
+            // try to find the optimal distance to use between the tags
+            for (int i = 0; i < distanceAlternatives.length && !optimalDistanceFound; i++) {
+                if (delta / distanceAlternatives[i] <= numberTimes) {
+                    distanceBetweenTags = distanceAlternatives[i];
+                    optimalDistanceFound = true;
                 }
-
-                int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
-                g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
             }
 
-            // Restore original font.
-            g.setFont(oldFont);
+            // set up the number formatting
+            DecimalFormat numberFormat = new DecimalFormat();
+            numberFormat.setGroupingSize(3);
+            numberFormat.setGroupingUsed(true);
+
+            // now we can mark each unit
+            for (int i = 0; i < aMax; i++) {
+
+                if ((aMin + i) % distanceBetweenTags == 0) {
+                    int yLoc = (int) (aPadding + (i * scaleUnitYTags));
+                    g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
+                    int labelAsInt = aMin + i;
+                    String label = numberFormat.format(labelAsInt);
+                    int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
+                    g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
+                }
+            }
         }
     }
 
@@ -1451,7 +1452,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         // Drop a dotted line down to the peaks.
         dropDottedLine(aFirstIndex, aFirstDatasetIndex, y - 3, g);
-        dropDottedLine(aSecondIndex,aSecondDatasetIndex, y - 3, g);
+        dropDottedLine(aSecondIndex, aSecondDatasetIndex, y - 3, g);
         int xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (width / 2);
         g.drawString(deltaMass, xPosText, y - 5);
         if (!matches.trim().equals("")) {
@@ -1539,7 +1540,7 @@ public abstract class GraphicsPanel extends JPanel {
             int peakIndex = -1;
             int dataSetIndex = -1;
 
-            for (int j=0; j<iXAxisData.size(); j++) {
+            for (int j = 0; j < iXAxisData.size(); j++) {
                 for (int i = 0; i < iXAxisData.get(j).length; i++) {
                     double delta = iXAxisData.get(j)[i] - xValue;
                     if (Math.abs(delta) <= error) {
@@ -1597,7 +1598,7 @@ public abstract class GraphicsPanel extends JPanel {
         iYAxisDataInPixels = new ArrayList<int[]>();
 
         // cycle the datasets
-        for(int j=0;j < iXAxisData.size();j++) {
+        for (int j = 0; j < iXAxisData.size(); j++) {
 
             // set the color
             g.setColor(iDataPointAndLineColor.get(j));
@@ -1646,7 +1647,7 @@ public abstract class GraphicsPanel extends JPanel {
                 }
             }
         }
-        
+
         // Change the color back to its original setting.
         g.setColor(originalColor);
     }
@@ -1671,7 +1672,7 @@ public abstract class GraphicsPanel extends JPanel {
         iYAxisDataInPixels = new ArrayList<int[]>();
 
         // cycle the datasets
-        for(int j=0; j<iXAxisData.size(); j++) {
+        for (int j = 0; j < iXAxisData.size(); j++) {
 
             iXAxisDataInPixels.add(new int[iXAxisData.get(j).length]);
             iYAxisDataInPixels.add(new int[iYAxisData.get(j).length]);
@@ -1721,11 +1722,11 @@ public abstract class GraphicsPanel extends JPanel {
 
             // check if there are any data points to draw
             if (!xAxisPointsShown.isEmpty()) {
-                
+
                 // set the color and opacity level
                 g.setColor(iAreaUnderCurveColor.get(j));
 
-                if(j != 0){
+                if (j != 0) {
                     g2d.setComposite(makeComposite(alphaLevel));
                 }
 
@@ -1774,6 +1775,6 @@ public abstract class GraphicsPanel extends JPanel {
      */
     private AlphaComposite makeComposite(float alpha) {
         int type = AlphaComposite.SRC_OVER;
-        return(AlphaComposite.getInstance(type, alpha));
+        return (AlphaComposite.getInstance(type, alpha));
     }
 }

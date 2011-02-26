@@ -728,7 +728,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Compomics-Utilities");
-        setMinimumSize(new java.awt.Dimension(1000, 0));
+        setMinimumSize(new java.awt.Dimension(1000, 700));
 
         jTabbedPane.setMinimumSize(new java.awt.Dimension(235, 102));
         jTabbedPane.setPreferredSize(new java.awt.Dimension(20, 680));

@@ -24,6 +24,16 @@ import java.util.ArrayList;
 public abstract class GraphicsPanel extends JPanel {
 
     /**
+     * A hashmap of the current x-axis reference areas. Key is the name of
+     * the reference area.
+     */
+    private HashMap<String, ReferenceArea> referenceAreasXAxis = new HashMap<String, ReferenceArea>();
+    /**
+     * A hashmap of the current y-axis reference areas. Key is the name of
+     * the reference area.
+     */
+    private HashMap<String, ReferenceArea> referenceAreasYAxis = new HashMap<String, ReferenceArea>();
+    /**
      * The list of supported tag distances for the x- and y-axis. The most
      * detailed alternative, i.e., the smallest number, is always used.
      */
@@ -203,14 +213,14 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int padding = 20;
     /**
+     * The current padding (distance between the axes and the border of the panel).
+     */
+    protected int currentPadding = 20;
+    /**
      * The maximum padding (distance between the axes and the border of the panel).
      * Increase if font size on the y-axis becomes too small.
      */
     protected int maxPadding = 50;
-    /**
-     * The boolean is set to 'true' if the decimals should not be shown for the axis tags.
-     */
-    protected boolean hideDecimals = false;
     /**
      * The boolean is set to 'true' if the file name is to be shown in the panel.
      */
@@ -556,6 +566,10 @@ public abstract class GraphicsPanel extends JPanel {
             // @TODO: scale?
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
 
+            // add reference areas that are to be drawn in the back, if any
+            drawYAxisReferenceAreas(g, false);
+            drawXAxisReferenceAreas(g, false);
+
             if (currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram)
                     || currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)
                     || currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
@@ -626,10 +640,178 @@ public abstract class GraphicsPanel extends JPanel {
                 }
             }
 
+            // add reference areas that are to be drawn on top of the data, if any{
+            drawYAxisReferenceAreas(g, true);
+            drawXAxisReferenceAreas(g, true);
+
             // @TODO scale.
             // (re-)draw the axes to have them appear in front of the data points
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
         }
+    }
+
+    /**
+     * Draws the x-axis reference areas if any.
+     * 
+     * @param g             Graphics object to draw on.
+     * @param drawOnTop     if true the areas to be drawn on top of the data are drawn,
+     *                      if false the areas that are to be drawn behind the data are drawn
+     */
+    protected void drawXAxisReferenceAreas(Graphics g, boolean drawOnTop) {
+
+        // used to find the location of the label
+        FontMetrics fm = g.getFontMetrics();
+
+        // switch to 2D graphics
+        Graphics2D g2d = (Graphics2D) g;
+
+        // store the original color
+        Color originalColor = g2d.getColor();
+        Composite originalComposite = g2d.getComposite();
+
+        Iterator<String> allReferenceAreas = referenceAreasXAxis.keySet().iterator();
+
+        while (allReferenceAreas.hasNext()) {
+
+            ReferenceArea currentReferenceArea = referenceAreasXAxis.get(allReferenceAreas.next());
+
+            if (drawOnTop == currentReferenceArea.drawOnTop()) {
+
+                // set the color and opacity level
+                g.setColor(currentReferenceArea.getAreaColor());
+                g2d.setComposite(makeComposite(currentReferenceArea.getAlpha()));
+
+                // set up the data tables for the polygon
+                int[] xTemp = new int[4];
+                int[] yTemp = new int[4];
+
+                // x range start
+                double tempDouble = (currentReferenceArea.getStart() - iXAxisMin) / iXScaleUnit;
+                int start = (int) tempDouble;
+                if ((tempDouble - start) >= 0.5) {
+                    start++;
+                }
+
+                // x range end
+                tempDouble = (currentReferenceArea.getEnd() - iXAxisMin) / iXScaleUnit;
+                int end = (int) tempDouble;
+                if ((tempDouble - end) >= 0.5) {
+                    end++;
+                }
+
+                xTemp[0] = start + iXPadding;
+                yTemp[0] = 0;
+
+                xTemp[1] = end + iXPadding;
+                yTemp[1] = 0;
+
+                xTemp[2] = end + iXPadding;
+                yTemp[2] = this.getHeight() - currentPadding;
+
+                xTemp[3] = start + iXPadding;
+                yTemp[3] = this.getHeight() - currentPadding;
+
+                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+
+                // draw the label
+                if (currentReferenceArea.drawLabel()) {
+
+                    // set the color and opacity level for the label
+                    g2d.setColor(Color.BLACK);
+                    g2d.setComposite(originalComposite);
+
+                    // insert the label
+                    String label = currentReferenceArea.getLabel();
+                    g2d.drawString(label, start + iXPadding + 5, (int) fm.getStringBounds(label, g).getHeight());
+                }
+            }
+        }
+
+        // Change the color and alpha level back to its original setting.
+        g2d.setColor(originalColor);
+        g2d.setComposite(originalComposite);
+    }
+
+    /**
+     * Draws the y-axis reference areas if any.
+     *
+     * @param g             Graphics object to draw on.
+     * @param drawOnTop     if true the areas to be drawn on top of the data are drawn,
+     *                      if false the areas that are to be drawn behind the data are drawn
+     */
+    protected void drawYAxisReferenceAreas(Graphics g, boolean drawOnTop) {
+
+        // used to find the location of the label
+        FontMetrics fm = g.getFontMetrics();
+
+        // switch to 2D graphics
+        Graphics2D g2d = (Graphics2D) g;
+
+        // store the original color
+        Color originalColor = g2d.getColor();
+        Composite originalComposite = g2d.getComposite();
+
+        Iterator<String> allReferenceAreas = referenceAreasYAxis.keySet().iterator();
+
+        while (allReferenceAreas.hasNext()) {
+
+            ReferenceArea currentReferenceArea = referenceAreasYAxis.get(allReferenceAreas.next());
+
+            if (drawOnTop == currentReferenceArea.drawOnTop()) {
+
+                // set the color and opacity level
+                g.setColor(currentReferenceArea.getAreaColor());
+                g2d.setComposite(makeComposite(currentReferenceArea.getAlpha()));
+
+                // set up the data tables for the polygon
+                int[] xTemp = new int[4];
+                int[] yTemp = new int[4];
+
+                // y range start
+                double tempDouble = (currentReferenceArea.getStart() - iYAxisMin) / iYScaleUnit;
+                int start = (int) tempDouble;
+                if ((tempDouble - start) >= 0.5) {
+                    start++;
+                }
+
+                // y range end
+                tempDouble = (currentReferenceArea.getEnd() - iYAxisMin) / iYScaleUnit;
+                int end = (int) tempDouble;
+                if ((tempDouble - end) >= 0.5) {
+                    end++;
+                }
+
+                xTemp[0] = currentPadding;
+                yTemp[0] = this.getHeight() - start - currentPadding;
+
+                xTemp[1] = currentPadding;
+                yTemp[1] = this.getHeight() - end - currentPadding;
+
+                xTemp[2] = this.getWidth() - currentPadding;
+                yTemp[2] = this.getHeight() - end - currentPadding;
+
+                xTemp[3] = this.getWidth() - currentPadding;
+                yTemp[3] = this.getHeight() - start - currentPadding;
+
+                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+
+                // draw the label
+                if (currentReferenceArea.drawLabel()) {
+
+                    // set the color and opacity level for the label
+                    g2d.setColor(Color.BLACK);
+                    g2d.setComposite(originalComposite);
+
+                    // insert the label
+                    String label = currentReferenceArea.getLabel();
+                    g2d.drawString(label, currentPadding + 5, this.getHeight() - end - currentPadding + (int) fm.getStringBounds(label, g).getHeight());
+                }
+            }
+        }
+
+        // Change the color and alpha level back to its original setting.
+        g2d.setColor(originalColor);
+        g2d.setComposite(originalComposite);
     }
 
     /**
@@ -864,6 +1046,84 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
+     * Add a x-axis reference area.
+     *
+     * @param label     the label for the reference area, must be unique
+     * @param start     the start of the reference area
+     * @param end the   end of the reference area
+     * @param areaColor the color of the area
+     */
+    public void addReferenceAreaXAxis(ReferenceArea referenceArea) {
+        referenceAreasXAxis.put(referenceArea.getLabel(), referenceArea);
+    }
+
+    /**
+     * Removes the x-axis reference area with the given label. Does nothing if no
+     * reference with the given label is found.
+     *
+     * @param label the reference to remove
+     */
+    public void removeReferenceAreaXAxis(String label) {
+        referenceAreasXAxis.remove(label);
+    }
+
+    /**
+     * Removes all the x-axis reference areas.
+     */
+    public void removeAllReferenceAreasXAxis() {
+        referenceAreasXAxis = new HashMap<String, ReferenceArea>();
+    }
+
+    /**
+     * Returns all the x-axis references areas as a hashmap, with the labels
+     * as the keys.
+     *
+     * @return hashmap of all reference areas
+     */
+    public HashMap<String, ReferenceArea> getAllReferenceAreasXAxis() {
+        return referenceAreasXAxis;
+    }
+
+    /**
+     * Add a y-axis reference area.
+     *
+     * @param label     the label for the reference area, must be unique
+     * @param start     the start of the reference area
+     * @param end       the end of the reference area
+     * @param areaColor the color of the area
+     */
+    public void addReferenceAreaYAxis(ReferenceArea referenceArea) {
+        referenceAreasYAxis.put(referenceArea.getLabel(), referenceArea);
+    }
+
+    /**
+     * Removes the y-axis reference area with the given label. Does nothing if no
+     * reference with the given label is found.
+     *
+     * @param label the reference to remove
+     */
+    public void removeReferenceAreaYAxis(String label) {
+        referenceAreasYAxis.remove(label);
+    }
+
+    /**
+     * Removes all the y-axis reference areas.
+     */
+    public void removeAllReferenceAreasYAxis() {
+        referenceAreasYAxis = new HashMap<String, ReferenceArea>();
+    }
+
+    /**
+     * Returns all the y-axis references areas as a hashmap, with the labels
+     * as the keys.
+     *
+     * @return hashmap of all reference areas
+     */
+    public HashMap<String, ReferenceArea> getAllReferenceAreasYAxis() {
+        return referenceAreasYAxis;
+    }
+
+    /**
      * Sets the color of data points and line for the dataset with the
      * given dataset index.
      *
@@ -1035,19 +1295,19 @@ public abstract class GraphicsPanel extends JPanel {
         int minWidth = fm.stringWidth(Double.toString(aYMin));
         int maxWidth = fm.stringWidth(Double.toString(aYMax));
         int max = Math.max(Math.max(xAxisLabelWidth, yAxisLabelWidth), Math.max(minWidth, maxWidth));
-        int tempPadding = padding;
+        currentPadding = padding;
 
         if ((padding - max) < 0) {
-            tempPadding += max;
-            if (tempPadding > maxPadding) {
-                tempPadding = maxPadding;
+            currentPadding += max;
+            if (currentPadding > maxPadding) {
+                currentPadding = maxPadding;
             }
         } else {
-            tempPadding *= 2;
+            currentPadding *= 2;
         }
 
         // X-axis.
-        int xAxis = (this.getWidth() - (2 * tempPadding));
+        int xAxis = (this.getWidth() - (2 * currentPadding));
 
         // hide any data going slightly below the y-axis
         if (yDataIsPositive) {
@@ -1055,54 +1315,54 @@ public abstract class GraphicsPanel extends JPanel {
             g.setColor(this.getBackground());
 
             if (miniature) {
-                g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 2);
+                g.fillRect(currentPadding, this.getHeight() - currentPadding, this.getWidth() - currentPadding - 2, 2);
             } else {
-                g.fillRect(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding - 2, 20);
+                g.fillRect(currentPadding, this.getHeight() - currentPadding, this.getWidth() - currentPadding - 2, 20);
             }
 
             g.setColor(currentColor);
         }
 
-        g.drawLine(tempPadding, this.getHeight() - tempPadding, this.getWidth() - tempPadding, this.getHeight() - tempPadding);
+        g.drawLine(currentPadding, this.getHeight() - currentPadding, this.getWidth() - currentPadding, this.getHeight() - currentPadding);
 
         if (!miniature) {
 
             // Arrowhead on X-axis.
-            g.fillPolygon(new int[]{this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding - 3, this.getWidth() - tempPadding + 2},
-                    new int[]{this.getHeight() - tempPadding + 5, this.getHeight() - tempPadding - 5, this.getHeight() - tempPadding}, 3);
+            g.fillPolygon(new int[]{this.getWidth() - currentPadding - 3, this.getWidth() - currentPadding - 3, this.getWidth() - currentPadding + 2},
+                    new int[]{this.getHeight() - currentPadding + 5, this.getHeight() - currentPadding - 5, this.getHeight() - currentPadding}, 3);
 
             // X-axis label
             if (iXAxisLabel.equalsIgnoreCase("m/z")) {
-                g.drawString(iXAxisLabel, this.getWidth() - (tempPadding - (padding / 2)), this.getHeight() - tempPadding + 4);
+                g.drawString(iXAxisLabel, this.getWidth() - (currentPadding - (padding / 2)), this.getHeight() - currentPadding + 4);
             } else {
-                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (tempPadding / 2));
+                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (currentPadding / 2));
             }
 
 
             // Y-axis.
-            g.drawLine(tempPadding, this.getHeight() - tempPadding, tempPadding, tempPadding / 2);
+            g.drawLine(currentPadding, this.getHeight() - currentPadding, currentPadding, currentPadding / 2);
         }
 
-        iXPadding = tempPadding;
-        int yAxis = this.getHeight() - tempPadding - (tempPadding / 2);
+        iXPadding = currentPadding;
+        int yAxis = this.getHeight() - currentPadding - (currentPadding / 2);
 
         if (!miniature) {
 
             // Arrowhead on Y axis.
-            g.fillPolygon(new int[]{tempPadding - 5, tempPadding + 5, tempPadding},
-                    new int[]{(tempPadding / 2) + 3, (tempPadding / 2) + 3, tempPadding / 2 - 2},
+            g.fillPolygon(new int[]{currentPadding - 5, currentPadding + 5, currentPadding},
+                    new int[]{(currentPadding / 2) + 3, (currentPadding / 2) + 3, currentPadding / 2 - 2},
                     3);
 
             // Y-axis label
             if (iYAxisLabel.equalsIgnoreCase("Int")) {
-                g.drawString(iYAxisLabel, tempPadding - yAxisLabelWidth, (tempPadding / 2) - 4);
+                g.drawString(iYAxisLabel, currentPadding - yAxisLabelWidth, (currentPadding / 2) - 4);
             } else {
-                g.drawString(iYAxisLabel, tempPadding - (yAxisLabelWidth / 5), (tempPadding / 2) - 4);
+                g.drawString(iYAxisLabel, currentPadding - (yAxisLabelWidth / 5), (currentPadding / 2) - 4);
             }
         }
 
         // Now the tags along the axes.
-        this.drawXTags(g, (int) Math.floor(aXMin), (int) Math.ceil(aXMax), aXScale, xAxis, tempPadding);
+        this.drawXTags(g, (int) Math.floor(aXMin), (int) Math.ceil(aXMax), aXScale, xAxis, currentPadding);
         int yTemp = yAxis;
 
         if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
@@ -1110,7 +1370,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         iTopPadding = this.getHeight() - yTemp - 5;
-        this.drawYTags(g, (int) Math.floor(aYMin), (int) Math.ceil(aYMax), yTemp, tempPadding);
+        this.drawYTags(g, (int) Math.floor(aYMin), (int) Math.ceil(aYMax), yTemp, currentPadding);
 
         return new int[]{xAxis, yAxis};
     }

@@ -38,7 +38,9 @@ public abstract class GraphicsPanel extends JPanel {
      * detailed alternative, i.e., the smallest number, is always used.
      */
     protected int[] distanceAlternatives = {1, 5, 10, 25, 50, 100, 250, 500, 1000,
-        2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000};
+        2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2000000,
+        2500000, 5000000, 10000000, 20000000, 25000000, 50000000, 100000000
+    };
     /**
      * If set to true, the y-axis is removed, the y- and x-axis tags are removed, 
      * and any annotations are hidden. All to make the graphics panel look better
@@ -1556,6 +1558,29 @@ public abstract class GraphicsPanel extends JPanel {
             numberFormat.setGroupingSize(3);
             numberFormat.setGroupingUsed(true);
 
+            // max y-value to display
+            String largestLabel = numberFormat.format((int) aMax);
+
+            // old font storage
+            Font oldFont = g.getFont();
+
+            // find the required scaling level for the y-axis tags
+            int sizeCounter = 0;
+            int margin = aPadding - 10;
+
+            while (g.getFontMetrics().stringWidth(largestLabel) >= margin) {
+                sizeCounter++;
+                g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - sizeCounter));
+            }
+
+            // set the font to use for the y-axis tags
+            if (oldFont.getSize() - sizeCounter > 0) {
+                g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - sizeCounter));
+            } else {
+                // have to make sure that the font at least has a size of 1
+                g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), 1));
+            }
+
             // now we can mark each unit
             for (int i = 0; i < aMax; i++) {
 
@@ -1568,6 +1593,9 @@ public abstract class GraphicsPanel extends JPanel {
                     g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
                 }
             }
+
+            // restore original font
+            g.setFont(oldFont);
         }
     }
 

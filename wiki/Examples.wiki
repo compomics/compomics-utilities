@@ -54,6 +54,42 @@ To use the SpectrumPanel in your project do the following:
     parentJPanel.repaint();
 }}}
 
+*Reference Areas* 
+
+Reference areas can be added to the SpectrumPanel.
+
+X-axis:
+
+{{{
+spectrumPanel.addReferenceAreaXAxis(new ReferenceArea(
+    "A",         // reference area label
+    200,         // start of area
+    250,         // end of area
+    Color.blue,  // color of area
+    0.1f,        // transparency level
+    false,       // drawn on top of or behind the data
+    true));      // draw the label
+}}}
+
+Y-axis:
+
+{{{
+spectrumPanel.addReferenceAreaYAxis(new ReferenceArea(
+    "Low", 
+    0, 
+    500, 
+    Color.ORANGE, 
+    0.3f, 
+    false, 
+    true));
+}}}
+
+To remove a reference area:
+
+{{{
+spectrumPanel.removeReferenceAreaXAxis("A");
+}}}
+
 [#Contents Top of page]
 
 ----
@@ -79,6 +115,10 @@ To use the ChromatogramPanel in your project do the following:
     parentJPanel.validate();
     parentJPanel.repaint();     
 }}}
+
+*Reference Areas* 
+
+Reference areas can be added to the ChromatogramPanel in the same way as for [Spectrum_Panel SpectrumPanels].
 
 [#Contents Top of page]
 
@@ -140,6 +180,10 @@ To use the ChromatogramPanel in your project do the following:
     parentPanel.validate();
     parentPanel.repaint();
 }}}
+
+*Reference Areas* 
+
+Reference areas can be added to the IsotopicDistributionPanel in the same way as for [Spectrum_Panel SpectrumPanels].
 
 [#Contents Top of page]
 
@@ -275,12 +319,12 @@ All experiment objects can be completed by user-defined parameters. They all ext
 {{{
 	// Add a user defined parameter
 	yourObject.addUrParam(
-		aParameter,		// UrParameter, your parameter key
-		aValue);		// Object, the desired value
+		aParameter,            // UrParameter, your parameter key
+		aValue);               // Object, the desired value
 		
 	// Get a user parameter back
 	yourObject.getUrParam(
-		theParameter);	        // UrParameter, the key of the stored parameter
+            theParameter);	       // UrParameter, the key of the stored parameter
 }}}
 
 It is possible to save/open compomics experiments. This is achieved by the serialization of the instance of the Experiment object and all its attributes. The class ExperimentIO makes this operation straightforward, note however that spectrum peak lists will be emptied before saving:
@@ -288,11 +332,8 @@ It is possible to save/open compomics experiments. This is achieved by the seria
 {{{
 
 	ExperimentIO experimentIO = new ExperimentIO();    // experimentIO will take care of the saving/opening of files
-
 	experimentIO.save(selectedFile, experiment);       // Saves the experiment "experiment" in the selected file "selected file"
-
 	experimentIO.getDate(myFile);                      // Returns the date of saving of the experiment stored in myFile
-
 	experimentIO.loadExperiment(myFile);               // Returns the experiment saved in myFile
 
 }}}

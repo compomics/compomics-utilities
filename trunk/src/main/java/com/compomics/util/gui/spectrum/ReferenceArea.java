@@ -18,7 +18,7 @@ public class ReferenceArea {
     private double end;
     /** the color of the reference area */
     private Color areaColor;
-    /** the alpha level of the reference area */
+    /** the alpha level (transparency) of the reference area */
     private float alpha;
     /** if the area is to be drawn on top of or behind the data */
     private boolean drawOnTop;
@@ -32,7 +32,7 @@ public class ReferenceArea {
      * @param start     the start of the reference area
      * @param end       the end of the reference area
      * @param areaColor the color of the reference area
-     * @param alpha     the alpha level of the reference area
+     * @param alpha     the alpha level (transparency) of the reference area
      * @param drawOnTop if the area is to be drawn on top of or behind the data
      * @param drawLabel if the label is to be drawn or not
      * @throws IllegalArgumentException alpha must be in the range 0.0f to 1.0f
@@ -126,7 +126,7 @@ public class ReferenceArea {
     }
 
     /**
-     * Get the alpha level.
+     * Get the alpha level (transparency).
      *
      * @return the alpha level
      */
@@ -135,7 +135,7 @@ public class ReferenceArea {
     }
 
     /**
-     * Set the alpha level.
+     * Set the alpha level (transparency).
      *
      * @param alpha the alpha level to set
      */

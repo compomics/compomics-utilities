@@ -118,7 +118,7 @@ To use the ChromatogramPanel in your project do the following:
 
 *Reference Areas* 
 
-Reference areas can be added to the ChromatogramPanel in the same way as for [Spectrum_Panel SpectrumPanels].
+Reference areas can be added to the ChromatogramPanel in the same way as for [#Spectrum_Panel SpectrumPanels].
 
 [#Contents Top of page]
 
@@ -183,7 +183,7 @@ To use the ChromatogramPanel in your project do the following:
 
 *Reference Areas* 
 
-Reference areas can be added to the IsotopicDistributionPanel in the same way as for [Spectrum_Panel SpectrumPanels].
+Reference areas can be added to the IsotopicDistributionPanel in the same way as for [#Spectrum_Panel SpectrumPanels].
 
 [#Contents Top of page]
 

@@ -1839,7 +1839,7 @@ public abstract class GraphicsPanel extends JPanel {
                         } else {
                             // Oops, we already had one...
                             // Take the one with the largest intensity.
-                            if (iYAxisData.get(j)[i] > iYAxisData.get(j)[peakIndex]) {
+                            if (iYAxisData.get(j)[i] > iYAxisData.get(dataSetIndex)[peakIndex]) {
                                 peakIndex = i;
                                 dataSetIndex = j;
                             }

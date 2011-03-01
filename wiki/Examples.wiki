@@ -275,6 +275,25 @@ Once the modifications loaded, one can easily load identifications from Mascot, 
 	HashSet<SpectrumMatch> matches = mascotReader.getAllSpectrumMatches();
 }}}
 
+
+Theoretic fragment ions can be generated using the FragmentFactory and specta can be annotated afterward:
+
+{{{
+	// Load the fragment factory
+	FragmentFactory fragmentFactory = FragmentFactory.getInstance();
+
+	// estimate theoretic fragment ion masses of the desired peptide
+	ArrayList<PeptideFragmentIon> fragments = fragmentFactory.getFragmentIons(peptide);
+
+	// Create a spectrum annotator
+	SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+
+	// Annotate the spectrum with the desired m/z tolerance (mzTolerance) and with the desired minimal peak intensity (intensityMin)
+	spectrumAnnotator.annotateSpectrum(peptide, spectrum, mzTolerance, intensityMin);
+
+}}}
+
+
 It is also possible to attach the spectra to the current ProteomicAnalysis. Currently mgf and mzML files are supported. mzML files are handled by [http://jmzml.googlecode.com jmzml]. It is possible to load all spectra or only identified spectra:
 
 {{{

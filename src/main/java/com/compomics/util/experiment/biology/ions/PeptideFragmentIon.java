@@ -61,23 +61,23 @@ public class PeptideFragmentIon extends Ion {
      * This int is the identifier for a z ion.
      */
     public final static int Z_ION = 11;
-     /**
+    /**
      * This int is the identifier for an MH ion. The number of H is not represented here.
      */
     public final static int MH_ION = 12;
-     /**
+    /**
      * This int is the identifier for an MH-NH3 ion.
      */
     public final static int MHNH3_ION = 13;
-     /**
+    /**
      * This int is the identifier for an MH-H2O ion.
      */
     public final static int MHH2O_ION = 14;
-     /**
+    /**
      * This int is the identifier for an immonium ion. The nature of the immonium ion is not coded yet.
      */
     public final static int IMMONIUM = 15;
-     /**
+    /**
      * This int is the identifier for a precursor ion loss. The nature of the loss is not coded yet.
      */
     public final static int PRECURSOR_LOSS = 16;
@@ -93,7 +93,6 @@ public class PeptideFragmentIon extends Ion {
      * Ion charge
      */
     private Charge charge;
-
 
     /**
      * Construction for a peptide fragment.
@@ -136,6 +135,24 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
+     * Getter for the charge
+     *
+     * @return the ion charge
+     */
+    public Charge getCharge() {
+        return charge;
+    }
+
+    /**
+     * Setter for the charge
+     *
+     * @param charge
+     */
+    public void setCharge(Charge charge) {
+        this.charge = charge;
+    }
+
+    /**
      * Getter for the ion type
      * 
      * @return the ion type according to the static fields
@@ -150,5 +167,41 @@ public class PeptideFragmentIon extends Ion {
      */
     public int getNumber() {
         return number;
+    }
+
+    /**
+     * Returns the ion type (a, b, c, x, y, z) as a string.
+     *
+     * @return the ion type as a string.
+     */
+    public String getIonType() {
+
+        //  @TODO: add the other ion types!!!
+
+        if (type == B_ION || type == BH2O_ION || type == BNH3_ION) {
+            return "b";
+        } else if (type == Y_ION || type == YH2O_ION || type == YNH3_ION) {
+            return "y";
+        }
+
+        return "?";
+    }
+
+    /**
+     * Returns the neutral loss (if any), the empty string if no loss.
+     *
+     * @return the neutral loss
+     */
+    public String getNeutralLoss() {
+
+        // @TODO: add the other ion  types (a, x, c, etc)!!
+
+        if (type == BH2O_ION || type == YH2O_ION) {
+            return "-H20";
+        } else if (type == BNH3_ION || type == YNH3_ION) {
+            return "-NH3";
+        }
+
+        return "";
     }
 }

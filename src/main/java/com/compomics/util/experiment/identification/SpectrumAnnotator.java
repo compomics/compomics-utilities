@@ -59,18 +59,30 @@ public class SpectrumAnnotator {
 
         int inspectedIon, inspectedCharge = spectrum.getPrecursor().getCharge().value;
         double fragmentMZ;
+
+        // iterate the possible charge states
         while (inspectedCharge > 0) {
+
+            // iterate the fragment ions for the current charge state
             for (PeptideFragmentIon fragmentIon : fragmentIons) {
+
+                // set the current charge for the fragment ion
+                fragmentIon.setCharge(new Charge(Charge.PLUS, inspectedCharge));
+
                 inspectedIon = fragmentIon.getType();
                 fragmentMZ = (fragmentIon.theoreticMass + inspectedCharge * Atom.H.mass) / inspectedCharge;
+
                 if (fragmentMZ >= mz.get(0) - mzTolerance
                         && fragmentMZ <= mz.get(mz.size() - 1) + mzTolerance) {
+
                     int indexMin = 0;
                     int indexMax = mz.size() - 1;
                     int index;
                     Peak currentPeak;
                     double currentMz;
+
                     currentMz = mz.get(indexMax);
+
                     if (Math.abs(currentMz - fragmentMZ) <= mzTolerance) {
                         currentPeak = peakMap.get(currentMz);
                         if (!results.containsKey(inspectedIon) || !results.get(inspectedIon).containsKey(inspectedCharge)
@@ -78,10 +90,12 @@ public class SpectrumAnnotator {
                             if (!results.containsKey(inspectedIon)) {
                                 results.put(inspectedIon, new HashMap<Integer, IonMatch>());
                             }
-                            results.get(inspectedIon).put(fragmentIon.getType(), new IonMatch(currentPeak, fragmentIon));
+                            results.get(inspectedIon).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
                         }
                     }
+
                     currentMz = mz.get(indexMin);
+
                     if (Math.abs(currentMz - fragmentMZ) <= mzTolerance) {
                         currentPeak = peakMap.get(currentMz);
                         if (!results.containsKey(inspectedIon) || !results.get(inspectedIon).containsKey(inspectedCharge)
@@ -89,9 +103,10 @@ public class SpectrumAnnotator {
                             if (!results.containsKey(inspectedIon)) {
                                 results.put(inspectedIon, new HashMap<Integer, IonMatch>());
                             }
-                            results.get(inspectedIon).put(fragmentIon.getType(), new IonMatch(currentPeak, fragmentIon));
+                            results.get(inspectedIon).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
                         }
                     }
+
                     while (indexMax - indexMin > 1) {
                         index = (indexMax - indexMin) / 2 + indexMin;
                         currentMz = mz.get(index);
@@ -102,9 +117,17 @@ public class SpectrumAnnotator {
                                 if (!results.containsKey(inspectedIon)) {
                                     results.put(inspectedIon, new HashMap<Integer, IonMatch>());
                                 }
-                                results.get(inspectedIon).put(fragmentIon.getType(), new IonMatch(currentPeak, fragmentIon));
+                                results.get(inspectedIon).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
+
+//                                System.out.println("added: "
+//                                        + fragmentIon.getIonType()
+//                                        + fragmentIon.getNumber()
+//                                        + fragmentIon.getCharge().getChargeAsFormattedString()
+//                                        + fragmentIon.getNeutralLoss()
+//                                        + " - " + currentPeak.mz);
                             }
                         }
+                        
                         if (currentMz < fragmentMZ) {
                             indexMin = index;
                         } else {
@@ -112,9 +135,11 @@ public class SpectrumAnnotator {
                         }
                     }
                 }
-                inspectedCharge--;
             }
+
+            inspectedCharge--;
         }
+        
         return results;
     }
 

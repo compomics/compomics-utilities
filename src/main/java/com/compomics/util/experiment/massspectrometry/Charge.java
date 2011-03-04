@@ -59,4 +59,25 @@ public class Charge extends ExperimentObject {
                 return "";
         }
     }
+
+    /**
+     * Returns the charge as a string of +. One for each charge.
+     * A charge of 1 however returns the empty string.
+     *
+     * @return  the charge as a string of +
+     */
+    public String getChargeAsFormattedString() {
+
+        String temp = "";
+
+        for (int i=0; i<value; i++) {
+            temp += "+";
+        }
+
+        if (value == 1) {
+            temp = "";
+        }
+
+        return temp;
+    }
 }

@@ -2,13 +2,11 @@ package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.FragmentFactory;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
-import java.util.HashMap;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

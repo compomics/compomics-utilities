@@ -52,10 +52,10 @@ public class SpectrumAnnotator {
      * @param intensityLimit
      * @return
      */
-    public HashMap<Integer, HashMap<Integer, IonMatch>> annotateSpectrum(Peptide peptide, MSnSpectrum spectrum, double mzTolerance, double intensityLimit) {
+    public HashMap<String, HashMap<Integer, IonMatch>> annotateSpectrum(Peptide peptide, MSnSpectrum spectrum, double mzTolerance, double intensityLimit) {
         setPeptide(peptide);
         setSpectrum(spectrum, intensityLimit);
-        HashMap<Integer, HashMap<Integer, IonMatch>> results = new HashMap<Integer, HashMap<Integer, IonMatch>>();
+        HashMap<String, HashMap<Integer, IonMatch>> results = new HashMap<String, HashMap<Integer, IonMatch>>();
 
         int inspectedIon, inspectedCharge = spectrum.getPrecursor().getCharge().value;
         double fragmentMZ;
@@ -85,12 +85,13 @@ public class SpectrumAnnotator {
 
                     if (Math.abs(currentMz - fragmentMZ) <= mzTolerance) {
                         currentPeak = peakMap.get(currentMz);
-                        if (!results.containsKey(inspectedIon) || !results.get(inspectedIon).containsKey(inspectedCharge)
-                                || results.get(inspectedIon).get(inspectedCharge).peak.intensity < currentPeak.intensity) {
-                            if (!results.containsKey(inspectedIon)) {
-                                results.put(inspectedIon, new HashMap<Integer, IonMatch>());
+                        if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())
+                                || !results.get(inspectedIon + "_" + fragmentIon.getNumber()).containsKey(inspectedCharge)
+                                || results.get(inspectedIon + "_" + fragmentIon.getNumber()).get(inspectedCharge).peak.intensity < currentPeak.intensity) {
+                            if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())) {
+                                results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                             }
-                            results.get(inspectedIon).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
+                            results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
                         }
                     }
 
@@ -98,12 +99,13 @@ public class SpectrumAnnotator {
 
                     if (Math.abs(currentMz - fragmentMZ) <= mzTolerance) {
                         currentPeak = peakMap.get(currentMz);
-                        if (!results.containsKey(inspectedIon) || !results.get(inspectedIon).containsKey(inspectedCharge)
-                                || results.get(inspectedIon).get(inspectedCharge).peak.intensity < currentPeak.intensity) {
-                            if (!results.containsKey(inspectedIon)) {
-                                results.put(inspectedIon, new HashMap<Integer, IonMatch>());
+                        if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())
+                                || !results.get(inspectedIon + "_" + fragmentIon.getNumber()).containsKey(inspectedCharge)
+                                || results.get(inspectedIon + "_" + fragmentIon.getNumber()).get(inspectedCharge).peak.intensity < currentPeak.intensity) {
+                            if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())) {
+                                results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                             }
-                            results.get(inspectedIon).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
+                            results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
                         }
                     }
 
@@ -112,19 +114,13 @@ public class SpectrumAnnotator {
                         currentMz = mz.get(index);
                         if (Math.abs(currentMz - fragmentMZ) <= mzTolerance) {
                             currentPeak = peakMap.get(currentMz);
-                            if (!results.containsKey(inspectedIon) || !results.get(inspectedIon).containsKey(inspectedCharge)
-                                    || results.get(inspectedIon).get(inspectedCharge).peak.intensity < currentPeak.intensity) {
-                                if (!results.containsKey(inspectedIon)) {
-                                    results.put(inspectedIon, new HashMap<Integer, IonMatch>());
+                            if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())
+                                    || !results.get(inspectedIon + "_" + fragmentIon.getNumber()).containsKey(inspectedCharge)
+                                    || results.get(inspectedIon + "_" + fragmentIon.getNumber()).get(inspectedCharge).peak.intensity < currentPeak.intensity) {
+                                if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())) {
+                                    results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                                 }
-                                results.get(inspectedIon).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
-
-//                                System.out.println("added: "
-//                                        + fragmentIon.getIonType()
-//                                        + fragmentIon.getNumber()
-//                                        + fragmentIon.getCharge().getChargeAsFormattedString()
-//                                        + fragmentIon.getNeutralLoss()
-//                                        + " - " + currentPeak.mz);
+                                results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
                             }
                         }
                         

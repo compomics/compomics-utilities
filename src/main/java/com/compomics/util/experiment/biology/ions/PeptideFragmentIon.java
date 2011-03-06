@@ -109,9 +109,9 @@ public class PeptideFragmentIon extends Ion {
     /**
      * Construction for a peptide fragment.
      *
-     * @param type  the type of ion according to static fields
+     * @param type      the type of ion according to static fields
      * @param number    the ion number
-     * @param mz    the ion m/z
+     * @param mz        the ion m/z
      */
     public PeptideFragmentIon(int type, int number, double mz) {
         this.type = type;
@@ -176,12 +176,24 @@ public class PeptideFragmentIon extends Ion {
      */
     public String getIonType() {
 
-        //  @TODO: add the other ion types!!!
-
         if (type == B_ION || type == BH2O_ION || type == BNH3_ION) {
             return "b";
         } else if (type == Y_ION || type == YH2O_ION || type == YNH3_ION) {
             return "y";
+        } else if (type == A_ION || type == AH2O_ION || type == ANH3_ION) {
+            return "a";
+        } else if (type == C_ION) {
+            return "c";
+        } else if (type == X_ION) {
+            return "x";
+        } else if (type == Z_ION) {
+            return "z";
+        } else if (type == MH_ION || type == MHNH3_ION || type == MHH2O_ION) {
+            return "Prec"; //  @TODO: verify that this is correct!!
+        } else if (type == IMMONIUM) {
+            return "i";
+        } else if (type == PRECURSOR_LOSS) {
+            return "Prec-loss";
         }
 
         return "?";
@@ -194,11 +206,11 @@ public class PeptideFragmentIon extends Ion {
      */
     public String getNeutralLoss() {
 
-        // @TODO: add the other ion  types (a, x, c, etc)!!
-
-        if (type == BH2O_ION || type == YH2O_ION) {
+        if (type == BH2O_ION || type == YH2O_ION
+                || type == AH2O_ION || type == MHH2O_ION) {
             return "-H20";
-        } else if (type == BNH3_ION || type == YNH3_ION) {
+        } else if (type == BNH3_ION || type == YNH3_ION
+                || type == ANH3_ION || type == MHNH3_ION) {
             return "-NH3";
         }
 

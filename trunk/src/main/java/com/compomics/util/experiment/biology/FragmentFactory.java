@@ -25,6 +25,7 @@ public class FragmentFactory {
 
     /**
      * Static method which returns the instance of the factory
+     *
      * @return  the instance of the factory
      */
     public static FragmentFactory getInstance() {
@@ -36,6 +37,7 @@ public class FragmentFactory {
 
     /**
      * This method returns the theoretic fragment ions expected from a peptide sequence.
+     * 
      * @param peptide       The considered peptide
      * @return              the expected fragment ions
      */

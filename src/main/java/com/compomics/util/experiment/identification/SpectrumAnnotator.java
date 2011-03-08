@@ -46,11 +46,12 @@ public class SpectrumAnnotator {
 
     /**
      * Annotates a spectrum and returns a map containing the annotations: ion type -> charge -> Ion match
+     * 
      * @param peptide
      * @param spectrum
      * @param mzTolerance
      * @param intensityLimit
-     * @return
+     * @return a map containing the annotations
      */
     public HashMap<String, HashMap<Integer, IonMatch>> annotateSpectrum(Peptide peptide, MSnSpectrum spectrum, double mzTolerance, double intensityLimit) {
         setPeptide(peptide);

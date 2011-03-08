@@ -1050,10 +1050,7 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * Add a x-axis reference area.
      *
-     * @param label     the label for the reference area, must be unique
-     * @param start     the start of the reference area
-     * @param end the   end of the reference area
-     * @param areaColor the color of the area
+     * @param referenceArea the reference area to add
      */
     public void addReferenceAreaXAxis(ReferenceArea referenceArea) {
         referenceAreasXAxis.put(referenceArea.getLabel(), referenceArea);
@@ -1089,10 +1086,7 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * Add a y-axis reference area.
      *
-     * @param label     the label for the reference area, must be unique
-     * @param start     the start of the reference area
-     * @param end       the end of the reference area
-     * @param areaColor the color of the area
+     * @param referenceArea the reference area to add
      */
     public void addReferenceAreaYAxis(ReferenceArea referenceArea) {
         referenceAreasYAxis.put(referenceArea.getLabel(), referenceArea);

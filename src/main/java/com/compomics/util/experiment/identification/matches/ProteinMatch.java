@@ -71,7 +71,7 @@ public class ProteinMatch extends ExperimentObject {
     /**
      * setter for the matching protein
      *
-     * @param theoreticProtein the matching protein
+     * @param protein the matching protein
      */
     public void addTheoreticProtein(Protein protein) {
         theoreticProtein.put(protein.getAccession(), protein);

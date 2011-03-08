@@ -49,8 +49,8 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * Constructor for the spectrum match
      *
-     * @param spectrum   The matched spectrumKey
-     * @param assumption The matching peptide assumption
+     * @param spectrumKey   The matched spectrumKey
+     * @param assumption    The matching peptide assumption
      */
     public SpectrumMatch(String spectrumKey, PeptideAssumption assumption) {
         int advocateId = assumption.getAdvocate();
@@ -63,7 +63,7 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * Constructor for the spectrum match
      *
-     * @param spectrum The matched spectrum key
+     * @param spectrumKey The matched spectrum key
      */
     public SpectrumMatch(String spectrumKey) {
         this.spectrumKey = spectrumKey;

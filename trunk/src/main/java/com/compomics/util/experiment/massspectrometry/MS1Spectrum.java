@@ -23,10 +23,10 @@ public class MS1Spectrum extends Spectrum {
     /**
      * constructor for an MS1 spectrum
      *
-     * @param spectrumTitle title of the spectrum
-     * @param spectrum      Set of peaks
-     * @param fileName      name of the file
-     * @param rt            retention time
+     * @param spectrumTitle     title of the spectrum
+     * @param spectrum          Set of peaks
+     * @param fileName          name of the file
+     * @param scanStartTime     scan start time
      */
     public MS1Spectrum(String fileName, String spectrumTitle, double scanStartTime, HashSet<Peak> spectrum) {
         this.spectrumTitle = spectrumTitle;

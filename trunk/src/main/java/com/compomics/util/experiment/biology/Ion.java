@@ -57,7 +57,7 @@ public abstract class Ion extends ExperimentObject {
      *
      * @param spectrum
      * @param ionTolerance
-     * @return
+     * @return the IonMatch
      */
     public IonMatch match(MSnSpectrum spectrum, double ionTolerance) {
         HashMap<Double, Peak> peakMap = spectrum.getPeakMap();

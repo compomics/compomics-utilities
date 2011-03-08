@@ -24,6 +24,20 @@ import java.util.ArrayList;
 public abstract class GraphicsPanel extends JPanel {
 
     /**
+     * If true the x-axis will be drawn using the scientific annotation.
+     * The pattern i set in the "scientificPattern" field.
+     */
+    private boolean scientificXAxis = false;
+    /**
+     * If true the y-axis will be drawn using the scientific annotation.
+     * The pattern i set in the "scientificPattern" field.
+     */
+    private boolean scientificYAxis = false;
+    /**
+     * The number format pattern for scientific annotation.
+     */
+    private String scientificPattern = "##0.#####E0";
+    /**
      * A hashmap of the current x-axis reference areas. Key is the name of
      * the reference area.
      */
@@ -33,14 +47,6 @@ public abstract class GraphicsPanel extends JPanel {
      * the reference area.
      */
     private HashMap<String, ReferenceArea> referenceAreasYAxis = new HashMap<String, ReferenceArea>();
-    /**
-     * The list of supported tag distances for the x- and y-axis. The most
-     * detailed alternative, i.e., the smallest number, is always used.
-     */
-    protected int[] distanceAlternatives = {1, 5, 10, 25, 50, 100, 250, 500, 1000,
-        2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2000000,
-        2500000, 5000000, 10000000, 20000000, 25000000, 50000000, 100000000
-    };
     /**
      * If set to true, the y-axis is removed, the y- and x-axis tags are removed, 
      * and any annotations are hidden. All to make the graphics panel look better
@@ -1473,33 +1479,70 @@ public abstract class GraphicsPanel extends JPanel {
             // find the scale unit for the x tags
             double scaleUnitXTags = aXAxisWidth / delta;
 
-            int distanceBetweenTags = 1;
-            boolean optimalDistanceFound = false;
-
             // try to find the optimal distance to use between the tags
-            for (int i = 0; i < distanceAlternatives.length && !optimalDistanceFound; i++) {
-                if (delta / distanceAlternatives[i] <= numberTimes) {
-                    distanceBetweenTags = distanceAlternatives[i];
-                    optimalDistanceFound = true;
-                }
-            }
+            int distanceBetweenTags = findOptimalTagDistance(numberTimes, delta);
 
             // set up the number formatting
             DecimalFormat numberFormat = new DecimalFormat();
             numberFormat.setGroupingSize(3);
             numberFormat.setGroupingUsed(true);
 
-            // now we can mark each unit
-            for (int i = 0; i < aMax; i++) {
+            if (scientificXAxis) {
+                numberFormat = new DecimalFormat(scientificPattern);
+            }
 
-                if ((aMin + i) % distanceBetweenTags == 0) {
+            // add the tags and values
+            if (delta > 1) {
+
+                // now we can mark each unit
+                for (int i = 0; i < aMax; i++) {
+
+                    if ((aMin + i) % distanceBetweenTags == 0) {
+
+                        int xLoc = (int) (aPadding + (i * scaleUnitXTags));
+
+                        if (xLoc < (aPadding + aXAxisWidth)) {
+                            g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                            int labelAsInt = aMin + i;
+                            String label = numberFormat.format(labelAsInt);
+                            int labelWidth = fm.stringWidth(label);
+                            g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+                        }
+                    }
+                }
+            } else {
+
+                // special case for when zoom size is 1Da. we then need to use float values, e.g., 155.1, 155.2 etc.
+
+                // first find how many tags we have room for: 10, 5, 2 or 1
+                int numberOfTags = 10;
+
+                // find the scale unit for the x tags
+                if (numberTimes >= numberOfTags) {
+                    scaleUnitXTags = aXAxisWidth / numberOfTags;
+                } else {
+                    numberOfTags = 5;
+
+                    if (numberTimes >= numberOfTags) {
+                        scaleUnitXTags = aXAxisWidth / numberOfTags;
+                    } else {
+                        numberOfTags = 2;
+
+                        if (numberTimes >= numberOfTags) {
+                            numberOfTags = 1;
+                        }
+                    }
+                }
+
+                // add the tags
+                for (int i = 0; i < numberOfTags; i++) {
 
                     int xLoc = (int) (aPadding + (i * scaleUnitXTags));
 
                     if (xLoc < (aPadding + aXAxisWidth)) {
                         g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
-                        int labelAsInt = aMin + i;
-                        String label = numberFormat.format(labelAsInt);
+                        double labelAsdouble = aMin + ((1 / (double) numberOfTags) * i);
+                        String label = numberFormat.format(labelAsdouble);
                         int labelWidth = fm.stringWidth(label);
                         g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
                     }
@@ -1536,21 +1579,17 @@ public abstract class GraphicsPanel extends JPanel {
             // find the scale unit for the x tags
             double scaleUnitYTags = aYAxisHeight / delta;
 
-            int distanceBetweenTags = 1;
-            boolean optimalDistanceFound = false;
-
-            // try to find the optimal distance to use between the tags
-            for (int i = 0; i < distanceAlternatives.length && !optimalDistanceFound; i++) {
-                if (delta / distanceAlternatives[i] <= numberTimes) {
-                    distanceBetweenTags = distanceAlternatives[i];
-                    optimalDistanceFound = true;
-                }
-            }
+            // ind the optimal distance to use between the tags
+            int distanceBetweenTags = findOptimalTagDistance(numberTimes, delta);
 
             // set up the number formatting
             DecimalFormat numberFormat = new DecimalFormat();
             numberFormat.setGroupingSize(3);
             numberFormat.setGroupingUsed(true);
+
+            if (scientificYAxis) {
+                numberFormat = new DecimalFormat(scientificPattern);
+            }
 
             // max y-value to display
             String largestLabel = numberFormat.format((int) aMax);
@@ -1591,6 +1630,58 @@ public abstract class GraphicsPanel extends JPanel {
             // restore original font
             g.setFont(oldFont);
         }
+    }
+
+    /**
+     * Try to find the optimal distance between the tags. The most detailed
+     * option is always used, i.e., the option containing the most tags
+     * within the current boundaries. Note always returns a round number,
+     * e.g., 1, 5, 10, 25, 50, etc.
+     *
+     * @param maxNumberOfTags   the maxium number of tags there is room for
+     * @param delta             the difference between the max and the min value
+     * @return                  the optimal distance between the tags
+     */
+    private int findOptimalTagDistance(int maxNumberOfTags, double delta) {
+
+        // the two smallest tag options
+        int[] distanceAlternatives = {1, 5};
+
+        int optimalDistance = 1;
+        boolean optimalDistanceFound = false;
+
+        // check if the two inimum tag options can be used
+        for (int i = 0; i < distanceAlternatives.length && !optimalDistanceFound; i++) {
+            if (delta / distanceAlternatives[i] <= maxNumberOfTags) {
+                optimalDistance = distanceAlternatives[i];
+                optimalDistanceFound = true;
+            }
+        }
+
+        int tempOptimalDistance = 10;
+
+        // find the optimal tag distance
+        while (!optimalDistanceFound) {
+
+            if (delta / (tempOptimalDistance * 2.5) <= maxNumberOfTags) {
+                optimalDistance = Double.valueOf(tempOptimalDistance * 2.5).intValue();
+                optimalDistanceFound = true;
+            }
+
+            if (delta / (tempOptimalDistance * 5) <= maxNumberOfTags && !optimalDistanceFound) {
+                optimalDistance = Double.valueOf(tempOptimalDistance * 5).intValue();
+                optimalDistanceFound = true;
+            }
+
+            if (delta / (tempOptimalDistance * 10) <= maxNumberOfTags && !optimalDistanceFound) {
+                optimalDistance = Double.valueOf(tempOptimalDistance * 10).intValue();
+                optimalDistanceFound = true;
+            }
+
+            tempOptimalDistance *= 10;
+        }
+
+        return optimalDistance;
     }
 
     /**
@@ -2058,5 +2149,49 @@ public abstract class GraphicsPanel extends JPanel {
     private AlphaComposite makeComposite(float alpha) {
         int type = AlphaComposite.SRC_OVER;
         return (AlphaComposite.getInstance(type, alpha));
+    }
+
+    /**
+     * Set if the x-axis tags are to be drawn using scientific annotation. The
+     * default is false. The default pattern is "##0.#####E0".
+     *
+     * @param scientificXAxis if the x-axis tags is to be drawn using scientific annotation
+     */
+    public void setScientificXAxis(boolean scientificXAxis) {
+        this.scientificXAxis = scientificXAxis;
+    }
+
+    /**
+     * Set if the x-axis tags are to be drawn using scientific annotation. The
+     * default is false. For pattern details see java.text.DecimalFormat. The
+     * default pattern is "##0.#####E0".
+     *
+     * @param pattern            the number format pattern to use
+     */
+    public void setScientificXAxis(String pattern) {
+        this.scientificXAxis = true;
+        this.scientificPattern = pattern;
+    }
+
+    /**
+     * Set if the y-axis tags are to be drawn using scientific annotation. The
+     * default is false. The default pattern is "##0.#####E0".
+     *
+     * @param scientificYAxis if the y-axis tags is to be drawn using scientific annotation
+     */
+    public void setScientificYAxis(boolean scientificYAxis) {
+        this.scientificYAxis = scientificYAxis;
+    }
+
+    /**
+     * Set if the y-axis tags are to be drawn using scientific annotation. The
+     * default is false. For pattern details see java.text.DecimalFormat. The
+     * default pattern is "##0.#####E0".
+     *
+     * @param pattern            the number format pattern to use
+     */
+    public void setScientificYAxis(String pattern) {
+        this.scientificYAxis = true;
+        this.scientificPattern = pattern;
     }
 }

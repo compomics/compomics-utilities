@@ -1494,7 +1494,8 @@ public abstract class GraphicsPanel extends JPanel {
             // add the tags and values
             if (delta > 1) {
 
-                // now we can mark each unit
+                long lTagValue = 0;
+                // now we can mark the first unit
                 for (int i = 0; i < aMax; i++) {
 
                     if ((aMin + i) % distanceBetweenTags == 0) {
@@ -1507,9 +1508,25 @@ public abstract class GraphicsPanel extends JPanel {
                             String label = numberFormat.format(labelAsInt);
                             int labelWidth = fm.stringWidth(label);
                             g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+                            lTagValue = i;
+                            break;
                         }
                     }
                 }
+
+                // now we can mark the rest of the units
+                while(lTagValue < aMax){
+                    int xLoc = (int) (aPadding + (lTagValue * scaleUnitXTags));
+                        if (xLoc < (aPadding + aXAxisWidth)) {
+                            g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                            long labelAsInt = aMin + lTagValue;
+                            String label = numberFormat.format(labelAsInt);
+                            int labelWidth = fm.stringWidth(label);
+                            g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+                        }
+                    lTagValue = lTagValue + distanceBetweenTags;
+                }
+
             } else {
 
                 // special case for when zoom size is 1Da. we then need to use float values, e.g., 155.1, 155.2 etc.
@@ -1614,17 +1631,15 @@ public abstract class GraphicsPanel extends JPanel {
                 g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), 1));
             }
 
-            // now we can mark each unit
-            for (int i = 0; i < aMax; i++) {
-
-                if ((aMin + i) % distanceBetweenTags == 0) {
-                    int yLoc = (int) (aPadding + (i * scaleUnitYTags));
-                    g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
-                    int labelAsInt = aMin + i;
-                    String label = numberFormat.format(labelAsInt);
-                    int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
-                    g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
-                }
+            long lTagValue = 0;
+            while(lTagValue < aMax){
+                int yLoc = (int) (aPadding + (lTagValue * scaleUnitYTags));
+                g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
+                long labelAsInt = aMin + lTagValue;
+                String label = numberFormat.format(labelAsInt);
+                int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
+                g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
+                lTagValue = lTagValue + distanceBetweenTags;
             }
 
             // restore original font

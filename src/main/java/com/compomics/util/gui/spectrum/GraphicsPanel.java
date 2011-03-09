@@ -1665,7 +1665,7 @@ public abstract class GraphicsPanel extends JPanel {
         int optimalDistance = 1;
         boolean optimalDistanceFound = false;
 
-        // check if the two inimum tag options can be used
+        // check if the two minimum tag options can be used
         for (int i = 0; i < distanceAlternatives.length && !optimalDistanceFound; i++) {
             if (delta / distanceAlternatives[i] <= maxNumberOfTags) {
                 optimalDistance = distanceAlternatives[i];

@@ -299,12 +299,12 @@ public class SequenceFragmentationPanel extends JPanel {
 
         for (int i = 0; i < iSequenceComponents.length; i++) {
             // Move X for a text component.
-            lEstimateX = lEstimateX + this.getFontMetrics(iBaseFont).stringWidth(iSequenceComponents[i]) + iHorizontalSpace;
+            lEstimateX += this.getFontMetrics(iBaseFont).stringWidth(iSequenceComponents[i]) + iHorizontalSpace;
             // Move the XLocation forwards with the component's length and the horizontal spacer.
-            lEstimateX = lEstimateX + iBarWidth + iHorizontalSpace;
+            lEstimateX += iBarWidth + iHorizontalSpace;
         }
 
-        lEstimateX = lEstimateX + iXStart;
+        lEstimateX += iXStart;
         return lEstimateX;
     }
 

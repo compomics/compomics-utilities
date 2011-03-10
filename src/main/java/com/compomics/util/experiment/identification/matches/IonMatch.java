@@ -40,6 +40,19 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
+     * Constructor for an ion peak
+     *
+     * @param aPeak the matched peak
+     * @param anIon the corresponding ion
+     * @param error the matching error in Da
+     */
+    public IonMatch(Peak aPeak, Ion anIon, double error) {
+        peak = aPeak;
+        ion = anIon;
+        this.error = error;
+    }
+
+    /**
      * set the matching error
      *
      * @param error the matching error in Da

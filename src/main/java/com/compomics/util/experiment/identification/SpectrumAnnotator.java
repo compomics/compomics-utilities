@@ -38,7 +38,8 @@ public class SpectrumAnnotator {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
             if (Math.abs(fragmentIon.theoreticMass - peak.mz * charge.value) <= mzTolerance) {
-                result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(), fragmentIon.getNumber(), charge)));
+                result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(), 
+                        fragmentIon.getNumber(), charge), fragmentIon.theoreticMass - peak.mz * charge.value));
             }
         }
         return result;
@@ -92,7 +93,7 @@ public class SpectrumAnnotator {
                             if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())) {
                                 results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                             }
-                            results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
+                            results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon, currentMz - fragmentMZ));
                         }
                     }
 
@@ -106,7 +107,7 @@ public class SpectrumAnnotator {
                             if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())) {
                                 results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                             }
-                            results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
+                            results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon, currentMz - fragmentMZ));
                         }
                     }
 
@@ -121,7 +122,9 @@ public class SpectrumAnnotator {
                                 if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())) {
                                     results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                                 }
-                                results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon));
+                                results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon, currentMz - fragmentMZ));
+
+                                System.out.println("error: " + (currentMz - fragmentMZ));
                             }
                         }
                         

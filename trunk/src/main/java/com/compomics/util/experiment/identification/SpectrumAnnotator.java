@@ -123,8 +123,6 @@ public class SpectrumAnnotator {
                                     results.put(inspectedIon + "_" + fragmentIon.getNumber(), new HashMap<Integer, IonMatch>());
                                 }
                                 results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon, currentMz - fragmentMZ));
-
-                                System.out.println("error: " + (currentMz - fragmentMZ));
                             }
                         }
                         

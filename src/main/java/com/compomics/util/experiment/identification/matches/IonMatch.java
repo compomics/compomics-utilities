@@ -1,11 +1,12 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * This class will model the assignement of a peak to a theoretical ion.
+ * This class will model the assignment of a peak to a theoretical ion.
  * <p/>
  * Created by IntelliJ IDEA.
  * User: Marc
@@ -23,42 +24,21 @@ public class IonMatch extends ExperimentObject {
      */
     public Ion ion;
     /**
-     * The error made (in Da)
+     * The supposed charge of the ion
      */
-    private double error;
+    public Charge charge;
 
 
     /**
      * Constructor for an ion peak
      *
      * @param aPeak the matched peak
-     * @param anIon the corresponding ion
+     * @param anIon the corresponding type of ion
+     * @param aCharge the charge of the ion
      */
-    public IonMatch(Peak aPeak, Ion anIon) {
+    public IonMatch(Peak aPeak, Ion anIon, Charge aCharge) {
         peak = aPeak;
         ion = anIon;
-    }
-
-    /**
-     * Constructor for an ion peak
-     *
-     * @param aPeak the matched peak
-     * @param anIon the corresponding ion
-     * @param error the matching error in Da
-     */
-    public IonMatch(Peak aPeak, Ion anIon, double error) {
-        peak = aPeak;
-        ion = anIon;
-        this.error = error;
-    }
-
-    /**
-     * set the matching error
-     *
-     * @param error the matching error in Da
-     */
-    public void setError(double error) {
-        this.error = error;
     }
 
     /**
@@ -67,6 +47,6 @@ public class IonMatch extends ExperimentObject {
      * @return the matching error
      */
     public double getError() {
-        return error;
+        return (peak.mz-ion.theoreticMass)*charge.value;
     }
 }

@@ -140,7 +140,7 @@ public class SpectrumAnnotator {
                         index = (indexMax - indexMin) / 2 + indexMin;
                         currentMass = inspectedCharge * mz.get(index);
                         if (Math.abs(currentMass - fragmentMass) <= massTolerance/inspectedCharge) {
-                            currentPeak = peakMap.get(currentMass);
+                            currentPeak = peakMap.get(mz.get(index));
                             if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())
                                     || !results.get(inspectedIon + "_" + fragmentIon.getNumber()).containsKey(inspectedCharge)
                                     || results.get(inspectedIon + "_" + fragmentIon.getNumber()).get(inspectedCharge).peak.intensity < currentPeak.intensity) {

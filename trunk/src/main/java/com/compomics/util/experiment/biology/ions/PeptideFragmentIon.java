@@ -115,12 +115,12 @@ public class PeptideFragmentIon extends Ion {
      *
      * @param type      the type of ion according to static fields
      * @param number    the ion number
-     * @param mz        the ion m/z
+     * @param mass      the ion mass
      */
-    public PeptideFragmentIon(int type, int number, double mz) {
+    public PeptideFragmentIon(int type, int number, double mass) {
         this.type = type;
         this.number = number;
-        this.theoreticMass = mz;
+        this.theoreticMass = mass;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }
 
@@ -129,13 +129,13 @@ public class PeptideFragmentIon extends Ion {
      *
      * @param type      the type of ion according to static fields
      * @param number    the ion number
-     * @param mz        the ion m/z
+     * @param mass      the ion mass
      * @param charge    the ion charge
      */
-    public PeptideFragmentIon(int type, int number, double mz, Charge charge) {
+    public PeptideFragmentIon(int type, int number, double mass, Charge charge) {
         this.type = type;
         this.number = number;
-        this.theoreticMass = mz;
+        this.theoreticMass = mass;
         this.charge = charge;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }

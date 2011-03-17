@@ -100,11 +100,11 @@ public class PTMFactory {
                         }
                     }
                 }
-            } else if (currentPTM.getType() == PTM.MODC) {
+            } else if (currentPTM.getType() == PTM.MODC || currentPTM.getType() == PTM.MODCP) {
                 if (Math.abs(currentPTM.getMass() - mass) < 0.01 && sequence.endsWith(location)) {
                     return currentPTM;
                 }
-            } else if (currentPTM.getType() == PTM.MODN) {
+            } else if (currentPTM.getType() == PTM.MODN || currentPTM.getType() == PTM.MODNP) {
                 if (Math.abs(currentPTM.getMass() - mass) < 0.01 && sequence.startsWith(location)) {
                     return currentPTM;
                 }

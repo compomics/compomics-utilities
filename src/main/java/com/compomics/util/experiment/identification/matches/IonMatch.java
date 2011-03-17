@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
@@ -28,7 +29,6 @@ public class IonMatch extends ExperimentObject {
      */
     public Charge charge;
 
-
     /**
      * Constructor for an ion peak
      *
@@ -39,6 +39,7 @@ public class IonMatch extends ExperimentObject {
     public IonMatch(Peak aPeak, Ion anIon, Charge aCharge) {
         peak = aPeak;
         ion = anIon;
+        charge = aCharge;
     }
 
     /**
@@ -47,6 +48,9 @@ public class IonMatch extends ExperimentObject {
      * @return the matching error
      */
     public double getError() {
-        return (peak.mz-ion.theoreticMass)*charge.value;
+
+        // @TODO: verify that this is correct!!
+
+        return  peak.mz - ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value);
     }
 }

@@ -90,6 +90,10 @@ public class PeptideFragmentIon extends Ion {
      */
     private int number;
     /**
+     * Ion charge
+     */
+    private Charge charge;
+    /**
      * Ion intensity.
      */
     private Double intensity;
@@ -119,7 +123,41 @@ public class PeptideFragmentIon extends Ion {
         this.theoreticMass = mz;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }
-    
+
+    /**
+     * Constructor for a theoretic peptide fragment with ion number in the sequence
+     *
+     * @param type      the type of ion according to static fields
+     * @param number    the ion number
+     * @param mz        the ion m/z
+     * @param charge    the ion charge
+     */
+    public PeptideFragmentIon(int type, int number, double mz, Charge charge) {
+        this.type = type;
+        this.number = number;
+        this.theoreticMass = mz;
+        this.charge = charge;
+        this.familyType = Ion.PEPTIDE_FRAGMENT;
+    }
+
+    /**
+     * Getter for the charge
+     *
+     * @return the ion charge
+     */
+    public Charge getCharge() {
+        return charge;
+    }
+
+    /**
+     * Setter for the charge
+     * 
+     * @param charge
+     */
+    public void setCharge(Charge charge) {
+        this.charge = charge;
+    }
+
     /**
      * Getter for the intensity
      *

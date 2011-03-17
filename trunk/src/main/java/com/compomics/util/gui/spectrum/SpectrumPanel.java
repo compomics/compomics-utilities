@@ -530,7 +530,7 @@ public class SpectrumPanel extends GraphicsPanel {
             // dark green
             currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
 
-        } else if (peakLabel.startsWith("Prec")) { // precursor
+        } else if (peakLabel.startsWith("Prec") || peakLabel.startsWith("MH")) { // precursor
 
             // red
             currentColor = Color.gray; // Color.red is used in MascotDatFile

@@ -172,12 +172,12 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         for (Modification currentModification : foundFixedModifications) {
                             String[] parsedName = currentModification.getName().split("@");
                             double mass = new Double(parsedName[0]);
-                            String aa = parsedName[1];
+                            String aa = parsedName[1].toUpperCase();
                             currentPTM = ptmFactory.getPTM(mass, aa, sequence);
                             for (String residue : currentPTM.getResiduesArray()) {
                                 if (residue.equals("[")) {
-                                    foundModifications.add(new ModificationMatch(currentPTM, false, 0));
-                                } else if (residue.equals("[")) {
+                                        foundModifications.add(new ModificationMatch(currentPTM, false, 0));
+                                } else if (residue.equals("]")) {
                                     foundModifications.add(new ModificationMatch(currentPTM, false, sequence.length() - 1));
                                 } else {
                                     String tempSequence = "#" + sequence + "#";
@@ -191,7 +191,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                     }
                                 }
                             }
-
                         }
                         ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(bestPeptide.getDomainID());
                         for (Modification currentModification : foundVariableModifications) {

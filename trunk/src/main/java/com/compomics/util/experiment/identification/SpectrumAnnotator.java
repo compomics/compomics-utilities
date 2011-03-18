@@ -95,7 +95,7 @@ public class SpectrumAnnotator {
         Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
 
         // get the spectrum annotations
-        HashMap<String, HashMap<Integer, IonMatch>> annotations = annotateSpectrum(peptide, spectrum, massTolerance, intensityLimit);
+        HashMap<String, HashMap<Integer, IonMatch>> annotations = annotateSpectrum(peptide, spectrum, massTolerance, intensityLimit).getAnnotations();
 
         Iterator<String> ionTypeIterator = annotations.keySet().iterator();
 
@@ -129,18 +129,18 @@ public class SpectrumAnnotator {
      * @param annotations   the annotations to transform into DefaultSpectrumAnnotations
      * @return              a vector of DefaultSpectrumAnnotations
      */
-    public Vector<DefaultSpectrumAnnotation> getSpectrumAnnotations(HashMap<String, HashMap<Integer, IonMatch>> annotations) {
+    public Vector<DefaultSpectrumAnnotation> getSpectrumAnnotations(SpectrumAnnotationMap annotations) {
 
         // set up the annotation vector
         Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
 
-        Iterator<String> ionTypeIterator = annotations.keySet().iterator();
+        Iterator<String> ionTypeIterator = annotations.getAnnotations().keySet().iterator();
 
         // iterate the annotations and add them to the spectrum
         while (ionTypeIterator.hasNext()) {
             String ionType = ionTypeIterator.next();
 
-            HashMap<Integer, IonMatch> chargeMap = annotations.get(ionType);
+            HashMap<Integer, IonMatch> chargeMap = annotations.getAnnotations().get(ionType);
             Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
 
             while (chargeIterator.hasNext()) {
@@ -166,9 +166,9 @@ public class SpectrumAnnotator {
      * @param spectrum          The spectrum
      * @param massTolerance     The mass tolerance to use (in Dalton)
      * @param intensityLimit    The minimal intensity to search for
-     * @return a map containing the annotations
+     * @return                  a map containing the annotations
      */
-    public HashMap<String, HashMap<Integer, IonMatch>> annotateSpectrum(Peptide peptide, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
+    public SpectrumAnnotationMap annotateSpectrum(Peptide peptide, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
         setPeptide(peptide);
         setSpectrum(spectrum, intensityLimit);
         HashMap<String, HashMap<Integer, IonMatch>> results = new HashMap<String, HashMap<Integer, IonMatch>>();
@@ -249,7 +249,7 @@ public class SpectrumAnnotator {
             inspectedCharge--;
         }
 
-        return results;
+        return new SpectrumAnnotationMap(results);
     }
 
     /**
@@ -287,6 +287,42 @@ public class SpectrumAnnotator {
         if (this.peptide == null || !this.peptide.isSameAs(peptide)) {
             this.peptide = peptide;
             fragmentIons = fragmentFactory.getFragmentIons(peptide);
+        }
+    }
+
+    /**
+     * A support class for "hiding" the HashMap inside an object for easier
+     * use in other methods. Should not normally be created on its own, but
+     * rather created using the annotateSpectrum method in the SpectrumAnnotation
+     * class.
+     */
+    public class SpectrumAnnotationMap {
+
+        /**
+         * The HashMap of the annotations. ion type -> charge -> ion match
+         */
+        private HashMap<String, HashMap<Integer, IonMatch>> annotations;
+
+        /**
+         * Create a new SpectrumAnnotationMap. Should not normally be used
+         * directly, but rather created using the annotateSpectrum method in
+         * the SpectrumAnnotation class.
+         *
+         * @param annotations a HashMap of the annotations
+         */
+        public SpectrumAnnotationMap(HashMap<String, HashMap<Integer, IonMatch>> annotations) {
+            this.annotations = annotations;
+        }
+
+        /**
+         *
+         * Returns the actual annotations "hidden" inside the SpectrumAnnotationMap
+         * object. HashMap structure: ion type -> charge -> ion match
+         *
+         * @return a HashMap of the annotations
+         */
+        public HashMap<String, HashMap<Integer, IonMatch>> getAnnotations() {
+            return annotations;
         }
     }
 }

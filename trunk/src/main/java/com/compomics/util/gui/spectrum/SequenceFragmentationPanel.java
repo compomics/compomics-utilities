@@ -1,11 +1,15 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
+import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAnnotationMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * This class was imported from the Peptizer and MascotDatfile parser, and was
@@ -91,6 +95,62 @@ public class SequenceFragmentationPanel extends JPanel {
         iIonMatches = aIonMatches;
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
+    }
+
+    /**
+     * Creates a new SequenceFragmentationPanel.
+     *
+     * @param aSequence                  String with the Modified Sequence of an peptide identification.
+     * @param annotations                SpectrumAnnotationMap with all annotations, singly charged b and y ions will be extracted
+     * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
+     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
+     * @see java.awt.GraphicsEnvironment#isHeadless
+     * @see javax.swing.JComponent#getDefaultLocale
+     */
+    public SequenceFragmentationPanel(String aSequence, SpectrumAnnotationMap annotations, boolean boolModifiedSequence) throws HeadlessException {
+        super();
+        isModifiedSequence = boolModifiedSequence;
+        iSequenceComponents = parseSequenceIntoComponents(aSequence);
+        iIonMatches = getSequenceFragmentationAnnotations(annotations);
+        this.normalizeMatchedIons();
+        this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
+    }
+
+    /**
+     * Extract the singly charged b and y ions from the complete set of annotations.
+     *
+     * @param annotations   the complete set of annotations
+     * @return              singly charged b and y ions
+     */
+    private ArrayList<IonMatch> getSequenceFragmentationAnnotations(SpectrumAnnotationMap annotations) {
+
+        // the sequence fragment annotations
+        ArrayList<IonMatch> sequenceAnnotations = new ArrayList<IonMatch>();
+
+        Iterator<String> ionTypeIterator = annotations.getAnnotations().keySet().iterator();
+
+        // iterate the annotations and store the needed data
+        while (ionTypeIterator.hasNext()) {
+            String ionType = ionTypeIterator.next();
+
+            HashMap<Integer, IonMatch> chargeMap = annotations.getAnnotations().get(ionType);
+            Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
+
+            while (chargeIterator.hasNext()) {
+                Integer currentCharge = chargeIterator.next();
+                IonMatch ionMatch = chargeMap.get(currentCharge);
+
+                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
+
+                // set up the data for the sequence fragmentation plot
+                if ((fragmentIon.getType() == PeptideFragmentIonType.B_ION
+                        || fragmentIon.getType() == PeptideFragmentIonType.Y_ION) && currentCharge == 1) {
+                    sequenceAnnotations.add(ionMatch);
+                }
+            }
+        }
+
+        return sequenceAnnotations;
     }
 
     /**

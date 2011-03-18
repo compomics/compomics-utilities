@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -32,9 +33,9 @@ public class IonMatch extends ExperimentObject {
     /**
      * Constructor for an ion peak
      *
-     * @param aPeak the matched peak
-     * @param anIon the corresponding type of ion
-     * @param aCharge the charge of the ion
+     * @param aPeak     the matched peak
+     * @param anIon     the corresponding type of ion
+     * @param aCharge   the charge of the ion
      */
     public IonMatch(Peak aPeak, Ion anIon, Charge aCharge) {
         peak = aPeak;
@@ -48,9 +49,36 @@ public class IonMatch extends ExperimentObject {
      * @return the matching error
      */
     public double getError() {
+        return peak.mz - ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value);
+    }
 
-        // @TODO: verify that this is correct!!
+    /**
+     * Returns the annotation to use for the given ion match as a String.
+     *
+     * Format: ion type + [ion number] + [charge] + [neutral loss]
+     *
+     * @return the annotation to use for the given ion match
+     */
+    public String getPeakAnnotation() {
 
-        return  peak.mz - ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value);
+        if (ion instanceof PeptideFragmentIon) {
+            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
+
+            String annotation = fragmentIon.getIonType();
+
+            // add fragment ion number
+            if (!fragmentIon.getIonType().equalsIgnoreCase("MH")
+                    && !fragmentIon.getIonType().equalsIgnoreCase("i")
+                    && !fragmentIon.getIonType().equalsIgnoreCase("Prec-loss")) {
+                annotation += fragmentIon.getNumber();
+            }
+
+            // add charge and any neutral losses
+            annotation += charge.getChargeAsFormattedString() + fragmentIon.getNeutralLoss();
+
+            return annotation;
+        } else {
+            return null;
+        }
     }
 }

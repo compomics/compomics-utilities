@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -183,5 +184,116 @@ public abstract class Spectrum extends ExperimentObject {
         if (peakList != null) {
             peakList.clear();
         }
+    }
+
+    /**
+     * Returns the mz values as an array.
+     *
+     * @return the mz values as an array
+     */
+    public double[] getMzValuesAsArray() {
+
+        double[] mz = new double[peakList.size()];
+
+        int counter = 0;
+
+        for (Peak currentPeak : peakList) {
+            mz[counter] = currentPeak.mz;
+            counter++;
+        }
+
+        return mz;
+    }
+
+    /**
+     * Returns the intensity values as an array.
+     *
+     * @return the intensity values as an array
+     */
+    public double[] getIntensityValuesAsArray() {
+
+        double[] intensity = new double[peakList.size()];
+
+        int counter = 0;
+
+        for (Peak currentPeak : peakList) {
+            intensity[counter] = currentPeak.intensity;
+            counter++;
+        }
+
+        return intensity;
+    }
+
+    /**
+     * Returns the total intensity of the spectrum.
+     *
+     * @return the total intensity
+     */
+    public double getTotalIntensity() {
+
+        double tempIntensity = 0;
+
+        for (Peak currentPeak : peakList) {
+            tempIntensity += currentPeak.intensity;
+        }
+
+        return tempIntensity;
+    }
+
+    /**
+     * Returns the max intensity value.
+     *
+     * @return the max intensity value
+     */
+    public double getMaxIntensity () {
+
+        double maxIntensity = Double.MIN_VALUE;
+
+        for (Peak currentPeak : peakList) {
+            if (currentPeak.intensity > maxIntensity) {
+                maxIntensity = currentPeak.intensity;
+            }
+        }
+
+        return maxIntensity;
+    }
+
+    /**
+     * Returns the max mz value.
+     *
+     * @return the max mz value
+     */
+    public double getMaxMz() {
+
+        double maxMz = Double.MIN_VALUE;
+
+        for (Peak currentPeak : peakList) {
+            if (currentPeak.mz > maxMz) {
+                maxMz = currentPeak.mz;
+            }
+        }
+
+        return maxMz;
+    }
+
+    /**
+     * Returns an array containing the intensity of all peak above the
+     * provided threshold.
+     *
+     * @param threshold     the lower threshold
+     * @return              an array containing the intensity of all peak above the
+     *                      provided threshold
+     */
+    public ArrayList<Double> getPeaksAboveIntensityThreshold(double threshold) {
+
+        ArrayList<Double> peakIntensities = new ArrayList<Double>();
+
+        for (Peak currentPeak : peakList) {
+            if (currentPeak.intensity > threshold) {
+                peakIntensities.add(currentPeak.intensity);
+            }
+        }
+
+        return peakIntensities;
     }
 }

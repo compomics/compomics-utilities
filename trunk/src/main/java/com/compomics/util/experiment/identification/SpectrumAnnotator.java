@@ -4,13 +4,18 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.FragmentFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
+import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * The spectrum annotator annotates peaks in a spectrum.
@@ -67,11 +72,91 @@ public class SpectrumAnnotator {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
             if (Math.abs(fragmentIon.theoreticMass + charge.value * Atom.H.mass - peak.mz * charge.value) <= massTolerance) {
-                result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(), 
+                result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(),
                         fragmentIon.getNumber()), charge));
             }
         }
         return result;
+    }
+
+    /**
+     * Annotates a spectrum and returns the annotations as a vector of
+     * DefaultSpectrumAnnotation that can be added to a SpectrumPanel.
+     *
+     * @param peptide           The theoretic peptide to match
+     * @param spectrum          The spectrum
+     * @param massTolerance     The mass tolerance to use (in Dalton)
+     * @param intensityLimit    The minimal intensity to search for
+     * @return                  a vector of DefaultSpectrumAnnotations
+     */
+    public Vector<DefaultSpectrumAnnotation> getSpectrumAnnotations(Peptide peptide, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
+
+        // set up the annotation vector
+        Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
+
+        // get the spectrum annotations
+        HashMap<String, HashMap<Integer, IonMatch>> annotations = annotateSpectrum(peptide, spectrum, massTolerance, intensityLimit);
+
+        Iterator<String> ionTypeIterator = annotations.keySet().iterator();
+
+        // iterate the annotations and add them to the spectrum
+        while (ionTypeIterator.hasNext()) {
+            String ionType = ionTypeIterator.next();
+
+            HashMap<Integer, IonMatch> chargeMap = annotations.get(ionType);
+            Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
+
+            while (chargeIterator.hasNext()) {
+                Integer currentCharge = chargeIterator.next();
+                IonMatch ionMatch = chargeMap.get(currentCharge);
+
+                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
+
+                // add the peak annotation
+                currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getError(),
+                        SpectrumPanel.determineColorOfPeak(fragmentIon.getIonType() + fragmentIon.getNeutralLoss()),
+                        ionMatch.getPeakAnnotation()));
+            }
+        }
+
+        return currentAnnotations;
+    }
+
+    /**
+     * Annotates a spectrum and returns the annotations as a vector of
+     * DefaultSpectrumAnnotation that can be added to a SpectrumPanel.
+     *
+     * @param annotations   the annotations to transform into DefaultSpectrumAnnotations
+     * @return              a vector of DefaultSpectrumAnnotations
+     */
+    public Vector<DefaultSpectrumAnnotation> getSpectrumAnnotations(HashMap<String, HashMap<Integer, IonMatch>> annotations) {
+
+        // set up the annotation vector
+        Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
+
+        Iterator<String> ionTypeIterator = annotations.keySet().iterator();
+
+        // iterate the annotations and add them to the spectrum
+        while (ionTypeIterator.hasNext()) {
+            String ionType = ionTypeIterator.next();
+
+            HashMap<Integer, IonMatch> chargeMap = annotations.get(ionType);
+            Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
+
+            while (chargeIterator.hasNext()) {
+                Integer currentCharge = chargeIterator.next();
+                IonMatch ionMatch = chargeMap.get(currentCharge);
+
+                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
+
+                // add the peak annotation
+                currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getError(),
+                        SpectrumPanel.determineColorOfPeak(fragmentIon.getIonType() + fragmentIon.getNeutralLoss()),
+                        ionMatch.getPeakAnnotation()));
+            }
+        }
+
+        return currentAnnotations;
     }
 
     /**
@@ -88,7 +173,8 @@ public class SpectrumAnnotator {
         setSpectrum(spectrum, intensityLimit);
         HashMap<String, HashMap<Integer, IonMatch>> results = new HashMap<String, HashMap<Integer, IonMatch>>();
 
-        int inspectedIon, inspectedCharge = spectrum.getPrecursor().getCharge().value;
+        int inspectedCharge = spectrum.getPrecursor().getCharge().value;
+        PeptideFragmentIonType inspectedIon;
         double fragmentMass, currentMass;
 
         // iterate the possible charge states
@@ -139,7 +225,7 @@ public class SpectrumAnnotator {
                     while (indexMax - indexMin > 1) {
                         index = (indexMax - indexMin) / 2 + indexMin;
                         currentMass = inspectedCharge * mz.get(index);
-                        if (Math.abs(currentMass - fragmentMass) <= massTolerance/inspectedCharge) {
+                        if (Math.abs(currentMass - fragmentMass) <= massTolerance / inspectedCharge) {
                             currentPeak = peakMap.get(mz.get(index));
                             if (!results.containsKey(inspectedIon + "_" + fragmentIon.getNumber())
                                     || !results.get(inspectedIon + "_" + fragmentIon.getNumber()).containsKey(inspectedCharge)
@@ -150,7 +236,7 @@ public class SpectrumAnnotator {
                                 results.get(inspectedIon + "_" + fragmentIon.getNumber()).put(inspectedCharge, new IonMatch(currentPeak, fragmentIon, new Charge(Charge.PLUS, inspectedCharge)));
                             }
                         }
-                        
+
                         if (currentMass < fragmentMass) {
                             indexMin = index;
                         } else {
@@ -162,7 +248,7 @@ public class SpectrumAnnotator {
 
             inspectedCharge--;
         }
-        
+
         return results;
     }
 

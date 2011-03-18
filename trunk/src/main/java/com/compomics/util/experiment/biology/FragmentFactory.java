@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,15 +73,15 @@ public class FragmentFactory {
                 }
             }
 
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass));
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.ANH3_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - Atom.N.mass - 3 * Atom.H.mass));
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.AH2O_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - 2 * Atom.H.mass - Atom.O.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.ANH3_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - Atom.N.mass - 3 * Atom.H.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.AH2O_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - 2 * Atom.H.mass - Atom.O.mass));
 
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.B_ION, faa, forwardMass));
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.BNH3_ION, faa, forwardMass - Atom.N.mass - 3 * Atom.H.mass));
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.BH2O_ION, faa, forwardMass - 2 * Atom.H.mass - Atom.O.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.B_ION, faa, forwardMass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.BNH3_ION, faa, forwardMass - Atom.N.mass - 3 * Atom.H.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.BH2O_ION, faa, forwardMass - 2 * Atom.H.mass - Atom.O.mass));
 
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass));
 
             raa = sequence.length() - aa - 1;
             currentAA = getAminoAcid(sequence.charAt(raa));
@@ -91,13 +92,13 @@ public class FragmentFactory {
                 }
             }
 
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass));
 
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.Y_ION, faa, rewindMass + 2 * Atom.H.mass));
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.YNH3_ION, faa, rewindMass - Atom.N.mass - Atom.H.mass));
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.YH2O_ION, faa, rewindMass - Atom.O.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.Y_ION, faa, rewindMass + 2 * Atom.H.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.YNH3_ION, faa, rewindMass - Atom.N.mass - Atom.H.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.YH2O_ION, faa, rewindMass - Atom.O.mass));
 
-            result.add(new PeptideFragmentIon(PeptideFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass));
+            result.add(new PeptideFragmentIon(PeptideFragmentIonType.Z_ION, faa, rewindMass - Atom.N.mass));
 
         }
 
@@ -108,9 +109,9 @@ public class FragmentFactory {
                 forwardMass += ptm.getMass();
             }
         }
-        result.add(new PeptideFragmentIon(PeptideFragmentIon.MH_ION, sequence.length(), forwardMass + 2 * Atom.H.mass + Atom.O.mass));
-        result.add(new PeptideFragmentIon(PeptideFragmentIon.MHNH3_ION, sequence.length(), forwardMass - Atom.N.mass - Atom.H.mass + Atom.O.mass));
-        result.add(new PeptideFragmentIon(PeptideFragmentIon.MHH2O_ION, sequence.length(), forwardMass));
+        result.add(new PeptideFragmentIon(PeptideFragmentIonType.MH_ION, sequence.length(), forwardMass + 2 * Atom.H.mass + Atom.O.mass));
+        result.add(new PeptideFragmentIon(PeptideFragmentIonType.MHNH3_ION, sequence.length(), forwardMass - Atom.N.mass - Atom.H.mass + Atom.O.mass));
+        result.add(new PeptideFragmentIon(PeptideFragmentIonType.MHH2O_ION, sequence.length(), forwardMass));
 
         return result;
     }

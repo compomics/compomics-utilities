@@ -11,6 +11,7 @@ import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
+import com.compomics.util.gui.protein.ProteinSequencePane;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
@@ -731,7 +732,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         peptidesJXTable = new org.jdesktop.swingx.JXTable();
         jLabel22 = new javax.swing.JLabel();
         numberOfPeptidesJLabel = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
+        sequenceCoverageJPanel = new javax.swing.JPanel();
         proteinCoverageJScrollPane = new javax.swing.JScrollPane();
         proteinSequenceCoverageJEditorPane = new javax.swing.JEditorPane();
         jLabel23 = new javax.swing.JLabel();
@@ -1916,8 +1917,13 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Sequence Coverage"));
-        jPanel9.setPreferredSize(new java.awt.Dimension(500, 341));
+        sequenceCoverageJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Sequence Coverage"));
+        sequenceCoverageJPanel.setPreferredSize(new java.awt.Dimension(500, 341));
+        sequenceCoverageJPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                sequenceCoverageJPanelComponentResized(evt);
+            }
+        });
 
         proteinCoverageJScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -1933,27 +1939,27 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         sequenceCoverageJLabel.setText("-");
 
-        org.jdesktop.layout.GroupLayout jPanel9Layout = new org.jdesktop.layout.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel9Layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout sequenceCoverageJPanelLayout = new org.jdesktop.layout.GroupLayout(sequenceCoverageJPanel);
+        sequenceCoverageJPanel.setLayout(sequenceCoverageJPanelLayout);
+        sequenceCoverageJPanelLayout.setHorizontalGroup(
+            sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(sequenceCoverageJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
-                    .add(jPanel9Layout.createSequentialGroup()
+                    .add(sequenceCoverageJPanelLayout.createSequentialGroup()
                         .add(jLabel23)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(sequenceCoverageJLabel)))
                 .addContainerGap())
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel9Layout.createSequentialGroup()
+        sequenceCoverageJPanelLayout.setVerticalGroup(
+            sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, sequenceCoverageJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel23)
                     .add(sequenceCoverageJLabel))
                 .addContainerGap())
@@ -1976,7 +1982,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                             .add(jPanel10, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jPanel9, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
+                            .add(sequenceCoverageJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
                             .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -1989,7 +1995,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jPanel9, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .add(sequenceCoverageJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                     .add(jPanel10, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -2583,6 +2589,15 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_exportJButtonActionPerformed
 
     /**
+     * Update the sequence coverage pane when the frame width changes.
+     * 
+     * @param evt
+     */
+    private void sequenceCoverageJPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_sequenceCoverageJPanelComponentResized
+        formatProteinSequence();
+    }//GEN-LAST:event_sequenceCoverageJPanelComponentResized
+
+    /**
      * Opens the help dialog.
      *
      * @param urlAsString the URL (as a String) of the help file to display
@@ -2619,77 +2634,13 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 coverage[j]++;
             }
         }
+        
+        // create and display the formatted sequence
+        double sequenceCoverage = ProteinSequencePane.formatProteinSequence(
+                proteinSequenceCoverageJEditorPane, cleanProteinSequence, selectedPeptideStart, selectedPeptideEnd, coverage);
 
-        String sequenceTable = "", currentCellSequence = "";
-        boolean selectedPeptide = false, coveredPeptide = false;
-        double sequenceCoverage = 0;
-
-        // iterate the coverage table and create the formatted sequence string
-        for (int i = 1; i < coverage.length; i++) {
-
-            // add indices per 50 residues
-            if (i % 50 == 1 || i == 1) {
-                sequenceTable += "</tr><tr><td height='20'><font size=2><a name=\"" + i + ".\"></a>" + i + ".</td>";
-
-                int currentCharIndex = i;
-
-                while (currentCharIndex + 10 < cleanProteinSequence.length() && currentCharIndex + 10 < (i + 50)) {
-                    sequenceTable += "<td height='20'><font size=2><a name=\""
-                            + (currentCharIndex + 10) + ".\"></a>" + (currentCharIndex + 10) + ".</td>";
-                    currentCharIndex += 10;
-                }
-
-                sequenceTable += "</tr><tr>";
-            }
-
-            // check if the current residues is covered
-            if (coverage[i] > 0) {
-                sequenceCoverage++;
-                coveredPeptide = true;
-            } else {
-                coveredPeptide = false;
-            }
-
-            // check if the current residue is contained in the selected peptide
-            if (i == selectedPeptideStart) {
-                selectedPeptide = true;
-            } else if (i == selectedPeptideEnd + 1) {
-                selectedPeptide = false;
-            }
-
-            // highlight the covered and selected peptides
-            if (selectedPeptide) {
-                currentCellSequence += "<font color=red>" + cleanProteinSequence.charAt(i - 1) + "</font>";
-            } else if (coveredPeptide) {
-                currentCellSequence += "<font color=blue>" + cleanProteinSequence.charAt(i - 1) + "</font>";
-            } else {
-                currentCellSequence += "<font color=black>" + cleanProteinSequence.charAt(i - 1) + "</font>";
-            }
-
-            // add the sequence to the formatted sequence
-            if (i % 10 == 0) {
-                sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td>";
-                currentCellSequence = "";
-            }
-        }
-
-        // add remaining tags and complete the formatted sequence
-        sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td></table><font color=black>";
-        String formattedSequence = "<html><body><table cellspacing='2'>" + sequenceTable + "</html></body>";
-
-        // calculte and display the percent sequence coverage
-        sequenceCoverageJLabel.setText(Util.roundDouble(sequenceCoverage / cleanProteinSequence.length(), 2) + "%");
-
-        // display the formatted sequence
-        proteinSequenceCoverageJEditorPane.setText(formattedSequence);
-        proteinSequenceCoverageJEditorPane.updateUI();
-
-        // make sure that the currently selected peptide is visible
-        if (selectedPeptideStart != -1) {
-            proteinSequenceCoverageJEditorPane.scrollToReference((selectedPeptideStart - selectedPeptideStart % 10 + 1) + ".");
-        } else {
-            proteinSequenceCoverageJEditorPane.setCaretPosition(0);
-        }
+        // display the percent sequence coverage
+        sequenceCoverageJLabel.setText(Util.roundDouble(sequenceCoverage, 2) + "%");
     }
 
     /**
@@ -2916,7 +2867,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -2956,6 +2906,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JEditorPane proteinSequenceJEditorPane;
     private javax.swing.JScrollPane proteinSequenceJScrollPane;
     private javax.swing.JLabel sequenceCoverageJLabel;
+    private javax.swing.JPanel sequenceCoverageJPanel;
     private javax.swing.JComboBox silacLabelPeptideAJComboBox;
     private javax.swing.JComboBox silacLabelPeptideBJComboBox;
     private javax.swing.JTextField siteJTextField;

@@ -57,7 +57,11 @@ public class ProteinSequencePane {
         double temp = editorPane.getWidth() / (fm.stringWidth("W"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
-        numberOfAminoAcidsPerRow += 10;
+
+        // add some additional amino acids when we have lots of room
+        if (numberOfAminoAcidsPerRow > 50) {
+            numberOfAminoAcidsPerRow += 10;
+        }
 
         ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
 

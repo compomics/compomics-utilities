@@ -2,6 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -295,5 +296,25 @@ public abstract class Spectrum extends ExperimentObject {
         }
 
         return peakIntensities;
+    }
+
+    /**
+     * Returns the intensity limit. Returns 0 if annotateMostIntensePeaks is set
+     * to false,
+     *
+     * @param annotateMostIntensePeaks  returns 0 if set to false
+     * @return                          the intensity limit
+     */
+    public double getIntensityLimit(boolean annotateMostIntensePeaks) {
+        if (annotateMostIntensePeaks) {
+            ArrayList<Double> intensities = new ArrayList<Double>();
+            for (Peak peak : peakList) {
+                intensities.add(peak.intensity);
+            }
+            Collections.sort(intensities);
+            int index = 3 * (intensities.size() - 1) / 4;
+            return intensities.get(index);
+        }
+        return 0;
     }
 }

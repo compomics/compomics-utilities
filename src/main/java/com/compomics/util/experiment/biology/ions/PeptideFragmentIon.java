@@ -13,77 +13,82 @@ import com.compomics.util.experiment.biology.Ion;
 public class PeptideFragmentIon extends Ion {
 
     /**
-     * This int is the identifier for an a ion.
+     * An enumerator of the supported fragment ion types.
      */
-    public final static int A_ION = 0;
-    /**
-     * This int is the identifier for an a* ion.
-     */
-    public final static int ANH3_ION = 1;
-    /**
-     * This int is the identifier for an a° ion.
-     */
-    public final static int AH2O_ION = 2;
-    /**
-     * This int is the identifier for a b ion.
-     */
-    public final static int B_ION = 3;
-    /**
-     * This int is the identifier for a b* ion.
-     */
-    public final static int BNH3_ION = 4;
-    /**
-     * This int is the identifier for a b° ion.
-     */
-    public final static int BH2O_ION = 5;
-    /**
-     * This int is the identifier for a c ion.
-     */
-    public final static int C_ION = 6;
-    /**
-     * This int is the identifier for a x ion.
-     */
-    public final static int X_ION = 7;
-    /**
-     * This int is the identifier for a y ion.
-     */
-    public final static int Y_ION = 8;
-    /**
-     * This int is the identifier for a y* ion.
-     */
-    public final static int YNH3_ION = 9;
-    /**
-     * This int is the identifier for a y° ion.
-     */
-    public final static int YH2O_ION = 10;
-    /**
-     * This int is the identifier for a z ion.
-     */
-    public final static int Z_ION = 11;
-    /**
-     * This int is the identifier for an MH ion. The number of H is not represented here.
-     */
-    public final static int MH_ION = 12;
-    /**
-     * This int is the identifier for an MH-NH3 ion.
-     */
-    public final static int MHNH3_ION = 13;
-    /**
-     * This int is the identifier for an MH-H2O ion.
-     */
-    public final static int MHH2O_ION = 14;
-    /**
-     * This int is the identifier for an immonium ion. The nature of the immonium ion is not coded yet.
-     */
-    public final static int IMMONIUM = 15;
-    /**
-     * This int is the identifier for a precursor ion loss. The nature of the loss is not coded yet.
-     */
-    public final static int PRECURSOR_LOSS = 16;
+    public enum PeptideFragmentIonType {
+
+        /**
+         * This int is the identifier for an a ion.
+         */
+        A_ION,
+        /**
+         * This int is the identifier for an a ion with NH3 loss.
+         */
+        ANH3_ION,
+        /**
+         * This int is the identifier for an a ion with H2O loss.
+         */
+        AH2O_ION,
+        /**
+         * This int is the identifier for a b ion.
+         */
+        B_ION,
+        /**
+         * This int is the identifier for a b ion with NH3 loss.
+         */
+        BNH3_ION,
+        /**
+         * This int is the identifier for a b ion with H2O loss.
+         */
+        BH2O_ION,
+        /**
+         * This int is the identifier for a c ion.
+         */
+        C_ION,
+        /**
+         * This int is the identifier for a x ion.
+         */
+        X_ION,
+        /**
+         * This int is the identifier for a y ion.
+         */
+        Y_ION, /**
+         * This int is the identifier for a y ion with NH3 loss.
+         */
+        YNH3_ION,
+        /**
+         * This int is the identifier for a y ion with H2O loss.
+         */
+        YH2O_ION,
+        /**
+         * This int is the identifier for a z ion.
+         */
+        Z_ION,
+        /**
+         * This int is the identifier for an MH ion. The number of H is not represented here.
+         */
+        MH_ION,
+        /**
+         * This int is the identifier for an MH-NH3 ion.
+         */
+        MHNH3_ION,
+        /**
+         * This int is the identifier for an MH-H2O ion.
+         */
+        MHH2O_ION,
+        /**
+         * This int is the identifier for an immonium ion. The nature of the immonium ion is not coded yet.
+         */
+        IMMONIUM,
+        /**
+         * This int is the identifier for a precursor ion loss. The nature of the loss is not coded yet.
+         */
+        PRECURSOR_LOSS;
+    }
     /**
      * Type of ion
      */
-    private int type;
+    private PeptideFragmentIonType type;
     /**
      * position of the ion in the peptide for peptide ions
      */
@@ -92,10 +97,10 @@ public class PeptideFragmentIon extends Ion {
     /**
      * Construction for a peptide fragment.
      *
-     * @param type  the type of ion according to static fields
-     * @param mass    the ion mass
+     * @param type   the type of ion according to static fields
+     * @param mass                      the ion mass
      */
-    public PeptideFragmentIon(int type, double mass) {
+    public PeptideFragmentIon(PeptideFragmentIonType type, double mass) {
         this.type = type;
         this.theoreticMass = mass;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
@@ -108,7 +113,7 @@ public class PeptideFragmentIon extends Ion {
      * @param number    the ion number
      * @param mass      the ion mass
      */
-    public PeptideFragmentIon(int type, int number, double mass) {
+    public PeptideFragmentIon(PeptideFragmentIonType type, int number, double mass) {
         this.type = type;
         this.number = number;
         this.theoreticMass = mass;
@@ -118,9 +123,9 @@ public class PeptideFragmentIon extends Ion {
     /**
      * Getter for the ion type
      * 
-     * @return the ion type according to the static fields
+     * @return the ion type
      */
-    public int getType() {
+    public PeptideFragmentIonType getType() {
         return type;
     }
 
@@ -139,23 +144,31 @@ public class PeptideFragmentIon extends Ion {
      */
     public String getIonType() {
 
-        if (type == B_ION || type == BH2O_ION || type == BNH3_ION) {
+        if (type == PeptideFragmentIonType.B_ION
+                || type == PeptideFragmentIonType.BH2O_ION
+                || type == PeptideFragmentIonType.BNH3_ION) {
             return "b";
-        } else if (type == Y_ION || type == YH2O_ION || type == YNH3_ION) {
+        } else if (type == PeptideFragmentIonType.Y_ION
+                || type == PeptideFragmentIonType.YH2O_ION
+                || type == PeptideFragmentIonType.YNH3_ION) {
             return "y";
-        } else if (type == A_ION || type == AH2O_ION || type == ANH3_ION) {
+        } else if (type == PeptideFragmentIonType.A_ION
+                || type == PeptideFragmentIonType.AH2O_ION
+                || type == PeptideFragmentIonType.ANH3_ION) {
             return "a";
-        } else if (type == C_ION) {
+        } else if (type == PeptideFragmentIonType.C_ION) {
             return "c";
-        } else if (type == X_ION) {
+        } else if (type == PeptideFragmentIonType.X_ION) {
             return "x";
-        } else if (type == Z_ION) {
+        } else if (type == PeptideFragmentIonType.Z_ION) {
             return "z";
-        } else if (type == MH_ION || type == MHNH3_ION || type == MHH2O_ION) {
+        } else if (type == PeptideFragmentIonType.MH_ION
+                || type == PeptideFragmentIonType.MHNH3_ION
+                || type == PeptideFragmentIonType.MHH2O_ION) {
             return "MH";
-        } else if (type == IMMONIUM) {
+        } else if (type == PeptideFragmentIonType.IMMONIUM) {
             return "i";
-        } else if (type == PRECURSOR_LOSS) {
+        } else if (type == PeptideFragmentIonType.PRECURSOR_LOSS) {
             return "Prec-loss";
         }
 
@@ -169,11 +182,15 @@ public class PeptideFragmentIon extends Ion {
      */
     public String getNeutralLoss() {
 
-        if (type == BH2O_ION || type == YH2O_ION
-                || type == AH2O_ION || type == MHH2O_ION) {
-            return "-H20";
-        } else if (type == BNH3_ION || type == YNH3_ION
-                || type == ANH3_ION || type == MHNH3_ION) {
+        if (type == PeptideFragmentIonType.BH2O_ION
+                || type == PeptideFragmentIonType.YH2O_ION
+                || type == PeptideFragmentIonType.AH2O_ION
+                || type == PeptideFragmentIonType.MHH2O_ION) {
+            return "-H2O";
+        } else if (type == PeptideFragmentIonType.BNH3_ION
+                || type == PeptideFragmentIonType.YNH3_ION
+                || type == PeptideFragmentIonType.ANH3_ION
+                || type == PeptideFragmentIonType.MHNH3_ION) {
             return "-NH3";
         }
 

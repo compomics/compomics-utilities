@@ -6,6 +6,7 @@
  */
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
 import javax.swing.*;
@@ -541,5 +542,122 @@ public class SpectrumPanel extends GraphicsPanel {
         }
 
         return currentColor;
+    }
+
+    /**
+     * Filters the annotations and returns the annotations matching the currently selected types.
+     *
+     * @param annotations                   the annotations to be filtered, the annotations are
+     *                                      assumed to have the following form:
+     *                                          ion type + [ion number] + [charge] + [neutral loss]
+     * @param fragmentIonTypes              the fragment ion types to include, assumed to be one of
+     *                                      the PeptideFragmentIon types, e.g, PeptideFragmentIon.B_ION
+     * @param h2oLossSelected               if true, H2O losses are shown
+     * @param nh3LossSelected               if true, NH3 losses are shown
+     * @param singleChargeSelected          if singly charged fragments are to be included
+     * @param doubleChargeSelected          if double charged fragments are to be included
+     * @param moreThanTwoChargesSelected    if fragments with more than two charges are to be included
+     * @return                              the filtered annotations
+     */
+    public static Vector<DefaultSpectrumAnnotation> filterAnnotations(
+            Vector<DefaultSpectrumAnnotation> annotations,
+            ArrayList<PeptideFragmentIonType> fragmentIonTypes,
+            boolean h2oLossSelected,
+            boolean nh3LossSelected,
+            boolean singleChargeSelected,
+            boolean doubleChargeSelected,
+            boolean moreThanTwoChargesSelected) {
+
+        Vector<DefaultSpectrumAnnotation> filteredAnnotations = new Vector();
+
+        for (int i = 0; i < annotations.size(); i++) {
+            
+            String currentLabel = annotations.get(i).getLabel();
+
+            boolean useAnnotation = true;
+
+            // check ion type
+            if (currentLabel.startsWith("a")) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.A_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.AH2O_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.ANH3_ION))) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("b")) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.B_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.BH2O_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.BNH3_ION))) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("c")) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.C_ION))) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("x")) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.X_ION))) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("y")) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.Y_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.YH2O_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.YNH3_ION))) {
+                    useAnnotation = false;
+                }
+            } else if (currentLabel.startsWith("z")) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.Z_ION))) {
+                    useAnnotation = false;
+                }
+            } else { // other
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.MH_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.MHH2O_ION)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.MHNH3_ION))) {
+                    useAnnotation = false;
+                }
+            }
+
+            // check neutral losses
+            if (useAnnotation) {
+                if (currentLabel.lastIndexOf("-H2O") != -1 || currentLabel.lastIndexOf("-H20") != -1) {
+                    if (!h2oLossSelected) {
+                        useAnnotation = false;
+                    }
+                }
+
+                if (currentLabel.lastIndexOf("-NH3") != -1) {
+                    if (!nh3LossSelected) {
+                        useAnnotation = false;
+                    }
+                }
+            }
+
+            // check ion charge
+            if (useAnnotation) {
+                if (currentLabel.lastIndexOf("+") == -1) {
+
+                    // test needed to be able to show ions in the "other" group
+                    if (currentLabel.startsWith("a") || currentLabel.startsWith("b") || currentLabel.startsWith("c")
+                            || currentLabel.startsWith("x") || currentLabel.startsWith("y") || currentLabel.startsWith("z")) {
+                        if (!singleChargeSelected) {
+                            useAnnotation = false;
+                        }
+                    }
+                } else if (currentLabel.lastIndexOf("+++") != -1) {
+                    if (!moreThanTwoChargesSelected) {
+                        useAnnotation = false;
+                    }
+                } else if (currentLabel.lastIndexOf("++") != -1) {
+                    if (!doubleChargeSelected) {
+                        useAnnotation = false;
+                    }
+                }
+            }
+
+            if (useAnnotation) {
+                filteredAnnotations.add(annotations.get(i));
+            }
+        }
+
+        return filteredAnnotations;
     }
 }

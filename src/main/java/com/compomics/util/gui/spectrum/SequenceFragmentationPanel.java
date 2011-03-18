@@ -77,9 +77,9 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * Creates a new SequenceFragmentationPanel.
      *
-     * @param aSequence            String with the Modified Sequence of an peptide identification.
-     * @param aFragmentIons        ArrayList with Fragmentation ion matches.
-     * @param boolModifiedSequence boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
+     * @param aSequence                  String with the Modified Sequence of an peptide identification.
+     * @param aIonMatches                ArrayList with Fragmentation ion matches.
+     * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
@@ -343,7 +343,7 @@ public class SequenceFragmentationPanel extends JPanel {
             PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
             switch (lFragmentIon.getType()) {
                 //  Yion
-                case PeptideFragmentIon.Y_ION:
+                case Y_ION:
                     // If array unit is not '0', another ion for this fragmentation site is allready found.
                     if (yIons[lFragmentIon.getNumber() - 1] != 0) {
                         // We want to save the most intense.
@@ -355,7 +355,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     yIons[lFragmentIon.getNumber() - 1] = lRatio;
                     break;
                 // Bion
-                case PeptideFragmentIon.B_ION:
+                case B_ION:
                     if (bIons[lFragmentIon.getNumber() - 1] != 0) {
                         if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
                             lRatio = bIons[lFragmentIon.getNumber() - 1];

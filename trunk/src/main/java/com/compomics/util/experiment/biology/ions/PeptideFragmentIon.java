@@ -93,7 +93,7 @@ public class PeptideFragmentIon extends Ion {
      * Construction for a peptide fragment.
      *
      * @param type  the type of ion according to static fields
-     * @param mz    the ion mass
+     * @param mass    the ion mass
      */
     public PeptideFragmentIon(int type, double mass) {
         this.type = type;

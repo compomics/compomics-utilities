@@ -14,6 +14,21 @@ import javax.swing.JEditorPane;
 public class ProteinSequencePane {
 
     /**
+     * Formats the protein sequence such that the covered parts of the sequence
+     * is highlighted. The result is inserted into the provided JEditorPane.
+     *
+     * @param editorPane                the editor pane to add the formatted sequence to
+     * @param cleanSequence             the clean protein sequence, i.e., just the amino acid sequence
+     * @param coverage                  the sequence coverage map with numbers indicating the number
+     *                                  of times a given residue is used, zero means no coverage,
+     *                                  (note: only uses index 1-n)
+     * @return                          the calculated sequence coverage in percent (0-100)
+     */
+    public static double formatProteinSequence(JEditorPane editorPane, String cleanSequence, int[] coverage) {
+        return formatProteinSequence(editorPane, cleanSequence, -1, -1, coverage);
+    }
+
+    /**
      * Formats the protein sequence such that both the covered parts of the sequence
      * and the peptide selected in the peptide table is highlighted. The result is
      * inserted into the provided JEditorPane.
@@ -23,10 +38,15 @@ public class ProteinSequencePane {
      * @param selectedPeptideStart      the start index of the currently selected peptide
      * @param selectedPeptideEnd        the end index if the currently selected peptide
      * @param coverage                  the sequence coverage map with numbers indicating the number
-     *                                  of times a given residue is used, zero means no coverage
+     *                                  of times a given residue is used, zero means no coverage,
+     *                                  (note: only uses index 1-n)
      * @return                          the calculated sequence coverage in percent (0-100)
      */
     public static double formatProteinSequence(JEditorPane editorPane, String cleanSequence, int selectedPeptideStart, int selectedPeptideEnd, int[] coverage) {
+
+        if (cleanSequence.length() != coverage.length - 1) {
+            throw new IllegalArgumentException("The lenght of the coverage map has to be equal to the lenght of the sequence + 1!");
+        }
 
         String sequenceTable = "", currentCellSequence = "";
         boolean selectedPeptide = false, coveredPeptide = false;

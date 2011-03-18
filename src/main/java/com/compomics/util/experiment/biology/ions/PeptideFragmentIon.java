@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**
  * This class models a peptide fragment ion.
@@ -89,24 +88,16 @@ public class PeptideFragmentIon extends Ion {
      * position of the ion in the peptide for peptide ions
      */
     private int number;
-    /**
-     * Ion charge
-     */
-    private Charge charge;
-    /**
-     * Ion intensity.
-     */
-    private Double intensity;
 
     /**
      * Construction for a peptide fragment.
      *
      * @param type  the type of ion according to static fields
-     * @param mz    the ion m/z
+     * @param mz    the ion mass
      */
-    public PeptideFragmentIon(int type, double mz) {
+    public PeptideFragmentIon(int type, double mass) {
         this.type = type;
-        this.theoreticMass = mz;
+        this.theoreticMass = mass;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
     }
 
@@ -122,58 +113,6 @@ public class PeptideFragmentIon extends Ion {
         this.number = number;
         this.theoreticMass = mass;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
-    }
-
-    /**
-     * Constructor for a theoretic peptide fragment with ion number in the sequence
-     *
-     * @param type      the type of ion according to static fields
-     * @param number    the ion number
-     * @param mass      the ion mass
-     * @param charge    the ion charge
-     */
-    public PeptideFragmentIon(int type, int number, double mass, Charge charge) {
-        this.type = type;
-        this.number = number;
-        this.theoreticMass = mass;
-        this.charge = charge;
-        this.familyType = Ion.PEPTIDE_FRAGMENT;
-    }
-
-    /**
-     * Getter for the charge
-     *
-     * @return the ion charge
-     */
-    public Charge getCharge() {
-        return charge;
-    }
-
-    /**
-     * Setter for the charge
-     * 
-     * @param charge
-     */
-    public void setCharge(Charge charge) {
-        this.charge = charge;
-    }
-
-    /**
-     * Getter for the intensity
-     *
-     * @return the intensity
-     */
-    public Double getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Setter for the intensity
-     *
-     * @param intensity
-     */
-    public void setIntensity(Double intensity) {
-        this.intensity = intensity;
     }
 
     /**

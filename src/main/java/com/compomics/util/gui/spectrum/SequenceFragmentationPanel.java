@@ -1,6 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.matches.IonMatch;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,9 +23,9 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private String[] iSequenceComponents;
     /**
-     * The list of fragment ions.
+     * The list of fragment ion matches.
      */
-    private ArrayList<PeptideFragmentIon> iFragmentIons;
+    private ArrayList<IonMatch> iIonMatches;
     /**
      * Double array on b-ions for the sequence components.
      * If '0', no corresponding ions were given for the component.
@@ -77,17 +78,17 @@ public class SequenceFragmentationPanel extends JPanel {
      * Creates a new SequenceFragmentationPanel.
      *
      * @param aSequence            String with the Modified Sequence of an peptide identification.
-     * @param aFragmentIons        ArrayList with Fragmentation objects.
+     * @param aFragmentIons        ArrayList with Fragmentation ion matches.
      * @param boolModifiedSequence boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String aSequence, ArrayList<PeptideFragmentIon> aFragmentIons, boolean boolModifiedSequence) throws HeadlessException {
+    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence) throws HeadlessException {
         super();
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
-        iFragmentIons = aFragmentIons;
+        iIonMatches = aIonMatches;
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
     }
@@ -331,17 +332,15 @@ public class SequenceFragmentationPanel extends JPanel {
 
         // Dig up the most intense matched ion.
         double lMaxIntensity = 0.0;
-        for (int i = 0; i < iFragmentIons.size(); i++) {
-            PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) iFragmentIons.get(i);
-            if (lMaxIntensity < lFragmentIon.getIntensity()) {
-                lMaxIntensity = lFragmentIon.getIntensity();
+        for (IonMatch lMatch : iIonMatches) {
+            if (lMaxIntensity < lMatch.peak.intensity) {
+                lMaxIntensity = lMatch.peak.intensity;
             }
         }
 
-        for (int i = 0; i < iFragmentIons.size(); i++) {
-            PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) iFragmentIons.get(i);
-            double lRatio = lFragmentIon.getIntensity() / lMaxIntensity;
-
+        for (IonMatch lMatch : iIonMatches) {
+            double lRatio = lMatch.peak.intensity / lMaxIntensity;
+            PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
             switch (lFragmentIon.getType()) {
                 //  Yion
                 case PeptideFragmentIon.Y_ION:
@@ -381,13 +380,13 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Set the ArrayList with FragmentIons.
+     * Set the ArrayList with FragmentIon matches.
      * The double[] indexing b and y ion intensities will be recalculated.
      *
-     * @param lFragmentions VeArrayListctor
+     * @param lIonMatches VeArrayListctor
      */
-    public void setFragmentions(ArrayList lFragmentions) {
-        iFragmentIons = lFragmentions;
+    public void setIonMatches(ArrayList lIonMatches) {
+        iIonMatches = lIonMatches;
         normalizeMatchedIons();
     }
 }

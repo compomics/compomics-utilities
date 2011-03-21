@@ -288,7 +288,8 @@ Theoretic fragment ions can be generated using the FragmentFactory and specta ca
 	// Create a spectrum annotator
 	SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
 
-	// Annotate the spectrum with the desired m/z tolerance (mzTolerance) and with the desired minimal peak intensity (intensityMin)
+	// Annotate the spectrum with the desired m/z tolerance (mzTolerance)
+        // and with the desired minimal peak intensity (intensityMin)
 	spectrumAnnotator.annotateSpectrum(peptide, spectrum, mzTolerance, intensityMin);
 
 }}}
@@ -325,7 +326,8 @@ FASTA files can be loaded into the structure. The proteins are loaded into the S
 	// Create a new SequenceDataBase
 	SequenceDataBase db = new SequenceDataBase("SGD", "test");
 
-	// Create a FastaHeaderParser which will be used to parse the fasta header  (here the accession is given surrounded by '|')
+	// Create a FastaHeaderParser which will be used to parse the fasta header
+  // (here the accession is given surrounded by '|')
 	FastaHeaderParser fastaHeaderParser = new FastaHeaderParser("|", "|");
 	// Import your fasta file
 	db.importDataBase(fastaHeaderParser, fastaFile);
@@ -350,10 +352,17 @@ It is possible to save/open compomics experiments. This is achieved by the seria
 
 {{{
 
-	ExperimentIO experimentIO = new ExperimentIO();    // experimentIO will take care of the saving/opening of files
-	experimentIO.save(selectedFile, experiment);       // Saves the experiment "experiment" in the selected file "selected file"
-	experimentIO.getDate(myFile);                      // Returns the date of saving of the experiment stored in myFile
-	experimentIO.loadExperiment(myFile);               // Returns the experiment saved in myFile
+    // experimentIO will take care of the saving/opening of files
+    ExperimentIO experimentIO = new ExperimentIO();   
+ 
+    // Saves the experiment "experiment" in the selected file "selected file"
+    experimentIO.save(selectedFile, experiment);       
+	
+    // Returns the date of saving of the experiment stored in myFile
+    experimentIO.getDate(myFile);
+
+    // Returns the experiment saved in myFile
+    experimentIO.loadExperiment(myFile);               
 
 }}}
 
@@ -381,7 +390,8 @@ Example:
 {{{
 java -cp
 utilities-X.Y.Z.jar com.compomics.util.db.DBAccessorGenerator 
---user TestUser --password BadPassword com.mysql.jdbc.Driver jdbc:mysql://server.com/myDb testTable com.compomics.test.db
+--user TestUser --password BadPassword com.mysql.jdbc.Driver
+jdbc:mysql://server.com/myDb testTable com.compomics.test.db
 }}}
 
 The above command line will create a class called TestTableAccessor in the com.compomics.test.db package that can be used to access the data in the tabled named ´testTable´, using the provided user name and password to access the database.

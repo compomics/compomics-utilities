@@ -391,7 +391,7 @@ Example:
 java -cp
 utilities-X.Y.Z.jar com.compomics.util.db.DBAccessorGenerator 
 --user TestUser --password BadPassword com.mysql.jdbc.Driver
-jdbc:mysql://server.com/myDb testTable com.compomics.test.db
+    jdbc:mysql://server.com/myDb testTable com.compomics.test.db
 }}}
 
 The above command line will create a class called TestTableAccessor in the com.compomics.test.db package that can be used to access the data in the tabled named ´testTable´, using the provided user name and password to access the database.

@@ -37,7 +37,7 @@ public abstract class Quantification extends ExperimentObject {
      * @return      the desired proteins quantification
      */
     public ProteinQuantification getProteinQuantification(int index) {
-        return proteinQuantification.getClass(index);
+        return proteinQuantification.get(index);
     }
 
     /**

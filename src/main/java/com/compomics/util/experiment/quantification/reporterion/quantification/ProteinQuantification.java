@@ -84,4 +84,13 @@ public class ProteinQuantification extends ExperimentObject {
     public ArrayList<PeptideQuantification> getPeptideQuantification() {
         return peptideQuantification;
     }
+
+    /**
+     * Returns a specific peptide quantification
+     * @param index the index of the desired peptide quantification
+     * @return      the desired peptide quantification
+     */
+    public PeptideQuantification getPeptide(int index) {
+        return peptideQuantification.get(index);
+    }
 }

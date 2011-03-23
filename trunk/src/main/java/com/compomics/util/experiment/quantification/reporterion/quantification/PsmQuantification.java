@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Date: Sep 1, 2010
  * Time: 3:53:12 PM
  */
-public class SpectrumQuantification extends ExperimentObject {
+public class PsmQuantification extends ExperimentObject {
 
     /**
      * The corresponding spectrum key
@@ -32,7 +32,7 @@ public class SpectrumQuantification extends ExperimentObject {
      * Constructor for a spectrumQuantification
      * @param spectrum  the corresponding spectrum
      */
-    public SpectrumQuantification(MSnSpectrum spectrum) {
+    public PsmQuantification(MSnSpectrum spectrum) {
         this.spectrumKey = spectrum.getSpectrumKey();
     }
 

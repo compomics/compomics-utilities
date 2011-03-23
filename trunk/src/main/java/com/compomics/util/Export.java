@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import javax.swing.JComponent;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.transcoder.Transcoder;
@@ -19,18 +20,39 @@ import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.transcoder.image.TIFFTranscoder;
 import org.apache.fop.svg.PDFTranscoder;
+import org.jfree.chart.JFreeChart;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- * Includes export methods that are used by the other classes.
+ * Includes export to figure formats for Components and JFreeCharts.
  *
  * @author  Harald Barsnes
  */
 public class Export {
 
     /**
-     * Exports the contents of a Component to an svg, png, gif etc.
+     * Exports the contents of a JFreeChart to an svg, png, pdf etc.
+     *
+     * @param chart chart to export
+     * @param bounds the dimensions of the viewport
+     * @param exportFile the output file
+     * @param imageType the image type
+     * @throws IOException
+     * @throws TranscoderException
+     */
+    public static void exportChart(JFreeChart chart, Rectangle bounds, File exportFile, ImageType imageType)
+            throws IOException, TranscoderException {
+
+        // draw the component in the SVG graphics
+        SVGGraphics2D svgGenerator = drawSvgGraphics(chart, bounds);
+
+        // export the plot
+        exportPlot(exportFile, imageType, svgGenerator);
+    }
+
+    /**
+     * Exports the contents of a Component to an svg, png, pdf etc.
      *
      * @param component component to export
      * @param bounds the dimensions of the viewport
@@ -68,11 +90,11 @@ public class Export {
         svgGenerator.setSVGCanvasSize(bounds.getSize());
 
         // draw the panel in the SVG generator
-//        if (component instanceof JFreeChart) {    // @TODO: re-add the JFreeChart support?
-//            ((JFreeChart) component).draw(svgGenerator, bounds);
-//        } else if (component instanceof Component) {
-            ((Component) component).paintAll(svgGenerator);
-//        }
+        if (component instanceof JFreeChart) {
+            ((JFreeChart) component).draw(svgGenerator, bounds);
+        } else if (component instanceof JComponent) {
+            ((JComponent) component).paintAll(svgGenerator);
+        }
 
         return svgGenerator;
     }

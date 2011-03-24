@@ -143,7 +143,7 @@ public class MassErrorBubblePlot extends JPanel {
             }
         }
 
-        JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", "Mass Error (Da)", xyzDataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", "Mass Error (Da)", xyzDataset, PlotOrientation.VERTICAL, !fragmentIonLabels, true, false);
 
         // fine tune the chart properites
         XYPlot plot = chart.getXYPlot();

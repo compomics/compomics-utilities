@@ -571,7 +571,7 @@ public class SpectrumPanel extends GraphicsPanel {
         Vector<DefaultSpectrumAnnotation> filteredAnnotations = new Vector();
 
         for (int i = 0; i < annotations.size(); i++) {
-            
+
             String currentLabel = annotations.get(i).getLabel();
 
             boolean useAnnotation = true;
@@ -659,5 +659,187 @@ public class SpectrumPanel extends GraphicsPanel {
         }
 
         return filteredAnnotations;
+    }
+
+     /**
+     * Returns the peak color to be used for the given peak label. The
+     * colors used are based on the color coding used in MascotDatfile.
+     *
+     * @param fragmentIonType
+     * @return the peak color
+     */
+    public static Color determineFragmentIonColor(PeptideFragmentIonType fragmentIonType) {
+
+        Color currentColor = Color.GRAY;
+
+        if (fragmentIonType == PeptideFragmentIonType.A_ION) {
+            // turquoise
+            currentColor = new Color(153, 0, 0);
+        } else if (fragmentIonType == PeptideFragmentIonType.AH2O_ION) {
+            // light purple-blue
+            currentColor = new Color(171, 161, 255);
+        } else if (fragmentIonType == PeptideFragmentIonType.ANH3_ION) {
+            // ugly purple pink
+            currentColor = new Color(248, 151, 202);
+        } else if (fragmentIonType == PeptideFragmentIonType.B_ION) {
+            // dark blue
+            currentColor = new Color(0, 0, 255);
+        } else if (fragmentIonType == PeptideFragmentIonType.BH2O_ION) {
+            // nice blue
+            currentColor = new Color(0, 125, 200);
+        } else if (fragmentIonType == PeptideFragmentIonType.BNH3_ION) {
+            // another purple
+            currentColor = new Color(153, 0, 255);
+        } else if (fragmentIonType == PeptideFragmentIonType.C_ION) {
+            // purple blue
+            currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
+        } else if (fragmentIonType == PeptideFragmentIonType.X_ION) {
+            // green
+            currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
+        } else if (fragmentIonType == PeptideFragmentIonType.Y_ION) {
+            // red
+            currentColor = new Color(255, 0, 0);
+        } else if (fragmentIonType == PeptideFragmentIonType.YH2O_ION) {
+            // ??
+            currentColor = new Color(255, 150, 0);
+        } else if (fragmentIonType == PeptideFragmentIonType.YNH3_ION) {
+            // ??
+            currentColor = new Color(255, 0, 150);
+        } else if (fragmentIonType == PeptideFragmentIonType.Z_ION) {
+            // dark green
+            currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
+        } else if (fragmentIonType == PeptideFragmentIonType.MH_ION) {
+            // red
+            currentColor = Color.gray; // Color.red is used in MascotDatFile
+        } else if (fragmentIonType == PeptideFragmentIonType.MHH2O_ION) {
+            // red
+            currentColor = Color.gray; // Color.red is used in MascotDatFile
+        } else if (fragmentIonType == PeptideFragmentIonType.MHNH3_ION) {
+            // red
+            currentColor = Color.gray; // Color.red is used in MascotDatFile
+        } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM) {
+            // grey
+            currentColor = Color.gray;
+        }
+
+        return currentColor;
+    }
+
+    /**
+     * Returns the color to use for the given fragment ion label.
+     *
+     * @param seriesLabel the series label
+     * @return the fragment ion color
+     */
+    public static Color determineFragmentIonColor(String seriesLabel) {
+
+        Color currentColor = Color.GRAY;
+
+        if (seriesLabel.startsWith("a")) {
+
+            // turquoise
+            currentColor = new Color(153, 0, 0);
+
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                // light purple-blue
+                currentColor = new Color(171, 161, 255);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                // ugly purple pink
+                currentColor = new Color(248, 151, 202);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
+            }
+
+        } else if (seriesLabel.startsWith("b")) {
+
+            // dark blue
+            currentColor = new Color(0, 0, 255);
+
+            // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(0, 150, 255);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("b ions - mod.")) {
+                currentColor = new Color(150, 0, 255);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
+            }
+
+        } else if (seriesLabel.startsWith("c")) {
+
+            // purple blue
+            currentColor = new Color(188, 0, 255);
+
+            // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(188, 150, 255);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 0, 255);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
+            }
+
+        } else if (seriesLabel.startsWith("x")) {
+
+            // green
+            currentColor = new Color(78, 200, 0);
+
+            // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(78, 200, 150);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 200, 255);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
+            }
+
+        } else if (seriesLabel.startsWith("y")) {
+
+            // red
+            currentColor = new Color(255, 0, 0);
+
+             // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(255, 150, 0);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("y ions - mod.")) {
+                currentColor = new Color(255, 0, 150);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
+            }
+
+        } else if (seriesLabel.startsWith("z")) {
+
+            // dark green
+            currentColor = new Color(64, 179, 0);
+
+             // change color slightly if a neutral loss is detected
+            if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+                currentColor = new Color(64, 179, 150);
+            } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+                currentColor = new Color(255, 179, 150);
+            }
+
+            // change color slightly if a double charge is detected
+            if(seriesLabel.lastIndexOf("++") != -1){
+                currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
+            }
+
+        }
+
+        return currentColor;
     }
 }

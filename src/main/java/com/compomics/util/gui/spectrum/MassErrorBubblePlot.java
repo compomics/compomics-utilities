@@ -52,6 +52,7 @@ public class MassErrorBubblePlot extends JPanel {
      * @param annotations                   the full list of spectrum annotations
      * @param currentFragmentIons           the currently selected fragment ion types
      * @param currentSpectra                the current spectra
+     * @param massTolerance                 the mass error tolerance
      * @param includeSinglyCharge           if singly charged fragment ions are to be included
      * @param includeDoublyCharge           if doubly charged fragment ions are to be included
      * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
@@ -62,6 +63,7 @@ public class MassErrorBubblePlot extends JPanel {
             ArrayList<SpectrumAnnotationMap> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
+            double massTolerance,
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges,
@@ -154,6 +156,10 @@ public class MassErrorBubblePlot extends JPanel {
                 plot.getRenderer().setSeriesPaint(i, SpectrumPanel.determineFragmentIonColor((String) xyzDataset.getSeriesKey(i)));
             }
         }
+
+        // set the mass error range
+        plot.getRangeAxis().setLowerBound(-massTolerance);
+        plot.getRangeAxis().setUpperBound(massTolerance);
 
         // remove space before/after the domain axis
         plot.getDomainAxis().setUpperMargin(0);

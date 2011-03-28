@@ -142,10 +142,10 @@ public class IntensityHistogram extends JPanel {
             plot.getRangeAxis().setRange(0, plot.getRangeAxis().getUpperBound());
 
             // hide unwanted chart details
-            plot.getRangeAxis().setVisible(false);
-            plot.getDomainAxis().setVisible(false);
-            plot.setRangeGridlinesVisible(false);
-            plot.setDomainGridlinesVisible(false);
+//            plot.getRangeAxis().setVisible(false);
+//            plot.getDomainAxis().setVisible(false);
+//            plot.setRangeGridlinesVisible(false);
+//            plot.setDomainGridlinesVisible(false);
             plot.setOutlineVisible(false);
 
             plot.setBackgroundPaint(Color.WHITE);

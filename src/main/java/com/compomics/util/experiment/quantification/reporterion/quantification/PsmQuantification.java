@@ -58,7 +58,7 @@ public class PsmQuantification extends ExperimentObject {
      * Getter for the spectrum key
      * @return the corresponding spectrum key
      */
-    public String getSpectrumKey() {
+    public String getKey() {
         return spectrumKey;
     }
 

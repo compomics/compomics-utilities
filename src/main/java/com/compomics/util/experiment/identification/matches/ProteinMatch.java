@@ -52,7 +52,7 @@ public class ProteinMatch extends ExperimentObject {
         for (Protein protein : peptideMatch.getTheoreticPeptide().getParentProteins()) {
             theoreticProtein.put(protein.getAccession(), protein);
         }
-        peptideMatches.put(peptideMatch.getTheoreticPeptide().getIndex(), peptideMatch);
+        peptideMatches.put(peptideMatch.getTheoreticPeptide().getKey(), peptideMatch);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ProteinMatch extends ExperimentObject {
      * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) throws Exception {
-        String index = peptideMatch.getTheoreticPeptide().getIndex();
+        String index = peptideMatch.getTheoreticPeptide().getKey();
         if (peptideMatches.get(index) == null) {
             peptideMatches.put(index, peptideMatch);
         } else {

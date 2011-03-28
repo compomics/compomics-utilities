@@ -132,7 +132,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return the index of a peptide
      */
-    public String getIndex() {
+    public String getKey() {
         ArrayList<String> modifications = new ArrayList<String>();
         for (ModificationMatch mod : getModificationMatches()) {
             if (mod.isVariable()) {
@@ -158,6 +158,6 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating if the other peptide is the same.
      */
     public boolean isSameAs(Peptide anOtherPeptide) {
-        return getIndex().equals(anOtherPeptide.getIndex());
+        return getKey().equals(anOtherPeptide.getKey());
     }
 }

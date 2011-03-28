@@ -57,6 +57,7 @@ public class MassErrorPlot extends JPanel {
      * @param annotations                   the full list of spectrum annotations
      * @param currentFragmentIons           the currently selected fragment ion types
      * @param currentSpectrum               the current spectrum
+     * @param massTolerance                 the mass error tolerance
      * @param includeSinglyCharge           if singly charged fragment ions are to be included
      * @param includeDoublyCharge           if doubly charged fragment ions are to be included
      * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
@@ -65,6 +66,7 @@ public class MassErrorPlot extends JPanel {
             SpectrumAnnotationMap annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             MSnSpectrum currentSpectrum,
+            double massTolerance,
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges) {
@@ -147,17 +149,9 @@ public class MassErrorPlot extends JPanel {
             plot.getDomainAxis().setUpperMargin(0);
             plot.getDomainAxis().setLowerMargin(0);
 
-            // make sure that the chart as a symmetrical y-axis
-            ValueAxis rangeAxis = plot.getRangeAxis();
-
-            double lowerBound = rangeAxis.getLowerBound();
-            double upperBound = rangeAxis.getUpperBound();
-
-            if (Math.abs(lowerBound) > Math.abs(upperBound)) {
-                rangeAxis.setUpperBound(Math.abs(lowerBound));
-            } else {
-                rangeAxis.setLowerBound(-Math.abs(upperBound));
-            }
+            // set the mass error range
+            plot.getRangeAxis().setLowerBound(-massTolerance);
+            plot.getRangeAxis().setUpperBound(massTolerance);
 
             plot.setRangeGridlinePaint(Color.black);
 

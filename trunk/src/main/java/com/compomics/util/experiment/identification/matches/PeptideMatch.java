@@ -47,8 +47,8 @@ public class PeptideMatch extends ExperimentObject {
      *
      * @return the peptideMatch id
      */
-    public String getId() {
-        return theoreticPeptide.getIndex();
+    public String getKey() {
+        return theoreticPeptide.getKey();
     }
 
     /**
@@ -69,7 +69,7 @@ public class PeptideMatch extends ExperimentObject {
     public PeptideMatch(Peptide peptide, SpectrumMatch spectrumMatch) {
         theoreticPeptide = peptide;
         mainMatch = spectrumMatch;
-        String index = spectrumMatch.getSpectrumKey();
+        String index = spectrumMatch.getKey();
         spectrumMatches.put(index, spectrumMatch);
     }
 
@@ -115,7 +115,7 @@ public class PeptideMatch extends ExperimentObject {
      * @return key of the main spectrum matched
      */
     public String getMainSpectrumKey() {
-        return mainMatch.getSpectrumKey();
+        return mainMatch.getKey();
     }
 
     /**
@@ -133,7 +133,7 @@ public class PeptideMatch extends ExperimentObject {
      * @param spectrumMatch a spectrum match
      */
     public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws Exception {
-        String index = spectrumMatch.getSpectrumKey();
+        String index = spectrumMatch.getKey();
         if (spectrumMatches.get(index) == null) {
             spectrumMatches.put(index, spectrumMatch);
         } else {

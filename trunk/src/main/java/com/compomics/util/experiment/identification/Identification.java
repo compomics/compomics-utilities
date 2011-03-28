@@ -98,7 +98,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws Exception exception thrown when one tries to assign more than one identification per advocate to the same spectrum
      */
     public void addSpectrumMatch(SpectrumMatch newMatch) throws Exception {
-        String proteinKey, peptideKey, spectrumKey = newMatch.getSpectrumKey();
+        String proteinKey, peptideKey, spectrumKey = newMatch.getKey();
         Peptide peptide;
         SpectrumMatch oldMatch = spectrumIdentification.get(spectrumKey);
         if (!spectrumIdentification.containsKey(spectrumKey)) {
@@ -111,7 +111,7 @@ public abstract class Identification extends ExperimentObject {
         }
         for (int searchEngine : newMatch.getAdvocates()) {
             peptide = newMatch.getFirstHit(searchEngine).getPeptide();
-            peptideKey = peptide.getIndex();
+            peptideKey = peptide.getKey();
             if (peptideIdentification.containsKey(peptideKey) && !peptideIdentification.get(peptideKey).getSpectrumMatches().containsKey(spectrumKey)) {
                 peptideIdentification.get(peptideKey).addSpectrumMatch(spectrumIdentification.get(spectrumKey));
             } else if (!peptideIdentification.containsKey(peptideKey)) {

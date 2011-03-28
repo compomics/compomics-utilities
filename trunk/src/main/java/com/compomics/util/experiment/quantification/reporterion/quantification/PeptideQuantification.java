@@ -24,7 +24,7 @@ public class PeptideQuantification extends ExperimentObject {
     /**
      * The corresponding spectrum quantification
      */
-    private ArrayList<PsmQuantification> psmQuantification = new ArrayList<PsmQuantification>();
+    private HashMap<String, PsmQuantification> psmQuantification = new HashMap<String, PsmQuantification>();
 
     /**
      * The estimated ratios
@@ -34,9 +34,16 @@ public class PeptideQuantification extends ExperimentObject {
     /**
      * Constructor for the peptide quantification
      * @param peptideMatch              the identification peptide match
+     */
+    public PeptideQuantification(PeptideMatch peptideMatch) {
+        this.peptideMatch = peptideMatch;
+    }
+    /**
+     * Constructor for the peptide quantification
+     * @param peptideMatch              the identification peptide match
      * @param spectrumQuantification    the corresponding spectrum quantification
      */
-    public PeptideQuantification(PeptideMatch peptideMatch, ArrayList<PsmQuantification> psmQuantification) {
+    public PeptideQuantification(PeptideMatch peptideMatch, HashMap<String, PsmQuantification> psmQuantification) {
         this.peptideMatch = peptideMatch;
         this.psmQuantification = psmQuantification;
     }
@@ -47,7 +54,7 @@ public class PeptideQuantification extends ExperimentObject {
      * @param spectrumQuantification    the corresponding spectrum quantification
      * @param ratios                    the estimated ratios
      */
-    public PeptideQuantification(PeptideMatch peptideMatch, ArrayList<PsmQuantification> psmQuantification, HashMap<Integer, Ratio> ratios) {
+    public PeptideQuantification(PeptideMatch peptideMatch, HashMap<String, PsmQuantification> psmQuantification, HashMap<Integer, Ratio> ratios) {
         this.peptideMatch = peptideMatch;
         this.psmQuantification = psmQuantification;
         this.ratios = ratios;
@@ -81,15 +88,31 @@ public class PeptideQuantification extends ExperimentObject {
      * Getter for the corresponding spectrum quantification
      * @return List of spectrum quantification
      */
-    public ArrayList<PsmQuantification> getPsmQuantification() {
+    public HashMap<String, PsmQuantification> getPsmQuantification() {
         return psmQuantification;
     }
     /**
      * returns a specific psm quantification
-     * @param index the index of the quantification in the list
+     * @param index the index of the quantification 
      * @return the desired psm
      */
-    public PsmQuantification getPsm(int index) {
+    public PsmQuantification getPsm(String index) {
         return psmQuantification.get(index);
+    }
+
+    /**
+     * Adds a new psm quantification in the psm quantification map
+     * @param newPsmQuantification the new psm quantification
+     */
+    public void addPsmQuantification(PsmQuantification newPsmQuantification) {
+        psmQuantification.put(newPsmQuantification.getKey(), newPsmQuantification);
+    }
+
+    /**
+     * Returns the key of the peptide quantification
+     * @return the key of the peptide quantification
+     */
+    public String getKey() {
+        return peptideMatch.getKey();
     }
 }

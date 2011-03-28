@@ -3,7 +3,7 @@ package com.compomics.util.experiment.quantification;
 import com.compomics.util.experiment.quantification.reporterion.quantification.ProteinQuantification;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class contains quantification results.
@@ -21,13 +21,13 @@ public abstract class Quantification extends ExperimentObject {
     /**
      * The protein quantification
      */
-    protected ArrayList<ProteinQuantification> proteinQuantification = new ArrayList<ProteinQuantification>();
+    protected HashMap<String, ProteinQuantification> proteinQuantification = new HashMap<String, ProteinQuantification>();
 
     /**
      * This method retrieves the quantification result at the protein level
      * @return quantification at the protein level
      */
-    public ArrayList<ProteinQuantification> getProteinQuantification() {
+    public HashMap<String, ProteinQuantification> getProteinQuantification() {
         return proteinQuantification;
     }
 
@@ -36,7 +36,7 @@ public abstract class Quantification extends ExperimentObject {
      * @param index the index of the desired protein quantification
      * @return      the desired proteins quantification
      */
-    public ProteinQuantification getProteinQuantification(int index) {
+    public ProteinQuantification getProteinQuantification(String index) {
         return proteinQuantification.get(index);
     }
 
@@ -45,15 +45,7 @@ public abstract class Quantification extends ExperimentObject {
      * @param aProteinQuantification    The corresponding protein quantification
      */
     public void addProteinQuantification(ProteinQuantification aProteinQuantification) {
-        proteinQuantification.add(aProteinQuantification);
-    }
-
-    /**
-     * Add proteins quantification to the experiment
-     * @param aProteinQuantification    The corresponding list of protein quantification
-     */
-    public void addProteinQuantification(ArrayList<ProteinQuantification> aProteinQuantification) {
-        proteinQuantification.addAll(aProteinQuantification);
+        proteinQuantification.put(aProteinQuantification.getProteinMatch().getKey(), aProteinQuantification);
     }
 
     /**

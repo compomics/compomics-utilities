@@ -92,7 +92,7 @@ public class SpectrumMatch extends ExperimentObject {
      *
      * @return the matched spectrum key
      */
-    public String getSpectrumKey() {
+    public String getKey() {
         return spectrumKey;
     }
 
@@ -123,7 +123,7 @@ public class SpectrumMatch extends ExperimentObject {
      */
     public void addFirstHit(int otherAdvocateId, PeptideAssumption otherAssumption) throws Exception {
         if (firstHits.get(otherAdvocateId) != null) {
-            if (!firstHits.get(otherAdvocateId).getPeptide().getIndex().equals(otherAssumption.getPeptide().getIndex())) {
+            if (!firstHits.get(otherAdvocateId).getPeptide().getKey().equals(otherAssumption.getPeptide().getKey())) {
                 throw new Exception("Two identifications by the same search engine for a single spectrum");
             } else {
                 return;

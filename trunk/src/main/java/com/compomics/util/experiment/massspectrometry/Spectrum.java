@@ -63,7 +63,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return  the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
-        return spectrumKey.substring(spectrumKey.indexOf("_"));
+        return spectrumKey.substring(spectrumKey.indexOf("_")+1);
     }
 
     /**

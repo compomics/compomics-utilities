@@ -93,10 +93,9 @@ public class MSnSpectrum extends Spectrum {
      * @return the peak list as mgf bloc
      */
     public String asMgf() {
-        double mass = (precursor.getMz()+precursor.getCharge().value)/precursor.getCharge().value;
         String result = "BEGIN IONS\n\n";
         result += "TITLE=" + spectrumTitle + "\n";
-        result += "PEPMASS=" + mass + "\n";
+        result += "PEPMASS=" + precursor.getMz() + "\n";
         result += "RTINSECONDS=" + precursor.getRt() + "\n";
         result += "CHARGE=" + precursor.getCharge().toString() + "\n\n";
 

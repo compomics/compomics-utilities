@@ -76,7 +76,7 @@ public class PeptideAssumption extends ExperimentObject {
         this.eValue = eValue;
         this.file = identificationFile;
         this.c13 = (new Double(measuredMass-peptide.getMass())).intValue();
-        this.ppmMassError = 1000000*(measuredMass-c13-peptide.getMass())/peptide.getMass();
+        this.ppmMassError = Math.abs(1000000*(measuredMass-c13-peptide.getMass())/peptide.getMass());
     }
 
     /**

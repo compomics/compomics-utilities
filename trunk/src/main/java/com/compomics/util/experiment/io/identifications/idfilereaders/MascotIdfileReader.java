@@ -21,7 +21,6 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.refinementparameters.C13;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 
 import java.io.File;
@@ -181,13 +180,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      */
     private SpectrumMatch getSpectrumMatch(PeptideHit aPeptideHit, int query, boolean decoySection) {
         boolean c13 = false;
-        double deltaMass;
-        if (Math.abs(aPeptideHit.getDeltaMass()) > 0.5) {
-            deltaMass = 1000000 * Math.abs(aPeptideHit.getDeltaMass() - 1) / aPeptideHit.getPeptideMr();
-            c13 = true;
-        } else {
-            deltaMass = 1000000 * Math.abs(aPeptideHit.getDeltaMass()) / aPeptideHit.getPeptideMr();
-        }
         Double measuredMass = aPeptideHit.getPeptideMr() + aPeptideHit.getDeltaMass();
         String measuredCharge = iMascotDatfile.getQuery(query).getChargeString();
         String sign = String.valueOf(measuredCharge.charAt(1));
@@ -245,12 +237,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
 
         Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);
-        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, deltaMass, mascotEValue, getFileName());
-        C13 c13Param = new C13(c13);
-        currentAssumption.addUrParam(c13Param);
+        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, measuredMass, mascotEValue, getFileName());
         MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
         currentAssumption.addUrParam(scoreParam);
         // Secondary hits are not implemented yet
         return new SpectrumMatch(spectrumKey, currentAssumption);
     }
-}
+        }

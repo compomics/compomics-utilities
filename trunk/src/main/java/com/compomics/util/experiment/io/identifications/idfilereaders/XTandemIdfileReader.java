@@ -201,8 +201,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             foundModifications.add(new ModificationMatch(currentPTM, true, currentModification.getNumber()));
                         }
                         peptide = new com.compomics.util.experiment.biology.Peptide(sequence, bestPeptide.getDomainMh(), proteins, foundModifications);
-                        deltaMass = Math.abs(1000000 * (measuredMass - bestPeptide.getDomainMh()) / bestPeptide.getDomainMh());
-                        PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, deltaMass, eValue, getFileName());
+                        PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, measuredMass, eValue, getFileName());
                         // secondary hits are not implemented yet
                         SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey, currentAssumption);
                         foundPeptides.add(currentMatch);

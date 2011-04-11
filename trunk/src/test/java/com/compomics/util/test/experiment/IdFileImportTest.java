@@ -43,7 +43,7 @@ public class IdFileImportTest extends TestCase {
         try {
             ptmFactory.importModifications(modificationFile);
             ptmFactory.importModifications(userModificationFile);
-            IdfileReader reader = idfileReaderFactory.getFileReader(xTandemFile);
+            IdfileReader reader = idfileReaderFactory.getFileReader(mascotFile);
             HashSet<SpectrumMatch> matches;
             matches = reader.getAllSpectrumMatches();
 

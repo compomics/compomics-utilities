@@ -30,13 +30,21 @@ public class PeptideAssumption extends ExperimentObject {
      */
     private int advocate;
     /**
-     * The precursor mass error
+     * The measured mass of the precursor ion (according to the search engine)
      */
-    private double deltaMass;
+    private double measuredMass;
     /**
      * The e-value
      */
     private double eValue;
+    /**
+     * The number of 1Da intervals between the measured mass and the theoretical mass
+     */
+    private int c13;
+    /**
+     * The precursor mass deviation in ppm;
+     */
+    private double ppmMassError;
     /**
      * The fragment ion annotation
      */
@@ -56,17 +64,19 @@ public class PeptideAssumption extends ExperimentObject {
      * @param aPeptide              the theoretic peptide
      * @param rank                  the identification rank
      * @param advocate              the advocate used
-     * @param deltaMass             the peptide mass error
+     * @param deltaMass             the precursor measured mass
      * @param eValue                the e-value
      * @param identificationFile    the identification file
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double deltaMass, double eValue, String identificationFile) {
+    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double measuredMass, double eValue, String identificationFile) {
         this.peptide = aPeptide;
         this.rank = rank;
         this.advocate = advocate;
-        this.deltaMass = deltaMass;
+        this.measuredMass = measuredMass;
         this.eValue = eValue;
         this.file = identificationFile;
+        this.c13 = (new Double(measuredMass-peptide.getMass())).intValue();
+        this.ppmMassError = 1000000*(measuredMass-c13-peptide.getMass())/peptide.getMass();
     }
 
     /**
@@ -97,12 +107,24 @@ public class PeptideAssumption extends ExperimentObject {
     }
 
     /**
+     * Returns the measured precursor mass according to the search engine
+     * @return the measured precursor mass according to the search engine
+     */
+    public double getMeasuredMass() {
+        return measuredMass;
+    }
+
+    public int getC13() {
+        return c13;
+    }
+
+    /**
      * returns the precursor mass error (in ppm)
      *
      * @return the precursor mass error (in ppm)
      */
     public double getDeltaMass() {
-        return deltaMass;
+        return ppmMassError;
     }
 
     /**

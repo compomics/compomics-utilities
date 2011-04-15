@@ -719,7 +719,9 @@ public abstract class GraphicsPanel extends JPanel {
                 xTemp[3] = start + iXPadding;
                 yTemp[3] = this.getHeight() - currentPadding;
 
-                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+                if (start >= iXAxisMin && end <= iYAxisMax) {
+                    g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+                }
 
                 // draw the label
                 if (currentReferenceArea.drawLabel()) {
@@ -801,7 +803,9 @@ public abstract class GraphicsPanel extends JPanel {
                 xTemp[3] = this.getWidth() - currentPadding;
                 yTemp[3] = this.getHeight() - start - currentPadding;
 
-                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+                if (start >= iYAxisMin && end <= iYAxisMax) {
+                    g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+                }
 
                 // draw the label
                 if (currentReferenceArea.drawLabel()) {
@@ -1392,6 +1396,8 @@ public abstract class GraphicsPanel extends JPanel {
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
 
+        //this.setFont(new Font(this.getFont().getName(), this.getFont().getStyle(), 18));
+
         // find the scale unit
         double delta = aMax - aMin;
         iXScaleUnit = delta / aXAxisWidth; // note: do not alter! also used when drawing the peaks
@@ -1433,7 +1439,7 @@ public abstract class GraphicsPanel extends JPanel {
                 int xDistance = ((this.getWidth() - (iXPadding * 2)) / 4) - (precLength / 2);
                 int fromBottom = fm.getAscent() / 2;
                 Font oldFont = this.getFont();
-
+                
                 int smallFontCorrection = 0;
                 int yHeight = this.getHeight() - fromBottom;
                 int xAdditionForResolution = precLength + 15;

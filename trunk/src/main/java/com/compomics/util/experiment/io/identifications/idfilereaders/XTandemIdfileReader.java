@@ -197,8 +197,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             String[] parsedName = currentModification.getName().split("@");
                             double mass = new Double(parsedName[0]);
                             String aa = parsedName[1];
+                            int location = new Integer(currentModification.getLocation()) - new Integer(bestPeptide.getDomainStart()) + 1;
                             currentPTM = ptmFactory.getPTM(mass, aa, sequence);
-                            foundModifications.add(new ModificationMatch(currentPTM, true, currentModification.getNumber()));
+                            foundModifications.add(new ModificationMatch(currentPTM, true, location));
                         }
                         peptide = new com.compomics.util.experiment.biology.Peptide(sequence, bestPeptide.getDomainMh(), proteins, foundModifications);
                         PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.XTANDEM, measuredMass, eValue, getFileName());

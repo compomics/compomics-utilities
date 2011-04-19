@@ -23,8 +23,8 @@ import java.util.HashSet;
 public class IdFileImportTest extends TestCase {
 
     private static final String MASCOT_FILE = "testFiles/orbitrap001769.dat";
-    private static final String OMSSA_FILE = "testFiles/orbitrap001769.omx";
-    private static final String XTANDEM_FILE = "testFiles/orbitrap001764.xml";
+    private static final String OMSSA_FILE = "testFiles/velos004096_HR_new.omx";
+    private static final String XTANDEM_FILE = "testFiles/velos004096_HR_new.t.xml";
     private static final String MODIFICATION_FILE = "exampleFiles/experiment/mods.xml";
     private static final String USER_MODIFICATION_FILE = "exampleFiles/experiment/usermods.xml";
     private Ms2Identification identification = new Ms2Identification();
@@ -39,11 +39,11 @@ public class IdFileImportTest extends TestCase {
         File omssaFile = new File(OMSSA_FILE);
         File xTandemFile = new File(XTANDEM_FILE);
 
-/**
+
         try {
             ptmFactory.importModifications(modificationFile);
             ptmFactory.importModifications(userModificationFile);
-            IdfileReader reader = idfileReaderFactory.getFileReader(mascotFile);
+            IdfileReader reader = idfileReaderFactory.getFileReader(xTandemFile);
             HashSet<SpectrumMatch> matches;
             matches = reader.getAllSpectrumMatches();
 
@@ -60,6 +60,6 @@ public class IdFileImportTest extends TestCase {
         } catch (Exception e) {
             int debug = 0;
         }
-**/
+
     }
 }

@@ -37,6 +37,10 @@ public class PTMFactory {
      */
     private HashMap<Integer, PTM> indexToPTMMap = new HashMap<Integer, PTM>();
     /**
+     * A map linking modification names to their index
+     */
+    private HashMap<String, Integer> nameToIndexMap = new HashMap<String, Integer>();
+    /**
      * The set of imported PTM
      */
     private HashSet<PTM> ptmSet = new HashSet<PTM>();
@@ -67,6 +71,15 @@ public class PTMFactory {
      */
     public PTM getPTM(int index) {
         return indexToPTMMap.get(index);
+    }
+
+    /**
+     * Returns the index of the desired modification
+     * @param modificationName  the desired modification name to lower case
+     * @return the corresponding index
+     */
+    public Integer getPTMIndex(String modificationName) {
+        return nameToIndexMap.get(modificationName);
     }
 
     /**
@@ -260,6 +273,7 @@ public class PTMFactory {
         ptmSet.add(currentPTM);
         mascotNameToPTMMap.put("", currentPTM);
         indexToPTMMap.put(number, currentPTM);
+        nameToIndexMap.put(currentPTM.getName().toLowerCase(), number);
     }
 
     /**

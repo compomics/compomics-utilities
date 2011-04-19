@@ -64,7 +64,7 @@ public class PeptideAssumption extends ExperimentObject {
      * @param aPeptide              the theoretic peptide
      * @param rank                  the identification rank
      * @param advocate              the advocate used
-     * @param deltaMass             the precursor measured mass
+     * @param measuredMass             the precursor measured mass
      * @param eValue                the e-value
      * @param identificationFile    the identification file
      */

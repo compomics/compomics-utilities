@@ -199,7 +199,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                             for (MSModHit msModHit : msModHits) {
                                 int msMod = msModHit.MSModHit_modtype.MSMod;
                                 currentPTM = ptmFactory.getPTM(msMod);
-                                int location = msModHit.MSModHit_site;
+                                int location = msModHit.MSModHit_site+1;
                                 modificationsFound.add(new ModificationMatch(currentPTM, true, location));
                             }
                             // inspect fixed modifications

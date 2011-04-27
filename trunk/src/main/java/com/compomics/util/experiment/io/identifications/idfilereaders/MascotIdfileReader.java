@@ -205,8 +205,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 if (correspondingPTM != null) {
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
                 } else {
-                    // User dependant code ! Do not submit!
-                    correspondingPTM = getModification(handledModification.getType(), handledModification.getMass());
                     foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
                 }
             }
@@ -244,28 +242,5 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         currentAssumption.addUrParam(scoreParam);
         // Secondary hits are not implemented yet
         return new SpectrumMatch(spectrumKey, currentAssumption);
-    }
-
-    /**
-     * User dependant method! Do not commit!
-     */
-    private PTM getModification(String modificationName, double modMass) {
-        if (modificationName.equals("Phosphorylation")) {
-            return new PTM(PTM.MODAA, "Phosphorylation", 79.966331, new String[] {"T", "S", "Y"});
-        } else if (modificationName.equals("Oxidation")) {
-            return new PTM(PTM.MODAA, "Oxidation of M", 15.994915, new String[] {"M"});
-        } else if (modificationName.equals("Carbamidomethyl")) {
-                                return new PTM(PTM.MODAA, "Carbamidomethylation", 57.021464, new String[] {"C"});
-        } else if (modificationName.equals("Acetyl")) {
-                                return new PTM(PTM.MODAA, "Acetylation", 42.010565, new String[] {"K", "["});
-        } else if (modificationName.equals("Gln->pyro-Glu")) {
-            return new PTM(PTM.MODAA, "Pyro Glu", -17.026549, new String[] {"Q"});
-        } else if (modificationName.equals("Glu->pyro-Glu")) {
-            return new PTM(PTM.MODAA, "Pyro Glu", -18.010565, new String[] {"E"});
-        } else if (modificationName.equals("iTRAQ4plex")) {
-            return new PTM(PTM.MODAA, "iTRAQ", 144.105918, new String[]{"K", "[", "Y"});
-        } else {
-            return new PTM(PTM.MODMAX, modificationName, modMass, new String[] {"x"});
-        }
     }
 }

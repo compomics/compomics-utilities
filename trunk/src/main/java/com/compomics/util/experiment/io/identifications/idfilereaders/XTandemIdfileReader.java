@@ -215,4 +215,3 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return foundPeptides;
     }
 }
-

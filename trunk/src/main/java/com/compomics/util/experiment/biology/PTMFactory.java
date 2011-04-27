@@ -74,6 +74,15 @@ public class PTMFactory {
     }
 
     /**
+     * Returns the PTM indexed by its name
+     * @param name  the name of the desired PTM
+     * @return      The desired PTM
+     */
+    public PTM getPTM(String name) {
+        return indexToPTMMap.get(nameToIndexMap.get(name));
+    }
+
+    /**
      * Returns the index of the desired modification
      * @param modificationName  the desired modification name to lower case
      * @return the corresponding index

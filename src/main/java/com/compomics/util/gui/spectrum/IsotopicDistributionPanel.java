@@ -172,6 +172,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param dataPointAndLineColor the color to use for the data points and lines
      * @param areaUnderCurveColor   the color to use for the area under the curve
      * @param labelDifference       the number of neutrons to add due to the label
+     * @throws IOException
      */
     public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor, int labelDifference) throws IOException {
 

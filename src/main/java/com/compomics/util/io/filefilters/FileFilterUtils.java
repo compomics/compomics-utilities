@@ -66,6 +66,12 @@ public class FileFilterUtils {
     public final static String TIFF = "TIFF";
     public final static String JPG = "JPG";
     public final static String JPEG = "JPEG";
+    public final static String FASTA = "FASTA";
+    public final static String fasta = "fasta";
+    public final static String FAS = "FAS";
+    public final static String fas = "fas";
+    public final static String PEFF = "PEFF";
+    public final static String peff = "peff";
 
     /**
      * Get the extension of a file.

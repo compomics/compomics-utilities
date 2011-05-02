@@ -6,6 +6,7 @@ import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAn
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,9 +14,14 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.jfree.ui.Layer;
+import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.TextAnchor;
 
 /**
  * Creates a MassErrorBubblePlot displaying the mz values vs the mass error
@@ -25,6 +31,30 @@ import org.jfree.data.xy.DefaultXYZDataset;
  */
 public class MassErrorBubblePlot extends JPanel {
 
+    /**
+     * The default fragment ion marker color.
+     */
+    private static Color defaultMarkerColor = new Color(0, 0, 255, 25); // light blue
+    /**
+     * The default b ion marker color.
+     */
+    private static Color bFragmentIonColor = new Color(0, 0, 255, 25); // light  blue
+    /**
+     * The default y ion marker color.
+     */
+    private static Color yFragmentIonColor = new Color(0, 255, 0, 25); // light green
+    /**
+     * The default other marker color.
+     */
+    private static Color otherFragmentIonColor = new Color(255, 0, 0, 25); // light red
+    /**
+     * The default visible alpha level.
+     */
+    public static final float DEFAULT_VISIBLE_MARKER_ALPHA = 1.0f;
+    /**
+     * The default non-visible alpha level.
+     */
+    public static final float DEFAULT_NON_VISIBLE_MARKER_ALPHA = 0.0f;
     /**
      * The currently selected fragment ion types.
      */
@@ -58,6 +88,7 @@ public class MassErrorBubblePlot extends JPanel {
      * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
      * @param fragmentIonLabels             if true, the fragment ion type is used as the data series key,
      *                                      otherwise the psm index is used
+     * @param addMarkers                    if true interval markers for the fragment ions will be shown
      */
     public MassErrorBubblePlot(
             ArrayList<SpectrumAnnotationMap> annotations,
@@ -67,7 +98,8 @@ public class MassErrorBubblePlot extends JPanel {
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges,
-            boolean fragmentIonLabels) {
+            boolean fragmentIonLabels,
+            boolean addMarkers) {
         super();
 
         setOpaque(false);
@@ -81,6 +113,9 @@ public class MassErrorBubblePlot extends JPanel {
         this.includeMoreThanTwoCharges = includeMoreThanTwoCharges;
 
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
+
+        HashMap<String, ArrayList<XYZDataPoint>> fragmentIonDataset =
+                            new HashMap<String, ArrayList<XYZDataPoint>>();
 
         for (int j = 0; j < annotations.size(); j++) {
 
@@ -115,13 +150,13 @@ public class MassErrorBubblePlot extends JPanel {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
 
-                        if (data.get(ionMatch.getPeakAnnotation()) != null) {
-                            data.get(ionMatch.getPeakAnnotation()).add(
+                        if (data.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")") != null) {
+                            data.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")").add(
                                     new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), ionMatch.peak.intensity / totalIntensity));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), ionMatch.peak.intensity / totalIntensity));
-                            data.put(ionMatch.getPeakAnnotation(), temp);
+                            data.put(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")", temp);
                         }
                     }
 
@@ -131,6 +166,7 @@ public class MassErrorBubblePlot extends JPanel {
 
                     double[][] dataXYZ = new double[3][currentlyUsedIonMatches.size()];
 
+
                     for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
@@ -138,6 +174,15 @@ public class MassErrorBubblePlot extends JPanel {
                         dataXYZ[0][i] = ionMatch.peak.mz;
                         dataXYZ[1][i] = ionMatch.getError();
                         dataXYZ[2][i] = ionMatch.peak.intensity / totalIntensity;
+
+                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
+                            fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
+                                    new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), ionMatch.peak.intensity / totalIntensity));
+                        } else {
+                            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
+                            temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), ionMatch.peak.intensity / totalIntensity));
+                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(), temp);
+                        }
                     }
 
                     xyzDataset.addSeries("" + (j + 1), dataXYZ);
@@ -146,6 +191,15 @@ public class MassErrorBubblePlot extends JPanel {
         }
 
         JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", "Mass Error (Da)", xyzDataset, PlotOrientation.VERTICAL, !fragmentIonLabels, true, false);
+
+        if (chart.getLegend() != null) {
+            chart.getLegend().setPosition(RectangleEdge.RIGHT);
+        }
+
+        // add fragment ion bar highlighters
+        if (addMarkers) {
+            addFragmentIonTypeMarkers(fragmentIonDataset, chart, true);
+        }
 
         // fine tune the chart properites
         XYPlot plot = chart.getXYPlot();
@@ -161,11 +215,17 @@ public class MassErrorBubblePlot extends JPanel {
         plot.getRangeAxis().setLowerBound(-massTolerance);
         plot.getRangeAxis().setUpperBound(massTolerance);
 
+        plot.getDomainAxis().setLowerBound(0);
+        plot.getDomainAxis().setUpperBound(plot.getDomainAxis().getUpperBound() + 100);
+
         // remove space before/after the domain axis
         plot.getDomainAxis().setUpperMargin(0);
         plot.getDomainAxis().setLowerMargin(0);
 
         plot.setRangeGridlinePaint(Color.black);
+
+        // make semi see through
+        plot.setForegroundAlpha(0.5f);
 
         // set background color
         chart.getPlot().setBackgroundPaint(Color.WHITE);
@@ -175,6 +235,99 @@ public class MassErrorBubblePlot extends JPanel {
         chartPanel.setBackground(Color.WHITE);
 
         this.add(chartPanel);
+    }
+
+    /**
+     * Adds interval markers for all the fragment ion types.
+     *
+     * @param data          the data to get the interval markers from
+     * @param chart         the chart to add the markers to
+     * @param showMarkers   if true interval markers for the fragment ions will be added
+     */
+    public static void addFragmentIonTypeMarkers(HashMap<String, ArrayList<XYZDataPoint>> data, JFreeChart chart, boolean showMarkers) {
+
+        int horizontalFontPadding = 13;
+
+        Iterator<String> iterator = data.keySet().iterator();
+
+        // iterate the data and add one interval marker for each fragment ion type
+        while (iterator.hasNext()) {
+
+            String fragmentIonType = iterator.next();
+
+            // get the mz value of the current fragment ion type
+            ArrayList<XYZDataPoint> dataPoints = data.get(fragmentIonType);
+            XYZDataPoint currentDataPoint = dataPoints.get(0);
+            double currentXValue = currentDataPoint.getX();
+
+            // create the interval marker
+            IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
+            intervalMarker.setLabel(fragmentIonType);
+            intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+            intervalMarker.setLabelPaint(Color.GRAY);
+            intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+
+            // set the fragment ion marker color
+            if (fragmentIonType.startsWith("b")) {
+                intervalMarker.setPaint(bFragmentIonColor);
+            } else if (fragmentIonType.startsWith("y")) {
+                intervalMarker.setPaint(yFragmentIonColor);
+            } else {
+                intervalMarker.setPaint(otherFragmentIonColor);
+            }
+
+            // make the marker visible or not
+            if (showMarkers) {
+                intervalMarker.setAlpha(DEFAULT_VISIBLE_MARKER_ALPHA);
+            } else {
+                intervalMarker.setAlpha(DEFAULT_NON_VISIBLE_MARKER_ALPHA);
+            }
+
+            // set the horizontal location of the markers label
+            // this is need so that not all labels appear on top of each other
+            if (fragmentIonType.startsWith("y")) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("Prec") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
+
+                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
+                }
+
+                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 6, 0, horizontalFontPadding * 6, 0));
+                }
+            }
+
+            if (fragmentIonType.startsWith("i")) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
+            }
+
+            if (fragmentIonType.lastIndexOf("++") != -1) {
+                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
+
+                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
+                }
+
+                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
+                }
+            }
+
+            // add the interval marker to the plot
+            ((XYPlot) chart.getPlot()).addDomainMarker(intervalMarker, Layer.BACKGROUND);
+        }
     }
 
     /**
@@ -246,8 +399,6 @@ public class MassErrorBubblePlot extends JPanel {
         java.util.Collections.sort(sortedKeys);
 
         DefaultXYZDataset dataset = new DefaultXYZDataset();
-
-        HashMap<Double, ArrayList<Double>> xAndYValues = new HashMap<Double, ArrayList<Double>>();
 
         for (int j = 0; j < sortedKeys.size(); j++) {
 

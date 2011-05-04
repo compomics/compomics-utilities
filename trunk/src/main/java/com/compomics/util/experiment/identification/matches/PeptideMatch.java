@@ -169,7 +169,13 @@ public class PeptideMatch extends ExperimentObject {
      * @return spectrum count
      */
     public int getSpectrumCount() {
-        return spectrumMatches.size();
+        int result = 0;
+        for (SpectrumMatch spectrumMatch : spectrumMatches.values()) {
+            if (spectrumMatch.getBestAssumption().getPeptide().isSameAs(theoreticPeptide)) {
+                result++;
+            }
+        }
+        return result;
     }
 
     /**

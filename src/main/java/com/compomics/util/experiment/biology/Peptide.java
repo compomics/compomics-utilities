@@ -113,6 +113,14 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Sets the parent proteins
+     * @param parentProteins the parent proteins as list
+     */
+    public void setParentProteins(ArrayList<Protein> parentProteins) {
+        this.parentProteins = parentProteins;
+    }
+
+    /**
      * This methods evaluates the number of missed cleavages
      *
      * @return the number of missed cleavages

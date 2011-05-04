@@ -123,6 +123,20 @@ public class ProteinMatch extends ExperimentObject {
     }
 
     /**
+     * Returns the number of peptides found
+     * @return the number of peptides found
+     */
+    public int getPeptideCount() {
+        int result = 0;
+        for (PeptideMatch peptideMatch : peptideMatches.values()) {
+            if (peptideMatch.getSpectrumCount() > 0) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    /**
      * methods indicates if the protein match is a decoy one
      *
      * @return boolean indicating if the protein match is a decoy one

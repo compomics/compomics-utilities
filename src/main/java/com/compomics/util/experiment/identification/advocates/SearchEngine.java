@@ -14,15 +14,18 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class SearchEngine extends ExperimentObject implements Advocate {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 9162799394758139976L;
+    /**
      * index of the search engine
      */
     private int id;
 
     /**
      * constructor for a search engine
-      */
+     */
     public SearchEngine() {
-
     }
 
     /**

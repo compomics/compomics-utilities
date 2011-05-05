@@ -12,7 +12,12 @@ import java.io.Serializable;
  * Time: 11:35:43 AM
  */
 public interface UrParameter extends Serializable {
-    
+
+    /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 6808590175195298797L;
+
     /**
      * This method returns the family name of the parameter
      * @return family name

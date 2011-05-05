@@ -11,6 +11,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class Sample extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 303393644914835325L;
+    /**
      * sample reference
      */
     private String reference;
@@ -28,7 +32,7 @@ public class Sample extends ExperimentObject {
      * @param newReference  the new reference
      */
     public void setReference(String newReference) {
-         this.reference = newReference;
+        this.reference = newReference;
     }
 
     /**

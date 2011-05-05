@@ -16,15 +16,17 @@ import java.util.HashMap;
 public class MsExperiment extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 4330394623824512352L;
+    /**
      * reference of the experiment
      */
     private String reference;
-
     /**
      * the samples analyzed
      */
     private HashMap<Integer, Sample> samples = new HashMap<Integer, Sample>();
-
     /**
      * the analysis
      */

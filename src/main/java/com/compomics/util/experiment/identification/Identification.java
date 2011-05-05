@@ -20,6 +20,10 @@ import java.util.Set;
 public abstract class Identification extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -2551700699384242554L;
+    /**
      * The identification results as a proteine match map, indexed by protein accession.
      */
     protected HashMap<String, ProteinMatch> proteinIdentification = new HashMap<String, ProteinMatch>();

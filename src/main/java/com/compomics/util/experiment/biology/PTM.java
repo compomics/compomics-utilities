@@ -13,6 +13,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class PTM extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -545472596243822505L;
+    /**
      * modification at particular amino acids
      */
     public static final int MODAA = 0;
@@ -71,9 +75,8 @@ public class PTM extends ExperimentObject {
 
     /**
      * Constructor for the modification
-      */
+     */
     public PTM() {
-
     }
 
     /**

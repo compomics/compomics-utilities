@@ -14,6 +14,10 @@ import java.util.HashSet;
 public abstract class Spectrum extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 7152424141470431489L;
+    /**
      * spectrum title
      */
     protected String spectrumTitle;
@@ -63,7 +67,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return  the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
-        return spectrumKey.substring(spectrumKey.indexOf("_")+1);
+        return spectrumKey.substring(spectrumKey.indexOf("_") + 1);
     }
 
     /**
@@ -246,7 +250,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @return the max intensity value
      */
-    public double getMaxIntensity () {
+    public double getMaxIntensity() {
 
         double maxIntensity = Double.MIN_VALUE;
 

@@ -18,6 +18,10 @@ import java.util.Set;
 public class SequenceDataBase extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -8651416887737619199L;
+    /**
      * Flag for a decoy protein
      */
     public static final String decoyFlag = "REV";  // This ough not to be hard coded

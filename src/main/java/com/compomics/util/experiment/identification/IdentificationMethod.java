@@ -11,15 +11,17 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class IdentificationMethod extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 4601179275244591663L;
+    /**
      * index for identification method based on peptide mass fingerprinting
      */
     public final static int PEPTIDE_FINGERPRINTING = 0;
-
     /**
      * index for identification method based on MS2 fragment ion matching
      */
     public final static int MS2_IDENTIFICATION = 1;
-
     /**
      * index of the method
      */

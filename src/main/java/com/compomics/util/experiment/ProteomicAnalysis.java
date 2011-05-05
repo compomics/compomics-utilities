@@ -17,20 +17,21 @@ import java.util.HashMap;
 public class ProteomicAnalysis extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -6738411343333889777L;
+    /**
      * the analysis index
      */
     private int index;
-
     /**
      * The acquired spectra
      */
     private SpectrumCollection spectrumCollection = new SpectrumCollection();
-
     /**
      * Quantification results
      */
     private HashMap<Integer, Quantification> quantification = new HashMap<Integer, Quantification>();
-
     /**
      * Identification results
      */
@@ -122,5 +123,4 @@ public class ProteomicAnalysis extends ExperimentObject {
     public void setSequenceDataBase(SequenceDataBase sequenceDataBase) {
         this.sequenceDataBase = sequenceDataBase;
     }
-
 }

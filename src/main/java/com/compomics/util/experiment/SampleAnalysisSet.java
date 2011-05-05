@@ -15,10 +15,13 @@ import java.util.ArrayList;
 public class SampleAnalysisSet extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -5399187779025810060L;
+    /**
      * The reference sample
      */
     private Sample sample;
-
     /**
      * The various analysis indexed by replicates indexes
      */
@@ -33,7 +36,7 @@ public class SampleAnalysisSet extends ExperimentObject {
         this.sample = referenceSample;
         analysis.put(replicate.getIndex(), replicate);
     }
-    
+
     /**
      * Contructor for a set of analysis of a sample
      * @param referenceSample   the reference sample

@@ -11,6 +11,11 @@ import com.compomics.util.experiment.personalization.UrParameter;
 public class MascotScore implements UrParameter {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 1781298332459022056L;
+
+    /**
      * This method returns the family name of the parameter
      *
      * @return family name
@@ -27,7 +32,6 @@ public class MascotScore implements UrParameter {
     public int getIndex() {
         return 1;
     }
-
     /**
      * The Mascot score
      */

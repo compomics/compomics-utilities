@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.massspectrometry;
 
-
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -15,6 +14,10 @@ import java.util.Iterator;
 public class MSnSpectrum extends Spectrum {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -7144961253807359274L;
+    /**
      * the precursor
      */
     private Precursor precursor;
@@ -24,7 +27,6 @@ public class MSnSpectrum extends Spectrum {
      */
     public MSnSpectrum() {
     }
-
 
     /**
      * Minimal constructor for the spectrum. The peak list is not loaded in order to reduce memory consumption.
@@ -40,7 +42,6 @@ public class MSnSpectrum extends Spectrum {
         this.spectrumTitle = spectrumTitle;
         this.fileName = fileName;
     }
-
 
     /**
      * constructor for the spectrum

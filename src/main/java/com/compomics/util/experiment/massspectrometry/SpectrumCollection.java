@@ -24,6 +24,10 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 public class SpectrumCollection extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -7894588835760914088L;
+    /**
      * static index for an mgf collection
      */
     public static final int MGF = 0;

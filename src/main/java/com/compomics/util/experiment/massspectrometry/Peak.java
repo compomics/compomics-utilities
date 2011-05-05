@@ -2,7 +2,6 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
-
 /**
  * This class represents a peak.
  *
@@ -13,6 +12,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  */
 public class Peak extends ExperimentObject {
 
+    /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -7425947046833405676L;
     /**
      * The mass over charge ratio of the peak.
      */
@@ -36,7 +39,7 @@ public class Peak extends ExperimentObject {
         this.mz = mz;
         this.intensity = intensity;
     }
-    
+
     /**
      * Constructor for a peak.
      *

@@ -11,15 +11,17 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class Precursor extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -2711244157697138296L;
+    /**
      * The retention time when the precursor was isolated
      */
     private double rt;
-
     /**
      * The measured m/z of the precursor
      */
     private double mz;
-
     /**
      * The charge of the precursor
      */

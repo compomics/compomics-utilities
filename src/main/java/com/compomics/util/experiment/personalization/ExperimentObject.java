@@ -14,6 +14,10 @@ import java.io.Serializable;
 public abstract class ExperimentObject implements Serializable {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 1929697552061121072L;
+    /**
      * Map containing user refinement parameters
      */
     private HashMap<String, UrParameter> urParams = new HashMap<String, UrParameter>();

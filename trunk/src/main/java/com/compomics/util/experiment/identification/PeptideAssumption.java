@@ -18,6 +18,10 @@ import java.util.HashSet;
 public class PeptideAssumption extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 3606509518581203063L;
+    /**
      * The rank of the peptide assumption for the concerned spectrum
      */
     private int rank;
@@ -75,8 +79,8 @@ public class PeptideAssumption extends ExperimentObject {
         this.measuredMass = measuredMass;
         this.eValue = eValue;
         this.file = identificationFile;
-        this.c13 = (new Double(measuredMass-peptide.getMass())).intValue();
-        this.ppmMassError = Math.abs(1000000*(measuredMass-c13-peptide.getMass())/peptide.getMass());
+        this.c13 = (new Double(measuredMass - peptide.getMass())).intValue();
+        this.ppmMassError = Math.abs(1000000 * (measuredMass - c13 - peptide.getMass()) / peptide.getMass());
     }
 
     /**
@@ -173,7 +177,7 @@ public class PeptideAssumption extends ExperimentObject {
             for (Protein protein : peptide.getParentProteins()) {
                 if (!protein.isDecoy()) {
                     isDecoy = false;
-        return isDecoy;
+                    return isDecoy;
                 }
             }
             isDecoy = true;

@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
-
 /**
  * This class models the match between theoretic ptm and identification results.
  * <p/>
@@ -14,6 +13,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  */
 public class ModificationMatch extends ExperimentObject {
 
+    /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 7129515983284796207L;
     /**
      * the theoretic modiffication
      */
@@ -26,7 +29,6 @@ public class ModificationMatch extends ExperimentObject {
      * the location in the peptide sequence
      */
     private int modifiedSite;
-
 
     /**
      * constructor for a modification match

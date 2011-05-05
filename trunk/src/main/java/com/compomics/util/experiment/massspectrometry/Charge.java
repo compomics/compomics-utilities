@@ -13,6 +13,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class Charge extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -7119215126058492261L;
+    /**
      * static int to modele a positive charge
      */
     public final static int PLUS = +1;
@@ -70,7 +74,7 @@ public class Charge extends ExperimentObject {
 
         String temp = "";
 
-        for (int i=0; i<value; i++) {
+        for (int i = 0; i < value; i++) {
             temp += "+";
         }
 

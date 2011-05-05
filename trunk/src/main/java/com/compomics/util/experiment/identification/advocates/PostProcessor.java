@@ -14,6 +14,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class PostProcessor extends ExperimentObject implements Advocate {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 1892975432623296983L;
+    /**
      * index of the post-processor
      */
     private int id;
@@ -22,7 +26,6 @@ public class PostProcessor extends ExperimentObject implements Advocate {
      * contructor for a post-processor
      */
     public PostProcessor() {
-
     }
 
     /**
@@ -31,7 +34,7 @@ public class PostProcessor extends ExperimentObject implements Advocate {
      * @param id    index of the post-processor
      */
     public PostProcessor(int id) {
-        this.id=id;
+        this.id = id;
     }
 
     /**

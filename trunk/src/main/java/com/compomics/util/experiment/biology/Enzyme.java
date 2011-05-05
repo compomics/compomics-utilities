@@ -14,6 +14,11 @@ import java.util.ArrayList;
  */
 public class Enzyme extends ExperimentObject {
 
+    /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -1852087173903613377L;
+
     /*
      * The enzyme id
      */
@@ -89,14 +94,14 @@ public class Enzyme extends ExperimentObject {
         }
     }
 
-   /**
-    * Get the X!Tandem enzyme format
-    *
-    * @return          The enzyme X!Tandem format as String
-    */
+    /**
+     * Get the X!Tandem enzyme format
+     *
+     * @return          The enzyme X!Tandem format as String
+     */
     public String getXTandemFormat() {
         String result = "";
-        
+
         if (aminoAcidBefore.size() > 0) {
             result += "[";
             for (Character aa : aminoAcidBefore) {
@@ -130,7 +135,7 @@ public class Enzyme extends ExperimentObject {
             }
             result += "}";
         }
-        
+
         return result;
     }
 
@@ -165,5 +170,4 @@ public class Enzyme extends ExperimentObject {
     public ArrayList<Character> getRestrictionBefore() {
         return restrictionBefore;
     }
-
 }

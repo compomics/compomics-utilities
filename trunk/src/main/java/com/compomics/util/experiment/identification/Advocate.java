@@ -13,6 +13,10 @@ import java.io.Serializable;
 public interface Advocate extends Serializable {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -9081265337103997591L;
+    /**
      * Mascot index
      */
     public static final int MASCOT = 0;

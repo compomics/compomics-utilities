@@ -18,6 +18,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class IonMatch extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 5753142782728884464L;
+    /**
      * The matched peak
      */
     public Peak peak;

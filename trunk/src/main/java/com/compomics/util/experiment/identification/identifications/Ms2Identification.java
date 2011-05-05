@@ -12,6 +12,11 @@ import com.compomics.util.experiment.identification.Identification;
 public class Ms2Identification extends Identification {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -7242302146506873391L;
+
+    /**
      * constructor for MS2 identification
      */
     public Ms2Identification() {

@@ -17,6 +17,10 @@ import java.util.*;
 public class Peptide extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 5632064601627536034L;
+    /**
      * The peptide sequence
      */
     private String sequence;

@@ -19,6 +19,10 @@ import java.util.HashSet;
 public class SpectrumMatch extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -8871774892783096178L;
+    /**
      * The index of the matched spectrum
      */
     private String spectrumKey;
@@ -43,7 +47,6 @@ public class SpectrumMatch extends ExperimentObject {
      * Constructor for the spectrum match
      */
     public SpectrumMatch() {
-
     }
 
     /**

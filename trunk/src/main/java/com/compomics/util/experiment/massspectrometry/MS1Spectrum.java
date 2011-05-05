@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.massspectrometry;
 
-
 import java.util.HashSet;
 
 /**
@@ -14,10 +13,14 @@ import java.util.HashSet;
 public class MS1Spectrum extends Spectrum {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -7328539274222920271L;
+
+    /**
      * Constructor for an MS1 spectrum
      */
     public MS1Spectrum() {
-
     }
 
     /**

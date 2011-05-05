@@ -14,6 +14,10 @@ import java.util.ArrayList;
 public class Protein extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 1987224639519365761L;
+    /**
      * The protein accession
      */
     private String accession;
@@ -132,8 +136,8 @@ public class Protein extends ExperimentObject {
             char aaBefore, aaAfter;
             for (int i = 0; i < sequenceCharacters.length - 1; i++) {
                 aaBefore = sequenceCharacters[i];
-                aaAfter = sequenceCharacters[i+1];
-                if ((aminoAcidBefore.contains(aaBefore) || aminoAcidAfter.contains(aaAfter)) 
+                aaAfter = sequenceCharacters[i + 1];
+                if ((aminoAcidBefore.contains(aaBefore) || aminoAcidAfter.contains(aaAfter))
                         && !(restrictionBefore.contains(aaBefore) || restrictionAfter.contains(aaAfter))) {
                     nCleavages++;
                 }

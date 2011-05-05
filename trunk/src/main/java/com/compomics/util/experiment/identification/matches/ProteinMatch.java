@@ -20,6 +20,10 @@ import java.util.Set;
 public class ProteinMatch extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = -6061842447053092696L;
+    /**
      * The matching protein(s)
      */
     private HashMap<String, Protein> theoreticProtein = new HashMap<String, Protein>();
@@ -199,7 +203,6 @@ public class ProteinMatch extends ExperimentObject {
         return theoreticProtein.size();
     }
 
-
     /**
      * Returns a boolean indicating whether the protein match contains another set of theoretic proteins.
      * @param proteinMatch  another protein match
@@ -216,7 +219,7 @@ public class ProteinMatch extends ExperimentObject {
         }
         return true;
     }
-    
+
     /**
      * Returns a boolean indicating whether a protein was found in this protein match
      * @param aProtein  the inspected protein

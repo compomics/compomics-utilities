@@ -18,6 +18,10 @@ import java.util.HashMap;
 public class PeptideMatch extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 7195830246336841081L;
+    /**
      * the theoretic peptide mathing
      */
     private Peptide theoreticPeptide;
@@ -34,12 +38,10 @@ public class PeptideMatch extends ExperimentObject {
      */
     private Boolean isDecoy = null;
 
-
     /**
      * constructor for the peptide match
      */
     public PeptideMatch() {
-
     }
 
     /**

@@ -4,6 +4,7 @@ import java.awt.FontMetrics;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import javax.swing.JEditorPane;
+import javax.swing.SwingUtilities;
 
 /**
  * This class contains a method that formats a given protein sequence such that 
@@ -94,14 +95,9 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
-        double temp = editorPane.getWidth() / (fm.stringWidth("W"));
+        double temp = (editorPane.getWidth() - 200) / (fm.stringWidth("X"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
-
-        // add some additional amino acids when we have lots of room
-        if (numberOfAminoAcidsPerRow > 50) {
-            numberOfAminoAcidsPerRow += 10;
-        }
 
         ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
 
@@ -162,22 +158,42 @@ public class ProteinSequencePane {
 
         // display the formatted sequence
         editorPane.setText(formattedSequence);
-        editorPane.updateUI();
 
         // make sure that the currently selected peptide is visible
-        if (selectedPeptideStart.get(0) != -1) {
+        if (selectedPeptideStart.size() > 0 && selectedPeptideStart.get(0) != -1) {
 
             boolean referenceMarkerFound = false;
 
             for (int i = 0; i < referenceMarkers.size() - 1 && !referenceMarkerFound; i++) {
                 if (selectedPeptideStart.get(0) >= referenceMarkers.get(i) && selectedPeptideStart.get(0) < referenceMarkers.get(i + 1)) {
-                    editorPane.scrollToReference(referenceMarkers.get(i).toString());
+
+                    final JEditorPane tempEditorPane = editorPane;
+                    final String referenceMarker = referenceMarkers.get(i).toString();
+
+                    // invoke later to give time for components to update
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            tempEditorPane.scrollToReference(referenceMarker);
+                        }
+                    });
+
                     referenceMarkerFound = true;
                 }
             }
 
             if (!referenceMarkerFound) {
-                editorPane.scrollToReference(referenceMarkers.get(referenceMarkers.size() - 1).toString());
+
+                final JEditorPane tempEditorPane = editorPane;
+                final String referenceMarker = referenceMarkers.get(referenceMarkers.size() - 1).toString();
+
+                // invoke later to give time for components to update
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    public void run() {
+                        tempEditorPane.scrollToReference(referenceMarker);
+                    }
+                });
             }
 
         } else {
@@ -220,14 +236,9 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
-        double temp = editorPane.getWidth() / (fm.stringWidth("W"));
+        double temp = (editorPane.getWidth() - 200) / (fm.stringWidth("X"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
-
-        // add some additional amino acids when we have lots of room
-        if (numberOfAminoAcidsPerRow > 50) {
-            numberOfAminoAcidsPerRow += 10;
-        }
 
         ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
 
@@ -366,7 +377,6 @@ public class ProteinSequencePane {
 
         // display the formatted sequence
         editorPane.setText(formattedSequence);
-        editorPane.updateUI();
 
         // make sure that the currently selected peptide is visible
         if (selectedPeptideStart != -1) {
@@ -375,13 +385,33 @@ public class ProteinSequencePane {
 
             for (int i = 0; i < referenceMarkers.size() - 1 && !referenceMarkerFound; i++) {
                 if (selectedPeptideStart >= referenceMarkers.get(i) && selectedPeptideStart < referenceMarkers.get(i + 1)) {
-                    editorPane.scrollToReference(referenceMarkers.get(i).toString());
+
+                    final JEditorPane tempEditorPane = editorPane;
+                    final String referenceMarker = referenceMarkers.get(i).toString();
+
+                    // invoke later to give time for components to update
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            tempEditorPane.scrollToReference(referenceMarker);
+                        }
+                    });
+
                     referenceMarkerFound = true;
                 }
             }
 
             if (!referenceMarkerFound) {
-                editorPane.scrollToReference(referenceMarkers.get(referenceMarkers.size() - 1).toString());
+                final JEditorPane tempEditorPane = editorPane;
+                final String referenceMarker = referenceMarkers.get(referenceMarkers.size() - 1).toString();
+
+                // invoke later to give time for components to update
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    public void run() {
+                        tempEditorPane.scrollToReference(referenceMarker);
+                    }
+                });
             }
 
         } else {

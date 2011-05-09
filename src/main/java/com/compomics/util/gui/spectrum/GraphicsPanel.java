@@ -172,6 +172,14 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int iEndXLoc = 0;
     /**
+     * The lower range for the current zoom range.
+     */
+    protected double xAxisZoomRangeLowerValue = 0;
+    /**
+     * The upper range for the current zoom range.
+     */
+    protected double xAxisZoomRangeUpperValue = 0;
+    /**
      * The current dragging location.
      */
     protected int iDragXLoc = 0;
@@ -405,6 +413,23 @@ public abstract class GraphicsPanel extends JPanel {
         this.miniature = miniature;
     }
 
+    /**
+     * Returns the lower range for the current zoom range.
+     *
+     * @return the lower range for the current zoom range
+     */
+    public double getXAxisZoomRangeLowerValue() {
+        return xAxisZoomRangeLowerValue;
+    }
+
+    /**
+     * Returns the upper range for the current zoom range.
+     *
+     * @return the upper range for the current zoom range
+     */
+    public double getXAxisZoomRangeUpperValue() {
+        return xAxisZoomRangeUpperValue;
+    }
     /**
      * An enumerator of the possible GraphicsPanel types
      */
@@ -1174,6 +1199,9 @@ public abstract class GraphicsPanel extends JPanel {
      */
     public void rescale(double aMinXAxisValue, double aMaxXAxisValue, boolean aNotifyListeners) {
 
+        xAxisZoomRangeLowerValue = aMinXAxisValue;
+        xAxisZoomRangeUpperValue = aMaxXAxisValue;
+
         // Calculate the new max y-axis value.
         double maxInt = 1.0;
 
@@ -1200,6 +1228,7 @@ public abstract class GraphicsPanel extends JPanel {
         if (tempOoM < 0) {
             tempOoM--;
         }
+
         int orderOfMagnitude = (int) tempOoM;
         double power = Math.pow(10, orderOfMagnitude);
         iXAxisMin = aMinXAxisValue - (aMinXAxisValue % power);

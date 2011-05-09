@@ -282,6 +282,24 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
+     * Returns the min mz value.
+     *
+     * @return the min mz value
+     */
+    public double getMinMz() {
+
+        double minMz = Double.MAX_VALUE;
+
+        for (Peak currentPeak : peakList) {
+            if (currentPeak.mz < minMz) {
+                minMz = currentPeak.mz;
+            }
+        }
+
+        return minMz;
+    }
+
+    /**
      * Returns an array containing the intensity of all peak above the
      * provided threshold.
      *

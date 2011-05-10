@@ -21,7 +21,7 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * The version UID for Serialization/Deserialization compatibility
      */
-    static final long serialVersionUID = -8871774892783096178L;
+    static final long serialVersionUID = 3227760855215444318L;
     /**
      * The index of the matched spectrum
      */
@@ -29,7 +29,7 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * The corresponding peptide assumptions
      */
-    private HashSet<PeptideAssumption> assumptions = new HashSet<PeptideAssumption>();
+    private HashMap<Integer, HashMap<Double, PeptideAssumption>> assumptions = new HashMap<Integer, HashMap<Double, PeptideAssumption>>();
     /**
      * The best assumption
      */
@@ -57,7 +57,8 @@ public class SpectrumMatch extends ExperimentObject {
      */
     public SpectrumMatch(String spectrumKey, PeptideAssumption assumption) {
         int advocateId = assumption.getAdvocate();
-        assumptions.add(assumption);
+        assumptions.put(advocateId, new HashMap<Double, PeptideAssumption>());
+        assumptions.get(advocateId).put(assumption.getEValue(), assumption);
         firstHits.put(advocateId, assumption);
         advocates.add(advocateId);
         this.spectrumKey = spectrumKey;
@@ -100,21 +101,26 @@ public class SpectrumMatch extends ExperimentObject {
     }
 
     /**
-     * Add a secondary hit
+     * Return all assumptions for the specified search engine indexed by their e-value
      *
-     * @param secondaryHit a secondary hit
+     * @param  advocateId the desired advocate ID
+     * @return all assumptions
      */
-    public void addSecondaryHit(PeptideAssumption secondaryHit) {
-        assumptions.add(secondaryHit);
+    public HashMap<Double, PeptideAssumption> getAllAssumptions(int advocateId) {
+        return assumptions.get(advocateId);
     }
 
     /**
-     * Return all assumptions
+     * Return all assumptions for all search engines as a list
      *
      * @return all assumptions
      */
-    public HashSet<PeptideAssumption> getAllAssumptions() {
-        return assumptions;
+    public ArrayList<PeptideAssumption> getAllAssumptions() {
+        ArrayList<PeptideAssumption> result = new ArrayList<PeptideAssumption>();
+        for (HashMap<Double, PeptideAssumption> seMap : assumptions.values()) {
+            result.addAll(seMap.values());
+        }
+        return result;
     }
 
     /**
@@ -122,19 +128,18 @@ public class SpectrumMatch extends ExperimentObject {
      *
      * @param otherAdvocateId The index of the new advocate
      * @param otherAssumption The new peptide assumption
-     * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
-    public void addFirstHit(int otherAdvocateId, PeptideAssumption otherAssumption) throws Exception {
-        if (firstHits.get(otherAdvocateId) != null) {
-            if (!firstHits.get(otherAdvocateId).getPeptide().getKey().equals(otherAssumption.getPeptide().getKey())) {
-                throw new Exception("Two identifications by the same search engine for a single spectrum");
-            } else {
-                return;
-            }
+    public void addHit(int otherAdvocateId, PeptideAssumption otherAssumption) {
+        if (!firstHits.containsKey(otherAdvocateId) || firstHits.get(otherAdvocateId).getEValue() > otherAssumption.getEValue()) {
+            firstHits.put(otherAdvocateId, otherAssumption);
         }
-        firstHits.put(otherAdvocateId, otherAssumption);
-        assumptions.add(otherAssumption);
-        advocates.add(otherAdvocateId);
+        if (!assumptions.containsKey(otherAdvocateId)) {
+            assumptions.put(otherAdvocateId, new HashMap<Double, PeptideAssumption>());
+        }
+        assumptions.get(otherAdvocateId).put(otherAssumption.getEValue(), otherAssumption);
+        if (!advocates.contains(otherAdvocateId)) {
+            advocates.add(otherAdvocateId);
+        }
     }
 
     /**

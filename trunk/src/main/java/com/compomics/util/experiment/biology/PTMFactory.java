@@ -44,6 +44,10 @@ public class PTMFactory {
      * The set of imported PTM
      */
     private HashSet<PTM> ptmSet = new HashSet<PTM>();
+    /**
+     * unknown modification to be returned when the modification is not found
+     */
+    private static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new String[0]);
 
     /**
      * Constructor for the factory
@@ -70,7 +74,10 @@ public class PTMFactory {
      * @return the selected PTM
      */
     public PTM getPTM(int index) {
-        return indexToPTMMap.get(index);
+        if (indexToPTMMap.get(index) != null) {
+            return indexToPTMMap.get(index);
+        }
+        return unknownPTM;
     }
 
     /**
@@ -79,7 +86,10 @@ public class PTMFactory {
      * @return      The desired PTM
      */
     public PTM getPTM(String name) {
+        if (indexToPTMMap.get(nameToIndexMap.get(name)) != null) {
         return indexToPTMMap.get(nameToIndexMap.get(name));
+        }
+        return unknownPTM;
     }
 
     /**
@@ -132,7 +142,7 @@ public class PTMFactory {
                 }
             }
         }
-        return null;
+        return unknownPTM;
     }
 
     /**
@@ -142,7 +152,10 @@ public class PTMFactory {
      * @return the candidate PTM
      */
     public PTM getPTMFromMascotName(String aMascotName) {
+        if (mascotNameToPTMMap.get(aMascotName) != null) {
         return mascotNameToPTMMap.get(aMascotName);
+        }
+        return unknownPTM;
     }
 
     /**

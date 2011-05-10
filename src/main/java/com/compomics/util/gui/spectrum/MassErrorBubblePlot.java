@@ -79,6 +79,7 @@ public class MassErrorBubblePlot extends JPanel {
     /**
      * Creates a new MassErrorBubblePlot.
      *
+     * @param dataIndexes                   the data set indexes/labels
      * @param annotations                   the full list of spectrum annotations
      * @param currentFragmentIons           the currently selected fragment ion types
      * @param currentSpectra                the current spectra
@@ -91,6 +92,7 @@ public class MassErrorBubblePlot extends JPanel {
      * @param addMarkers                    if true interval markers for the fragment ions will be shown
      */
     public MassErrorBubblePlot(
+            ArrayList<String> dataIndexes,
             ArrayList<SpectrumAnnotationMap> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
@@ -100,12 +102,13 @@ public class MassErrorBubblePlot extends JPanel {
             boolean includeMoreThanTwoCharges,
             boolean fragmentIonLabels,
             boolean addMarkers) {
-        this(annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers);
+        this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers);
     }
 
     /**
      * Creates a new MassErrorBubblePlot.
      *
+     * @param dataIndexes                   the data set indexes/labels
      * @param annotations                   the full list of spectrum annotations
      * @param currentFragmentIons           the currently selected fragment ion types
      * @param currentSpectra                the current spectra
@@ -119,6 +122,7 @@ public class MassErrorBubblePlot extends JPanel {
      * @param addMarkers                    if true interval markers for the fragment ions will be shown
      */
     public MassErrorBubblePlot(
+            ArrayList<String> dataIndexes,
             ArrayList<SpectrumAnnotationMap> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
@@ -213,7 +217,7 @@ public class MassErrorBubblePlot extends JPanel {
                         }
                     }
 
-                    xyzDataset.addSeries("" + (j + 1), dataXYZ);
+                    xyzDataset.addSeries(dataIndexes.get(j), dataXYZ);
                 }
             }
         }

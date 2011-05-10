@@ -99,9 +99,8 @@ public abstract class Identification extends ExperimentObject {
      * Add a spectrum match to the model.
      *
      * @param newMatch the new spectrum match
-     * @throws Exception exception thrown when one tries to assign more than one identification per advocate to the same spectrum
      */
-    public void addSpectrumMatch(SpectrumMatch newMatch) throws Exception {
+    public void addSpectrumMatch(SpectrumMatch newMatch) {
         String proteinKey, peptideKey, spectrumKey = newMatch.getKey();
         Peptide peptide;
         SpectrumMatch oldMatch = spectrumIdentification.get(spectrumKey);
@@ -110,7 +109,7 @@ public abstract class Identification extends ExperimentObject {
             oldMatch = newMatch;
         } else {
             for (int searchEngine : newMatch.getAdvocates()) {
-                oldMatch.addFirstHit(searchEngine, newMatch.getFirstHit(searchEngine));
+                oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine));
             }
         }
         for (int searchEngine : newMatch.getAdvocates()) {

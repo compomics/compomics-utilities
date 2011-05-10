@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
@@ -134,13 +135,13 @@ public class PeptideMatch extends ExperimentObject {
      *
      * @param spectrumMatch a spectrum match
      */
-    public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws Exception {
+    public void addSpectrumMatch(SpectrumMatch spectrumMatch) {
         String index = spectrumMatch.getKey();
         if (spectrumMatches.get(index) == null) {
             spectrumMatches.put(index, spectrumMatch);
         } else {
             for (int searchEngine : spectrumMatch.getAdvocates()) {
-                spectrumMatches.get(index).addFirstHit(searchEngine, spectrumMatch.getFirstHit(searchEngine));
+                spectrumMatches.get(index).addHit(searchEngine, spectrumMatch.getFirstHit(searchEngine));
             }
         }
     }
@@ -149,17 +150,18 @@ public class PeptideMatch extends ExperimentObject {
      * add spectrum matches
      *
      * @param newMatches matched spectra
-     * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
-    public void addSpectrumMatches(HashMap<String, SpectrumMatch> newMatches) throws Exception {
+    public void addSpectrumMatches(HashMap<String, SpectrumMatch> newMatches) {
         SpectrumMatch newMatch;
         for (String index : newMatches.keySet()) {
             newMatch = newMatches.get(index);
-            if (spectrumMatches.get(index) == null) {
+            if (!spectrumMatches.containsKey(index)) {
                 spectrumMatches.put(index, newMatch);
             } else {
                 for (int searchEngine : newMatch.getAdvocates()) {
-                    spectrumMatches.get(index).addFirstHit(searchEngine, newMatch.getFirstHit(searchEngine));
+                    for (PeptideAssumption peptideAssumption : newMatch.getAllAssumptions(searchEngine).values()) {
+                        spectrumMatches.get(index).addHit(searchEngine, peptideAssumption);
+                    }
                 }
             }
         }

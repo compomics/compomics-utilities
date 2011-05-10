@@ -128,40 +128,45 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
                 }
                 Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
-                Boolean nonDecoyHitFound = false;
-                if (mascotPeptideHits != null) {                                        // There might not be an identification for every query
-                    if (mascotDecoyPeptideHits != null) {
-                        if (mascotDecoyPeptideHits.get(0).getIonsScore() < mascotPeptideHits.get(0).getIonsScore()) {
-                            nonDecoyHitFound = true;
-                        }
-                    } else {
-                        nonDecoyHitFound = true;
-                    }
-                }
-                if (nonDecoyHitFound) {
-                    boolean singleBestHit = true;
-                    if (mascotPeptideHits.size() > 1) {
-                        if ((mascotPeptideHits.get(0).getExpectancy() == mascotPeptideHits.get(1).getExpectancy()) && (mascotPeptideHits.get(0).getSequence().compareTo(mascotPeptideHits.get(1).getSequence()) != 0)) {
-                            singleBestHit = false;
-                        }
-                    }
-                    if (singleBestHit) {
-                        PeptideHit thisPeptideHit = mascotPeptideHits.get(0);
-                        SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, false);
-                        assignedPeptideHits.add(currentMatch);
-                    }
+
+                // Get spectrum information
+
+                PeptideHit testPeptide = null;
+                if (mascotPeptideHits != null) {
+                    testPeptide = mascotPeptideHits.get(0);
                 } else if (mascotDecoyPeptideHits != null) {
-                    boolean singleBestHit = true;
-                    if (mascotDecoyPeptideHits.size() > 1) {
-                        if ((mascotDecoyPeptideHits.get(0).getExpectancy() == mascotDecoyPeptideHits.get(1).getExpectancy()) && (mascotDecoyPeptideHits.get(0).getSequence().compareTo(mascotDecoyPeptideHits.get(1).getSequence()) != 0)) {
-                            singleBestHit = false;
+                    testPeptide = mascotPeptideHits.get(0);
+                }
+                if (testPeptide != null) {
+                    Double measuredMass = testPeptide.getPeptideMr() + testPeptide.getDeltaMass();
+                    String measuredCharge = iMascotDatfile.getQuery(i + 1).getChargeString();
+                    String sign = String.valueOf(measuredCharge.charAt(1));
+                    Charge charge;
+                    if (sign.compareTo("+") == 0) {
+                        charge = new Charge(Charge.PLUS, Integer.valueOf(measuredCharge.substring(0, 1)));
+                    } else {
+                        charge = new Charge(Charge.MINUS, Integer.valueOf(measuredCharge.substring(0, 1)));
+                    }
+                    Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
+                    String spectrumId = iMascotDatfile.getQuery(i + 1).getTitle();
+                    MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
+                   SpectrumMatch currentMatch = new SpectrumMatch(spectrum.getSpectrumKey());
+                    if (spectrumCollection != null) {
+                        spectrumCollection.addSpectrum(spectrum);
+                    }
+
+                    // Get all hits
+                    if (mascotPeptideHits != null) {
+                        for (PeptideHit peptideHit : mascotPeptideHits) {
+                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, i + 1, false));
                         }
                     }
-                    if (singleBestHit) {
-                        PeptideHit thisPeptideHit = mascotDecoyPeptideHits.get(0);
-                        SpectrumMatch currentMatch = getSpectrumMatch(thisPeptideHit, i + 1, true);
-                        assignedPeptideHits.add(currentMatch);
+                    if (mascotDecoyPeptideHits != null) {
+                        for (PeptideHit peptideHit : mascotDecoyPeptideHits) {
+                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, i + 1, true));
+                        }
                     }
+                    assignedPeptideHits.add(currentMatch);
                 }
             }
         } catch (Exception e) {
@@ -171,24 +176,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     /**
-     * parses a spectrum match out of a peptideHit
+     * parses a peptide assumption out of a peptideHit
      *
      * @param aPeptideHit  the peptide hit to parse
      * @param query        the corresponding query
      * @param decoySection is it in the decoy section?
-     * @return a spectrum match
+     * @return a peptide assumption
      */
-    private SpectrumMatch getSpectrumMatch(PeptideHit aPeptideHit, int query, boolean decoySection) {
-        boolean c13 = false;
+    private PeptideAssumption getPeptideAssumption(PeptideHit aPeptideHit, int query, boolean decoySection) {
         Double measuredMass = aPeptideHit.getPeptideMr() + aPeptideHit.getDeltaMass();
         String measuredCharge = iMascotDatfile.getQuery(query).getChargeString();
-        String sign = String.valueOf(measuredCharge.charAt(1));
-        Charge charge;
-        if (sign.compareTo("+") == 0) {
-            charge = new Charge(Charge.PLUS, Integer.valueOf(measuredCharge.substring(0, 1)));
-        } else {
-            charge = new Charge(Charge.MINUS, Integer.valueOf(measuredCharge.substring(0, 1)));
-        }
         ArrayList<ModificationMatch> foundModifications = new ArrayList();
         Modification handledModification;
         PTM correspondingPTM;
@@ -211,20 +208,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
         Double mascotEValue = aPeptideHit.getExpectancy();
 
-        String spectrumId = iMascotDatfile.getQuery(query).getTitle();
-        //com.compomics.mascotdatfile.util.mascot.Peak[] kennysPeakList = iMascotDatfile.getQuery(query).getPeakList();
-        /**
-         * Peak lists are not imported anymore to save memory
-        for (com.compomics.mascotdatfile.util.mascot.Peak peak : kennysPeakList) {
-        peakList.add(new Peak(peak.getMZ(), peak.getIntensity()));
-        }
-         **/
-        Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
-        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
-        String spectrumKey = spectrum.getSpectrumKey();
-        if (spectrumCollection != null) {
-            spectrumCollection.addSpectrum(spectrum);
-        }
         ArrayList<Protein> proteins = new ArrayList();
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
             String accession = ((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession();
@@ -240,7 +223,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, measuredMass, mascotEValue, getFileName());
         MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
         currentAssumption.addUrParam(scoreParam);
-        // Secondary hits are not implemented yet
-        return new SpectrumMatch(spectrumKey, currentAssumption);
+        return currentAssumption;
     }
 }

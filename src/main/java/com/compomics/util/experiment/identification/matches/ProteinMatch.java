@@ -102,11 +102,10 @@ public class ProteinMatch extends ExperimentObject {
      * add a subordinated peptide match
      *
      * @param peptideMatch a peptide match
-     * @throws Exception exception thrown when attempting to link two identifications from the same search engine on a single spectrum
      */
-    public void addPeptideMatch(PeptideMatch peptideMatch) throws Exception {
+    public void addPeptideMatch(PeptideMatch peptideMatch) {
         String index = peptideMatch.getTheoreticPeptide().getKey();
-        if (peptideMatches.get(index) == null) {
+        if (!peptideMatches.containsKey(index)) {
             peptideMatches.put(index, peptideMatch);
         } else {
             peptideMatches.get(index).addSpectrumMatches(peptideMatch.getSpectrumMatches());

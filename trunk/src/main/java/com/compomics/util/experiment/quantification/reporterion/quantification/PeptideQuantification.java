@@ -41,7 +41,7 @@ public class PeptideQuantification extends ExperimentObject {
     /**
      * Constructor for the peptide quantification
      * @param peptideMatch              the identification peptide match
-     * @param spectrumQuantification    the corresponding spectrum quantification
+     * @param psmQuantification         the corresponding spectrum quantification 
      */
     public PeptideQuantification(PeptideMatch peptideMatch, HashMap<String, PsmQuantification> psmQuantification) {
         this.peptideMatch = peptideMatch;
@@ -51,7 +51,7 @@ public class PeptideQuantification extends ExperimentObject {
     /**
      * Constructor for the peptide quantification
      * @param peptideMatch              the identification peptide match
-     * @param spectrumQuantification    the corresponding spectrum quantification
+     * @param psmQuantification         the corresponding spectrum quantification
      * @param ratios                    the estimated ratios
      */
     public PeptideQuantification(PeptideMatch peptideMatch, HashMap<String, PsmQuantification> psmQuantification, HashMap<Integer, Ratio> ratios) {

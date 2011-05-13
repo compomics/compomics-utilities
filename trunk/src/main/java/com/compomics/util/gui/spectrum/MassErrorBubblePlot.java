@@ -242,14 +242,14 @@ public class MassErrorBubblePlot extends JPanel {
                 plot.getRenderer().setSeriesPaint(i, SpectrumPanel.determineFragmentIonColor((String) xyzDataset.getSeriesKey(i)));
             }
         }
-
+        
         // set the mass error range
         plot.getRangeAxis().setLowerBound(-massTolerance);
         plot.getRangeAxis().setUpperBound(massTolerance);
-
+        
         plot.getDomainAxis().setLowerBound(0);
         plot.getDomainAxis().setUpperBound(plot.getDomainAxis().getUpperBound() + 100);
-
+        
         // remove space before/after the domain axis
         plot.getDomainAxis().setUpperMargin(0);
         plot.getDomainAxis().setLowerMargin(0);

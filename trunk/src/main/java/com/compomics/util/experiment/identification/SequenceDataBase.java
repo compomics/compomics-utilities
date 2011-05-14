@@ -131,4 +131,22 @@ public class SequenceDataBase extends ExperimentObject {
             nTargetSequences++;
         }
     }
+
+    /**
+     * Returns the database name.
+     * 
+     * @return the database name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the database version.
+     * 
+     * @return the database version
+     */
+    public String getVersion() {
+        return version;
+    }
 }

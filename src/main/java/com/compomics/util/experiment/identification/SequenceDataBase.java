@@ -139,7 +139,13 @@ public class SequenceDataBase extends ExperimentObject {
                 header = line;
                 fastaHeader = Header.parseFromFASTA(header);
                 accession = fastaHeader.getAccession();
-                decoy = accession.contains(decoyFlag);
+
+                if (accession != null) {
+                    decoy = accession.contains(decoyFlag);
+                } else {
+                    decoy = false;
+                }
+
                 sequence = "";
             } else {
                 sequence += line;
@@ -153,7 +159,7 @@ public class SequenceDataBase extends ExperimentObject {
             nTargetSequences++;
         }
     }
-    
+
     /**
      * Appends reversed sequences to the database
      * @throws IllegalArgumentException Exception thrown if the database already contains decoy sequences
@@ -165,52 +171,54 @@ public class SequenceDataBase extends ExperimentObject {
         ArrayList<String> proteinKeys = new ArrayList<String>(proteinMap.keySet());
         Header decoyHeader;
         Protein decoyProtein;
-            for (String key : proteinKeys) {
-                decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
-                decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
-                decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
-                decoyProtein = new Protein(decoyHeader.getAccession(), reverseSequence(proteinMap.get(key).getSequence()), true);
+        for (String key : proteinKeys) {
+            decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
+            decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
+            decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
+            decoyProtein = new Protein(decoyHeader.getAccession(), reverseSequence(proteinMap.get(key).getSequence()), true);
 
-                proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
-                headerMap.put(decoyProtein.getProteinKey(), decoyHeader);
+            proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
+            headerMap.put(decoyProtein.getProteinKey(), decoyHeader);
         }
     }
 
     /**
-     * Reverses a protein sequence
+     * Reverses a protein sequence.
+     * 
      * @param sequence the protein sequence
      * @return the reversed protein sequence
      */
     private String reverseSequence(String sequence) {
         String reversed = "";
-        for(int i=sequence.length()-1; i>=0; i--) {
-            reversed+=sequence.charAt(i);
+        for (int i = sequence.length() - 1; i >= 0; i--) {
+            reversed += sequence.charAt(i);
         }
         return reversed;
     }
 
     /**
      * Exports the sequence data base as a fasta file. Target sequences first then decoy sequences. proteins are sorted by accession alphabetic order.
+     * 
      * @param fastaFile     The fasta file where sequences should be output
      * @throws IOException  Exception thrown whenever a problem occurred while writing the file.
      */
     public void exportAsFasta(File fastaFile) throws IOException {
-            Writer proteinWriter = new BufferedWriter(new FileWriter(fastaFile));
-            ArrayList<String> keys = new ArrayList<String>(proteinMap.keySet());
-            Collections.sort(keys);
-            for (String proteinKey : keys) {
-                if (!proteinMap.get(proteinKey).isDecoy()) {
-                    proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
-                    proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
-                }
+        Writer proteinWriter = new BufferedWriter(new FileWriter(fastaFile));
+        ArrayList<String> keys = new ArrayList<String>(proteinMap.keySet());
+        Collections.sort(keys);
+        for (String proteinKey : keys) {
+            if (!proteinMap.get(proteinKey).isDecoy()) {
+                proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
+                proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
             }
-            for (String proteinKey : keys) {
-                if (proteinMap.get(proteinKey).isDecoy()) {
-                    proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
-                    proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
-                }
+        }
+        for (String proteinKey : keys) {
+            if (proteinMap.get(proteinKey).isDecoy()) {
+                proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
+                proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
             }
-            proteinWriter.close();
+        }
+        proteinWriter.close();
     }
 
     /**
@@ -230,5 +238,4 @@ public class SequenceDataBase extends ExperimentObject {
     public String getVersion() {
         return version;
     }
-
 }

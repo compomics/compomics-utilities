@@ -1,7 +1,6 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.identification.FastaHeaderParser;
 import com.compomics.util.experiment.identification.SequenceDataBase;
 import java.io.File;
 import junit.framework.Assert;
@@ -18,8 +17,7 @@ public class fastaTest extends TestCase {
         try {
             File fastaFile = new File("src/test/resources/experiment/sgd.fasta");
             SequenceDataBase db = new SequenceDataBase("SGD", "test");
-            FastaHeaderParser fastaHeaderParser = new FastaHeaderParser("", " ");
-            db.importDataBase(fastaHeaderParser, fastaFile);
+            db.importDataBase(fastaFile);
             Assert.assertTrue(db.getNumberOfTargetSequences() == 0);
             Protein sgdProtein = db.getProtein("YPL008W_REVERSED");
             Assert.assertTrue(sgdProtein.isDecoy());
@@ -27,8 +25,7 @@ public class fastaTest extends TestCase {
 
             fastaFile = new File("src/test/resources/experiment/uniprot.fasta");
             db = new SequenceDataBase("uniprot", "test");
-            fastaHeaderParser = new FastaHeaderParser("|", "|");
-            db.importDataBase(fastaHeaderParser, fastaFile);
+            db.importDataBase(fastaFile);
             Assert.assertTrue(db.getNumberOfTargetSequences() == 1);
             Protein uniprotProtein = db.getProtein("P31946");
             Assert.assertTrue(!uniprotProtein.isDecoy());

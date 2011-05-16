@@ -26,10 +26,6 @@ public class Protein extends ExperimentObject {
      */
     private boolean decoy;
     /**
-     * The protein description
-     */
-    private String description;
-    /**
      * The protein sequence
      */
     private String sequence;
@@ -55,13 +51,11 @@ public class Protein extends ExperimentObject {
      * constructor for a protein
      *
      * @param accession     The protein accession
-     * @param description   The protein description
      * @param sequence      The protein sequence
      * @param isDecoy       boolean indicating whether the protein is decoy
      */
-    public Protein(String accession, String description, String sequence, boolean isDecoy) {
+    public Protein(String accession, String sequence, boolean isDecoy) {
         this.accession = accession;
-        this.description = description;
         this.sequence = sequence;
         this.decoy = isDecoy;
     }
@@ -81,15 +75,6 @@ public class Protein extends ExperimentObject {
      */
     public String getAccession() {
         return accession;
-    }
-
-    /**
-     * Getter for the protein description
-     *
-     * @return the protein description
-     */
-    public String getDescription() {
-        return description;
     }
 
     /**

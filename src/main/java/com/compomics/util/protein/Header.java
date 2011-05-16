@@ -11,6 +11,7 @@
  * Time: 13:43:28
  */
 package com.compomics.util.protein;
+import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import java.util.StringTokenizer;
@@ -23,7 +24,7 @@ import java.util.StringTokenizer;
  *
  * @author Lennart Martens
  */
-public class Header implements Cloneable {
+public class Header implements Cloneable, Serializable {
 
     // Class specific log4j logger for Header instances.
     static Logger logger = Logger.getLogger(Header.class);

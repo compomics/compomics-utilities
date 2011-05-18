@@ -171,7 +171,9 @@ public class SequenceDataBase extends ExperimentObject {
         ArrayList<String> proteinKeys = new ArrayList<String>(proteinMap.keySet());
         Header decoyHeader;
         Protein decoyProtein;
+        
         for (String key : proteinKeys) {
+            
             decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
             decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
@@ -189,11 +191,7 @@ public class SequenceDataBase extends ExperimentObject {
      * @return the reversed protein sequence
      */
     private String reverseSequence(String sequence) {
-        String reversed = "";
-        for (int i = sequence.length() - 1; i >= 0; i--) {
-            reversed += sequence.charAt(i);
-        }
-        return reversed;
+        return new StringBuilder(sequence).reverse().toString();
     }
 
     /**

@@ -19,7 +19,8 @@ import java.util.Set;
 /**
  * This class models a protein database used for peptide/protein identification (like uniprot)
  *
- * @author Marc
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SequenceDataBase extends ExperimentObject {
 
@@ -53,7 +54,8 @@ public class SequenceDataBase extends ExperimentObject {
     private int nTargetSequences = 0;
 
     /**
-     * Constructor for a sequence database
+     * Constructor for a sequence database.
+     * 
      * @param name      Name of the database
      * @param version   Version of the database
      */
@@ -63,7 +65,8 @@ public class SequenceDataBase extends ExperimentObject {
     }
 
     /**
-     * Returns a protein indexed by its key
+     * Returns a protein indexed by its key.
+     * 
      * @param proteinKey protein key
      * @return the corresponding protein
      */
@@ -73,6 +76,7 @@ public class SequenceDataBase extends ExperimentObject {
 
     /**
      * Returns the protein header of the desired protein.
+     * 
      * @param proteinKey protein key
      * @return the corresponding header
      */
@@ -81,7 +85,8 @@ public class SequenceDataBase extends ExperimentObject {
     }
 
     /**
-     * Adds a protein to the map
+     * Adds a protein to the map.
+     * 
      * @param protein the new protein
      */
     public void addProtein(Protein protein) {
@@ -92,7 +97,8 @@ public class SequenceDataBase extends ExperimentObject {
     }
 
     /**
-     * returns the number of target hits loaded
+     * Returns the number of target hits loaded.
+     * 
      * @return the number of target hits loaded
      */
     public int getNumberOfTargetSequences() {
@@ -100,7 +106,8 @@ public class SequenceDataBase extends ExperimentObject {
     }
 
     /**
-     * Returns the list of all protein imported
+     * Returns the list of all protein imported.
+     * 
      * @return list of all protein imported
      */
     public Set<String> getProteinList() {
@@ -108,7 +115,7 @@ public class SequenceDataBase extends ExperimentObject {
     }
 
     /**
-     * Imports a sequence database from a fasta file
+     * Imports a sequence database from a fasta file.
      *
      * @param fastaFile                 The fasta file to import
      * @throws FileNotFoundException    Exception thrown when the fasta file is not found
@@ -116,28 +123,32 @@ public class SequenceDataBase extends ExperimentObject {
      * @throws IllegalArgumentException Exception thrown whenever the fasta header is not of correct format
      */
     public void importDataBase(File fastaFile) throws FileNotFoundException, IOException {
+        
         FileReader f = new FileReader(fastaFile);
         BufferedReader b = new BufferedReader(f);
 
-        String header, line = b.readLine();
-        String accession = "", description = "", sequence = "";
+        String line = b.readLine();
+        String accession = "", sequence = "";
         Protein newProtein;
         Header fastaHeader = null;
         boolean decoy = false;
 
         while (line != null) {
+            
             line = line.trim();
+            
             if (line.startsWith(">")) {
                 if (!sequence.equals("")) {
                     newProtein = new Protein(accession, sequence, decoy);
                     proteinMap.put(newProtein.getProteinKey(), newProtein);
                     headerMap.put(newProtein.getProteinKey(), fastaHeader);
+                    
                     if (!decoy) {
                         nTargetSequences++;
                     }
                 }
-                header = line;
-                fastaHeader = Header.parseFromFASTA(header);
+                
+                fastaHeader = Header.parseFromFASTA(line);
                 accession = fastaHeader.getAccession();
 
                 if (accession != null) {
@@ -150,34 +161,38 @@ public class SequenceDataBase extends ExperimentObject {
             } else {
                 sequence += line;
             }
+            
             line = b.readLine();
         }
+        
         newProtein = new Protein(accession, sequence, decoy);
         proteinMap.put(newProtein.getProteinKey(), newProtein);
         headerMap.put(newProtein.getProteinKey(), fastaHeader);
+        
         if (!decoy) {
             nTargetSequences++;
         }
     }
 
     /**
-     * Appends reversed sequences to the database
+     * Appends reversed sequences to the database.
+     * 
      * @throws IllegalArgumentException Exception thrown if the database already contains decoy sequences
      */
     public void appendDecoySequences() {
+        
         if (nTargetSequences < proteinMap.size()) {
             throw new IllegalArgumentException("The database already contains decoy sequences!");
         }
+        
         ArrayList<String> proteinKeys = new ArrayList<String>(proteinMap.keySet());
-        Header decoyHeader;
-        Protein decoyProtein;
         
         for (String key : proteinKeys) {
             
-            decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
+            Header decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
             decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
-            decoyProtein = new Protein(decoyHeader.getAccession(), reverseSequence(proteinMap.get(key).getSequence()), true);
+            Protein decoyProtein = new Protein(decoyHeader.getAccession(), reverseSequence(proteinMap.get(key).getSequence()), true);
 
             proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
             headerMap.put(decoyProtein.getProteinKey(), decoyHeader);
@@ -195,15 +210,20 @@ public class SequenceDataBase extends ExperimentObject {
     }
 
     /**
-     * Exports the sequence data base as a fasta file. Target sequences first then decoy sequences. proteins are sorted by accession alphabetic order.
+     * Exports the sequence database as a fasta file. Target sequences first then 
+     * decoy sequences. Proteins are sorted by accession alphabetic order.
      * 
      * @param fastaFile     The fasta file where sequences should be output
      * @throws IOException  Exception thrown whenever a problem occurred while writing the file.
      */
     public void exportAsFasta(File fastaFile) throws IOException {
+        
         Writer proteinWriter = new BufferedWriter(new FileWriter(fastaFile));
         ArrayList<String> keys = new ArrayList<String>(proteinMap.keySet());
         Collections.sort(keys);
+        
+        // @TODO: check if it is possible to do this without having to iterate the keys twice?
+
         for (String proteinKey : keys) {
             if (!proteinMap.get(proteinKey).isDecoy()) {
                 proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");

@@ -29,7 +29,7 @@ public class SpectrumMatch extends ExperimentObject {
     /**
      * The corresponding peptide assumptions
      */
-    private HashMap<Integer, HashMap<Double, PeptideAssumption>> assumptions = new HashMap<Integer, HashMap<Double, PeptideAssumption>>();
+    private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptions = new HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>>();
     /**
      * The best assumption
      */
@@ -57,8 +57,9 @@ public class SpectrumMatch extends ExperimentObject {
      */
     public SpectrumMatch(String spectrumKey, PeptideAssumption assumption) {
         int advocateId = assumption.getAdvocate();
-        assumptions.put(advocateId, new HashMap<Double, PeptideAssumption>());
-        assumptions.get(advocateId).put(assumption.getEValue(), assumption);
+        assumptions.put(advocateId, new HashMap<Double, ArrayList<PeptideAssumption>>());
+        assumptions.get(advocateId).put(assumption.getEValue(), new ArrayList<PeptideAssumption>());
+        assumptions.get(advocateId).get(assumption.getEValue()).add(assumption);
         firstHits.put(advocateId, assumption);
         advocates.add(advocateId);
         this.spectrumKey = spectrumKey;
@@ -106,10 +107,10 @@ public class SpectrumMatch extends ExperimentObject {
      * @param  advocateId the desired advocate ID
      * @return all assumptions
      */
-    public HashMap<Double, PeptideAssumption> getAllAssumptions(int advocateId) {
+    public HashMap<Double, ArrayList<PeptideAssumption>> getAllAssumptions(int advocateId) {
         return assumptions.get(advocateId);
     }
-
+ 
     /**
      * Return all assumptions for all search engines as a list
      *
@@ -117,8 +118,10 @@ public class SpectrumMatch extends ExperimentObject {
      */
     public ArrayList<PeptideAssumption> getAllAssumptions() {
         ArrayList<PeptideAssumption> result = new ArrayList<PeptideAssumption>();
-        for (HashMap<Double, PeptideAssumption> seMap : assumptions.values()) {
-            result.addAll(seMap.values());
+        for (HashMap<Double, ArrayList<PeptideAssumption>> seMap : assumptions.values()) {
+            for (double eValue : seMap.keySet()) {
+            result.addAll(seMap.get(eValue));
+            }
         }
         return result;
     }
@@ -134,9 +137,12 @@ public class SpectrumMatch extends ExperimentObject {
             firstHits.put(otherAdvocateId, otherAssumption);
         }
         if (!assumptions.containsKey(otherAdvocateId)) {
-            assumptions.put(otherAdvocateId, new HashMap<Double, PeptideAssumption>());
+            assumptions.put(otherAdvocateId, new HashMap<Double, ArrayList<PeptideAssumption>>());
         }
-        assumptions.get(otherAdvocateId).put(otherAssumption.getEValue(), otherAssumption);
+        if (!assumptions.get(otherAdvocateId).containsKey(otherAssumption.getEValue())) {
+            assumptions.get(otherAdvocateId).put(otherAssumption.getEValue(), new ArrayList<PeptideAssumption>());
+        }
+        assumptions.get(otherAdvocateId).get(otherAssumption.getEValue()).add(otherAssumption);
         if (!advocates.contains(otherAdvocateId)) {
             advocates.add(otherAdvocateId);
         }

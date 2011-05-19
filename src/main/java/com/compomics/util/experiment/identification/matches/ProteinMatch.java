@@ -28,6 +28,10 @@ public class ProteinMatch extends ExperimentObject {
      */
     private HashMap<String, Protein> theoreticProtein = new HashMap<String, Protein>();
     /**
+     * The retained protein after protein inference resolution
+     */
+    private Protein mainMatch;
+    /**
      * The corresponding peptide matches
      */
     private HashMap<String, PeptideMatch> peptideMatches = new HashMap<String, PeptideMatch>();
@@ -68,6 +72,10 @@ public class ProteinMatch extends ExperimentObject {
         return theoreticProtein.get(accession);
     }
 
+    /**
+     * Returns the accessions of the possible theoretic proteins
+     * @return  the accessions of the possible theoretic proteins
+     */
     public Set<String> getTheoreticProteinsAccessions() {
         return theoreticProtein.keySet();
     }
@@ -82,11 +90,19 @@ public class ProteinMatch extends ExperimentObject {
     }
 
     /**
-     * Removes a protein from the collection
-     * @param accession the accession of the protein to remove
+     * Returns the main match after protein inference
+     * @return the main match after protein inference
      */
-    public void removeProtein(String accession) {
-        theoreticProtein.remove(accession);
+    public Protein getMainMatch() {
+        return mainMatch;
+    }
+
+    /**
+     * Sets the main protein after protein inference
+     * @param mainMatch the main match
+     */
+    public void setMainMatch(Protein mainMatch) {
+        this.mainMatch = mainMatch;
     }
 
     /**
@@ -104,7 +120,7 @@ public class ProteinMatch extends ExperimentObject {
      * @param peptideMatch a peptide match
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) {
-        String index = peptideMatch.getTheoreticPeptide().getKey();
+        String index = peptideMatch.getKey();
         if (!peptideMatches.containsKey(index)) {
             peptideMatches.put(index, peptideMatch);
         } else {

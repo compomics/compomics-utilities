@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 
@@ -159,8 +160,12 @@ public class PeptideMatch extends ExperimentObject {
                 spectrumMatches.put(index, newMatch);
             } else {
                 for (int searchEngine : newMatch.getAdvocates()) {
-                    for (PeptideAssumption peptideAssumption : newMatch.getAllAssumptions(searchEngine).values()) {
-                        spectrumMatches.get(index).addHit(searchEngine, peptideAssumption);
+                    if (spectrumMatches.get(index).getFirstHit(searchEngine) == null) {
+                        for (ArrayList<PeptideAssumption> peptideAssumptions : newMatch.getAllAssumptions(searchEngine).values()) {
+                            for (PeptideAssumption peptideAssumption : peptideAssumptions) {
+                                spectrumMatches.get(index).addHit(searchEngine, peptideAssumption);
+                            }
+                        }
                     }
                 }
             }

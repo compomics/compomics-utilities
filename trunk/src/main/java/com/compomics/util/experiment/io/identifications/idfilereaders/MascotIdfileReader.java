@@ -135,7 +135,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 if (mascotPeptideHits != null) {
                     testPeptide = mascotPeptideHits.get(0);
                 } else if (mascotDecoyPeptideHits != null) {
-                    testPeptide = mascotPeptideHits.get(0);
+                    testPeptide = mascotDecoyPeptideHits.get(0);
                 }
                 if (testPeptide != null) {
                     Double measuredMass = testPeptide.getPeptideMr() + testPeptide.getDeltaMass();

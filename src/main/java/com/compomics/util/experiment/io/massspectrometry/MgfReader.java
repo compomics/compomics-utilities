@@ -36,7 +36,7 @@ public class MgfReader {
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws Exception {
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0;
-        int precursorCharge = 0;
+        int precursorCharge = 1;
         double rt = -1.0;
         String scanNumber = "";
         String spectrumTitle = "";
@@ -83,13 +83,20 @@ public class MgfReader {
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, new Precursor(rt, precursorMass, new Charge(Charge.PLUS, precursorCharge)), spectrumTitle, spectrum, aFile.getName());
                 msnSpectrum.setScanNumber(scanNumber);
                 spectra.add(msnSpectrum);
-            } else if (line.compareTo("") != 0) {
+            } else if (!line.equals("")) {
                 try {
                     Double mz = new Double(line.substring(0, line.indexOf(' ')));
                     Double intensity = new Double(line.substring(line.indexOf(' ')));
                     spectrum.add(new Peak(mz, intensity));
-                } catch (Exception e) {
+                } catch (Exception e1) {
+                    // try with tab separated
+                try {
+                    Double mz = new Double(line.substring(0, line.indexOf('\t')));
+                    Double intensity = new Double(line.substring(line.indexOf('\t')));
+                    spectrum.add(new Peak(mz, intensity));
+                } catch (Exception e2) {
                     // ignore comments and all other lines
+                }
                 }
             }
         }

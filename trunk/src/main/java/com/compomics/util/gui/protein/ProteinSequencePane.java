@@ -95,11 +95,14 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
-        double temp = (editorPane.getWidth() - 200) / (fm.stringWidth("X"));
+        double temp = (editorPane.getWidth() - 250) / (fm.stringWidth("X"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
 
         ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
+
+        boolean previousAminoAcidWasCovered = false;
+        boolean previousAminoAcidWasSelected = false;
 
         // iterate the coverage table and create the formatted sequence string
         for (int i = 1; i < coverage.length; i++) {
@@ -129,31 +132,68 @@ public class ProteinSequencePane {
                     selectedPeptide = false;
                 }
             }
-
-            String underlineStart = "";
-            String underlineEnd = "";
-
-            if (selectedPeptide) {
-                underlineStart = "<u>";
-                underlineEnd = "</u>";
+            
+            if (previousAminoAcidWasSelected && !selectedPeptide) {
+                currentCellSequence += "</span>";
             }
 
             // highlight the covered and selected peptides
-            if (coveredPeptide) {
-                currentCellSequence += "<font color=black>" + underlineStart + cleanSequence.charAt(i - 1) + underlineEnd + "</font>";
+            if (selectedPeptide) {
+                if (i % 10 == 1) {
+                    currentCellSequence += "<span style=\"background:#CEE3F6\">" + cleanSequence.charAt(i - 1);
+                } else {
+                    if (previousAminoAcidWasSelected) {
+                        currentCellSequence += cleanSequence.charAt(i - 1);
+                    } else {
+                        currentCellSequence += "</span><span style=\"background:#CEE3F6\">" + cleanSequence.charAt(i - 1);
+                    }
+                }
+                
+                previousAminoAcidWasSelected = true;
+                
             } else {
-                currentCellSequence += "<span style=\"color:#BDBDBD\">" + cleanSequence.charAt(i - 1) + "</span>";
+                
+                previousAminoAcidWasSelected = false;
+                
+                if (coveredPeptide) {
+                    if (i % 10 == 1) {
+                        currentCellSequence += cleanSequence.charAt(i - 1);
+                    } else {
+                        if (previousAminoAcidWasCovered) {
+                            currentCellSequence += cleanSequence.charAt(i - 1);
+                        } else {
+                            currentCellSequence += "</span>" + cleanSequence.charAt(i - 1);
+                        }
+                    }
+                } else {
+                    if (i % 10 == 1) {
+                        currentCellSequence += "<span style=\"color:#BDBDBD\">" + cleanSequence.charAt(i - 1);
+                    } else {
+                        if (previousAminoAcidWasCovered) {
+                            currentCellSequence += "<span style=\"color:#BDBDBD\">" + cleanSequence.charAt(i - 1);
+                        } else {
+                            currentCellSequence += cleanSequence.charAt(i - 1);
+                        }
+                    }
+                }
             }
 
             // add the sequence to the formatted sequence
             if (i % 10 == 0) {
-                sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td>";
+                if (previousAminoAcidWasCovered && !previousAminoAcidWasSelected) {
+                    sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td>";
+                } else {
+                    sequenceTable += "<td><tt>" + currentCellSequence + "</span></tt></td>";
+                }
+
                 currentCellSequence = "";
             }
+
+            previousAminoAcidWasCovered = coveredPeptide;
         }
 
         // add remaining tags and complete the formatted sequence
-        sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td></table><font color=black>";
+        sequenceTable += "<td><tt>" + currentCellSequence + "</tt></td></table>";
         String formattedSequence = "<html><body><table cellspacing='2'>" + sequenceTable + "</html></body>";
 
         // display the formatted sequence
@@ -224,6 +264,8 @@ public class ProteinSequencePane {
     public static double formatProteinSequence(JEditorPane editorPane, String cleanSequence, int selectedPeptideStart, int selectedPeptideEnd, int[] coverage,
             TreeMap<String, String> aKeyValuePairs, boolean showModifications, boolean showVariants, boolean showCoverage) {
 
+        // @TODO: the html code ought to be optimized similar to the method above!!
+        
         if (cleanSequence.length() != coverage.length - 1) {
             throw new IllegalArgumentException("The lenght of the coverage map has to be equal to the lenght of the sequence + 1!");
         }
@@ -236,7 +278,7 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
-        double temp = (editorPane.getWidth() - 200) / (fm.stringWidth("X"));
+        double temp = (editorPane.getWidth() - 250) / (fm.stringWidth("X"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
 

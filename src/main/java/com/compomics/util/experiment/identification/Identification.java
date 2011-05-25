@@ -75,6 +75,7 @@ public abstract class Identification extends ExperimentObject {
      * Add a protein identification to the identification results
      *
      * @param proteinMatch the protein identification match
+     * @throws Exception  
      */
     public void addProteinMatch(ProteinMatch proteinMatch) throws Exception {
         for (PeptideMatch peptideMatch : proteinMatch.getPeptideMatches().values()) {
@@ -88,6 +89,7 @@ public abstract class Identification extends ExperimentObject {
      * Add protein identifications to the identification results
      *
      * @param proteinMatches the list of protein identification matches
+     * @throws Exception  
      */
     public void addProteinMatch(ArrayList<ProteinMatch> proteinMatches) throws Exception {
         for (ProteinMatch proteinMatch : proteinMatches) {

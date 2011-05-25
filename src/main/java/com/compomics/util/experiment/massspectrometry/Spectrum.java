@@ -10,6 +10,7 @@ import java.util.HashSet;
  * This class models a spectrum
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class Spectrum extends ExperimentObject {
 
@@ -41,45 +42,53 @@ public abstract class Spectrum extends ExperimentObject {
      * The timepoint when the spectrum was recorded (scan start time in mzML files)
      */
     protected double scanStartTime;
+    /**
+     * The splitter in the key between spectrumFile and spectrumTitle.
+     */
+    public static final String SPECTRUM_KEY_SPLITTER = "|";
 
     /**
-     * Convenience method returning the key for a spectrum
-     * @param spectrumFile  The spectrum file
-     * @param spectrumTitle The spectrum title
-     * @return  the corresponding spectrum key
+     * Convenience method returning the key for a spectrum.
+     * 
+     * @param spectrumFile      The spectrum file
+     * @param spectrumTitle     The spectrum title
+     * @return                  the corresponding spectrum key
      */
     public static String getSpectrumKey(String spectrumFile, String spectrumTitle) {
-        return spectrumFile + "_" + spectrumTitle;
+        return spectrumFile + SPECTRUM_KEY_SPLITTER + spectrumTitle;
     }
 
     /**
-     * Convenience method to retrieve the name of a file from the spectrum key
+     * Convenience method to retrieve the name of a file from the spectrum key.
+     * 
      * @param spectrumKey   the spectrum key
-     * @return  the name of the file containing the spectrum
+     * @return              the name of the file containing the spectrum
      */
     public static String getSpectrumFile(String spectrumKey) {
-        return spectrumKey.split("_")[0];
+        return spectrumKey.split("\\" + SPECTRUM_KEY_SPLITTER)[0];
     }
 
     /**
-     * Convenience method to retrieve the name of a spectrum from the spectrum key
+     * Convenience method to retrieve the name of a spectrum from the spectrum key.
+     * 
      * @param spectrumKey   the spectrum key
-     * @return  the title of the spectrum
+     * @return              the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
-        return spectrumKey.substring(spectrumKey.indexOf("_") + 1);
+        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 1);
     }
 
     /**
-     * Returns the key of the spectrum
+     * Returns the key of the spectrum.
+     * 
      * @return the key of the spectrum
      */
     public String getSpectrumKey() {
-        return fileName + "_" + spectrumTitle;
+        return fileName + SPECTRUM_KEY_SPLITTER + spectrumTitle;
     }
 
     /**
-     * returns the spectrum title
+     * Returns the spectrum title.
      *
      * @return spectrum title
      */
@@ -88,7 +97,7 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * format the peaks so they can be plot in JFreeChart
+     * Format the peaks so they can be plot in JFreeChart.
      *
      * @return a table containing the peaks
      */
@@ -127,7 +136,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Getter for the scan number
+     * Getter for the scan number.
+     * 
      * @return the spectrum scan number
      */
     public String getScanNumber() {
@@ -135,7 +145,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Setter for the scan number or range
+     * Setter for the scan number or range.
+     * 
      * @param scanNumber or range
      */
     public void setScanNumber(String scanNumber) {
@@ -143,7 +154,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the file name
+     * Returns the file name.
+     * 
      * @return the file name
      */
     public String getFileName() {
@@ -151,7 +163,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns at which level the spectrum was recorded
+     * Returns at which level the spectrum was recorded.
+     * 
      * @return at which level the spectrum was recorded
      */
     public int getLevel() {
@@ -159,7 +172,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the peak list
+     * Returns the peak list.
+     * 
      * @return the peak list
      */
     public HashSet<Peak> getPeakList() {
@@ -167,7 +181,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the scan start time
+     * Returns the scan start time.
+     * 
      * @return the scan start time
      */
     public double getScanStartTime() {
@@ -175,7 +190,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Sets the scan start time
+     * Sets the scan start time.
+     * 
      * @param scanStartTime the timepoint when the spectrum was recorded
      */
     public void setScanStartTime(double scanStartTime) {
@@ -183,7 +199,7 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * This method will remove the peak list in order to reduce memory consumption of the model
+     * This method will remove the peak list in order to reduce memory consumption of the model.
      */
     public void removePeakList() {
         if (peakList != null) {
@@ -328,15 +344,20 @@ public abstract class Spectrum extends ExperimentObject {
      * @return                          the intensity limit
      */
     public double getIntensityLimit(boolean annotateMostIntensePeaks) {
+        
         if (annotateMostIntensePeaks) {
+            
             ArrayList<Double> intensities = new ArrayList<Double>();
+            
             for (Peak peak : peakList) {
                 intensities.add(peak.intensity);
             }
+            
             Collections.sort(intensities);
             int index = 3 * (intensities.size() - 1) / 4;
             return intensities.get(index);
         }
+        
         return 0;
     }
 }

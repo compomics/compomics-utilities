@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * This class models an MSn spectrum.

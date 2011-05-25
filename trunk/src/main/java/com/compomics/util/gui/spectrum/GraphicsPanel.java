@@ -88,7 +88,7 @@ public abstract class GraphicsPanel extends JPanel {
      * The keys are the Doubles with the massdelta, the values are the
      * descriptions.
      */
-    protected static HashMap iKnownMassDeltas = null;
+    protected static HashMap<Double, String> iKnownMassDeltas = null;
 
     // Static init block takes care of reading the 'SpectrumPanel.properties' file if
     // it hasn't already been done.
@@ -378,6 +378,20 @@ public abstract class GraphicsPanel extends JPanel {
     protected int iMSLevel = 0;
 
     /**
+     * An enumerator of the possible GraphicsPanel types
+     */
+    protected enum GraphicsPanelType {
+
+        profileSpectrum, centroidSpectrum, chromatogram,
+        isotopicDistributionCentroid, isotopicDistributionProfile
+    }
+    
+    /**
+     * Sets the current GraphicsPanel type, default to centroid spectrum
+     */
+    protected GraphicsPanelType currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
+
+    /**
      * Returns true of all the y-data is to be assumed as positive.
      *
      * @return true of all the y-data is to be assumed as positive
@@ -430,18 +444,48 @@ public abstract class GraphicsPanel extends JPanel {
     public double getXAxisZoomRangeUpperValue() {
         return xAxisZoomRangeUpperValue;
     }
-    /**
-     * An enumerator of the possible GraphicsPanel types
-     */
-    protected enum GraphicsPanelType {
 
-        profileSpectrum, centroidSpectrum, chromatogram,
-        isotopicDistributionCentroid, isotopicDistributionProfile
-    }
     /**
-     * Sets the current GraphicsPanel type, default to centroid spectrum
+     * Get the size of the window to use when searching for matches in the known masses
+     * list when the user hovers over a second data point after clicking a previous
+     * data point.
+     * 
+     * @return the size of the delta mass window
      */
-    protected GraphicsPanelType currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
+    public double getDeltaMassWindow() {
+        return deltaMassWindow;
+    }
+
+    /**
+     * Set the size of the window to use when searching for matches in the known masses
+     * list when the user hovers over a second data point after clicking a previous
+     * data point.
+     * 
+     * @param deltaMassWindow the new size of the delta mass window
+     */
+    public void setDeltaMassWindow(double deltaMassWindow) {
+        this.deltaMassWindow = deltaMassWindow;
+    }
+
+    /**
+     * Get all the known mass deltas (if any). The keys are the Doubles with the 
+     * massdelta, the values are the descriptions.
+     * 
+     * @return HashMap of the known mass deltas
+     */
+    public static HashMap<Double, String> getKnownMassDeltas() {
+        return iKnownMassDeltas;
+    }
+
+    /**
+     * Set all the known mass deltas (if any). The keys are the Doubles with the 
+     * massdelta, the values are the descriptions.
+     * 
+     * @param aiKnownMassDeltas the HasMap of the known mass deltas
+     */
+    public static void setKnownMassDeltas(HashMap<Double, String> aiKnownMassDeltas) {
+        iKnownMassDeltas = aiKnownMassDeltas;
+    }
 
     /**
      * Returns the x-axis data.
@@ -1468,7 +1512,7 @@ public abstract class GraphicsPanel extends JPanel {
                 int xDistance = ((this.getWidth() - (iXPadding * 2)) / 4) - (precLength / 2);
                 int fromBottom = fm.getAscent() / 2;
                 Font oldFont = this.getFont();
-                
+
                 int smallFontCorrection = 0;
                 int yHeight = this.getHeight() - fromBottom;
                 int xAdditionForResolution = precLength + 15;
@@ -1550,15 +1594,15 @@ public abstract class GraphicsPanel extends JPanel {
                 }
 
                 // now we can mark the rest of the units
-                while(lTagValue < aMax){
+                while (lTagValue < aMax) {
                     int xLoc = (int) (aPadding + (lTagValue * scaleUnitXTags));
-                        if (xLoc < (aPadding + aXAxisWidth)) {
-                            g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
-                            long labelAsInt = aMin + lTagValue;
-                            String label = numberFormat.format(labelAsInt);
-                            int labelWidth = fm.stringWidth(label);
-                            g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
-                        }
+                    if (xLoc < (aPadding + aXAxisWidth)) {
+                        g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                        long labelAsInt = aMin + lTagValue;
+                        String label = numberFormat.format(labelAsInt);
+                        int labelWidth = fm.stringWidth(label);
+                        g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+                    }
                     lTagValue = lTagValue + distanceBetweenTags;
                 }
 
@@ -1667,7 +1711,7 @@ public abstract class GraphicsPanel extends JPanel {
             }
 
             long lTagValue = 0;
-            while(lTagValue < aMax){
+            while (lTagValue < aMax) {
                 int yLoc = (int) (aPadding + (lTagValue * scaleUnitYTags));
                 g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
                 long labelAsInt = aMin + lTagValue;

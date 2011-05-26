@@ -107,7 +107,7 @@ public class ProteomicAnalysis extends ExperimentObject {
     public void clearSpectrumCollection() {
         spectrumCollection = new SpectrumCollection();
     }
-
+    
     /**
      * Returns the sequence database used for identification
      * @return the sequence database used for identification

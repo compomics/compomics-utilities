@@ -16,9 +16,9 @@ import java.util.HashMap;
 public class ProteinQuantification extends ExperimentObject {
 
     /**
-     * The identification protein match
+     * The identification protein match key
      */
-    private ProteinMatch proteinMatch;
+    private String proteinKey;
 
     /**
      * The peptide quantification corresponding
@@ -32,29 +32,29 @@ public class ProteinQuantification extends ExperimentObject {
 
     /**
      * Constructor for the protein quantification
-     * @param proteinMatch              the identified protein match
+     * @param proteinKey              the identified protein match key
      */
-    public ProteinQuantification(ProteinMatch proteinMatch) {
-        this.proteinMatch = proteinMatch;
+    public ProteinQuantification(String proteinKey) {
+        this.proteinKey = proteinKey;
     }
     /**
      * Constructor for the protein quantification
-     * @param proteinMatch              the identified protein match
+     * @param proteinKey              the identified protein match key
      * @param peptideQuantification     the corresponding peptide quantification
      */
-    public ProteinQuantification(ProteinMatch proteinMatch, HashMap<String, PeptideQuantification> peptideQuantification) {
-        this.proteinMatch = proteinMatch;
+    public ProteinQuantification(String proteinKey, HashMap<String, PeptideQuantification> peptideQuantification) {
+        this.proteinKey = proteinKey;
         this.peptideQuantification = peptideQuantification;
     }
 
     /**
      * Constructor for the protein quantification
-     * @param proteinMatch              the identified protein match
+     * @param proteinKey              the identified protein match key
      * @param proteinRatios             the estimated protein ratios
      * @param peptideQuantification     the corresponding peptide quantification
      */
-    public ProteinQuantification(ProteinMatch proteinMatch, HashMap<String, PeptideQuantification> peptideQuantification, HashMap<Integer, Ratio> proteinRatios) {
-        this.proteinMatch = proteinMatch;
+    public ProteinQuantification(String proteinKey, HashMap<String, PeptideQuantification> peptideQuantification, HashMap<Integer, Ratio> proteinRatios) {
+        this.proteinKey = proteinKey;
         this.proteinRatios = proteinRatios;
         this.peptideQuantification = peptideQuantification;
     }
@@ -65,14 +65,6 @@ public class ProteinQuantification extends ExperimentObject {
      */
     public void setProteinRatios(HashMap<Integer, Ratio> ratios) {
         this.proteinRatios = ratios;
-    }
-
-    /**
-     * Getter for the protein match
-     * @return the protein match
-     */
-    public ProteinMatch getProteinMatch() {
-        return proteinMatch;
     }
 
     /**
@@ -105,7 +97,7 @@ public class ProteinQuantification extends ExperimentObject {
      * @param newPeptideQuantification the new peptide quantification
      */
     public void addPeptideQuantification(PeptideQuantification newPeptideQuantification) {
-        peptideQuantification.put(newPeptideQuantification.getPeptideMatch().getKey(), newPeptideQuantification);
+        peptideQuantification.put(newPeptideQuantification.getKey(), newPeptideQuantification);
     }
 
     /**
@@ -113,6 +105,6 @@ public class ProteinQuantification extends ExperimentObject {
      * @return the indexing key of the protein quantification
      */
     public String getKey() {
-        return proteinMatch.getKey();
+        return proteinKey;
     }
 }

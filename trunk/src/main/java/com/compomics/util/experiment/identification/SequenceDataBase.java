@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.gui.dialogs.ProgressDialogX;
 import com.compomics.util.protein.Header;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -173,13 +174,23 @@ public class SequenceDataBase extends ExperimentObject {
             nTargetSequences++;
         }
     }
+    
+    /**
+     * Appends reversed sequences to the database.
+     * 
+     * @throws IllegalArgumentException     Exception thrown if the database already contains decoy sequences
+     */
+    public void appendDecoySequences() {
+        appendDecoySequences(null);
+    }
 
     /**
      * Appends reversed sequences to the database.
      * 
-     * @throws IllegalArgumentException Exception thrown if the database already contains decoy sequences
+     * @param progressDialog                The progress dialog, can be null
+     * @throws IllegalArgumentException     Exception thrown if the database already contains decoy sequences
      */
-    public void appendDecoySequences() {
+    public void appendDecoySequences(ProgressDialogX progressDialog) {
         
         if (nTargetSequences < proteinMap.size()) {
             throw new IllegalArgumentException("The database already contains decoy sequences!");
@@ -187,7 +198,18 @@ public class SequenceDataBase extends ExperimentObject {
         
         ArrayList<String> proteinKeys = new ArrayList<String>(proteinMap.keySet());
         
+        if (progressDialog != null) {
+            progressDialog.setIntermidiate(false);
+            progressDialog.setMax(proteinKeys.size());
+        }
+        
+        int counter = 1;
+        
         for (String key : proteinKeys) {
+            
+            if (progressDialog != null) {
+                progressDialog.setValue(counter++);
+            }
             
             Header decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
             decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
@@ -196,6 +218,10 @@ public class SequenceDataBase extends ExperimentObject {
 
             proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
             headerMap.put(decoyProtein.getProteinKey(), decoyHeader);
+        }
+        
+        if (progressDialog != null) {
+            progressDialog.setIntermidiate(true);
         }
     }
 
@@ -213,29 +239,64 @@ public class SequenceDataBase extends ExperimentObject {
      * Exports the sequence database as a fasta file. Target sequences first then 
      * decoy sequences. Proteins are sorted by accession alphabetic order.
      * 
-     * @param fastaFile     The fasta file where sequences should be output
-     * @throws IOException  Exception thrown whenever a problem occurred while writing the file.
+     * @param fastaFile         The fasta file where sequences should be output
+     * @throws IOException      Exception thrown whenever a problem occurred while writing the file.
      */
     public void exportAsFasta(File fastaFile) throws IOException {
+        exportAsFasta(fastaFile, null);
+    }
+    
+    /**
+     * Exports the sequence database as a fasta file. Target sequences first then 
+     * decoy sequences. Proteins are sorted by accession alphabetic order.
+     * 
+     * @param fastaFile         The fasta file where sequences should be output
+     * @param progressDialog    The progress dialog, can be null
+     * @throws IOException      Exception thrown whenever a problem occurred while writing the file.
+     */
+    public void exportAsFasta(File fastaFile, ProgressDialogX progressDialog) throws IOException {
         
         Writer proteinWriter = new BufferedWriter(new FileWriter(fastaFile));
         ArrayList<String> keys = new ArrayList<String>(proteinMap.keySet());
         Collections.sort(keys);
         
         // @TODO: check if it is possible to do this without having to iterate the keys twice?
+        
+        if (progressDialog != null) {
+            progressDialog.setIntermidiate(false);
+            progressDialog.setMax(keys.size()*2);
+        }
+        
+        int counter = 1;
 
         for (String proteinKey : keys) {
+            
+            if (progressDialog != null) {
+                progressDialog.setValue(counter++);
+            }
+            
             if (!proteinMap.get(proteinKey).isDecoy()) {
                 proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
                 proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
             }
         }
+        
         for (String proteinKey : keys) {
+            
+            if (progressDialog != null) {
+                progressDialog.setValue(counter++);
+            }
+            
             if (proteinMap.get(proteinKey).isDecoy()) {
                 proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
                 proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
             }
         }
+        
+        if (progressDialog != null) {
+            progressDialog.setIntermidiate(true);
+        }
+        
         proteinWriter.close();
     }
 

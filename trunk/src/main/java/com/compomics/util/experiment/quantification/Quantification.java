@@ -45,7 +45,7 @@ public abstract class Quantification extends ExperimentObject {
      * @param aProteinQuantification    The corresponding protein quantification
      */
     public void addProteinQuantification(ProteinQuantification aProteinQuantification) {
-        proteinQuantification.put(aProteinQuantification.getProteinMatch().getKey(), aProteinQuantification);
+        proteinQuantification.put(aProteinQuantification.getKey(), aProteinQuantification);
     }
 
     /**

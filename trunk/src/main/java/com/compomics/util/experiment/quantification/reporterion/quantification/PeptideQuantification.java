@@ -19,7 +19,7 @@ public class PeptideQuantification extends ExperimentObject {
     /**
      * the identification peptide match
      */
-    private PeptideMatch peptideMatch;
+    private String peptideKey;
 
     /**
      * The corresponding spectrum quantification
@@ -33,18 +33,18 @@ public class PeptideQuantification extends ExperimentObject {
 
     /**
      * Constructor for the peptide quantification
-     * @param peptideMatch              the identification peptide match
+     * @param peptideKey              the key of the identification peptide match
      */
-    public PeptideQuantification(PeptideMatch peptideMatch) {
-        this.peptideMatch = peptideMatch;
+    public PeptideQuantification(String peptideKey) {
+        this.peptideKey = peptideKey;
     }
     /**
      * Constructor for the peptide quantification
-     * @param peptideMatch              the identification peptide match
+     * @param peptideKey              the key of the identification peptide match
      * @param psmQuantification         the corresponding spectrum quantification 
      */
-    public PeptideQuantification(PeptideMatch peptideMatch, HashMap<String, PsmQuantification> psmQuantification) {
-        this.peptideMatch = peptideMatch;
+    public PeptideQuantification(String peptideKey, HashMap<String, PsmQuantification> psmQuantification) {
+        this.peptideKey = peptideKey;
         this.psmQuantification = psmQuantification;
     }
 
@@ -54,8 +54,8 @@ public class PeptideQuantification extends ExperimentObject {
      * @param psmQuantification         the corresponding spectrum quantification
      * @param ratios                    the estimated ratios
      */
-    public PeptideQuantification(PeptideMatch peptideMatch, HashMap<String, PsmQuantification> psmQuantification, HashMap<Integer, Ratio> ratios) {
-        this.peptideMatch = peptideMatch;
+    public PeptideQuantification(String peptideKey, HashMap<String, PsmQuantification> psmQuantification, HashMap<Integer, Ratio> ratios) {
+        this.peptideKey = peptideKey;
         this.psmQuantification = psmQuantification;
         this.ratios = ratios;
     }
@@ -66,14 +66,6 @@ public class PeptideQuantification extends ExperimentObject {
      */
     public void setPeptideRatios(HashMap<Integer, Ratio> ratios) {
         this.ratios = ratios;
-    }
-
-    /**
-     * Getter for the peptide match
-     * @return the peptide match
-     */
-    public PeptideMatch getPeptideMatch() {
-        return peptideMatch;
     }
 
     /**
@@ -113,6 +105,6 @@ public class PeptideQuantification extends ExperimentObject {
      * @return the key of the peptide quantification
      */
     public String getKey() {
-        return peptideMatch.getKey();
+        return peptideKey;
     }
 }

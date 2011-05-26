@@ -32,8 +32,8 @@ public class PsmQuantification extends ExperimentObject {
      * Constructor for a spectrumQuantification
      * @param spectrum  the corresponding spectrum
      */
-    public PsmQuantification(MSnSpectrum spectrum) {
-        this.spectrumKey = spectrum.getSpectrumKey();
+    public PsmQuantification(String spectrumKey) {
+        this.spectrumKey = spectrumKey;
     }
 
     /**

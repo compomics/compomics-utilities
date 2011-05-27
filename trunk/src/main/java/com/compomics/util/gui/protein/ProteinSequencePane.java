@@ -95,7 +95,14 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
-        double temp = (editorPane.getWidth() - 250) / (fm.stringWidth("X"));
+        
+        int indexWidth = 200;
+        
+        if (cleanSequence.length() > 999) {
+            indexWidth = 250;
+        }
+        
+        double temp = (editorPane.getWidth() - indexWidth) / (fm.stringWidth("X"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
 
@@ -278,7 +285,14 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
-        double temp = (editorPane.getWidth() - 250) / (fm.stringWidth("X"));
+        
+        int indexWidth = 200;
+        
+        if (cleanSequence.length() > 999) {
+            indexWidth = 250;
+        }
+        
+        double temp = (editorPane.getWidth() - indexWidth) / (fm.stringWidth("X"));
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
 

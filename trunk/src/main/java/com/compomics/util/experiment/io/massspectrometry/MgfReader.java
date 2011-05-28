@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 /**
  * This class will read an mgf file.
@@ -20,20 +21,20 @@ import java.util.HashSet;
 public class MgfReader {
 
     /**
-     * general constructor for an mgf reader
+     * General constructor for an mgf reader.
      */
     public MgfReader() {
     }
 
     /**
-     * Reads an mgf file and retrieves a list of spectra
+     * Reads an mgf file and retrieves a list of spectra.
      *
-     * @param aFile the mgf file
-     * @return list of MSnSpectra imported from the file
-     * @throws Exception Exeption thrown if a problem is encountered reading the file
+     * @param aFile         the mgf file
+     * @return              list of MSnSpectra imported from the file
+     * @throws Exception    Exeption thrown if a problem is encountered reading the file
      */
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws Exception {
-        
+
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         int precursorCharge = 1;
@@ -41,7 +42,7 @@ public class MgfReader {
         HashSet<Peak> spectrum = new HashSet<Peak>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
         String line = null;
-        
+
         while ((line = br.readLine()) != null) {
             line = line.trim();
             if (line.equals("BEGIN IONS")) {
@@ -51,23 +52,19 @@ public class MgfReader {
             } else if (line.startsWith("CHARGE")) {
                 precursorCharge = new Integer(line.substring(line.indexOf('=') + 1, line.indexOf('=') + 2));
             } else if (line.startsWith("PEPMASS")) {
-
-                    // @TODO: verify that this is the best way of doing this
-                
-                    if (line.lastIndexOf(" ") != -1) {
-                        String[] temp = line.split(" ");
-                        precursorMass = new Double(temp[0].substring(temp[0].indexOf('=') + 1));
-                        precursorIntensity = new Double(temp[1]);
-                    } else if (line.lastIndexOf("\t") != -1) {
-                        String[] temp = line.split("\t");
-                        precursorMass = new Double(temp[0].substring(temp[0].indexOf('=') + 1));
-                        precursorIntensity = new Double(temp[1]);
-                    } else {
-                        precursorMass = new Double(line.substring(line.indexOf('=') + 1));
-                    }
+                String temp = line.substring(line.indexOf("=") + 1);
+                String[] values = temp.split("\\s");
+                precursorMass = Double.parseDouble(values[0]);
+                if (values.length > 1) {
+                    precursorIntensity = Double.parseDouble(values[1]);
+                } else {
+                    precursorIntensity = 0.0;
+                }
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
-                    rt = new Double(line.substring(line.indexOf('=') + 1));
+                    String value = line.substring(line.indexOf('=') + 1);
+                    String[] temp = Pattern.compile("\\D").split(value);
+                    rt = new Double(temp[0]);
                 } catch (Exception e) {
                     throw new Exception("Cannot parse retention time.");
                 }

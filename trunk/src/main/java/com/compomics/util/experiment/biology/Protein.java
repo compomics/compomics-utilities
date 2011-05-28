@@ -29,6 +29,10 @@ public class Protein extends ExperimentObject {
      * The protein sequence
      */
     private String sequence;
+    /**
+     * The protein database type.
+     */
+    private String databaseType;
 
     /**
      * Constructor for a protein
@@ -37,10 +41,10 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Simplistic constructor for a protein (typically used when loading identification files)
+     * Simplistic constructor for a protein (typically used when loading identification files).
      *
-     * @param accession The protein accession
-     * @param isDecoy       boolean indicating whether the protein is decoy
+     * @param accession     The protein accession
+     * @param isDecoy       boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, boolean isDecoy) {
         this.accession = accession;
@@ -48,20 +52,36 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * constructor for a protein
+     * Constructor for a protein.
      *
      * @param accession     The protein accession
      * @param sequence      The protein sequence
-     * @param isDecoy       boolean indicating whether the protein is decoy
+     * @param isDecoy       boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, String sequence, boolean isDecoy) {
         this.accession = accession;
         this.sequence = sequence;
         this.decoy = isDecoy;
     }
+    
+    /**
+     * Constructor for a protein.
+     *
+     * @param accession     The protein accession
+     * @param databaseType  The protein database the protein comes from
+     * @param sequence      The protein sequence
+     * @param isDecoy       boolean indicating whether the protein is a decoy
+     */
+    public Protein(String accession, String databaseType, String sequence, boolean isDecoy) {
+        this.accession = accession;
+        this.databaseType = databaseType;
+        this.sequence = sequence;
+        this.decoy = isDecoy;
+    }
 
     /**
-     * indicates if the protein is factice (from a decoy database for instance)
+     * Indicates if the protein is factice (from a decoy database for instance)
+     * 
      * @return a boolean indicating if the protein is factice
      */
     public boolean isDecoy() {
@@ -75,6 +95,15 @@ public class Protein extends ExperimentObject {
      */
     public String getAccession() {
         return accession;
+    }
+    
+    /**
+     * Getter for the protein database type.
+     *
+     * @return the protein database type
+     */
+    public String getDatabaseType() {
+        return databaseType;
     }
 
     /**

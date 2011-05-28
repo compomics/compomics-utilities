@@ -56,6 +56,12 @@ public class SequenceDataBase extends ExperimentObject {
 
     /**
      * Constructor for a sequence database.
+     */
+    public SequenceDataBase() {
+    }
+    
+    /**
+     * Constructor for a sequence database.
      * 
      * @param name      Name of the database
      * @param version   Version of the database
@@ -129,7 +135,7 @@ public class SequenceDataBase extends ExperimentObject {
         BufferedReader b = new BufferedReader(f);
 
         String line = b.readLine();
-        String accession = "", sequence = "";
+        String accession = "", databaseType = null, sequence = "";
         Protein newProtein;
         Header fastaHeader = null;
         boolean decoy = false;
@@ -140,7 +146,7 @@ public class SequenceDataBase extends ExperimentObject {
             
             if (line.startsWith(">")) {
                 if (!sequence.equals("")) {
-                    newProtein = new Protein(accession, sequence, decoy);
+                    newProtein = new Protein(accession, databaseType, sequence, decoy);
                     proteinMap.put(newProtein.getProteinKey(), newProtein);
                     headerMap.put(newProtein.getProteinKey(), fastaHeader);
                     
@@ -151,6 +157,7 @@ public class SequenceDataBase extends ExperimentObject {
                 
                 fastaHeader = Header.parseFromFASTA(line);
                 accession = fastaHeader.getAccession();
+                databaseType = fastaHeader.getDatabaseType();
 
                 if (accession != null) {
                     decoy = accession.contains(decoyFlag);
@@ -166,7 +173,7 @@ public class SequenceDataBase extends ExperimentObject {
             line = b.readLine();
         }
         
-        newProtein = new Protein(accession, sequence, decoy);
+        newProtein = new Protein(accession, databaseType, sequence, decoy);
         proteinMap.put(newProtein.getProteinKey(), newProtein);
         headerMap.put(newProtein.getProteinKey(), fastaHeader);
         
@@ -214,7 +221,7 @@ public class SequenceDataBase extends ExperimentObject {
             Header decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
             decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
-            Protein decoyProtein = new Protein(decoyHeader.getAccession(), reverseSequence(proteinMap.get(key).getSequence()), true);
+            Protein decoyProtein = new Protein(decoyHeader.getAccession(), null, reverseSequence(proteinMap.get(key).getSequence()), true);
 
             proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
             headerMap.put(decoyProtein.getProteinKey(), decoyHeader);

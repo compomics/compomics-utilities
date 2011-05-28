@@ -65,7 +65,7 @@ public class Header implements Cloneable, Serializable {
      * of the database. The links themselves are not included as these might 
      * change outside the control of the compomics-utilties library.
      */
-    private String iDatabaseType = null;
+    private String iDatabaseType = null; // @TODO: perhaps this should be replaced by an Enum?
 
     /**
      * The foreign accession String is an accession String in another database of significance.

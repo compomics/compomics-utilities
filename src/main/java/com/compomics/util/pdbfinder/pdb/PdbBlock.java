@@ -118,8 +118,6 @@ public class PdbBlock {
                 input.append((char) i);
             }
 
-            System.out.println("1: " + input.toString());
-            
             lSequence = readFasta(input.toString(), aPdbAccession);
 
         } catch (MalformedURLException e) {

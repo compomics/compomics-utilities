@@ -7,6 +7,8 @@ package com.compomics.util.pdbfinder.pdb;
  * Time: 13:53:14
  */
 public class PdbParameter {
+    
+    // @TODO: add JavaDoc...
 
     private String iPdbaccession;
     private String iTitle;

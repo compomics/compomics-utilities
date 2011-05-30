@@ -9,6 +9,8 @@ import java.util.Vector;
  * Time: 9:09:14
  */
 public class DasAlignment {
+    
+    // @TODO: add JavaDoc...
 
     private String iAlignment;
     //feature elements

@@ -7,6 +7,8 @@ package com.compomics.util.pdbfinder.das.readers;
  * Time: 8:30:45
  */
 public class StartEndPosition {
+    
+    // @TODO: add JavaDoc...
 
     private int iStart;
     private int iEnd;

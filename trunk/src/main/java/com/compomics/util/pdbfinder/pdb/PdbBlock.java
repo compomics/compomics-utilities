@@ -1,5 +1,14 @@
 package com.compomics.util.pdbfinder.pdb;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Niklaas Colaert
@@ -7,6 +16,8 @@ package com.compomics.util.pdbfinder.pdb;
  * Time: 13:53:46
  */
 public class PdbBlock {
+    
+    // @TODO: add JavaDoc...
 
     private String iBlock;
     private int iStart_protein;
@@ -15,6 +26,7 @@ public class PdbBlock {
     private int iEnd_block;
     private Integer[] iSelectedPositions;
     private boolean iSelection = false;
+    private String iUrl;
 
     public PdbBlock(String aBlock, int aStart_protein, int aEnd_protein, int aStart_block, int aEnd_block) {
         this.iBlock = aBlock;
@@ -80,5 +92,69 @@ public class PdbBlock {
     public void setSelectedPositions(Integer[] aSelectedPositions) {
         this.iSelectedPositions = aSelectedPositions;
         iSelection = true;
+    }
+
+    public String getBlockSequence(String aPdbAccession) {
+        String lUrl = "http://www.rcsb.org/pdb/files/fasta.txt?structureIdList=" + aPdbAccession;
+        return readUrl(lUrl, aPdbAccession);
+    }
+
+    public String readUrl(String aUrl, String aPdbAccession) {
+
+        this.iUrl = aUrl;
+
+        String lSequence = null;
+
+        try {
+            URL myURL = new URL(aUrl);
+            StringBuilder input = new StringBuilder();
+            HttpURLConnection c = (HttpURLConnection) myURL.openConnection();
+            BufferedInputStream in = new BufferedInputStream(c.getInputStream());
+            Reader r = new InputStreamReader(in);
+
+            int i;
+
+            while ((i = r.read()) != -1) {
+                input.append((char) i);
+            }
+
+            System.out.println("1: " + input.toString());
+            
+            lSequence = readFasta(input.toString(), aPdbAccession);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (ConnectException e) {
+            System.out.println("Connect exception for url " + iUrl);
+        } catch (IOException e) {
+            System.out.println("I/O exception for url " + iUrl);
+        }
+
+        return lSequence;
+    }
+
+    public String readFasta(String lFasta, String aPdbAccession) {
+
+        String[] lLines = lFasta.split("\n");
+        boolean lSequenceNeeded = false;
+        String lSequence = "";
+
+        for (int i = 0; i < lLines.length; i++) {
+            if (lLines[i].startsWith(">")) {
+                //check if we need to read this
+                if (lLines[i].indexOf(aPdbAccession + ":" + iBlock + "|") >= 0) {
+                    //we need this
+                    lSequenceNeeded = true;
+                } else {
+                    lSequenceNeeded = false;
+                }
+            } else {
+                if (lSequenceNeeded) {
+                    lSequence = lSequence + lLines[i];
+                }
+            }
+        }
+
+        return lSequence;
     }
 }

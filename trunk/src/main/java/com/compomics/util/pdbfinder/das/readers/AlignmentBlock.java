@@ -7,6 +7,8 @@ package com.compomics.util.pdbfinder.das.readers;
  * Time: 9:18:16
  */
 public class AlignmentBlock {
+    
+    // @TODO: add JavaDoc...
 
     private int iPdbStart;
     private int iPdbEnd;

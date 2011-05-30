@@ -23,6 +23,8 @@ import java.util.Vector;
  * Time: 10:44
  */
 public class FindPdbForUniprotAccessions {
+    
+    // @TODO: add JavaDoc...
 
     private String iProteinAccession;
     private DasAlignment[] iAlignments;

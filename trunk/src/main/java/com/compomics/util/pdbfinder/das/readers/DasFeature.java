@@ -9,6 +9,8 @@ import java.util.Vector;
  * Time: 14:07:47
  */
 public class DasFeature {
+    
+    // @TODO: add JavaDoc...
 
     private String iFeature;
     

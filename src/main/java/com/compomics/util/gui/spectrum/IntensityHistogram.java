@@ -5,7 +5,6 @@ import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAn
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,6 +12,7 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
@@ -106,25 +106,13 @@ public class IntensityHistogram extends JPanel {
 
             HistogramDataset dataset = new HistogramDataset();
             dataset.setType(HistogramType.RELATIVE_FREQUENCY); // @TODO: use SCALE_AREA_TO_1 instead??
-            dataset.addSeries("NonAnnotated", nonAnnotatedIntensities, bins, 0, currentSpectrum.getMaxIntensity());
+            dataset.addSeries("Not Annotated", nonAnnotatedIntensities, bins, 0, currentSpectrum.getMaxIntensity());
             dataset.addSeries("Annotated", annotatedIntensities, bins, 0, currentSpectrum.getMaxIntensity());
 
             JFreeChart chart = ChartFactory.createHistogram(null, null, null,
                     dataset, PlotOrientation.VERTICAL, false, true, false);
 
-            ChartPanel chartPanel = new ChartPanel(chart) {
-
-                @Override
-                public String getToolTipText(MouseEvent e) {
-                    return "Intensity Distribution";
-                }
-
-                @Override
-                public String getToolTipText() {
-                    return "Intensity Distribution";
-                }
-            };
-
+            ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setBorder(null);
             chart.setBorderVisible(false);
 
@@ -132,6 +120,7 @@ public class IntensityHistogram extends JPanel {
 
             // set up the chart renderer
             XYBarRenderer renderer = new XYBarRenderer();
+            renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
             renderer.setShadowVisible(false);
             //renderer.setSeriesPaint(0, new Color(210, 210, 210, 150)); // @TODO: make this selectable by the user
             renderer.setSeriesPaint(0, new Color(0, 0, 250, 150)); // @TODO: make this selectable by the user
@@ -142,20 +131,11 @@ public class IntensityHistogram extends JPanel {
             plot.getRangeAxis().setRange(0, plot.getRangeAxis().getUpperBound());
 
             // hide unwanted chart details
-//            plot.getRangeAxis().setVisible(false);
-//            plot.getDomainAxis().setVisible(false);
-//            plot.setRangeGridlinesVisible(false);
-//            plot.setDomainGridlinesVisible(false);
             plot.setOutlineVisible(false);
 
             plot.setBackgroundPaint(Color.WHITE);
             chartPanel.setBackground(Color.WHITE);
             chart.setBackgroundPaint(Color.WHITE);
-
-            chartPanel.setDomainZoomable(false);
-            chartPanel.setRangeZoomable(false);
-            chartPanel.setPopupMenu(null);
-            chartPanel.setDisplayToolTips(true);
 
             this.add(chartPanel);
         }

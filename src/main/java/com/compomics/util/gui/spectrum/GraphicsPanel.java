@@ -1069,7 +1069,7 @@ public abstract class GraphicsPanel extends JPanel {
             /**
              * Invoked when a mouse button is pressed on a component and then
              * dragged.  Mouse drag events will continue to be delivered to
-             * the component where the first originated until the mouse button is
+             * the component where they first originated until the mouse button is
              * released (regardless of whether the mouse position is within the
              * bounds of the component).
              */

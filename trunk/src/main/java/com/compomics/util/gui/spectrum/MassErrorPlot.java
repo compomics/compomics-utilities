@@ -5,7 +5,6 @@ import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAn
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +13,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
@@ -116,11 +116,14 @@ public class MassErrorPlot extends JPanel {
                 dataXY[0][0] = ionMatch.peak.mz;
                 dataXY[1][0] = ionMatch.getError();
 
-                xyDataset.addSeries(i, dataXY);
+                xyDataset.addSeries(ionMatch.getPeakAnnotation(), dataXY);
 
-                int alphaLevel = Double.valueOf((ionMatch.peak.intensity / totalIntensity) / (maxAnnotatedIntensity / totalIntensity) * 255).intValue();
+                // use the two lines below is all points ought to have the same color
+                //int alphaLevel = Double.valueOf((ionMatch.peak.intensity / totalIntensity) / (maxAnnotatedIntensity / totalIntensity) * 255).intValue();
+                //colors.add(new Color(255, 0, 0, alphaLevel)); // @TODO: make color selectable by the user?
 
-                colors.add(new Color(255, 0, 0, alphaLevel)); // @TODO: make color selectable by the user?
+                // use the same colors as for the SpectrumPanel annotation
+                colors.add(SpectrumPanel.determineFragmentIonColor(ionMatch.getPeakAnnotation()));
             }
 
             JFreeChart chart = ChartFactory.createScatterPlot(null, null, null, xyDataset, PlotOrientation.VERTICAL, false, false, false);
@@ -129,6 +132,7 @@ public class MassErrorPlot extends JPanel {
             XYPlot plot = chart.getXYPlot();
 
             DefaultXYItemRenderer renderer = new DefaultXYItemRenderer();
+            renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 
             // set the colors and shape for the datapoints
             for (int i = 0; i < colors.size(); i++) {
@@ -137,7 +141,7 @@ public class MassErrorPlot extends JPanel {
                     renderer.setSeriesPaint(i, colors.get(i));
                     renderer.setSeriesShape(i, renderer.getBaseShape());
                 } else {
-                    renderer.setSeriesPaint(i, Color.RED); // @TODO: make this selectable by the user?
+                    renderer.setSeriesPaint(i, colors.get(i));
                     renderer.setSeriesShape(i, renderer.getBaseShape());
                 }
             }
@@ -167,25 +171,8 @@ public class MassErrorPlot extends JPanel {
             chart.getPlot().setBackgroundPaint(Color.WHITE);
             chart.setBackgroundPaint(Color.WHITE);
 
-            ChartPanel chartPanel = new ChartPanel(chart) {
-
-                @Override
-                public String getToolTipText(MouseEvent e) {
-                    return "Mass Error Plot";
-                }
-
-                @Override
-                public String getToolTipText() {
-                    return "Mass Error Plot";
-                }
-            };
-
+            ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setBackground(Color.WHITE);
-
-            chartPanel.setDomainZoomable(false);
-            chartPanel.setRangeZoomable(false);
-            chartPanel.setPopupMenu(null);
-
             this.add(chartPanel);
         }
     }

@@ -4,9 +4,11 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAnnotationMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +24,12 @@ import java.util.Iterator;
  */
 public class SequenceFragmentationPanel extends JPanel {
 
+    
+    /**
+     * A map of the rectangles used to draw each fragment ion peak. This map is 
+     * later used for the tooltip for each peak.
+     */
+    private HashMap<String, Rectangle> fragmentIonRectangles;
     /**
      * Elementary data for composing the Panel.
      */
@@ -95,6 +103,15 @@ public class SequenceFragmentationPanel extends JPanel {
         iIonMatches = aIonMatches;
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
+        
+        fragmentIonRectangles = new HashMap<String, Rectangle> ();
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+
+            public void mouseMoved(MouseEvent me) {
+                mouseMovedHandler(me);
+            }
+        });
     }
 
     /**
@@ -114,6 +131,15 @@ public class SequenceFragmentationPanel extends JPanel {
         iIonMatches = getSequenceFragmentationAnnotations(annotations);
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
+        
+        fragmentIonRectangles = new HashMap<String, Rectangle> ();
+        
+        addMouseMotionListener(new MouseMotionAdapter() {
+
+            public void mouseMoved(MouseEvent me) {
+                mouseMovedHandler(me);
+            }
+        });
     }
 
     /**
@@ -240,7 +266,10 @@ public class SequenceFragmentationPanel extends JPanel {
                         lBarHeight = 7;
                     }
                     g2.setColor(Color.BLUE);
-                    g2.fill(new Rectangle(xLocation, lMidStringHeight.intValue() + 1, iBarWidth, lBarHeight));
+                    Rectangle tempRectangle = new Rectangle(xLocation, lMidStringHeight.intValue() + 1, iBarWidth, lBarHeight);
+                    g2.fill(tempRectangle);
+                    
+                    fragmentIonRectangles.put("b" + (i+1), tempRectangle);
                 }
             }
 
@@ -254,8 +283,10 @@ public class SequenceFragmentationPanel extends JPanel {
                     g2.setColor(Color.RED);
                     // y bar height and y-axis start are somewhat different for yIons.
                     int yBarStart = lMidStringHeight.intValue() - 1 - lBarHeight;
-
-                    g2.fill(new Rectangle(xLocation, yBarStart, iBarWidth, lBarHeight));
+                    Rectangle tempRectangle = new Rectangle(xLocation, yBarStart, iBarWidth, lBarHeight);
+                    g2.fill(tempRectangle);
+                    
+                    fragmentIonRectangles.put("y" + (yIons.length - i), tempRectangle);
                 }
             }
 
@@ -448,5 +479,32 @@ public class SequenceFragmentationPanel extends JPanel {
     public void setIonMatches(ArrayList lIonMatches) {
         iIonMatches = lIonMatches;
         normalizeMatchedIons();
+    }
+
+    /**
+     * If the mouse hovers over one of the fragment ion peaks the tooltip is 
+     * set to the fragment ion type and number. If not the tooltip is set 
+     * to null.
+     */
+    private void mouseMovedHandler(MouseEvent me) {
+        
+        String tooltip = null;
+        
+        Iterator<String> ions = fragmentIonRectangles.keySet().iterator();
+        
+        boolean matchFound = false;
+        
+        // iterate the peak rectangles and look for matches
+        while (ions.hasNext() && !matchFound) {
+            
+            String key = ions.next();
+
+            if (fragmentIonRectangles.get(key).contains(me.getPoint())) {
+                tooltip = key;
+                matchFound = true;
+            }
+        }
+        
+        this.setToolTipText(tooltip);
     }
 }

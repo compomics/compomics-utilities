@@ -176,24 +176,32 @@ public class MassErrorBubblePlot extends JPanel {
 
                 if (fragmentIonLabels) {
 
-                    HashMap<String, ArrayList<XYZDataPoint>> data =
-                            new HashMap<String, ArrayList<XYZDataPoint>>();
-
                     for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
-
-                        if (data.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")") != null) {
-                            data.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")").add(
+                        
+                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
+                            fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
                                     new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
-                            data.put(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")", temp);
+                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(), temp);
                         }
+
+                        // The code below ought to be used if fragmentIonLabels are used and more than one spectrum is to be displayed.
+                        // As this is currently not used the below code is not used either
+      //                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")") != null) {
+      //                            fragmentIonDataset.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")").add(
+      //                                    new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+      //                        } else {
+      //                            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
+      //                            temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+      //                            fragmentIonDataset.put(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")", temp);
+      //                        }
                     }
 
-                    xyzDataset = addXYZDataSeries(data);
+                    xyzDataset = addXYZDataSeries(fragmentIonDataset);
 
                 } else {
 

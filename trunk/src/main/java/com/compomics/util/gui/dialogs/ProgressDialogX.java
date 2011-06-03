@@ -9,6 +9,9 @@ import javax.swing.SwingUtilities;
  */
 public class ProgressDialogX extends javax.swing.JDialog {
 
+    /**
+     * The progress dialog parent.
+     */
     private ProgressDialogParent progressDialogFrame;
     /**
      * If set to true, trying to close the progess bar will be ignored.
@@ -20,6 +23,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
      * Opens a new ProgressDialogX with a Frame as a parent
      * 
      * @param parent
+     * @param progressDialogFrame 
      * @param modal
      */
     public ProgressDialogX(java.awt.Frame parent, ProgressDialogParent progressDialogFrame, boolean modal) {
@@ -39,6 +43,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
      * Opens a new ProgressDialog with a JDialog as a parent
      * 
      * @param parent
+     * @param progressDialogFrame 
      * @param modal
      */
     public ProgressDialogX(javax.swing.JDialog parent, ProgressDialogParent progressDialogFrame, boolean modal) {
@@ -105,10 +110,13 @@ public class ProgressDialogX extends javax.swing.JDialog {
     }
 
     /**
-     * Makes the dialog intermidiate or not intermidiate. Also 
+     * Makes the dialog indeterminate or not indeterminate. Also 
      * turns the paint progress string on or off.
      * 
      * @param intermidiate
+     * 
+     * @deprecated Replaced by setIndeterminate, from utilities 3.1.17.
+     * @see #setIndeterminate(boolean) 
      */
     public void setIntermidiate(final boolean intermidiate) {
 
@@ -116,6 +124,22 @@ public class ProgressDialogX extends javax.swing.JDialog {
             public void run() {
                 progressBar.setStringPainted(!intermidiate);
                 progressBar.setIndeterminate(intermidiate);
+            }
+        });
+    }
+    
+    /**
+     * Makes the dialog indeterminate or not indeterminate. Also 
+     * turns the paint progress string on or off.
+     * 
+     * @param indeterminate
+     */
+    public void setIndeterminate(final boolean indeterminate) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                progressBar.setStringPainted(!indeterminate);
+                progressBar.setIndeterminate(indeterminate);
             }
         });
     }

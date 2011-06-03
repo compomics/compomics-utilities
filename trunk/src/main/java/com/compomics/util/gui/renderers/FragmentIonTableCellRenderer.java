@@ -50,7 +50,7 @@ public class FragmentIonTableCellRenderer implements TableCellRenderer {
         this.foregroundColor = foreground;
 
         // make sure that floating numbers are always shown using four decimals
-        numberFormat = new DecimalFormat("0.0000");
+        numberFormat = new DecimalFormat("0.00");
         numberFormat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.US));
     }
 

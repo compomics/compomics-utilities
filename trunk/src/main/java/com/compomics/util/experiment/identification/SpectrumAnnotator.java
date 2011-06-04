@@ -60,7 +60,8 @@ public class SpectrumAnnotator {
     }
 
     /**
-     * This method matches the potential fragment ions of a given peptide with a given peak
+     * This method matches the potential fragment ions of a given peptide with a given peak.
+     * 
      * @param peptide       The peptide
      * @param peak          The peak to match
      * @param massTolerance The mass tolerance to use (in Dalton)
@@ -68,14 +69,28 @@ public class SpectrumAnnotator {
      * @return              A list of potential ion matches
      */
     public ArrayList<IonMatch> matchPeak(Peptide peptide, Peak peak, double massTolerance, Charge charge) {
+        
         setPeptide(peptide);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
-            if (Math.abs(fragmentIon.theoreticMass + charge.value * Atom.H.mass - peak.mz * charge.value) <= massTolerance) {
-                result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(),
-                        fragmentIon.getNumber()), charge));
+            if (!fragmentIon.getIonType().startsWith("i")) {
+                
+                // add the non immonium ions
+                if (Math.abs(fragmentIon.theoreticMass + charge.value * Atom.H.mass - peak.mz * charge.value) <= massTolerance) {
+                    result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(),
+                            fragmentIon.getNumber()), charge));
+                }
+            } else if (charge.value == 1) {
+                
+                // only add immonium ions of charge 1
+                if (Math.abs(fragmentIon.theoreticMass + charge.value * Atom.H.mass - peak.mz * charge.value) <= massTolerance) {
+                    result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(),
+                            fragmentIon.getNumber()), charge));
+                }
             }
         }
+        
         return result;
     }
 

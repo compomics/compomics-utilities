@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.quantification.reporterion.quantification;
 
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.quantification.Ratio;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -9,9 +8,8 @@ import java.util.HashMap;
 
 /**
  * This class models the quantification at the MS2 spectrum level.
- * User: Marc
- * Date: Sep 1, 2010
- * Time: 3:53:12 PM
+ * 
+ * @author Marc Vaudel
  */
 public class PsmQuantification extends ExperimentObject {
 
@@ -30,7 +28,7 @@ public class PsmQuantification extends ExperimentObject {
 
     /**
      * Constructor for a spectrumQuantification
-     * @param spectrum  the corresponding spectrum
+     * @param spectrumKey  the corresponding spectrum
      */
     public PsmQuantification(String spectrumKey) {
         this.spectrumKey = spectrumKey;

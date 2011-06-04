@@ -9,7 +9,8 @@ import java.util.HashMap;
 /**
  * This factory generates the expected fragment ions from a peptide sequence.
  *
- * @author Marc
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FragmentFactory {
 
@@ -59,56 +60,70 @@ public class FragmentFactory {
         ArrayList<PeptideFragmentIon> result = new ArrayList<PeptideFragmentIon>();
 
         AminoAcid currentAA;
-        PeptideFragmentIon currentFragment;
         double forwardMass = 0;
         double rewindMass = Atom.O.mass;
         int raa, faa;
+        
         for (int aa = 0; aa < sequence.length() - 1; aa++) {
+            
             faa = aa + 1;
             currentAA = getAminoAcid(sequence.charAt(aa));
             forwardMass += currentAA.monoisotopicMass;
+            
             if (modifications.get(aa) != null) {
                 for (PTM ptm : modifications.get(aa)) {
                     forwardMass += ptm.getMass();
                 }
             }
+            
+            // add the immonium ion
+            result.add(new PeptideFragmentIon(PeptideFragmentIon.getImmoniumIon(currentAA.singleLetterCode), currentAA.monoisotopicMass - Atom.C.mass - Atom.O.mass));
 
+            // add the a-ions
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass));
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.ANH3_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - Atom.N.mass - 3 * Atom.H.mass));
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.AH2O_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - 2 * Atom.H.mass - Atom.O.mass));
 
+            // add the b-ions
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.B_ION, faa, forwardMass));
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.BNH3_ION, faa, forwardMass - Atom.N.mass - 3 * Atom.H.mass));
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.BH2O_ION, faa, forwardMass - 2 * Atom.H.mass - Atom.O.mass));
 
+            // add the c-ion
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass));
 
             raa = sequence.length() - aa - 1;
             currentAA = getAminoAcid(sequence.charAt(raa));
             rewindMass += currentAA.monoisotopicMass;
+            
             if (modifications.get(raa) != null) {
                 for (PTM ptm : modifications.get(raa)) {
                     forwardMass += ptm.getMass();
                 }
             }
 
+            // add the x-ion
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass));
 
+            // add the y-ions
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.Y_ION, faa, rewindMass + 2 * Atom.H.mass));
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.YNH3_ION, faa, rewindMass - Atom.N.mass - Atom.H.mass));
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.YH2O_ION, faa, rewindMass - Atom.O.mass));
 
+            // add the z-ions
             result.add(new PeptideFragmentIon(PeptideFragmentIonType.Z_ION, faa, rewindMass - Atom.N.mass));
-
         }
 
         currentAA = getAminoAcid(sequence.charAt(sequence.length() - 1));
         forwardMass += currentAA.monoisotopicMass;
+        
         if (modifications.get(sequence.length() - 1) != null) {
             for (PTM ptm : modifications.get(sequence.length() - 1)) {
                 forwardMass += ptm.getMass();
             }
         }
+        
+        // add the precursor ions
         result.add(new PeptideFragmentIon(PeptideFragmentIonType.MH_ION, sequence.length(), forwardMass + 2 * Atom.H.mass + Atom.O.mass));
         result.add(new PeptideFragmentIon(PeptideFragmentIonType.MHNH3_ION, sequence.length(), forwardMass - Atom.N.mass - Atom.H.mass + Atom.O.mass));
         result.add(new PeptideFragmentIon(PeptideFragmentIonType.MHH2O_ION, sequence.length(), forwardMass));
@@ -118,6 +133,7 @@ public class FragmentFactory {
 
     /**
      * Returns the amino acid corresponding to the letter given, null if not implemented.
+     * 
      * @param letter    the letter given
      * @return          the corresponding amino acid.
      */

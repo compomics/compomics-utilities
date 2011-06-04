@@ -9,11 +9,8 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This class will model the assignment of a peak to a theoretical ion.
- * <p/>
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 23, 2010
- * Time: 1:29:41 PM
+ * 
+ * @author Marc Vaudel
  */
 public class IonMatch extends ExperimentObject {
 
@@ -35,7 +32,7 @@ public class IonMatch extends ExperimentObject {
     public Charge charge;
 
     /**
-     * Constructor for an ion peak
+     * Constructor for an ion peak.
      *
      * @param aPeak     the matched peak
      * @param anIon     the corresponding type of ion
@@ -48,7 +45,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * get the matching error
+     * Get the matching error.
      *
      * @return the matching error
      */
@@ -72,7 +69,7 @@ public class IonMatch extends ExperimentObject {
 
             // add fragment ion number
             if (!fragmentIon.getIonType().equalsIgnoreCase("MH")
-                    && !fragmentIon.getIonType().equalsIgnoreCase("i")
+                    && !fragmentIon.getIonType().startsWith("i")
                     && !fragmentIon.getIonType().equalsIgnoreCase("Prec-loss")) {
                 annotation += fragmentIon.getNumber();
             }

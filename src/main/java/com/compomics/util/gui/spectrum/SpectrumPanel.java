@@ -186,7 +186,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
      *                                  can be 'null' for default coloring.
      * @param aMaxPadding   int the sets the maximum padding size.
-
+    
      * @param aShowFileName boolean that specifies if the file name should be shown in the panel
      * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
      * @param aShowResolution   boolean that specifies if the resolution should be shown in the panel
@@ -608,7 +608,26 @@ public class SpectrumPanel extends GraphicsPanel {
                     useAnnotation = false;
                 }
             } else { // other
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM)
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_A)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_C)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_D)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_E)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_F)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_G)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_H)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_I)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_K)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_L)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_M)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_N)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_P)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_Q)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_R)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_S)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_T)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_V)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_W)
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_Y)
                         || fragmentIonTypes.contains(PeptideFragmentIonType.MH_ION)
                         || fragmentIonTypes.contains(PeptideFragmentIonType.MHH2O_ION)
                         || fragmentIonTypes.contains(PeptideFragmentIonType.MHNH3_ION))) {
@@ -661,7 +680,7 @@ public class SpectrumPanel extends GraphicsPanel {
         return filteredAnnotations;
     }
 
-     /**
+    /**
      * Returns the peak color to be used for the given peak label. The
      * colors used are based on the color coding used in MascotDatfile.
      *
@@ -717,7 +736,26 @@ public class SpectrumPanel extends GraphicsPanel {
         } else if (fragmentIonType == PeptideFragmentIonType.MHNH3_ION) {
             // red
             currentColor = Color.gray; // Color.red is used in MascotDatFile
-        } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM) {
+        } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM_A
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_C
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_D
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_E
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_F
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_G
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_H
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_I
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_K
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_L
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_M
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_N
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_P
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_Q
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_R
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_S
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_T
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_V
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_W
+                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_Y) {
             // grey
             currentColor = Color.gray;
         }
@@ -749,7 +787,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
 
             // change color slightly if a double charge is detected
-            if(seriesLabel.lastIndexOf("++") != -1){
+            if (seriesLabel.lastIndexOf("++") != -1) {
                 currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
             }
 
@@ -766,7 +804,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
 
             // change color slightly if a double charge is detected
-            if(seriesLabel.lastIndexOf("++") != -1){
+            if (seriesLabel.lastIndexOf("++") != -1) {
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
             }
 
@@ -783,7 +821,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
 
             // change color slightly if a double charge is detected
-            if(seriesLabel.lastIndexOf("++") != -1){
+            if (seriesLabel.lastIndexOf("++") != -1) {
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
             }
 
@@ -800,7 +838,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
 
             // change color slightly if a double charge is detected
-            if(seriesLabel.lastIndexOf("++") != -1){
+            if (seriesLabel.lastIndexOf("++") != -1) {
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
             }
 
@@ -809,7 +847,7 @@ public class SpectrumPanel extends GraphicsPanel {
             // red
             currentColor = new Color(255, 0, 0);
 
-             // change color slightly if a neutral loss is detected
+            // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
                 currentColor = new Color(255, 150, 0);
             } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("y ions - mod.")) {
@@ -817,7 +855,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
 
             // change color slightly if a double charge is detected
-            if(seriesLabel.lastIndexOf("++") != -1){
+            if (seriesLabel.lastIndexOf("++") != -1) {
                 currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
             }
 
@@ -826,7 +864,7 @@ public class SpectrumPanel extends GraphicsPanel {
             // dark green
             currentColor = new Color(64, 179, 0);
 
-             // change color slightly if a neutral loss is detected
+            // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
                 currentColor = new Color(64, 179, 150);
             } else if (seriesLabel.lastIndexOf("NH3") != -1) {
@@ -834,7 +872,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
 
             // change color slightly if a double charge is detected
-            if(seriesLabel.lastIndexOf("++") != -1){
+            if (seriesLabel.lastIndexOf("++") != -1) {
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
             }
 

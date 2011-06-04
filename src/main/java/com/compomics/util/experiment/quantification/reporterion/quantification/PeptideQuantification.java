@@ -1,23 +1,19 @@
 package com.compomics.util.experiment.quantification.reporterion.quantification;
 
-import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.quantification.Ratio;
-import com.compomics.util.experiment.quantification.reporterion.quantification.PsmQuantification;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashMap;
-import java.util.ArrayList;
 
 /**
  * This class models quantification at the peptide level.
- * User: Marc
- * Date: Sep 1, 2010
- * Time: 3:49:22 PM
+ * 
+ * @author Marc Vaudel
  */
 public class PeptideQuantification extends ExperimentObject {
 
     /**
-     * the identification peptide match
+     * The identification peptide match
      */
     private String peptideKey;
 
@@ -50,7 +46,7 @@ public class PeptideQuantification extends ExperimentObject {
 
     /**
      * Constructor for the peptide quantification
-     * @param peptideMatch              the identification peptide match
+     * @param peptideKey              the identification peptide match
      * @param psmQuantification         the corresponding spectrum quantification
      * @param ratios                    the estimated ratios
      */

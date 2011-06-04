@@ -77,13 +77,93 @@ public class PeptideFragmentIon extends Ion {
          */
         MHH2O_ION,
         /**
-         * This int is the identifier for an immonium ion. The nature of the immonium ion is not coded yet.
+         * This int is the identifier for an alanine immonium ion.
          */
-        IMMONIUM,
+        IMMONIUM_A,
+        /**
+         * This int is the identifier for an arginine immonium ion.
+         */
+        IMMONIUM_R,
+        /**
+         * This int is the identifier for an asparagine immonium ion.
+         */
+        IMMONIUM_N,
+        /**
+         * This int is the identifier for an aspartic acid immonium ion.
+         */
+        IMMONIUM_D,
+        /**
+         * This int is the identifier for a cysteine immonium ion.
+         */
+        IMMONIUM_C,
+        /**
+         * This int is the identifier for a glutamic acid immonium ion.
+         */
+        IMMONIUM_E,
+        /**
+         * This int is the identifier for a glutamine acid immonium ion.
+         */
+        IMMONIUM_Q,
+        /**
+         * This int is the identifier for a glycine acid immonium ion.
+         */
+        IMMONIUM_G,
+        /**
+         * This int is the identifier for an histidine acid immonium ion.
+         */
+        IMMONIUM_H,
+        /**
+         * This int is the identifier for an isoleucine acid immonium ion.
+         */
+        IMMONIUM_I,
+        /**
+         * This int is the identifier for a leucine acid immonium ion.
+         */
+        IMMONIUM_L,
+        /**
+         * This int is the identifier for a lysine acid immonium ion.
+         */
+        IMMONIUM_K,
+        /**
+         * This int is the identifier for a methionine acid immonium ion.
+         */
+        IMMONIUM_M,
+        /**
+         * This int is the identifier for a phenylalanine acid immonium ion.
+         */
+        IMMONIUM_F,
+        /**
+         * This int is the identifier for a proline acid immonium ion.
+         */
+        IMMONIUM_P,
+        /**
+         * This int is the identifier for a serine acid immonium ion.
+         */
+        IMMONIUM_S,
+        /**
+         * This int is the identifier for a threonine acid immonium ion.
+         */
+        IMMONIUM_T,
+        /**
+         * This int is the identifier for a tryptophan acid immonium ion.
+         */
+        IMMONIUM_W,
+        /**
+         * This int is the identifier for a tyrosine acid immonium ion.
+         */
+        IMMONIUM_Y,
+        /**
+         * This int is the identifier for a valine acid immonium ion.
+         */
+        IMMONIUM_V,
         /**
          * This int is the identifier for a precursor ion loss. The nature of the loss is not coded yet.
          */
-        PRECURSOR_LOSS;
+        PRECURSOR_LOSS,
+        /**
+         * This int is the identifier for an unknown ion.
+         */
+        UNKNOWN;
     }
     /**
      * Type of ion
@@ -166,8 +246,46 @@ public class PeptideFragmentIon extends Ion {
                 || type == PeptideFragmentIonType.MHNH3_ION
                 || type == PeptideFragmentIonType.MHH2O_ION) {
             return "MH";
-        } else if (type == PeptideFragmentIonType.IMMONIUM) {
-            return "i";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_A) {
+            return "iA";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_C) {
+            return "iC";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_D) {
+            return "iD";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_E) {
+            return "iE";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_F) {
+            return "iF";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_G) {
+            return "iG";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_H) {
+            return "iH";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_I) {
+            return "iI";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_K) {
+            return "iK";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_L) {
+            return "iL";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_M) {
+            return "iM";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_N) {
+            return "iN";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_P) {
+            return "iP";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_Q) {
+            return "iQ";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_R) {
+            return "iR";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_S) {
+            return "iS";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_T) {
+            return "iT";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_V) {
+            return "iV";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_W) {
+            return "iW";
+        } else if (type == PeptideFragmentIonType.IMMONIUM_Y) {
+            return "iY";
         } else if (type == PeptideFragmentIonType.PRECURSOR_LOSS) {
             return "Prec-loss";
         }
@@ -195,5 +313,58 @@ public class PeptideFragmentIon extends Ion {
         }
 
         return "";
+    }
+
+    /**
+     * Converts a given amino acid residue to the given immonium ion.
+     * 
+     * @param aminoAcidResidue  the amino acid residue
+     * @return                  the corresponding immonium ion
+     */
+    public static PeptideFragmentIonType getImmoniumIon(String aminoAcidResidue) {
+
+        if (aminoAcidResidue.equalsIgnoreCase("A")) {
+            return PeptideFragmentIonType.IMMONIUM_A;
+        } else if (aminoAcidResidue.equalsIgnoreCase("C")) {
+            return PeptideFragmentIonType.IMMONIUM_C;
+        } else if (aminoAcidResidue.equalsIgnoreCase("D")) {
+            return PeptideFragmentIonType.IMMONIUM_D;
+        } else if (aminoAcidResidue.equalsIgnoreCase("E")) {
+            return PeptideFragmentIonType.IMMONIUM_E;
+        } else if (aminoAcidResidue.equalsIgnoreCase("F")) {
+            return PeptideFragmentIonType.IMMONIUM_F;
+        } else if (aminoAcidResidue.equalsIgnoreCase("G")) {
+            return PeptideFragmentIonType.IMMONIUM_G;
+        } else if (aminoAcidResidue.equalsIgnoreCase("H")) {
+            return PeptideFragmentIonType.IMMONIUM_H;
+        } else if (aminoAcidResidue.equalsIgnoreCase("I")) {
+            return PeptideFragmentIonType.IMMONIUM_I;
+        } else if (aminoAcidResidue.equalsIgnoreCase("K")) {
+            return PeptideFragmentIonType.IMMONIUM_K;
+        } else if (aminoAcidResidue.equalsIgnoreCase("L")) {
+            return PeptideFragmentIonType.IMMONIUM_L;
+        } else if (aminoAcidResidue.equalsIgnoreCase("M")) {
+            return PeptideFragmentIonType.IMMONIUM_M;
+        } else if (aminoAcidResidue.equalsIgnoreCase("N")) {
+            return PeptideFragmentIonType.IMMONIUM_N;
+        } else if (aminoAcidResidue.equalsIgnoreCase("P")) {
+            return PeptideFragmentIonType.IMMONIUM_P;
+        } else if (aminoAcidResidue.equalsIgnoreCase("Q")) {
+            return PeptideFragmentIonType.IMMONIUM_Q;
+        } else if (aminoAcidResidue.equalsIgnoreCase("R")) {
+            return PeptideFragmentIonType.IMMONIUM_R;
+        } else if (aminoAcidResidue.equalsIgnoreCase("S")) {
+            return PeptideFragmentIonType.IMMONIUM_S;
+        } else if (aminoAcidResidue.equalsIgnoreCase("T")) {
+            return PeptideFragmentIonType.IMMONIUM_T;
+        } else if (aminoAcidResidue.equalsIgnoreCase("V")) {
+            return PeptideFragmentIonType.IMMONIUM_V;
+        } else if (aminoAcidResidue.equalsIgnoreCase("W")) {
+            return PeptideFragmentIonType.IMMONIUM_W;
+        } else if (aminoAcidResidue.equalsIgnoreCase("Y")) {
+            return PeptideFragmentIonType.IMMONIUM_Y;
+        }
+
+        return PeptideFragmentIonType.UNKNOWN;
     }
 }

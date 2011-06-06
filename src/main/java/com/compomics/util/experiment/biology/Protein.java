@@ -78,7 +78,7 @@ public class Protein extends ExperimentObject {
         this.sequence = sequence;
         this.decoy = isDecoy;
     }
-
+    
     /**
      * Indicates if the protein is factice (from a decoy database for instance)
      * 

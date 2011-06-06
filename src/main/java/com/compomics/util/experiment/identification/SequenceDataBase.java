@@ -3,6 +3,8 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.gui.dialogs.ProgressDialogX;
+import com.compomics.util.protein.AASequenceImpl;
+import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Header;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -53,13 +55,18 @@ public class SequenceDataBase extends ExperimentObject {
      * Number of targeted sequences loaded
      */
     private int nTargetSequences = 0;
+    /**
+     * The sequence to protein acceesion number map. Key is the peptide sequence, 
+     * object is an array list of the mapped protein accession numbers.
+     */
+    HashMap<String, ArrayList<String>> sequenceToProteinMap = new HashMap<String, ArrayList<String>>();
 
     /**
      * Constructor for a sequence database.
      */
     public SequenceDataBase() {
     }
-    
+
     /**
      * Constructor for a sequence database.
      * 
@@ -120,7 +127,7 @@ public class SequenceDataBase extends ExperimentObject {
     public Set<String> getProteinList() {
         return proteinMap.keySet();
     }
-
+    
     /**
      * Imports a sequence database from a fasta file.
      *
@@ -130,7 +137,22 @@ public class SequenceDataBase extends ExperimentObject {
      * @throws IllegalArgumentException Exception thrown whenever the fasta header is not of correct format
      */
     public void importDataBase(File fastaFile) throws FileNotFoundException, IOException {
-        
+        importDataBase(fastaFile, null, 0, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Imports a sequence database from a fasta file.
+     *
+     * @param fastaFile                 The fasta file to import
+     * @param enzyme                    The enzyme to use
+     * @param minPeptideLength          The minimum peptide length 
+     * @param maxPeptideLength          The maximum peptide length
+     * @throws FileNotFoundException    Exception thrown when the fasta file is not found
+     * @throws IOException              Exception thrown whenever an error is encountered while parsing the file
+     * @throws IllegalArgumentException Exception thrown whenever the fasta header is not of correct format
+     */
+    public void importDataBase(File fastaFile, Enzyme enzyme, int minPeptideLength, int maxPeptideLength) throws FileNotFoundException, IOException {
+
         FileReader f = new FileReader(fastaFile);
         BufferedReader b = new BufferedReader(f);
 
@@ -139,22 +161,51 @@ public class SequenceDataBase extends ExperimentObject {
         Protein newProtein;
         Header fastaHeader = null;
         boolean decoy = false;
-
+        
+        // create the sequence to protein map
+        sequenceToProteinMap = new HashMap<String, ArrayList<String>>();
+        
         while (line != null) {
-            
+
             line = line.trim();
-            
+
             if (line.startsWith(">")) {
-                if (!sequence.equals("")) {
-                    newProtein = new Protein(accession, databaseType, sequence, decoy);
+                if (!sequence.equalsIgnoreCase("")) {
+
+                    if (enzyme != null) {
+
+                        // cleave the protein into peptides
+                        com.compomics.util.protein.Protein[] tempPeptides = 
+                                enzyme.cleave(new com.compomics.util.protein.Protein(new AASequenceImpl(sequence)), minPeptideLength, maxPeptideLength);
+
+                        // add all protein matches for the given peptide sequence
+                        for (int i = 0; i < tempPeptides.length; i++) {
+                            
+                            String tempPeptideSequence = tempPeptides[i].getSequence().getSequence();
+
+                            if (sequenceToProteinMap.containsKey(tempPeptideSequence)) {
+                                sequenceToProteinMap.get(tempPeptideSequence).add(accession);
+                            } else {
+                                ArrayList<String> accessions = new ArrayList<String>();
+                                accessions.add(accession);
+                                sequenceToProteinMap.put(tempPeptideSequence, accessions);
+                            }
+                        }
+                        
+                        newProtein = new Protein(accession, databaseType, sequence, decoy);
+  
+                    } else {
+                        newProtein = new Protein(accession, databaseType, sequence, decoy);
+                    }
+
                     proteinMap.put(newProtein.getProteinKey(), newProtein);
                     headerMap.put(newProtein.getProteinKey(), fastaHeader);
-                    
+
                     if (!decoy) {
                         nTargetSequences++;
                     }
                 }
-                
+
                 fastaHeader = Header.parseFromFASTA(line);
                 accession = fastaHeader.getAccession();
                 databaseType = fastaHeader.getDatabaseType();
@@ -169,19 +220,38 @@ public class SequenceDataBase extends ExperimentObject {
             } else {
                 sequence += line;
             }
-            
+
             line = b.readLine();
         }
-        
+
         newProtein = new Protein(accession, databaseType, sequence, decoy);
         proteinMap.put(newProtein.getProteinKey(), newProtein);
         headerMap.put(newProtein.getProteinKey(), fastaHeader);
-        
+
         if (!decoy) {
             nTargetSequences++;
         }
     }
     
+    /**
+     * Returns the sequence to protein accessions map.
+     * 
+     * @return the sequence to protein accessions map
+     */
+    public HashMap<String, ArrayList<String>> getSequenceToProteinMap () {
+        return sequenceToProteinMap;
+    }
+    
+    /**
+     * Empties the sequence to protein map. Used to free up the memory 
+     * used by the map. And to hinder this map from being saved when 
+     * saving the project as a cps file, as the file then becomes very 
+     * big.
+     */
+    public void emptySequenceToProteinMap () {
+        sequenceToProteinMap = new HashMap<String, ArrayList<String>>();
+    }
+
     /**
      * Appends reversed sequences to the database.
      * 
@@ -198,26 +268,26 @@ public class SequenceDataBase extends ExperimentObject {
      * @throws IllegalArgumentException     Exception thrown if the database already contains decoy sequences
      */
     public void appendDecoySequences(ProgressDialogX progressDialog) {
-        
+
         if (nTargetSequences < proteinMap.size()) {
             throw new IllegalArgumentException("The database already contains decoy sequences!");
         }
-        
+
         ArrayList<String> proteinKeys = new ArrayList<String>(proteinMap.keySet());
-        
+
         if (progressDialog != null) {
-            progressDialog.setIntermidiate(false);
+            progressDialog.setIndeterminate(false);
             progressDialog.setMax(proteinKeys.size());
         }
-        
+
         int counter = 1;
-        
+
         for (String key : proteinKeys) {
-            
+
             if (progressDialog != null) {
                 progressDialog.setValue(counter++);
             }
-            
+
             Header decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
             decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
@@ -226,9 +296,9 @@ public class SequenceDataBase extends ExperimentObject {
             proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
             headerMap.put(decoyProtein.getProteinKey(), decoyHeader);
         }
-        
+
         if (progressDialog != null) {
-            progressDialog.setIntermidiate(true);
+            progressDialog.setIndeterminate(true);
         }
     }
 
@@ -252,7 +322,7 @@ public class SequenceDataBase extends ExperimentObject {
     public void exportAsFasta(File fastaFile) throws IOException {
         exportAsFasta(fastaFile, null);
     }
-    
+
     /**
      * Exports the sequence database as a fasta file. Target sequences first then 
      * decoy sequences. Proteins are sorted by accession alphabetic order.
@@ -262,48 +332,48 @@ public class SequenceDataBase extends ExperimentObject {
      * @throws IOException      Exception thrown whenever a problem occurred while writing the file.
      */
     public void exportAsFasta(File fastaFile, ProgressDialogX progressDialog) throws IOException {
-        
+
         Writer proteinWriter = new BufferedWriter(new FileWriter(fastaFile));
         ArrayList<String> keys = new ArrayList<String>(proteinMap.keySet());
         Collections.sort(keys);
-        
+
         // @TODO: check if it is possible to do this without having to iterate the keys twice?
-        
+
         if (progressDialog != null) {
-            progressDialog.setIntermidiate(false);
-            progressDialog.setMax(keys.size()*2);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMax(keys.size() * 2);
         }
-        
+
         int counter = 1;
 
         for (String proteinKey : keys) {
-            
+
             if (progressDialog != null) {
                 progressDialog.setValue(counter++);
             }
-            
+
             if (!proteinMap.get(proteinKey).isDecoy()) {
                 proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
                 proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
             }
         }
-        
+
         for (String proteinKey : keys) {
-            
+
             if (progressDialog != null) {
                 progressDialog.setValue(counter++);
             }
-            
+
             if (proteinMap.get(proteinKey).isDecoy()) {
                 proteinWriter.write(headerMap.get(proteinKey).toString() + "\n");
                 proteinWriter.write(proteinMap.get(proteinKey).getSequence() + "\n");
             }
         }
-        
+
         if (progressDialog != null) {
-            progressDialog.setIntermidiate(true);
+            progressDialog.setIndeterminate(true);
         }
-        
+
         proteinWriter.close();
     }
 

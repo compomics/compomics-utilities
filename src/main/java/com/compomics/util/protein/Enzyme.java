@@ -11,6 +11,7 @@
  * Time: 18:38:53
  */
 package com.compomics.util.protein;
+import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -26,20 +27,21 @@ import java.util.Vector;
 /**
  * This class implements the functionality for an Enzyme.
  *
- * @author Lennart Martens.
+ * @author Lennart Martens
+ * @author Harald Barsnes
  */
 public class Enzyme implements Cloneable {
 
     // Class specific log4j logger for Enzyme instances.
     Logger logger = Logger.getLogger(Enzyme.class);
 
-    public static final int CTERM = 0;
-    public static final int NTERM = 1;
+    public static final int CTERM = 0; // @TODO: should be replaced by Emnum
+    public static final int NTERM = 1; // @TODO: should be replaced by Emnum
 
-    public static final int FULLY_ENZYMATIC = 1;
-    public static final int N_TERM_ENZYMATIC = 2;
-    public static final int C_TERM_ENZYMATIC = 3;
-    public static final int ENTIRELY_NOT_ENZYMATIC = 4;
+    public static final int FULLY_ENZYMATIC = 1; // @TODO: should be replaced by Emnum
+    public static final int N_TERM_ENZYMATIC = 2; // @TODO: should be replaced by Emnum
+    public static final int C_TERM_ENZYMATIC = 3; // @TODO: should be replaced by Emnum
+    public static final int ENTIRELY_NOT_ENZYMATIC = 4; // @TODO: should be replaced by Emnum
 
     /**
      * This String holds the title (or name) for the enzyme.
@@ -123,6 +125,63 @@ public class Enzyme implements Cloneable {
             throw new IllegalArgumentException("I only understand the positions 'Nterm' or 'Cterm'! You passed: '" + aPosition + "'.");
         }
         iMiscleavages = aMiscleavages;
+    }
+    
+    /**
+     * Creates a new Enzyme from a com.compomics.util.experiment.biology.Enzyme enzyme 
+     * and the maximum number of missed cleavages.
+     * 
+     * @param enzyme                The com.compomics.util.experiment.biology.Enzyme enzyme
+     * @param maxMissedCleavages    The maximum number of missed cleavages
+     */
+    public Enzyme(com.compomics.util.experiment.biology.Enzyme enzyme, int maxMissedCleavages) {
+        
+        String position = "", cleavage = "", restrict = "";
+    
+        if (enzyme.getAminoAcidBefore().size() > 0) {
+            position = "Cterm";
+            
+            ArrayList<Character> temp = enzyme.getAminoAcidBefore();
+            
+            for (int i=0; i<temp.size();i++) {
+                cleavage += temp.get(i);
+            }
+
+            temp = enzyme.getRestrictionAfter();
+            
+            for (int i=0; i<temp.size();i++) {
+                restrict += temp.get(i);
+            }
+        } else {
+            position = "Nterm";
+            
+            ArrayList<Character> temp = enzyme.getAminoAcidAfter();
+            
+            for (int i=0; i<temp.size();i++) {
+                cleavage += temp.get(i);
+            }
+
+            temp = enzyme.getRestrictionBefore();
+            
+            for (int i=0; i<temp.size();i++) {
+                restrict += temp.get(i);
+            }
+        }
+        
+        iTitle = enzyme.getName();
+        this.setCleavage(cleavage);
+        this.setRestrict(restrict);
+        position = position.trim();
+        
+        if(position.equalsIgnoreCase("Cterm")) {
+            iPosition = CTERM;
+        } else if(position.equalsIgnoreCase("Nterm")) {
+            iPosition = NTERM;
+        } else {
+            throw new IllegalArgumentException("I only understand the positions 'Nterm' or 'Cterm'! You passed: '" + position + "'.");
+        }
+        
+        iMiscleavages = maxMissedCleavages; 
     }
 
     /**
@@ -308,16 +367,34 @@ public class Enzyme implements Cloneable {
         return result.toString();
     }
 
-
     /**
      * This method is the focus of the Enzyme instance. It can perform
      * an <i>in-silico</i> digest of a Protein sequence according to the
-     * specifications detailed in the construction or via the setters.
+     * specifications detailed in the construction or via the setters. 
+     * Using this methods returns all possible peptides, regardless 
+     * of length. To only return peptides within certain lengths use 
+     * the other cleave method.
      *
      * @param   aProtein    Protein instance to cleave.
      * @return  Protein[]   with the resultant peptides.
      */
     public Protein[] cleave(Protein aProtein) {
+        return cleave(aProtein, 0, Integer.MAX_VALUE);
+    }
+
+    /**
+     * This method is the focus of the Enzyme instance. It can perform
+     * an <i>in-silico</i> digest of a Protein sequence according to the
+     * specifications detailed in the construction or via the setters. 
+     * Only returns peptides between the minimum and maximum peptide 
+     * lengths.
+     *
+     * @param   aProtein        Protein instance to cleave.
+     * @param minPeptideLength  The minimum peptide length to consider
+     * @param maxPeptideLength  The maximum peptide length to consider
+     * @return  Protein[]       with the resultant peptides.
+     */
+    public Protein[] cleave(Protein aProtein, int minPeptideLength, int maxPeptideLength) {
         Vector result = null;
 
         // We'll need a lot of stuff here.
@@ -333,14 +410,19 @@ public class Enzyme implements Cloneable {
         char[] sequence = aProtein.getSequence().getSequence().toCharArray();
 
         // Check for a header that contains locations.
-        int headerStart = aProtein.getHeader().getStartLocation()-1;
-        if(headerStart < 0) {
-           headerStart = 0;
+        int headerStart = 0;
+        
+        if (aProtein.getHeader() != null) {
+            headerStart = aProtein.getHeader().getStartLocation()-1;
+            if(headerStart < 0) {
+               headerStart = 0;
+            }
         }
-
+       
         // Okay, I guess we've set the stage now.
         // Let's start cleaving!
         int walkingIndex = 0;
+        
         for(int i=0;i<sequence.length;i++) {
             // Transform the current char into the corresponding wrapper.
             Character current = new Character(sequence[i]);
@@ -367,6 +449,7 @@ public class Enzyme implements Cloneable {
                 String temp = null;
                 int start = -1;
                 int end = -1;
+                
                 if(this.iPosition == Enzyme.CTERM) {
                     // Take the part, starting from walkingIndex up to the current
                     // as a new peptide and store it in the interMed Vector.
@@ -393,6 +476,7 @@ public class Enzyme implements Cloneable {
                 endIndices.add(new Integer(end));
             }
         }
+        
         // Add this point, we should check whether we have
         // the entire sequence.
         // We probably don't, because the last cleavable residu will
@@ -413,10 +497,13 @@ public class Enzyme implements Cloneable {
 
         // Cycle the current sequences.
         for(int j=0;j<imSequences.length;j++) {
+            
             String temp = imSequences[j];
+            
             // Apply the number of allowed missed cleavages sequentially from
             // this sequence.
             for (int k=0;k<this.iMiscleavages;k++) {
+                
                 // If we fall outside of the range of current sequences
                 // (for instance if we try to apply a second allowed missed
                 //  cleavage to the penultimate peptide, we fall outside of
@@ -438,15 +525,18 @@ public class Enzyme implements Cloneable {
 
         // Cycle all again, and do a cleanup if C-terminal truncation has been detected.
         if((aProtein.isTruncated()) && (aProtein.getTruncationPosition() == Protein.CTERMTRUNC)) {
+            
             // Okay, C-terminal truncation is flagged.
             // This means that all peptides with a startindex equal to the startindex
             // of the parent (or '1' if the parent does not have startindex), are not
             // realistic peptides, but artifacts of our truncation.
             // So they get kicked out.
             int parentStart = aProtein.getHeader().getStartLocation();
+            
             if(parentStart < 0) {
                 parentStart = 1;
             }
+            
             for(int i=0;i<interMed.size();i++) {
                 int start = ((Integer)startIndices.get(i)).intValue();
                 if(start == parentStart) {
@@ -464,15 +554,27 @@ public class Enzyme implements Cloneable {
         int liSize = interMed.size();
         result = new Vector(liSize);
         Header header = aProtein.getHeader();
+        
         // Create the Proteins and store them.
         for(int i=0;i<liSize;i++) {
+            
             // If the sequence comes from a translation, it will contain an '_' if a stopcodon is present.
             // Omit all sequences containing these.
             String pepSequence = (String)interMed.get(i);
             if(pepSequence.indexOf("_") < 0) {
-                Header h = (Header)header.clone();
-                h.setLocation(((Integer)startIndices.get(i)).intValue(), ((Integer)endIndices.get(i)).intValue());
-                result.add(new Protein(h, new AASequenceImpl(pepSequence)));
+                
+                // only include peptides within the min and max peptide lengths
+                if (pepSequence.length() >= minPeptideLength && pepSequence.length() <= maxPeptideLength) {            
+                
+                    Header h = null;
+
+                    if (header != null) {
+                        h = (Header)header.clone();
+                        h.setLocation(((Integer)startIndices.get(i)).intValue(), ((Integer)endIndices.get(i)).intValue());
+                    }
+
+                    result.add(new Protein(h, new AASequenceImpl(pepSequence)));
+                }
             }
         }
 

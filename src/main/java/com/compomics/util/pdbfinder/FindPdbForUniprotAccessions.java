@@ -17,28 +17,55 @@ import java.net.URL;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas
- * Date: 21/04/11
- * Time: 10:44
+ * Maps uniprot protein accession numbers to PDB file ids.
+ * 
+ * @author Niklaas Colaert
  */
 public class FindPdbForUniprotAccessions {
     
-    // @TODO: add JavaDoc...
-
+    /**
+     * The protein accession number.
+     */
     private String iProteinAccession;
+    /**
+     * @TODO: JavaDoc missing...
+     */
     private DasAlignment[] iAlignments;
+    /**
+     * @TODO: JavaDoc missing...
+     */
     private Vector<PdbParameter> iPdbs = new Vector<PdbParameter>();
+    /**
+     * @TODO: JavaDoc missing...
+     */
     private DasAnnotationServerAlingmentReader iDasReader = new DasAnnotationServerAlingmentReader("empty");
+    /**
+     * @TODO: JavaDoc missing...
+     */
     private String iUrl;
+    /**
+     * @TODO: JavaDoc missing...
+     */
     private boolean isFirstTry = true;
+    /**
+     * Set to true of the PDB URL could be read, false otherwise.
+     */
+    private boolean urlRead = false;
 
+    /**
+     * @TODO: JavaDoc missing...
+     * 
+     * @param aProteinAccession 
+     */
     public FindPdbForUniprotAccessions(String aProteinAccession) {
+        
         this.iProteinAccession = aProteinAccession;
+        
         //find features
         String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
         readUrl(urlMake);
         iAlignments = iDasReader.getAllAlignments();
+        
         try {
             for (int a = 0; a < iAlignments.length; a++) {
                 DasAlignment align = iAlignments[a];
@@ -73,15 +100,40 @@ public class FindPdbForUniprotAccessions {
             }
         } catch (StringIndexOutOfBoundsException e) {
             System.out.println("Error in reading das pdb alignment");
+            e.printStackTrace();
         }
     }
+    
+    /**
+     * Returns true if the PDB URL was read, false otherwise.
+     * 
+     * @return true if the PDB URL was read, false otherwise
+     */
+    public boolean urlWasRead() {
+        return urlRead;
+    }
 
+    /**
+     * Returns a vector of the PDB files mapped to the given protein 
+     * accession number.
+     * 
+     * @return a vector of the PDB files
+     */
     public Vector<PdbParameter> getPdbs() {
         return iPdbs;
     }
 
-    public void readUrl(String aUrl) {
+    /**
+     * Tries to read the PDB URL.
+     * 
+     * @param aUrl the PDB URL to read
+     */
+    private void readUrl(String aUrl) {
+        
+        urlRead = false;
+        
         this.iUrl = aUrl;
+        
         try {
             URL myURL = new URL(aUrl);
             StringBuilder input = new StringBuilder();
@@ -95,6 +147,7 @@ public class FindPdbForUniprotAccessions {
             }
 
             iDasReader = new DasAnnotationServerAlingmentReader(input.toString());
+            urlRead = true;
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -109,6 +162,11 @@ public class FindPdbForUniprotAccessions {
         }
     }
 
+    /**
+     * Main method. Used for testing purposes.
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
         String lAccession = "O75369";
         FindPdbForUniprotAccessions lF = new FindPdbForUniprotAccessions(lAccession);

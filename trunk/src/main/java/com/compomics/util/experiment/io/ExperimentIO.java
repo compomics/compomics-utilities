@@ -4,7 +4,6 @@ import com.compomics.util.experiment.MsExperiment;
 import com.compomics.util.experiment.biology.Sample;
 
 import java.io.*;
-import java.util.Date;
 
 /**
  * This class takes care of the saving and opening of Compomics utilities
@@ -42,7 +41,7 @@ public class ExperimentIO {
      * @throws IOException  Exception thrown whenever an error is encountered while writing the file
      */
     public void saveIdentifications(File file, MsExperiment experiment) throws IOException {
-
+  
         // Spectra are removed to save time and space
         for (Sample sample : experiment.getSamples().values()) {
             for (int replicateNumber : experiment.getAnalysisSet(sample).getReplicateNumberList()) {

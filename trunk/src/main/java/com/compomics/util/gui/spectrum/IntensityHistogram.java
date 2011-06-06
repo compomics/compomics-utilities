@@ -122,8 +122,8 @@ public class IntensityHistogram extends JPanel {
             XYBarRenderer renderer = new XYBarRenderer();
             renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
             renderer.setShadowVisible(false);
-            //renderer.setSeriesPaint(0, new Color(210, 210, 210, 150)); // @TODO: make this selectable by the user
-            renderer.setSeriesPaint(0, new Color(0, 0, 250, 150)); // @TODO: make this selectable by the user
+            renderer.setSeriesPaint(0, new Color(210, 210, 210, 150)); // @TODO: make this selectable by the user
+            //renderer.setSeriesPaint(0, new Color(0, 0, 250, 150)); // @TODO: make this selectable by the user
             renderer.setSeriesPaint(1, new Color(110, 196, 97)); // @TODO: make this selectable by the user
             plot.setRenderer(renderer);
 

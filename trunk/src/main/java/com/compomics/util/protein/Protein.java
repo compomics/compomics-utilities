@@ -78,8 +78,8 @@ public class Protein {
      * 'isTruncated()' method returns true.
      */
     public static final int CTERMTRUNC = 2;
-
-
+    
+    
     /**
      * This constructor requires an AASequenceImpl as argument.
      * This will be the sequence around which the protein will be built.
@@ -117,7 +117,7 @@ public class Protein {
         this.iTruncated = aTruncated;
         this.iTruncationPosition = aTruncationPosition;
     }
-
+    
     /**
      * This constructor allows for the construction of a Protein instance
      * by passing a FASTA entry.

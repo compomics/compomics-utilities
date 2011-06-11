@@ -338,7 +338,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns the intensity limit. Returns 0 if annotateMostIntensePeaks is set
-     * to false,
+     * to false.
      *
      * @param annotateMostIntensePeaks  returns 0 if set to false
      * @return                          the intensity limit
@@ -351,6 +351,10 @@ public abstract class Spectrum extends ExperimentObject {
             
             for (Peak peak : peakList) {
                 intensities.add(peak.intensity);
+            }
+            
+            if (intensities.isEmpty()) {
+                return 0;
             }
             
             Collections.sort(intensities);

@@ -666,13 +666,12 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         otherIonsJCheckBox = new javax.swing.JCheckBox();
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator6 = new javax.swing.JSeparator();
-        jSeparator7 = new javax.swing.JSeparator();
-        jSeparator8 = new javax.swing.JSeparator();
         profileSpectrumJCheckBox = new javax.swing.JCheckBox();
         linkedSpectraJCheckBox = new javax.swing.JCheckBox();
         jSeparator5 = new javax.swing.JSeparator();
         jSeparator9 = new javax.swing.JSeparator();
         exportJButton = new javax.swing.JButton();
+        allPeaksJCheckBox = new javax.swing.JCheckBox();
         spectrumPanelInfoJLabel = new javax.swing.JLabel();
         spectrumPanelHelpJLabel = new javax.swing.JLabel();
         spectraJPanel = new javax.swing.JPanel();
@@ -962,6 +961,19 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
+        allPeaksJCheckBox.setSelected(true);
+        allPeaksJCheckBox.setText("All");
+        allPeaksJCheckBox.setToolTipText("Display all peaks or just the annotated peaks");
+        allPeaksJCheckBox.setEnabled(false);
+        allPeaksJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
+        allPeaksJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
+        allPeaksJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
+        allPeaksJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                allPeaksJCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout ionSelectionJPanelLayout = new org.jdesktop.layout.GroupLayout(ionSelectionJPanel);
         ionSelectionJPanel.setLayout(ionSelectionJPanelLayout);
         ionSelectionJPanelLayout.setHorizontalGroup(
@@ -969,10 +981,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(ionSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(ionSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(allPeaksJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jSeparator9, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(jSeparator5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
-                    .add(jSeparator8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
-                    .add(jSeparator7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(jSeparator6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(jSeparator4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.CENTER, otherIonsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 65, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -998,7 +1009,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         ionSelectionJPanelLayout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, linkedSpectraJCheckBox, otherIonsJCheckBox, profileSpectrumJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
 
-        ionSelectionJPanelLayout.linkSize(new java.awt.Component[] {jSeparator1, jSeparator2, jSeparator3, jSeparator4, jSeparator6, jSeparator7, jSeparator8}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+        ionSelectionJPanelLayout.linkSize(new java.awt.Component[] {jSeparator1, jSeparator2, jSeparator3, jSeparator4, jSeparator6}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
 
         ionSelectionJPanelLayout.setVerticalGroup(
             ionSelectionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1039,11 +1050,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(jSeparator6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(profileSpectrumJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jSeparator8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(allPeaksJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(linkedSpectraJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jSeparator5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1051,7 +1060,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(jSeparator9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(exportJButton)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         ionSelectionJPanelLayout.linkSize(new java.awt.Component[] {H2OIonsJCheckBox, NH3IonsJCheckBox, aIonsJCheckBox, bIonsJCheckBox, cIonsJCheckBox, chargeOneJCheckBox, chargeOverTwoJCheckBox, chargeTwoJCheckBox, otherIonsJCheckBox, xIonsJCheckBox, yIonsJCheckBox, zIonsJCheckBox}, org.jdesktop.layout.GroupLayout.VERTICAL);
@@ -2448,26 +2457,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_chargePeptideBJSpinnerStateChanged
 
     /**
-     * Updates the isotopic distributions according to the current values
-     * if the user clicks changes the peptide charge.
-     *
-     * @param evt
-     */
-    private void silacLabelPeptideAJComboBoxStateChanged(ActionEvent evt) {
-        setUpIsotopicDistributionPanelDemo();
-    }
-
-    /**
-     * Updates the isotopic distributions according to the current values
-     * if the user clicks changes the peptide charge.
-     *
-     * @param evt
-     */
-    private void silacLabelPeptideBJComboBoxStateChanged(ActionEvent evt) {
-        setUpIsotopicDistributionPanelDemo();
-    }
-
-    /**
      * Turns the profile spectrum mode on or off.
      * 
      * @param evt
@@ -2480,6 +2469,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         spectrumBPanel.setProfileMode(profileSpectrumJCheckBox.isSelected());
         spectrumBPanel.validate();
         spectrumBPanel.repaint();
+        
+        allPeaksJCheckBox.setEnabled(!profileSpectrumJCheckBox.isSelected());
+        
+        if (profileSpectrumJCheckBox.isSelected()) {
+            allPeaksJCheckBox.setSelected(true);
+        }   
+        
+        allPeaksJCheckBoxActionPerformed(null);
     }//GEN-LAST:event_profileSpectrumJCheckBoxActionPerformed
 
     /**
@@ -2904,6 +2901,19 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_showCoverageJCheckBoxActionPerformed
 
     /**
+     * Turns the display of all or just the annotated peaks on or off.
+     * 
+     * @param evt 
+     */
+    private void allPeaksJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allPeaksJCheckBoxActionPerformed
+        spectrumAPanel.showAnnotatedPeaksOnly(!allPeaksJCheckBox.isSelected());
+        spectrumBPanel.showAnnotatedPeaksOnly(!allPeaksJCheckBox.isSelected());
+        
+        spectrumAPanel.repaint();
+        spectrumBPanel.repaint();
+    }//GEN-LAST:event_allPeaksJCheckBoxActionPerformed
+
+    /**
      * Opens the help dialog.
      *
      * @param urlAsString the URL (as a String) of the help file to display
@@ -3101,6 +3111,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JCheckBox H2OIonsJCheckBox;
     private javax.swing.JCheckBox NH3IonsJCheckBox;
     private javax.swing.JCheckBox aIonsJCheckBox;
+    private javax.swing.JCheckBox allPeaksJCheckBox;
     private javax.swing.JCheckBox bIonsJCheckBox;
     private javax.swing.JButton browseJButton;
     private javax.swing.JCheckBox cIonsJCheckBox;
@@ -3167,8 +3178,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JCheckBox linkedSpectraJCheckBox;

@@ -376,6 +376,11 @@ public abstract class GraphicsPanel extends JPanel {
      * given.
      */
     protected int iMSLevel = 0;
+    /**
+     * If false, only the annotated peaks will be shown. Note that this setting 
+     * is ignored in profile mode!
+     */
+    protected boolean showAllPeaks = true;
 
     /**
      * An enumerator of the possible GraphicsPanel types
@@ -1958,10 +1963,10 @@ public abstract class GraphicsPanel extends JPanel {
      * This method attempts to find a list of known mass deltas,
      * corresponding with the specified x value in the given window.
      *
-     * @param aDelta
-     * @param aWindow
-     * @return String with the description of the matching mass delta
-     *                or empty String if none was found.
+     * @param aDelta    the delta mass to search for
+     * @param aWindow   the window used for the search
+     * @return String   with the description of the matching mass delta
+     *                  or empty String if none was found.
      */
     protected String findDeltaMassMatches(double aDelta, double aWindow) {
         StringBuffer result = new StringBuffer("");
@@ -2084,32 +2089,56 @@ public abstract class GraphicsPanel extends JPanel {
                 } else if (lXAxisValue > iXAxisMax) {
                     break;
                 } else {
-                    double lYAxisValue = iYAxisData.get(j)[i];
-
-                    // Calculate pixel coordinates for x and y values.
-                    // X value first.
-                    double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
-                    int temp = (int) tempDouble;
-                    if ((tempDouble - temp) >= 0.5) {
-                        temp++;
+                    
+                    // only draw annotated peaks?
+                    boolean annotatedPeak = false;
+                    
+                    // check if the peak is annotated
+                    for (int m = 0; m < iAnnotations.size() && !annotatedPeak && !showAllPeaks; m++) {
+                        Object o = iAnnotations.get(m);
+                        if (o instanceof SpectrumAnnotation) {
+                            SpectrumAnnotation sa = (SpectrumAnnotation) o;
+                            
+                            double xValue = sa.getMZ();
+                            double error = Math.abs(sa.getErrorMargin());
+                            double delta = lXAxisValue - xValue;
+                            
+                            if (Math.abs(delta) <= error) {
+                                annotatedPeak = true;
+                            }  
+                        }
                     }
-                    int xAxisPxl = temp + iXPadding;
-                    iXAxisDataInPixels.get(j)[i] = xAxisPxl;
+                    
+                    // draw the peak if it is annotated or if all peaks are to be drawn
+                    if (annotatedPeak || showAllPeaks) {
+                    
+                        double lYAxisValue = iYAxisData.get(j)[i];
 
-                    // Now intensity.
-                    tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
-                    temp = (int) tempDouble;
-                    if ((tempDouble - temp) >= 0.5) {
-                        temp++;
-                    }
-                    int yValuePxl = this.getHeight() - (temp + iXPadding);
-                    iYAxisDataInPixels.get(j)[i] = yValuePxl;
-                    if (iDrawStyle == LINES) {
-                        // Draw the line.
-                        g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
-                    } else if (iDrawStyle == DOTS) {
-                        // Draw the dot.
-                        g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
+                        // Calculate pixel coordinates for x and y values.
+                        // X value first.
+                        double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
+                        int temp = (int) tempDouble;
+                        if ((tempDouble - temp) >= 0.5) {
+                            temp++;
+                        }
+                        int xAxisPxl = temp + iXPadding;
+                        iXAxisDataInPixels.get(j)[i] = xAxisPxl;
+
+                        // Now intensity.
+                        tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
+                        temp = (int) tempDouble;
+                        if ((tempDouble - temp) >= 0.5) {
+                            temp++;
+                        }
+                        int yValuePxl = this.getHeight() - (temp + iXPadding);
+                        iYAxisDataInPixels.get(j)[i] = yValuePxl;
+                        if (iDrawStyle == LINES) {
+                            // Draw the line.
+                            g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
+                        } else if (iDrawStyle == DOTS) {
+                            // Draw the dot.
+                            g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
+                        }
                     }
                 }
             }

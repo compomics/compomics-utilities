@@ -387,6 +387,17 @@ public class SpectrumPanel extends GraphicsPanel {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
         }
     }
+    
+    /**
+     * If true only the annotated peaks will be drawn. The default value is 
+     * false, and result in all peaks being drawn. Note that this setting 
+     * is ignored when in profile mode!
+     * 
+     * @param aAnnotatedPeaks if true only the annotated peaks will be drawn
+     */
+    public void showAnnotatedPeaksOnly(boolean aAnnotatedPeaks) {
+        this.showAllPeaks = !aAnnotatedPeaks;
+    }
 
     /**
      * This method initializes a SpectrumPanel based on the spectrum information in

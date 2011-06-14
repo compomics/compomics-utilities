@@ -75,6 +75,10 @@ public class MassErrorBubblePlot extends JPanel {
      * The list of currently used ions.
      */
     private ArrayList<IonMatch> currentlyUsedIonMatches;
+    /**
+     * The chart panel.
+     */
+    private ChartPanel chartPanel;
 
     /**
      * Creates a new MassErrorBubblePlot.
@@ -271,7 +275,7 @@ public class MassErrorBubblePlot extends JPanel {
         chart.getPlot().setBackgroundPaint(Color.WHITE);
         chart.setBackgroundPaint(Color.WHITE);
 
-        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(Color.WHITE);
 
         this.add(chartPanel);
@@ -458,5 +462,14 @@ public class MassErrorBubblePlot extends JPanel {
         }
 
         return dataset;
+    }
+    
+    /**
+     * Returns the chart panel.
+     * 
+     * @return the chart panel
+     */
+    public ChartPanel getChartPanel () {
+        return chartPanel;
     }
 }

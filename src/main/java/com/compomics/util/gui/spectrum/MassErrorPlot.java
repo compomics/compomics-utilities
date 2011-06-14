@@ -50,6 +50,10 @@ public class MassErrorPlot extends JPanel {
      * The list of currently used ions.
      */
     private ArrayList<IonMatch> currentlyUsedIonMatches;
+    /**
+     * The chart panel.
+     */
+    private ChartPanel chartPanel;
 
     /**
      * Creates a new MassErrorPlot.
@@ -171,7 +175,7 @@ public class MassErrorPlot extends JPanel {
             chart.getPlot().setBackgroundPaint(Color.WHITE);
             chart.setBackgroundPaint(Color.WHITE);
 
-            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel = new ChartPanel(chart);
             chartPanel.setBackground(Color.WHITE);
             this.add(chartPanel);
         }
@@ -223,5 +227,14 @@ public class MassErrorPlot extends JPanel {
      */
     public int getNumberOfDataPointsInPlot() {
         return currentlyUsedIonMatches.size();
+    }
+    
+    /**
+     * Returns the chart panel.
+     * 
+     * @return the chart panel
+     */
+    public ChartPanel getChartPanel () {
+        return chartPanel;
     }
 }

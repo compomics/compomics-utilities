@@ -24,6 +24,11 @@ import java.util.ArrayList;
 public abstract class GraphicsPanel extends JPanel {
 
     /**
+     * The color to use for the non-annotated peaks when only the annotated 
+     * peaks are to be shown.
+     */
+    private Color peakWaterMarkColor = new Color(150, 150, 150, 50);
+    /**
      * If true the x-axis will be drawn using the scientific annotation.
      * The pattern i set in the "scientificPattern" field.
      */
@@ -2109,37 +2114,55 @@ public abstract class GraphicsPanel extends JPanel {
                         }
                     }
                     
-                    // draw the peak if it is annotated or if all peaks are to be drawn
-                    if (annotatedPeak || showAllPeaks) {
+                    double lYAxisValue = iYAxisData.get(j)[i];
+
+                    // Calculate pixel coordinates for x and y values.
+                    // X value first.
+                    double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
+                    int temp = (int) tempDouble;
                     
-                        double lYAxisValue = iYAxisData.get(j)[i];
-
-                        // Calculate pixel coordinates for x and y values.
-                        // X value first.
-                        double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
-                        int temp = (int) tempDouble;
-                        if ((tempDouble - temp) >= 0.5) {
-                            temp++;
-                        }
-                        int xAxisPxl = temp + iXPadding;
-                        iXAxisDataInPixels.get(j)[i] = xAxisPxl;
-
-                        // Now intensity.
-                        tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
-                        temp = (int) tempDouble;
-                        if ((tempDouble - temp) >= 0.5) {
-                            temp++;
-                        }
-                        int yValuePxl = this.getHeight() - (temp + iXPadding);
-                        iYAxisDataInPixels.get(j)[i] = yValuePxl;
-                        if (iDrawStyle == LINES) {
-                            // Draw the line.
-                            g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
-                        } else if (iDrawStyle == DOTS) {
-                            // Draw the dot.
-                            g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
-                        }
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
                     }
+                    
+                    int xAxisPxl = temp + iXPadding;
+
+                    if (annotatedPeak || showAllPeaks) {
+                        iXAxisDataInPixels.get(j)[i] = xAxisPxl;
+                    }
+
+                    // Now intensity.
+                    tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
+                    temp = (int) tempDouble;
+                    
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+                    
+                    int yValuePxl = this.getHeight() - (temp + iXPadding);
+
+                    if (annotatedPeak || showAllPeaks) {
+                        iYAxisDataInPixels.get(j)[i] = yValuePxl;
+                    }
+
+                    // store the current peak color
+                    Color currentColor = g.getColor();
+
+                    // change the peak color if the peak is to be drawn in the background
+                    if (!annotatedPeak && !showAllPeaks) {
+                        g.setColor(peakWaterMarkColor);
+                    }
+
+                    // draw the peak
+                    if (iDrawStyle == LINES) {
+                        // Draw the line.
+                        g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
+                    } else if (iDrawStyle == DOTS) {
+                        // Draw the dot.
+                        g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
+                    }
+
+                    g.setColor(currentColor);
                 }
             }
         }
@@ -2316,5 +2339,23 @@ public abstract class GraphicsPanel extends JPanel {
     public void setScientificYAxis(String pattern) {
         this.scientificYAxis = true;
         this.scientificPattern = pattern;
+    }
+    
+    /**
+     * Get the peak water mark color.
+     * 
+     * @return the peak water mark color
+     */
+    public Color getPeakWaterMarkColor() {
+        return peakWaterMarkColor;
+    }
+
+    /**
+     * Set the peak water mark color.
+     * 
+     * @param peakWaterMarkColor the color to set
+     */
+    public void setPeakWaterMarkColor(Color peakWaterMarkColor) {
+        this.peakWaterMarkColor = peakWaterMarkColor;
     }
 }

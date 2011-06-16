@@ -27,7 +27,7 @@ public abstract class GraphicsPanel extends JPanel {
      * The color to use for the non-annotated peaks when only the annotated 
      * peaks are to be shown.
      */
-    private Color peakWaterMarkColor = new Color(150, 150, 150, 50);
+    private Color peakWaterMarkColor = new Color(100, 100, 100, 50);
     /**
      * If true the x-axis will be drawn using the scientific annotation.
      * The pattern i set in the "scientificPattern" field.

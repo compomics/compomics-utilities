@@ -26,6 +26,10 @@ import java.util.StringTokenizer;
  */
 public class Header implements Cloneable, Serializable {
 
+    /**
+     * The version UID for Serialization/Deserialization compatibility
+     */
+    static final long serialVersionUID = 7665784733371863163L;
     // Class specific log4j logger for Header instances.
     static Logger logger = Logger.getLogger(Header.class);
 
@@ -34,7 +38,6 @@ public class Header implements Cloneable, Serializable {
      */
     private Header() {
     }
-
     /**
      * The ID String corresponds to the String that is present as the first
      * element following the opening '>'. It is most notably 'sw' for SwissProt, and
@@ -42,7 +45,6 @@ public class Header implements Cloneable, Serializable {
      * ID is the first element in the abbreviated header String.
      */
     private String iID = null;
-
     /**
      * The foreign ID is the ID of another database this entry is orignally from.
      * Most notably used for SwissProt entries in NCBI. <br />
@@ -50,14 +52,12 @@ public class Header implements Cloneable, Serializable {
      * header String.
      */
     private String iForeignID = null;
-
     /**
      * The accession String is the unique identifier for the sequence in the respective database.
      * Note that for NCBI, the accession number also defines a unique moment in time. <br />
      * Accession String is the second element in the abbreviated header String.
      */
     private String iAccession = null;
-    
     /**
      * Extracted database name. As there is no standard database names, this is 
      * only an internally consistent naming scheme included to be able to later 
@@ -66,20 +66,17 @@ public class Header implements Cloneable, Serializable {
      * change outside the control of the compomics-utilties library.
      */
     private String iDatabaseType = null; // @TODO: perhaps this should be replaced by an Enum?
-
     /**
      * The foreign accession String is an accession String in another database of significance.
      * Most notably used for SwissProt accessions that are kept in the NCBI database. <br />
      * The foreign accession String is an addendum to the foreign ID String in the abbreviated header String.
      */
     private String iForeignAccession = null;
-
     /**
      * The description is a more or less elaborate description of the protein in question. <br />
      * The description is the third element (and final) in the abbreviated header String.
      */
     private String iDescription = null;
-
     /**
      * The foreign Description is a description for an entry in another DB.
      * Most notably, the SwissProt short description for an entry that is found within
@@ -88,29 +85,24 @@ public class Header implements Cloneable, Serializable {
      * header String.
      */
     private String iForeignDescription = null;
-
     /**
      * This variable holds all unidentified parts for the Header.
      * If the String was not (recognized as) a standard SwissProt or
      * NCBI header, this variable holds the entire header.
      */
     private String iRest = null;
-
     /**
      * This StringBuffer holds all the addenda for this header.
      */
     private StringBuffer iAddenda = null;
-
     /**
      * This variable holds a possible startindex for the associated sequence
      */
     private int iStart = -1;
-
     /**
      * This variable holds a possible endindex for the associated sequence
      */
     private int iEnd = -1;
-
 
     /**
      * Factory method that constructs a Header instance based on a FASTA header line.
@@ -123,28 +115,28 @@ public class Header implements Cloneable, Serializable {
     public static Header parseFromFASTA(String aFASTAHeader) {
         Header result = null;
 
-        if(aFASTAHeader == null) {
+        if (aFASTAHeader == null) {
             // Do nothing, just return 'null'.
-        } else if(aFASTAHeader.trim().equals("")) {
+        } else if (aFASTAHeader.trim().equals("")) {
             result = new Header();
             result.iRest = "";
         } else {
             result = new Header();
             // Remove leading '>', if present.
-            if(aFASTAHeader.startsWith(">")) {
+            if (aFASTAHeader.startsWith(">")) {
                 aFASTAHeader = aFASTAHeader.substring(1);
             }
 
             // Now check for the possible presence of addenda in the header.
             // First check the description for addenda, and if that should fail, give 'Rest' a chance.
             int liPos = -1;
-            if((liPos = aFASTAHeader.indexOf("^A")) >= 0) {
+            if ((liPos = aFASTAHeader.indexOf("^A")) >= 0) {
                 result.iAddenda = new StringBuffer(aFASTAHeader.substring(liPos));
                 aFASTAHeader = aFASTAHeader.substring(0, liPos);
             }
             try {
                 // First determine what kind of Header we've got.
-                if(aFASTAHeader.startsWith("sw|") || aFASTAHeader.startsWith("SW|")) {
+                if (aFASTAHeader.startsWith("sw|") || aFASTAHeader.startsWith("SW|")) {
                     // SwissProt.
                     // We need to find three elements:
                     //   - the ID (sw, we already know that one).
@@ -154,7 +146,7 @@ public class Header implements Cloneable, Serializable {
                     StringTokenizer lSt = new StringTokenizer(aFASTAHeader, "|");
 
                     // There should be at least three tokens.
-                    if(lSt.countTokens() < 3) {
+                    if (lSt.countTokens() < 3) {
                         throw new IllegalArgumentException("Non-standard or false SwissProt header passed. Expecting something like: '>sw|Pxxxx|ACTB_HUMAN xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
                         result.iDatabaseType = "UNIPROT";
@@ -162,26 +154,26 @@ public class Header implements Cloneable, Serializable {
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
                         int index = -1;
-                        if((index = result.iAccession.indexOf(" (")) > 0) {
+                        if ((index = result.iAccession.indexOf(" (")) > 0) {
                             String temp = result.iAccession.substring(index);
                             result.iAccession = result.iAccession.substring(0, index);
                             int open = 2;
                             int minus = temp.indexOf("-");
                             int end = temp.indexOf(")");
                             result.iStart = Integer.parseInt(temp.substring(open, minus));
-                            result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                            result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         result.iDescription = lSt.nextToken();
                         // If there are any more elements, add them to the 'rest' section.
-                        if(lSt.hasMoreTokens()) {
+                        if (lSt.hasMoreTokens()) {
                             StringBuffer lBuffer = new StringBuffer();
-                            while(lSt.hasMoreTokens()) {
+                            while (lSt.hasMoreTokens()) {
                                 lBuffer.append(lSt.nextToken());
                             }
                             result.iRest = lBuffer.toString();
                         }
                     }
-                } else if(aFASTAHeader.startsWith("gi|") || aFASTAHeader.startsWith("GI|")) {
+                } else if (aFASTAHeader.startsWith("gi|") || aFASTAHeader.startsWith("GI|")) {
                     // NCBI.
                     // We need to check for a number of things here:
                     //   - first of all, we should get the ID (which we already have, 'gi')
@@ -194,23 +186,23 @@ public class Header implements Cloneable, Serializable {
 
                     // We expect to see either two or at least four or more tokens.
                     int tokenCount = lSt.countTokens();
-                    if(tokenCount == 3) {
+                    if (tokenCount == 3) {
                         result.iDatabaseType = "NCBI";
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
                         int index = -1;
-                        if((index = result.iAccession.indexOf(" (")) > 0) {
+                        if ((index = result.iAccession.indexOf(" (")) > 0) {
                             String temp = result.iAccession.substring(index);
                             result.iAccession = result.iAccession.substring(0, index);
                             int open = 2;
                             int minus = temp.indexOf("-");
                             int end = temp.indexOf(")");
                             result.iStart = Integer.parseInt(temp.substring(open, minus));
-                            result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                            result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         result.iDescription = lSt.nextToken().trim();
-                    } else if(tokenCount < 4) {
+                    } else if (tokenCount < 4) {
                         throw new IllegalArgumentException("Non-standard or false NCBInr header passed. Expecting something like: '>gi|xxxxx|xx|xxxxx|(x) xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
                         result.iDatabaseType = "NCBI";
@@ -218,56 +210,56 @@ public class Header implements Cloneable, Serializable {
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
                         int index = -1;
-                        if((index = result.iAccession.indexOf(" (")) > 0) {
+                        if ((index = result.iAccession.indexOf(" (")) > 0) {
                             String temp = result.iAccession.substring(index);
                             result.iAccession = result.iAccession.substring(0, index);
                             int open = 2;
                             int minus = temp.indexOf("-");
                             int end = temp.indexOf(")");
                             result.iStart = Integer.parseInt(temp.substring(open, minus));
-                            result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                            result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         result.iForeignID = lSt.nextToken();
                         // Only retrieve the foreign accession if it is specifed (meaning a token count of 5).
-                        if(tokenCount >= 5) {
+                        if (tokenCount >= 5) {
                             result.iForeignAccession = lSt.nextToken();
                         }
                         // Append all the rest, regardless of further pipes (which have no structural meaning anymore).
                         StringBuffer lSB = new StringBuffer();
-                        while(lSt.hasMoreTokens()) {
+                        while (lSt.hasMoreTokens()) {
                             lSB.append(lSt.nextToken());
                         }
                         String temp = lSB.toString();
-                        if(temp.startsWith(" ")) {
+                        if (temp.startsWith(" ")) {
                             // Only description present.
                             result.iDescription = temp.substring(1);
                         } else {
                             // Up to the first space is foreign description.
                             int location = temp.indexOf(" ");
                             result.iForeignDescription = temp.substring(0, location);
-                            result.iDescription = temp.substring(location+1);
+                            result.iDescription = temp.substring(location + 1);
                         }
                     }
-                } else if(aFASTAHeader.startsWith("IPI:") || aFASTAHeader.startsWith("ipi:") || aFASTAHeader.startsWith("IPI|") || aFASTAHeader.startsWith("ipi|")) {
-                        // An IPI header looks like:
-                        // >IPI:IPIxxxxxx.y|REFSEQ_XP:XP_aaaaa[|many more like this can be present] Tax_Id=9606 descr
-                        result.iDatabaseType = "IPI";
-                        result.iID = "IPI";
-                        result.iAccession = aFASTAHeader.substring(4, aFASTAHeader.indexOf("|", 4));
-                        // Check for the presence of a location.
-                        int index = -1;
-                        if((index = result.iAccession.indexOf(" (")) > 0) {
-                            String temp = result.iAccession.substring(index);
-                            result.iAccession = result.iAccession.substring(0, index);
-                            int open = 2;
-                            int minus = temp.indexOf("-");
-                            int end = temp.indexOf(")");
-                            result.iStart = Integer.parseInt(temp.substring(open, minus));
-                            result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
-                        }
-                        // Take everything from the first '|' we meet after the accession number.
-                        result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|", 5)+1);
-                } else if(aFASTAHeader.startsWith("HIT")) {
+                } else if (aFASTAHeader.startsWith("IPI:") || aFASTAHeader.startsWith("ipi:") || aFASTAHeader.startsWith("IPI|") || aFASTAHeader.startsWith("ipi|")) {
+                    // An IPI header looks like:
+                    // >IPI:IPIxxxxxx.y|REFSEQ_XP:XP_aaaaa[|many more like this can be present] Tax_Id=9606 descr
+                    result.iDatabaseType = "IPI";
+                    result.iID = "IPI";
+                    result.iAccession = aFASTAHeader.substring(4, aFASTAHeader.indexOf("|", 4));
+                    // Check for the presence of a location.
+                    int index = -1;
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
+                        String temp = result.iAccession.substring(index);
+                        result.iAccession = result.iAccession.substring(0, index);
+                        int open = 2;
+                        int minus = temp.indexOf("-");
+                        int end = temp.indexOf(")");
+                        result.iStart = Integer.parseInt(temp.substring(open, minus));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
+                    }
+                    // Take everything from the first '|' we meet after the accession number.
+                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|", 5) + 1);
+                } else if (aFASTAHeader.startsWith("HIT")) {
                     try {
                         //http://www.h-invitational.jp/
                         // A H-Invitation database entry looks like:
@@ -277,33 +269,33 @@ public class Header implements Cloneable, Serializable {
                         result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
                         // Check for the presence of a location.
                         int index = -1;
-                        if((index = result.iAccession.indexOf(" (")) > 0) {
+                        if ((index = result.iAccession.indexOf(" (")) > 0) {
                             String temp = result.iAccession.substring(index);
                             result.iAccession = result.iAccession.substring(0, index);
                             int open = 2;
                             int minus = temp.indexOf("-");
                             int end = temp.indexOf(")");
                             result.iStart = Integer.parseInt(temp.substring(open, minus));
-                            result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                            result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         // Take everything from the first '|' we meet after the accession number.
-                        result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
-                    } catch(Exception excep) {
+                        result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
+                    } catch (Exception excep) {
                         logger.error(excep.getMessage(), excep);
                         logger.info(aFASTAHeader);
                     }
-                } else if(aFASTAHeader.startsWith("OE")) {
+                } else if (aFASTAHeader.startsWith("OE")) {
                     // Halobacterium header from the Max Planck people.
                     // We need to find two elements:
                     //   - the accession String (easily retrieved as the next String until a space is encountered).
                     //   - the description
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
-                    if(accessionEndLoc < 0 || aFASTAHeader.length() < (accessionEndLoc + 4)) {
+                    if (accessionEndLoc < 0 || aFASTAHeader.length() < (accessionEndLoc + 4)) {
                         throw new IllegalArgumentException("Non-standard Halobacterium (Max Planck) header passed. Expecting something like '>OExyz (OExyz) xxx xxx xxx', but was '" + aFASTAHeader + "'!");
                     }
                     // Now we have to see if there is location information present.
                     // This is a bit tricky here, because the accession number itself is repeated between '()' after the space.
-                    if(aFASTAHeader.charAt(accessionEndLoc+1) ==  '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc+2))) {
+                    if (aFASTAHeader.charAt(accessionEndLoc + 1) == '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc + 2))) {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
@@ -312,27 +304,27 @@ public class Header implements Cloneable, Serializable {
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
-                } else if(aFASTAHeader.startsWith("hflu_")) {
+                } else if (aFASTAHeader.startsWith("hflu_")) {
                     // H Influenza header from Novartis.
                     // We need to find two elements:
                     //   - the accession String (easily retrieved as the next String until a space is encountered).
                     //   - the description
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
-                    if(accessionEndLoc < 0) {
+                    if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Non-standard H Influenza (Novartis) header passed. Expecting something like '>hflu_lsi_xxxx xxx xxx xxx', but was '" + aFASTAHeader + "'!");
                     }
                     // Now we have to see if there is location information present.
-                    if(aFASTAHeader.charAt(accessionEndLoc+1) ==  '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc+2))) {
+                    if (aFASTAHeader.charAt(accessionEndLoc + 1) == '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc + 2))) {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
@@ -341,27 +333,27 @@ public class Header implements Cloneable, Serializable {
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
-                } else if(aFASTAHeader.startsWith("C.tr_") || aFASTAHeader.startsWith("C_trachomatis_")) {
+                } else if (aFASTAHeader.startsWith("C.tr_") || aFASTAHeader.startsWith("C_trachomatis_")) {
                     // C. Trachomatis header.
                     // We need to find two elements:
                     //   - the accession String (retrieved as the actual accession String which lasts up to the first space).
                     //   - the description (everything after the first space).
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
-                    if(accessionEndLoc < 0) {
+                    if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Non-standard C trachomatis header passed. Expecting something like '>C_tr_Lx_x [xxx - xxx] | xxx xxx ', but was '" + aFASTAHeader + "'!");
                     }
                     // Now we have to see if there is location information present.
-                    if(aFASTAHeader.charAt(accessionEndLoc+1) ==  '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc+2))) {
+                    if (aFASTAHeader.charAt(accessionEndLoc + 1) == '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc + 2))) {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
@@ -370,42 +362,42 @@ public class Header implements Cloneable, Serializable {
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
-                } else if(aFASTAHeader.startsWith(" M. tub.")) {
+                } else if (aFASTAHeader.startsWith(" M. tub.")) {
                     // M. Tuberculosis header.
                     // We need to find two elements:
                     //   - the accession String (retrieved as the first pipe-delimited String).
                     //   - the description (everything after the pipe that closes the accession String).
                     int accessionStartLoc = aFASTAHeader.indexOf("|") + 1;
                     int accessionEndLoc = aFASTAHeader.indexOf("|", accessionStartLoc);
-                    if(accessionEndLoc < 0) {
+                    if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Non-standard M tuberculosis header passed. Expecting something like '>M. tub.xxx|Rvxxx| xxx xxx', but was '" + aFASTAHeader + "'!");
                     }
                     result.iDatabaseType = "M. Tuberculosis";
-                    result.iID = aFASTAHeader.substring(0, accessionStartLoc-1);
+                    result.iID = aFASTAHeader.substring(0, accessionStartLoc - 1);
                     result.iAccession = aFASTAHeader.substring(accessionStartLoc, accessionEndLoc).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
-                    result.iDescription = aFASTAHeader.substring(accessionEndLoc+1).trim();
-                } else if(aFASTAHeader.matches("^CG.* pep:.*")) {
+                    result.iDescription = aFASTAHeader.substring(accessionEndLoc + 1).trim();
+                } else if (aFASTAHeader.matches("^CG.* pep:.*")) {
                     // Drosophile DB.
                     // We need to find two elements:
                     //   - the accession String (retrieved as the trimmed version of everything
@@ -417,34 +409,34 @@ public class Header implements Cloneable, Serializable {
                     result.iAccession = aFASTAHeader.substring(0, pepLoc).trim();
                     String possibleDescriptionPrefix = "";
                     // See if there is "(*xE*)" information wrongly assigned to the accession number.
-                    if(result.iAccession.indexOf("(*") > 0) {
+                    if (result.iAccession.indexOf("(*") > 0) {
                         possibleDescriptionPrefix = result.iAccession.substring(result.iAccession.indexOf("(*"), result.iAccession.indexOf("*)") + 2) + " ";
                         result.iAccession = result.iAccession.substring(0, result.iAccession.indexOf("(*"));
                     }
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = possibleDescriptionPrefix + aFASTAHeader.substring(pepLoc).trim();
-                } else if(aFASTAHeader.matches(".*SGDID:[^\\s]+,.*")) {
+                } else if (aFASTAHeader.matches(".*SGDID:[^\\s]+,.*")) {
                     // OK, SGD entry. The text up to but not including the first space is deemed accession,
                     // everything else is taken as description.
                     // So we need to find two elements:
                     //   - the accession String (taking into account possible location info).
                     //   - the description
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
-                    if(accessionEndLoc < 0) {
+                    if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Non-standard SGD header passed. Expecting something like '>xxxx xxx SGDID:xxxx xxx', but was '" + aFASTAHeader + "'!");
                     }
                     // Now we have to see if there is location information present.
-                    if(aFASTAHeader.charAt(accessionEndLoc+1) ==  '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc+2))) {
+                    if (aFASTAHeader.charAt(accessionEndLoc + 1) == '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc + 2))) {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
@@ -453,28 +445,28 @@ public class Header implements Cloneable, Serializable {
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
-                } else if(aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*")) {
+                } else if (aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*")) {
                     // Old (everything before 9.0 release (31 Oct 2006)) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
                     //  >XXX_YYYY (acc) rest
                     int start = aFASTAHeader.indexOf(" (");
                     int end = aFASTAHeader.indexOf(") ");
-                    result.iAccession = aFASTAHeader.substring(start+2, end);
+                    result.iAccession = aFASTAHeader.substring(start + 2, end);
                     result.iDatabaseType = "UNIPROT";
                     result.iID = "sw";
-                    result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end+2);
-                }  else if(aFASTAHeader.matches("^sp\\|[^|\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
+                    result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end + 2);
+                } else if (aFASTAHeader.matches("^sp\\|[^|\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
@@ -482,7 +474,7 @@ public class Header implements Cloneable, Serializable {
                     String tempHeader = aFASTAHeader.substring(3);
                     result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
                     // See if there is location information.
-                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
+                    if (result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
                         int openBracket = result.iAccession.indexOf("(");
                         result.iStart = Integer.parseInt(result.iAccession.substring(openBracket, result.iAccession.indexOf(" ", openBracket)).trim());
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
@@ -490,8 +482,8 @@ public class Header implements Cloneable, Serializable {
                     }
                     result.iDatabaseType = "UNIPROT";
                     result.iID = "sw";
-                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
-                } else if(aFASTAHeader.matches("^tr\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
+                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
+                } else if (aFASTAHeader.matches("^tr\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
@@ -499,28 +491,28 @@ public class Header implements Cloneable, Serializable {
                     String tempHeader = aFASTAHeader.substring(3);
                     result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
                     // See if there is location information.
-                    if(result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
+                    if (result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
                         int openBracket = result.iAccession.indexOf("(");
-                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf(" ", openBracket)).trim());
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf(" ", openBracket)).trim());
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
-                    } else if(result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                    } else if (result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
                         int openBracket = result.iAccession.indexOf("(");
-                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf("-", openBracket)).trim());
-                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket)+1, result.iAccession.indexOf(")")).trim());
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
                     result.iDatabaseType = "UNIPROT";
                     result.iID = "tr";
-                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|")+1);
-                } else if(aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
+                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
+                } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
                     //  >accession|ID descr rest (including taxonomy, if available)
                     result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|")).trim();
                     // See if there is location information.
-                    if(aFASTAHeader.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
+                    if (aFASTAHeader.matches("[^\\(]+\\([\\d]+ [\\d]\\)$")) {
                         int openBracket = aFASTAHeader.indexOf("(");
                         result.iAccession = aFASTAHeader.substring(0, openBracket).trim();
                         result.iStart = Integer.parseInt(aFASTAHeader.substring(openBracket, aFASTAHeader.indexOf(" ", openBracket)).trim());
@@ -528,21 +520,21 @@ public class Header implements Cloneable, Serializable {
                     }
                     result.iDatabaseType = "UNIPROT";
                     result.iID = "sw";
-                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
-                } else if(aFASTAHeader.matches("^FB.+\\stype=.*")) {
+                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
+                } else if (aFASTAHeader.matches("^FB.+\\stype=.*")) {
                     // Flybase FASTA format.
                     // Accession number
                     result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf("type")).trim();
-                    if(result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                    if (result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
                         int openBracket = result.iAccession.indexOf("(");
-                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket+1, result.iAccession.indexOf("-", openBracket)).trim());
-                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket)+1, result.iAccession.indexOf(")")).trim());
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
                     result.iDatabaseType = "Flybase";
                     result.iID = "";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("type="));
-                } else if(aFASTAHeader.startsWith("dm")) {
+                } else if (aFASTAHeader.startsWith("dm")) {
                     // A personal D. Melanogaster header from translating the dm genome into protein sequences.
                     // We need to find two elements, separated by a space:
                     //   - the accession String (retrieved as the first part of a space delimited String).
@@ -550,7 +542,7 @@ public class Header implements Cloneable, Serializable {
                     //
                     // ex: >dm345_3L-sense [234353534-234353938]
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
-                    if(accessionEndLoc < 0) {
+                    if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Incorrect D. melanogaster heading. Expecting something like '>dm345_3L-sense [234353534-234353938]', but was '" + aFASTAHeader + "'!");
                     }
                     result.iDatabaseType = "D. Melanogaster";
@@ -559,12 +551,12 @@ public class Header implements Cloneable, Serializable {
                     int index1 = -1;
                     int index2 = -1;
                     int separation = -1;
-                    if(((index1 = aFASTAHeader.indexOf("[")) > 0) && ((index2 = aFASTAHeader.indexOf("]")) > 0) && ((separation = aFASTAHeader.lastIndexOf("-")) > 0)) {
-                        result.iStart = Integer.parseInt(aFASTAHeader.substring(index1+1, separation));
-                        result.iEnd = Integer.parseInt(aFASTAHeader.substring(separation+1, index2));
+                    if (((index1 = aFASTAHeader.indexOf("[")) > 0) && ((index2 = aFASTAHeader.indexOf("]")) > 0) && ((separation = aFASTAHeader.lastIndexOf("-")) > 0)) {
+                        result.iStart = Integer.parseInt(aFASTAHeader.substring(index1 + 1, separation));
+                        result.iEnd = Integer.parseInt(aFASTAHeader.substring(separation + 1, index2));
                     }
-                    result.iDescription = aFASTAHeader.substring(accessionEndLoc+1).trim();
-                } else if(aFASTAHeader.matches("^[^|\t]* [|] [^|]*[|][^|]*[|][^|]*[|][^|]*")) {
+                    result.iDescription = aFASTAHeader.substring(accessionEndLoc + 1).trim();
+                } else if (aFASTAHeader.matches("^[^|\t]* [|] [^|]*[|][^|]*[|][^|]*[|][^|]*")) {
                     // The Arabidopsis thaliana database; TAIR format
                     // We need to find two elements, separated by pipes:
                     //   - the accession number with version (retrieved as the part before the first pipe).
@@ -575,22 +567,22 @@ public class Header implements Cloneable, Serializable {
                     result.iDatabaseType = "Arabidopsis thaliana, TAIR format";
                     result.iAccession = aFASTAHeader.substring(0, firstPipeLoc).trim();
                     result.iID = "";
-                    int secondPipeLoc = aFASTAHeader.indexOf("|", firstPipeLoc+1);
-                    int thirdPipeLoc = aFASTAHeader.indexOf("|", secondPipeLoc+1);
-                    result.iDescription = aFASTAHeader.substring(secondPipeLoc+1, thirdPipeLoc).trim();
+                    int secondPipeLoc = aFASTAHeader.indexOf("|", firstPipeLoc + 1);
+                    int thirdPipeLoc = aFASTAHeader.indexOf("|", secondPipeLoc + 1);
+                    result.iDescription = aFASTAHeader.substring(secondPipeLoc + 1, thirdPipeLoc).trim();
                     result.iID = "";
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
-                } else if(aFASTAHeader.matches("^nrAt[^\t]*\t.*")) {
+                } else if (aFASTAHeader.matches("^nrAt[^\t]*\t.*")) {
                     // The PSB Arabidopsis thaliana database; proprietary format
                     // We need to find three elements:
                     //   - the internal accession (at the start, separated by 'tab' and space from the next part).
@@ -602,26 +594,26 @@ public class Header implements Cloneable, Serializable {
                     int closeBracketLoc = aFASTAHeader.indexOf(")");
                     // If there is a location, there will be a closing bracket at 'closeBracketLoc+1' as well.
                     // If so, use this one.
-                    int tempLoc = closeBracketLoc+1;
-                    if(aFASTAHeader.length() > tempLoc && aFASTAHeader.charAt(tempLoc) == ')') {
+                    int tempLoc = closeBracketLoc + 1;
+                    if (aFASTAHeader.length() > tempLoc && aFASTAHeader.charAt(tempLoc) == ')') {
                         closeBracketLoc = tempLoc;
                     }
                     result.iDatabaseType = "PSB Arabidopsis thaliana";
-                    result.iAccession = aFASTAHeader.substring(openBracketLoc+1, closeBracketLoc).trim();
+                    result.iAccession = aFASTAHeader.substring(openBracketLoc + 1, closeBracketLoc).trim();
                     result.iID = aFASTAHeader.substring(0, openBracketLoc).trim();
-                    result.iDescription = aFASTAHeader.substring(closeBracketLoc+1).trim();
+                    result.iDescription = aFASTAHeader.substring(closeBracketLoc + 1).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
-                } else if(aFASTAHeader.matches("^L. monocytogenes[^|]*[|][^|]*[|].*")) {
+                } else if (aFASTAHeader.matches("^L. monocytogenes[^|]*[|][^|]*[|].*")) {
                     // The Listeria database; proprietary format
                     // We need to find three elements:
                     //   - the leader element (at the start, separated by '|' from the next part).
@@ -630,21 +622,21 @@ public class Header implements Cloneable, Serializable {
                     //
                     // ex: L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)
                     int firstPipe = aFASTAHeader.indexOf("|");
-                    int secondPipe = aFASTAHeader.indexOf("|", firstPipe+1);
+                    int secondPipe = aFASTAHeader.indexOf("|", firstPipe + 1);
                     result.iDatabaseType = "Listeria";
                     result.iID = aFASTAHeader.substring(0, firstPipe).trim();
-                    result.iAccession = aFASTAHeader.substring(firstPipe+1, secondPipe).trim();
-                    result.iDescription = aFASTAHeader.substring(secondPipe+1).trim();
+                    result.iAccession = aFASTAHeader.substring(firstPipe + 1, secondPipe).trim();
+                    result.iDescription = aFASTAHeader.substring(secondPipe + 1).trim();
                     // Check for the presence of a location.
                     int index = -1;
-                    if((index = result.iAccession.indexOf(" (")) > 0) {
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
                         String temp = result.iAccession.substring(index);
                         result.iAccession = result.iAccession.substring(0, index);
                         int open = 2;
                         int minus = temp.indexOf("-");
                         int end = temp.indexOf(")");
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
-                        result.iEnd = Integer.parseInt(temp.substring(minus+1, end));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                 } else {
                     // Okay, try the often-used 'generic' approach. If this fails, we go to the worse-case scenario, ie. do not process at all.
@@ -664,39 +656,39 @@ public class Header implements Cloneable, Serializable {
                     String testDescription = null;
                     int testStart = -1;
                     int testEnd = -1;
-                    if((accessionEndLoc > 0) && (aFASTAHeader.indexOf("(") >= 0) && (aFASTAHeader.indexOf(")", aFASTAHeader.indexOf("(")+1) >= 0)) {
+                    if ((accessionEndLoc > 0) && (aFASTAHeader.indexOf("(") >= 0) && (aFASTAHeader.indexOf(")", aFASTAHeader.indexOf("(") + 1) >= 0)) {
                         // Now we have to see if there is location information present.
-                        if(aFASTAHeader.substring(accessionEndLoc+1, aFASTAHeader.indexOf(")", accessionEndLoc+2)+1).matches("[(][0-9]+-[0-9]+[)]") && !aFASTAHeader.substring(accessionEndLoc+2, aFASTAHeader.indexOf(")", accessionEndLoc+2)).equals(aFASTAHeader.substring(0, accessionEndLoc).trim())) {
+                        if (aFASTAHeader.substring(accessionEndLoc + 1, aFASTAHeader.indexOf(")", accessionEndLoc + 2) + 1).matches("[(][0-9]+-[0-9]+[)]") && !aFASTAHeader.substring(accessionEndLoc + 2, aFASTAHeader.indexOf(")", accessionEndLoc + 2)).equals(aFASTAHeader.substring(0, accessionEndLoc).trim())) {
                             // start and end found. Add it to the accession number and remove it from the description.
                             accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                         }
                         testAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                         // Check for the presence of a location.
                         int index = -1;
-                        if((index = testAccession.indexOf(" (")) > 0) {
+                        if ((index = testAccession.indexOf(" (")) > 0) {
                             String temp = testAccession.substring(index);
                             testAccession = testAccession.substring(0, index);
                             int open = 2;
                             int minus = temp.indexOf("-");
                             int end = temp.indexOf(")");
                             testStart = Integer.parseInt(temp.substring(open, minus));
-                            testEnd = Integer.parseInt(temp.substring(minus+1, end));
+                            testEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         testDescription = aFASTAHeader.substring(accessionEndLoc).trim();
                         // Find the second occurrence of the accession number, which should be in the description.
                         int enzymicity = -1;
-                        if(testDescription.indexOf("(*") >= 0 && testDescription.indexOf("*)", testDescription.indexOf("(*"+4)) > 0) {
+                        if (testDescription.indexOf("(*") >= 0 && testDescription.indexOf("*)", testDescription.indexOf("(*" + 4)) > 0) {
                             enzymicity = testDescription.indexOf("*)") + 2;
                         }
                         startSecAcc = testDescription.indexOf("(", enzymicity);
-                        endSecAcc = testDescription.indexOf(")", startSecAcc+2);
+                        endSecAcc = testDescription.indexOf(")", startSecAcc + 2);
                     }
                     // See if the accessions match up.
-                    if(startSecAcc >= 0 && endSecAcc >= 0 && testDescription.substring(startSecAcc+1, endSecAcc).trim().equals(testAccession.trim())) {
+                    if (startSecAcc >= 0 && endSecAcc >= 0 && testDescription.substring(startSecAcc + 1, endSecAcc).trim().equals(testAccession.trim())) {
                         result.iID = "";
                         result.iAccession = testAccession;
                         result.iDescription = testDescription;
-                        if(testStart >= 0 && testEnd >= 0) {
+                        if (testStart >= 0 && testEnd >= 0) {
                             result.iStart = testStart;
                             result.iEnd = testEnd;
                         }
@@ -706,24 +698,24 @@ public class Header implements Cloneable, Serializable {
                         result.iRest = aFASTAHeader;
                         // Check for the presence of a location.
                         int index = -1;
-                        if( ((index = result.iRest.lastIndexOf(" (")) > 0) && (result.iRest.lastIndexOf(")")>0) && (result.iRest.lastIndexOf("-") > index)) {
+                        if (((index = result.iRest.lastIndexOf(" (")) > 0) && (result.iRest.lastIndexOf(")") > 0) && (result.iRest.lastIndexOf("-") > index)) {
                             String temp = result.iRest.substring(index);
                             int open = 2;
                             int minus = temp.indexOf("-");
                             int end = temp.lastIndexOf(")");
                             try {
                                 int tempStart = Integer.parseInt(temp.substring(open, minus));
-                                int tempEnd = Integer.parseInt(temp.substring(minus+1, end));
+                                int tempEnd = Integer.parseInt(temp.substring(minus + 1, end));
                                 result.iStart = tempStart;
                                 result.iEnd = tempEnd;
                                 result.iRest = result.iRest.substring(0, index);
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 // apparently not location info.
                             }
                         }
                     }
                 }
-            } catch(RuntimeException excep) {
+            } catch (RuntimeException excep) {
                 logger.error(" * Unable to process FASTA header line:\n\t" + aFASTAHeader + "\n\n");
                 throw excep;
             }
@@ -755,7 +747,7 @@ public class Header implements Cloneable, Serializable {
     public void setAccession(String aAccession) {
         iAccession = aAccession;
     }
-    
+
     public String getDatabaseType() {
         return iDatabaseType;
     }
@@ -808,43 +800,43 @@ public class Header implements Cloneable, Serializable {
      */
     public String getAbbreviatedFASTAHeader() {
         StringBuffer result = new StringBuffer(">" + this.getCoreHeader());
-        if(this.iID == null) {
+        if (this.iID == null) {
             // Apparently we have not been able to identify and parse
             // this header.
             // In that case, the core header already contains everything,
             // so don't do anything.
         } else {
             // Some more appending to be done here.
-            if(!this.iID.equals("")) {
-                if(this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("tr") || this.iID.equalsIgnoreCase("IPI") || this.iID.toLowerCase().startsWith("l. monocytogenes")) {
+            if (!this.iID.equals("")) {
+                if (this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("tr") || this.iID.equalsIgnoreCase("IPI") || this.iID.toLowerCase().startsWith("l. monocytogenes")) {
                     // FASTA entry with pipe ('|') separating core header from description.
-                    result.append("|"+this.iDescription);
-                } else if(this.iID.equalsIgnoreCase("gi")) {
+                    result.append("|" + this.iDescription);
+                } else if (this.iID.equalsIgnoreCase("gi")) {
                     // NCBI entry.
                     result.append("|");
                     // See if we have a foreign ID.
-                    if(iForeignID != null) {
-                        result.append(this.iForeignID+"|"+this.iForeignAccession+"|");
+                    if (iForeignID != null) {
+                        result.append(this.iForeignID + "|" + this.iForeignAccession + "|");
                         // See if we also have a description.
-                        if(this.iForeignDescription != null) {
+                        if (this.iForeignDescription != null) {
                             result.append(this.iForeignDescription);
                         }
                     }
                     // Add the Description.
                     result.append(" " + this.iDescription);
-                } else if(this.iID.startsWith(" M. tub.")) {
+                } else if (this.iID.startsWith(" M. tub.")) {
                     // Mycobacterium tuberculosis entry.
                     result.append("|" + this.iDescription);
-                } else if(this.iID.startsWith("dm")) {
+                } else if (this.iID.startsWith("dm")) {
                     // Personal Drosphila melanogaster entry.
                     result = result.delete(result.indexOf("|"), result.length());
                     result.append(" [" + this.iStart + "-" + this.iEnd + "]");
-                } else if(this.iID.startsWith("nrAt")) {
+                } else if (this.iID.startsWith("nrAt")) {
                     // Proprietary PSB A. thaliana entry
                     result.append(" " + this.iDescription);
                 }
-            } else if(this.iID.equals("")) {
-                if(iAccession.startsWith("HIT")) {
+            } else if (this.iID.equals("")) {
+                if (iAccession.startsWith("HIT")) {
                     result.append("|" + this.iDescription);
                 } else {
                     // Just add a space and the description.
@@ -862,11 +854,11 @@ public class Header implements Cloneable, Serializable {
      */
     public String toString() {
         String result = null;
-        if(this.iID == null) {
+        if (this.iID == null) {
             result = this.getAbbreviatedFASTAHeader();
         } else {
             result = this.getAbbreviatedFASTAHeader();
-            if(this.iRest != null) {
+            if (this.iRest != null) {
                 result += " " + this.iRest;
             }
         }
@@ -893,22 +885,22 @@ public class Header implements Cloneable, Serializable {
         int score = -1;
 
         // Score the header...
-        if(this.iID == null || this.iID.equals("") || this.iID.startsWith(" M. tub.") || this.iID.startsWith("nrAt") || this.iID.startsWith("L. monocytogenes")) {
+        if (this.iID == null || this.iID.equals("") || this.iID.startsWith(" M. tub.") || this.iID.startsWith("nrAt") || this.iID.startsWith("L. monocytogenes")) {
             score = 0;
-        } else if(this.iID.equalsIgnoreCase("sw")) {
+        } else if (this.iID.equalsIgnoreCase("sw")) {
             score = 4;
-        } else if(this.iID.equalsIgnoreCase("tr")) {
+        } else if (this.iID.equalsIgnoreCase("tr")) {
             score = 2;
-        } else if(this.iID.equalsIgnoreCase("ipi")) {
-            if(this.iDescription != null && this.iDescription.toUpperCase().indexOf("SWISS-PROT") >= 0) {
+        } else if (this.iID.equalsIgnoreCase("ipi")) {
+            if (this.iDescription != null && this.iDescription.toUpperCase().indexOf("SWISS-PROT") >= 0) {
                 score = 3;
-            } else if(this.iDescription != null && ( (this.iDescription.toUpperCase().indexOf("TREMBL") >= 0) || (this.iDescription.toUpperCase().indexOf("REFSEQ_NP") >= 0) )) {
+            } else if (this.iDescription != null && ((this.iDescription.toUpperCase().indexOf("TREMBL") >= 0) || (this.iDescription.toUpperCase().indexOf("REFSEQ_NP") >= 0))) {
                 score = 2;
             } else {
                 score = 1;
             }
-        } else if(this.iID.equalsIgnoreCase("gi")) {
-            if(this.iForeignID != null && this.iForeignID.equals("sp")) {
+        } else if (this.iID.equalsIgnoreCase("gi")) {
+            if (this.iForeignID != null && this.iForeignID.equals("sp")) {
                 score = 2;
             } else {
                 score = 1;
@@ -929,24 +921,24 @@ public class Header implements Cloneable, Serializable {
      */
     public String getCoreHeader() {
         String result = null;
-        if(iID != null && iID.startsWith("nrAt")) {
+        if (iID != null && iID.startsWith("nrAt")) {
             result = this.getID() + " \t(" + this.getAccession();
-        } else if(iID != null && !iID.equals("")) {
+        } else if (iID != null && !iID.equals("")) {
             result = this.getID() + "|" + this.getAccession();
-        } else if(iID != null && iID.equals("")) {
+        } else if (iID != null && iID.equals("")) {
             // No ID given, so just take the accession.
             result = this.getAccession();
-        } else if(iID == null) {
+        } else if (iID == null) {
             result = this.iRest;
         }
 
         // See if we need to add information about the location.
-        if(iStart >= 0) {
+        if (iStart >= 0) {
             result += " (" + Integer.toString(iStart) + "-" + Integer.toString(iEnd) + ")";
         }
 
         // For the PSB A. Thaliana, we need to include the closing ')'.
-        if(iID != null && iID.startsWith("nrAt")) {
+        if (iID != null && iID.startsWith("nrAt")) {
             result += ")";
         }
 
@@ -962,15 +954,15 @@ public class Header implements Cloneable, Serializable {
      */
     public void addAddendum(String aAddendum) {
         // First see if we have addenda already.
-        if(this.iAddenda == null) {
+        if (this.iAddenda == null) {
             iAddenda = new StringBuffer();
         }
 
         // Now check for the presence of the '^A' sequence.
-        if(aAddendum.startsWith("^A")) {
+        if (aAddendum.startsWith("^A")) {
             iAddenda.append(aAddendum);
         } else {
-            iAddenda.append("^A"+aAddendum);
+            iAddenda.append("^A" + aAddendum);
         }
     }
 
@@ -982,7 +974,7 @@ public class Header implements Cloneable, Serializable {
      */
     public String getAddenda() {
         String result = null;
-        if(this.iAddenda != null) {
+        if (this.iAddenda != null) {
             result = iAddenda.toString();
         }
         return result;
@@ -996,7 +988,7 @@ public class Header implements Cloneable, Serializable {
     public boolean hasAddenda() {
         boolean result = false;
 
-        if(this.iAddenda != null) {
+        if (this.iAddenda != null) {
             result = true;
         }
 
@@ -1013,7 +1005,7 @@ public class Header implements Cloneable, Serializable {
     public String getFullHeaderWithAddenda() {
         String result = this.toString();
 
-        if(this.iAddenda != null) {
+        if (this.iAddenda != null) {
             result += iAddenda.toString();
         }
 
@@ -1035,7 +1027,7 @@ public class Header implements Cloneable, Serializable {
     public String getAbbreviatedFASTAHeaderWithAddenda() {
         String result = this.getAbbreviatedFASTAHeader();
 
-        if(this.iAddenda != null) {
+        if (this.iAddenda != null) {
             result += iAddenda.toString();
         }
 
@@ -1094,7 +1086,7 @@ public class Header implements Cloneable, Serializable {
         Object result = null;
         try {
             result = super.clone();
-        } catch(CloneNotSupportedException cnse) {
+        } catch (CloneNotSupportedException cnse) {
             logger.error(cnse.getMessage(), cnse);
         }
         return result;

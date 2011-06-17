@@ -150,7 +150,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
                     String spectrumId = iMascotDatfile.getQuery(i + 1).getTitle();
                     MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
-                   SpectrumMatch currentMatch = new SpectrumMatch(spectrum.getSpectrumKey());
+                    SpectrumMatch currentMatch = new SpectrumMatch(spectrum.getSpectrumKey());
                     if (spectrumCollection != null) {
                         spectrumCollection.addSpectrum(spectrum);
                     }
@@ -185,7 +185,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      */
     private PeptideAssumption getPeptideAssumption(PeptideHit aPeptideHit, int query, boolean decoySection) {
         Double measuredMass = aPeptideHit.getPeptideMr() + aPeptideHit.getDeltaMass();
-        String measuredCharge = iMascotDatfile.getQuery(query).getChargeString();
         ArrayList<ModificationMatch> foundModifications = new ArrayList();
         Modification handledModification;
         PTM correspondingPTM;
@@ -199,11 +198,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             handledModification = aPeptideHit.getModifications()[l];
             if (handledModification != null) {
                 correspondingPTM = ptmFactory.getPTMFromMascotName(handledModification.getShortType());
-                if (correspondingPTM != null) {
-                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
-                } else {
-                    foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
+                if (correspondingPTM == null) {
+                    correspondingPTM = new PTM(0, handledModification.getType() + " (Mascot)", handledModification.getMass(), new String[]{aPeptideHit.getSequence().charAt(modificationSite) + ""});
                 }
+                foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
             }
         }
         Double mascotEValue = aPeptideHit.getExpectancy();
@@ -225,4 +223,4 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         currentAssumption.addUrParam(scoreParam);
         return currentAssumption;
     }
-}
+        }

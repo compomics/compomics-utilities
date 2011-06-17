@@ -18,6 +18,10 @@ public class PsmQuantification extends ExperimentObject {
      */
     private String spectrumKey;
     /**
+     * The key of the spectrum match
+     */
+    private String spectrumMatchKey;
+    /**
      * The matches of the reporter ions
      */
     private HashMap<Integer, IonMatch> reporterMatches = new HashMap<Integer, IonMatch>();
@@ -30,8 +34,9 @@ public class PsmQuantification extends ExperimentObject {
      * Constructor for a spectrumQuantification
      * @param spectrumKey  the corresponding spectrum
      */
-    public PsmQuantification(String spectrumKey) {
+    public PsmQuantification(String spectrumKey, String spectrumMatchKey) {
         this.spectrumKey = spectrumKey;
+        this.spectrumMatchKey = spectrumMatchKey;
     }
 
     /**
@@ -58,6 +63,14 @@ public class PsmQuantification extends ExperimentObject {
      */
     public String getKey() {
         return spectrumKey;
+    }
+
+    /**
+     * Getter for the key of the spectrum match
+     * @return
+     */
+    public String getSpectrumMatchKey() {
+        return spectrumMatchKey;
     }
 
     /**

@@ -98,7 +98,7 @@ public class FragmentFactory {
             
             if (modifications.get(raa) != null) {
                 for (PTM ptm : modifications.get(raa)) {
-                    forwardMass += ptm.getMass();
+                    rewindMass += ptm.getMass();
                 }
             }
 

@@ -170,4 +170,62 @@ public class Enzyme extends ExperimentObject {
     public ArrayList<Character> getRestrictionBefore() {
         return restrictionBefore;
     }
+
+    /**
+     * Digests a protein sequence in a list of expected peptide sequences.
+     * 
+     * @param sequence              the protein sequence
+     * @param nMissedCleavages      the allowed number of missed cleavages
+     * @param nMin                  the minimal size for a peptide
+     * @param nMax                  the maximal size for a peptide
+     * @return a list of expected peptide sequences
+     */
+    public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
+        ArrayList<String> noCleavage = new ArrayList<String>();
+        String tempSequence = sequence;
+        int tempCleavage, cleavage;
+        while (tempSequence.length() > 1) {
+            cleavage = 0;
+            for (Character aa : getAminoAcidAfter()) {
+                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
+                if (tempCleavage > cleavage && !getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
+                    cleavage = tempCleavage;
+                }
+            }
+            for (Character aa : getAminoAcidBefore()) {
+                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
+                if (tempCleavage > cleavage && !getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
+                    cleavage = tempCleavage;
+                }
+            }
+            if (cleavage == 0) {
+                noCleavage.add(tempSequence);
+                break;
+            }
+            noCleavage.add(tempSequence.substring(cleavage + 1));
+            tempSequence = tempSequence.substring(0, cleavage + 1);
+        }
+        ArrayList<String> result = new ArrayList<String>();
+        for (String peptide : noCleavage) {
+            if (peptide.length() >= nMin && peptide.length() <= nMax) {
+                result.add(peptide);
+            }
+        }
+        if (nMissedCleavages > 0) {
+            for (int nmc = 1; nmc <= nMissedCleavages; nmc++) {
+                if (noCleavage.size() > 0) {
+                    for (int i = noCleavage.size() - 1; i > 0; i--) {
+                        noCleavage.set(i, noCleavage.get(i) + noCleavage.get(i - 1));
+                    }
+                    noCleavage.remove(0);
+                    for (String peptide : noCleavage) {
+                        if (peptide.length() <= nMax && peptide.length() >= nMin) {
+                            result.add(peptide);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
 }

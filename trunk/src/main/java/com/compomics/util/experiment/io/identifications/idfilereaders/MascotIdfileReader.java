@@ -8,7 +8,6 @@ import com.compomics.mascotdatfile.util.mascot.ProteinHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
 import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
@@ -47,10 +46,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * Instance of the mascotdatfile parser
      */
     private MascotDatfileInf iMascotDatfile;
-    /**
-     * the PTM factory
-     */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
     /**
      * The spectrum collection to complete
      */
@@ -197,10 +192,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             }
             handledModification = aPeptideHit.getModifications()[l];
             if (handledModification != null) {
-                correspondingPTM = ptmFactory.getPTMFromMascotName(handledModification.getShortType());
-                if (correspondingPTM == null) {
-                    correspondingPTM = new PTM(0, handledModification.getType() + " (Mascot)", handledModification.getMass(), new String[]{aPeptideHit.getSequence().charAt(modificationSite) + ""});
-                }
+                correspondingPTM = new PTM(0, handledModification.getType(), handledModification.getMass(), new String[]{aPeptideHit.getSequence().charAt(modificationSite) + ""});
                 foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
             }
         }
@@ -223,4 +215,4 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         currentAssumption.addUrParam(scoreParam);
         return currentAssumption;
     }
-        }
+}

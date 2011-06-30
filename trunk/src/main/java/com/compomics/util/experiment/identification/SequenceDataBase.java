@@ -3,8 +3,6 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.gui.dialogs.ProgressDialogX;
-import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Header;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -55,11 +53,6 @@ public class SequenceDataBase extends ExperimentObject {
      * Number of targeted sequences loaded
      */
     private int nTargetSequences = 0;
-    /**
-     * The sequence to protein acceesion number map. Key is the peptide sequence, 
-     * object is an array list of the mapped protein accession numbers.
-     */
-    HashMap<String, ArrayList<String>> sequenceToProteinMap = new HashMap<String, ArrayList<String>>();
 
     /**
      * Constructor for a sequence database.
@@ -127,7 +120,7 @@ public class SequenceDataBase extends ExperimentObject {
     public Set<String> getProteinList() {
         return proteinMap.keySet();
     }
-    
+
     /**
      * Imports a sequence database from a fasta file.
      *
@@ -137,21 +130,6 @@ public class SequenceDataBase extends ExperimentObject {
      * @throws IllegalArgumentException Exception thrown whenever the fasta header is not of correct format
      */
     public void importDataBase(File fastaFile) throws FileNotFoundException, IOException {
-        importDataBase(fastaFile, null, 0, Integer.MAX_VALUE);
-    }
-
-    /**
-     * Imports a sequence database from a fasta file.
-     *
-     * @param fastaFile                 The fasta file to import
-     * @param enzyme                    The enzyme to use
-     * @param minPeptideLength          The minimum peptide length 
-     * @param maxPeptideLength          The maximum peptide length
-     * @throws FileNotFoundException    Exception thrown when the fasta file is not found
-     * @throws IOException              Exception thrown whenever an error is encountered while parsing the file
-     * @throws IllegalArgumentException Exception thrown whenever the fasta header is not of correct format
-     */
-    public void importDataBase(File fastaFile, Enzyme enzyme, int minPeptideLength, int maxPeptideLength) throws FileNotFoundException, IOException {
 
         FileReader f = new FileReader(fastaFile);
         BufferedReader b = new BufferedReader(f);
@@ -162,42 +140,13 @@ public class SequenceDataBase extends ExperimentObject {
         Header fastaHeader = null;
         boolean decoy = false;
         
-        // create the sequence to protein map
-        sequenceToProteinMap = new HashMap<String, ArrayList<String>>();
-        
         while (line != null) {
 
             line = line.trim();
 
             if (line.startsWith(">")) {
                 if (!sequence.equalsIgnoreCase("")) {
-
-                    if (enzyme != null) {
-
-                        // cleave the protein into peptides
-                        com.compomics.util.protein.Protein[] tempPeptides = 
-                                enzyme.cleave(new com.compomics.util.protein.Protein(new AASequenceImpl(sequence)), minPeptideLength, maxPeptideLength);
-
-                        // add all protein matches for the given peptide sequence
-                        for (int i = 0; i < tempPeptides.length; i++) {
-                            
-                            String tempPeptideSequence = tempPeptides[i].getSequence().getSequence();
-
-                            if (sequenceToProteinMap.containsKey(tempPeptideSequence)) {
-                                sequenceToProteinMap.get(tempPeptideSequence).add(accession);
-                            } else {
-                                ArrayList<String> accessions = new ArrayList<String>();
-                                accessions.add(accession);
-                                sequenceToProteinMap.put(tempPeptideSequence, accessions);
-                            }
-                        }
-                        
-                        newProtein = new Protein(accession, databaseType, sequence, decoy);
-  
-                    } else {
-                        newProtein = new Protein(accession, databaseType, sequence, decoy);
-                    }
-
+                    newProtein = new Protein(accession, databaseType, sequence, decoy);  
                     proteinMap.put(newProtein.getProteinKey(), newProtein);
                     headerMap.put(newProtein.getProteinKey(), fastaHeader);
 
@@ -231,25 +180,6 @@ public class SequenceDataBase extends ExperimentObject {
         if (!decoy) {
             nTargetSequences++;
         }
-    }
-    
-    /**
-     * Returns the sequence to protein accessions map.
-     * 
-     * @return the sequence to protein accessions map
-     */
-    public HashMap<String, ArrayList<String>> getSequenceToProteinMap () {
-        return sequenceToProteinMap;
-    }
-    
-    /**
-     * Empties the sequence to protein map. Used to free up the memory 
-     * used by the map. And to hinder this map from being saved when 
-     * saving the project as a cps file, as the file then becomes very 
-     * big.
-     */
-    public void emptySequenceToProteinMap () {
-        sequenceToProteinMap = new HashMap<String, ArrayList<String>>();
     }
 
     /**

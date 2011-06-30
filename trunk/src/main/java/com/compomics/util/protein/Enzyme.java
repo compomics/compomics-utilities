@@ -129,7 +129,8 @@ public class Enzyme implements Cloneable {
     
     /**
      * Creates a new Enzyme from a com.compomics.util.experiment.biology.Enzyme enzyme 
-     * and the maximum number of missed cleavages.
+     * and the maximum number of missed cleavages. 
+     * We put a lot of efforts in standardizing all objects into the experiment package. We are now very happy to provide you the opportunity to mess up your code!
      * 
      * @param enzyme                The com.compomics.util.experiment.biology.Enzyme enzyme
      * @param maxMissedCleavages    The maximum number of missed cleavages

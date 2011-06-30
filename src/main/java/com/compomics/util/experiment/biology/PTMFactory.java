@@ -112,6 +112,7 @@ public class PTMFactory {
 
     /**
      * getter for a ptm according to its measured characteristics
+     * /!\ This method can generate inconsistent results in case a measurement matches to various PTMs.
      *
      * @param mass      the measured mass induced by the modification
      * @param location  the modification location
@@ -141,19 +142,6 @@ public class PTMFactory {
                     return currentPTM;
                 }
             }
-        }
-        return unknownPTM;
-    }
-
-    /**
-     * returns a ptm referenced by its mascot name
-     *
-     * @param aMascotName   The Mascot name of a protein
-     * @return the candidate PTM
-     */
-    public PTM getPTMFromMascotName(String aMascotName) {
-        if (mascotNameToPTMMap.get(aMascotName) != null) {
-        return mascotNameToPTMMap.get(aMascotName);
         }
         return unknownPTM;
     }

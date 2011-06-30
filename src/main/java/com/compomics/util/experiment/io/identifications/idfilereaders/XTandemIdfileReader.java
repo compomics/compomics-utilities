@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -46,10 +45,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * the peptide map
      */
     private PeptideMap peptideMap;
-    /**
-     * the PTM factory
-     */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
     /**
      * The spectrum collection to complete
      */
@@ -133,7 +128,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                     for (Peptide peptide : spectrumPeptides) {
                         for (Domain domain : peptide.getDomains()) {
-                        currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain));
+                            currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain));
                         }
                     }
                     foundPeptides.add(currentMatch);
@@ -175,7 +170,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             String[] parsedName = currentModification.getName().split("@");
             double mass = new Double(parsedName[0]);
             String aa = parsedName[1].toUpperCase();
-            currentPTM = ptmFactory.getPTM(mass, aa, sequence);
+            currentPTM = new PTM(0, currentModification.getName(), mass, new String[]{aa});
             for (String residue : currentPTM.getResiduesArray()) {
                 if (residue.equals("[")) {
                     foundModifications.add(new ModificationMatch(currentPTM, false, 0));
@@ -200,7 +195,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             double mass = new Double(parsedName[0]);
             String aa = parsedName[1];
             int location = new Integer(currentModification.getLocation()) - new Integer(domain.getDomainStart()) + 1;
-            currentPTM = ptmFactory.getPTM(mass, aa, sequence);
+            currentPTM = new PTM(0, currentModification.getName(), mass, new String[]{aa});
             foundModifications.add(new ModificationMatch(currentPTM, true, location));
         }
         peptide = new com.compomics.util.experiment.biology.Peptide(sequence, domain.getDomainMh(), proteins, foundModifications);

@@ -60,6 +60,14 @@ public class ModificationMatch extends ExperimentObject {
     public PTM getTheoreticPtm() {
         return theoreticPtm;
     }
+    
+    /**
+     * Sets the theoretic PTM
+     * @param ptm the theoretic PTM
+     */
+    public void setTheoreticPtm(PTM ptm) {
+        this.theoreticPtm = ptm;
+    }
 
     /**
      * getter for the modification site

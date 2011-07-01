@@ -227,9 +227,9 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             for (String location : residuesArray) {
                 tempSequence = currentMsHit.MSHits_pepstring;
                 if (location.compareTo("[") == 0) {
-                    modificationsFound.add(new ModificationMatch(currentPTM, false, 0));
+                    modificationsFound.add(new ModificationMatch(currentPTM, false, 1));
                 } else if (location.compareTo("]") == 0) {
-                    modificationsFound.add(new ModificationMatch(currentPTM, false, tempSequence.length() - 1));
+                    modificationsFound.add(new ModificationMatch(currentPTM, false, tempSequence.length()));
                 } else {
                     tempSequence = "#" + tempSequence + "#";
                     String[] sequenceFragments = tempSequence.split(location);
@@ -237,7 +237,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         int cpt = 0;
                         for (int f = 0; f < sequenceFragments.length - 1; f++) {
                             cpt = cpt + sequenceFragments[f].length();
-                            modificationsFound.add(new ModificationMatch(currentPTM, false, cpt - 1));
+                            modificationsFound.add(new ModificationMatch(currentPTM, false, cpt));
                         }
                     }
                 }

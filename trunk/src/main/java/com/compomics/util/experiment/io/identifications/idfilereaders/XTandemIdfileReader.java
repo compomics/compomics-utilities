@@ -194,7 +194,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             String[] parsedName = currentModification.getName().split("@");
             double mass = new Double(parsedName[0]);
             String aa = parsedName[1];
-            int location = new Integer(currentModification.getLocation()) - new Integer(domain.getDomainStart()) + 1;
+            int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;
+            if (location < 1) {
+                int debug = 1;
+            }
             currentPTM = new PTM(0, currentModification.getName(), mass, new String[]{aa});
             foundModifications.add(new ModificationMatch(currentPTM, true, location));
         }

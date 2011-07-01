@@ -185,14 +185,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         PTM correspondingPTM;
         int modificationSite;
         for (int l = 0; l < aPeptideHit.getModifications().length; l++) {
-            if (l > 0) {
-                modificationSite = l - 1;
+            if (l == 0) {
+                modificationSite = 1;
+            } else if (l > aPeptideHit.getSequence().length()) {
+                modificationSite = aPeptideHit.getSequence().length();
             } else {
                 modificationSite = l;
             }
             handledModification = aPeptideHit.getModifications()[l];
             if (handledModification != null) {
-                correspondingPTM = new PTM(0, handledModification.getType(), handledModification.getMass(), new String[]{aPeptideHit.getSequence().charAt(modificationSite) + ""});
+                correspondingPTM = new PTM(0, handledModification.getType(), handledModification.getMass(), new String[]{aPeptideHit.getSequence().charAt(modificationSite-1) + ""});
                 foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
             }
         }

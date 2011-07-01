@@ -111,6 +111,14 @@ public class PTM extends ExperimentObject {
     public String getName() {
         return name;
     }
+    
+    /**
+     * Sets the ptm name
+     * @param name  the ptm name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * getter for the mass difference induced by this modification

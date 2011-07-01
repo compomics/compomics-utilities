@@ -79,6 +79,21 @@ public class Peptide extends ExperimentObject {
     public ArrayList<ModificationMatch> getModificationMatches() {
         return modifications;
     }
+    
+    /**
+     * Clears the list of imported modification matches
+     */
+    public void clearModificationMAtches() {
+        modifications.clear();
+    }
+    
+    /**
+     * Adds a modification match
+     * @param modificationMatch the modification match to add
+     */
+    public void addModificationMatch(ModificationMatch modificationMatch) {
+        modifications.add(modificationMatch);
+    }
 
     /**
      * getter for the sequence

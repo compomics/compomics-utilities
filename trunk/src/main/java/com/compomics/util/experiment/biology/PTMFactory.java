@@ -279,7 +279,7 @@ public class PTMFactory {
         }
 
         // Create and implement modification.
-        PTM currentPTM = new PTM(getIndex(modType), name, new Double(mass), residuesArray);
+        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residuesArray);
         ptmSet.add(currentPTM);
         mascotNameToPTMMap.put("", currentPTM);
         indexToPTMMap.put(number, currentPTM);

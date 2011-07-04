@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Date: Sep 1, 2010
  * Time: 11:59:18 AM
  */
-public abstract class ExperimentObject implements Serializable {
+public abstract class ExperimentObject implements Serializable, Cloneable {
 
     /**
      * The version UID for Serialization/Deserialization compatibility

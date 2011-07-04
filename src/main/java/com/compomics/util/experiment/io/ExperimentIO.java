@@ -2,8 +2,15 @@ package com.compomics.util.experiment.io;
 
 import com.compomics.util.experiment.MsExperiment;
 import com.compomics.util.experiment.biology.Sample;
+import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
+import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
  * This class takes care of the saving and opening of Compomics utilities
@@ -40,19 +47,45 @@ public class ExperimentIO {
      * @param experiment    The experiment to be saved
      * @throws IOException  Exception thrown whenever an error is encountered while writing the file
      */
-    public void saveIdentifications(File file, MsExperiment experiment) throws IOException {
-  
-        // Spectra are removed to save time and space
+    public void saveIdentifications(File file, MsExperiment experiment) throws IOException, MzMLUnmarshallerException {
+
+        // peak lists are not serialized to save time and space
+        HashMap<String, HashSet<Peak>> backUp = new HashMap<String, HashSet<Peak>>();
+        SpectrumCollection spectrumCollection;
+        HashSet<Peak> peaks;
         for (Sample sample : experiment.getSamples().values()) {
             for (int replicateNumber : experiment.getAnalysisSet(sample).getReplicateNumberList()) {
-                experiment.getAnalysisSet(sample).getProteomicAnalysis(replicateNumber).getSpectrumCollection().removePeaks();
+                spectrumCollection = experiment.getAnalysisSet(sample).getProteomicAnalysis(replicateNumber).getSpectrumCollection();
+                if (spectrumCollection.getSourceType() == SpectrumCollection.MGF) {
+                    for (String spectrumKey : spectrumCollection.getAllKeys()) {
+                        peaks = new HashSet<Peak>();
+                        for (Peak peak : spectrumCollection.getSpectrum(spectrumKey).getPeakList()) {
+                            peaks.add(peak);
+                        }
+                        backUp.put(spectrumKey, peaks);
+                        spectrumCollection.getSpectrum(spectrumKey).removePeakList();
+                    }
+                }
             }
         }
 
+        // Serialize the experiment object
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(experiment);
         oos.close();
+
+        // Put the peak lists back
+        for (Sample sample : experiment.getSamples().values()) {
+            for (int replicateNumber : experiment.getAnalysisSet(sample).getReplicateNumberList()) {
+                spectrumCollection = experiment.getAnalysisSet(sample).getProteomicAnalysis(replicateNumber).getSpectrumCollection();
+                if (spectrumCollection.getSourceType() == SpectrumCollection.MGF) {
+                    for (String spectrumKey : spectrumCollection.getAllKeys()) {
+                        spectrumCollection.getSpectrum(spectrumKey).setPeakList(backUp.get(spectrumKey));
+                    }
+                }
+            }
+        }
     }
 
     /**

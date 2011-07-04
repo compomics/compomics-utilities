@@ -179,6 +179,14 @@ public abstract class Spectrum extends ExperimentObject {
     public HashSet<Peak> getPeakList() {
         return peakList;
     }
+    
+    /**
+     * Sets the peak list
+     * @param peakList HashSet of peaks containing the peaks of the spectrum
+     */
+    public void setPeakList(HashSet<Peak> peakList) {
+        this.peakList = peakList;
+    }
 
     /**
      * Returns the scan start time.

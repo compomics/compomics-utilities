@@ -19,11 +19,12 @@ import com.compomics.util.io.PklFile;
 import com.compomics.util.io.filefilters.PdfFileFilter;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.Enzyme;
+import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Protein;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,16 +38,23 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
+import no.uib.jsparklines.renderers.JSparklinesIntegerColorTableCellRenderer;
 import org.apache.batik.transcoder.TranscoderException;
 
 /**
@@ -58,7 +66,19 @@ import org.apache.batik.transcoder.TranscoderException;
  * @author Harald Barsnes
  */
 public class UtilitiesDemo extends javax.swing.JFrame {
-
+ 
+    /**
+     * The PEFF annotations color map.
+     */
+    private HashMap<Integer, Color> peffAnnotationsColorMap;
+    /**
+     * The PEFF annotations tooltip map.
+     */
+    private HashMap<Integer, String> peffAnnotationsTooltipMap;
+    /**
+     * If true, the format shown is PEFF, if false FASTA is assumed.
+     */
+    private boolean peffFormat = true;
     /**
      * The map of the PEFF key value pairs.
      */
@@ -113,6 +133,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * Used for the in silico digestion example.
      */
     private String cleanProteinSequence = null;
+    /**
+     * The tag colors for PEFF formatting.
+     */
+    private HashMap<String, Color> selectedAnnotationTypes;
 
     /** 
      * Creates a new UtilitiesDemo frame and makes it visible.
@@ -121,6 +145,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         initComponents();
 
         keyValuePairs = new TreeMap<String, String>();
+        selectedAnnotationTypes = new HashMap<String, Color>();
 
         // set the title including version number
         this.setTitle(this.getTitle() + " " + getVersion() + " - Demo");
@@ -158,6 +183,33 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         peptidesJXTable.getTableHeader().setReorderingAllowed(false);
         peptideAJXTable.getTableHeader().setReorderingAllowed(false);
         peptideBJXTable.getTableHeader().setReorderingAllowed(false);
+        peffHeaderJTable.getTableHeader().setReorderingAllowed(false);
+        peffAnnotationsJTable.getTableHeader().setReorderingAllowed(false);
+        proteinHeaderJTable.getTableHeader().setReorderingAllowed(false);
+
+        peptidesJXTable.getColumn(" ").setMinWidth(40);
+        peptidesJXTable.getColumn(" ").setMaxWidth(40);
+        peptidesJXTable.getColumn("Start").setMinWidth(40);
+        peptidesJXTable.getColumn("Start").setMaxWidth(40);
+        peptidesJXTable.getColumn("End").setMinWidth(40);
+        peptidesJXTable.getColumn("End").setMaxWidth(40);
+
+        peffHeaderJTable.getColumn(" ").setMinWidth(40);
+        peffHeaderJTable.getColumn(" ").setMaxWidth(40);
+
+        proteinHeaderJTable.getColumn(" ").setMinWidth(40);
+        proteinHeaderJTable.getColumn(" ").setMaxWidth(40);
+
+        peffAnnotationsJTable.getColumn(" ").setMinWidth(40);
+        peffAnnotationsJTable.getColumn(" ").setMaxWidth(40);
+        peffAnnotationsJTable.getColumn("F").setMinWidth(40);
+        peffAnnotationsJTable.getColumn("F").setMaxWidth(40);
+        peffAnnotationsJTable.getColumn("B").setMinWidth(40);
+        peffAnnotationsJTable.getColumn("B").setMaxWidth(40);
+        peffAnnotationsJTable.getColumn("  ").setMinWidth(40);
+        peffAnnotationsJTable.getColumn("  ").setMaxWidth(40);
+
+        peffAnnotationsJTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
     }
 
     /**
@@ -741,26 +793,26 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         upperMassJSpinner = new javax.swing.JSpinner();
         jPanel3 = new javax.swing.JPanel();
-        proteinSequenceJScrollPane = new javax.swing.JScrollPane();
-        proteinSequenceJEditorPane = new javax.swing.JEditorPane();
         jLabel24 = new javax.swing.JLabel();
         sequenceFileJTextField = new javax.swing.JTextField();
         browseJButton = new javax.swing.JButton();
-        jLabel25 = new javax.swing.JLabel();
+        nextJButton = new javax.swing.JButton();
+        sequenceJTabbedPane = new javax.swing.JTabbedPane();
+        jPanel9 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        peffAnnotationsJTable = new javax.swing.JTable();
+        jPanel12 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        proteinHeaderJTable = new javax.swing.JTable();
         jPanel10 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        peffHeaderJTable = new javax.swing.JTable();
+        peptidesJPanel = new javax.swing.JPanel();
         peptidesJScrollPane = new javax.swing.JScrollPane();
         peptidesJXTable = new org.jdesktop.swingx.JXTable();
-        jLabel22 = new javax.swing.JLabel();
-        numberOfPeptidesJLabel = new javax.swing.JLabel();
         sequenceCoverageJPanel = new javax.swing.JPanel();
         proteinCoverageJScrollPane = new javax.swing.JScrollPane();
         proteinSequenceCoverageJEditorPane = new javax.swing.JEditorPane();
-        jLabel23 = new javax.swing.JLabel();
-        sequenceCoverageJLabel = new javax.swing.JLabel();
-        nextJButton = new javax.swing.JButton();
-        showModsJCheckBox = new javax.swing.JCheckBox();
-        showVariantsJCheckBox = new javax.swing.JCheckBox();
-        showCoverageJCheckBox = new javax.swing.JCheckBox();
 
         jRadioButton1.setText("jRadioButton1");
 
@@ -788,7 +840,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             informationJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(informationJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1166, Short.MAX_VALUE)
+                .add(informationJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1178, Short.MAX_VALUE)
                 .addContainerGap())
         );
         informationJPanelLayout.setVerticalGroup(
@@ -1095,7 +1147,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1027, Short.MAX_VALUE)
+                .add(spectrumBJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1039, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -1119,7 +1171,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1027, Short.MAX_VALUE)
+                .add(spectrumAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1039, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -1134,8 +1186,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         spectraJPanel.setLayout(spectraJPanelLayout);
         spectraJPanelLayout.setHorizontalGroup(
             spectraJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1059, Short.MAX_VALUE)
+            .add(jPanel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE)
         );
         spectraJPanelLayout.setVerticalGroup(
             spectraJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1157,8 +1209,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, spectrumJPanelLayout.createSequentialGroup()
+                        .add(10, 10, 10)
                         .add(spectrumPanelInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 395, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 397, Short.MAX_VALUE)
                         .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1171,8 +1224,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(ionSelectionJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(spectrumJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(spectrumPanelInfoJLabel)
-                    .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(spectrumPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(spectrumPanelInfoJLabel))
                 .addContainerGap())
         );
 
@@ -1208,7 +1261,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1134, Short.MAX_VALUE)
+                .add(chromatogramAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1146, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -1228,8 +1281,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(chromatogramJPanelLayout.createSequentialGroup()
+                        .add(10, 10, 10)
                         .add(chromatogramPanelInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 536, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 538, Short.MAX_VALUE)
                         .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1240,8 +1294,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(jPanel8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(chromatogramJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(chromatogramPanelInfoJLabel)
-                    .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(chromatogramPanelHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(chromatogramPanelInfoJLabel))
                 .addContainerGap())
         );
 
@@ -1357,8 +1411,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(jLabel5))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(peptideSequenceAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
-                    .add(peptideSequenceBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE))
+                    .add(peptideSequenceAJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
+                    .add(peptideSequenceBJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1Layout.createSequentialGroup()
@@ -1642,7 +1696,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(isotopicDistributionAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
+                .add(isotopicDistributionAJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 831, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -1662,8 +1716,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(isotopicDistributionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, isotopicDistributionJPanelLayout.createSequentialGroup()
+                        .add(10, 10, 10)
                         .add(isotopicDistributionCalculatorInfoJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 639, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 641, Short.MAX_VALUE)
                         .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, isotopicDistributionJPanelLayout.createSequentialGroup()
                         .add(jPanel5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1689,8 +1744,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                         .add(jPanel5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(isotopicDistributionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(isotopicDistributionCalculatorInfoJLabel)
-                    .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(isotopicDistributionCalculatorHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(isotopicDistributionCalculatorInfoJLabel))
                 .addContainerGap())
         );
 
@@ -1846,18 +1901,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Sequence"));
         jPanel3.setPreferredSize(new java.awt.Dimension(200, 215));
 
-        proteinSequenceJScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        proteinSequenceJEditorPane.setEditable(false);
-        proteinSequenceJEditorPane.setMinimumSize(new java.awt.Dimension(20, 20));
-        proteinSequenceJEditorPane.setPreferredSize(new java.awt.Dimension(20, 20));
-        proteinSequenceJEditorPane.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                proteinSequenceJEditorPaneKeyReleased(evt);
-            }
-        });
-        proteinSequenceJScrollPane.setViewportView(proteinSequenceJEditorPane);
-
         jLabel24.setText("Sequence File:");
 
         sequenceFileJTextField.setEditable(false);
@@ -1870,7 +1913,146 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
-        jLabel25.setText("PEFF File Header:");
+        nextJButton.setText("Next");
+        nextJButton.setToolTipText("Go to the next sequence in the file");
+        nextJButton.setEnabled(false);
+        nextJButton.setPreferredSize(new java.awt.Dimension(55, 14));
+        nextJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextJButtonActionPerformed(evt);
+            }
+        });
+
+        peffAnnotationsJTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                " ", "Term", "F", "B", "  "
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        peffAnnotationsJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                peffAnnotationsJTableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(peffAnnotationsJTable);
+
+        org.jdesktop.layout.GroupLayout jPanel9Layout = new org.jdesktop.layout.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 691, Short.MAX_VALUE)
+            .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 79, Short.MAX_VALUE)
+            .add(jPanel9Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+        );
+
+        sequenceJTabbedPane.addTab("Sequence Annotations", jPanel9);
+
+        proteinHeaderJTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                " ", "Term", "Value"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(proteinHeaderJTable);
+
+        org.jdesktop.layout.GroupLayout jPanel12Layout = new org.jdesktop.layout.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 691, Short.MAX_VALUE)
+            .add(jPanel12Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 79, Short.MAX_VALUE)
+            .add(jPanel12Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+        );
+
+        sequenceJTabbedPane.addTab("Protein Details", jPanel12);
+
+        peffHeaderJTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                " ", "Term", "Value"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(peffHeaderJTable);
+
+        org.jdesktop.layout.GroupLayout jPanel10Layout = new org.jdesktop.layout.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 691, Short.MAX_VALUE)
+            .add(jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 79, Short.MAX_VALUE)
+            .add(jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+        );
+
+        sequenceJTabbedPane.addTab("PEFF Header", jPanel10);
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1879,16 +2061,20 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, proteinSequenceJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3Layout.createSequentialGroup()
+                    .add(sequenceJTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+                    .add(jPanel3Layout.createSequentialGroup()
                         .add(jLabel24)
+                        .add(18, 18, 18)
+                        .add(sequenceFileJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(sequenceFileJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                        .add(browseJButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(browseJButton))
-                    .add(jLabel25))
+                        .add(nextJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
+
+        jPanel3Layout.linkSize(new java.awt.Component[] {browseJButton, nextJButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
@@ -1896,30 +2082,31 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel24)
                     .add(sequenceFileJTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(nextJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(browseJButton))
                 .add(18, 18, 18)
-                .add(jLabel25)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(proteinSequenceJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                .add(sequenceJTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Peptides"));
-        jPanel10.setPreferredSize(new java.awt.Dimension(317, 277));
+        jPanel3Layout.linkSize(new java.awt.Component[] {browseJButton, nextJButton}, org.jdesktop.layout.GroupLayout.VERTICAL);
+
+        peptidesJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Peptides"));
+        peptidesJPanel.setPreferredSize(new java.awt.Dimension(317, 277));
 
         peptidesJXTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Sequence", "Mass", "Start", "End"
+                " ", "Sequence", "Mass", "Start", "End"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1943,33 +2130,20 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
         peptidesJScrollPane.setViewportView(peptidesJXTable);
 
-        jLabel22.setText("Number of Peptides:");
-
-        numberOfPeptidesJLabel.setText("0");
-
-        org.jdesktop.layout.GroupLayout jPanel10Layout = new org.jdesktop.layout.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel10Layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout peptidesJPanelLayout = new org.jdesktop.layout.GroupLayout(peptidesJPanel);
+        peptidesJPanel.setLayout(peptidesJPanelLayout);
+        peptidesJPanelLayout.setHorizontalGroup(
+            peptidesJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(peptidesJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(peptidesJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
-                    .add(jPanel10Layout.createSequentialGroup()
-                        .add(jLabel22)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(numberOfPeptidesJLabel)))
+                .add(peptidesJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel10Layout.createSequentialGroup()
+        peptidesJPanelLayout.setVerticalGroup(
+            peptidesJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(peptidesJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(peptidesJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
-                .add(18, 18, 18)
-                .add(jPanel10Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel22)
-                    .add(numberOfPeptidesJLabel))
+                .add(peptidesJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1996,92 +2170,22 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         });
         proteinCoverageJScrollPane.setViewportView(proteinSequenceCoverageJEditorPane);
 
-        jLabel23.setText("Sequence Coverage:");
-
-        sequenceCoverageJLabel.setText("-");
-
-        nextJButton.setText("Next");
-        nextJButton.setToolTipText("Go to next sequence");
-        nextJButton.setEnabled(false);
-        nextJButton.setPreferredSize(new java.awt.Dimension(55, 14));
-        nextJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nextJButtonActionPerformed(evt);
-            }
-        });
-
-        showModsJCheckBox.setSelected(true);
-        showModsJCheckBox.setText("Modifications");
-        showModsJCheckBox.setIconTextGap(10);
-        showModsJCheckBox.setPreferredSize(new java.awt.Dimension(87, 14));
-        showModsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showModsJCheckBoxActionPerformed(evt);
-            }
-        });
-
-        showVariantsJCheckBox.setSelected(true);
-        showVariantsJCheckBox.setText("Variants");
-        showVariantsJCheckBox.setIconTextGap(10);
-        showVariantsJCheckBox.setPreferredSize(new java.awt.Dimension(65, 14));
-        showVariantsJCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showVariantsJCheckBoxActionPerformed(evt);
-            }
-        });
-
-        showCoverageJCheckBox.setSelected(true);
-        showCoverageJCheckBox.setText("Coverage");
-        showCoverageJCheckBox.setIconTextGap(10);
-        showCoverageJCheckBox.setPreferredSize(new java.awt.Dimension(87, 14));
-        showCoverageJCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showCoverageJCheckBoxActionPerformed(evt);
-            }
-        });
-
         org.jdesktop.layout.GroupLayout sequenceCoverageJPanelLayout = new org.jdesktop.layout.GroupLayout(sequenceCoverageJPanel);
         sequenceCoverageJPanel.setLayout(sequenceCoverageJPanelLayout);
         sequenceCoverageJPanelLayout.setHorizontalGroup(
             sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, sequenceCoverageJPanelLayout.createSequentialGroup()
+            .add(sequenceCoverageJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
-                    .add(sequenceCoverageJPanelLayout.createSequentialGroup()
-                        .add(jLabel23)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(sequenceCoverageJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 206, Short.MAX_VALUE)
-                        .add(showCoverageJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 102, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(showModsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 102, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(showVariantsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(nextJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        sequenceCoverageJPanelLayout.linkSize(new java.awt.Component[] {showCoverageJCheckBox, showModsJCheckBox, showVariantsJCheckBox}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
-
         sequenceCoverageJPanelLayout.setVerticalGroup(
             sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, sequenceCoverageJPanelLayout.createSequentialGroup()
+            .add(sequenceCoverageJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel23)
-                    .add(sequenceCoverageJLabel)
-                    .add(nextJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(showModsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(showVariantsJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(showCoverageJCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        sequenceCoverageJPanelLayout.linkSize(new java.awt.Component[] {jLabel23, sequenceCoverageJLabel}, org.jdesktop.layout.GroupLayout.VERTICAL);
 
         org.jdesktop.layout.GroupLayout proteinDigestionJPanelLayout = new org.jdesktop.layout.GroupLayout(proteinDigestionJPanel);
         proteinDigestionJPanel.setLayout(proteinDigestionJPanelLayout);
@@ -2091,17 +2195,18 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(proteinDigestionJPanelLayout.createSequentialGroup()
-                        .add(proteinDigestionJLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 413, Short.MAX_VALUE)
-                        .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(proteinDigestionJPanelLayout.createSequentialGroup()
                         .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(jPanel10, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
+                            .add(peptidesJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+                            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(sequenceCoverageJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
-                            .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE))))
+                            .add(sequenceCoverageJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, proteinDigestionJPanelLayout.createSequentialGroup()
+                        .add(10, 10, 10)
+                        .add(proteinDigestionJLabel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 415, Short.MAX_VALUE)
+                        .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         proteinDigestionJPanelLayout.setVerticalGroup(
@@ -2109,16 +2214,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(proteinDigestionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                    .add(jPanel3, 0, 197, Short.MAX_VALUE)
                     .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(sequenceCoverageJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
-                    .add(jPanel10, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
+                .add(8, 8, 8)
+                .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(sequenceCoverageJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                    .add(peptidesJPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(proteinDigestionJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(proteinDigestionJLabel)
-                    .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(inSilicoDigestionHelpJLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(proteinDigestionJLabel))
                 .addContainerGap())
         );
 
@@ -2128,7 +2233,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1191, Short.MAX_VALUE)
+            .add(jTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1203, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2469,13 +2574,13 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         spectrumBPanel.setProfileMode(profileSpectrumJCheckBox.isSelected());
         spectrumBPanel.validate();
         spectrumBPanel.repaint();
-        
+
         allPeaksJCheckBox.setEnabled(!profileSpectrumJCheckBox.isSelected());
-        
+
         if (profileSpectrumJCheckBox.isSelected()) {
             allPeaksJCheckBox.setSelected(true);
-        }   
-        
+        }
+
         allPeaksJCheckBoxActionPerformed(null);
     }//GEN-LAST:event_profileSpectrumJCheckBoxActionPerformed
 
@@ -2527,13 +2632,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         // and clear the peptide sequence coverage details
         proteinSequenceCoverageJEditorPane.setText("");
-        sequenceCoverageJLabel.setText("-");
 
         // get the sequence and perform the digestion
         if (currentSequence.length() > 0) {
-
-            // scroll to to up sequence
-            proteinSequenceJEditorPane.setCaretPosition(0);
 
             // this will contain the sequence without indices, white space etc
             cleanProteinSequence = "";
@@ -2547,13 +2648,37 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
                 Protein protein = new Protein(currentSequence);
                 String fullHeader = protein.getHeader().getFullHeaderWithAddenda();
-                keyValuePairs = getHeaderValuePairs(fullHeader);
+
+                while (proteinHeaderJTable.getModel().getRowCount() > 0) {
+                    ((DefaultTableModel) proteinHeaderJTable.getModel()).removeRow(0);
+                }
+
+                if (peffFormat) {
+                    keyValuePairs = getHeaderValuePairsPeffFormat(fullHeader);
+                } else {
+                    keyValuePairs = new TreeMap<String, String>();
+                    getHeaderValuesFastaFormat(protein.getHeader());
+                }
+
+                // get the tag colors
+                selectedAnnotationTypes = new HashMap<String, Color>();
+
+                for (int i = 0; i < peffAnnotationsJTable.getRowCount(); i++) {
+                    
+                    if ((Boolean) peffAnnotationsJTable.getValueAt(i, 4)) {
+                        selectedAnnotationTypes.put((String) peffAnnotationsJTable.getValueAt(i, 1) + "_Foreground", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(i, 2)));
+                        selectedAnnotationTypes.put((String) peffAnnotationsJTable.getValueAt(i, 1) + "_Background", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(i, 3)));
+                    }
+                }
+
+                int width = getPreferredColumnWidth(proteinHeaderJTable, proteinHeaderJTable.getColumn("Term").getModelIndex(), 6);
+                proteinHeaderJTable.getColumn("Term").setMinWidth(width);
+                proteinHeaderJTable.getColumn("Term").setMaxWidth(width);
 
                 cleavedPeptides = selectedEnzyme.cleave(protein);
                 cleanProteinSequence = protein.getSequence().getSequence();
 
-                ((TitledBorder) sequenceCoverageJPanel.getBorder()).setTitle("Sequence Coverage - " + keyValuePairs.get("Accession"));
-                sequenceCoverageJPanel.repaint();
+                int counter = 0;
 
                 // cycle the peptides and add them to the peptide table
                 for (int i = 0; i < cleavedPeptides.length; i++) {
@@ -2562,6 +2687,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     if (cleavedPeptides[i].getMass() >= ((Integer) lowerMassJSpinner.getValue()).intValue()
                             && cleavedPeptides[i].getMass() <= ((Integer) upperMassJSpinner.getValue()).intValue()) {
                         ((DefaultTableModel) peptidesJXTable.getModel()).addRow(new Object[]{
+                                    ++counter,
                                     cleavedPeptides[i].getSequence().getSequence(),
                                     cleavedPeptides[i].getMass(),
                                     cleavedPeptides[i].getHeader().getStartLocation(),
@@ -2570,7 +2696,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 }
 
                 // display the sequence coverage in the sequence coverage panel
-                formatProteinSequence();
+                double coverage = formatProteinSequence();
+
+                ((TitledBorder) sequenceCoverageJPanel.getBorder()).setTitle("Sequence Coverage (" + Util.roundDouble(coverage, 2) + "%)");
+                sequenceCoverageJPanel.repaint();
 
             } catch (IllegalArgumentException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "Error Parsing Protein Sequence", JOptionPane.ERROR_MESSAGE);
@@ -2578,7 +2707,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         }
 
         // update the number of peptides in the peptide table count
-        numberOfPeptidesJLabel.setText("" + peptidesJXTable.getRowCount());
+        ((TitledBorder) peptidesJPanel.getBorder()).setTitle("Peptides (" + peptidesJXTable.getRowCount() + ")");
+        peptidesJPanel.repaint();
     }
 
     /**
@@ -2587,7 +2717,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @param header    the header to extract the key-value pairs from
      * @return          the key-value pairs
      */
-    private TreeMap<String, String> getHeaderValuePairs(String header) {
+    private TreeMap<String, String> getHeaderValuePairsPeffFormat(String header) {
 
         TreeMap<String, String> map = new TreeMap<String, String>();
 
@@ -2595,16 +2725,70 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         if (valuePairs.length > 0) {
 
-            map.put("Accession", valuePairs[0].substring(1));
+            String tempAccession = valuePairs[0].substring(1);
+            
+            if (tempAccession.indexOf(":") != -1) {
+                tempAccession = tempAccession.substring(tempAccession.indexOf(":") + 1); 
+            }
+            
+            map.put("Accession", tempAccession);
+
+            ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
+                        proteinHeaderJTable.getRowCount() + 1,
+                        "Accession",
+                        tempAccession
+                    });
 
             for (int i = 1; i < valuePairs.length; i++) {
                 String temp = valuePairs[i].trim();
-                String[] valuePair = temp.split("=");
-                map.put(valuePair[0], valuePair[1]);
+                
+                String key = temp.substring(0, temp.indexOf("="));
+                String values = temp.substring(temp.indexOf("=") + 1);
+                
+                map.put(key, values);
+
+                ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
+                            proteinHeaderJTable.getRowCount() + 1,
+                            key,
+                            values
+                        });
             }
         }
 
         return map;
+    }
+
+    /**
+     * Extracts and returns the FASTA key-value pairs from the FASTA header.
+     *
+     * @param header    the header to extract the key-value pairs from
+     * @return          the key-value pairs
+     */
+    private void getHeaderValuesFastaFormat(Header proteinHeader) {
+
+        ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
+                    proteinHeaderJTable.getRowCount() + 1,
+                    "Accession",
+                    proteinHeader.getAccession()
+                });
+
+        ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
+                    proteinHeaderJTable.getRowCount() + 1,
+                    "Database",
+                    proteinHeader.getDatabaseType()
+                });
+
+        ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
+                    proteinHeaderJTable.getRowCount() + 1,
+                    "ID",
+                    proteinHeader.getID()
+                });
+
+        ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
+                    proteinHeaderJTable.getRowCount() + 1,
+                    "Description",
+                    proteinHeader.getDescription()
+                });
     }
 
     /**
@@ -2631,10 +2815,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * @see #updateInSilicoDigestion()
      */
-    private void proteinSequenceJEditorPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proteinSequenceJEditorPaneKeyReleased
-        updateInSilicoDigestion();
-    }//GEN-LAST:event_proteinSequenceJEditorPaneKeyReleased
-
     /**
      * @see #formatProteinSequence(java.lang.String)
      */
@@ -2743,6 +2923,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         if (evt.getEventType() == HyperlinkEvent.EventType.ENTERED) {
             proteinSequenceCoverageJEditorPane.setToolTipText(evt.getDescription());
+        } else if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            
+            String proteinAccession = keyValuePairs.get("Accession");
+            String proteinUniProtUrl = "http://www.uniprot.org/uniprot/" + proteinAccession.trim() + "#section_features";
+            
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+            BareBonesBrowserLaunch.openURL(proteinUniProtUrl);
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         } else {
             proteinSequenceCoverageJEditorPane.setToolTipText(null);
         }
@@ -2781,26 +2969,136 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         int returnVal = fileChooser.showOpenDialog(this.getParent());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+
             currentSequenceFile = fileChooser.getSelectedFile();
             sequenceFileJTextField.setText(currentSequenceFile.getPath());
 
+            peffFormat = currentSequenceFile.getAbsolutePath().toLowerCase().endsWith(".peff");
+
+            while (peffHeaderJTable.getModel().getRowCount() > 0) {
+                ((DefaultTableModel) peffHeaderJTable.getModel()).removeRow(0);
+            }
+
+            while (peffAnnotationsJTable.getModel().getRowCount() > 0) {
+                ((DefaultTableModel) peffAnnotationsJTable.getModel()).removeRow(0);
+            }
+
             try {
+                int colorCounter = 0;
+
+                // set up the color maps
+                peffAnnotationsColorMap = new HashMap<Integer, Color>();
+                peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
+                peffAnnotationsColorMap.put(colorCounter++, new Color(102, 153, 255));
+                peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
+                peffAnnotationsColorMap.put(colorCounter++, new Color(255, 102, 102));
+                peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
+                peffAnnotationsColorMap.put(colorCounter++, new Color(0, 204, 51));
+                peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
+                peffAnnotationsColorMap.put(colorCounter++, new Color(0, 204, 51));
+                peffAnnotationsColorMap.put(colorCounter++, Color.WHITE);
+                peffAnnotationsColorMap.put(colorCounter++, Color.ORANGE);
+
+
+                // set up the protein inference tooltip map
+                peffAnnotationsTooltipMap = new HashMap<Integer, String>();
+
+                for (int i = 0; i < colorCounter; i++) {
+                    peffAnnotationsTooltipMap.put(i, "Double click to change color");
+                }
+
+                peffAnnotationsJTable.getColumn("B").setCellRenderer(
+                        new JSparklinesIntegerColorTableCellRenderer(Color.PINK, peffAnnotationsColorMap, peffAnnotationsTooltipMap));
+
+                peffAnnotationsJTable.getColumn("F").setCellRenderer(
+                        new JSparklinesIntegerColorTableCellRenderer(Color.PINK, peffAnnotationsColorMap, peffAnnotationsTooltipMap));
+
+                colorCounter = 0;
+
+                if (peffFormat) {
+
+                    ((DefaultTableModel) peffAnnotationsJTable.getModel()).addRow(new Object[]{
+                                (peffAnnotationsJTable.getRowCount() + 1),
+                                "ModRes",
+                                colorCounter++,
+                                colorCounter++,
+                                true
+                            });
+
+                    ((DefaultTableModel) peffAnnotationsJTable.getModel()).addRow(new Object[]{
+                                (peffAnnotationsJTable.getRowCount() + 1),
+                                "Variant",
+                                colorCounter++,
+                                colorCounter++,
+                                true
+                            });
+                    
+                    ((DefaultTableModel) peffAnnotationsJTable.getModel()).addRow(new Object[]{
+                                (peffAnnotationsJTable.getRowCount() + 1),
+                                "Signal",
+                                colorCounter++,
+                                colorCounter++,
+                                false
+                            });
+                    
+                    ((DefaultTableModel) peffAnnotationsJTable.getModel()).addRow(new Object[]{
+                                (peffAnnotationsJTable.getRowCount() + 1),
+                                "Site",
+                                colorCounter++,
+                                colorCounter++,
+                                false
+                            });
+                    
+                    ((DefaultTableModel) peffAnnotationsJTable.getModel()).addRow(new Object[]{
+                                (peffAnnotationsJTable.getRowCount() + 1),
+                                "Multiple",
+                                colorCounter++,
+                                colorCounter++,
+                                true
+                            });
+                }
+
+                sequenceJTabbedPane.setEnabledAt(2, peffFormat);
 
                 FileReader peffFileReader = new FileReader(currentSequenceFile);
                 currentPeffBufferedReader = new BufferedReader(peffFileReader);
 
                 currentSequenceLine = currentPeffBufferedReader.readLine();
 
-                String header = "";
-
                 // read the file header
                 while (currentSequenceLine.startsWith("#")) {
-                    header += currentSequenceLine + "\n";
+
+                    if (peffFormat) {
+
+                        if (currentSequenceLine.indexOf(" //") == -1) {
+
+                            String term = currentSequenceLine.substring(currentSequenceLine.lastIndexOf("#") + 2, currentSequenceLine.lastIndexOf("=")).trim();
+                            String value = currentSequenceLine.substring(currentSequenceLine.lastIndexOf("=") + 1).trim();
+
+                            ((DefaultTableModel) peffHeaderJTable.getModel()).addRow(new Object[]{
+                                        (peffHeaderJTable.getRowCount() + 1),
+                                        term,
+                                        value});
+
+                            if (term.equalsIgnoreCase("SpecificValue")) {
+                                // @TODO: extract values and map on sequence!!
+                                //                            if (value.indexOf("")) {
+                                //                                
+                                //                            }
+                            }
+                        } else {
+                            ((DefaultTableModel) peffHeaderJTable.getModel()).addRow(new Object[]{
+                                        (peffHeaderJTable.getRowCount() + 1),
+                                        "//"});
+                        }
+                    }
+
                     currentSequenceLine = currentPeffBufferedReader.readLine();
                 }
 
-                proteinSequenceJEditorPane.setText(header);
-                proteinSequenceJEditorPane.setCaretPosition(0);
+                int width = getPreferredColumnWidth(peffHeaderJTable, peffHeaderJTable.getColumn("Term").getModelIndex(), 6);
+                peffHeaderJTable.getColumn("Term").setMinWidth(width);
+                peffHeaderJTable.getColumn("Term").setMaxWidth(width);
 
                 // skip the empty space
                 while (!currentSequenceLine.startsWith(">")) {
@@ -2844,6 +3142,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private void nextJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextJButtonActionPerformed
 
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
         try {
 
             currentSequence = currentSequenceLine + "\n";
@@ -2871,34 +3171,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_nextJButtonActionPerformed
-
-    /**
-     * Turns the display of the modifications on or off.
-     *
-     * @param evt
-     */
-    private void showModsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showModsJCheckBoxActionPerformed
-        formatProteinSequence();
-    }//GEN-LAST:event_showModsJCheckBoxActionPerformed
-
-    /**
-     * Turns the display of the variants on or off.
-     *
-     * @param evt
-     */
-    private void showVariantsJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showVariantsJCheckBoxActionPerformed
-        formatProteinSequence();
-    }//GEN-LAST:event_showVariantsJCheckBoxActionPerformed
-
-    /**
-     * Turns the display of the sequence coverage on or off.
-     *
-     * @param evt
-     */
-    private void showCoverageJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCoverageJCheckBoxActionPerformed
-        formatProteinSequence();
-    }//GEN-LAST:event_showCoverageJCheckBoxActionPerformed
 
     /**
      * Turns the display of all or just the annotated peaks on or off.
@@ -2908,10 +3183,60 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void allPeaksJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allPeaksJCheckBoxActionPerformed
         spectrumAPanel.showAnnotatedPeaksOnly(!allPeaksJCheckBox.isSelected());
         spectrumBPanel.showAnnotatedPeaksOnly(!allPeaksJCheckBox.isSelected());
-        
+
         spectrumAPanel.repaint();
         spectrumBPanel.repaint();
     }//GEN-LAST:event_allPeaksJCheckBoxActionPerformed
+
+    private void peffAnnotationsJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peffAnnotationsJTableMouseClicked
+
+        int row = peffAnnotationsJTable.getSelectedRow();
+        int column = peffAnnotationsJTable.getSelectedColumn();
+
+        if (row != -1) {
+
+            if (column == 4) {
+                
+                selectedAnnotationTypes = new HashMap<String, Color>();
+                
+                for (int i=0; i<peffAnnotationsJTable.getRowCount(); i++) {
+                    if ((Boolean) peffAnnotationsJTable.getValueAt(i, column)) {
+                        selectedAnnotationTypes.put((String) peffAnnotationsJTable.getValueAt(i, 1) + "_Foreground", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(i, 2)));
+                        selectedAnnotationTypes.put((String) peffAnnotationsJTable.getValueAt(i, 1) + "_Background", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(i, 3)));
+                    }
+                }
+
+                formatProteinSequence();
+
+            } else if (column == 2 || column == 3) { 
+                
+                Color tempColor = JColorChooser.showDialog(this, "Choose Color", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(row, column)));
+                
+                if (tempColor != null) {
+                     
+                    peffAnnotationsColorMap.put((Integer) peffAnnotationsJTable.getValueAt(row, column), tempColor);
+
+                    peffAnnotationsJTable.getColumn("B").setCellRenderer(
+                            new JSparklinesIntegerColorTableCellRenderer(Color.PINK, peffAnnotationsColorMap, peffAnnotationsTooltipMap));
+
+                    peffAnnotationsJTable.getColumn("F").setCellRenderer(
+                            new JSparklinesIntegerColorTableCellRenderer(Color.PINK, peffAnnotationsColorMap, peffAnnotationsTooltipMap));
+
+                    // get the tag colors
+                    selectedAnnotationTypes = new HashMap<String, Color>();
+
+                    for (int i = 0; i < peffAnnotationsJTable.getRowCount(); i++) {
+                        if ((Boolean) peffAnnotationsJTable.getValueAt(i, 4)) {
+                            selectedAnnotationTypes.put((String) peffAnnotationsJTable.getValueAt(i, 1) + "_Foreground", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(i, 2)));
+                            selectedAnnotationTypes.put((String) peffAnnotationsJTable.getValueAt(i, 1) + "_Background", peffAnnotationsColorMap.get((Integer) peffAnnotationsJTable.getValueAt(i, 3)));
+                        }
+                    }
+
+                    formatProteinSequence();
+                }
+            }
+        }
+    }//GEN-LAST:event_peffAnnotationsJTableMouseClicked
 
     /**
      * Opens the help dialog.
@@ -2926,8 +3251,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * Formats the protein sequence such that both the covered parts of the sequence
      * and the peptide selected in the peptide table is highlighted, and any
      * modifications and variants of a PEFF file.
+     * 
+     * @return the sequence coverage in percent
      */
-    public void formatProteinSequence() {
+    public double formatProteinSequence() {
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+
+        double sequenceCoverage = 0.0;
 
         if (cleanProteinSequence != null) {
 
@@ -2936,8 +3267,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             // find the start end end indices for the currently selected peptide, if any
             if (peptidesJXTable.getSelectedRow() != -1) {
-                selectedPeptideStart = ((Integer) peptidesJXTable.getValueAt(peptidesJXTable.getSelectedRow(), 2)).intValue();
-                selectedPeptideEnd = ((Integer) peptidesJXTable.getValueAt(peptidesJXTable.getSelectedRow(), 3)).intValue();
+                selectedPeptideStart = ((Integer) peptidesJXTable.getValueAt(peptidesJXTable.getSelectedRow(), 3)).intValue();
+                selectedPeptideEnd = ((Integer) peptidesJXTable.getValueAt(peptidesJXTable.getSelectedRow(), 4)).intValue();
             }
 
             // an array containing the coverage index for each residue
@@ -2946,8 +3277,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // iterate the peptide table and store the coverage for each peptide
             for (int i = 0; i < peptidesJXTable.getRowCount(); i++) {
 
-                int tempPeptideStart = ((Integer) peptidesJXTable.getValueAt(i, 2)).intValue();
-                int tempPeptideEnd = ((Integer) peptidesJXTable.getValueAt(i, 3)).intValue();
+                int tempPeptideStart = ((Integer) peptidesJXTable.getValueAt(i, 3)).intValue();
+                int tempPeptideEnd = ((Integer) peptidesJXTable.getValueAt(i, 4)).intValue();
 
                 for (int j = tempPeptideStart; j <= tempPeptideEnd; j++) {
                     coverage[j]++;
@@ -2955,13 +3286,14 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
 
             // create and display the formatted sequence
-            double sequenceCoverage = ProteinSequencePane.formatProteinSequence(
+            sequenceCoverage = ProteinSequencePane.formatProteinSequence(
                     proteinSequenceCoverageJEditorPane, cleanProteinSequence, selectedPeptideStart, selectedPeptideEnd, coverage,
-                    keyValuePairs, showModsJCheckBox.isSelected(), showVariantsJCheckBox.isSelected(), showCoverageJCheckBox.isSelected());
-
-            // display the percent sequence coverage
-            sequenceCoverageJLabel.setText(Util.roundDouble(sequenceCoverage, 2) + "%");
+                    keyValuePairs, selectedAnnotationTypes);
         }
+
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        return sequenceCoverage;
     }
 
     /**
@@ -3082,7 +3414,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-            public void run() { 
+            public void run() {
                 UtilitiesGUIDefaults.setLookAndFeel();
                 new UtilitiesDemo();
             }
@@ -3150,10 +3482,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -3164,6 +3493,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -3171,7 +3501,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -3184,8 +3518,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JSpinner lowerMassJSpinner;
     private javax.swing.JSpinner missedCleavagesJSpinner;
     private javax.swing.JButton nextJButton;
-    private javax.swing.JLabel numberOfPeptidesJLabel;
     private javax.swing.JCheckBox otherIonsJCheckBox;
+    private javax.swing.JTable peffAnnotationsJTable;
+    private javax.swing.JTable peffHeaderJTable;
     private javax.swing.JPanel peptideAColorJPanel;
     private javax.swing.JTextField peptideACompositionJTextField;
     private javax.swing.JScrollPane peptideAJScrollPane;
@@ -3198,6 +3533,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JTextField peptideBMzJTextField;
     private javax.swing.JTextField peptideSequenceAJTextField;
     private javax.swing.JTextField peptideSequenceBJTextField;
+    private javax.swing.JPanel peptidesJPanel;
     private javax.swing.JScrollPane peptidesJScrollPane;
     private org.jdesktop.swingx.JXTable peptidesJXTable;
     private javax.swing.JTextField positionJTextField;
@@ -3205,15 +3541,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JScrollPane proteinCoverageJScrollPane;
     private javax.swing.JLabel proteinDigestionJLabel;
     private javax.swing.JPanel proteinDigestionJPanel;
+    private javax.swing.JTable proteinHeaderJTable;
     private javax.swing.JEditorPane proteinSequenceCoverageJEditorPane;
-    private javax.swing.JEditorPane proteinSequenceJEditorPane;
-    private javax.swing.JScrollPane proteinSequenceJScrollPane;
-    private javax.swing.JLabel sequenceCoverageJLabel;
     private javax.swing.JPanel sequenceCoverageJPanel;
     private javax.swing.JTextField sequenceFileJTextField;
-    private javax.swing.JCheckBox showCoverageJCheckBox;
-    private javax.swing.JCheckBox showModsJCheckBox;
-    private javax.swing.JCheckBox showVariantsJCheckBox;
+    private javax.swing.JTabbedPane sequenceJTabbedPane;
     private javax.swing.JComboBox silacLabelPeptideAJComboBox;
     private javax.swing.JComboBox silacLabelPeptideBJComboBox;
     private javax.swing.JTextField siteJTextField;
@@ -3228,4 +3560,44 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private javax.swing.JCheckBox yIonsJCheckBox;
     private javax.swing.JCheckBox zIonsJCheckBox;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Gets the preferred width of the column specified by vColIndex. The column
+     * will be just wide enough to show the column head and the widest cell in the 
+     * column. Margin pixels are added to the left and right (resulting in an additional 
+     * width of 2*margin pixels.
+     * 
+     * @param table         the table
+     * @param colIndex      the colum index
+     * @param margin        the margin to add
+     * @return              the prefereed width of the column 
+     */
+    public int getPreferredColumnWidth(JTable table, int colIndex, int margin) {
+
+        DefaultTableColumnModel colModel = (DefaultTableColumnModel) table.getColumnModel();
+        TableColumn col = colModel.getColumn(colIndex);
+        int width = 0;
+
+        // get width of column header
+        TableCellRenderer renderer = col.getHeaderRenderer();
+        if (renderer == null) {
+            renderer = table.getTableHeader().getDefaultRenderer();
+        }
+
+        Component comp = renderer.getTableCellRendererComponent(table, col.getHeaderValue(), false, false, 0, 0);
+        width = comp.getPreferredSize().width;
+
+        // get maximum width of column data
+        for (int r = 0; r < table.getRowCount(); r++) {
+            renderer = table.getCellRenderer(r, colIndex);
+            comp = renderer.getTableCellRendererComponent(
+                    table, table.getValueAt(r, colIndex), false, false, r, colIndex);
+            width = Math.max(width, comp.getPreferredSize().width);
+        }
+
+        // add margin
+        width += 2 * margin;
+
+        return width;
+    }
 }

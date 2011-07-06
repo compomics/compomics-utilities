@@ -1,5 +1,6 @@
 package com.compomics.util;
 
+import java.awt.Color;
 import java.io.File;
 
 /**
@@ -58,5 +59,15 @@ public class Util {
     public static double getPpmError(double theoreticalMzValue, double massError) {
         double ppmValue = (massError / theoreticalMzValue) * 1000000;
         return ppmValue;
+    }
+    
+    /**
+     * Converts a color to hex format for use in HTML tags.
+     * 
+     * @param color     the color to convert
+     * @return          the color in hex format
+     */
+    public static String color2Hex(Color color) {
+        return Integer.toHexString(color.getRGB() & 0x00ffffff);
     }
 }

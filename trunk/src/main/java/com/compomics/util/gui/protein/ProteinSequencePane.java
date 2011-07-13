@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
  * This class contains a method that formats a given protein sequence such that 
@@ -102,17 +103,25 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
+        int fontWidth = fm.stringWidth("X");
+        
+        // hardcoding needed to due issues with other look and feels
+        if (!UIManager.getLookAndFeel().getName().equalsIgnoreCase("Nimbus")) {
+            fontWidth = 8; // 8 is to represent the default average font width in html
+            
+            // @TODO: find a way of removing this hardcoding...
+        }
 
         int indexWidth = 200;
 
         if (cleanSequence.length() > 999) {
-            indexWidth = 250;
+            indexWidth += 50;
         }
 
-        double temp = (editorPane.getWidth() - indexWidth) / (fm.stringWidth("X"));
+        double temp = (editorPane.getParent().getWidth() - indexWidth) / fontWidth;
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
-
+        
         ArrayList<Integer> referenceMarkers = new ArrayList<Integer>();
 
         boolean previousAminoAcidWasCovered = false;
@@ -271,9 +280,6 @@ public class ProteinSequencePane {
      *                                  (note: only uses index 1-n)
      * @param aKeyValuePairs            the key value pairs used for PEFF formating
      * @param selectedAnnotationType    the colors to use for the different tags, key is the tag
-     * @param showModifications         if the modifications are to be highlighted or not
-     * @param showVariants              if the variants are to be highlighted or not
-     * @param showCoverage              if the coverage is to be highlighted or not
      * @return                          the calculated sequence coverage in percent (0-100)
      */
     public static double formatProteinSequence(JEditorPane editorPane, String cleanSequence, int selectedPeptideStart, int selectedPeptideEnd, int[] coverage,
@@ -293,14 +299,22 @@ public class ProteinSequencePane {
 
         // see how many amino acids we have room for
         FontMetrics fm = editorPane.getGraphics().getFontMetrics();
+        int fontWidth = fm.stringWidth("X");
+        
+        // hardcoding needed to due issues with other look and feels
+        if (!UIManager.getLookAndFeel().getName().equalsIgnoreCase("Nimbus")) {
+            fontWidth = 8; // 8 is to represent the default average font width in html
+            
+            // @TODO: find a way of removing this hardcoding...
+        }
 
         int indexWidth = 200;
 
         if (cleanSequence.length() > 999) {
-            indexWidth = 250;
+            indexWidth += 50;
         }
 
-        double temp = (editorPane.getWidth() - indexWidth) / (fm.stringWidth("X"));
+        double temp = (editorPane.getParent().getWidth() - indexWidth) / fontWidth; 
         int numberOfAminoAcidsPerRow = (int) temp / 10;
         numberOfAminoAcidsPerRow *= 10;
 

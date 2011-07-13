@@ -159,7 +159,11 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             accession = description.substring(start, end);
         } catch (Exception e) {
             int end = description.indexOf(" ");
-            accession = description.substring(0, end);
+            if (end != -1) {
+                accession = description.substring(0, end);
+            } else {
+                accession = description;
+            }
         }
         proteins.add(new Protein(accession, accession.contains(DECOY_FLAG)));
         eValue = domain.getDomainExpect();

@@ -14,6 +14,7 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.protein.Header;
 import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.*;
 
@@ -195,8 +196,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         HashMap peptideToProteinMap = omxFile.getPeptideToProteinMap();
         for (MSPepHit msPepHit : (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring)) {       // There might be redundancies in the map.
             Boolean taken = false;
-            String description = msPepHit.MSPepHit_defline;
-            String accession = getProteinAccession(description);
+            String accession = getProteinAccession(msPepHit.MSPepHit_defline);
             for (Protein protein : proteins) {
                 if (protein.getAccession().compareTo(accession) == 0) {
                     taken = true;
@@ -256,12 +256,10 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      */
     private String getProteinAccession(String description) {
         try {
-            int start = description.indexOf("|");
-            int end = description.indexOf("|", ++start);
-            return description.substring(start, end);
+            Header header = Header.parseFromFASTA(description);
+            return header.getAccession();
         } catch (Exception e) {
-            int end = description.indexOf(" ");
-            return description.substring(0, end);
+            return description.substring(1);
         }
     }
 

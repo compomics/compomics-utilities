@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.*;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.protein.Header;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
 import de.proteinms.xtandemparser.xtandem.Spectrum;
@@ -154,16 +155,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
         String accession = "";
         try {
-            int start = description.indexOf("|");
-            int end = description.indexOf("|", ++start);
-            accession = description.substring(start, end);
+            Header fastaHeader = Header.parseFromFASTA(description);
+            accession = fastaHeader.getAccession();
         } catch (Exception e) {
-            int end = description.indexOf(" ");
-            if (end != -1) {
-                accession = description.substring(0, end);
-            } else {
-                accession = description;
-            }
+            accession = description;
         }
         proteins.add(new Protein(accession, accession.contains(DECOY_FLAG)));
         eValue = domain.getDomainExpect();

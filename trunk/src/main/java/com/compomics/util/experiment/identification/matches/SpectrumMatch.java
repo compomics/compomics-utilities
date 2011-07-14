@@ -27,7 +27,7 @@ public class SpectrumMatch extends ExperimentObject {
      */
     private String spectrumKey;
     /**
-     * The corresponding peptide assumptions
+     * The corresponding peptide assumptions indexed by search engine and e-value.
      */
     private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptions = new HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>>();
     /**

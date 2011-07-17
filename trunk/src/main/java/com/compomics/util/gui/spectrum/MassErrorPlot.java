@@ -54,7 +54,11 @@ public class MassErrorPlot extends JPanel {
      * The chart panel.
      */
     private ChartPanel chartPanel;
-
+    /**
+     * If true the relative error (ppm) is used instead of the absolute error (Da).
+     */
+    private boolean useRelativeError = false;
+           
     /**
      * Creates a new MassErrorPlot.
      *
@@ -74,6 +78,30 @@ public class MassErrorPlot extends JPanel {
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges) {
+        this(annotations, currentFragmentIons, currentSpectrum, massTolerance, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, false);
+    }
+    
+    /**
+     * Creates a new MassErrorPlot.
+     *
+     * @param annotations                   the full list of spectrum annotations
+     * @param currentFragmentIons           the currently selected fragment ion types
+     * @param currentSpectrum               the current spectrum
+     * @param massTolerance                 the mass error tolerance
+     * @param includeSinglyCharge           if singly charged fragment ions are to be included
+     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
+     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
+     * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da)
+     */
+    public MassErrorPlot(
+            SpectrumAnnotationMap annotations,
+            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            MSnSpectrum currentSpectrum,
+            double massTolerance,
+            boolean includeSinglyCharge,
+            boolean includeDoublyCharge,
+            boolean includeMoreThanTwoCharges,
+            boolean useRelativeError) {
         super();
 
         setOpaque(false);
@@ -86,6 +114,7 @@ public class MassErrorPlot extends JPanel {
         this.includeSinglyCharge = includeSinglyCharge;
         this.includeDoublyCharge = includeDoublyCharge;
         this.includeMoreThanTwoCharges = includeMoreThanTwoCharges;
+        this.useRelativeError = useRelativeError;
 
         // the annotated ion matches
         currentlyUsedIonMatches = getCurrentlyUsedIonMatches();
@@ -110,6 +139,7 @@ public class MassErrorPlot extends JPanel {
             }
 
             double totalIntensity = currentSpectrum.getTotalIntensity();
+            double maxError = 0.0; 
 
             for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
@@ -118,7 +148,16 @@ public class MassErrorPlot extends JPanel {
                 IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
 
                 dataXY[0][0] = ionMatch.peak.mz;
-                dataXY[1][0] = ionMatch.getError();
+                
+                if (useRelativeError) {
+                    dataXY[1][0] = ionMatch.getRelativeError();
+                } else {
+                    dataXY[1][0] = ionMatch.getAbsoluteError();
+                }
+                
+                if (Math.abs(dataXY[1][0]) > maxError) {
+                    maxError = Math.abs(dataXY[1][0]);
+                }
 
                 xyDataset.addSeries(ionMatch.getPeakAnnotation(), dataXY);
 
@@ -158,9 +197,14 @@ public class MassErrorPlot extends JPanel {
             plot.getDomainAxis().setLowerMargin(0);
 
             // set the mass error range
-            plot.getRangeAxis().setLowerBound(-massTolerance);
-            plot.getRangeAxis().setUpperBound(massTolerance);
-
+            if (useRelativeError) {
+                plot.getRangeAxis().setLowerBound(-maxError * 1.1);
+                plot.getRangeAxis().setUpperBound(maxError * 1.1);
+            } else {
+                plot.getRangeAxis().setLowerBound(-massTolerance);
+                plot.getRangeAxis().setUpperBound(massTolerance);
+            }
+            
             plot.setRangeGridlinePaint(Color.black);
 
             ValueAxis domainAxis = plot.getDomainAxis();

@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import javax.swing.JOptionPane;
 
 /**
  * This reader will import identifications from an X!Tandem xml result file.
@@ -62,6 +63,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * constructor for the reader
      *
      * @param aFile the inspected file
+     * @throws SAXException  
      */
     public XTandemIdfileReader(File aFile) throws SAXException {
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
@@ -77,6 +79,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @param aFile              the inspected file
      * @param spectrumCollection the spectrum collection used
+     * @throws SAXException  
      */
     public XTandemIdfileReader(File aFile, SpectrumCollection spectrumCollection) throws SAXException {
         this.spectrumCollection = spectrumCollection;
@@ -99,7 +102,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     /**
-     * method which returns all spectrum matches found in the file
+     * Method which returns all spectrum matches found in the file.
      *
      * @return a set containing all spectrum matches
      */
@@ -143,7 +146,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     /**
-     * Returns a utilities peptide assumption from an X!Tandem peptide
+     * Returns a utilities peptide assumption from an X!Tandem peptide.
+     * 
      * @param domain the domain of the X!Tandem peptide
      * @return the corresponding peptide assumption
      */
@@ -161,6 +165,19 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         } catch (Exception e) {
             accession = description;
         }
+        
+        // final test to check that the accession number was correctly parsed
+        if (accession == null) {
+            JOptionPane.showMessageDialog(null, "Unable to extract the accession number from protein description: \n"
+                    + "\'" + description + "\'"
+                    + "\n\nVerify your FASTA file!", "Unknown Protein!", JOptionPane.ERROR_MESSAGE);
+            
+            throw new IllegalArgumentException(
+                    "Unable to extract the accession number from protein description: \n"
+                    + "\'" + description + "\'.\n"
+                    + "Please verify your FASTA file!");
+        }
+        
         proteins.add(new Protein(accession, SequenceDataBase.isDecoy(accession)));
         eValue = domain.getDomainExpect();
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());

@@ -128,7 +128,7 @@ public class SpectrumAnnotator {
                 PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
                 // add the peak annotation
-                currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getError(),
+                currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(),
                         SpectrumPanel.determineColorOfPeak(fragmentIon.getIonType() + fragmentIon.getNeutralLoss()),
                         ionMatch.getPeakAnnotation()));
             }
@@ -165,7 +165,7 @@ public class SpectrumAnnotator {
                 PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
                 // add the peak annotation
-                currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getError(),
+                currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(),
                         SpectrumPanel.determineColorOfPeak(fragmentIon.getIonType() + fragmentIon.getNeutralLoss()),
                         ionMatch.getPeakAnnotation()));
             }

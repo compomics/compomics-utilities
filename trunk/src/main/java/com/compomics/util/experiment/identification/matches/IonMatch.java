@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
@@ -47,10 +48,30 @@ public class IonMatch extends ExperimentObject {
     /**
      * Get the matching error.
      *
+     * @deprecated replaced by getAbsoluteError() and getRelativeError()
      * @return the matching error
      */
     public double getError() {
         return peak.mz - ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value);
+    }
+    
+    /**
+     * Get the absolute matching error in Da.
+     *
+     * @return the absolute matching error
+     */
+    public double getAbsoluteError() {
+        return peak.mz - ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value);
+    }
+    
+    /**
+     * Get the relative matching error in ppm.
+     *
+     * @return the relative matching error
+     */
+    public double getRelativeError() { 
+        return ((peak.mz - ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value)) 
+                / ((ion.theoreticMass + charge.value * Atom.H.mass) / charge.value)) * 1000000;
     }
 
     /**

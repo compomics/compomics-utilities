@@ -30,9 +30,9 @@ public class SequenceDataBase extends ExperimentObject {
      */
     static final long serialVersionUID = -8651416887737619199L;
     /**
-     * Flag for a decoy protein
+     * Recognized flags for a decoy protein
      */
-    public static final String decoyFlag = "REVERSED";
+    public static final String[] decoyFlags = {"REVERSED", "REV", "RND"};
     /**
      * Name of the database
      */
@@ -160,7 +160,7 @@ public class SequenceDataBase extends ExperimentObject {
                 databaseType = fastaHeader.getDatabaseType();
 
                 if (accession != null) {
-                    decoy = accession.contains(decoyFlag);
+                    decoy = isDecoy(accession);
                 } else {
                     decoy = false;
                 }
@@ -219,8 +219,8 @@ public class SequenceDataBase extends ExperimentObject {
             }
 
             Header decoyHeader = Header.parseFromFASTA(headerMap.get(key).toString());
-            decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlag);
-            decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlag);
+            decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlags[0]);
+            decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlags[0]);
             Protein decoyProtein = new Protein(decoyHeader.getAccession(), null, reverseSequence(proteinMap.get(key).getSequence()), true);
 
             proteinMap.put(decoyProtein.getProteinKey(), decoyProtein);
@@ -323,5 +323,20 @@ public class SequenceDataBase extends ExperimentObject {
      */
     public String getVersion() {
         return version;
+    }
+    
+    /**
+     * Returns whether a protein is decoy or not based on the protein accession. Recognized flags for decoy proteins are listed as a static field.
+     * 
+     * @param proteinAccession  The accession of the protein
+     * @return a boolean indicating whether the protein is Decoy.
+     */
+    public static boolean isDecoy(String proteinAccession) {
+        for (String flag : decoyFlags) {
+            if (proteinAccession.contains(flag)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

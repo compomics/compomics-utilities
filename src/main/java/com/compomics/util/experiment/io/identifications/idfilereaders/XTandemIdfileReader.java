@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SequenceDataBase;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -160,7 +161,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         } catch (Exception e) {
             accession = description;
         }
-        proteins.add(new Protein(accession, accession.contains(DECOY_FLAG)));
+        proteins.add(new Protein(accession, SequenceDataBase.isDecoy(accession)));
         eValue = domain.getDomainExpect();
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
         PTM currentPTM;
@@ -194,9 +195,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             double mass = new Double(parsedName[0]);
             String aa = parsedName[1];
             int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;
-            if (location < 1) {
-                int debug = 1;
-            }
             currentPTM = new PTM(0, currentModification.getName(), mass, new String[]{aa});
             foundModifications.add(new ModificationMatch(currentPTM, true, location));
         }

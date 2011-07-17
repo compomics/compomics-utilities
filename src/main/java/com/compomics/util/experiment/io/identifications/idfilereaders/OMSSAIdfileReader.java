@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SequenceDataBase;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -204,7 +205,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                 }
             }
             if (!taken) {
-                proteins.add(new Protein(accession, accession.contains(DECOY_FLAG)));
+                proteins.add(new Protein(accession, SequenceDataBase.isDecoy(accession)));
             }
         }
 

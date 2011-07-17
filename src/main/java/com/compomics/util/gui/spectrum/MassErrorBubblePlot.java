@@ -32,6 +32,10 @@ import org.jfree.ui.TextAnchor;
 public class MassErrorBubblePlot extends JPanel {
 
     /**
+     * If true the relative error (ppm) is used instead of the absolute error (Da).
+     */
+    private boolean useRelativeError = false;
+    /**
      * The default fragment ion marker color.
      */
     private static Color defaultMarkerColor = new Color(0, 0, 255, 25); // light blue
@@ -106,7 +110,38 @@ public class MassErrorBubblePlot extends JPanel {
             boolean includeMoreThanTwoCharges,
             boolean fragmentIonLabels,
             boolean addMarkers) {
-        this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers);
+        this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers, false);
+    }
+    
+    /**
+     * Creates a new MassErrorBubblePlot.
+     *
+     * @param dataIndexes                   the data set indexes/labels
+     * @param annotations                   the full list of spectrum annotations
+     * @param currentFragmentIons           the currently selected fragment ion types
+     * @param currentSpectra                the current spectra
+     * @param massTolerance                 the mass error tolerance
+     * @param includeSinglyCharge           if singly charged fragment ions are to be included
+     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
+     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
+     * @param fragmentIonLabels             if true, the fragment ion type is used as the data series key,
+     *                                      otherwise the psm index is used
+     * @param addMarkers                    if true interval markers for the fragment ions will be shown
+     * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da)
+     */
+    public MassErrorBubblePlot(
+            ArrayList<String> dataIndexes,
+            ArrayList<SpectrumAnnotationMap> annotations,
+            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<MSnSpectrum> currentSpectra,
+            double massTolerance,
+            boolean includeSinglyCharge,
+            boolean includeDoublyCharge,
+            boolean includeMoreThanTwoCharges,
+            boolean fragmentIonLabels,
+            boolean addMarkers,
+            boolean useRelativeError) {
+        this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers, useRelativeError);
     }
 
     /**
@@ -124,6 +159,7 @@ public class MassErrorBubblePlot extends JPanel {
      * @param fragmentIonLabels             if true, the fragment ion type is used as the data series key,
      *                                      otherwise the psm index is used
      * @param addMarkers                    if true interval markers for the fragment ions will be shown
+     * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da) 
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
@@ -136,7 +172,8 @@ public class MassErrorBubblePlot extends JPanel {
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges,
             boolean fragmentIonLabels,
-            boolean addMarkers) {
+            boolean addMarkers,
+            boolean useRelativeError) {
         super();
 
         setOpaque(false);
@@ -153,6 +190,8 @@ public class MassErrorBubblePlot extends JPanel {
 
         HashMap<String, ArrayList<XYZDataPoint>> fragmentIonDataset =
                             new HashMap<String, ArrayList<XYZDataPoint>>();
+        
+        double maxError = 0.0;
 
         for (int j = 0; j < annotations.size(); j++) {
 
@@ -184,12 +223,24 @@ public class MassErrorBubblePlot extends JPanel {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
                         
+                        double error;
+                        
+                        if (useRelativeError) {
+                            error = ionMatch.getRelativeError();
+                        } else {
+                            error = ionMatch.getAbsoluteError();
+                        }
+                        
+                        if (Math.abs(error) > maxError) {
+                            maxError = Math.abs(error);
+                        }
+                        
                         if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
                             fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
-                                    new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+                                    new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
-                            temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+                            temp.add(new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                             fragmentIonDataset.put(ionMatch.getPeakAnnotation(), temp);
                         }
 
@@ -214,17 +265,29 @@ public class MassErrorBubblePlot extends JPanel {
                     for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
+                        
+                        double error;
+                        
+                        if (useRelativeError) {
+                            error = ionMatch.getRelativeError();
+                        } else {
+                            error = ionMatch.getAbsoluteError();
+                        }
+                        
+                        if (Math.abs(error) > maxError) {
+                            maxError = Math.abs(error);
+                        }
 
                         dataXYZ[0][i] = ionMatch.peak.mz;
-                        dataXYZ[1][i] = ionMatch.getError();
+                        dataXYZ[1][i] = error;
                         dataXYZ[2][i] = (ionMatch.peak.intensity / totalIntensity) * bubbleScale;
 
                         if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
                             fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
-                                    new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), ionMatch.peak.intensity / totalIntensity));
+                                    new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
-                            temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), ionMatch.peak.intensity / totalIntensity));
+                            temp.add(new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
                             fragmentIonDataset.put(ionMatch.getPeakAnnotation(), temp);
                         }
                     }
@@ -233,8 +296,16 @@ public class MassErrorBubblePlot extends JPanel {
                 }
             }
         }
+        
+        String yAxisLabel;
+        
+        if (useRelativeError) {
+            yAxisLabel = "Mass Error (ppm)";
+        } else {
+            yAxisLabel = "Mass Error (Da)";
+        }
 
-        JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", "Mass Error (Da)", xyzDataset, PlotOrientation.VERTICAL, !fragmentIonLabels, true, false);
+        JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", yAxisLabel, xyzDataset, PlotOrientation.VERTICAL, !fragmentIonLabels, true, false);
 
         if (chart.getLegend() != null) {
             chart.getLegend().setPosition(RectangleEdge.RIGHT);
@@ -256,9 +327,14 @@ public class MassErrorBubblePlot extends JPanel {
         }
         
         // set the mass error range
-        plot.getRangeAxis().setLowerBound(-massTolerance);
-        plot.getRangeAxis().setUpperBound(massTolerance);
-        
+        if (useRelativeError) {
+            plot.getRangeAxis().setLowerBound(-maxError * 1.1);
+            plot.getRangeAxis().setUpperBound(maxError * 1.1);
+        } else {
+            plot.getRangeAxis().setLowerBound(-massTolerance);
+            plot.getRangeAxis().setUpperBound(massTolerance);
+        }
+           
         plot.getDomainAxis().setLowerBound(0);
         plot.getDomainAxis().setUpperBound(plot.getDomainAxis().getUpperBound() + 100);
         

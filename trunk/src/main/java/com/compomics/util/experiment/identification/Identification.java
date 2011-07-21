@@ -72,55 +72,35 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Add a protein identification to the identification results
-     *
-     * @param proteinMatch the protein identification match
-     * @throws Exception  
-     */
-    public void addProteinMatch(ProteinMatch proteinMatch) throws Exception {
-        for (PeptideMatch peptideMatch : proteinMatch.getPeptideMatches().values()) {
-            for (SpectrumMatch spectrumMatch : peptideMatch.getSpectrumMatches().values()) {
-                addSpectrumMatch(spectrumMatch);
-            }
-        }
-    }
-
-    /**
-     * Add protein identifications to the identification results
-     *
-     * @param proteinMatches the list of protein identification matches
-     * @throws Exception  
-     */
-    public void addProteinMatch(ArrayList<ProteinMatch> proteinMatches) throws Exception {
-        for (ProteinMatch proteinMatch : proteinMatches) {
-            addProteinMatch(proteinMatch);
-        }
-    }
-
-    /**
-     * Add a spectrum match to the model.
+     * Add a spectrum match to the spectrum matches map.
      *
      * @param newMatch the new spectrum match
      */
     public void addSpectrumMatch(SpectrumMatch newMatch) {
-        String proteinKey, peptideKey, spectrumKey = newMatch.getKey();
-        Peptide peptide;
+        String spectrumKey = newMatch.getKey();
         SpectrumMatch oldMatch = spectrumIdentification.get(spectrumKey);
-        if (!spectrumIdentification.containsKey(spectrumKey)) {
+        if (oldMatch == null) {
             spectrumIdentification.put(spectrumKey, newMatch);
-            oldMatch = newMatch;
         } else {
             for (int searchEngine : newMatch.getAdvocates()) {
                 oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine));
             }
         }
-        for (int searchEngine : newMatch.getAdvocates()) {
-            peptide = newMatch.getFirstHit(searchEngine).getPeptide();
+    }
+
+    /**
+     * Creates the peptides and protein instances based on the spectrum matches. Note that the attribute bestAssumption should be set for every spectrum match at this point.
+     */
+    public void buildPeptidesAndProteins() {
+        String peptideKey, proteinKey;
+        Peptide peptide;
+        for (SpectrumMatch spectrumMatch : getSpectrumIdentification().values()) {
+            peptide = spectrumMatch.getBestAssumption().getPeptide();
             peptideKey = peptide.getKey();
-            if (peptideIdentification.containsKey(peptideKey) && !peptideIdentification.get(peptideKey).getSpectrumMatches().containsKey(spectrumKey)) {
-                peptideIdentification.get(peptideKey).addSpectrumMatch(spectrumIdentification.get(spectrumKey));
-            } else if (!peptideIdentification.containsKey(peptideKey)) {
-                peptideIdentification.put(peptideKey, new PeptideMatch(peptide, oldMatch));
+            if (peptideIdentification.containsKey(peptideKey)) {
+                peptideIdentification.get(peptideKey).addSpectrumMatch(spectrumMatch);
+            } else {
+                peptideIdentification.put(peptideKey, new PeptideMatch(peptide, spectrumMatch));
             }
             proteinKey = ProteinMatch.getProteinMatchKey(peptide);
             if (proteinIdentification.containsKey(proteinKey) && !proteinIdentification.get(proteinKey).getPeptideMatches().containsKey(peptideKey)) {
@@ -137,14 +117,14 @@ public abstract class Identification extends ExperimentObject {
             }
         }
     }
-
-    /**
-     * Add a set of spectrumMatches to the model
-     *
-     * @param spectrumMatches The spectrum matches
-     * @throws Exception exception thrown when one tries to assign more than one identification per advocate to the same spectrum
-     */
-    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws Exception {
+    
+/**
+ * Add a set of spectrumMatches to the model
+ *
+ * @param spectrumMatches The spectrum matches
+ * @throws Exception exception thrown when one tries to assign more than one identification per advocate to the same spectrum
+ */
+public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws Exception {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
             addSpectrumMatch(spectrumMatch);
         }

@@ -159,6 +159,16 @@ public class SpectrumMatch extends ExperimentObject {
     }
 
     /**
+     * Sets the best peptideAssumption according to the search engine
+     * 
+     * @param advocateId        the search engine index
+     * @param peptideAssumption the best assumption
+     */
+    public void setFirstHit(int advocateId, PeptideAssumption peptideAssumption) {
+        firstHits.put(advocateId, peptideAssumption);
+    }
+
+    /**
      * Returns all advocates used referenced by their index
      *
      * @return all advocates used

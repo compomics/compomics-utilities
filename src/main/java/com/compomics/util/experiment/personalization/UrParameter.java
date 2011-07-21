@@ -5,7 +5,10 @@ import java.io.Serializable;
 /**
  * This interface will be used to reference refined parameters. Utilities Refined
  * parameters are referenced by a family name (for example Peptizer) and an integer
- * indexing the parameter in the family.
+ * indexing the parameter in the family. 
+ * 
+ * If your implementation of an ExperimentObject was a protein this would be a PTM...
+ * Acknowledging the great creativity of the code comments would be greatly appreciated!
  * 
  * User: Marc
  * Date: Sep 1, 2010

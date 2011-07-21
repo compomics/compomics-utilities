@@ -339,4 +339,13 @@ public class SequenceDataBase extends ExperimentObject {
         }
         return false;
     }
+    
+   /**
+     * Returns true if the database contains decoy sequences.
+     * 
+     * @return true if the database contains decoy sequences
+     */
+    public boolean includesDecoy() {
+        return nTargetSequences < proteinMap.size();
+    }
 }

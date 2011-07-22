@@ -9,6 +9,9 @@ import com.compomics.util.experiment.biology.Atom;
  */
 public class Carbon extends Atom {
 
+    /**
+     * Constructor
+     */
     public Carbon() {
         this.mass = 12.0;
         this.name = "Carbon";

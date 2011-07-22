@@ -9,6 +9,9 @@ import com.compomics.util.experiment.biology.Atom;
  */
 public class Nitrogen extends Atom {
 
+    /**
+     * Constructor
+     */
     public Nitrogen() {
         this.mass = 14.003074;
         this.name = "Nitrogen";

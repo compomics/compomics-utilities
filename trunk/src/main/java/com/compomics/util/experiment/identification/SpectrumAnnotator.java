@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.FragmentFactory;
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
@@ -63,19 +64,19 @@ public class SpectrumAnnotator {
      * This method matches the potential fragment ions of a given peptide with a given peak.
      * 
      * @param peptide       The peptide
+     * @param neutralLosses Map of expected neutral losses: neutral loss -> maximal position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      * @param peak          The peak to match
      * @param massTolerance The mass tolerance to use (in Dalton)
      * @param charge        The charge of the fragment to search for
      * @return              A list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, Peak peak, double massTolerance, Charge charge) {
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, HashMap<NeutralLoss, Integer> neutralLosses, Peak peak, double massTolerance, Charge charge) {
         
-        setPeptide(peptide);
+        setPeptide(peptide, neutralLosses);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
             if (!fragmentIon.getIonType().startsWith("i")) {
-                
                 // add the non immonium ions
                 if (Math.abs(fragmentIon.theoreticMass + charge.value * Atom.H.mass - peak.mz * charge.value) <= massTolerance) {
                     result.add(new IonMatch(peak, new PeptideFragmentIon(fragmentIon.getType(),
@@ -99,18 +100,19 @@ public class SpectrumAnnotator {
      * DefaultSpectrumAnnotation that can be added to a SpectrumPanel.
      *
      * @param peptide           The theoretic peptide to match
+     * @param neutralLosses Map of expected neutral losses: neutral loss -> maximal position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      * @param spectrum          The spectrum
      * @param massTolerance     The mass tolerance to use (in Dalton)
      * @param intensityLimit    The minimal intensity to search for
      * @return                  a vector of DefaultSpectrumAnnotations
      */
-    public Vector<DefaultSpectrumAnnotation> getSpectrumAnnotations(Peptide peptide, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
+    public Vector<DefaultSpectrumAnnotation> getSpectrumAnnotations(Peptide peptide, HashMap<NeutralLoss, Integer> neutralLosses, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
 
         // set up the annotation vector
         Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
 
         // get the spectrum annotations
-        HashMap<String, HashMap<Integer, IonMatch>> annotations = annotateSpectrum(peptide, spectrum, massTolerance, intensityLimit).getAnnotations();
+        HashMap<String, HashMap<Integer, IonMatch>> annotations = annotateSpectrum(peptide, neutralLosses, spectrum, massTolerance, intensityLimit).getAnnotations();
 
         Iterator<String> ionTypeIterator = annotations.keySet().iterator();
 
@@ -178,13 +180,14 @@ public class SpectrumAnnotator {
      * Annotates a spectrum and returns a map containing the annotations: ion type -> charge -> Ion match
      * 
      * @param peptide           The theoretic peptide to match
+     * @param neutralLosses Map of expected neutral losses: neutral loss -> maximal position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      * @param spectrum          The spectrum
      * @param massTolerance     The mass tolerance to use (in Dalton)
      * @param intensityLimit    The minimal intensity to search for
      * @return                  a map containing the annotations
      */
-    public SpectrumAnnotationMap annotateSpectrum(Peptide peptide, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
-        setPeptide(peptide);
+    public SpectrumAnnotationMap annotateSpectrum(Peptide peptide, HashMap<NeutralLoss, Integer> neutralLosses, MSnSpectrum spectrum, double massTolerance, double intensityLimit) {
+        setPeptide(peptide, neutralLosses);
         setSpectrum(spectrum, intensityLimit);
         HashMap<String, HashMap<Integer, IonMatch>> results = new HashMap<String, HashMap<Integer, IonMatch>>();
 
@@ -297,11 +300,12 @@ public class SpectrumAnnotator {
     /**
      * Sets a new peptide to match
      * @param peptide   the new peptide
+     * @param neutralLosses Map of expected neutral losses: neutral loss -> maximal position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      */
-    private void setPeptide(Peptide peptide) {
+    private void setPeptide(Peptide peptide, HashMap<NeutralLoss, Integer> neutralLosses) {
         if (this.peptide == null || !this.peptide.isSameAs(peptide)) {
             this.peptide = peptide;
-            fragmentIons = fragmentFactory.getFragmentIons(peptide);
+            fragmentIons = fragmentFactory.getFragmentIons(peptide, neutralLosses);
         }
     }
 

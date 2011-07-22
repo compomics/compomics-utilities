@@ -6,6 +6,8 @@
  */
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
@@ -387,7 +389,7 @@ public class SpectrumPanel extends GraphicsPanel {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
         }
     }
-    
+
     /**
      * If true only the annotated peaks will be drawn. The default value is 
      * false, and result in all peaks being drawn. Note that this setting 
@@ -563,8 +565,7 @@ public class SpectrumPanel extends GraphicsPanel {
      *                                          ion type + [ion number] + [charge] + [neutral loss]
      * @param fragmentIonTypes              the fragment ion types to include, assumed to be one of
      *                                      the PeptideFragmentIon types, e.g, PeptideFragmentIon.B_ION
-     * @param h2oLossSelected               if true, H2O losses are shown
-     * @param nh3LossSelected               if true, NH3 losses are shown
+     * @param neutralLosses                 list of neutral losses to display
      * @param singleChargeSelected          if singly charged fragments are to be included
      * @param doubleChargeSelected          if double charged fragments are to be included
      * @param moreThanTwoChargesSelected    if fragments with more than two charges are to be included
@@ -573,8 +574,7 @@ public class SpectrumPanel extends GraphicsPanel {
     public static Vector<DefaultSpectrumAnnotation> filterAnnotations(
             Vector<DefaultSpectrumAnnotation> annotations,
             ArrayList<PeptideFragmentIonType> fragmentIonTypes,
-            boolean h2oLossSelected,
-            boolean nh3LossSelected,
+            ArrayList<NeutralLoss> neutralLosses,
             boolean singleChargeSelected,
             boolean doubleChargeSelected,
             boolean moreThanTwoChargesSelected) {
@@ -589,15 +589,11 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // check ion type
             if (currentLabel.startsWith("a")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.A_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.AH2O_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.ANH3_ION))) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.A_ION))) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("b")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.B_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.BH2O_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.BNH3_ION))) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.B_ION))) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("c")) {
@@ -609,9 +605,7 @@ public class SpectrumPanel extends GraphicsPanel {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("y")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.Y_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.YH2O_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.YNH3_ION))) {
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.Y_ION))) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("z")) {
@@ -639,15 +633,29 @@ public class SpectrumPanel extends GraphicsPanel {
                         || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_V)
                         || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_W)
                         || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_Y)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.MH_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.MHH2O_ION)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.MHNH3_ION))) {
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.MH_ION))) {
                     useAnnotation = false;
                 }
             }
 
             // check neutral losses
             if (useAnnotation) {
+                boolean h2oLossSelected = false;
+                boolean nh3LossSelected = false;
+                boolean phosphoLossSelected = false;
+                boolean moxLossSelected = false;
+                for (NeutralLoss neutralLoss : neutralLosses) {
+                    if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                        h2oLossSelected = true;
+                    } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                        nh3LossSelected = true;
+                    } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                            || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                        phosphoLossSelected = true;
+                    } else if (neutralLoss.isSameAs(NeutralLoss.CH4OS)) {
+                        moxLossSelected = true;
+                    }
+                }
                 if (currentLabel.lastIndexOf("-H2O") != -1 || currentLabel.lastIndexOf("-H20") != -1) {
                     if (!h2oLossSelected) {
                         useAnnotation = false;
@@ -656,6 +664,17 @@ public class SpectrumPanel extends GraphicsPanel {
 
                 if (currentLabel.lastIndexOf("-NH3") != -1) {
                     if (!nh3LossSelected) {
+                        useAnnotation = false;
+                    }
+                }
+                if (currentLabel.lastIndexOf("-H3PO4") != -1
+                        || currentLabel.lastIndexOf("-HPO3") != -1) {
+                    if (!phosphoLossSelected) {
+                        useAnnotation = false;
+                    }
+                }
+                if (currentLabel.lastIndexOf("-CH4OS") != -1) {
+                    if (!moxLossSelected) {
                         useAnnotation = false;
                     }
                 }
@@ -698,28 +717,37 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param fragmentIonType
      * @return the peak color
      */
-    public static Color determineFragmentIonColor(PeptideFragmentIonType fragmentIonType) {
+    public static Color determineFragmentIonColor(PeptideFragmentIon fragmentIon) {
 
         Color currentColor = Color.GRAY;
+
+        PeptideFragmentIonType fragmentIonType = fragmentIon.getType();
+        ArrayList<NeutralLoss> neutralLosses = fragmentIon.getNeutralLosses();
 
         if (fragmentIonType == PeptideFragmentIonType.A_ION) {
             // turquoise
             currentColor = new Color(153, 0, 0);
-        } else if (fragmentIonType == PeptideFragmentIonType.AH2O_ION) {
-            // light purple-blue
-            currentColor = new Color(171, 161, 255);
-        } else if (fragmentIonType == PeptideFragmentIonType.ANH3_ION) {
-            // ugly purple pink
-            currentColor = new Color(248, 151, 202);
+            for (NeutralLoss neutralLoss : neutralLosses) {
+                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                    // light purple-blue
+                    currentColor = new Color(171, 161, 255);
+                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                    // ugly purple pink
+                    currentColor = new Color(248, 151, 202);
+                }
+            }
         } else if (fragmentIonType == PeptideFragmentIonType.B_ION) {
             // dark blue
             currentColor = new Color(0, 0, 255);
-        } else if (fragmentIonType == PeptideFragmentIonType.BH2O_ION) {
-            // nice blue
-            currentColor = new Color(0, 125, 200);
-        } else if (fragmentIonType == PeptideFragmentIonType.BNH3_ION) {
-            // another purple
-            currentColor = new Color(153, 0, 255);
+            for (NeutralLoss neutralLoss : neutralLosses) {
+                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                    // nice blue
+                    currentColor = new Color(0, 125, 200);
+                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                    // another purple
+                    currentColor = new Color(153, 0, 255);
+                }
+            }
         } else if (fragmentIonType == PeptideFragmentIonType.C_ION) {
             // purple blue
             currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
@@ -729,22 +757,19 @@ public class SpectrumPanel extends GraphicsPanel {
         } else if (fragmentIonType == PeptideFragmentIonType.Y_ION) {
             // red
             currentColor = new Color(255, 0, 0);
-        } else if (fragmentIonType == PeptideFragmentIonType.YH2O_ION) {
-            // ??
-            currentColor = new Color(255, 150, 0);
-        } else if (fragmentIonType == PeptideFragmentIonType.YNH3_ION) {
-            // ??
-            currentColor = new Color(255, 0, 150);
+            for (NeutralLoss neutralLoss : neutralLosses) {
+                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                    // ??
+                    currentColor = new Color(255, 150, 0);
+                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                    // ??
+                    currentColor = new Color(255, 0, 150);
+                }
+            }
         } else if (fragmentIonType == PeptideFragmentIonType.Z_ION) {
             // dark green
             currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
         } else if (fragmentIonType == PeptideFragmentIonType.MH_ION) {
-            // red
-            currentColor = Color.gray; // Color.red is used in MascotDatFile
-        } else if (fragmentIonType == PeptideFragmentIonType.MHH2O_ION) {
-            // red
-            currentColor = Color.gray; // Color.red is used in MascotDatFile
-        } else if (fragmentIonType == PeptideFragmentIonType.MHNH3_ION) {
             // red
             currentColor = Color.gray; // Color.red is used in MascotDatFile
         } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM_A
@@ -769,6 +794,14 @@ public class SpectrumPanel extends GraphicsPanel {
                 || fragmentIonType == PeptideFragmentIonType.IMMONIUM_Y) {
             // grey
             currentColor = Color.gray;
+        }
+
+        for (NeutralLoss neutralLoss : neutralLosses) {
+            if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                // @TODO can we find better colors for the neutral losses? The phospho losses should definitively flash
+                currentColor = Color.black;
+            }
         }
 
         return currentColor;

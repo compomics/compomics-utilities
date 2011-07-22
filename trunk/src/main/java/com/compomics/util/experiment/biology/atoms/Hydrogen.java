@@ -9,6 +9,9 @@ import com.compomics.util.experiment.biology.Atom;
  */
 public class Hydrogen extends Atom {
 
+    /**
+     * Constructor
+     */
     public Hydrogen() {
         this.mass = 1.00782503;
         this.name = "Hydrogen";

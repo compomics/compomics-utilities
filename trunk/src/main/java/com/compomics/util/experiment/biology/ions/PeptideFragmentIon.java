@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.biology.ions;
 
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Ion;
+import java.util.ArrayList;
 
 /**
  * This class models a peptide fragment ion.
@@ -22,25 +24,9 @@ public class PeptideFragmentIon extends Ion {
          */
         A_ION,
         /**
-         * This int is the identifier for an a ion with NH3 loss.
-         */
-        ANH3_ION,
-        /**
-         * This int is the identifier for an a ion with H2O loss.
-         */
-        AH2O_ION,
-        /**
          * This int is the identifier for a b ion.
          */
         B_ION,
-        /**
-         * This int is the identifier for a b ion with NH3 loss.
-         */
-        BNH3_ION,
-        /**
-         * This int is the identifier for a b ion with H2O loss.
-         */
-        BH2O_ION,
         /**
          * This int is the identifier for a c ion.
          */
@@ -52,14 +38,7 @@ public class PeptideFragmentIon extends Ion {
         /**
          * This int is the identifier for a y ion.
          */
-        Y_ION, /**
-         * This int is the identifier for a y ion with NH3 loss.
-         */
-        YNH3_ION,
-        /**
-         * This int is the identifier for a y ion with H2O loss.
-         */
-        YH2O_ION,
+        Y_ION,
         /**
          * This int is the identifier for a z ion.
          */
@@ -68,14 +47,6 @@ public class PeptideFragmentIon extends Ion {
          * This int is the identifier for an MH ion. The number of H is not represented here.
          */
         MH_ION,
-        /**
-         * This int is the identifier for an MH-NH3 ion.
-         */
-        MHNH3_ION,
-        /**
-         * This int is the identifier for an MH-H2O ion.
-         */
-        MHH2O_ION,
         /**
          * This int is the identifier for an alanine immonium ion.
          */
@@ -157,10 +128,6 @@ public class PeptideFragmentIon extends Ion {
          */
         IMMONIUM_V,
         /**
-         * This int is the identifier for a precursor ion loss. The nature of the loss is not coded yet.
-         */
-        PRECURSOR_LOSS,
-        /**
          * This int is the identifier for an unknown ion.
          */
         UNKNOWN;
@@ -169,6 +136,10 @@ public class PeptideFragmentIon extends Ion {
      * Type of ion
      */
     private PeptideFragmentIonType type;
+    /**
+     * the neutral losses found on the ion
+     */
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
      * position of the ion in the peptide for peptide ions
      */
@@ -184,6 +155,21 @@ public class PeptideFragmentIon extends Ion {
         this.type = type;
         this.theoreticMass = mass;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
+    }
+
+    /**
+     * Construction for a peptide fragment with neutral loss.
+     *
+     * @param type   the type of ion according to static fields
+     * @param mass                      the ion mass (accounting for neutral losses)
+     * @param number    the ion number
+     * @param neutralLosses List of neutral losses detected 
+     */
+    public PeptideFragmentIon(PeptideFragmentIonType type, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
+        this.type = type;
+        this.theoreticMass = mass;
+        this.familyType = Ion.PEPTIDE_FRAGMENT;
+        this.neutralLosses.addAll(neutralLosses);
     }
 
     /**
@@ -224,17 +210,11 @@ public class PeptideFragmentIon extends Ion {
      */
     public String getIonType() {
 
-        if (type == PeptideFragmentIonType.B_ION
-                || type == PeptideFragmentIonType.BH2O_ION
-                || type == PeptideFragmentIonType.BNH3_ION) {
+        if (type == PeptideFragmentIonType.B_ION) {
             return "b";
-        } else if (type == PeptideFragmentIonType.Y_ION
-                || type == PeptideFragmentIonType.YH2O_ION
-                || type == PeptideFragmentIonType.YNH3_ION) {
+        } else if (type == PeptideFragmentIonType.Y_ION) {
             return "y";
-        } else if (type == PeptideFragmentIonType.A_ION
-                || type == PeptideFragmentIonType.AH2O_ION
-                || type == PeptideFragmentIonType.ANH3_ION) {
+        } else if (type == PeptideFragmentIonType.A_ION) {
             return "a";
         } else if (type == PeptideFragmentIonType.C_ION) {
             return "c";
@@ -242,9 +222,7 @@ public class PeptideFragmentIon extends Ion {
             return "x";
         } else if (type == PeptideFragmentIonType.Z_ION) {
             return "z";
-        } else if (type == PeptideFragmentIonType.MH_ION
-                || type == PeptideFragmentIonType.MHNH3_ION
-                || type == PeptideFragmentIonType.MHH2O_ION) {
+        } else if (type == PeptideFragmentIonType.MH_ION) {
             return "MH";
         } else if (type == PeptideFragmentIonType.IMMONIUM_A) {
             return "iA";
@@ -286,8 +264,6 @@ public class PeptideFragmentIon extends Ion {
             return "iW";
         } else if (type == PeptideFragmentIonType.IMMONIUM_Y) {
             return "iY";
-        } else if (type == PeptideFragmentIonType.PRECURSOR_LOSS) {
-            return "Prec-loss";
         }
 
         return "?";
@@ -299,20 +275,20 @@ public class PeptideFragmentIon extends Ion {
      * @return the neutral loss
      */
     public String getNeutralLoss() {
-
-        if (type == PeptideFragmentIonType.BH2O_ION
-                || type == PeptideFragmentIonType.YH2O_ION
-                || type == PeptideFragmentIonType.AH2O_ION
-                || type == PeptideFragmentIonType.MHH2O_ION) {
-            return "-H2O";
-        } else if (type == PeptideFragmentIonType.BNH3_ION
-                || type == PeptideFragmentIonType.YNH3_ION
-                || type == PeptideFragmentIonType.ANH3_ION
-                || type == PeptideFragmentIonType.MHNH3_ION) {
-            return "-NH3";
+        String result = "";
+        for (NeutralLoss neutralLoss : neutralLosses) {
+            result += "-" + neutralLoss.name;
         }
+        return result;
+    }
 
-        return "";
+    /**
+     * Returns the neutral losses for this fragment ion
+     * 
+     * @return a list of neutral losses
+     */
+    public ArrayList<NeutralLoss> getNeutralLosses() {
+        return neutralLosses;
     }
 
     /**

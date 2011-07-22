@@ -3,6 +3,7 @@ package com.compomics.util.examples;
 import com.compomics.util.Export;
 import com.compomics.util.Util;
 import com.compomics.util.enumeration.ImageType;
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
@@ -2257,13 +2258,13 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             Integer key = iterator.next();
             SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(key);
             Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
+            
 
             // update the ion coverage annotations
             currentSpectrumPanel.setAnnotations(SpectrumPanel.filterAnnotations(
                     currentAnnotations,
                     getCurrentFragmentIonTypes(),
-                    H2OIonsJCheckBox.isSelected(),
-                    NH3IonsJCheckBox.isSelected(),
+                    getNeutralLosses(),
                     chargeOneJCheckBox.isSelected(),
                     chargeTwoJCheckBox.isSelected(),
                     chargeOverTwoJCheckBox.isSelected()));
@@ -3295,6 +3296,26 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         return sequenceCoverage;
     }
+    
+    /**
+     * Returns the selected neutral losses
+     * @return an ArrayList containing the selected neutral losses 
+     */
+    private ArrayList<NeutralLoss> getNeutralLosses() {
+        ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+        if (H2OIonsJCheckBox.isSelected()) {
+            neutralLosses.add(NeutralLoss.H2O);
+        }
+        if (NH3IonsJCheckBox.isSelected()) {
+            neutralLosses.add(NeutralLoss.NH3);
+        }
+        if (otherIonsJCheckBox.isSelected()) {
+            neutralLosses.add(NeutralLoss.CH4OS);
+            neutralLosses.add(NeutralLoss.H3PO4);
+            neutralLosses.add(NeutralLoss.HPO3);
+        }
+        return neutralLosses;
+    }
 
     /**
      * Returns an arraylist of the currently selected fragment ion types.
@@ -3307,22 +3328,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         if (aIonsJCheckBox.isSelected()) {
             fragmentIontypes.add(PeptideFragmentIonType.A_ION);
-            if (H2OIonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.AH2O_ION);
-            }
-            if (NH3IonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.ANH3_ION);
-            }
         }
 
         if (bIonsJCheckBox.isSelected()) {
             fragmentIontypes.add(PeptideFragmentIonType.B_ION);
-            if (H2OIonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.BH2O_ION);
-            }
-            if (NH3IonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.BNH3_ION);
-            }
         }
 
         if (cIonsJCheckBox.isSelected()) {
@@ -3335,12 +3344,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         if (yIonsJCheckBox.isSelected()) {
             fragmentIontypes.add(PeptideFragmentIonType.Y_ION);
-            if (H2OIonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.YH2O_ION);
-            }
-            if (NH3IonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.YNH3_ION);
-            }
         }
 
         if (zIonsJCheckBox.isSelected()) {
@@ -3370,12 +3373,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_Y);
             fragmentIontypes.add(PeptideFragmentIonType.MH_ION);
 
-            if (H2OIonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.MHH2O_ION);
-            }
-            if (NH3IonsJCheckBox.isSelected()) {
-                fragmentIontypes.add(PeptideFragmentIonType.MHNH3_ION);
-            }
         }
 
         return fragmentIontypes;

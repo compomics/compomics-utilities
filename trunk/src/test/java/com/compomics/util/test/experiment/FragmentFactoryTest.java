@@ -32,8 +32,8 @@ public class FragmentFactoryTest extends TestCase {
         neutralLosses.put(NeutralLoss.H2O, 3);
         neutralLosses.put(NeutralLoss.NH3, 9);
 
-        ArrayList<PeptideFragmentIon> fragments = fragmentFactory.getFragmentIons(peptide, neutralLosses);
-        
+        ArrayList<PeptideFragmentIon> fragments = fragmentFactory.getFragmentIons(peptide);
+        //@TODO: check neutral losses?
         for (PeptideFragmentIon peptideFragmentIon : fragments) {
             if (peptideFragmentIon.getNeutralLosses().isEmpty()) {
                 if (peptideFragmentIon.getNumber() == 1) {

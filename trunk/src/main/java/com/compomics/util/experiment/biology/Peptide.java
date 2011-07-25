@@ -181,10 +181,36 @@ public class Peptide extends ExperimentObject {
     /**
      * a method which compares to peptides. Two same peptides present the same sequence and same modifications at the same place.
      *
-     * @param anOtherPeptide an other peptide
+     * @param anOtherPeptide another peptide
      * @return a boolean indicating if the other peptide is the same.
      */
-    public boolean isSameAs(Peptide anOtherPeptide) {
-        return getKey().equals(anOtherPeptide.getKey());
+    public boolean isSameAs(Peptide anotherPeptide) {
+        return getKey().equals(anotherPeptide.getKey());
+    }
+    
+    /**
+     * Indicates whether another peptide has the same modifications at the same localization as this peptide. This method comes as a complement of isSameAs which does not account for PTM location.
+     * @param anotherPeptide    another peptide
+     * @return true if the other peptide has the same positions at the same location as the considered peptide
+     */
+    public boolean sameModificationsAs(Peptide anotherPeptide) {
+        if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
+            return false;
+        }
+        boolean found;
+        for (ModificationMatch modificationMatch1 : modifications) {
+            found = false;
+            for (ModificationMatch modificationMatch2 : anotherPeptide.getModificationMatches()) {
+                if (modificationMatch1.getTheoreticPtm().getName().equals(modificationMatch2.getTheoreticPtm().getName())
+                        && modificationMatch1.getModificationSite() == modificationMatch2.getModificationSite()) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
     }
 }

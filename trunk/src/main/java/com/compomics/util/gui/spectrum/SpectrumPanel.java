@@ -556,9 +556,11 @@ public class SpectrumPanel extends GraphicsPanel {
 
         return currentColor;
     }
-
+    
     /**
      * Filters the annotations and returns the annotations matching the currently selected types.
+     * 
+     * @deprecated Filtering of annotations should not be necessary anymore.
      *
      * @param annotations                   the annotations to be filtered, the annotations are
      *                                      assumed to have the following form:
@@ -613,26 +615,7 @@ public class SpectrumPanel extends GraphicsPanel {
                     useAnnotation = false;
                 }
             } else { // other
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_A)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_C)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_D)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_E)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_F)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_G)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_H)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_I)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_K)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_L)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_M)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_N)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_P)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_Q)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_R)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_S)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_T)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_V)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_W)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM_Y)
+                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM)
                         || fragmentIonTypes.contains(PeptideFragmentIonType.MH_ION))) {
                     useAnnotation = false;
                 }
@@ -772,26 +755,7 @@ public class SpectrumPanel extends GraphicsPanel {
         } else if (fragmentIonType == PeptideFragmentIonType.MH_ION) {
             // red
             currentColor = Color.gray; // Color.red is used in MascotDatFile
-        } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM_A
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_C
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_D
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_E
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_F
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_G
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_H
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_I
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_K
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_L
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_M
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_N
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_P
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_Q
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_R
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_S
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_T
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_V
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_W
-                || fragmentIonType == PeptideFragmentIonType.IMMONIUM_Y) {
+        } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM) {
             // grey
             currentColor = Color.gray;
         }

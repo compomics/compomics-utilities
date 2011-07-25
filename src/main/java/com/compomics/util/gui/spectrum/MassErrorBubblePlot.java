@@ -2,7 +2,6 @@ package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.XYZDataPoint;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAnnotationMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
@@ -101,7 +100,7 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<SpectrumAnnotationMap> annotations,
+            ArrayList<ArrayList<IonMatch>> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
@@ -112,7 +111,7 @@ public class MassErrorBubblePlot extends JPanel {
             boolean addMarkers) {
         this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers, false);
     }
-    
+
     /**
      * Creates a new MassErrorBubblePlot.
      *
@@ -131,7 +130,7 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<SpectrumAnnotationMap> annotations,
+            ArrayList<ArrayList<IonMatch>> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
@@ -163,7 +162,7 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
-            ArrayList<SpectrumAnnotationMap> annotations,
+            ArrayList<ArrayList<IonMatch>> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
@@ -189,13 +188,13 @@ public class MassErrorBubblePlot extends JPanel {
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
 
         HashMap<String, ArrayList<XYZDataPoint>> fragmentIonDataset =
-                            new HashMap<String, ArrayList<XYZDataPoint>>();
-        
+                new HashMap<String, ArrayList<XYZDataPoint>>();
+
         double maxError = 0.0;
 
         for (int j = 0; j < annotations.size(); j++) {
 
-            SpectrumAnnotationMap currentAnnotations = annotations.get(j);
+            ArrayList<IonMatch> currentAnnotations = annotations.get(j);
             MSnSpectrum currentSpectrum = currentSpectra.get(j);
 
             // the annotated ion matches
@@ -222,19 +221,19 @@ public class MassErrorBubblePlot extends JPanel {
                     for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
-                        
+
                         double error;
-                        
+
                         if (useRelativeError) {
                             error = ionMatch.getRelativeError();
                         } else {
                             error = ionMatch.getAbsoluteError();
                         }
-                        
+
                         if (Math.abs(error) > maxError) {
                             maxError = Math.abs(error);
                         }
-                        
+
                         if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
                             fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
@@ -246,14 +245,14 @@ public class MassErrorBubblePlot extends JPanel {
 
                         // The code below ought to be used if fragmentIonLabels are used and more than one spectrum is to be displayed.
                         // As this is currently not used the below code is not used either
-      //                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")") != null) {
-      //                            fragmentIonDataset.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")").add(
-      //                                    new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
-      //                        } else {
-      //                            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
-      //                            temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
-      //                            fragmentIonDataset.put(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")", temp);
-      //                        }
+                        //                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")") != null) {
+                        //                            fragmentIonDataset.get(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")").add(
+                        //                                    new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+                        //                        } else {
+                        //                            ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
+                        //                            temp.add(new XYZDataPoint(ionMatch.peak.mz, ionMatch.getError(), (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+                        //                            fragmentIonDataset.put(ionMatch.getPeakAnnotation() + " (" + (j + 1) + ")", temp);
+                        //                        }
                     }
 
                     xyzDataset = addXYZDataSeries(fragmentIonDataset);
@@ -265,15 +264,15 @@ public class MassErrorBubblePlot extends JPanel {
                     for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
                         IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
-                        
+
                         double error;
-                        
+
                         if (useRelativeError) {
                             error = ionMatch.getRelativeError();
                         } else {
                             error = ionMatch.getAbsoluteError();
                         }
-                        
+
                         if (Math.abs(error) > maxError) {
                             maxError = Math.abs(error);
                         }
@@ -296,9 +295,9 @@ public class MassErrorBubblePlot extends JPanel {
                 }
             }
         }
-        
+
         String yAxisLabel;
-        
+
         if (useRelativeError) {
             yAxisLabel = "Mass Error (ppm)";
         } else {
@@ -325,7 +324,7 @@ public class MassErrorBubblePlot extends JPanel {
                 plot.getRenderer().setSeriesPaint(i, SpectrumPanel.determineFragmentIonColor((String) xyzDataset.getSeriesKey(i)));
             }
         }
-        
+
         // set the mass error range
         if (useRelativeError) {
             plot.getRangeAxis().setLowerBound(-maxError * 1.1);
@@ -334,10 +333,10 @@ public class MassErrorBubblePlot extends JPanel {
             plot.getRangeAxis().setLowerBound(-massTolerance);
             plot.getRangeAxis().setUpperBound(massTolerance);
         }
-           
+
         plot.getDomainAxis().setLowerBound(0);
         plot.getDomainAxis().setUpperBound(plot.getDomainAxis().getUpperBound() + 100);
-        
+
         // remove space before/after the domain axis
         plot.getDomainAxis().setUpperMargin(0);
         plot.getDomainAxis().setLowerMargin(0);
@@ -455,33 +454,21 @@ public class MassErrorBubblePlot extends JPanel {
      *
      * @return the currently selected ions
      */
-    private ArrayList<IonMatch> getCurrentlyUsedIonMatches(SpectrumAnnotationMap annotations) {
+    private ArrayList<IonMatch> getCurrentlyUsedIonMatches(ArrayList<IonMatch> annotations) {
 
         currentlyUsedIonMatches = new ArrayList<IonMatch>();
 
-        Iterator<String> ionTypeIterator = annotations.getAnnotations().keySet().iterator();
+        for (IonMatch ionMatch : annotations) {
 
-        // iterate the annotations and store the needed data
-        while (ionTypeIterator.hasNext()) {
-            String ionType = ionTypeIterator.next();
+            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
-            HashMap<Integer, IonMatch> chargeMap = annotations.getAnnotations().get(ionType);
-            Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
-
-            while (chargeIterator.hasNext()) {
-                Integer currentCharge = chargeIterator.next();
-                IonMatch ionMatch = chargeMap.get(currentCharge);
-
-                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
-
-                // set up the data for the mass error and instensity histograms
-                if (currentFragmentIons.contains(fragmentIon.getType())) {
-
-                    if ((currentCharge == 1 && includeSinglyCharge)
-                            || (currentCharge == 2 && includeDoublyCharge)
-                            || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                        currentlyUsedIonMatches.add(ionMatch);
-                    }
+            // set up the data for the mass error and instensity histograms
+            if (currentFragmentIons.contains(fragmentIon.getType())) {
+                int currentCharge = ionMatch.charge.value;
+                if ((currentCharge == 1 && includeSinglyCharge)
+                        || (currentCharge == 2 && includeDoublyCharge)
+                        || (currentCharge > 2 && includeMoreThanTwoCharges)) {
+                    currentlyUsedIonMatches.add(ionMatch);
                 }
             }
         }
@@ -539,13 +526,13 @@ public class MassErrorBubblePlot extends JPanel {
 
         return dataset;
     }
-    
+
     /**
      * Returns the chart panel.
      * 
      * @return the chart panel
      */
-    public ChartPanel getChartPanel () {
+    public ChartPanel getChartPanel() {
         return chartPanel;
     }
 }

@@ -1,13 +1,10 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAnnotationMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -38,7 +35,7 @@ public class IntensityHistogram extends JPanel {
      * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
      */
     public IntensityHistogram(
-            SpectrumAnnotationMap annotations,
+            ArrayList<IonMatch> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             boolean annotateMostIntensePeaks,
@@ -57,30 +54,20 @@ public class IntensityHistogram extends JPanel {
         // the annotated intensities
         ArrayList<Double> annotatedPeakIntensities = new ArrayList<Double>();
 
-        Iterator<String> ionTypeIterator = annotations.getAnnotations().keySet().iterator();
+        int currentCharge;
+        for (IonMatch ionMatch : annotations) {
+            currentCharge = ionMatch.charge.value;
 
-        // iterate the annotations and store the needed data
-        while (ionTypeIterator.hasNext()) {
-            String ionType = ionTypeIterator.next();
+            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
-            HashMap<Integer, IonMatch> chargeMap = annotations.getAnnotations().get(ionType);
-            Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
+            // set up the data for the mass error and instensity histograms
+            if (currentFragmentIons.contains(fragmentIon.getType())) {
 
-            while (chargeIterator.hasNext()) {
-                Integer currentCharge = chargeIterator.next();
-                IonMatch ionMatch = chargeMap.get(currentCharge);
-
-                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
-
-                // set up the data for the mass error and instensity histograms
-                if (currentFragmentIons.contains(fragmentIon.getType())) {
-
-                    if ((currentCharge == 1 && includeSinglyCharge)
-                            || (currentCharge == 2 && includeDoublyCharge)
-                            || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                        annotatedPeakIntensities.add(ionMatch.peak.intensity);
-                        nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
-                    }
+                if ((currentCharge == 1 && includeSinglyCharge)
+                        || (currentCharge == 2 && includeDoublyCharge)
+                        || (currentCharge > 2 && includeMoreThanTwoCharges)) {
+                    annotatedPeakIntensities.add(ionMatch.peak.intensity);
+                    nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
                 }
             }
         }

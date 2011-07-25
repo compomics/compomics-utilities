@@ -2257,17 +2257,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             Integer key = iterator.next();
             SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(key);
-            Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
-            
 
             // update the ion coverage annotations
-            currentSpectrumPanel.setAnnotations(SpectrumPanel.filterAnnotations(
-                    currentAnnotations,
-                    getCurrentFragmentIonTypes(),
-                    getNeutralLosses(),
-                    chargeOneJCheckBox.isSelected(),
-                    chargeTwoJCheckBox.isSelected(),
-                    chargeOverTwoJCheckBox.isSelected()));
+            currentSpectrumPanel.setAnnotations(allAnnotations.get(key));
             currentSpectrumPanel.validate();
             currentSpectrumPanel.repaint();
         }
@@ -3351,26 +3343,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         }
 
         if (otherIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_A);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_C);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_D);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_E);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_F);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_G);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_H);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_I);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_K);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_L);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_M);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_N);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_P);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_Q);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_R);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_S);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_T);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_V);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_W);
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM_Y);
+            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM);
             fragmentIontypes.add(PeptideFragmentIonType.MH_ION);
 
         }

@@ -1,7 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.SpectrumAnnotator.SpectrumAnnotationMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
@@ -29,7 +28,7 @@ public class MassErrorPlot extends JPanel {
     /**
      * The complete list of possible spectrum annotations.
      */
-    private SpectrumAnnotationMap annotations;
+    private ArrayList<IonMatch> annotations;
     /**
      * The currently selected fragment ion types.
      */
@@ -58,7 +57,7 @@ public class MassErrorPlot extends JPanel {
      * If true the relative error (ppm) is used instead of the absolute error (Da).
      */
     private boolean useRelativeError = false;
-           
+
     /**
      * Creates a new MassErrorPlot.
      *
@@ -71,7 +70,7 @@ public class MassErrorPlot extends JPanel {
      * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
      */
     public MassErrorPlot(
-            SpectrumAnnotationMap annotations,
+            ArrayList<IonMatch> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             double massTolerance,
@@ -80,7 +79,7 @@ public class MassErrorPlot extends JPanel {
             boolean includeMoreThanTwoCharges) {
         this(annotations, currentFragmentIons, currentSpectrum, massTolerance, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, false);
     }
-    
+
     /**
      * Creates a new MassErrorPlot.
      *
@@ -94,7 +93,7 @@ public class MassErrorPlot extends JPanel {
      * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da)
      */
     public MassErrorPlot(
-            SpectrumAnnotationMap annotations,
+            ArrayList<IonMatch> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             double massTolerance,
@@ -139,7 +138,7 @@ public class MassErrorPlot extends JPanel {
             }
 
             double totalIntensity = currentSpectrum.getTotalIntensity();
-            double maxError = 0.0; 
+            double maxError = 0.0;
 
             for (int i = 0; i < currentlyUsedIonMatches.size(); i++) {
 
@@ -148,13 +147,13 @@ public class MassErrorPlot extends JPanel {
                 IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches.get(i);
 
                 dataXY[0][0] = ionMatch.peak.mz;
-                
+
                 if (useRelativeError) {
                     dataXY[1][0] = ionMatch.getRelativeError();
                 } else {
                     dataXY[1][0] = ionMatch.getAbsoluteError();
                 }
-                
+
                 if (Math.abs(dataXY[1][0]) > maxError) {
                     maxError = Math.abs(dataXY[1][0]);
                 }
@@ -204,7 +203,7 @@ public class MassErrorPlot extends JPanel {
                 plot.getRangeAxis().setLowerBound(-massTolerance);
                 plot.getRangeAxis().setUpperBound(massTolerance);
             }
-            
+
             plot.setRangeGridlinePaint(Color.black);
 
             ValueAxis domainAxis = plot.getDomainAxis();
@@ -234,29 +233,17 @@ public class MassErrorPlot extends JPanel {
 
         currentlyUsedIonMatches = new ArrayList<IonMatch>();
 
-        Iterator<String> ionTypeIterator = annotations.getAnnotations().keySet().iterator();
+        for (IonMatch ionMatch : annotations) {
 
-        // iterate the annotations and store the needed data
-        while (ionTypeIterator.hasNext()) {
-            String ionType = ionTypeIterator.next();
+            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
-            HashMap<Integer, IonMatch> chargeMap = annotations.getAnnotations().get(ionType);
-            Iterator<Integer> chargeIterator = chargeMap.keySet().iterator();
-
-            while (chargeIterator.hasNext()) {
-                Integer currentCharge = chargeIterator.next();
-                IonMatch ionMatch = chargeMap.get(currentCharge);
-
-                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
-
-                // set up the data for the mass error and instensity histograms
-                if (currentFragmentIons.contains(fragmentIon.getType())) {
-
-                    if ((currentCharge == 1 && includeSinglyCharge)
-                            || (currentCharge == 2 && includeDoublyCharge)
-                            || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                        currentlyUsedIonMatches.add(ionMatch);
-                    }
+            // set up the data for the mass error and instensity histograms
+            if (currentFragmentIons.contains(fragmentIon.getType())) {
+                int currentCharge = ionMatch.charge.value;
+                if ((currentCharge == 1 && includeSinglyCharge)
+                        || (currentCharge == 2 && includeDoublyCharge)
+                        || (currentCharge > 2 && includeMoreThanTwoCharges)) {
+                    currentlyUsedIonMatches.add(ionMatch);
                 }
             }
         }
@@ -272,13 +259,13 @@ public class MassErrorPlot extends JPanel {
     public int getNumberOfDataPointsInPlot() {
         return currentlyUsedIonMatches.size();
     }
-    
+
     /**
      * Returns the chart panel.
      * 
      * @return the chart panel
      */
-    public ChartPanel getChartPanel () {
+    public ChartPanel getChartPanel() {
         return chartPanel;
     }
 }

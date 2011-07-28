@@ -623,6 +623,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             // update the fragment ions
             aIonsJCheckBoxActionPerformed(null);
+            allPeaksJCheckBoxActionPerformed(null);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -642,7 +643,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         SpectrumPanel spectrumPanel = new SpectrumPanel(
                 pklFile.getMzValues(), pklFile.getIntensityValues(),
-                pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(),
+                pklFile.getPrecursorMz(), "" + pklFile.getPrecurorCharge(), 
                 "" + pklFile.getFileName(),
                 spectrumPanelMaxPadding, false, false, false, 2, profileMode);
 
@@ -987,7 +988,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
-        profileSpectrumJCheckBox.setSelected(true);
         profileSpectrumJCheckBox.setText("Profile");
         profileSpectrumJCheckBox.setToolTipText("Select profile or centroid mode.\n");
         profileSpectrumJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
@@ -1014,10 +1014,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             }
         });
 
-        allPeaksJCheckBox.setSelected(true);
         allPeaksJCheckBox.setText("All");
         allPeaksJCheckBox.setToolTipText("Display all peaks or just the annotated peaks");
-        allPeaksJCheckBox.setEnabled(false);
         allPeaksJCheckBox.setMaximumSize(new java.awt.Dimension(39, 23));
         allPeaksJCheckBox.setMinimumSize(new java.awt.Dimension(39, 23));
         allPeaksJCheckBox.setPreferredSize(new java.awt.Dimension(39, 23));
@@ -2257,9 +2255,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             Integer key = iterator.next();
             SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(key);
+            Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
 
             // update the ion coverage annotations
-            currentSpectrumPanel.setAnnotations(allAnnotations.get(key));
+            currentSpectrumPanel.setAnnotations(SpectrumPanel.filterAnnotations(
+                    currentAnnotations,
+                    getCurrentFragmentIonTypes(),
+                    getNeutralLosses(),
+                    chargeOneJCheckBox.isSelected(),
+                    chargeTwoJCheckBox.isSelected(),
+                    chargeOverTwoJCheckBox.isSelected()));
             currentSpectrumPanel.validate();
             currentSpectrumPanel.repaint();
         }

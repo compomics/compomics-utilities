@@ -59,8 +59,10 @@ public class ExperimentIO {
                 if (spectrumCollection.getSourceType() == SpectrumCollection.MGF) {
                     for (String spectrumKey : spectrumCollection.getAllKeys()) {
                         peaks = new HashSet<Peak>();
-                        for (Peak peak : spectrumCollection.getSpectrum(spectrumKey).getPeakList()) {
-                            peaks.add(peak);
+                        if (spectrumCollection.getSpectrum(spectrumKey).getPeakList() != null) {
+                            for (Peak peak : spectrumCollection.getSpectrum(spectrumKey).getPeakList()) {
+                                peaks.add(peak);
+                            }
                         }
                         backUp.put(spectrumKey, peaks);
                         spectrumCollection.getSpectrum(spectrumKey).removePeakList();

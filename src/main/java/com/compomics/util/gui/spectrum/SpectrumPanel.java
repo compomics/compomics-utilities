@@ -616,7 +616,7 @@ public class SpectrumPanel extends GraphicsPanel {
                 }
             } else { // other
                 if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.MH_ION))) {
+                        || fragmentIonTypes.contains(PeptideFragmentIonType.PRECURSOR_ION))) {
                     useAnnotation = false;
                 }
             }
@@ -752,7 +752,7 @@ public class SpectrumPanel extends GraphicsPanel {
         } else if (fragmentIonType == PeptideFragmentIonType.Z_ION) {
             // dark green
             currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
-        } else if (fragmentIonType == PeptideFragmentIonType.MH_ION) {
+        } else if (fragmentIonType == PeptideFragmentIonType.PRECURSOR_ION) {
             // red
             currentColor = Color.gray; // Color.red is used in MascotDatFile
         } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM) {

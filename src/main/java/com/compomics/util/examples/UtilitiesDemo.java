@@ -3344,7 +3344,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         if (otherIonsJCheckBox.isSelected()) {
             fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM);
-            fragmentIontypes.add(PeptideFragmentIonType.MH_ION);
+            fragmentIontypes.add(PeptideFragmentIonType.PRECURSOR_ION);
 
         }
 

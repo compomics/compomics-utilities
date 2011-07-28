@@ -559,8 +559,6 @@ public class SpectrumPanel extends GraphicsPanel {
     
     /**
      * Filters the annotations and returns the annotations matching the currently selected types.
-     * 
-     * @deprecated Filtering of annotations should not be necessary anymore.
      *
      * @param annotations                   the annotations to be filtered, the annotations are
      *                                      assumed to have the following form:

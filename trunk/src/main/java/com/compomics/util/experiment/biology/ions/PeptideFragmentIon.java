@@ -46,7 +46,7 @@ public class PeptideFragmentIon extends Ion {
         /**
          * This int is the identifier for an MH ion. The number of H is not represented here.
          */
-        MH_ION,
+        PRECURSOR_ION,
         /**
          * This int is the identifier for an immonium ion.
          */
@@ -164,8 +164,8 @@ public class PeptideFragmentIon extends Ion {
             return "x";
         } else if (type == PeptideFragmentIonType.Z_ION) {
             return "z";
-        } else if (type == PeptideFragmentIonType.MH_ION) {
-            return "MH";
+        } else if (type == PeptideFragmentIonType.PRECURSOR_ION) {
+            return "Prec";
         } else if (type == PeptideFragmentIonType.IMMONIUM) {
             return "i" + residue;
         }

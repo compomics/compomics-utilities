@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.biology.ions.Proton;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -27,6 +28,11 @@ public abstract class Ion extends ExperimentObject {
      * static index for glycons
      */
     public static final int REPORTER_ION = 2;
+    /**
+     * Ion family type
+     * static index for elementary ions
+     */
+    public static final int ELEMENTARY_ION = 3;
 
     /**
      * Ion attribute - the theoretic mass
@@ -43,5 +49,13 @@ public abstract class Ion extends ExperimentObject {
      */
     public int getIonFamilyType() {
         return familyType;
+    }
+    
+    /**
+     * Convenience method returning a proton
+     * @return Convenience method returning a proton
+     */
+    public static Ion proton() {
+        return new Proton();
     }
 }

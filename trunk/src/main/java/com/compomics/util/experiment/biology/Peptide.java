@@ -79,14 +79,14 @@ public class Peptide extends ExperimentObject {
     public ArrayList<ModificationMatch> getModificationMatches() {
         return modifications;
     }
-    
+
     /**
      * Clears the list of imported modification matches
      */
     public void clearModificationMAtches() {
         modifications.clear();
     }
-    
+
     /**
      * Adds a modification match
      * @param modificationMatch the modification match to add
@@ -102,6 +102,26 @@ public class Peptide extends ExperimentObject {
      */
     public String getSequence() {
         return sequence;
+    }
+
+    /**
+     * Returns the amount of missed cleavages using the specified enzyme
+     * @param enzyme the enzyme used
+     * @return the amount of missed cleavages
+     */
+    public int getNMissedCleavages(Enzyme enzyme) {
+        int mc = 0;
+        for (int aa = 0; aa < sequence.length() - 1; aa++) {
+            if (enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))
+                    && !enzyme.getRestrictionAfter().contains(sequence.charAt(aa + 1))) {
+                mc++;
+            }
+            if (enzyme.getAminoAcidAfter().contains(sequence.charAt(aa + 1))
+                    && !enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))) {
+                mc++;
+            }
+        }
+        return mc;
     }
 
     /**
@@ -140,21 +160,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * This methods evaluates the number of missed cleavages
-     *
-     * @return the number of missed cleavages
-     */
-    public int getNMissedCleavages() {
-        int cpt = 0;
-        for (int i = 0; i < sequence.length() - 1; i++) {
-            if ((sequence.charAt(i) == 'K' || sequence.charAt(i) == 'R') && sequence.charAt(i + 1) != 'P') {
-                cpt++;
-            }
-        }
-        return cpt;
-    }
-
-    /**
      * Returns the index of a peptide. index = SEQUENCE_mod1_mod2 with modifications ordered alphabetically.
      *
      * @return the index of a peptide
@@ -187,7 +192,7 @@ public class Peptide extends ExperimentObject {
     public boolean isSameAs(Peptide anotherPeptide) {
         return getKey().equals(anotherPeptide.getKey());
     }
-    
+
     /**
      * Indicates whether another peptide has the same modifications at the same localization as this peptide. This method comes as a complement of isSameAs which does not account for PTM location.
      * @param anotherPeptide    another peptide

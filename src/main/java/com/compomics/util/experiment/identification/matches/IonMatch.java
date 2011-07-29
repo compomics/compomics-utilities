@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -89,9 +90,8 @@ public class IonMatch extends ExperimentObject {
             String annotation = fragmentIon.getIonType();
 
             // add fragment ion number
-            if (!fragmentIon.getIonType().equalsIgnoreCase("MH")
-                    && !fragmentIon.getIonType().startsWith("i")
-                    && !fragmentIon.getIonType().equalsIgnoreCase("Prec-loss")) {
+            if (fragmentIon.getType() != PeptideFragmentIonType.IMMONIUM
+                    && fragmentIon.getType() != PeptideFragmentIonType.PRECURSOR_ION) {
                 annotation += fragmentIon.getNumber();
             }
 

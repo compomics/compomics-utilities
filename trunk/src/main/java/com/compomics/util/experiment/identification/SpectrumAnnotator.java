@@ -137,8 +137,8 @@ public class SpectrumAnnotator {
 
         fragmentMass = peptideFragmentIon.theoreticMass + inspectedCharge * Ion.proton().theoreticMass;
 
-        if (fragmentMass >= inspectedCharge * mz.get(0) - massTolerance
-                && fragmentMass <= inspectedCharge * mz.get(mz.size() - 1) + massTolerance) {
+        if (fragmentMass >= inspectedCharge * mz.get(0) - inspectedCharge * massTolerance
+                && fragmentMass <= inspectedCharge * mz.get(mz.size() - 1) + inspectedCharge * massTolerance) {
 
             int indexMin = 0;
             int indexMax = mz.size() - 1;
@@ -147,14 +147,14 @@ public class SpectrumAnnotator {
 
             currentMass = inspectedCharge * mz.get(indexMax);
 
-            if (Math.abs(currentMass - fragmentMass) <= massTolerance) {
+            if (Math.abs(currentMass - fragmentMass) <= inspectedCharge * massTolerance) {
                 currentPeak = peakMap.get(mz.get(indexMax));
                 bestMatch = new IonMatch(currentPeak, peptideFragmentIon, new Charge(Charge.PLUS, inspectedCharge));
             }
 
             currentMass = inspectedCharge * mz.get(indexMin);
 
-            if (Math.abs(currentMass - fragmentMass) <= massTolerance) {
+            if (Math.abs(currentMass - fragmentMass) <= inspectedCharge * massTolerance) {
                 currentPeak = peakMap.get(mz.get(indexMin));
                 if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                     bestMatch = new IonMatch(currentPeak, peptideFragmentIon, new Charge(Charge.PLUS, inspectedCharge));
@@ -164,7 +164,7 @@ public class SpectrumAnnotator {
             while (indexMax - indexMin > 1) {
                 index = (indexMax - indexMin) / 2 + indexMin;
                 currentMass = inspectedCharge * mz.get(index);
-                if (Math.abs(currentMass - fragmentMass) <= massTolerance / inspectedCharge) {
+                if (Math.abs(currentMass - fragmentMass) <= massTolerance * inspectedCharge) {
                     currentPeak = peakMap.get(mz.get(index));
                     if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                         bestMatch = new IonMatch(currentPeak, peptideFragmentIon, new Charge(Charge.PLUS, inspectedCharge));
@@ -216,7 +216,7 @@ public class SpectrumAnnotator {
 
     /**
      * Sets a new m/z for peak matching
-     * @param massTolerance the new m/z tolerance
+     * @param massTolerance the new m/z tolerance (in m/z, Th)
      */
     private void setMassTolerance(double massTolerance) {
         if (massTolerance != this.massTolerance) {

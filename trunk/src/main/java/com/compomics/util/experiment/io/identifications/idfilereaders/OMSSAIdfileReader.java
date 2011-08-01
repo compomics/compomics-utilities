@@ -13,7 +13,6 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header;
 import de.proteinms.omxparser.OmssaOmxFile;
@@ -57,10 +56,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
     /**
-     * The spectrum collection to complete
-     */
-    private SpectrumCollection spectrumCollection = null;
-    /**
      * The instance of the inspected omx file
      */
     private OmssaOmxFile omxFile;
@@ -78,33 +73,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      */
     public OMSSAIdfileReader(File idFile) {
         this.identificationFile = idFile;
-        modsFile = null;
-        userModsFile = null;
-        File currentFolder = new File(idFile.getParent());
-        File[] modsResult = currentFolder.listFiles();
-        if (modsResult != null) {
-            for (File file : modsResult) {
-                if (file.getName().compareToIgnoreCase("mods.xml") == 0) {
-                    modsFile = file;
-                }
-                if (file.getName().compareToIgnoreCase("usermods.xml") == 0) {
-                    userModsFile = file;
-                }
-            }
-        }
-        omxFile = getParserInstance();
-    }
-
-    /**
-     * Constructor for the reader with a spectrum collection where to put spectrum information in.
-     *
-     * @param idFile    the inspected file
-     * @param spectrumCollection the spectrum collection used
-     */
-    public OMSSAIdfileReader(File idFile, SpectrumCollection spectrumCollection) {
-        this.spectrumCollection = spectrumCollection;
-        this.identificationFile = idFile;
-
         modsFile = null;
         userModsFile = null;
         File currentFolder = new File(idFile.getParent());
@@ -168,9 +136,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         Precursor precursor = new Precursor(-1, expMass, charge);
                         MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, tempFile.getName());
                         String spectrumKey = spectrum.getSpectrumKey();
-                        if (spectrumCollection != null) {
-                            spectrumCollection.addSpectrum(spectrum);
-                        }
                         SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey, getPeptideAssumption(bestMsHit, i));
                         for (MSHits msHits : hitSet) {
                             if (msHits != bestMsHit) {

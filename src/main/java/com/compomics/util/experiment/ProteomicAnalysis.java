@@ -4,7 +4,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.Quantification;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.SequenceDataBase;
-import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 
 import java.util.HashMap;
 
@@ -24,10 +23,6 @@ public class ProteomicAnalysis extends ExperimentObject {
      * the analysis index
      */
     private int index;
-    /**
-     * The acquired spectra
-     */
-    private SpectrumCollection spectrumCollection = new SpectrumCollection();
     /**
      * Quantification results
      */
@@ -91,21 +86,6 @@ public class ProteomicAnalysis extends ExperimentObject {
      */
     public Identification getIdentification(int identificationMethod) {
         return identification.get(identificationMethod);
-    }
-
-    /**
-     * Returns the spectrum collection of the analysis
-     * @return  the spectrum collection of the analysis
-     */
-    public SpectrumCollection getSpectrumCollection() {
-        return spectrumCollection;
-    }
-
-    /**
-     * Clears the spectrum collection of the analysis
-     */
-    public void clearSpectrumCollection() {
-        spectrumCollection = new SpectrumCollection();
     }
     
     /**

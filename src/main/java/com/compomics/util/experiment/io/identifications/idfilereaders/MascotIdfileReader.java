@@ -19,7 +19,6 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.experiment.massspectrometry.SpectrumCollection;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 
@@ -47,10 +46,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * Instance of the mascotdatfile parser
      */
     private MascotDatfileInf iMascotDatfile;
-    /**
-     * The spectrum collection to complete
-     */
-    private SpectrumCollection spectrumCollection = null;
 
     /**
      * constructor for the mascotIdileReader
@@ -64,22 +59,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * @param aFile a file to read
      */
     public MascotIdfileReader(File aFile) {
-        inspectedFile = aFile;
-        try {
-            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); //getPath might have to be changed into getcanonicalPath
-        } catch (IOException e) {
-            System.exit(1);
-        }
-    }
-
-    /**
-     * Constructor for the MascotIdilereader with a spectrum collection to put spectrum information in
-     *
-     * @param aFile              a file to read
-     * @param spectrumCollection the spectrum collection used
-     */
-    public MascotIdfileReader(File aFile, SpectrumCollection spectrumCollection) {
-        this.spectrumCollection = spectrumCollection;
         inspectedFile = aFile;
         try {
             iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); //getPath might have to be changed into getcanonicalPath
@@ -147,9 +126,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     String spectrumId = iMascotDatfile.getQuery(i + 1).getTitle();
                     MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrum.getSpectrumKey());
-                    if (spectrumCollection != null) {
-                        spectrumCollection.addSpectrum(spectrum);
-                    }
 
                     // Get all hits
                     if (mascotPeptideHits != null) {

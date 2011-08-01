@@ -48,10 +48,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * the peptide map
      */
     private PeptideMap peptideMap;
-    /**
-     * The spectrum collection to complete
-     */
-    private SpectrumCollection spectrumCollection = null;
 
     /**
      * Constructor for the reader
@@ -66,23 +62,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * @throws SAXException  
      */
     public XTandemIdfileReader(File aFile) throws SAXException {
-        if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
-            xTandemFile = new XTandemFile(aFile.getPath());
-            modificationMap = xTandemFile.getModificationMap();
-            proteinMap = xTandemFile.getProteinMap();
-            peptideMap = xTandemFile.getPeptideMap();
-        }
-    }
-
-    /**
-     * constructor for the reader with a spectrum collection where to put spectrum identification in
-     *
-     * @param aFile              the inspected file
-     * @param spectrumCollection the spectrum collection used
-     * @throws SAXException  
-     */
-    public XTandemIdfileReader(File aFile, SpectrumCollection spectrumCollection) throws SAXException {
-        this.spectrumCollection = spectrumCollection;
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
             xTandemFile = new XTandemFile(aFile.getPath());
             modificationMap = xTandemFile.getModificationMap();
@@ -125,9 +104,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     double measuredMass = testDomain.getDomainMh() + testDomain.getDomainDeltaMh();
                     Precursor precursor = new Precursor(-1, measuredMass, charge); // The retention time is not known at this stage
                     MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumName, filename);
-                    if (spectrumCollection != null) {
-                        spectrumCollection.addSpectrum(spectrum);
-                    }
                     String spectrumKey = spectrum.getSpectrumKey();
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 

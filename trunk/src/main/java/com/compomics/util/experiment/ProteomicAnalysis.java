@@ -3,7 +3,6 @@ package com.compomics.util.experiment;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.Quantification;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.SequenceDataBase;
 
 import java.util.HashMap;
 
@@ -31,10 +30,6 @@ public class ProteomicAnalysis extends ExperimentObject {
      * Identification results
      */
     private HashMap<Integer, Identification> identification = new HashMap<Integer, Identification>();
-    /**
-     * The sequence database used for identification
-     */
-    private SequenceDataBase sequenceDataBase;
 
     /**
      * constructor for a proteomic analysis
@@ -86,21 +81,5 @@ public class ProteomicAnalysis extends ExperimentObject {
      */
     public Identification getIdentification(int identificationMethod) {
         return identification.get(identificationMethod);
-    }
-    
-    /**
-     * Returns the sequence database used for identification
-     * @return the sequence database used for identification
-     */
-    public SequenceDataBase getSequenceDataBase() {
-        return sequenceDataBase;
-    }
-
-    /**
-     * Sets the sequence database used for identification
-     * @param sequenceDataBase the sequence database used for identification
-     */
-    public void setSequenceDataBase(SequenceDataBase sequenceDataBase) {
-        this.sequenceDataBase = sequenceDataBase;
     }
 }

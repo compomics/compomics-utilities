@@ -12,7 +12,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
-import com.compomics.util.experiment.identification.SequenceDataBase;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -185,7 +185,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 int end = accession.indexOf("|", ++start);
                 accession = accession.substring(start, end);
             }
-            proteins.add(new Protein(accession, decoySection || SequenceDataBase.isDecoy(accession)));
+            proteins.add(new Protein(accession, decoySection || SequenceFactory.isDecoy(accession)));
         }
 
         Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);

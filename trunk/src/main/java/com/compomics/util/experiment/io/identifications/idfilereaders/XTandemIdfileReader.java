@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
-import com.compomics.util.experiment.identification.SequenceDataBase;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -154,7 +154,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     + "Please verify your FASTA file!");
         }
         
-        proteins.add(new Protein(accession, SequenceDataBase.isDecoy(accession)));
+        proteins.add(new Protein(accession, SequenceFactory.isDecoy(accession)));
         eValue = domain.getDomainExpect();
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
         PTM currentPTM;

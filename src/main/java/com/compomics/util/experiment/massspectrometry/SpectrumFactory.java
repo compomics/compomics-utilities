@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,22 +32,92 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  */
 public class SpectrumFactory {
 
+    /**
+     * The instance of the factory
+     */
     private static SpectrumFactory instance = null;
-    private Spectrum currentSpectrum = null;
+    /**
+     * Map of already loaded spectra
+     */
+    private HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
+    /**
+     * Amount of proteins in cache, one by default.
+     */
+    private int nCache = 1;
+    /**
+     * List of the implemented spectrum keys
+     */
+    private ArrayList<String> loadedSpectra = new ArrayList<String>();
+            
 
+    /**
+     * Constructor
+     */
     private SpectrumFactory() {
     }
 
+    /**
+     * static method returning the instance of the factory
+     * @return the instance of the factory
+     */
     public static SpectrumFactory getInstance() {
         if (instance == null) {
             instance = new SpectrumFactory();
         }
         return instance;
     }
+    
+    /**
+     * Static method returning the instance of the factory with a new cache size
+     * @param nCache
+     * @return 
+     */
+    public static SpectrumFactory getInstance(int nCache) {
+        if (instance == null) {
+            instance = new SpectrumFactory();
+        }
+        instance.setCacheSize(nCache);
+        return instance;
+    }
+    
+    /**
+     * Map of the random access files of the loaded mgf files (filename -> random access file)
+     */
     private HashMap<String, RandomAccessFile> mgfFilesMap = new HashMap<String, RandomAccessFile>();
+    /**
+     * Map of the mgf indexes (fileName -> mgf index)
+     */
     private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
+    /**
+     * Map of the mzML unmarshallers (fileName -> unmarshaller)
+     */
     private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
 
+    /**
+     * Sets the cache size
+     * @param nCache the new cache size
+     */
+    public void setCacheSize(int nCache) {
+        this.nCache = nCache;
+    }
+    
+    /**
+     * returns the cache size
+     * @return the cache size 
+     */
+    public int getCacheSize() {
+        return nCache;
+    }
+    
+    /**
+     * Add spectra to the factory
+     * 
+     * @param spectrumFile              The spectrum file, can be mgf or mzML
+     * @throws FileNotFoundException    Exception thrown whenever the file was not found
+     * @throws IOException              Exception thrown whenever an error occurred while reading the file
+     * @throws ClassNotFoundException   Exception thrown whenever an error occurred while deserializing the index .cui file.
+     * @throws Exception                Exception thrown whenever the mgf file was not correctly parsed
+     */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException, Exception {
         String fileName = spectrumFile.getName().toLowerCase();
         if (fileName.endsWith(".mgf")) {
@@ -68,10 +139,17 @@ public class SpectrumFactory {
         }
     }
 
+    /**
+     * Returns the precursor of the desired spectrum
+     * @param fileName      the name of the spectrum file
+     * @param spectrumTitle the title of the spectrum
+     * @return              the corresponding precursor
+     * @throws Exception    exception thrown whenever the file was not parsed correctly
+     */
     public Precursor getPrecursor(String fileName, String spectrumTitle) throws Exception {
-        if (currentSpectrum != null 
-                && Spectrum.getSpectrumKey(fileName, spectrumTitle).equals(currentSpectrum.getSpectrumKey())) {
-            return ((MSnSpectrum) currentSpectrum).getPrecursor();
+        String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+        if (currentSpectrumMap.containsKey(spectrumKey)) {
+            return ((MSnSpectrum) currentSpectrumMap.get(spectrumKey)).getPrecursor();
         }
         String name = fileName.toLowerCase();
         if (name.endsWith(".mgf")) {
@@ -122,10 +200,19 @@ public class SpectrumFactory {
         }
     }
 
+    /**
+     * Returns the spectrum desired
+     * 
+     * @param fileName      name of the spectrum file
+     * @param spectrumTitle title of the spectrum
+     * @return  the desired spectrum
+     * @throws IOException  exception thrown whenever an error occurred while reading the file
+     * @throws Exception    exception thrown whenever an error occurred while parsing the file
+     */
     public Spectrum getSpectrum(String fileName, String spectrumTitle) throws IOException, Exception {
-        if (currentSpectrum == null
-                || !Spectrum.getSpectrumKey(fileName, spectrumTitle).equals(currentSpectrum.getSpectrumKey())) {
-
+        String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+        if (!currentSpectrumMap.containsKey(spectrumKey)) {
+            Spectrum currentSpectrum;
             String name = fileName.toLowerCase();
             if (name.endsWith(".mgf")) {
                 currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
@@ -183,10 +270,23 @@ public class SpectrumFactory {
             } else {
                 throw new Exception("Spectrum file format not supported.");
             }
+            if (loadedSpectra.size()==nCache) {
+                currentSpectrumMap.remove(loadedSpectra.get(0));
+                loadedSpectra.remove(0);
+            }
+            currentSpectrumMap.put(spectrumKey, currentSpectrum);
+            loadedSpectra.add(spectrumKey);
+            return currentSpectrum;
         }
-        return currentSpectrum;
+        return currentSpectrumMap.get(spectrumKey);
     }
 
+    /**
+     * Writes the given mgf file index in the given directory
+     * @param mgfIndex      the mgf file index
+     * @param directory     the destination directory
+     * @throws IOException  exception thrown whenever an error is encountered while writing the file
+     */
     public void writeIndex(MgfIndex mgfIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
         FileOutputStream fos = new FileOutputStream(new File(directory, mgfIndex.getFileName() + ".cui"));
@@ -195,6 +295,14 @@ public class SpectrumFactory {
         oos.close();
     }
 
+    /**
+     * Deserializes the index of an mgf file
+     * @param mgfIndex                  the mgf index cuifile
+     * @return                          the corresponding mgf index object
+     * @throws FileNotFoundException    exception thrown whenever the file was not found
+     * @throws IOException              exception thrown whenever an error was encountered while reading the file
+     * @throws ClassNotFoundException   exception thrown whenever an error occurred while deserializing the object
+     */
     public MgfIndex getIndex(File mgfIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(mgfIndex);
         ObjectInputStream in = new ObjectInputStream(fis);
@@ -203,6 +311,10 @@ public class SpectrumFactory {
         return index;
     }
 
+    /**
+     * Closes all opened files
+     * @throws IOException exception thrown whenever an error occurred while closing the files
+     */
     public void closeFiles() throws IOException {
         for (RandomAccessFile randomAccessFile : mgfFilesMap.values()) {
             randomAccessFile.close();

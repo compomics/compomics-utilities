@@ -19,6 +19,9 @@ public class MgfIndex extends ExperimentObject {
      * The map of all indexes: spectrum title -> index in the file
      */
     private HashMap<String, Long> indexMap;
+    /**
+     * The name of the indexed file
+     */
     private String fileName;
 
     /**

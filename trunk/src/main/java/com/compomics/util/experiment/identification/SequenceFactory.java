@@ -1,4 +1,3 @@
-
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,19 +23,49 @@ import java.util.HashMap;
  */
 public class SequenceFactory {
 
+    /**
+     * Instance of the factory
+     */
     private static SequenceFactory instance = null;
-    private Header currentHeader = null;
-    private Protein currentProtein = null;
+    /**
+     * map of the currently loaded Headers
+     */
+    private HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
+    /**
+     * Map of the currently loaded proteins
+     */
+    private HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
+    /**
+     * Index of the fasta file
+     */
     private FastaIndex fastaIndex;
+    /**
+     * Random access file of the current fasta file
+     */
     private RandomAccessFile currentFastaFile;
+    /**
+     * Number of proteins to keep in cache, 1 by default
+     */
+    private int nCache = 1;
+    /**
+     * List of accessions of the loaded proteins
+     */
+    private ArrayList<String> loadedProteins = new ArrayList<String>();
     /**
      * Recognized flags for a decoy protein
      */
     public static final String[] decoyFlags = {"REVERSED", "REV", "RND"};
 
+    /**
+     * Constructor
+     */
     private SequenceFactory() {
     }
 
+    /**
+     * static method returning the instance of the factory
+     * @return the instance of the factory
+     */
     public static SequenceFactory getInstance() {
         if (instance == null) {
             instance = new SequenceFactory();
@@ -43,8 +73,29 @@ public class SequenceFactory {
         return instance;
     }
 
+    /**
+     * returns the instance of the factory with the specified cache size
+     * @param nCache    the new cache size
+     * @return the instance of the factory with the specified cache size
+     */
+    public static SequenceFactory getInstance(int nCache) {
+        if (instance == null) {
+            instance = new SequenceFactory();
+        }
+        instance.setnCache(nCache);
+        return instance;
+    }
+
+    /**
+     * Returns the desired protein
+     * @param accession     accession of the desired protein
+     * @return the desired protein
+     * @throws IOException exception thrown whenever an error is encountered while reading the fasta file
+     */
     public Protein getProtein(String accession) throws IOException {
-        if (currentProtein == null || !currentProtein.getAccession().equals(accession)) {
+        if (!currentProteinMap.containsKey(accession)) {
+            Protein currentProtein;
+            Header currentHeader = null;
             long index = fastaIndex.getIndex(accession);
             currentFastaFile.seek(index);
             String line, sequence = "";
@@ -61,24 +112,56 @@ public class SequenceFactory {
                 }
             }
             currentProtein = new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoy(accession));
+
+            if (loadedProteins.size() == nCache) {
+                currentProteinMap.remove(loadedProteins.get(0));
+                currentHeaderMap.remove(loadedProteins.get(0));
+                loadedProteins.remove(0);
+            }
+            loadedProteins.add(accession);
+            currentProteinMap.put(accession, currentProtein);
+            currentHeaderMap.put(accession, currentHeader);
+            return currentProtein;
         }
-        return currentProtein;
+        return currentProteinMap.get(accession);
     }
 
+    /**
+     * returns the desired header for the protein in the fasta file
+     * @param accession accession of the desired protein
+     * @return  the corresponding header
+     * @throws IOException exception thrown whenever an error occurred while reading the fasta file
+     */
     public Header getHeader(String accession) throws IOException {
-        if (currentHeader == null || !currentHeader.getAccession().equals(accession)) {
+        Header result = currentHeaderMap.get(accession);
+        if (result == null) {
             long index = fastaIndex.getIndex(accession);
             currentFastaFile.seek(index);
-            currentHeader = Header.parseFromFASTA(currentFastaFile.readLine());
+            result = Header.parseFromFASTA(currentFastaFile.readLine());
         }
-        return currentHeader;
+        return result;
     }
 
+    /**
+     * loads a new fasta file in the factory. Only one fasta file can be loaded at a time
+     * @param fastaFile the fasta file to load
+     * @throws FileNotFoundException    exception thrown if the file was not found
+     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
+     */
     public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
         currentFastaFile = new RandomAccessFile(fastaFile, "r");
         fastaIndex = getFastaIndex(fastaFile);
     }
 
+    /**
+     * Returns the file index of a fasta file
+     * @param fastaFile the fasta file
+     * @return the index of the fasta file
+     * @throws FileNotFoundException    exception thrown if the file was not found
+     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
+     */
     public FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
         if (indexFile.exists()) {
@@ -90,6 +173,12 @@ public class SequenceFactory {
         }
     }
 
+    /**
+     * serializes the fasta file index in a given directory
+     * @param fastaIndex    the index of the fasta file
+     * @param directory     the directory where to write the file
+     * @throws IOException  exception thrown whenever an error occurred while writing the file
+     */
     public void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
         FileOutputStream fos = new FileOutputStream(new File(directory, fastaIndex.getFileName() + ".cui"));
@@ -98,6 +187,14 @@ public class SequenceFactory {
         oos.close();
     }
 
+    /**
+     * Deserializes the index of the fasta file
+     * @param fastaIndex    the fasta cui index file
+     * @return the corresponding FastaIndex instance
+     * @throws FileNotFoundException    exception thrown if the file was not found
+     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
+     */
     public FastaIndex getIndex(File fastaIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(fastaIndex);
         ObjectInputStream in = new ObjectInputStream(fis);
@@ -106,10 +203,21 @@ public class SequenceFactory {
         return index;
     }
 
+    /**
+     * Closes the opened file
+     * @throws IOException exception thrown whenever an error occurred while closing the file
+     */
     public void closeFile() throws IOException {
         currentFastaFile.close();
     }
 
+    /**
+     * static method to create a fasta index for a fasta file
+     * @param fastaFile the fasta file
+     * @return  the corresponding fasta index
+     * @throws FileNotFoundException    exception thrown if the fasta file was not found
+     * @throws IOException  exception thrown whenever an error occurred while reading the file
+     */
     public static FastaIndex createFastaIndex(File fastaFile) throws FileNotFoundException, IOException {
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
@@ -156,18 +264,37 @@ public class SequenceFactory {
         return false;
     }
 
+    /**
+     * Indicates whether the database loaded contains decoy sequences
+     * @return a boolean indicating whether the database loaded contains decoy sequences
+     */
     public boolean concatenatedTargetDecoy() {
         return fastaIndex.isDecoy();
     }
 
+    /**
+     * Returns the number of target sequences in the database
+     * @return the number of target sequences in the database
+     */
     public int getNTargetSequences() {
         return fastaIndex.getNTarget();
     }
 
+    /**
+     * Appends decoy sequences to the desired file
+     * @param destinationFile the destination file
+     * @throws IOException exception thrown whenever an error occurred while reading or writing a file
+     */
     public void appendDecoySequences(File destinationFile) throws IOException {
         appendDecoySequences(destinationFile, null);
     }
 
+    /**
+     * Appends decoy sequences to the desired file while displaying progress
+     * @param destinationFile   the destination file
+     * @param progressDialog    the progress dialog
+     * @throws IOException exception thrown whenever an error occurred while reading or writing a file 
+     */
     public void appendDecoySequences(File destinationFile, ProgressDialogX progressDialog) throws IOException {
 
         if (progressDialog != null) {
@@ -187,7 +314,8 @@ public class SequenceFactory {
                 progressDialog.setValue(counter++);
             }
 
-            getProtein(accession);
+            Protein currentProtein = getProtein(accession);
+            Header currentHeader = getHeader(accession);
 
             decoyHeader = Header.parseFromFASTA(currentHeader.toString());
             decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlags[0]);
@@ -216,5 +344,29 @@ public class SequenceFactory {
      */
     private String reverseSequence(String sequence) {
         return new StringBuilder(sequence).reverse().toString();
+    }
+
+    /**
+     * Returns the sequences present in the database
+     * @return the sequences present in the database 
+     */
+    public ArrayList<String> getAccessions() {
+        return new ArrayList<String>(fastaIndex.getIndexes().keySet());
+    }
+
+    /**
+     * Returns the size of the cache
+     * @return the size of the cache 
+     */
+    public int getnCache() {
+        return nCache;
+    }
+
+    /**
+     * Sets the size of the cache
+     * @param nCache  the new size of the cache
+     */
+    public void setnCache(int nCache) {
+        this.nCache = nCache;
     }
 }

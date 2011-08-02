@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
@@ -87,9 +84,9 @@ public class SequenceFactory {
         if (indexFile.exists()) {
             return getIndex(indexFile);
         } else {
-            FastaIndex fastaIndex = createFastaIndex(fastaFile);
-            writeIndex(fastaIndex, fastaFile.getParentFile());
-            return fastaIndex;
+            FastaIndex tempFastaIndex = createFastaIndex(fastaFile);
+            writeIndex(tempFastaIndex, fastaFile.getParentFile());
+            return tempFastaIndex;
         }
     }
 

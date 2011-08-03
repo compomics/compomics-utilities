@@ -154,6 +154,19 @@ public class SequenceFactory {
     }
 
     /**
+     * loads a new fasta file in the factory. Only one fasta file can be loaded at a time
+     * @param fastaFile the fasta file to load
+     * @param progressDialog a progress dialog showing the progress
+     * @throws FileNotFoundException    exception thrown if the file was not found
+     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
+     */
+    public void loadFastaFile(File fastaFile, ProgressDialogX progressDialog) throws FileNotFoundException, IOException, ClassNotFoundException {
+        currentFastaFile = new RandomAccessFile(fastaFile, "r");
+        fastaIndex = getFastaIndex(fastaFile, progressDialog);
+    }
+
+    /**
      * Returns the file index of a fasta file
      * @param fastaFile the fasta file
      * @return the index of the fasta file
@@ -167,6 +180,26 @@ public class SequenceFactory {
             return getIndex(indexFile);
         } else {
             FastaIndex tempFastaIndex = createFastaIndex(fastaFile);
+            writeIndex(tempFastaIndex, fastaFile.getParentFile());
+            return tempFastaIndex;
+        }
+    }
+
+    /**
+     * Returns the file index of a fasta file
+     * @param fastaFile the fasta file
+     * @param progressDialog a progress dialog showing the progress
+     * @return the index of the fasta file
+     * @throws FileNotFoundException    exception thrown if the file was not found
+     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
+     */
+    public FastaIndex getFastaIndex(File fastaFile, ProgressDialogX progressDialog) throws FileNotFoundException, IOException, ClassNotFoundException {
+        File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
+        if (indexFile.exists()) {
+            return getIndex(indexFile);
+        } else {
+            FastaIndex tempFastaIndex = createFastaIndex(fastaFile, progressDialog);
             writeIndex(tempFastaIndex, fastaFile.getParentFile());
             return tempFastaIndex;
         }
@@ -218,9 +251,30 @@ public class SequenceFactory {
      * @throws IOException  exception thrown whenever an error occurred while reading the file
      */
     public static FastaIndex createFastaIndex(File fastaFile) throws FileNotFoundException, IOException {
+        return createFastaIndex(fastaFile, null);
+    }
+
+    /**
+     * static method to create a fasta index for a fasta file
+     * @param fastaFile the fasta file
+     * @param progressDialog a progress dialog showing the progress
+     * @return  the corresponding fasta index
+     * @throws FileNotFoundException    exception thrown if the fasta file was not found
+     * @throws IOException  exception thrown whenever an error occurred while reading the file
+     */
+    public static FastaIndex createFastaIndex(File fastaFile, ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
+
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(fastaFile, "r");
+
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMax(100);
+        }
+
+        long progressUnit = randomAccessFile.length()/100;
+        
         String line, accession = "";
         boolean decoy = false;
         int nTarget = 0;
@@ -237,9 +291,16 @@ public class SequenceFactory {
                 } else if (!decoy) {
                     decoy = true;
                 }
+                if (progressDialog != null) {
+                    progressDialog.setValue((int) (index/progressUnit));
+                }
             } else {
                 index = randomAccessFile.getFilePointer();
             }
+        }
+
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(true);
         }
 
         randomAccessFile.close();
@@ -301,11 +362,13 @@ public class SequenceFactory {
             progressDialog.setMax(fastaIndex.getNTarget());
         }
 
-        BufferedWriter proteinWriter = new BufferedWriter(new FileWriter(destinationFile));
+        RandomAccessFile newFile = new RandomAccessFile(destinationFile, "rw");
+        HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         int counter = 1;
-        Header decoyHeader;
-        String decoySequence;
+        Header decoyHeader, currentHeader;
+        Protein currentProtein;
+        String decoySequence, decoyAccession;
 
         for (String accession : fastaIndex.getIndexes().keySet()) {
 
@@ -313,26 +376,34 @@ public class SequenceFactory {
                 progressDialog.setValue(counter++);
             }
 
-            Protein currentProtein = getProtein(accession);
-            Header currentHeader = getHeader(accession);
+            currentProtein = getProtein(accession);
+            currentHeader = getHeader(accession);
 
+            decoyAccession = currentProtein.getAccession() + "_" + decoyFlags[0];
             decoyHeader = Header.parseFromFASTA(currentHeader.toString());
-            decoyHeader.setAccession(decoyHeader.getAccession() + "_" + decoyFlags[0]);
+            decoyHeader.setAccession(decoyAccession);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlags[0]);
             decoySequence = reverseSequence(currentProtein.getSequence());
 
-            proteinWriter.write(currentHeader.toString() + "\n");
-            proteinWriter.write(currentProtein.getSequence() + "\n");
-            proteinWriter.write(decoyHeader.toString() + "\n");
-            proteinWriter.write(decoySequence + "\n");
+            indexes.put(currentProtein.getAccession(), newFile.getFilePointer());
+            newFile.writeBytes(currentHeader.toString() + "\n");
+            newFile.writeBytes(currentProtein.getSequence() + "\n");
 
+            indexes.put(decoyAccession, newFile.getFilePointer());
+            newFile.writeBytes(decoyHeader.toString() + "\n");
+            newFile.writeBytes(decoySequence + "\n");
         }
 
         if (progressDialog != null) {
             progressDialog.setIndeterminate(true);
+            progressDialog.setTitle("Saving. Please Wait...");
         }
 
-        proteinWriter.close();
+        FastaIndex newIndex = new FastaIndex(indexes, destinationFile.getName(), true, counter - 1);
+        writeIndex(newIndex, destinationFile.getParentFile());
+
+
+        newFile.close();
     }
 
     /**

@@ -41,6 +41,10 @@ public class SpectrumFactory {
      */
     private HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
     /**
+     * Map of already loaded precursors
+     */
+    private HashMap<String, Precursor> loadedPrecursors = new HashMap<String, Precursor>();
+    /**
      * Amount of proteins in cache, one by default.
      */
     private int nCache = 1;
@@ -48,7 +52,6 @@ public class SpectrumFactory {
      * List of the implemented spectrum keys
      */
     private ArrayList<String> loadedSpectra = new ArrayList<String>();
-            
 
     /**
      * Constructor
@@ -66,7 +69,7 @@ public class SpectrumFactory {
         }
         return instance;
     }
-    
+
     /**
      * Static method returning the instance of the factory with a new cache size
      * @param nCache
@@ -79,7 +82,6 @@ public class SpectrumFactory {
         instance.setCacheSize(nCache);
         return instance;
     }
-    
     /**
      * Map of the random access files of the loaded mgf files (filename -> random access file)
      */
@@ -100,7 +102,7 @@ public class SpectrumFactory {
     public void setCacheSize(int nCache) {
         this.nCache = nCache;
     }
-    
+
     /**
      * returns the cache size
      * @return the cache size 
@@ -108,7 +110,7 @@ public class SpectrumFactory {
     public int getCacheSize() {
         return nCache;
     }
-    
+
     /**
      * Add spectra to the factory
      * 
@@ -151,9 +153,11 @@ public class SpectrumFactory {
         if (currentSpectrumMap.containsKey(spectrumKey)) {
             return ((MSnSpectrum) currentSpectrumMap.get(spectrumKey)).getPrecursor();
         }
+        Precursor currentPrecursor = loadedPrecursors.get(spectrumKey);
+        if (currentPrecursor == null) {
         String name = fileName.toLowerCase();
         if (name.endsWith(".mgf")) {
-            return MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
+            currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
         } else if (name.endsWith(".mzml")) {
             uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
             int level = 2;
@@ -191,13 +195,16 @@ public class SpectrumFactory {
                 }
             }
             if (level == 1) {
-                return null;
+                throw new Exception("MS1 spectrum");
             } else {
-                return new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
+                currentPrecursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
             }
         } else {
             throw new Exception("Spectrum file format not supported.");
         }
+        loadedPrecursors.put(spectrumKey, currentPrecursor);
+        }
+        return currentPrecursor;
     }
 
     /**
@@ -211,8 +218,8 @@ public class SpectrumFactory {
      */
     public Spectrum getSpectrum(String fileName, String spectrumTitle) throws IOException, Exception {
         String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
-        if (!currentSpectrumMap.containsKey(spectrumKey)) {
-            Spectrum currentSpectrum;
+        Spectrum currentSpectrum = currentSpectrumMap.get(spectrumKey);
+        if (currentSpectrum == null) {
             String name = fileName.toLowerCase();
             if (name.endsWith(".mgf")) {
                 currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
@@ -270,15 +277,14 @@ public class SpectrumFactory {
             } else {
                 throw new Exception("Spectrum file format not supported.");
             }
-            if (loadedSpectra.size()==nCache) {
+            if (loadedSpectra.size() == nCache) {
                 currentSpectrumMap.remove(loadedSpectra.get(0));
                 loadedSpectra.remove(0);
             }
             currentSpectrumMap.put(spectrumKey, currentSpectrum);
             loadedSpectra.add(spectrumKey);
-            return currentSpectrum;
         }
-        return currentSpectrumMap.get(spectrumKey);
+        return currentSpectrum;
     }
 
     /**

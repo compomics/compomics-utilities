@@ -54,7 +54,7 @@ public class SequenceFactory {
     /**
      * Recognized flags for a decoy protein
      */
-    public static final String[] decoyFlags = {"REVERSED", "REV", "RND"};
+    public static final String[] decoyFlags = {"REVERSED", "RND"};
 
     /**
      * Constructor
@@ -317,7 +317,7 @@ public class SequenceFactory {
      */
     public static boolean isDecoy(String proteinAccession) {
         for (String flag : decoyFlags) {
-            if (proteinAccession.contains(flag)) {
+            if (proteinAccession.endsWith(flag) || proteinAccession.startsWith(flag)) {
                 return true;
             }
         }

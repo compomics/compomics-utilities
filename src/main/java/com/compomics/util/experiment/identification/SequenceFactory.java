@@ -93,8 +93,8 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error is encountered while reading the fasta file
      */
     public Protein getProtein(String accession) throws IOException {
-        if (!currentProteinMap.containsKey(accession)) {
-            Protein currentProtein;
+        Protein currentProtein = currentProteinMap.get(accession);
+        if (currentProtein == null) {
             Header currentHeader = null;
             long index = fastaIndex.getIndex(accession);
             currentFastaFile.seek(index);
@@ -121,9 +121,8 @@ public class SequenceFactory {
             loadedProteins.add(accession);
             currentProteinMap.put(accession, currentProtein);
             currentHeaderMap.put(accession, currentHeader);
-            return currentProtein;
         }
-        return currentProteinMap.get(accession);
+        return currentProtein;
     }
 
     /**

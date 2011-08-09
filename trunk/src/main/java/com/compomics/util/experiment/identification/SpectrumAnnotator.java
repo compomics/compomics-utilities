@@ -268,9 +268,6 @@ public class SpectrumAnnotator {
                 if (aaMin >= 0) {
                     likelyNeutralLosses.put(NeutralLoss.H2O, aaMin + 1);
                 }
-                if (aaMin >= 0) {
-                    likelyNeutralLosses.put(NeutralLoss.H2O, aaMin + 1);
-                }
             } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
                 aaMin = peptide.getSequence().length();
                 if (peptide.getSequence().indexOf("K") != -1) {
@@ -284,9 +281,6 @@ public class SpectrumAnnotator {
                 }
                 if (peptide.getSequence().indexOf("Q") != -1) {
                     aaMin = Math.min(peptide.getSequence().indexOf("Q"), aaMin);
-                }
-                if (aaMin >= 0) {
-                    likelyNeutralLosses.put(NeutralLoss.NH3, aaMin + 1);
                 }
                 if (aaMin >= 0) {
                     likelyNeutralLosses.put(NeutralLoss.NH3, aaMin + 1);
@@ -382,7 +376,7 @@ public class SpectrumAnnotator {
         int aaMaxCH4OS = peptide.getSequence().length();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             if (Math.abs(modMatch.getTheoreticPtm().getMass() - 79.9663) < 0.01) {
-                if (peptide.getSequence().charAt(modMatch.getModificationSite()) == 'Y') {
+                if (peptide.getSequence().charAt(modMatch.getModificationSite()-1) == 'Y') {
                     aaMaxHPO3 = Math.min(aaMaxHPO3, modMatch.getModificationSite() + 1);
                 } else if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
                         || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {

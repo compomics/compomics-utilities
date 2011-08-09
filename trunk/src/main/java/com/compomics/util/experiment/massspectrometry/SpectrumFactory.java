@@ -149,60 +149,71 @@ public class SpectrumFactory {
      * @throws Exception    exception thrown whenever the file was not parsed correctly
      */
     public Precursor getPrecursor(String fileName, String spectrumTitle) throws Exception {
-        String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+        return getPrecursor(Spectrum.getSpectrumKey(fileName, spectrumTitle));
+    }
+
+    /**
+     * Returns the precursor of the desired spectrum
+     * @param spectrumKey   the key of the spectrum
+     * @return              the corresponding precursor
+     * @throws Exception    exception thrown whenever the file was not parsed correctly
+     */
+    public Precursor getPrecursor(String spectrumKey) throws Exception {
         if (currentSpectrumMap.containsKey(spectrumKey)) {
             return ((MSnSpectrum) currentSpectrumMap.get(spectrumKey)).getPrecursor();
         }
         Precursor currentPrecursor = loadedPrecursors.get(spectrumKey);
         if (currentPrecursor == null) {
-        String name = fileName.toLowerCase();
-        if (name.endsWith(".mgf")) {
-            currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
-        } else if (name.endsWith(".mzml")) {
-            uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
-            int level = 2;
-            double mzPrec = 0.0;
-            double scanTime = -1.0;
-            int chargePrec = 0;
-            for (CVParam cvParam : mzMLSpectrum.getCvParam()) {
-                if (cvParam.getAccession().equals("MS:1000511")) {
-                    level = new Integer(cvParam.getValue());
-                    break;
-                }
-            }
-            ScanList scanList = mzMLSpectrum.getScanList();
-            if (scanList != null) {
-                for (CVParam cvParam : scanList.getScan().get(scanList.getScan().size() - 1).getCvParam()) {
-                    if (cvParam.getAccession().equals("MS:1000016")) {
-                        scanTime = new Double(cvParam.getValue());
+            String fileName = Spectrum.getSpectrumFile(spectrumKey);
+            String name = fileName.toLowerCase();
+            String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey).toLowerCase();
+            if (name.endsWith(".mgf")) {
+                currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
+            } else if (name.endsWith(".mzml")) {
+                uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
+                int level = 2;
+                double mzPrec = 0.0;
+                double scanTime = -1.0;
+                int chargePrec = 0;
+                for (CVParam cvParam : mzMLSpectrum.getCvParam()) {
+                    if (cvParam.getAccession().equals("MS:1000511")) {
+                        level = new Integer(cvParam.getValue());
                         break;
                     }
                 }
-            }
-            PrecursorList precursorList = mzMLSpectrum.getPrecursorList();
-            if (precursorList != null) {
-                if (precursorList.getCount().intValue() == 1) {
-                    SelectedIonList sIonList = precursorList.getPrecursor().get(0).getSelectedIonList();
-                    if (sIonList != null) {
-                        for (CVParam cvParam : sIonList.getSelectedIon().get(0).getCvParam()) {
-                            if (cvParam.getAccession().equals("MS:1000744")) {
-                                mzPrec = new Double(cvParam.getValue());
-                            } else if (cvParam.getAccession().equals("MS:1000041")) {
-                                chargePrec = new Integer(cvParam.getValue());
+                ScanList scanList = mzMLSpectrum.getScanList();
+                if (scanList != null) {
+                    for (CVParam cvParam : scanList.getScan().get(scanList.getScan().size() - 1).getCvParam()) {
+                        if (cvParam.getAccession().equals("MS:1000016")) {
+                            scanTime = new Double(cvParam.getValue());
+                            break;
+                        }
+                    }
+                }
+                PrecursorList precursorList = mzMLSpectrum.getPrecursorList();
+                if (precursorList != null) {
+                    if (precursorList.getCount().intValue() == 1) {
+                        SelectedIonList sIonList = precursorList.getPrecursor().get(0).getSelectedIonList();
+                        if (sIonList != null) {
+                            for (CVParam cvParam : sIonList.getSelectedIon().get(0).getCvParam()) {
+                                if (cvParam.getAccession().equals("MS:1000744")) {
+                                    mzPrec = new Double(cvParam.getValue());
+                                } else if (cvParam.getAccession().equals("MS:1000041")) {
+                                    chargePrec = new Integer(cvParam.getValue());
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (level == 1) {
-                throw new Exception("MS1 spectrum");
+                if (level == 1) {
+                    throw new Exception("MS1 spectrum");
+                } else {
+                    currentPrecursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
+                }
             } else {
-                currentPrecursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
+                throw new Exception("Spectrum file format not supported.");
             }
-        } else {
-            throw new Exception("Spectrum file format not supported.");
-        }
-        loadedPrecursors.put(spectrumKey, currentPrecursor);
+            loadedPrecursors.put(spectrumKey, currentPrecursor);
         }
         return currentPrecursor;
     }
@@ -216,11 +227,24 @@ public class SpectrumFactory {
      * @throws IOException  exception thrown whenever an error occurred while reading the file
      * @throws Exception    exception thrown whenever an error occurred while parsing the file
      */
-    public Spectrum getSpectrum(String fileName, String spectrumTitle) throws IOException, Exception {
-        String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+    public Spectrum getSpectrum(String SpectrumFile, String SpectrumTitle) throws IOException, Exception {
+        return getSpectrum(Spectrum.getSpectrumKey(SpectrumFile, SpectrumTitle));
+    }
+
+    /**
+     * Returns the spectrum desired
+     * 
+     * @param spectrumKey      key of the spectrum 
+     * @return  the desired spectrum
+     * @throws IOException  exception thrown whenever an error occurred while reading the file
+     * @throws Exception    exception thrown whenever an error occurred while parsing the file
+     */
+    public Spectrum getSpectrum(String spectrumKey) throws IOException, Exception {
         Spectrum currentSpectrum = currentSpectrumMap.get(spectrumKey);
         if (currentSpectrum == null) {
+            String fileName = Spectrum.getSpectrumFile(spectrumKey);
             String name = fileName.toLowerCase();
+            String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey).toLowerCase();
             if (name.endsWith(".mgf")) {
                 currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {
@@ -325,5 +349,30 @@ public class SpectrumFactory {
         for (RandomAccessFile randomAccessFile : mgfFilesMap.values()) {
             randomAccessFile.close();
         }
+    }
+
+    /**
+     * Returns a list of loaded mgf files
+     * @return a list of loaded mgf files
+     */
+    public ArrayList<String> getMgfFileNames() {
+        return new ArrayList<String>(mgfFilesMap.keySet());
+    }
+
+    /**
+     * Returns a list of loaded mzML files
+     * @return a list of loaded mzML files
+     */
+    public ArrayList<String> getMzMLFileNames() {
+        return new ArrayList<String>(mzMLUnmarshallers.keySet());
+    }
+
+    /**
+     * Returns a list of titles from indexed spectra in the given file
+     * @param mgfFile   the name of the mgf file
+     * @return a list of titles from indexed spectra in the given file
+     */
+    public ArrayList<String> getSpectrumTitles(String mgfFile) {
+        return new ArrayList<String>(mgfIndexesMap.get(mgfFile).getIndexes().keySet());
     }
 }

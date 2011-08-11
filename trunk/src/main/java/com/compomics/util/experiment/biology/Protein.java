@@ -140,7 +140,7 @@ public class Protein extends ExperimentObject {
      */
     public int getNPossiblePeptides(Enzyme enzyme) {
 
-        int nCleavages = 0;
+        int nCleavages = 1;
         ArrayList<Character> aminoAcidBefore = enzyme.getAminoAcidBefore();
         ArrayList<Character> aminoAcidAfter = enzyme.getAminoAcidAfter();
         ArrayList<Character> restrictionBefore = enzyme.getRestrictionBefore();

@@ -166,7 +166,7 @@ public class MassErrorBubblePlot extends JPanel {
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
-            int bubbleScale,
+            double bubbleScale,
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges,

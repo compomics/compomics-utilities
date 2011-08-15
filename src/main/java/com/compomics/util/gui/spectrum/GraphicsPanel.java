@@ -1796,7 +1796,7 @@ public abstract class GraphicsPanel extends JPanel {
      * @param g Graphics object to draw the highlighting on.
      */
     protected void highLightPeak(int aIndex, int dataSetIndex, Graphics g) {
-        this.highLight(aIndex, dataSetIndex, g, Color.blue, null, 0, true);
+        this.highLight(aIndex, dataSetIndex, g, Color.blue, null, 0, true, 1);
     }
 
     /**
@@ -1807,38 +1807,45 @@ public abstract class GraphicsPanel extends JPanel {
      * @param g Graphics object to draw the highlighting on.
      */
     protected void highlightClicked(int aIndex, int dataSetIndex, Graphics g) {
-        this.highLight(aIndex, dataSetIndex, g, Color.BLACK, null, 0, true);
+        this.highLight(aIndex, dataSetIndex, g, Color.BLACK, null, 0, true, 1);
     }
 
     /**
      * This method will highlight the specified point in the specified color by
      * drawing a floating triangle + x-value above it.
      *
-     * @param aIndex    int with the index.
-     * @param dataSetIndex the index of the dataset
-     * @param g Graphics object to draw on
-     * @param aColor    Color to draw the highlighting in.
-     * @param aComment  String with an optional comment. Can be 'null' in which case
-     *                  it will be omitted.
-     * @param aPixelsSpacer int that gives the vertical spacer in pixels for the highlighting.
-     * @param aShowArrow boolean that indicates whether a downward-pointing arrow and dotted line
-     *                           should be drawn over the point.
+     * @param aIndex                int with the index.
+     * @param dataSetIndex          the index of the dataset
+     * @param g Graphics            object to draw on
+     * @param aColor                Color to draw the highlighting in.
+     * @param aComment              String with an optional comment. Can be 'null' in which case
+     *                              it will be omitted.
+     * @param aPixelsSpacer         int that gives the vertical spacer in pixels for the highlighting.
+     * @param aShowArrow            boolean that indicates whether a downward-pointing arrow and dotted line
+     *                              should be drawn over the point.
+     * @param aAnnotationCounter    the number of annotation of the given peak 
      */
-    protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow) {
+    protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow, int aAnnotationCounter) {
 
         int x = iXAxisDataInPixels.get(dataSetIndex)[aIndex];
         int y = 0;
-
+        
         if (aPixelsSpacer < 0) {
             y = iTopPadding;
         } else {
             y = iYAxisDataInPixels.get(dataSetIndex)[aIndex] - aPixelsSpacer;
-            // Correct for absurd heights.
-            if (y < iTopPadding / 3) {
-                y = iTopPadding / 3;
+            
+            // special case for when top peak is annotated with multiple annotations
+            if (y < 0) {   
+                y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 2);
             }
         }
-
+        
+        // Correct for absurd heights.
+        if (y < iTopPadding / 3) {
+            y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 2);
+        }
+        
         // Temporarily change the color
         Color originalColor = g.getColor();
         g.setColor(aColor);
@@ -2000,11 +2007,11 @@ public abstract class GraphicsPanel extends JPanel {
      *
      * @param aSA               SpectrumAnnotation with the annotation to find.
      * @param g                 Graphics instance to annotate on.
-     * @param aAlReadyAnnotated HashMap with the index of a point as key, and the number
+     * @param aAlreadyAnnotated HashMap with the index of a point as key, and the number
      *                          of times it has been annotated as value (or 'null' if not
      *                          yet annotated).
      */
-    protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap<String, Integer> aAlReadyAnnotated) {
+    protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap<String, Integer> aAlreadyAnnotated) {
 
         double xValue = aSA.getMZ();
         double error = Math.abs(aSA.getErrorMargin());
@@ -2047,15 +2054,15 @@ public abstract class GraphicsPanel extends JPanel {
                 int spacer = (int) ((iYAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
                 boolean showArrow = true;
                 String key = dataSetIndex + "_" + peakIndex;
-                if (aAlReadyAnnotated.containsKey(key)) {
-                    int count = ((Integer) aAlReadyAnnotated.get(key)).intValue();
+                if (aAlreadyAnnotated.containsKey(key)) {
+                    int count = ((Integer) aAlreadyAnnotated.get(key)).intValue();
                     spacer += count * (g.getFontMetrics().getAscent() + 2);
-                    aAlReadyAnnotated.put(key, new Integer(count + 1));
+                    aAlreadyAnnotated.put(key, new Integer(count + 1));
                     showArrow = false;
                 } else {
-                    aAlReadyAnnotated.put(key, new Integer(1));
+                    aAlreadyAnnotated.put(key, new Integer(1));
                 }
-                this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow);
+                this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow, aAlreadyAnnotated.get(key));
             }
         }
     }

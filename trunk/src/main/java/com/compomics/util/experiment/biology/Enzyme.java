@@ -182,27 +182,39 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
         ArrayList<String> noCleavage = new ArrayList<String>();
-        String tempSequence = sequence;
+        String tempPeptide, tempSequence1, tempSequence = sequence;
         int tempCleavage, cleavage;
         while (tempSequence.length() > 1) {
             cleavage = 0;
             for (Character aa : getAminoAcidAfter()) {
                 tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
+                while (getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
+                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
+                }
                 if (tempCleavage > cleavage && !getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
                     cleavage = tempCleavage;
                 }
             }
             for (Character aa : getAminoAcidBefore()) {
+                tempSequence1 = tempSequence;
                 tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
+                while (getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
+                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
+                }
                 if (tempCleavage > cleavage && !getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
                     cleavage = tempCleavage;
                 }
             }
             if (cleavage == 0) {
-                noCleavage.add(tempSequence);
+                if (tempSequence.length() <= nMax && tempSequence.length() >= nMin) {
+                    noCleavage.add(tempSequence);
+                }
                 break;
             }
-            noCleavage.add(tempSequence.substring(cleavage + 1));
+            tempPeptide = tempSequence.substring(cleavage + 1);
+            if (tempPeptide.length() <= nMax) {
+                noCleavage.add(tempPeptide);
+            }
             tempSequence = tempSequence.substring(0, cleavage + 1);
         }
         ArrayList<String> result = new ArrayList<String>();
@@ -211,7 +223,7 @@ public class Enzyme extends ExperimentObject {
                 result.add(peptide);
             }
         }
-        if (nMissedCleavages > 0) {
+        if (nMissedCleavages > 0 && noCleavage.size() > 0) {
             for (int nmc = 1; nmc <= nMissedCleavages; nmc++) {
                 if (noCleavage.size() > 0) {
                     for (int i = noCleavage.size() - 1; i > 0; i--) {

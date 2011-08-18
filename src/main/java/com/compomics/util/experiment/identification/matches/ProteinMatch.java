@@ -2,11 +2,15 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.identification.Match;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,24 +21,24 @@ import java.util.Set;
  * Date: Jun 18, 2010
  * Time: 8:59:02 AM
  */
-public class ProteinMatch extends ExperimentObject {
+public class ProteinMatch extends Match {
 
     /**
      * The version UID for Serialization/Deserialization compatibility
      */
     static final long serialVersionUID = -6061842447053092696L;
     /**
-     * The matching protein(s)
+     * The matching protein(s) accessions
      */
-    private HashMap<String, Protein> theoreticProtein = new HashMap<String, Protein>();
+    private ArrayList<String> theoreticProtein = new ArrayList<String>();
     /**
-     * The retained protein after protein inference resolution
+     * The accession of the retained protein after protein inference resolution
      */
-    private Protein mainMatch;
+    private String mainMatch;
     /**
-     * The corresponding peptide matches
+     * The corresponding peptide match keys
      */
-    private HashMap<String, PeptideMatch> peptideMatches = new HashMap<String, PeptideMatch>();
+    private ArrayList<String> peptideMatches = new ArrayList<String>();
 
     /**
      * Constructor for the protein match
@@ -47,37 +51,32 @@ public class ProteinMatch extends ExperimentObject {
      *
      * @param protein the matching protein
      */
-    public ProteinMatch(Protein protein) {
-        theoreticProtein.put(protein.getAccession(), protein);
+    public ProteinMatch(String proteinAccession) {
+        theoreticProtein.add(proteinAccession);
+        mainMatch = proteinAccession;
     }
 
     /**
      * Constructor for the protein match
      *
-     * @param peptideMatch The corresponding peptide matches
+     * @param peptideMatch The corresponding peptide match
      */
-    public ProteinMatch(PeptideMatch peptideMatch) {
-        for (Protein protein : peptideMatch.getTheoreticPeptide().getParentProteins()) {
-            theoreticProtein.put(protein.getAccession(), protein);
+    public ProteinMatch(Peptide peptide) {
+        ArrayList<String> parentProteins = peptide.getParentProteins();
+        Collections.sort(parentProteins);
+        for (String protein : parentProteins) {
+            theoreticProtein.add(protein);
         }
-        peptideMatches.put(peptideMatch.getTheoreticPeptide().getKey(), peptideMatch);
-    }
-
-    /**
-     * getter for the matching protein
-     *
-     * @return the matching protein
-     */
-    public Protein getTheoreticProtein(String accession) {
-        return theoreticProtein.get(accession);
+        mainMatch = parentProteins.get(0);
+        peptideMatches.add(peptide.getKey());
     }
 
     /**
      * Returns the accessions of the possible theoretic proteins
      * @return  the accessions of the possible theoretic proteins
      */
-    public Set<String> getTheoreticProteinsAccessions() {
-        return theoreticProtein.keySet();
+    public ArrayList<String> getTheoreticProteinsAccessions() {
+        return theoreticProtein;
     }
 
     /**
@@ -85,23 +84,23 @@ public class ProteinMatch extends ExperimentObject {
      *
      * @param protein the matching protein
      */
-    public void addTheoreticProtein(Protein protein) {
-        theoreticProtein.put(protein.getAccession(), protein);
+    public void addTheoreticProtein(String proteinAccession) {
+        theoreticProtein.add(proteinAccession);
     }
 
     /**
-     * Returns the main match after protein inference
-     * @return the main match after protein inference
+     * Returns the main match accession after protein inference
+     * @return the main match accession after protein inference
      */
-    public Protein getMainMatch() {
+    public String getMainMatch() {
         return mainMatch;
     }
 
     /**
-     * Sets the main protein after protein inference
+     * Sets the main protein accession after protein inference
      * @param mainMatch the main match
      */
-    public void setMainMatch(Protein mainMatch) {
+    public void setMainMatch(String mainMatch) {
         this.mainMatch = mainMatch;
     }
 
@@ -110,7 +109,7 @@ public class ProteinMatch extends ExperimentObject {
      *
      * @return subordinated peptide matches
      */
-    public HashMap<String, PeptideMatch> getPeptideMatches() {
+    public ArrayList<String> getPeptideMatches() {
         return peptideMatches;
     }
 
@@ -119,26 +118,8 @@ public class ProteinMatch extends ExperimentObject {
      *
      * @param peptideMatch a peptide match
      */
-    public void addPeptideMatch(PeptideMatch peptideMatch) {
-        String index = peptideMatch.getKey();
-        if (!peptideMatches.containsKey(index)) {
-            peptideMatches.put(index, peptideMatch);
-        } else {
-            peptideMatches.get(index).addSpectrumMatches(peptideMatch.getSpectrumMatches());
-        }
-    }
-
-    /**
-     * method to get the spectrum count for this protein match
-     *
-     * @return the spectrum count for this protein match
-     */
-    public int getSpectrumCount() {
-        int spectrumCount = 0;
-        for (PeptideMatch peptideMatch : peptideMatches.values()) {
-            spectrumCount += peptideMatch.getSpectrumCount();
-        }
-        return spectrumCount;
+    public void addPeptideMatch(String peptideMatchKey) {
+        peptideMatches.add(peptideMatchKey);
     }
 
     /**
@@ -146,13 +127,7 @@ public class ProteinMatch extends ExperimentObject {
      * @return the number of peptides found
      */
     public int getPeptideCount() {
-        int result = 0;
-        for (PeptideMatch peptideMatch : peptideMatches.values()) {
-            if (peptideMatch.getSpectrumCount() > 0) {
-                result++;
-            }
-        }
-        return result;
+        return peptideMatches.size();
     }
 
     /**
@@ -161,8 +136,8 @@ public class ProteinMatch extends ExperimentObject {
      * @return boolean indicating if the protein match is a decoy one
      */
     public boolean isDecoy() {
-        for (Protein protein : theoreticProtein.values()) {
-            if (protein.isDecoy()) {
+        for (String protein : theoreticProtein) {
+            if (SequenceFactory.isDecoy(protein)) {
                 return true;
             }
         }
@@ -170,20 +145,25 @@ public class ProteinMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the index of the protein match
-     *
-     * @return the index of the protein match
+     * Convenience method indicating whether a match is decoy based on the match key
+     * 
+     * @param key   the match key
+     * @return a boolean indicating whether a match is decoy
      */
-    public String getKey() {
-        ArrayList<String> accessions = new ArrayList<String>();
-        for (Protein protein : theoreticProtein.values()) {
-            if (!accessions.contains(protein.getAccession())) {
-                accessions.add(protein.getAccession());
+    public static boolean isDecoy(String key) {
+        for (String accession : getAccessions(key)) {
+            if (SequenceFactory.isDecoy(accession)) {
+                return true;
             }
         }
-        Collections.sort(accessions);
+        return false;
+    }
+
+    @Override
+    public String getKey() {
+        Collections.sort(theoreticProtein);
         String result = "";
-        for (String accession : accessions) {
+        for (String accession : theoreticProtein) {
             result += accession + " ";
         }
         return result.trim();
@@ -196,9 +176,9 @@ public class ProteinMatch extends ExperimentObject {
      */
     public static String getProteinMatchKey(Peptide peptide) {
         ArrayList<String> accessions = new ArrayList<String>();
-        for (Protein protein : peptide.getParentProteins()) {
-            if (!accessions.contains(protein.getAccession())) {
-                accessions.add(protein.getAccession());
+        for (String protein : peptide.getParentProteins()) {
+            if (!accessions.contains(protein)) {
+                accessions.add(protein);
             }
         }
         Collections.sort(accessions);
@@ -207,6 +187,15 @@ public class ProteinMatch extends ExperimentObject {
             result += accession + " ";
         }
         return result.trim();
+    }
+
+    /**
+     * Returns the number of proteins for the match corresponding to the given key
+     * @param matchKey   the given key
+     * @return the number of proteins for this match
+     */
+    public static int getNProteins(String matchKey) {
+        return getAccessions(matchKey).length;
     }
 
     /**
@@ -219,6 +208,26 @@ public class ProteinMatch extends ExperimentObject {
     }
 
     /**
+     * Returns a boolean indicating whether a protein match contains another set of matches.
+     * 
+     * @param sharedKey the key of the protein of interest
+     * @param uniqueKey the key of the protein supposedly contained
+     * @return a boolean indicating whether a protein match contains another set of matches.
+     */
+    public static boolean contains(String sharedKey, String uniqueKey) {
+        if (sharedKey.equals(uniqueKey)) {
+            return false;
+        }
+        List<String> sharedAccessions = Arrays.asList(getAccessions(sharedKey));
+        for (String uniqueAccession : getAccessions(uniqueKey)) {
+            if (!sharedAccessions.contains(uniqueAccession)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Returns a boolean indicating whether the protein match contains another set of theoretic proteins.
      * @param proteinMatch  another protein match
      * @return  a boolean indicating whether the protein match contains another set of theoretic proteins
@@ -228,7 +237,7 @@ public class ProteinMatch extends ExperimentObject {
             return false;
         }
         for (String accession : proteinMatch.getTheoreticProteinsAccessions()) {
-            if (!theoreticProtein.containsKey(accession)) {
+            if (!theoreticProtein.contains(accession)) {
                 return false;
             }
         }
@@ -240,28 +249,16 @@ public class ProteinMatch extends ExperimentObject {
      * @param aProtein  the inspected protein
      * @return a boolean indicating whether a protein was found in this protein match
      */
-    public boolean contains(Protein aProtein) {
-        return theoreticProtein.containsKey(aProtein.getAccession());
+    public boolean contains(String aProtein) {
+        return theoreticProtein.contains(aProtein);
     }
 
     /**
-     * returns a proteinMatch complementary to the protein match given
-     * Example:
-     * if the protein match was identified on proteins A, B and C; if the given match was identified on A; the method returns a protein match with B and C.
-     * @param proteinMatch  the given protein match
-     * @return  a proteinMatch complementary to the protein match given
-     * @throws Exception    Exception thrown when two spectrum matches from the same search engine are attached to the same spectrum
+     * Returns a list of accessions from the given key
+     * @param key the given key
+     * @return the corresponding list of accessions
      */
-    public ProteinMatch getComplementMatch(ProteinMatch proteinMatch) throws Exception {
-        ProteinMatch result = new ProteinMatch();
-        for (PeptideMatch peptideMatch : peptideMatches.values()) {
-            result.addPeptideMatch(peptideMatch);
-        }
-        for (Protein protein : theoreticProtein.values()) {
-            if (!proteinMatch.contains(protein)) {
-                result.addTheoreticProtein(protein);
-            }
-        }
-        return result;
+    public static String[] getAccessions(String key) {
+        return key.split(" ");
     }
 }

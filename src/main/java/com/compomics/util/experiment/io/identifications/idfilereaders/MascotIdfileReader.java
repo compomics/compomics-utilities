@@ -177,7 +177,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
         Double mascotEValue = aPeptideHit.getExpectancy();
 
-        ArrayList<Protein> proteins = new ArrayList();
+        ArrayList<String> proteins = new ArrayList();
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
             String accession = ((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession();
             if (accession.lastIndexOf('|') != -1) {
@@ -185,7 +185,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 int end = accession.indexOf("|", ++start);
                 accession = accession.substring(start, end);
             }
-            proteins.add(new Protein(accession, decoySection || SequenceFactory.isDecoy(accession)));
+            proteins.add(accession);
         }
 
         Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);

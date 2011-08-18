@@ -35,7 +35,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The parent proteins
      */
-    private ArrayList<Protein> parentProteins;
+    private ArrayList<String> parentProteins;
     /**
      * The modifications carried by the peptide
      */
@@ -55,7 +55,7 @@ public class Peptide extends ExperimentObject {
      * @param parentProteins The parent proteins
      * @param modifications  The PTM of this peptide
      */
-    public Peptide(String aSequence, Double mass, ArrayList<Protein> parentProteins, ArrayList<ModificationMatch> modifications) {
+    public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
         this.mass = mass;
         this.parentProteins = parentProteins;
@@ -125,6 +125,26 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns the amount of missed cleavages using the specified enzyme for the given sequence
+     * @param enzyme the enzyme used
+     * @return the amount of missed cleavages
+     */
+    public static int getNMissedCleavages(String sequence, Enzyme enzyme) {
+        int mc = 0;
+        for (int aa = 0; aa < sequence.length() - 1; aa++) {
+            if (enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))
+                    && !enzyme.getRestrictionAfter().contains(sequence.charAt(aa + 1))) {
+                mc++;
+            }
+            if (enzyme.getAminoAcidAfter().contains(sequence.charAt(aa + 1))
+                    && !enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))) {
+                mc++;
+            }
+        }
+        return mc;
+    }
+
+    /**
      * method to add a fragmentIon
      *
      * @param fragment a fragment ion of this peptide
@@ -147,7 +167,7 @@ public class Peptide extends ExperimentObject {
      *
      * @return the parent proteins
      */
-    public ArrayList<Protein> getParentProteins() {
+    public ArrayList<String> getParentProteins() {
         return parentProteins;
     }
 
@@ -155,7 +175,7 @@ public class Peptide extends ExperimentObject {
      * Sets the parent proteins
      * @param parentProteins the parent proteins as list
      */
-    public void setParentProteins(ArrayList<Protein> parentProteins) {
+    public void setParentProteins(ArrayList<String> parentProteins) {
         this.parentProteins = parentProteins;
     }
 
@@ -179,6 +199,43 @@ public class Peptide extends ExperimentObject {
         String result = sequence;
         for (String mod : modifications) {
             result += "_" + mod;
+        }
+        return result;
+    }
+
+    /**
+     * Returns a boolean indicating whether the peptide has variable modifications based on its key
+     * @param peptideKey the peptide key
+     * @return a boolean indicating whether the peptide has variable modifications
+     */
+    public static boolean isModified(String peptideKey) {
+        return peptideKey.contains("_");
+    }
+
+    /**
+     * Returns the sequence of the peptide indexed by the given key
+     * @param peptideKey the peptide key
+     * @return the corresponding sequence
+     */
+    public static String getSequence(String peptideKey) {
+        int index = peptideKey.indexOf("_");
+        if (index > 0) {
+            return peptideKey.substring(0, peptideKey.indexOf("_"));
+        } else {
+            return peptideKey;
+        }
+    }
+
+    /**
+     * Returns a list of names of the variable modifications found in the key of a peptide
+     * @param peptideKey the key of a peptide
+     * @return a list of names of the variable modifications found in the key
+     */
+    public static ArrayList<String> getModificationFamily(String peptideKey) {
+        ArrayList<String> result = new ArrayList<String>();
+        String[] parsedKey = peptideKey.split("_");
+        for (int i = 1; i < parsedKey.length; i++) {
+            result.add(parsedKey[i]);
         }
         return result;
     }

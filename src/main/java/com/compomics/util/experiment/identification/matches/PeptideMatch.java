@@ -2,7 +2,9 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.identification.Match;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 
@@ -16,7 +18,7 @@ import java.util.HashMap;
  * Date: Jun 18, 2010
  * Time: 8:58:46 AM
  */
-public class PeptideMatch extends ExperimentObject {
+public class PeptideMatch extends Match {
 
     /**
      * The version UID for Serialization/Deserialization compatibility
@@ -27,13 +29,13 @@ public class PeptideMatch extends ExperimentObject {
      */
     private Peptide theoreticPeptide;
     /**
-     * The main match, typically highest score
+     * The key of the main match, typically of the highest score
      */
-    private SpectrumMatch mainMatch;
+    private String mainMatchKey;
     /**
      * All spectrum matches indexed by spectrum id: FILE_TITLE
      */
-    private HashMap<String, SpectrumMatch> spectrumMatches = new HashMap<String, SpectrumMatch>();
+    private ArrayList<String> spectrumMatches = new ArrayList<String>();
     /**
      * is the peptide match a decoy hit
      */
@@ -45,11 +47,7 @@ public class PeptideMatch extends ExperimentObject {
     public PeptideMatch() {
     }
 
-    /**
-     * Convenience method to index peptideMatches on the peptide id
-     *
-     * @return the peptideMatch id
-     */
+    @Override
     public String getKey() {
         return theoreticPeptide.getKey();
     }
@@ -66,14 +64,13 @@ public class PeptideMatch extends ExperimentObject {
     /**
      * Constructor for the peptide match
      *
-     * @param peptide       The matching peptide
-     * @param spectrumMatch The main spectrum match
+     * @param peptide          The matching peptide
+     * @param spectrumMatchKey The key of the main spectrum match
      */
-    public PeptideMatch(Peptide peptide, SpectrumMatch spectrumMatch) {
+    public PeptideMatch(Peptide peptide, String spectrumMatchKey) {
         theoreticPeptide = peptide;
-        mainMatch = spectrumMatch;
-        String index = spectrumMatch.getKey();
-        spectrumMatches.put(index, spectrumMatch);
+        mainMatchKey = spectrumMatchKey;
+        spectrumMatches.add(spectrumMatchKey);
     }
 
     /**
@@ -95,30 +92,21 @@ public class PeptideMatch extends ExperimentObject {
     }
 
     /**
-     * method returns the main match
+     * method returns the key of the main match
      *
-     * @return the main match
+     * @return the main match key
      */
-    public SpectrumMatch getMainMatch() {
-        return mainMatch;
+    public String getMainMatchKey() {
+        return mainMatchKey;
     }
 
     /**
      * methods sets the main match
      *
-     * @param spectrumMatch the main match
+     * @param spectrumMatch the key of the main match
      */
-    public void setMainMatch(SpectrumMatch spectrumMatch) {
-        this.mainMatch = spectrumMatch;
-    }
-
-    /**
-     * methods which returns the key of the main spectrum matched
-     *
-     * @return key of the main spectrum matched
-     */
-    public String getMainSpectrumKey() {
-        return mainMatch.getKey();
+    public void setMainMatch(String spectrumMatchKey) {
+        this.mainMatchKey = spectrumMatchKey;
     }
 
     /**
@@ -126,7 +114,7 @@ public class PeptideMatch extends ExperimentObject {
      *
      * @return all spectrum matches
      */
-    public HashMap<String, SpectrumMatch> getSpectrumMatches() {
+    public ArrayList<String> getSpectrumMatches() {
         return spectrumMatches;
     }
 
@@ -135,40 +123,8 @@ public class PeptideMatch extends ExperimentObject {
      *
      * @param spectrumMatch a spectrum match
      */
-    public void addSpectrumMatch(SpectrumMatch spectrumMatch) {
-        String index = spectrumMatch.getKey();
-        if (spectrumMatches.get(index) == null) {
-            spectrumMatches.put(index, spectrumMatch);
-        } else {
-            for (int searchEngine : spectrumMatch.getAdvocates()) {
-                spectrumMatches.get(index).addHit(searchEngine, spectrumMatch.getFirstHit(searchEngine));
-            }
-        }
-    }
-
-    /**
-     * add spectrum matches
-     *
-     * @param newMatches matched spectra
-     */
-    public void addSpectrumMatches(HashMap<String, SpectrumMatch> newMatches) {
-        SpectrumMatch newMatch;
-        for (String index : newMatches.keySet()) {
-            newMatch = newMatches.get(index);
-            if (!spectrumMatches.containsKey(index)) {
-                spectrumMatches.put(index, newMatch);
-            } else {
-                for (int searchEngine : newMatch.getAdvocates()) {
-                    if (spectrumMatches.get(index).getFirstHit(searchEngine) == null) {
-                        for (ArrayList<PeptideAssumption> peptideAssumptions : newMatch.getAllAssumptions(searchEngine).values()) {
-                            for (PeptideAssumption peptideAssumption : peptideAssumptions) {
-                                spectrumMatches.get(index).addHit(searchEngine, peptideAssumption);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    public void addSpectrumMatch(String spectrumMatchKey) {
+        spectrumMatches.add(mainMatchKey);
     }
 
     /**
@@ -177,13 +133,7 @@ public class PeptideMatch extends ExperimentObject {
      * @return spectrum count
      */
     public int getSpectrumCount() {
-        int result = 0;
-        for (SpectrumMatch spectrumMatch : spectrumMatches.values()) {
-            if (spectrumMatch.getBestAssumption().getPeptide().isSameAs(theoreticPeptide)) {
-                result++;
-            }
-        }
-        return result;
+        return spectrumMatches.size();
     }
 
     /**
@@ -193,8 +143,8 @@ public class PeptideMatch extends ExperimentObject {
      */
     public boolean isDecoy() {
         if (isDecoy == null) {
-            for (Protein protein : theoreticPeptide.getParentProteins()) {
-                if (!protein.isDecoy()) {
+            for (String protein : theoreticPeptide.getParentProteins()) {
+                if (!SequenceFactory.isDecoy(protein)) {
                     isDecoy = false;
                     return isDecoy;
                 }

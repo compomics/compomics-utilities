@@ -174,13 +174,13 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public boolean isDecoy() {
         if (isDecoy == null) {
-            for (Protein protein : peptide.getParentProteins()) {
-                if (!protein.isDecoy()) {
-                    isDecoy = false;
+            for (String protein : peptide.getParentProteins()) {
+                if (SequenceFactory.isDecoy(protein)) {
+                    isDecoy = true;
                     return isDecoy;
                 }
             }
-            isDecoy = true;
+            isDecoy = false;
         }
         return isDecoy;
     }

@@ -28,7 +28,7 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      * @param parameter The parameter
      */
     public void addUrParam(UrParameter parameter) {
-        urParams.put(parameter.getFamilyName() + "_" + parameter.getIndex(), parameter);
+        urParams.put(getParameterKey(parameter), parameter);
     }
 
     /**
@@ -38,6 +38,15 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      * @return          the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
-        return urParams.get(parameter.getFamilyName() + "_" + parameter.getIndex());
+        return urParams.get(getParameterKey(parameter));
+    }
+    
+    /**
+     * Returns the key of a personalization parameter
+     * @param parameter the desired parameter
+     * @return the corresponding Key
+     */
+    public static String getParameterKey(UrParameter parameter) {
+        return parameter.getFamilyName() + "|" + parameter.getIndex();
     }
 }

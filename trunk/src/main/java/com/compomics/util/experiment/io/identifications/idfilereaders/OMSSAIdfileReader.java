@@ -73,21 +73,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      */
     public OMSSAIdfileReader(File idFile) {
         this.identificationFile = idFile;
-        modsFile = null;
-        userModsFile = null;
-        File currentFolder = new File(idFile.getParent());
-        File[] modsResult = currentFolder.listFiles();
-        if (modsResult != null) {
-            for (File file : modsResult) {
-                if (file.getName().compareToIgnoreCase("mods.xml") == 0) {
-                    modsFile = file;
-                }
-                if (file.getName().compareToIgnoreCase("usermods.xml") == 0) {
-                    userModsFile = file;
-                }
-            }
-        }
-        omxFile = getParserInstance();
+        omxFile = new OmssaOmxFile(idFile.getPath(), false);
     }
 
     /**
@@ -158,19 +144,19 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         Double calcMass = ((double) currentMsHit.MSHits_theomass) / msResponseScale;
         Double expMass = ((double) currentMsHit.MSHits_mass) / msResponseScale;
 
-        ArrayList<Protein> proteins = new ArrayList();
+        ArrayList<String> proteins = new ArrayList<String>();
         HashMap peptideToProteinMap = omxFile.getPeptideToProteinMap();
         for (MSPepHit msPepHit : (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring)) {       // There might be redundancies in the map.
             Boolean taken = false;
             String accession = getProteinAccession(msPepHit.MSPepHit_defline);
-            for (Protein protein : proteins) {
-                if (protein.getAccession().compareTo(accession) == 0) {
+            for (String protein : proteins) {
+                if (protein.compareTo(accession) == 0) {
                     taken = true;
                     break;
                 }
             }
             if (!taken) {
-                proteins.add(new Protein(accession, SequenceFactory.isDecoy(accession)));
+                proteins.add(accession);
             }
         }
 
@@ -227,24 +213,5 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         } catch (Exception e) {
             return description.substring(1);
         }
-    }
-
-    /**
-     * gives the parser instance
-     *
-     * @return an omssa omx file
-     */
-    private OmssaOmxFile getParserInstance() {
-        OmssaOmxFile omxFile;
-        if (modsFile != null && userModsFile != null) {
-            omxFile = new OmssaOmxFile(identificationFile.getPath(), modsFile.getPath(), userModsFile.getPath());
-        } else if (modsFile == null && userModsFile != null) {
-            omxFile = new OmssaOmxFile(identificationFile.getPath(), null, userModsFile.getPath());
-        } else if (modsFile != null) {
-            omxFile = new OmssaOmxFile(identificationFile.getPath(), modsFile.getPath(), null);
-        } else {
-            omxFile = new OmssaOmxFile(identificationFile.getPath(), null, null);
-        }
-        return omxFile;
     }
 }

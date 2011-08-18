@@ -45,7 +45,7 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
-    public static final String SPECTRUM_KEY_SPLITTER = "|";
+    public static final String SPECTRUM_KEY_SPLITTER = "_cus_";
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -65,7 +65,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return              the name of the file containing the spectrum
      */
     public static String getSpectrumFile(String spectrumKey) {
-        return spectrumKey.split("\\" + SPECTRUM_KEY_SPLITTER)[0];
+        return spectrumKey.split(SPECTRUM_KEY_SPLITTER)[0];
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return              the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
-        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 1);
+        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 5);
     }
 
     /**

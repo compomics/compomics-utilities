@@ -34,23 +34,6 @@ public class ExperimentIO {
     }
 
     /**
-     * Method which saves an experiment identifications (spectra are removed)
-     *
-     * @param file          The destination file
-     * @param experiment    The experiment to be saved
-     * @throws IOException  Exception thrown whenever an error is encountered while writing the file
-     */
-    public void saveIdentifications(File file, MsExperiment experiment) throws IOException, MzMLUnmarshallerException {
-
-        // Serialize the experiment object
-        FileOutputStream fos = new FileOutputStream(file);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(experiment);
-        oos.close();
-
-    }
-
-    /**
      * Method which loads an experiment
      *
      * @param utilitiesFile             File to import

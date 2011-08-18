@@ -128,7 +128,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * @return the corresponding peptide assumption
      */
     private PeptideAssumption getPeptideAssumption(Domain domain) {
-        ArrayList<Protein> proteins = new ArrayList<Protein>();
+        ArrayList<String> proteins = new ArrayList<String>();
         double eValue;
         com.compomics.util.experiment.biology.Peptide peptide;
         double measuredMass = domain.getDomainMh() + domain.getDomainDeltaMh();
@@ -154,7 +154,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     + "Please verify your FASTA file!");
         }
         
-        proteins.add(new Protein(accession, SequenceFactory.isDecoy(accession)));
+        proteins.add(accession);
         eValue = domain.getDomainExpect();
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
         PTM currentPTM;

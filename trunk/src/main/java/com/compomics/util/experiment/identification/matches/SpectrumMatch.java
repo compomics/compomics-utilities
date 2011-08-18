@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.experiment.identification.Match;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -16,7 +17,7 @@ import java.util.HashSet;
  * Date: Jun 18, 2010
  * Time: 8:58:26 AM
  */
-public class SpectrumMatch extends ExperimentObject {
+public class SpectrumMatch extends Match {
 
     /**
      * The version UID for Serialization/Deserialization compatibility
@@ -92,11 +93,7 @@ public class SpectrumMatch extends ExperimentObject {
         this.bestAssumption = bestAssumption;
     }
 
-    /**
-     * Getter for the spectrum key
-     *
-     * @return the matched spectrum key
-     */
+    @Override
     public String getKey() {
         return spectrumKey;
     }

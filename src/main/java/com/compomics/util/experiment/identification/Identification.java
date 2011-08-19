@@ -303,7 +303,7 @@ public abstract class Identification extends ExperimentObject {
             spectrumIdentification.add(spectrumKey);
             loadedMatchesMap.put(spectrumKey, newMatch);
             loadedMatches.add(spectrumKey);
-        modifiedMatches.put(spectrumKey, true);
+            modifiedMatches.put(spectrumKey, true);
             updateCache();
         }
     }
@@ -397,7 +397,12 @@ public abstract class Identification extends ExperimentObject {
      * Empties the cache and serializes everything in the specified serialization folder
      * @throws Exception exception thrown whenever an error occurred while serializing a match
      */
-    public void emptyCache() throws Exception {
+    public void emptyCache(ProgressDialogX progressDialog) throws Exception {
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMax(loadedMatchesMap.size());
+        }
+        int cpt = 0;
         for (String key : loadedMatchesMap.keySet()) {
             if (modifiedMatches.get(key)) {
                 try {
@@ -405,15 +410,18 @@ public abstract class Identification extends ExperimentObject {
                     FileOutputStream fos = new FileOutputStream(matchFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
-                    oos.close();
+                    oos.close();                    
                 } catch (Exception e) {
                     throw new Exception("Error while writing match " + key);
                 }
             }
-            loadedMatches.remove(key);
-            loadedMatchesMap.remove(key);
-            modifiedMatches.remove(key);
+            if (progressDialog != null) {
+                progressDialog.setValue(++cpt);
+            }
         }
+        loadedMatches.clear();
+        loadedMatchesMap.clear();
+        modifiedMatches.clear();
     }
 
     /**
@@ -485,7 +493,7 @@ public abstract class Identification extends ExperimentObject {
         for (String key : keys) {
             if (loadedMatches.contains(key)) {
                 try {
-                    File matchFile = new File(serializationDirectory, key + EXTENTION);
+                    File matchFile = new File(newPath, key + EXTENTION);
                     FileOutputStream fos = new FileOutputStream(matchFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));

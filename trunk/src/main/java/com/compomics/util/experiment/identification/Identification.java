@@ -293,16 +293,17 @@ public abstract class Identification extends ExperimentObject {
      */
     public void addSpectrumMatch(SpectrumMatch newMatch) throws Exception {
         String spectrumKey = newMatch.getKey();
-        modifiedMatches.put(spectrumKey, true);
         if (spectrumIdentification.contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey);
             for (int searchEngine : newMatch.getAdvocates()) {
                 oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine));
             }
+            setMatchChanged(oldMatch);
         } else {
             spectrumIdentification.add(spectrumKey);
             loadedMatchesMap.put(spectrumKey, newMatch);
             loadedMatches.add(spectrumKey);
+        modifiedMatches.put(spectrumKey, true);
             updateCache();
         }
     }

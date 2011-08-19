@@ -410,7 +410,7 @@ public abstract class Identification extends ExperimentObject {
                     FileOutputStream fos = new FileOutputStream(matchFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
-                    oos.close();                    
+                    oos.close();
                 } catch (Exception e) {
                     throw new Exception("Error while writing match " + key);
                 }
@@ -498,6 +498,7 @@ public abstract class Identification extends ExperimentObject {
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    modifiedMatches.put(key, false);
                 } catch (Exception e) {
                     throw new Exception("Error while writing match " + key);
                 }
@@ -506,14 +507,10 @@ public abstract class Identification extends ExperimentObject {
                 File newFile = new File(newPath, key + EXTENTION);
                 oldFile.renameTo(newFile);
             }
-            cpt++;
             if (progressDialog != null) {
-                progressDialog.setValue(cpt);
+                progressDialog.setValue(++cpt);
             }
         }
         serializationDirectory = newFolder.getPath();
-        for (String key : modifiedMatches.keySet()) {
-            modifiedMatches.put(key, false);
-        }
     }
 }

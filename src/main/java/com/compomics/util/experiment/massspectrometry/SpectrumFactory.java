@@ -166,7 +166,7 @@ public class SpectrumFactory {
         if (currentPrecursor == null) {
             String fileName = Spectrum.getSpectrumFile(spectrumKey);
             String name = fileName.toLowerCase();
-            String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey).toLowerCase();
+            String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {

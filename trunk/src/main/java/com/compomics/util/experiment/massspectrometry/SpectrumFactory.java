@@ -121,7 +121,7 @@ public class SpectrumFactory {
      * @throws Exception                Exception thrown whenever the mgf file was not correctly parsed
      */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException, Exception {
-        String fileName = spectrumFile.getName().toLowerCase();
+        String fileName = spectrumFile.getName();
         if (fileName.endsWith(".mgf")) {
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
             MgfIndex mgfIndex;
@@ -165,7 +165,7 @@ public class SpectrumFactory {
         Precursor currentPrecursor = loadedPrecursors.get(spectrumKey);
         if (currentPrecursor == null) {
             String fileName = Spectrum.getSpectrumFile(spectrumKey);
-            String name = fileName.toLowerCase();
+            String name = fileName;
             String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
@@ -243,8 +243,8 @@ public class SpectrumFactory {
         Spectrum currentSpectrum = currentSpectrumMap.get(spectrumKey);
         if (currentSpectrum == null) {
             String fileName = Spectrum.getSpectrumFile(spectrumKey);
-            String name = fileName.toLowerCase();
-            String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey).toLowerCase();
+            String name = fileName;
+            String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
                 currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {

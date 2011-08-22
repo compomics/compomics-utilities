@@ -144,7 +144,7 @@ public class MgfReader {
 
         randomAccessFile.close();
 
-        return new MgfIndex(indexes, mgfFile.getName().toLowerCase());
+        return new MgfIndex(indexes, mgfFile.getName());
     }
 
     /**

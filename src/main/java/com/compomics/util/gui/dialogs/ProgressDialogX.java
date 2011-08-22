@@ -96,6 +96,18 @@ public class ProgressDialogX extends javax.swing.JDialog {
     }
 
     /**
+     * Increases the progress value by 1
+     */
+    public void incrementValue() {
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                progressBar.setValue(progressBar.getValue()+1);
+            }
+        });
+    }
+
+    /**
      * Sets the maximum value of the progress bar
      * 
      * @param value the maximum value

@@ -260,7 +260,10 @@ public class MgfReader {
                     || line.startsWith("SCANS")
                     || line.startsWith("INSTRUMENT")) {
             } else if (line.startsWith("CHARGE")) {
-                precursorCharge = new Integer(line.substring(line.indexOf('=') + 1, line.indexOf('=') + 2));
+                if (line.endsWith("+") || line.endsWith("-")) {
+                    line = line.substring(0, line.length()-1);
+                }
+                precursorCharge = new Integer(line.substring(line.indexOf('=') + 1));
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -271,13 +274,7 @@ public class MgfReader {
                     precursorIntensity = 0.0;
                 }
             } else if (line.startsWith("RTINSECONDS")) {
-                try {
-                    String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = Pattern.compile("\\D").split(value);
-                    rt = new Double(temp[0]);
-                } catch (Exception e) {
-                    throw new Exception("Cannot parse retention time.");
-                }
+                rt = new Double(line.substring(line.indexOf('=') + 1));
             } else {
                 return new Precursor(rt, precursorMass, precursorIntensity, new Charge(Charge.PLUS, precursorCharge));
             }

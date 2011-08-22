@@ -8,6 +8,8 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,24 +23,18 @@ import junit.framework.TestCase;
  */
 public class SpectrumTest extends TestCase {
 
-    public void testSpectrumImport() {
-        File mgfFile = new File("testFiles/testSpectrum.mgf");
-        MgfReader mgfReader = new MgfReader();
-        /**
-        try {
-        MSnSpectrum spectrum = (mgfReader.getSpectra(mgfFile)).get(0);
-        Assert.assertTrue(spectrum.getSpectrumTitle().equals("1080.01647949219_3171.8305"));
-        Assert.assertTrue(spectrum.getPrecursor().getCharge().value == 2);
-        Assert.assertTrue(spectrum.getPrecursor().getMz() == 1080.01647949219);
-        Assert.assertTrue(spectrum.getPrecursor().getRt() == 3171.8305);
-
-        Peptide peptide = new Peptide("IMNGEADAMSLDGGFVYIAGK", 0.0, new ArrayList<Protein>(), new ArrayList<ModificationMatch>());
-        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
-        HashMap<Integer, HashMap<Integer, IonMatch>> result = spectrumAnnotator.annotateSpectrum(peptide, spectrum, 0.5, 0);
+    public void testSpectrumImport() throws Exception {
+        File mgfFile = new File("src/test/resources/experiment/test.mgf");
+        SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
         
-        } catch (Exception e) {
-            int debug = 0;
-        }**/
+        spectrumFactory.addSpectra(mgfFile);
+        
+        Precursor precursor = spectrumFactory.getPrecursor("test.mgf", "controllerType=0 controllerNumber=1 scan=159");
+        
+        Assert.assertTrue(precursor.getCharge().value == 2);
+        Assert.assertTrue(precursor.getMz() == 1060.86962890625);
+        Assert.assertTrue(precursor.getRt() == 218.6808);
+
     }
 
 }

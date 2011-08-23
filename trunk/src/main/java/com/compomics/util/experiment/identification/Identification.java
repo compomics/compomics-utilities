@@ -87,7 +87,11 @@ public abstract class Identification extends ExperimentObject {
      * Map of the user's parameters.
      */
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
-
+    /**
+     * Map of long keys which will be referenced by their index for file creation
+     */
+    protected ArrayList<String> longKeys = new ArrayList<String>();
+    
     /**
      * adds a parameter with a corresponding match key which will be loaded in the memory. Use this method only for frequently used parameters, otherwise attach the parameters to the matches.
      * @param key           the key of the parameter
@@ -191,7 +195,7 @@ public abstract class Identification extends ExperimentObject {
             loadedMatchesMap.remove(matchKey);
             modifiedMatches.remove(matchKey);
         } else {
-            File match = new File(serializationDirectory, matchKey + EXTENTION);
+            File match = new File(serializationDirectory, getFileName(matchKey));
             match.delete();
         }
     }
@@ -206,7 +210,7 @@ public abstract class Identification extends ExperimentObject {
         int index = loadedMatches.indexOf(matchKey);
         if (index == -1) {
             try {
-                File newMatch = new File(serializationDirectory, matchKey + EXTENTION);
+                File newMatch = new File(serializationDirectory, getFileName(matchKey));
                 FileInputStream fis = new FileInputStream(newMatch);
                 ObjectInputStream in = new ObjectInputStream(fis);
                 Object spectrumMatch = in.readObject();
@@ -319,7 +323,7 @@ public abstract class Identification extends ExperimentObject {
                 String key = loadedMatches.get(0);
                 if (modifiedMatches.get(key)) {
                     try {
-                        File matchFile = new File(serializationDirectory, key + EXTENTION);
+                        File matchFile = new File(serializationDirectory, getFileName(key));
                         FileOutputStream fos = new FileOutputStream(matchFile);
                         ObjectOutputStream oos = new ObjectOutputStream(fos);
                         oos.writeObject(loadedMatchesMap.get(key));
@@ -406,7 +410,7 @@ public abstract class Identification extends ExperimentObject {
         for (String key : loadedMatchesMap.keySet()) {
             if (modifiedMatches.get(key)) {
                 try {
-                    File matchFile = new File(serializationDirectory, key + EXTENTION);
+                    File matchFile = new File(serializationDirectory, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
@@ -462,7 +466,7 @@ public abstract class Identification extends ExperimentObject {
             modifiedMatches.put(key, true);
         } else {
             try {
-                File matchFile = new File(serializationDirectory, key + EXTENTION);
+                File matchFile = new File(serializationDirectory, getFileName(key));
                 FileOutputStream fos = new FileOutputStream(matchFile);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(match);
@@ -487,13 +491,13 @@ public abstract class Identification extends ExperimentObject {
         keys.addAll(proteinIdentification);
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
-            progressDialog.setMax(proteinIdentification.size());
+            progressDialog.setMax(keys.size());
         }
         int cpt = 0;
         for (String key : keys) {
             if (loadedMatches.contains(key)) {
                 try {
-                    File matchFile = new File(newPath, key + EXTENTION);
+                    File matchFile = new File(newPath, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
@@ -503,8 +507,8 @@ public abstract class Identification extends ExperimentObject {
                     throw new Exception("Error while writing match " + key);
                 }
             } else {
-                File oldFile = new File(serializationDirectory, key + EXTENTION);
-                File newFile = new File(newPath, key + EXTENTION);
+                File oldFile = new File(serializationDirectory, getFileName(key));
+                File newFile = new File(newPath, getFileName(key));
                 oldFile.renameTo(newFile);
             }
             if (progressDialog != null) {
@@ -512,5 +516,23 @@ public abstract class Identification extends ExperimentObject {
             }
         }
         serializationDirectory = newFolder.getPath();
+    }
+    
+    /**
+     * Returns the name of the file to use for serialization/deserialization
+     * @param key   the key of the match
+     * @return      the name of the corresponding file
+     */
+    public String getFileName(String key) {
+        if (key.length()<100) {
+            return key + EXTENTION;
+        } else {
+            int index = longKeys.indexOf(key);
+            if (index == -1) {
+                index = longKeys.size();
+                longKeys.add(key);                
+            }
+            return index + EXTENTION;
+        }
     }
 }

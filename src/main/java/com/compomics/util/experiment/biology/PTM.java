@@ -25,7 +25,7 @@ public class PTM extends ExperimentObject {
      */
     public static final int MODN = 1;
     /**
-     * modification at the N terminus of a protein
+     * modification at the N terminus of a protein at particular amino acids
      */
     public static final int MODNAA = 2;
     /**
@@ -69,6 +69,10 @@ public class PTM extends ExperimentObject {
      */
     private String name;
     /**
+     * Short name of the modification
+     */
+    private String shortName;
+    /**
      * Mass difference produced by this modification
      */
     private double mass;
@@ -90,6 +94,23 @@ public class PTM extends ExperimentObject {
     public PTM(int type, String name, double mass, String[] residuesArray) {
         this.type = type;
         this.name = name;
+        this.mass = mass;
+        this.residuesArray = residuesArray;
+    }
+    
+    /**
+     * Constructor for a reference modification
+     *
+     * @param type              Type of modification according to static attributes
+     * @param name              Name of the modification
+     * @param shortName         Short name of the modification
+     * @param mass              Mass difference produced by the modification
+     * @param residuesArray     Residue array affected by this modification
+     */
+    public PTM(int type, String name, String shortName, double mass, String[] residuesArray) {
+        this.type = type;
+        this.name = name;
+        this.shortName = shortName;
         this.mass = mass;
         this.residuesArray = residuesArray;
     }
@@ -118,6 +139,23 @@ public class PTM extends ExperimentObject {
      */
     public void setName(String name) {
         this.name = name;
+    }
+    
+    /**
+     * getter for the short modification name
+     *
+     * @return the short modification name
+     */
+    public String getShortName() {
+        return shortName;
+    }
+    
+    /**
+     * Sets the short ptm name
+     * @param shortName  the ptm name
+     */
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     /**

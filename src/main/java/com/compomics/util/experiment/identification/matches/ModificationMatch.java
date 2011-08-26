@@ -70,7 +70,7 @@ public class ModificationMatch extends ExperimentObject {
     }
 
     /**
-     * getter for the modification site, 0 is the first amino acid.
+     * getter for the modification site, 1 is the first amino acid.
      *
      * @return the index of the modification in the sequence
      */

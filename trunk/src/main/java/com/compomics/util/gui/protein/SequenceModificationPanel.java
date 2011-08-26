@@ -1,7 +1,6 @@
-package com.compomics.util.gui.spectrum;
+package com.compomics.util.gui.protein;
 
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.Util;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
@@ -12,18 +11,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * This class was imported from the Peptizer and MascotDatfile parser, and was
- * developed to display fragmentation information on the modified sequence as
- * inspired by X!Tandem.
+ * A panel for displaying modification profiles. (Based on the SequenceFragmentationPanel.)
  *
+ * @author Harald Barsnes
  * @author Kenny Helsens
  * @author Lennart Martens
- * @author Harald Barsnes
  */
-public class SequenceFragmentationPanel extends JPanel {
+public class SequenceModificationPanel extends JPanel {
 
     /**
-     * A map of the rectangles used to draw each fragment ion peak. This map is 
+     * A map of the rectangles used to draw each profile peak. This map is 
      * later used for the tooltip for each peak.
      */
     private HashMap<String, Rectangle> fragmentIonRectangles;
@@ -32,23 +29,9 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private String[] iSequenceComponents;
     /**
-     * The list of fragment ion matches.
+     * The list of modification profiles.
      */
-    private ArrayList<IonMatch> iIonMatches;
-    /**
-     * Double array on b-ions for the sequence components.
-     * If '0', no corresponding ions were given for the component.
-     * Otherwise, a double between [0:1] is stored in the array that
-     * is relative with the intensity of the most intense fragmention.
-     */
-    private double[] bIons;
-    /**
-     * Double array on y-ions for the sequence components.
-     * If '0', no corresponding ions were given for the component.
-     * Otherwise, a double between [0:1] is stored in the array that
-     * is relative with the intensity of the most intense fragmention.
-     */
-    private double[] yIons;
+    private ArrayList<ModificationProfile> profiles;
     /**
      * The font to use.
      */
@@ -56,7 +39,7 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * The maximum bar height.
      */
-    private final double iMaxBarHeight = 40;
+    private final double iMaxBarHeight = 20;
     /**
      * The width of the bars.
      */
@@ -68,12 +51,11 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * The x-axis start position.
      */
-    private final int iXStart = 10;
+    private final int iXStart = 50;
     /**
-     * This boolean decides whether to markup the modified sequence in
-     * red for y-ion coverage and underline for b-ion coverage.
+     * The y-axis start position.
      */
-    private boolean iBoolHighlightSequence = false;
+    private final int iYStart = 10;
     /**
      * This boolean holds whether or not the given sequence is a modified 
      * sequence or a normal peptide sequence.
@@ -86,22 +68,22 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * Creates a new SequenceFragmentationPanel.
      *
-     * @param aSequence                  String with the Modified Sequence of an peptide identification.
-     * @param aIonMatches                ArrayList with Fragmentation ion matches.
+     * @param aSequence                  String with the Modified Sequence of a peptide identification.
+     * @param profiles                   ArrayList with the modification profiles.
      * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence) throws HeadlessException {
+    public SequenceModificationPanel(String aSequence, ArrayList<ModificationProfile> profiles, boolean boolModifiedSequence) throws HeadlessException {
         super();
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
-        iIonMatches = aIonMatches;
-        this.normalizeMatchedIons();
+        this.profiles = profiles;
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
-        
-        fragmentIonRectangles = new HashMap<String, Rectangle> ();
+        this.setMaximumSize(new Dimension(estimateWidth(), estimateHeight()));
+
+        fragmentIonRectangles = new HashMap<String, Rectangle>();
 
         addMouseMotionListener(new MouseMotionAdapter() {
 
@@ -112,12 +94,10 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Paints the SequenceFragmentationPanel.
+     * Paints the SequenceModificationPanel.
      *
-     * Based on the given ModifiedSequence Components and Fragmentions, a visualisation 
-     * (inspired by X!Tandem) is drawn on a Graphics object. Next to every possible
-     * fragmentation site of the peptide a bar is drawn wether b or y ions were found
-     * originating from this fragmentation side.
+     * Based on the given ModifiedSequence Components and Modification profile, a visualisation 
+     * is drawn on a Graphics object showing the profile above the sequence.
      *
      * @param g the specified Graphics window
      * @see java.awt.Component#update(java.awt.Graphics)
@@ -132,95 +112,97 @@ public class SequenceFragmentationPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Drawing offsets.
-        int yLocation = new Double(iMaxBarHeight).intValue() + iXStart;
+        int yLocation = new Double(iMaxBarHeight).intValue() + iYStart;
         int xLocation = iXStart;
 
         int lFontHeight = g2.getFontMetrics().getHeight();
         Double lMidStringHeight = yLocation - lFontHeight * 0.2;
+        Double aboveSequenceHeight = yLocation - lFontHeight * 0.5;
+        Double belowSequenceHeight = yLocation + lFontHeight * 0.15;
 
         for (int i = 0; i < iSequenceComponents.length; i++) {
             // reset base color to black.
             g2.setColor(Color.black);
 
-            /**
-             * A. Draw the component.
-             *  --------------------
-             */
-            int length = iSequenceComponents.length;
+            // Draw this amino acid.
+            g2.setColor(Color.black);
+            g2.drawString(iSequenceComponents[i], xLocation, yLocation);
 
-            if (iBoolHighlightSequence) {
-                if (i == 0) {
-                    // b-ion fragment of this component found?
-                    if (bIons[i] != 0) {
-                        g2.setColor(Color.black);
-                        g2.drawLine(xLocation - iHorizontalSpace, (yLocation + 2),
-                                xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i])
-                                + iHorizontalSpace, (yLocation + 2));
+
+            // draw bars below the sequence
+            int lBarHeight = 0;
+//            // bIon Bar
+//            if (i <= bIons.length - 1) {
+//                if (bIons[i] != 0) {
+//                    lBarHeight = (new Double(bIons[i] * iMaxBarHeight).intValue());
+//                    if (lBarHeight < 5) {
+//                        lBarHeight = 7;
+//                    }
+//                    g2.setColor(Color.BLUE);
+//                    Rectangle tempRectangle = new Rectangle(xLocation, belowSequenceHeight.intValue(), iBarWidth, lBarHeight);
+//                    g2.fill(tempRectangle);
+//                    
+//                    g2.setColor(new Color(100, 100, 255));
+//                    tempRectangle = new Rectangle(xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i]) - iBarWidth, belowSequenceHeight.intValue(), iBarWidth, (int) (lBarHeight*0.5));
+//                    g2.fill(tempRectangle);
+//                    
+//                    fragmentIonRectangles.put("b" + (i+1), tempRectangle);
+//                }
+//            }
+
+            int tempXLocation = xLocation;
+
+            // special case for modifications on the first reidue
+            if (i == 0) {
+                xLocation += g2.getFontMetrics().stringWidth(iSequenceComponents[i]) - g2.getFontMetrics().stringWidth("X");
+            }
+
+            // draw bars above the sequence
+            for (int j = 0; j < profiles.size(); j++) {
+
+                ModificationProfile currentModificationProfile = profiles.get(j);
+
+                if (currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] > 0) {
+                    g2.setColor(currentModificationProfile.getColor());
+
+                    lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
+                    if (lBarHeight < 5) {
+                        lBarHeight = 7;
                     }
-                } else if (i == (length - 1)) {
-                    // y-ions fragment of this component found?
-                    if (yIons[yIons.length - (i)] != 0) {
-                        g2.setColor(Color.red);
+
+                    int barStart = aboveSequenceHeight.intValue() - 1 - lBarHeight;
+                    Rectangle tempRectangle = new Rectangle(xLocation, barStart, iBarWidth, lBarHeight);
+                    g2.fill(tempRectangle);
+                    fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
+                            + " [d-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX], 2) + "]",
+                            tempRectangle);
+
+                    g2.setColor(Color.black);
+                }
+
+                if (currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] > 0) {
+                    g2.setColor(currentModificationProfile.getColor());
+
+                    lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
+                    if (lBarHeight < 5) {
+                        lBarHeight = 7;
                     }
-                } else {
-                    // Aha, two ions needed here.
-                    // b-ion fragment of this component found?
-                    if (bIons[i] != 0 && (bIons[i - 1] != 0 || bIons[i + 1] != 0)) {
-                        g2.setColor(Color.black);
-                        g2.drawLine(xLocation - iHorizontalSpace, (yLocation + 2),
-                                xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i])
-                                + iHorizontalSpace, (yLocation + 2));
-                    }
-                    // y-ions fragment of this component found?
-                    if (yIons[yIons.length - (i)] != 0 && (yIons[yIons.length - (i + 1)] != 0
-                            || yIons[yIons.length - (i - 1)] != 0)) {
-                        g2.setColor(Color.red);
-                    }
+
+                    int barStart = aboveSequenceHeight.intValue() - 1 - lBarHeight;
+                    Rectangle tempRectangle = new Rectangle(xLocation + g2.getFontMetrics().stringWidth("X") - iBarWidth, barStart, iBarWidth, lBarHeight);
+                    g2.fill(tempRectangle);
+                    fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
+                            + " [a-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX], 2) + "]",
+                            tempRectangle);
+
+                    g2.setColor(Color.black);
                 }
             }
 
-            // Draw this component.
-            g2.drawString(iSequenceComponents[i], xLocation, yLocation);
+            xLocation = tempXLocation;
 
             // Move the XLocation forwards with the component's length and the horizontal spacer..
             xLocation = xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i]) + iHorizontalSpace;
-
-            /**
-             * B. Draw the bars.
-             *  --------------------
-             */
-            int lBarHeight = 0;
-            // bIon Bar
-            if (i <= bIons.length - 1) {
-                if (bIons[i] != 0) {
-                    lBarHeight = (new Double(bIons[i] * iMaxBarHeight).intValue());
-                    if (lBarHeight < 5) {
-                        lBarHeight = 7;
-                    }
-                    g2.setColor(Color.BLUE);
-                    Rectangle tempRectangle = new Rectangle(xLocation, lMidStringHeight.intValue() + 1, iBarWidth, lBarHeight);
-                    g2.fill(tempRectangle);
-                    
-                    fragmentIonRectangles.put("b" + (i+1), tempRectangle);
-                }
-            }
-
-            // yIon Bar
-            if (i <= yIons.length - 1) {
-                if (yIons[yIons.length - (i + 1)] != 0) {
-                    lBarHeight = (new Double(yIons[yIons.length - (i + 1)] * iMaxBarHeight).intValue());
-                    if (lBarHeight < 5) {
-                        lBarHeight = 7;
-                    }
-                    g2.setColor(Color.RED);
-                    // y bar height and y-axis start are somewhat different for yIons.
-                    int yBarStart = lMidStringHeight.intValue() - 1 - lBarHeight;
-                    Rectangle tempRectangle = new Rectangle(xLocation, yBarStart, iBarWidth, lBarHeight);
-                    g2.fill(tempRectangle);
-                    
-                    fragmentIonRectangles.put("y" + (yIons.length - i), tempRectangle);
-                }
-            }
 
             // Move the XLocation forwards with the component's length and the horizontal spacer..
             xLocation = xLocation + iBarWidth + iHorizontalSpace;
@@ -231,7 +213,6 @@ public class SequenceFragmentationPanel extends JPanel {
 
     /**
      * This method can parse a modified sequence String into a String[] with different components.
-     * Primitive analog to getModifiedSequenceComponents() on a peptidehit.
      *
      * @param aSequence String with the Modified sequence of a peptideHit.
      * @return the modified sequence of the peptidehit in a String[].
@@ -345,52 +326,6 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Build the normalized intensity indexes for the parts of the modified sequence that were covered by fragmentions.
-     */
-    private void normalizeMatchedIons() {
-
-        // Create Y and B boolean arrays.
-        bIons = new double[iSequenceComponents.length - 1];
-        yIons = new double[iSequenceComponents.length - 1];
-
-        // Dig up the most intense matched ion.
-        double lMaxIntensity = 0.0;
-        for (IonMatch lMatch : iIonMatches) {
-            if (lMaxIntensity < lMatch.peak.intensity) {
-                lMaxIntensity = lMatch.peak.intensity;
-            }
-        }
-
-        for (IonMatch lMatch : iIonMatches) {
-            double lRatio = lMatch.peak.intensity / lMaxIntensity;
-            PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
-            switch (lFragmentIon.getType()) {
-                //  Yion
-                case Y_ION:
-                    // If array unit is not '0', another ion for this fragmentation site is allready found.
-                    if (yIons[lFragmentIon.getNumber() - 1] != 0) {
-                        // We want to save the most intense.
-                        if (yIons[lFragmentIon.getNumber() - 1] > lRatio) {
-                            // Reset lRatio to the most intense.
-                            lRatio = yIons[lFragmentIon.getNumber() - 1];
-                        }
-                    }
-                    yIons[lFragmentIon.getNumber() - 1] = lRatio;
-                    break;
-                // Bion
-                case B_ION:
-                    if (bIons[lFragmentIon.getNumber() - 1] != 0) {
-                        if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
-                            lRatio = bIons[lFragmentIon.getNumber() - 1];
-                        }
-                    }
-                    bIons[lFragmentIon.getNumber() - 1] = lRatio;
-                    break;
-            }
-        }
-    }
-
-    /**
      * Set the Sequence for the SequenceFragmentationPanel.
      *
      * @param lSequence            String with peptide sequence.
@@ -403,32 +338,21 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Set the ArrayList with FragmentIon matches.
-     * The double[] indexing b and y ion intensities will be recalculated.
-     *
-     * @param lIonMatches VeArrayListctor
-     */
-    public void setIonMatches(ArrayList lIonMatches) {
-        iIonMatches = lIonMatches;
-        normalizeMatchedIons();
-    }
-
-    /**
      * If the mouse hovers over one of the fragment ion peaks the tooltip is 
      * set to the fragment ion type and number. If not the tooltip is set 
      * to null.
      */
     private void mouseMovedHandler(MouseEvent me) {
-        
+
         String tooltip = null;
-        
+
         Iterator<String> ions = fragmentIonRectangles.keySet().iterator();
-        
+
         boolean matchFound = false;
-        
+
         // iterate the peak rectangles and look for matches
         while (ions.hasNext() && !matchFound) {
-            
+
             String key = ions.next();
 
             if (fragmentIonRectangles.get(key).contains(me.getPoint())) {
@@ -436,7 +360,7 @@ public class SequenceFragmentationPanel extends JPanel {
                 matchFound = true;
             }
         }
-        
+
         this.setToolTipText(tooltip);
     }
 }

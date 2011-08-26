@@ -87,7 +87,7 @@ public class PTMFactory {
      */
     public PTM getPTM(String name) {
         if (indexToPTMMap.get(nameToIndexMap.get(name)) != null) {
-        return indexToPTMMap.get(nameToIndexMap.get(name));
+            return indexToPTMMap.get(nameToIndexMap.get(name));
         }
         return unknownPTM;
     }
@@ -273,7 +273,7 @@ public class PTMFactory {
         String[] residuesArray = new String[residues.size()];
         residues.toArray(residuesArray);
         // Move the parser to the end tag of this modification.
-        type = parser.next();
+            type = parser.next();
         while (!(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
             type = parser.next();
         }

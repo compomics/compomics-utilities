@@ -275,4 +275,54 @@ public class Peptide extends ExperimentObject {
         }
         return true;
     }
+    
+    /**
+     * Returns the N-terminal of the peptide as a String. Returns "NH3" if the 
+     * terminal is not modified, otherwise returns the name of the modification.
+     * 
+     * @return the N-terminal of the peptide as a String, e.g., "NH3"
+     */
+    public String getNTerminal () {
+        
+        String nTerm = "NH3";
+        
+        // @TODO: add short name when implemented!!
+        
+//        for (int i=0; i < modifications.size(); i++) {
+//            if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
+//                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
+//                    nTerm = modifications.get(i).getTheoreticPtm().getShortName();
+//                }
+//            }
+//        }
+//        
+//        nTerm = nTerm.replaceAll("-", " ");
+        
+        return nTerm;
+    }
+    
+    /**
+     * Returns the C-terminal of the peptide as a String. Returns "COOH" if the 
+     * terminal is not modified, otherwise returns the name of the modification.
+     * 
+     * @return the C-terminal of the peptide as a String, e.g., "COOH"
+     */
+    public String getCTerminal () {
+        
+        String cTerm = "COOH";
+        
+        // @TODO: add short name when implemented!!
+        
+//        for (int i=0; i < modifications.size(); i++) {
+//            if (modifications.get(i).getModificationSite() == sequence.length()) {
+//                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
+//                    cTerm = modifications.get(i).getTheoreticPtm().getShortName();
+//                }
+//            }
+//        }
+//        
+//        cTerm = cTerm.replaceAll("-", " ");
+        
+        return cTerm;
+    }
 }

@@ -70,8 +70,8 @@ public class FragmentFactory {
             currentAA = getAminoAcid(sequence.charAt(aa));
             forwardMass += currentAA.monoisotopicMass;
 
-            if (modifications.get(aa) != null) {
-                for (PTM ptm : modifications.get(aa)) {
+            if (modifications.get(faa) != null) {
+                for (PTM ptm : modifications.get(faa)) {
                     forwardMass += ptm.getMass();
                 }
             }

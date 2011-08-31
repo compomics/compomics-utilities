@@ -98,6 +98,7 @@ public class PeptideFragmentIon extends Ion {
         this.theoreticMass = mass;
         this.familyType = Ion.PEPTIDE_FRAGMENT;
         this.neutralLosses.addAll(neutralLosses);
+        this.number = number;
     }
 
     /**
@@ -151,7 +152,6 @@ public class PeptideFragmentIon extends Ion {
      * @return the ion type as a string.
      */
     public String getIonType() {
-
         if (type == PeptideFragmentIonType.B_ION) {
             return "b";
         } else if (type == PeptideFragmentIonType.Y_ION) {
@@ -169,7 +169,6 @@ public class PeptideFragmentIon extends Ion {
         } else if (type == PeptideFragmentIonType.IMMONIUM) {
             return "i" + residue;
         }
-
         return "?";
     }
 

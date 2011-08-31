@@ -123,7 +123,7 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns a peak map.
+     * Returns a peak map where peaks are indexed by their m/z.
      *
      * @return a peak map
      */
@@ -133,6 +133,14 @@ public abstract class Spectrum extends ExperimentObject {
             result.put(peak.mz, peak);
         }
         return result;
+    }
+    
+    /**
+     * Adds a peak to the spectrum peak list
+     * @param aPeak the peak to add
+     */
+    public void addPeak(Peak aPeak) {
+        this.peakList.add(aPeak);
     }
 
     /**

@@ -343,11 +343,11 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Indicates whether the memory used by the application is lower than 90% of the heap size
-     * @return a boolean indicating whether the memory used by the application is lower than 90% of the heap
+     * Indicates whether the memory used by the application is lower than 99% of the heap size
+     * @return a boolean indicating whether the memory used by the application is lower than 99% of the heap
      */
     public boolean memoryCheck() {
-        return Runtime.getRuntime().totalMemory() < (long) (0.9 * Runtime.getRuntime().maxMemory());
+        return Runtime.getRuntime().totalMemory() < (long) (0.99 * Runtime.getRuntime().maxMemory());
     }
 
     /**

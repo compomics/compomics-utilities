@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -96,8 +97,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 if (spectrumPeptides.size() > 0) {
                     Peptide testPeptide = spectrumPeptides.get(0);
                     Domain testDomain = testPeptide.getDomains().get(0);
-                    File tempFile = new File(xTandemFile.getInputParameters().getSpectrumPath());
-                    String filename = tempFile.getName();
+                    String tempFile = xTandemFile.getInputParameters().getSpectrumPath();
+                    String filename = Util.getFileName(tempFile);
                     Charge charge = new Charge(Charge.PLUS, currentSpectrum.getPrecursorCharge());
                     double measuredMass = testDomain.getDomainMh() + testDomain.getDomainDeltaMh();
                     Precursor precursor = new Precursor(-1, measuredMass, charge); // The retention time is not known at this stage

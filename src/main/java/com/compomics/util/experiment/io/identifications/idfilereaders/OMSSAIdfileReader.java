@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.identification.PeptideAssumption;
-import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -106,7 +105,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             for (int i = 0; i < msSearchResponse.size(); i++) {
                 msResponseScale = msSearchResponse.get(i).MSResponse_scale;
                 Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
-                File tempFile = new File(msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile);
+                String tempFile = msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile;
                 for (MSHitSet msHitSet : msHitSetMap.values()) {
                     List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;
                     if (hitSet.size() > 0) {
@@ -120,7 +119,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
                         Double expMass = ((double) bestMsHit.MSHits_mass) / msResponseScale;
                         Precursor precursor = new Precursor(-1, expMass, charge);
-                        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, tempFile.getName());
+                        String filename = Util.getFileName(tempFile);
+                        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, filename);
                         String spectrumKey = spectrum.getSpectrumKey();
                         SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey, getPeptideAssumption(bestMsHit, i));
                         for (MSHits msHits : hitSet) {

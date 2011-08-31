@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
@@ -28,10 +27,6 @@ public class Peptide extends ExperimentObject {
      * The peptide mass
      */
     private Double mass;
-    /**
-     * The theoretic fragment ions after fragmentation
-     */
-    private HashSet<PeptideFragmentIon> theoreticPeptideFragmentIons = new HashSet();
     /**
      * The parent proteins
      */
@@ -142,24 +137,6 @@ public class Peptide extends ExperimentObject {
             }
         }
         return mc;
-    }
-
-    /**
-     * method to add a fragmentIon
-     *
-     * @param fragment a fragment ion of this peptide
-     */
-    public void addFragmentIon(PeptideFragmentIon fragment) {
-        theoreticPeptideFragmentIons.add(fragment);
-    }
-
-    /**
-     * Method which returns an iterator on the fragment ions
-     *
-     * @return an iterator on implemented fragment ions
-     */
-    public Iterator<PeptideFragmentIon> fragmentIterator() {
-        return theoreticPeptideFragmentIons.iterator();
     }
 
     /**

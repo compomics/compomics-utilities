@@ -523,6 +523,46 @@ public class SpectrumAnnotator {
         return result;
     }
 
+    
+    /**
+     * Returns the expected ions in a map indexed by the possible charges
+     * 
+     * Note that, except for +1 precursors, fragments ions will be expected to have a charge strictly smaller than the precursor ion charge.
+     * 
+     * @param expectedFragmentIons  The expected fragment ions to look for
+     * @param neutralLosses         Map of expected neutral losses: neutral loss -> first position in the sequence (first aa is 1). let null if neutral losses should not be considered.
+     * @param charges               List of expected charges
+     * @param peptide               The peptide of interest
+     * @param intensityLimit        The intensity limit to use
+     * @param mzTolerance           The m/z tolerance to use
+     * @return an ArrayList of IonMatch containing the ion matches with the given settings
+     */
+    public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
+        HashMap<Integer, ArrayList<PeptideFragmentIon>> result = new HashMap<Integer, ArrayList<PeptideFragmentIon>>();
+        setPeptide(peptide);
+        String key;
+        for (PeptideFragmentIon fragmentIon : fragmentIons) {
+            if (expectedFragmentIons.contains(fragmentIon.getType())
+                    && lossesValidated(neutralLosses, fragmentIon, peptide)) {
+                for (int charge : charges) {
+                    if (chargeValidated(fragmentIon, charge)) {
+                        if (!result.containsKey(charge)) {
+                            result.put(charge, new ArrayList<PeptideFragmentIon>());
+                        }
+                    }
+                }
+                if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION) {
+                    if (chargeValidated(fragmentIon, precursorCharge)) {
+                        if (!result.containsKey(precursorCharge)) {
+                            result.put(precursorCharge, new ArrayList<PeptideFragmentIon>());
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * Returns the currently matched ions with the given settings
      * @param expectedFragmentIons  The expected fragment ions to look for

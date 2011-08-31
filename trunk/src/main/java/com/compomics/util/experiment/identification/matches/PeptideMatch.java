@@ -1,14 +1,9 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.Match;
-import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
-
-import java.util.HashMap;
 
 /**
  * This class models a peptide match.
@@ -103,7 +98,7 @@ public class PeptideMatch extends Match {
     /**
      * methods sets the main match
      *
-     * @param spectrumMatch the key of the main match
+     * @param spectrumMatchKey the key of the main match
      */
     public void setMainMatch(String spectrumMatchKey) {
         this.mainMatchKey = spectrumMatchKey;
@@ -121,7 +116,7 @@ public class PeptideMatch extends Match {
     /**
      * add a spectrum match
      *
-     * @param spectrumMatch a spectrum match
+     * @param spectrumMatchKey  a spectrum match
      */
     public void addSpectrumMatch(String spectrumMatchKey) {
         spectrumMatches.add(mainMatchKey);

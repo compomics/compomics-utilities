@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -294,6 +293,7 @@ public abstract class Identification extends ExperimentObject {
      * Add a spectrum match to the spectrum matches map.
      *
      * @param newMatch the new spectrum match
+     * @throws Exception  
      */
     public void addSpectrumMatch(SpectrumMatch newMatch) throws Exception {
         String spectrumKey = newMatch.getKey();
@@ -351,7 +351,11 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Creates the peptides and protein instances based on the spectrum matches. Note that the attribute bestAssumption should be set for every spectrum match at this point. This operation will be very slow if the cache is already full.
+     * Creates the peptides and protein instances based on the spectrum matches. Note that the attribute 
+     * bestAssumption should be set for every spectrum match at this point. This operation will be very 
+     * slow if the cache is already full.
+     * 
+     * @throws Exception 
      */
     public void buildPeptidesAndProteins() throws Exception {
         String peptideKey, proteinKey;
@@ -399,6 +403,8 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Empties the cache and serializes everything in the specified serialization folder
+     * 
+     * @param progressDialog 
      * @throws Exception exception thrown whenever an error occurred while serializing a match
      */
     public void emptyCache(ProgressDialogX progressDialog) throws Exception {
@@ -459,6 +465,9 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Indicates that a match was changed, it will thus be serialized again if needed.
+     * 
+     * @param match
+     * @throws Exception  
      */
     public void setMatchChanged(Match match) throws Exception {
         String key = match.getKey();

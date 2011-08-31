@@ -7,6 +7,7 @@ import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.mascotdatfile.util.mascot.ProteinHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
@@ -71,8 +72,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * @return the spectrum file name
      */
     public String getMgfFileName() {
-        File temp = new File(iMascotDatfile.getParametersSection().getFile());
-        return temp.getName();
+        String temp = iMascotDatfile.getParametersSection().getFile();
+        return Util.getFileName(temp);
     }
 
     /**

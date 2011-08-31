@@ -70,4 +70,27 @@ public class Util {
     public static String color2Hex(Color color) {
         return Integer.toHexString(color.getRGB() & 0x00ffffff);
     }
+    
+    /**
+     * An OS independent getName alternative. Useful if the path is provided 
+     * as a hardcoded string and opened in a different OS.
+     * 
+     * @param filePath  the file path as a string
+     * @return          the file name, or the complete path of no file name is detected
+     */
+    public static String getFileName(String filePath) {
+        
+        String tempFileName = filePath;
+        
+        int slash1 = tempFileName.lastIndexOf("/");
+        int slash2 = tempFileName.lastIndexOf("\\");
+        
+        int lastSlashIndex = Math.max(slash1, slash2);
+        
+        if (lastSlashIndex != -1) {
+            tempFileName = tempFileName.substring(lastSlashIndex + 1);
+        }
+        
+        return tempFileName;
+    }
 }

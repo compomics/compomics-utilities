@@ -30,6 +30,7 @@ public class IntensityHistogram extends JPanel {
      * @param currentFragmentIons           the currently selected fragment ion types
      * @param currentSpectrum               the current spectrum
      * @param annotateMostIntensePeaks      if only the most intense peaks are to be included
+     * @param intensityLevel                annotation intensity level in percent, e.g., 0.75
      * @param includeSinglyCharge           if singly charged fragment ions are to be included
      * @param includeDoublyCharge           if doubly charged fragment ions are to be included
      * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
@@ -39,6 +40,7 @@ public class IntensityHistogram extends JPanel {
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             boolean annotateMostIntensePeaks,
+            double intensityLevel,
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
             boolean includeMoreThanTwoCharges) {
@@ -49,7 +51,7 @@ public class IntensityHistogram extends JPanel {
 
         // the non annotated intensities
         ArrayList<Double> nonAnnotatedPeakIntensities =
-                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(annotateMostIntensePeaks));
+                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(annotateMostIntensePeaks, intensityLevel));
 
         // the annotated intensities
         ArrayList<Double> annotatedPeakIntensities = new ArrayList<Double>();

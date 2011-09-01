@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
@@ -68,7 +67,7 @@ public class PeptideAssumption extends ExperimentObject {
      * @param aPeptide              the theoretic peptide
      * @param rank                  the identification rank
      * @param advocate              the advocate used
-     * @param measuredMass             the precursor measured mass
+     * @param measuredMass          the precursor measured mass
      * @param eValue                the e-value
      * @param identificationFile    the identification file
      */
@@ -118,6 +117,11 @@ public class PeptideAssumption extends ExperimentObject {
         return measuredMass;
     }
 
+    /**
+     * Returns the number of 1Da intervals between the measured mass and the theoretical mass
+     * 
+     * @return the number of 1Da intervals between the measured mass and the theoretical mass
+     */
     public int getC13() {
         return c13;
     }

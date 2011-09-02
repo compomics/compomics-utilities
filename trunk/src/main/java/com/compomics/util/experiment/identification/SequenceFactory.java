@@ -3,12 +3,10 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.gui.dialogs.ProgressDialogX;
 import com.compomics.util.protein.Header;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -239,8 +237,10 @@ public class SequenceFactory {
      * Closes the opened file
      * @throws IOException exception thrown whenever an error occurred while closing the file
      */
-    public void closeFile() throws IOException {
-        currentFastaFile.close();
+    public void closeFile() throws IOException { 
+        if (currentFastaFile != null) {
+            currentFastaFile.close();
+        }
     }
 
     /**

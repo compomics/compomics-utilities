@@ -234,13 +234,13 @@ public class MassErrorBubblePlot extends JPanel {
                             maxError = Math.abs(error);
                         }
 
-                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
-                            fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
+                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)) != null) {
+                            fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
-                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(), temp);
+                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(true), temp);
                         }
 
                         // The code below ought to be used if fragmentIonLabels are used and more than one spectrum is to be displayed.
@@ -281,13 +281,13 @@ public class MassErrorBubblePlot extends JPanel {
                         dataXYZ[1][i] = error;
                         dataXYZ[2][i] = (ionMatch.peak.intensity / totalIntensity) * bubbleScale;
 
-                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation()) != null) {
-                            fragmentIonDataset.get(ionMatch.getPeakAnnotation()).add(
+                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)) != null) {
+                            fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
-                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(), temp);
+                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(true), temp);
                         }
                     }
 
@@ -321,7 +321,15 @@ public class MassErrorBubblePlot extends JPanel {
         // set the data series colors if fragment ion label type is currently used
         if (fragmentIonLabels) {
             for (int i = 0; i < xyzDataset.getSeriesCount(); i++) {
-                plot.getRenderer().setSeriesPaint(i, SpectrumPanel.determineFragmentIonColor((String) xyzDataset.getSeriesKey(i)));
+                
+                // have to remove html stuff first...
+                String tempKey = (String) xyzDataset.getSeriesKey(i);
+                tempKey = tempKey.replaceAll("<html>", "");
+                tempKey = tempKey.replaceAll("<sub>", "");
+                tempKey = tempKey.replaceAll("</html>", "");
+                tempKey = tempKey.replaceAll("</sub>", "");
+                
+                plot.getRenderer().setSeriesPaint(i, SpectrumPanel.determineFragmentIonColor(tempKey)); 
             }
         }
 

@@ -5,8 +5,6 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -158,7 +156,7 @@ public class MassErrorPlot extends JPanel {
                     maxError = Math.abs(dataXY[1][0]);
                 }
 
-                xyDataset.addSeries(ionMatch.getPeakAnnotation(), dataXY);
+                xyDataset.addSeries(ionMatch.getPeakAnnotation(true), dataXY);
 
                 // use the two lines below is all points ought to have the same color
                 //int alphaLevel = Double.valueOf((ionMatch.peak.intensity / totalIntensity) / (maxAnnotatedIntensity / totalIntensity) * 255).intValue();

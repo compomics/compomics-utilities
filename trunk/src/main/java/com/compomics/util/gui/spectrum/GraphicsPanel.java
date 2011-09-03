@@ -24,6 +24,10 @@ import java.util.ArrayList;
 public abstract class GraphicsPanel extends JPanel {
 
     /**
+     * If true, all numbers in peak annotations are subscripted.
+     */
+    private boolean subscriptAnnotationNumbers = true;
+    /**
      * The color to use for the non-annotated peaks when only the annotated 
      * peaks are to be shown.
      */
@@ -386,6 +390,24 @@ public abstract class GraphicsPanel extends JPanel {
      * is ignored in profile mode!
      */
     protected boolean showAllPeaks = true;
+
+    /**
+     * Returns true if the numbers in the peak annotations are to be subscripted.
+     * 
+     * @return true if the numbers in the peak annotations are to be subscripted
+     */
+    public boolean isSubscriptAnnotationNumbers() {
+        return subscriptAnnotationNumbers;
+    }
+
+    /**
+     * Set if the numbers in the peak annotations are to be subscripted.
+     * 
+     * @param subscriptAnnotationNumbers set if the numbers in the peak annotations are to be subscripted
+     */
+    public void setSubscriptAnnotationNumbers(boolean subscriptAnnotationNumbers) {
+        this.subscriptAnnotationNumbers = subscriptAnnotationNumbers;
+    }
 
     /**
      * An enumerator of the possible GraphicsPanel types
@@ -1851,19 +1873,39 @@ public abstract class GraphicsPanel extends JPanel {
         g.setColor(aColor);
 
         // Draw the triangle first, if appropriate.
-        int arrowSpacer = 6;
+        int arrowSpacer = 10;
         if (aShowArrow) {
             g.fillPolygon(new int[]{x - 3, x + 3, x},
                     new int[]{y - 6, y - 6, y - 3},
                     3);
-            arrowSpacer = 9;
+            arrowSpacer = 13;
         }
 
         // Now the x-value.
         // If there is any, print the comment instead of the x-value.
         if (aComment != null && !aComment.trim().equals("")) {
             aComment = aComment.trim();
-            g.drawString(aComment, x - g.getFontMetrics().stringWidth(aComment) / 2, y - arrowSpacer);
+            
+            if (subscriptAnnotationNumbers) {
+                int commentXStart = x - g.getFontMetrics().stringWidth(aComment) / 2;
+                Font oldFont = g.getFont();
+
+                for (int i=0; i<aComment.length(); i++) {
+
+                    int tempX = commentXStart + g.getFontMetrics().stringWidth(aComment.substring(0, i));
+
+                    if (Character.isDigit(aComment.charAt(i))) {
+                        g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - 2));
+                        g.drawString("" + aComment.charAt(i), tempX, y - arrowSpacer + 5);
+                    } else {
+                        g.drawString("" + aComment.charAt(i), tempX, y - arrowSpacer);
+                    }
+
+                    g.setFont(oldFont);
+                }
+            } else {
+                g.drawString(aComment, x - g.getFontMetrics().stringWidth(aComment) / 2, y - arrowSpacer);
+            }
         } else {
             // No comment, so print the x- and y-value. Note: both are rounded to four decimals
             String xValue = Double.toString(Util.roundDouble(iXAxisData.get(dataSetIndex)[aIndex], 4));
@@ -1981,7 +2023,7 @@ public abstract class GraphicsPanel extends JPanel {
      *                  or empty String if none was found.
      */
     protected String findDeltaMassMatches(double aDelta, double aWindow) {
-        StringBuffer result = new StringBuffer("");
+        StringBuilder result = new StringBuilder("");
         boolean appended = false;
         if (iKnownMassDeltas != null) {
             Iterator iter = iKnownMassDeltas.keySet().iterator();

@@ -437,6 +437,22 @@ public class SequenceFragmentationPanel extends JPanel {
             }
         }
         
+        // add subscripts for the ion indexes
+        if (tooltip != null) {
+            
+            String temp = "<html>";
+            
+            for (int i=0; i < tooltip.length(); i++) {
+                if (Character.isDigit(tooltip.charAt(i))) {
+                    temp += "<sub>" + tooltip.charAt(i) + "<sub>";
+                } else {
+                    temp += tooltip.charAt(i);
+                }
+            }
+            
+            tooltip = temp + "</html>";
+        }
+        
         this.setToolTipText(tooltip);
     }
 }

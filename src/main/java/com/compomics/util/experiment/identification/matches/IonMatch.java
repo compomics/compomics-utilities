@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
@@ -83,21 +82,60 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation() {
-
+        return getPeakAnnotation(false);
+    }
+    
+    /**
+     * Returns the annotation to use for the given ion match as a String.
+     *
+     * Format: ion type + [ion number] + [charge] + [neutral loss]
+     *
+     * @param html  if true, returns the annotation as HTML with subscripts tags
+     * @return      the annotation to use for the given ion match
+     */
+    public String getPeakAnnotation(boolean html) {
+        
         if (ion instanceof PeptideFragmentIon) {
             PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
 
             String annotation = fragmentIon.getIonType();
+            
+            if (html) {
+                annotation = "<html>" + annotation;
+            }
 
             // add fragment ion number
             if (fragmentIon.getType() != PeptideFragmentIonType.IMMONIUM
                     && fragmentIon.getType() != PeptideFragmentIonType.PRECURSOR_ION) {
-                annotation += fragmentIon.getNumber();
+                if (html) {
+                    annotation += "<sub>" + fragmentIon.getNumber() + "</sub>";
+                } else  {
+                    annotation += fragmentIon.getNumber();
+                }
             }
 
-            // add charge and any neutral losses
-            annotation += charge.getChargeAsFormattedString() + fragmentIon.getNeutralLoss();
+            // add charge
+            annotation += charge.getChargeAsFormattedString();
+            
+            // add any neutral losses
+            if (html) {
+                String neutralLoss = fragmentIon.getNeutralLoss();
+                
+                for (int i=0; i<neutralLoss.length(); i++) {
+                    if (Character.isDigit(neutralLoss.charAt(i))) {
+                        annotation += "<sub>" + neutralLoss.charAt(i) + "</sub>";
+                    } else {
+                        annotation += neutralLoss.charAt(i);
+                    }
+                }
+            } else {
+                annotation += fragmentIon.getNeutralLoss();
+            }
 
+            if (html) {
+                annotation = annotation + "</html>";
+            }
+            
             return annotation;
         } else {
             return null;

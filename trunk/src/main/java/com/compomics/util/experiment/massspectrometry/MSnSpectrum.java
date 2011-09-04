@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class models an MSn spectrum.
@@ -92,15 +94,24 @@ public class MSnSpectrum extends Spectrum {
      * 
      * @return the peak list as mgf bloc
      */
-    public String asMgf() {
+    public String asMgf() {    
         String result = "BEGIN IONS\n\n";
         result += "TITLE=" + spectrumTitle + "\n";
         result += "PEPMASS=" + precursor.getMz() + "\n";
         result += "RTINSECONDS=" + precursor.getRt() + "\n";
         result += "CHARGE=" + precursor.getCharge().toString() + "\n\n";
 
+        // add the values to a tree map to get them sorted in mz    
+        TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();
+
+        // @TODO: is there a better way of doing this?
+
         for (Peak peak : peakList) {
-            result += peak.mz + " " + peak.intensity + "\n";
+            sortedPeakList.put(peak.mz, peak.intensity);
+        }
+
+        for (Map.Entry<Double, Double> entry : sortedPeakList.entrySet()) {
+            result += entry.getKey() + " " + entry.getValue() + "\n";
         }
 
         result += "\nEND IONS\n\n\n";

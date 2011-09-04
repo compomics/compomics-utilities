@@ -219,7 +219,7 @@ public class FragmentIonTable extends JTable {
 
         columnHeaders.add("AA");
         tempColumnTypes.add(java.lang.String.class);
-        tooltips.add("Amino acid sequence");
+        tooltips.add("amino acid sequence");
 
         if (currentFragmentIonTypes.contains(PeptideFragmentIonType.Z_ION)) {
             columnHeaders.add("z");
@@ -286,9 +286,6 @@ public class FragmentIonTable extends JTable {
      * Add the peptide and sequence indexes to the table.
      */
     private void addPeptideSequenceAndIndexes() {
-
-        // get the peptide sequence
-        String peptideSequence = currentPeptide.getSequence();
 
         // add the peptide sequence and indexes to the table
         for (int i = 0; i < peptideSequence.length(); i++) {
@@ -551,7 +548,7 @@ public class FragmentIonTable extends JTable {
             }
 
             double meanValue = stats.getMean();
-            double standardDeviation = stats.getStandardDeviation(); // @TODO: implement the error bars!!
+            double standardDeviation = stats.getStandardDeviation();
 
             if (allAnnotations.size() > 1 && meanValue + standardDeviation > maxIntensity) {
                 maxIntensity = meanValue + standardDeviation;

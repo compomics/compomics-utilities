@@ -1859,13 +1859,13 @@ public abstract class GraphicsPanel extends JPanel {
             
             // special case for when top peak is annotated with multiple annotations
             if (y < 0) {   
-                y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 2);
+                y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 4);
             }
         }
         
         // Correct for absurd heights.
         if (y < iTopPadding / 3) {
-            y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 2);
+            y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 4);
         }
         
         // Temporarily change the color
@@ -1896,7 +1896,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                     if (Character.isDigit(aComment.charAt(i))) {
                         g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize() - 2));
-                        g.drawString("" + aComment.charAt(i), tempX, y - arrowSpacer + 5);
+                        g.drawString("" + aComment.charAt(i), tempX, y - arrowSpacer + 3);
                     } else {
                         g.drawString("" + aComment.charAt(i), tempX, y - arrowSpacer);
                     }
@@ -2098,7 +2098,7 @@ public abstract class GraphicsPanel extends JPanel {
                 String key = dataSetIndex + "_" + peakIndex;
                 if (aAlreadyAnnotated.containsKey(key)) {
                     int count = ((Integer) aAlreadyAnnotated.get(key)).intValue();
-                    spacer += count * (g.getFontMetrics().getAscent() + 2);
+                    spacer += count * (g.getFontMetrics().getAscent() + 4);
                     aAlreadyAnnotated.put(key, new Integer(count + 1));
                     showArrow = false;
                 } else {

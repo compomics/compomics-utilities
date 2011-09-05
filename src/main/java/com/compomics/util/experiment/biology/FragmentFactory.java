@@ -185,8 +185,8 @@ public class FragmentFactory {
             currentAA = getAminoAcid(sequence.charAt(raa));
             rewindMass += currentAA.monoisotopicMass;
 
-            if (modifications.get(raa) != null) {
-                for (PTM ptm : modifications.get(raa)) {
+            if (modifications.get(raa+1) != null) {
+                for (PTM ptm : modifications.get(raa+1)) {
                     rewindMass += ptm.getMass();
                 }
             }
@@ -282,8 +282,8 @@ public class FragmentFactory {
         currentAA = getAminoAcid(sequence.charAt(sequence.length() - 1));
         forwardMass += currentAA.monoisotopicMass;
 
-        if (modifications.get(sequence.length() - 1) != null) {
-            for (PTM ptm : modifications.get(sequence.length() - 1)) {
+        if (modifications.get(sequence.length()) != null) {
+            for (PTM ptm : modifications.get(sequence.length())) {
                 forwardMass += ptm.getMass();
             }
         }

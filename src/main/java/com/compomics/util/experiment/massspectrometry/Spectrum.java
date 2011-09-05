@@ -360,9 +360,8 @@ public abstract class Spectrum extends ExperimentObject {
      * @param intensityLimit            the intensity limit in percent, e.g., 0.75
      * @return                          the intensity limit
      */
-    public double getIntensityLimit(boolean annotateMostIntensePeaks, double intensityLimit) { // @TODO: is annotateMostIntensePeaks needed? why not just set limit to 0.0??
+    public double getIntensityLimit(double intensityLimit) { 
         
-        if (annotateMostIntensePeaks) {
             
             ArrayList<Double> intensities = new ArrayList<Double>();
             
@@ -377,8 +376,5 @@ public abstract class Spectrum extends ExperimentObject {
             Collections.sort(intensities);
             int index = (int) ((intensities.size() - 1) * intensityLimit);
             return intensities.get(index);
-        }
-        
-        return 0;
     }
 }

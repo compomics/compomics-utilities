@@ -39,7 +39,6 @@ public class IntensityHistogram extends JPanel {
             ArrayList<IonMatch> annotations,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
             MSnSpectrum currentSpectrum,
-            boolean annotateMostIntensePeaks,
             double intensityLevel,
             boolean includeSinglyCharge,
             boolean includeDoublyCharge,
@@ -51,7 +50,7 @@ public class IntensityHistogram extends JPanel {
 
         // the non annotated intensities
         ArrayList<Double> nonAnnotatedPeakIntensities =
-                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(annotateMostIntensePeaks, intensityLevel));
+                currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityLevel));
 
         // the annotated intensities
         ArrayList<Double> annotatedPeakIntensities = new ArrayList<Double>();

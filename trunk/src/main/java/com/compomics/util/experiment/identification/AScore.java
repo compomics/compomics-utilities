@@ -26,9 +26,11 @@ import java.util.HashSet;
  */
 public class AScore {
 
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, PTM ptm, MSnSpectrum spectrum,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, double intensityLimit, double mzTolerance) {
-        HashMap<Integer, Double> result = new HashMap<Integer, Double>();
+    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, MSnSpectrum spectrum,
+            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, 
+            ArrayList<Integer> charges, double intensityLimit, double mzTolerance) {
+        
+        HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         String tempSequence;
         int index;
@@ -121,9 +123,13 @@ public class AScore {
             p2 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
         }
         if (p1 < p2) {
-            result.put(pos1, p2 - p1);
+            ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
+            modificationProfile.add(pos1);
+            result.put(modificationProfile, p2 - p1);
         } else {
-            result.put(pos2, p1 - p2);
+            ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
+            modificationProfile.add(pos2);
+            result.put(modificationProfile, p1 - p2);
         }
         return result;
     }

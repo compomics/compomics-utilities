@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
+import java.awt.Color;
 import java.util.*;
 
 /**
@@ -121,8 +123,9 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the amount of missed cleavages using the specified enzyme for the given sequence
-     * @param enzyme the enzyme used
-     * @return the amount of missed cleavages
+     * @param sequence      the peptide sequence
+     * @param enzyme        the enzyme used
+     * @return              the amount of missed cleavages
      */
     public static int getNMissedCleavages(String sequence, Enzyme enzyme) {
         int mc = 0;
@@ -162,19 +165,19 @@ public class Peptide extends ExperimentObject {
      * @return the index of a peptide
      */
     public String getKey() {
-        ArrayList<String> modifications = new ArrayList<String>();
+        ArrayList<String> tempModifications = new ArrayList<String>();
         for (ModificationMatch mod : getModificationMatches()) {
             if (mod.isVariable()) {
                 if (mod.getTheoreticPtm() != null) {
-                    modifications.add(mod.getTheoreticPtm().getName());
+                    tempModifications.add(mod.getTheoreticPtm().getName());
                 } else {
-                    modifications.add("unknown-modification");
+                    tempModifications.add("unknown-modification");
                 }
             }
         }
-        Collections.sort(modifications);
+        Collections.sort(tempModifications);
         String result = sequence;
-        for (String mod : modifications) {
+        for (String mod : tempModifications) {
             result += "_" + mod;
         }
         return result;
@@ -252,50 +255,137 @@ public class Peptide extends ExperimentObject {
         }
         return true;
     }
-    
+
     /**
      * Returns the N-terminal of the peptide as a String. Returns "NH3" if the 
      * terminal is not modified, otherwise returns the name of the modification.
      * 
      * @return the N-terminal of the peptide as a String, e.g., "NH3"
      */
-    public String getNTerminal () {
-        
+    public String getNTerminal() {
+
         String nTerm = "NH3";
-        
-        for (int i=0; i < modifications.size(); i++) {
+
+        for (int i = 0; i < modifications.size(); i++) {
             if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
                 if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
                     nTerm = modifications.get(i).getTheoreticPtm().getShortName();
                 }
             }
         }
-        
+
         nTerm = nTerm.replaceAll("-", " ");
-        
+
         return nTerm;
     }
-    
+
     /**
      * Returns the C-terminal of the peptide as a String. Returns "COOH" if the 
      * terminal is not modified, otherwise returns the name of the modification.
      * 
      * @return the C-terminal of the peptide as a String, e.g., "COOH"
      */
-    public String getCTerminal () {
-        
+    public String getCTerminal() {
+
         String cTerm = "COOH";
-        
-        for (int i=0; i < modifications.size(); i++) {
+
+        for (int i = 0; i < modifications.size(); i++) {
             if (modifications.get(i).getModificationSite() == sequence.length()) {
                 if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
                     cTerm = modifications.get(i).getTheoreticPtm().getShortName();
                 }
             }
         }
-        
+
         cTerm = cTerm.replaceAll("-", " ");
-        
+
         return cTerm;
+    }
+
+    /**
+     * Returns the modified sequence as an HTML string with modification 
+     * color coding.
+     * 
+     * @param colors    the ptm name to color mapping  
+     * @return          the modified sequence as an HTML string
+     */
+    public String getModifiedSequenceAsHtml(HashMap<String, Color> colors) {
+
+        String modifiedSequence = "<html>";
+
+        modifiedSequence = modifiedSequence + getNTerminal() + "-";
+
+        for (int i = 0; i < sequence.length(); i++) {
+
+            boolean modifiedResidue = false;
+
+            for (int j = 0; j < modifications.size(); j++) {
+
+                if (modifications.get(j).getTheoreticPtm().getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+
+                    if (modifications.get(j).getModificationSite() == (i + 1)) {
+
+                        Color ptmColor = colors.get(modifications.get(j).getTheoreticPtm().getName());
+
+                        modifiedSequence +=
+                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
+                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
+                                "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
+                                + sequence.charAt(i)
+                                + "</span>";
+
+                        modifiedResidue = true;
+                    }
+                } else {
+                    // @TODO: do something with terminal mods too??
+                }
+            }
+
+            if (!modifiedResidue) {
+                modifiedSequence += sequence.charAt(i);
+            }
+        }
+
+        modifiedSequence = modifiedSequence + "-" + getCTerminal();
+
+        modifiedSequence += "</html>";
+
+        return modifiedSequence;
+    }
+
+    /**
+     * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH. 
+     * 
+     * @return the modified sequence as a string
+     */
+    public String getModifiedSequenceAsString() {
+
+        String modifiedSequence = "";
+
+        modifiedSequence = modifiedSequence + getNTerminal() + "-";
+
+        for (int i = 0; i < sequence.length(); i++) {
+
+            boolean modifiedResidue = false;
+
+            for (int j = 0; j < modifications.size(); j++) {
+
+                if (modifications.get(j).getTheoreticPtm().getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+
+                    if (modifications.get(j).getModificationSite() == (i + 1)) {
+                        modifiedSequence += sequence.charAt(i) + "<" + modifications.get(j).getTheoreticPtm().getShortName() + ">";
+                        modifiedResidue = true;
+                    }
+                }
+            }
+
+            if (!modifiedResidue) {
+                modifiedSequence += sequence.charAt(i);
+            }
+        }
+
+        modifiedSequence = modifiedSequence + "-" + getCTerminal();
+
+        return modifiedSequence;
     }
 }

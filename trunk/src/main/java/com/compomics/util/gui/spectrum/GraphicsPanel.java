@@ -390,6 +390,11 @@ public abstract class GraphicsPanel extends JPanel {
      * is ignored in profile mode!
      */
     protected boolean showAllPeaks = true;
+    /**
+     * If true, the automatic y-axis zoom excludes the background peaks. False 
+     * includes all peaks in the zoom.
+     */
+    protected boolean yAxisZoomExcludesBackgroundPeaks = false;
 
     /**
      * Returns true if the numbers in the peak annotations are to be subscripted.
@@ -407,6 +412,25 @@ public abstract class GraphicsPanel extends JPanel {
      */
     public void setSubscriptAnnotationNumbers(boolean subscriptAnnotationNumbers) {
         this.subscriptAnnotationNumbers = subscriptAnnotationNumbers;
+    }
+
+    /**
+     * Returns true if the automatic y-axis zoom excludes background peaks. False 
+     * if includes all peaks.
+     * 
+     * @return true if the automatic y-axis zoom only excludes background peaks
+     */
+    public boolean yAxisZoomOnlyExcludesBackgroundPeaks() {
+        return yAxisZoomExcludesBackgroundPeaks;
+    }
+
+    /**
+     * Set if the automatic y-axis zoom only considers the anotated peaks.
+     * 
+     * @param yAxisZoomExcludesBackgroundPeaks
+     */
+    public void setYAxisZoomExcludesBackgroundPeaks(boolean yAxisZoomExcludesBackgroundPeaks) {
+        this.yAxisZoomExcludesBackgroundPeaks = yAxisZoomExcludesBackgroundPeaks;
     }
 
     /**
@@ -1290,7 +1314,17 @@ public abstract class GraphicsPanel extends JPanel {
                     break;
                 } else {
                     if (iYAxisData.get(j)[i] > maxInt) {
-                        maxInt = iYAxisData.get(j)[i];
+                        
+                        boolean annotatedPeak = false;
+                        
+                        // exclude background peaks?
+                        if (yAxisZoomExcludesBackgroundPeaks) {
+                            annotatedPeak = isPeakAnnotated(iXAxisData.get(j)[i]);
+                        }
+                        
+                        if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
+                            maxInt = iYAxisData.get(j)[i];
+                        }
                     }
                 }
             }
@@ -2143,26 +2177,14 @@ public abstract class GraphicsPanel extends JPanel {
                 } else if (lXAxisValue > iXAxisMax) {
                     break;
                 } else {
+
+                    // is the peak annotated?
+                    boolean annotatedPeak = true;
                     
-                    // only draw annotated peaks?
-                    boolean annotatedPeak = false;
-                    
-                    // check if the peak is annotated
-                    for (int m = 0; m < iAnnotations.size() && !annotatedPeak && !showAllPeaks; m++) {
-                        Object o = iAnnotations.get(m);
-                        if (o instanceof SpectrumAnnotation) {
-                            SpectrumAnnotation sa = (SpectrumAnnotation) o;
-                            
-                            double xValue = sa.getMZ();
-                            double error = Math.abs(sa.getErrorMargin());
-                            double delta = lXAxisValue - xValue;
-                            
-                            if (Math.abs(delta) <= error) {
-                                annotatedPeak = true;
-                            }  
-                        }
+                    if (!showAllPeaks) {
+                        annotatedPeak = isPeakAnnotated(lXAxisValue);
                     }
-                    
+
                     double lYAxisValue = iYAxisData.get(j)[i];
 
                     // Calculate pixel coordinates for x and y values.
@@ -2406,5 +2428,34 @@ public abstract class GraphicsPanel extends JPanel {
      */
     public void setPeakWaterMarkColor(Color peakWaterMarkColor) {
         this.peakWaterMarkColor = peakWaterMarkColor;
+    }
+    
+    /**
+     * Returns true of the given x-axis value is annotated with at least one 
+     * annotation.
+     * 
+     * @param xAxisValue    the x-axis value
+     * @return              true of the given x-axis value is annotated with at least one annotation
+     */
+    private boolean isPeakAnnotated(double xAxisValue) {
+        
+        boolean annotatedPeak = false;
+        
+        for (int m = 0; m < iAnnotations.size() && !annotatedPeak; m++) {
+            Object o = iAnnotations.get(m);
+            if (o instanceof SpectrumAnnotation) {
+                SpectrumAnnotation sa = (SpectrumAnnotation) o;
+
+                double xValue = sa.getMZ();
+                double error = Math.abs(sa.getErrorMargin());
+                double delta = xAxisValue - xValue;
+
+                if (Math.abs(delta) <= error) {
+                    annotatedPeak = true;
+                }  
+            }
+        }
+        
+        return annotatedPeak;
     }
 }

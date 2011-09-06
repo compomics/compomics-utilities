@@ -220,7 +220,7 @@ public class Peptide extends ExperimentObject {
     /**
      * a method which compares to peptides. Two same peptides present the same sequence and same modifications at the same place.
      *
-     * @param anOtherPeptide another peptide
+     * @param anotherPeptide another peptide
      * @return a boolean indicating if the other peptide is the same.
      */
     public boolean isSameAs(Peptide anotherPeptide) {
@@ -263,17 +263,15 @@ public class Peptide extends ExperimentObject {
         
         String nTerm = "NH3";
         
-        // @TODO: add short name when implemented!!
+        for (int i=0; i < modifications.size(); i++) {
+            if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
+                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
+                    nTerm = modifications.get(i).getTheoreticPtm().getShortName();
+                }
+            }
+        }
         
-//        for (int i=0; i < modifications.size(); i++) {
-//            if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
-//                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
-//                    nTerm = modifications.get(i).getTheoreticPtm().getShortName();
-//                }
-//            }
-//        }
-//        
-//        nTerm = nTerm.replaceAll("-", " ");
+        nTerm = nTerm.replaceAll("-", " ");
         
         return nTerm;
     }
@@ -288,17 +286,15 @@ public class Peptide extends ExperimentObject {
         
         String cTerm = "COOH";
         
-        // @TODO: add short name when implemented!!
+        for (int i=0; i < modifications.size(); i++) {
+            if (modifications.get(i).getModificationSite() == sequence.length()) {
+                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
+                    cTerm = modifications.get(i).getTheoreticPtm().getShortName();
+                }
+            }
+        }
         
-//        for (int i=0; i < modifications.size(); i++) {
-//            if (modifications.get(i).getModificationSite() == sequence.length()) {
-//                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
-//                    cTerm = modifications.get(i).getTheoreticPtm().getShortName();
-//                }
-//            }
-//        }
-//        
-//        cTerm = cTerm.replaceAll("-", " ");
+        cTerm = cTerm.replaceAll("-", " ");
         
         return cTerm;
     }

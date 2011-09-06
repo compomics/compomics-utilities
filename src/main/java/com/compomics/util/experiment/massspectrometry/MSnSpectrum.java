@@ -104,8 +104,6 @@ public class MSnSpectrum extends Spectrum {
         // add the values to a tree map to get them sorted in mz    
         TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();
 
-        // @TODO: is there a better way of doing this?
-
         for (Peak peak : peakList) {
             sortedPeakList.put(peak.mz, peak.intensity);
         }

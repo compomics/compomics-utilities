@@ -306,12 +306,17 @@ public class Peptide extends ExperimentObject {
      * Returns the modified sequence as an HTML string with modification 
      * color coding.
      * 
-     * @param colors    the ptm name to color mapping  
-     * @return          the modified sequence as an HTML string
+     * @param colors                    the ptm name to color mapping  
+     * @param includeHtmlStartEndTag    if true, start and end html tags are added
+     * @return                          the modified sequence as an HTML string
      */
-    public String getModifiedSequenceAsHtml(HashMap<String, Color> colors) {
+    public String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag) {
 
-        String modifiedSequence = "<html>";
+        String modifiedSequence = "";
+        
+        if (includeHtmlStartEndTag) {
+            modifiedSequence += "<html>";
+        }
 
         modifiedSequence = modifiedSequence + getNTerminal() + "-";
 
@@ -347,8 +352,10 @@ public class Peptide extends ExperimentObject {
         }
 
         modifiedSequence = modifiedSequence + "-" + getCTerminal();
-
-        modifiedSequence += "</html>";
+   
+        if (includeHtmlStartEndTag) {
+            modifiedSequence += "</html>";
+        }
 
         return modifiedSequence;
     }
@@ -356,13 +363,16 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH. 
      * 
-     * @return the modified sequence as a string
+     * @param includeTerminals      if true, the terminals are included
+     * @return                      the modified sequence as a string
      */
-    public String getModifiedSequenceAsString() {
+    public String getModifiedSequenceAsString(boolean includeTerminals) {
 
         String modifiedSequence = "";
 
-        modifiedSequence = modifiedSequence + getNTerminal() + "-";
+        if (includeTerminals) {
+            modifiedSequence += getNTerminal() + "-";
+        }
 
         for (int i = 0; i < sequence.length(); i++) {
 
@@ -384,7 +394,9 @@ public class Peptide extends ExperimentObject {
             }
         }
 
-        modifiedSequence = modifiedSequence + "-" + getCTerminal();
+        if (includeTerminals) {
+            modifiedSequence += "-" + getCTerminal();
+        }
 
         return modifiedSequence;
     }

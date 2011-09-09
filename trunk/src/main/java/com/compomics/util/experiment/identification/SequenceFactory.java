@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.gui.dialogs.ProgressDialogX;
 import com.compomics.util.protein.Header;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JProgressBar;
 
 /**
  * factory retrieving the information of the loaded fasta file
@@ -154,14 +154,14 @@ public class SequenceFactory {
     /**
      * loads a new fasta file in the factory. Only one fasta file can be loaded at a time
      * @param fastaFile the fasta file to load
-     * @param progressDialog a progress dialog showing the progress
+     * @param progressBar a progress bar showing the progress
      * @throws FileNotFoundException    exception thrown if the file was not found
      * @throws IOException  exception thrown if an error occurred while reading the fasta file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
-    public void loadFastaFile(File fastaFile, ProgressDialogX progressDialog) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void loadFastaFile(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
         currentFastaFile = new RandomAccessFile(fastaFile, "r");
-        fastaIndex = getFastaIndex(fastaFile, progressDialog);
+        fastaIndex = getFastaIndex(fastaFile, progressBar);
     }
 
     /**
@@ -186,18 +186,18 @@ public class SequenceFactory {
     /**
      * Returns the file index of a fasta file
      * @param fastaFile the fasta file
-     * @param progressDialog a progress dialog showing the progress
+     * @param progressBar a progress bar showing the progress
      * @return the index of the fasta file
      * @throws FileNotFoundException    exception thrown if the file was not found
      * @throws IOException  exception thrown if an error occurred while reading the fasta file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
-    public FastaIndex getFastaIndex(File fastaFile, ProgressDialogX progressDialog) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public FastaIndex getFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
         if (indexFile.exists()) {
             return getIndex(indexFile);
         } else {
-            FastaIndex tempFastaIndex = createFastaIndex(fastaFile, progressDialog);
+            FastaIndex tempFastaIndex = createFastaIndex(fastaFile, progressBar);
             writeIndex(tempFastaIndex, fastaFile.getParentFile());
             return tempFastaIndex;
         }
@@ -257,20 +257,22 @@ public class SequenceFactory {
     /**
      * static method to create a fasta index for a fasta file
      * @param fastaFile the fasta file
-     * @param progressDialog a progress dialog showing the progress
+     * @param progressBar a progress bar showing the progress
      * @return  the corresponding fasta index
      * @throws FileNotFoundException    exception thrown if the fasta file was not found
      * @throws IOException  exception thrown whenever an error occurred while reading the file
      */
-    public static FastaIndex createFastaIndex(File fastaFile, ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
+    public static FastaIndex createFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(fastaFile, "r");
 
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setMax(100);
+        if (progressBar != null) {
+            progressBar.setIndeterminate(false);
+            progressBar.setStringPainted(true);
+            progressBar.setMaximum(100);
+            progressBar.setValue(0);
         }
 
         long progressUnit = randomAccessFile.length()/100;
@@ -291,16 +293,17 @@ public class SequenceFactory {
                 } else if (!decoy) {
                     decoy = true;
                 }
-                if (progressDialog != null) {
-                    progressDialog.setValue((int) (index/progressUnit));
+                if (progressBar != null) {
+                    progressBar.setValue((int) (index/progressUnit));
                 }
             } else {
                 index = randomAccessFile.getFilePointer();
             }
         }
 
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(true);
+        if (progressBar != null) {
+            progressBar.setIndeterminate(true);
+            progressBar.setStringPainted(false);
         }
 
         randomAccessFile.close();
@@ -352,14 +355,16 @@ public class SequenceFactory {
     /**
      * Appends decoy sequences to the desired file while displaying progress
      * @param destinationFile   the destination file
-     * @param progressDialog    the progress dialog
+     * @param progressBar    the progress bar
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file 
      */
-    public void appendDecoySequences(File destinationFile, ProgressDialogX progressDialog) throws IOException {
+    public void appendDecoySequences(File destinationFile, JProgressBar progressBar) throws IOException {
 
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setMax(fastaIndex.getNTarget());
+        if (progressBar != null) {
+            progressBar.setIndeterminate(false);
+            progressBar.setStringPainted(true);
+            progressBar.setMaximum(fastaIndex.getNTarget());
+            progressBar.setValue(0);
         }
 
         RandomAccessFile newFile = new RandomAccessFile(destinationFile, "rw");
@@ -372,8 +377,8 @@ public class SequenceFactory {
 
         for (String accession : fastaIndex.getIndexes().keySet()) {
 
-            if (progressDialog != null) {
-                progressDialog.setValue(counter++);
+            if (progressBar != null) {
+                progressBar.setValue(counter++);
             }
 
             currentProtein = getProtein(accession);
@@ -394,9 +399,9 @@ public class SequenceFactory {
             newFile.writeBytes(decoySequence + "\n");
         }
 
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(true);
-            progressDialog.setTitle("Saving. Please Wait...");
+        if (progressBar != null) {
+            progressBar.setIndeterminate(true);
+            progressBar.setStringPainted(false);
         }
 
         FastaIndex newIndex = new FastaIndex(indexes, destinationFile.getName(), true, counter - 1);

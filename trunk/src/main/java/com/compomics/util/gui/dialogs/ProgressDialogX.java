@@ -1,5 +1,6 @@
 package com.compomics.util.gui.dialogs;
 
+import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 /**
@@ -238,4 +239,13 @@ public class ProgressDialogX extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Returns the progress bar for updates from external processes.
+     * 
+     * @return the progress bar
+     */
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
 }

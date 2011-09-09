@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import javax.swing.JProgressBar;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
@@ -110,7 +111,7 @@ public class SpectrumFactory {
     public int getCacheSize() {
         return nCache;
     }
-
+    
     /**
      * Add spectra to the factory
      * 
@@ -121,6 +122,20 @@ public class SpectrumFactory {
      * @throws Exception                Exception thrown whenever the mgf file was not correctly parsed
      */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException, Exception {
+        addSpectra(spectrumFile, null);
+    }
+
+    /**
+     * Add spectra to the factory
+     * 
+     * @param spectrumFile              The spectrum file, can be mgf or mzML
+     * @param progressBar               a progress bar showing the progress
+     * @throws FileNotFoundException    Exception thrown whenever the file was not found
+     * @throws IOException              Exception thrown whenever an error occurred while reading the file
+     * @throws ClassNotFoundException   Exception thrown whenever an error occurred while deserializing the index .cui file.
+     * @throws Exception                Exception thrown whenever the mgf file was not correctly parsed
+     */
+    public void addSpectra(File spectrumFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException, Exception {
         String fileName = spectrumFile.getName();
         if (fileName.endsWith(".mgf")) {
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
@@ -128,7 +143,7 @@ public class SpectrumFactory {
             if (indexFile.exists()) {
                 mgfIndex = getIndex(indexFile);
             } else {
-                mgfIndex = MgfReader.getIndexMap(spectrumFile);
+                mgfIndex = MgfReader.getIndexMap(spectrumFile, progressBar);
                 writeIndex(mgfIndex, spectrumFile.getParentFile());
             }
             mgfFilesMap.put(fileName, new RandomAccessFile(spectrumFile, "r"));
@@ -221,14 +236,14 @@ public class SpectrumFactory {
     /**
      * Returns the spectrum desired
      * 
-     * @param fileName      name of the spectrum file
+     * @param spectrumFile  name of the spectrum file
      * @param spectrumTitle title of the spectrum
      * @return  the desired spectrum
      * @throws IOException  exception thrown whenever an error occurred while reading the file
      * @throws Exception    exception thrown whenever an error occurred while parsing the file
      */
-    public Spectrum getSpectrum(String SpectrumFile, String SpectrumTitle) throws IOException, Exception {
-        return getSpectrum(Spectrum.getSpectrumKey(SpectrumFile, SpectrumTitle));
+    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) throws IOException, Exception {
+        return getSpectrum(Spectrum.getSpectrumKey(spectrumFile, spectrumTitle));
     }
 
     /**

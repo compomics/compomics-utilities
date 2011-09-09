@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Pattern;
+import javax.swing.JProgressBar;
 
 /**
  * This class will read an mgf file.
@@ -127,19 +128,49 @@ public class MgfReader {
      * @throws IOException              Exception thrown whenever an error occurs while reading the file
      */
     public static MgfIndex getIndexMap(File mgfFile) throws FileNotFoundException, IOException {
+        return getIndexMap(mgfFile, null);
+    }
+    
+    /**
+     * Returns the index of all spectra in the given mgf file
+     * @param mgfFile                   the given mgf file
+     * @param progressBar               a progress bar showing the progress
+     * @return                          the index of all spectra
+     * @throws FileNotFoundException    Exception thrown whenever the file is not found
+     * @throws IOException              Exception thrown whenever an error occurs while reading the file
+     */
+    public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
         String line;
         long currentIndex = 0;
+        
+        if (progressBar != null) {
+            progressBar.setIndeterminate(false);
+            progressBar.setStringPainted(true);
+            progressBar.setMaximum(100);
+            progressBar.setValue(0);
+        }
+
+        long progressUnit = randomAccessFile.length()/100;
 
         while ((line = randomAccessFile.readLine()) != null) {
             line = line.trim();
             if (line.equals("BEGIN IONS")) {
                 currentIndex = randomAccessFile.getFilePointer();
+                
+                if (progressBar != null) {
+                    progressBar.setValue((int) (currentIndex/progressUnit));
+                }
             } else if (line.startsWith("TITLE")) {
                 indexes.put(line.substring(line.indexOf('=') + 1), currentIndex);
             }
+        }
+        
+        if (progressBar != null) {
+            progressBar.setIndeterminate(true);
+            progressBar.setStringPainted(false);
         }
 
         randomAccessFile.close();

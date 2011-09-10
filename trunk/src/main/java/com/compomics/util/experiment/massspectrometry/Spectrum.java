@@ -353,16 +353,13 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the intensity limit. Returns 0 if annotateMostIntensePeaks is set
-     * to false.
+     * Returns the intensity limit.
      *
-     * @param annotateMostIntensePeaks  returns 0 if set to false
-     * @param intensityLimit            the intensity limit in percent, e.g., 0.75
+     * @param intensityLimit            the intensity limit in percent, e.g., 0.25
      * @return                          the intensity limit
      */
     public double getIntensityLimit(double intensityLimit) { 
         
-            
             ArrayList<Double> intensities = new ArrayList<Double>();
             
             for (Peak peak : peakList) {
@@ -374,7 +371,7 @@ public abstract class Spectrum extends ExperimentObject {
             }
             
             Collections.sort(intensities);
-            int index = (int) ((intensities.size() - 1) * intensityLimit);
+            int index = (int) ((intensities.size() - 1) * (1 - intensityLimit));
             return intensities.get(index);
     }
 }

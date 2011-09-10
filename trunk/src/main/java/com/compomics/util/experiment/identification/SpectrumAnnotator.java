@@ -137,7 +137,7 @@ public class SpectrumAnnotator {
 
         fragmentMass = peptideFragmentIon.theoreticMass + inspectedCharge * Ion.proton().theoreticMass;
 
-        if (fragmentMass >= inspectedCharge * mz.get(0) - inspectedCharge * massTolerance
+        if (!mz.isEmpty() && fragmentMass >= inspectedCharge * mz.get(0) - inspectedCharge * massTolerance
                 && fragmentMass <= inspectedCharge * mz.get(mz.size() - 1) + inspectedCharge * massTolerance) {
 
             int indexMin = 0;

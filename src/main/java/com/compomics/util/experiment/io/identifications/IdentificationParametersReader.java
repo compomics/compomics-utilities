@@ -51,11 +51,11 @@ public class IdentificationParametersReader {
     /**
      * Reference for the precursor mass tolerance unit
      */
-    public static final String PRECURSOR_MASS_TOLERANCE_UNIT = "PRECURSOR_MASS_TOLERANCE_UNIT";
+    public static final String PRECURSOR_MASS_ACCURACY_UNIT = "PRECURSOR_MASS_TOLERANCE_UNIT";
     /**
      * Reference for the fragment ion mass tolerance
      */
-    public static final String FRAGMENT_MASS_TOLERANCE = "FRAGMENT_MASS_TOLERANCE";
+    public static final String FRAGMENT_ION_MASS_ACCURACY = "FRAGMENT_MASS_TOLERANCE";
     /**
      * Reference for the lower precursor charge
      */

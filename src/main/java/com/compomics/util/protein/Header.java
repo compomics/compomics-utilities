@@ -766,7 +766,7 @@ public class Header implements Cloneable, Serializable {
     public DatabaseType getDatabaseType() {
         return databaseType;
     }
-
+    
     public void setDatabaseType(DatabaseType aDatabaseType) {
         databaseType = aDatabaseType;
     }

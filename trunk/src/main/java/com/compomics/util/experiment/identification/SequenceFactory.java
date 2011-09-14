@@ -61,7 +61,8 @@ public class SequenceFactory {
     }
 
     /**
-     * static method returning the instance of the factory
+     * Static method returning the instance of the factory.
+     * 
      * @return the instance of the factory
      */
     public static SequenceFactory getInstance() {
@@ -72,7 +73,8 @@ public class SequenceFactory {
     }
 
     /**
-     * returns the instance of the factory with the specified cache size
+     * returns the instance of the factory with the specified cache size.
+     * 
      * @param nCache    the new cache size
      * @return the instance of the factory with the specified cache size
      */
@@ -85,7 +87,7 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the desired protein
+     * Returns the desired protein.
      * @param accession     accession of the desired protein
      * @return the desired protein
      * @throws IOException exception thrown whenever an error is encountered while reading the fasta file
@@ -124,7 +126,8 @@ public class SequenceFactory {
     }
 
     /**
-     * returns the desired header for the protein in the fasta file
+     * Returns the desired header for the protein in the fasta file.
+     * 
      * @param accession accession of the desired protein
      * @return  the corresponding header
      * @throws IOException exception thrown whenever an error occurred while reading the fasta file
@@ -140,7 +143,8 @@ public class SequenceFactory {
     }
 
     /**
-     * loads a new fasta file in the factory. Only one fasta file can be loaded at a time
+     * Loads a new fasta file in the factory. Only one fasta file can be loaded at a time.
+     * 
      * @param fastaFile the fasta file to load
      * @throws FileNotFoundException    exception thrown if the file was not found
      * @throws IOException  exception thrown if an error occurred while reading the fasta file
@@ -152,7 +156,8 @@ public class SequenceFactory {
     }
 
     /**
-     * loads a new fasta file in the factory. Only one fasta file can be loaded at a time
+     * Loads a new fasta file in the factory. Only one fasta file can be loaded at a time.
+     * 
      * @param fastaFile the fasta file to load
      * @param progressBar a progress bar showing the progress
      * @throws FileNotFoundException    exception thrown if the file was not found
@@ -165,7 +170,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the file index of a fasta file
+     * Returns the file index of a fasta file.
+     * 
      * @param fastaFile the fasta file
      * @return the index of the fasta file
      * @throws FileNotFoundException    exception thrown if the file was not found
@@ -184,7 +190,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the file index of a fasta file
+     * Returns the file index of a fasta file.
+     * 
      * @param fastaFile the fasta file
      * @param progressBar a progress bar showing the progress
      * @return the index of the fasta file
@@ -204,7 +211,8 @@ public class SequenceFactory {
     }
 
     /**
-     * serializes the fasta file index in a given directory
+     * Serializes the fasta file index in a given directory.
+     * 
      * @param fastaIndex    the index of the fasta file
      * @param directory     the directory where to write the file
      * @throws IOException  exception thrown whenever an error occurred while writing the file
@@ -218,7 +226,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Deserializes the index of the fasta file
+     * Deserializes the index of the fasta file.
+     * 
      * @param fastaIndex    the fasta cui index file
      * @return the corresponding FastaIndex instance
      * @throws FileNotFoundException    exception thrown if the file was not found
@@ -234,7 +243,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Closes the opened file
+     * Closes the opened file.
+     * 
      * @throws IOException exception thrown whenever an error occurred while closing the file
      */
     public void closeFile() throws IOException { 
@@ -244,7 +254,8 @@ public class SequenceFactory {
     }
 
     /**
-     * static method to create a fasta index for a fasta file
+     * Static method to create a fasta index for a fasta file.
+     * 
      * @param fastaFile the fasta file
      * @return  the corresponding fasta index
      * @throws FileNotFoundException    exception thrown if the fasta file was not found
@@ -255,7 +266,8 @@ public class SequenceFactory {
     }
 
     /**
-     * static method to create a fasta index for a fasta file
+     * Static method to create a fasta index for a fasta file.
+     * 
      * @param fastaFile the fasta file
      * @param progressBar a progress bar showing the progress
      * @return  the corresponding fasta index
@@ -328,7 +340,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Indicates whether the database loaded contains decoy sequences
+     * Indicates whether the database loaded contains decoy sequences.
+     * 
      * @return a boolean indicating whether the database loaded contains decoy sequences
      */
     public boolean concatenatedTargetDecoy() {
@@ -336,7 +349,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the number of target sequences in the database
+     * Returns the number of target sequences in the database.
+     * 
      * @return the number of target sequences in the database
      */
     public int getNTargetSequences() {
@@ -344,7 +358,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Appends decoy sequences to the desired file
+     * Appends decoy sequences to the desired file.
+     * 
      * @param destinationFile the destination file
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file
      */
@@ -353,7 +368,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Appends decoy sequences to the desired file while displaying progress
+     * Appends decoy sequences to the desired file while displaying progress.
+     * 
      * @param destinationFile   the destination file
      * @param progressBar    the progress bar
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file 
@@ -422,7 +438,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the sequences present in the database
+     * Returns the sequences present in the database.
+     * 
      * @return the sequences present in the database 
      */
     public ArrayList<String> getAccessions() {
@@ -430,7 +447,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the size of the cache
+     * Returns the size of the cache.
+     * 
      * @return the size of the cache 
      */
     public int getnCache() {
@@ -438,7 +456,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Sets the size of the cache
+     * Sets the size of the cache.
+     * 
      * @param nCache  the new size of the cache
      */
     public void setnCache(int nCache) {

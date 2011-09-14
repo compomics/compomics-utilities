@@ -4,13 +4,9 @@ import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.gui.dialogs.ProgressDialogX;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

@@ -59,13 +59,28 @@ public class Header implements Cloneable, Serializable {
      */
     private String iAccession = null;
     /**
-     * Extracted database name. As there is no standard database names, this is 
+     * Extracted database name. As there are no standard database names, this is 
      * only an internally consistent naming scheme included to be able to later 
      * separate the databases. For example when linking to the online version 
      * of the database. The links themselves are not included as these might 
      * change outside the control of the compomics-utilties library.
      */
-    private String iDatabaseType = null; // @TODO: perhaps this should be replaced by an Enum?
+    private DatabaseType databaseType = null;
+    
+    /**
+     * A list of the database types. As there are no standard database names, this is 
+     * only an internally consistent naming scheme included to be able to later 
+     * separate the databases. For example when linking to the online version 
+     * of the database. The links themselves are not included as these might 
+     * change outside the control of the compomics-utilties library.
+     */
+    public enum DatabaseType {
+
+        UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis, 
+        Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, 
+        Listeria, Generic_Header, 
+    }
+    
     /**
      * The foreign accession String is an accession String in another database of significance.
      * Most notably used for SwissProt accessions that are kept in the NCBI database. <br />
@@ -149,7 +164,7 @@ public class Header implements Cloneable, Serializable {
                     if (lSt.countTokens() < 3) {
                         throw new IllegalArgumentException("Non-standard or false SwissProt header passed. Expecting something like: '>sw|Pxxxx|ACTB_HUMAN xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
-                        result.iDatabaseType = "UNIPROT";
+                        result.databaseType = DatabaseType.UniProt;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -187,7 +202,7 @@ public class Header implements Cloneable, Serializable {
                     // We expect to see either two or at least four or more tokens.
                     int tokenCount = lSt.countTokens();
                     if (tokenCount == 3) {
-                        result.iDatabaseType = "NCBI";
+                        result.databaseType = DatabaseType.NCBI;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -205,7 +220,7 @@ public class Header implements Cloneable, Serializable {
                     } else if (tokenCount < 4) {
                         throw new IllegalArgumentException("Non-standard or false NCBInr header passed. Expecting something like: '>gi|xxxxx|xx|xxxxx|(x) xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
-                        result.iDatabaseType = "NCBI";
+                        result.databaseType = DatabaseType.NCBI;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -243,7 +258,7 @@ public class Header implements Cloneable, Serializable {
                 } else if (aFASTAHeader.startsWith("IPI:") || aFASTAHeader.startsWith("ipi:") || aFASTAHeader.startsWith("IPI|") || aFASTAHeader.startsWith("ipi|")) {
                     // An IPI header looks like:
                     // >IPI:IPIxxxxxx.y|REFSEQ_XP:XP_aaaaa[|many more like this can be present] Tax_Id=9606 descr
-                    result.iDatabaseType = "IPI";
+                    result.databaseType = DatabaseType.IPI;
                     result.iID = "IPI";
                     result.iAccession = aFASTAHeader.substring(4, aFASTAHeader.indexOf("|", 4));
                     // Check for the presence of a location.
@@ -264,7 +279,7 @@ public class Header implements Cloneable, Serializable {
                         //http://www.h-invitational.jp/
                         // A H-Invitation database entry looks like:
                         // >HIT000000001.10|HIX0021591.10|AB002292.2|NO|NO|HC|cds 185..4219|DH domain containing protein.
-                        result.iDatabaseType = "H-Invitation";
+                        result.databaseType = DatabaseType.H_Invitation;
                         result.iID = "";
                         result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
                         // Check for the presence of a location.
@@ -299,7 +314,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.iDatabaseType = "Halobacterium";
+                    result.databaseType = DatabaseType.Halobacterium;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -328,7 +343,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.iDatabaseType = "H Influenza";
+                    result.databaseType = DatabaseType.H_Influenza;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -357,7 +372,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.iDatabaseType = "C. Trachomatis";
+                    result.databaseType = DatabaseType.C_Trachomatis;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -382,7 +397,7 @@ public class Header implements Cloneable, Serializable {
                     if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Non-standard M tuberculosis header passed. Expecting something like '>M. tub.xxx|Rvxxx| xxx xxx', but was '" + aFASTAHeader + "'!");
                     }
-                    result.iDatabaseType = "M. Tuberculosis";
+                    result.databaseType = DatabaseType.M_Tuberculosis;
                     result.iID = aFASTAHeader.substring(0, accessionStartLoc - 1);
                     result.iAccession = aFASTAHeader.substring(accessionStartLoc, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -404,7 +419,7 @@ public class Header implements Cloneable, Serializable {
                     //     up to (and NOT including) " pep:"
                     //   - the description (everything (trimmed) starting from (and including) the " pep:".
                     int pepLoc = aFASTAHeader.indexOf(" pep:");
-                    result.iDatabaseType = "Drosophile";
+                    result.databaseType = DatabaseType.Drosophile;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, pepLoc).trim();
                     String possibleDescriptionPrefix = "";
@@ -440,7 +455,7 @@ public class Header implements Cloneable, Serializable {
                         // start and end found. Add it to the accession number and remove it from the description.
                         accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
                     }
-                    result.iDatabaseType = "SGD";
+                    result.databaseType = DatabaseType.SGD;
                     result.iID = "";
                     result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Check for the presence of a location.
@@ -463,7 +478,7 @@ public class Header implements Cloneable, Serializable {
                     int start = aFASTAHeader.indexOf(" (");
                     int end = aFASTAHeader.indexOf(") ");
                     result.iAccession = aFASTAHeader.substring(start + 2, end);
-                    result.iDatabaseType = "UNIPROT";
+                    result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end + 2);
                 } else if (aFASTAHeader.matches("^sp\\|[^|\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
@@ -480,7 +495,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
-                    result.iDatabaseType = "UNIPROT";
+                    result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
                 } else if (aFASTAHeader.matches("^tr\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
@@ -502,7 +517,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
-                    result.iDatabaseType = "UNIPROT";
+                    result.databaseType = DatabaseType.UniProt;
                     result.iID = "tr";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
                 } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
@@ -518,7 +533,7 @@ public class Header implements Cloneable, Serializable {
                         result.iStart = Integer.parseInt(aFASTAHeader.substring(openBracket, aFASTAHeader.indexOf(" ", openBracket)).trim());
                         result.iEnd = Integer.parseInt(aFASTAHeader.substring(aFASTAHeader.indexOf(" ", openBracket), aFASTAHeader.indexOf(")")).trim());
                     }
-                    result.iDatabaseType = "UNIPROT";
+                    result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
                 } else if (aFASTAHeader.matches("^FB.+\\stype=.*")) {
@@ -531,7 +546,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
-                    result.iDatabaseType = "Flybase";
+                    result.databaseType = DatabaseType.Flybase;
                     result.iID = "";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("type="));
                 } else if (aFASTAHeader.startsWith("dm")) {
@@ -545,7 +560,7 @@ public class Header implements Cloneable, Serializable {
                     if (accessionEndLoc < 0) {
                         throw new IllegalArgumentException("Incorrect D. melanogaster heading. Expecting something like '>dm345_3L-sense [234353534-234353938]', but was '" + aFASTAHeader + "'!");
                     }
-                    result.iDatabaseType = "D. Melanogaster";
+                    result.databaseType = DatabaseType.D_Melanogaster;
                     result.iID = aFASTAHeader.substring(0, accessionEndLoc).trim();
                     // Parse the location.
                     int index1 = -1;
@@ -564,7 +579,7 @@ public class Header implements Cloneable, Serializable {
                     //
                     // ex: >AT1G08520.1 | Symbol: PDE166 | magnesium-chelatase subunit chlD, chloroplast, putative / Mg-protoporphyrin IX chelatase, putative (CHLD), similar to Mg-chelatase SP:O24133 from Nicotiana tabacum, GB:AF014399 GI:2318116 from (Pisum sativum) | chr1:2696415-2700961 FORWARD | Aliases: T27G7.20, T27G7_20, PDE166, PIGMENT DEFECTIVE 166
                     int firstPipeLoc = aFASTAHeader.indexOf("|");
-                    result.iDatabaseType = "Arabidopsis thaliana, TAIR format";
+                    result.databaseType = DatabaseType.Arabidopsis_thaliana_TAIR;
                     result.iAccession = aFASTAHeader.substring(0, firstPipeLoc).trim();
                     result.iID = "";
                     int secondPipeLoc = aFASTAHeader.indexOf("|", firstPipeLoc + 1);
@@ -598,7 +613,7 @@ public class Header implements Cloneable, Serializable {
                     if (aFASTAHeader.length() > tempLoc && aFASTAHeader.charAt(tempLoc) == ')') {
                         closeBracketLoc = tempLoc;
                     }
-                    result.iDatabaseType = "PSB Arabidopsis thaliana";
+                    result.databaseType = DatabaseType.PSB_Arabidopsis_thaliana;
                     result.iAccession = aFASTAHeader.substring(openBracketLoc + 1, closeBracketLoc).trim();
                     result.iID = aFASTAHeader.substring(0, openBracketLoc).trim();
                     result.iDescription = aFASTAHeader.substring(closeBracketLoc + 1).trim();
@@ -623,7 +638,7 @@ public class Header implements Cloneable, Serializable {
                     // ex: L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)
                     int firstPipe = aFASTAHeader.indexOf("|");
                     int secondPipe = aFASTAHeader.indexOf("|", firstPipe + 1);
-                    result.iDatabaseType = "Listeria";
+                    result.databaseType = DatabaseType.Listeria;
                     result.iID = aFASTAHeader.substring(0, firstPipe).trim();
                     result.iAccession = aFASTAHeader.substring(firstPipe + 1, secondPipe).trim();
                     result.iDescription = aFASTAHeader.substring(secondPipe + 1).trim();
@@ -647,7 +662,7 @@ public class Header implements Cloneable, Serializable {
                     // We need to find two elements:
                     //   - the accession String (easily retrieved as the next String until a space is encountered).
                     //   - the description
-                    result.iDatabaseType = "Generic Header";
+                    result.databaseType = DatabaseType.Generic_Header;
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
                     // Temporary storage variables.
                     int startSecAcc = -1;
@@ -748,12 +763,12 @@ public class Header implements Cloneable, Serializable {
         iAccession = aAccession;
     }
 
-    public String getDatabaseType() {
-        return iDatabaseType;
+    public DatabaseType getDatabaseType() {
+        return databaseType;
     }
 
-    public void setDatabaseType(String aDatabaseType) {
-        iDatabaseType = aDatabaseType;
+    public void setDatabaseType(DatabaseType aDatabaseType) {
+        databaseType = aDatabaseType;
     }
 
     public String getForeignAccession() {

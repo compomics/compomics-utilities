@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.protein.Header.DatabaseType;
 import java.util.ArrayList;
 
 /**
@@ -32,7 +33,7 @@ public class Protein extends ExperimentObject {
     /**
      * The protein database type.
      */
-    private String databaseType;
+    private DatabaseType databaseType;
 
     /**
      * Constructor for a protein
@@ -72,7 +73,7 @@ public class Protein extends ExperimentObject {
      * @param sequence      The protein sequence
      * @param isDecoy       boolean indicating whether the protein is a decoy
      */
-    public Protein(String accession, String databaseType, String sequence, boolean isDecoy) {
+    public Protein(String accession, DatabaseType databaseType, String sequence, boolean isDecoy) {
         this.accession = accession;
         this.databaseType = databaseType;
         this.sequence = sequence;
@@ -102,7 +103,7 @@ public class Protein extends ExperimentObject {
      *
      * @return the protein database type
      */
-    public String getDatabaseType() {
+    public DatabaseType getDatabaseType() {
         return databaseType;
     }
 

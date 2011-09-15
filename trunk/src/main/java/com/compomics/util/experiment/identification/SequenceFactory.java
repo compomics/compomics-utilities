@@ -180,13 +180,17 @@ public class SequenceFactory {
      */
     public FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
+        FastaIndex tempFastaIndex;
         if (indexFile.exists()) {
-            return getIndex(indexFile);
-        } else {
-            FastaIndex tempFastaIndex = createFastaIndex(fastaFile);
-            writeIndex(tempFastaIndex, fastaFile.getParentFile());
-            return tempFastaIndex;
+            try {
+                tempFastaIndex = getIndex(indexFile);
+                return tempFastaIndex;
+            } catch (Exception e) {
+            }
         }
+        tempFastaIndex = createFastaIndex(fastaFile);
+        writeIndex(tempFastaIndex, fastaFile.getParentFile());
+        return tempFastaIndex;
     }
 
     /**
@@ -201,13 +205,17 @@ public class SequenceFactory {
      */
     public FastaIndex getFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
+        FastaIndex tempFastaIndex;
         if (indexFile.exists()) {
-            return getIndex(indexFile);
-        } else {
-            FastaIndex tempFastaIndex = createFastaIndex(fastaFile, progressBar);
-            writeIndex(tempFastaIndex, fastaFile.getParentFile());
-            return tempFastaIndex;
+            try {
+                tempFastaIndex = getIndex(indexFile);
+                return tempFastaIndex;
+            } catch (Exception e) {
+            }
         }
+        tempFastaIndex = createFastaIndex(fastaFile, progressBar);
+        writeIndex(tempFastaIndex, fastaFile.getParentFile());
+        return tempFastaIndex;
     }
 
     /**
@@ -247,7 +255,7 @@ public class SequenceFactory {
      * 
      * @throws IOException exception thrown whenever an error occurred while closing the file
      */
-    public void closeFile() throws IOException { 
+    public void closeFile() throws IOException {
         if (currentFastaFile != null) {
             currentFastaFile.close();
         }
@@ -287,8 +295,8 @@ public class SequenceFactory {
             progressBar.setValue(0);
         }
 
-        long progressUnit = randomAccessFile.length()/100;
-        
+        long progressUnit = randomAccessFile.length() / 100;
+
         String line, accession = "";
         boolean decoy = false;
         int nTarget = 0;
@@ -306,7 +314,7 @@ public class SequenceFactory {
                     decoy = true;
                 }
                 if (progressBar != null) {
-                    progressBar.setValue((int) (index/progressUnit));
+                    progressBar.setValue((int) (index / progressUnit));
                 }
             } else {
                 index = randomAccessFile.getFilePointer();

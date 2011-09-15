@@ -111,7 +111,7 @@ public class SpectrumFactory {
     public int getCacheSize() {
         return nCache;
     }
-    
+
     /**
      * Add spectra to the factory
      * 
@@ -135,13 +135,18 @@ public class SpectrumFactory {
      * @throws ClassNotFoundException   Exception thrown whenever an error occurred while deserializing the index .cui file.
      * @throws Exception                Exception thrown whenever the mgf file was not correctly parsed
      */
-    public void addSpectra(File spectrumFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException, Exception {
+    public void addSpectra(File spectrumFile, JProgressBar progressBar) throws FileNotFoundException, IOException, Exception {
         String fileName = spectrumFile.getName();
         if (fileName.endsWith(".mgf")) {
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
             MgfIndex mgfIndex;
             if (indexFile.exists()) {
-                mgfIndex = getIndex(indexFile);
+                try {
+                    mgfIndex = getIndex(indexFile);
+                } catch (Exception e) {
+                    mgfIndex = MgfReader.getIndexMap(spectrumFile, progressBar);
+                    writeIndex(mgfIndex, spectrumFile.getParentFile());
+                }
             } else {
                 mgfIndex = MgfReader.getIndexMap(spectrumFile, progressBar);
                 writeIndex(mgfIndex, spectrumFile.getParentFile());

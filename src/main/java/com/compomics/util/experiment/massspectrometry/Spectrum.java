@@ -355,7 +355,7 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * Returns the intensity limit.
      *
-     * @param intensityLimit            the intensity limit in percent, e.g., 0.25
+     * @param intensityLimit            the intensity limit in percent, e.g., 0.75
      * @return                          the intensity limit
      */
     public double getIntensityLimit(double intensityLimit) { 
@@ -371,7 +371,7 @@ public abstract class Spectrum extends ExperimentObject {
             }
             
             Collections.sort(intensities);
-            int index = (int) ((intensities.size() - 1) * (1 - intensityLimit));
+            int index = (int) ((intensities.size() - 1) * intensityLimit);
             return intensities.get(index);
     }
 }

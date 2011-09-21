@@ -45,10 +45,6 @@ public class PeptideAssumption extends ExperimentObject {
      */
     private int c13;
     /**
-     * The precursor mass deviation in ppm;
-     */
-    private double ppmMassError;
-    /**
      * The fragment ion annotation
      */
     private HashSet<IonMatch> annotations = new HashSet<IonMatch>();
@@ -79,7 +75,6 @@ public class PeptideAssumption extends ExperimentObject {
         this.eValue = eValue;
         this.file = identificationFile;
         this.c13 = (new Double(measuredMass - peptide.getMass())).intValue();
-        this.ppmMassError = Math.abs(1000000 * (measuredMass - c13 - peptide.getMass()) / peptide.getMass());
     }
 
     /**
@@ -132,7 +127,7 @@ public class PeptideAssumption extends ExperimentObject {
      * @return the precursor mass error (in ppm)
      */
     public double getDeltaMass() {
-        return ppmMassError;
+        return (measuredMass-peptide.getMass())/peptide.getMass()*1000000;
     }
 
     /**

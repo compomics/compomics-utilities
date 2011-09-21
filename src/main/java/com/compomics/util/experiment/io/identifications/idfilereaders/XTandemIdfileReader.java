@@ -137,6 +137,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         try {
             Header fastaHeader = Header.parseFromFASTA(description);
             accession = fastaHeader.getAccession();
+            if (accession == null) {
+                accession = fastaHeader.getRest();
+            }
         } catch (Exception e) {
             accession = description;
         }

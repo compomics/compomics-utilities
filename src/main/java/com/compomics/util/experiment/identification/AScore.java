@@ -26,110 +26,140 @@ import java.util.HashSet;
  */
 public class AScore {
 
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, MSnSpectrum spectrum,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, 
+    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses,
             ArrayList<Integer> charges, double intensityLimit, double mzTolerance) {
-        
+
         HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         String tempSequence;
-        int index;
+        int tempIndex, ref = 0;
         for (String aa : ptm.getResiduesArray()) {
             tempSequence = peptide.getSequence();
-            while ((index = tempSequence.indexOf(aa)) > 0) {
-                possibleSites.add(index);
-                tempSequence = tempSequence.substring(index + 1);
+            while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
+                possibleSites.add(ref + tempIndex);
+                tempSequence = tempSequence.substring(tempIndex + 1);
+                ref += tempIndex + 1;
             }
         }
-        Collections.sort(possibleSites);
-        ArrayList<IonMatch> matches;
-        HashMap<Integer, HashMap<Double, Integer>> rawMap = new HashMap<Integer, HashMap<Double, Integer>>(); // curve figure 2b in A-score paper
-        HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance);
-        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
-        double p, P;
-        int n, N = 0;
-        Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getMass(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            if (!modificationMatch.getTheoreticPtm().getName().equals(ptm.getName())) {
-                noModPeptide.addModificationMatch(modificationMatch);
-            }
-        }
-        for (ArrayList<PeptideFragmentIon> fragmentIons : spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, peptide, spectrum.getPrecursor().getCharge().value).values()) {
-            N += fragmentIons.size();
-        }
-        for (int i = 1; i <= 10; i++) {
-            rawMap.put(i, new HashMap<Double, Integer>());
-            p = ((double) i) / 100;
-            for (int pos = 0; pos < possibleSites.size() - 1; pos++) {
-                tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getMass(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-                tempPeptide.addModificationMatch(new ModificationMatch(ptm, true, possibleSites.get(pos)));
-                matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(i), tempPeptide, intensityLimit, mzTolerance);
-                n = matches.size();
-                P = 0;
-                for (int k = n; k <= N; n++) {
-                    P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
+        if (possibleSites.size() > nPTM) {
+            Collections.sort(possibleSites);
+            ArrayList<IonMatch> matches;
+            HashMap<Integer, HashMap<Double, ArrayList<Integer>>> rawMap = new HashMap<Integer, HashMap<Double, ArrayList<Integer>>>(); // curve figure 2b in A-score paper
+            HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance);
+            SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+
+            double p, P;
+            int n, N = 0;
+            Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getMass(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+                if (!modificationMatch.getTheoreticPtm().getName().equals(ptm.getName())) {
+                    noModPeptide.addModificationMatch(modificationMatch);
                 }
-                rawMap.get(i).put(P, possibleSites.get(pos));
             }
-        }
-        int bestI = 0, pos1 = 0, pos2 = 0;
-        double maxDiff = 0;
-        for (int i = 1; i <= 10; i++) {
-            for (double score1 : rawMap.get(i).keySet()) {
-                for (double score2 : rawMap.get(i).keySet()) {
-                    if (score1 - score2 > maxDiff) {
+            for (ArrayList<PeptideFragmentIon> fragmentIons : spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, peptide, spectrum.getPrecursor().getCharge().value).values()) {
+                N += fragmentIons.size();
+            }
+            for (int i = 1; i <= 10; i++) {
+                rawMap.put(i, new HashMap<Double, ArrayList<Integer>>());
+                p = ((double) i) / 100;
+                for (int pos = 0; pos < possibleSites.size(); pos++) {
+                    tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getMass(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+                    tempPeptide.addModificationMatch(new ModificationMatch(ptm, true, possibleSites.get(pos)+1));
+                    matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(i), tempPeptide, intensityLimit, mzTolerance);
+                    n = matches.size();
+                    P = 0;
+                    for (int k = n; k <= N; k++) {
+                        P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
+                    }
+                    if (!rawMap.get(i).containsKey(P)) {
+                    rawMap.get(i).put(P, new ArrayList<Integer>());
+                    }
+                    rawMap.get(i).get(P).add(possibleSites.get(pos));
+                }
+            }
+            int bestI = 0, pos1 = 0, pos2 = 0;
+            double maxDiff = -1;
+            ArrayList<Double> scores;
+            for (int i = 1; i <= 10; i++) {
+                scores = new ArrayList<Double>(rawMap.get(i).keySet());
+                Collections.sort(scores);
+                if (rawMap.get(i).get(scores.get(scores.size()-1)).size()==1) {
+                    if (scores.get(scores.size()-1)-scores.get(scores.size()-2) > maxDiff) {
+                        pos1 = rawMap.get(i).get(scores.get(scores.size()-1)).get(0);
+                        pos2 = rawMap.get(i).get(scores.get(scores.size()-2)).get(0);
                         bestI = i;
-                        pos1 = Math.min(rawMap.get(i).get(score1), rawMap.get(i).get(score2));
-                        pos2 = Math.max(rawMap.get(i).get(score1), rawMap.get(i).get(score2));;
+                        maxDiff = scores.get(scores.size()-1)-scores.get(scores.size()-2);
+                    }
+                } else {
+                    if (0 > maxDiff) {
+                        pos1 = rawMap.get(i).get(scores.get(scores.size()-1)).get(0);
+                        pos2 = rawMap.get(i).get(scores.get(scores.size()-1)).get(1);
+                        bestI = i;
+                        maxDiff = 0;
                     }
                 }
             }
-        }
-        N = 0;
-        int aa;
-        for (ArrayList<PeptideFragmentIon> fragmentIons : spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, peptide, spectrum.getPrecursor().getCharge().value).values()) {
-            for (PeptideFragmentIon peptideFragmentIon : fragmentIons) {
-                if (peptideFragmentIon.getType() == PeptideFragmentIonType.A_ION
-                        || peptideFragmentIon.getType() == PeptideFragmentIonType.B_ION
-                        || peptideFragmentIon.getType() == PeptideFragmentIonType.C_ION) {
-                    aa = peptideFragmentIon.getNumber();
-                    if (aa >= pos1 && aa < pos2) {
-                        N++;
-                    }
-                } else if (peptideFragmentIon.getType() == PeptideFragmentIonType.X_ION
-                        || peptideFragmentIon.getType() == PeptideFragmentIonType.Y_ION
-                        || peptideFragmentIon.getType() == PeptideFragmentIonType.Z_ION) {
-                    aa = peptide.getSequence().length() - peptideFragmentIon.getNumber();
-                    if (aa >= pos1 && aa < pos2) {
-                        N++;
+            N = 0;
+            int aa;
+            for (ArrayList<PeptideFragmentIon> fragmentIons : spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, peptide, spectrum.getPrecursor().getCharge().value).values()) {
+                for (PeptideFragmentIon peptideFragmentIon : fragmentIons) {
+                    if (peptideFragmentIon.getType() == PeptideFragmentIonType.A_ION
+                            || peptideFragmentIon.getType() == PeptideFragmentIonType.B_ION
+                            || peptideFragmentIon.getType() == PeptideFragmentIonType.C_ION) {
+                        aa = peptideFragmentIon.getNumber();
+                        if (aa >= pos1 && aa < pos2) {
+                            N++;
+                        }
+                    } else if (peptideFragmentIon.getType() == PeptideFragmentIonType.X_ION
+                            || peptideFragmentIon.getType() == PeptideFragmentIonType.Y_ION
+                            || peptideFragmentIon.getType() == PeptideFragmentIonType.Z_ION) {
+                        aa = peptide.getSequence().length() - peptideFragmentIon.getNumber();
+                        if (aa >= pos1 && aa < pos2) {
+                            N++;
+                        }
                     }
                 }
             }
-        }
-        p = ((double) bestI) / 100;
-        tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getMass(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-        tempPeptide.addModificationMatch(new ModificationMatch(ptm, true, pos1));
-        matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(bestI), tempPeptide, intensityLimit, mzTolerance);
-        n = matches.size();
-        double p1 = 0;
-        for (int k = n; k <= N; n++) {
-            p1 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
-        }
-        tempPeptide.addModificationMatch(new ModificationMatch(ptm, true, pos2));
-        matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(bestI), tempPeptide, intensityLimit, mzTolerance);
-        n = matches.size();
-        double p2 = 0;
-        for (int k = n; k <= N; n++) {
-            p2 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
-        }
-        if (p1 < p2) {
-            ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-            modificationProfile.add(pos1);
-            result.put(modificationProfile, p2 - p1);
+            p = ((double) bestI) / 100;
+            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getMass(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+            tempPeptide.addModificationMatch(new ModificationMatch(ptm, true, pos1));
+            matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(bestI), tempPeptide, intensityLimit, mzTolerance);
+            n = matches.size();
+            double p1 = 0;
+            for (int k = n; k <= N; k++) {
+                p1 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
+            }
+            tempPeptide.addModificationMatch(new ModificationMatch(ptm, true, pos2));
+            matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(bestI), tempPeptide, intensityLimit, mzTolerance);
+            n = matches.size();
+            double p2 = 0;
+            for (int k = n; k <= N; k++) {
+                p2 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
+            }
+            double score;
+            if (p1 == p2) {
+                ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
+                modificationProfile.add(pos1);
+                modificationProfile.add(pos2);
+                result.put(modificationProfile, 100.0);
+            } else if (p1 < p2) {
+                ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
+                modificationProfile.add(pos1);
+                score = -10* Math.log10(p2-p1);
+                result.put(modificationProfile, score);
+            } else {
+                ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
+                modificationProfile.add(pos2);
+                score = -10* Math.log10(p1-p2);
+                result.put(modificationProfile, score);
+            }
         } else {
             ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-            modificationProfile.add(pos2);
-            result.put(modificationProfile, p1 - p2);
+            for (int pos : possibleSites) {
+                modificationProfile.add(pos);
+            }
+            result.put(modificationProfile, 100.0);
         }
         return result;
     }
@@ -143,25 +173,28 @@ public class AScore {
         ArrayList<Double> intensities, mz = new ArrayList<Double>(peakMap.keySet());
         Collections.sort(mz);
         double mzMax = mz.get(mz.size() - 1);
-        double currentmzMin = 0;
         int cpt = 0;
+        double currentmzMin = 0;
         Peak tempPeak;
         while (currentmzMin < mzMax) {
             intensities = new ArrayList<Double>();
             tempMap = new HashMap<Double, Peak>();
-            while (mz.get(cpt) < currentmzMin + 20*mzTolerance) {
+            while (cpt < mz.size()
+                    && mz.get(cpt) < currentmzMin + 20 * mzTolerance) {
                 tempPeak = peakMap.get(mz.get(cpt));
-                intensities.add(tempPeak.intensity);
-                tempMap.put(tempPeak.intensity, tempPeak);
+                intensities.add(-tempPeak.intensity);
+                tempMap.put(-tempPeak.intensity, tempPeak);
                 cpt++;
             }
             Collections.sort(intensities);
             for (int i = 1; i <= 10; i++) {
-                if (i < intensities.size()) {
-                    result.get(i).addPeak(tempMap.get(intensities.get(i - 1)));
+                if (i <= intensities.size()) {
+                    for (int j = i; j <= 10; j++) {
+                        result.get(j).addPeak(tempMap.get(intensities.get(i - 1)));
+                    }
                 }
             }
-            currentmzMin += 20*mzTolerance;
+            currentmzMin += 200 * mzTolerance;
         }
         return result;
     }

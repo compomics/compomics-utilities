@@ -549,6 +549,7 @@ public class SpectrumAnnotator {
                         if (!result.containsKey(charge)) {
                             result.put(charge, new ArrayList<PeptideFragmentIon>());
                         }
+                        result.get(charge).add(fragmentIon);
                     }
                 }
                 if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION) {
@@ -556,6 +557,7 @@ public class SpectrumAnnotator {
                         if (!result.containsKey(precursorCharge)) {
                             result.put(precursorCharge, new ArrayList<PeptideFragmentIon>());
                         }
+                        result.get(precursorCharge).add(fragmentIon);
                     }
                 }
             }

@@ -209,7 +209,11 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     private String getProteinAccession(String description) {
         try {
             Header header = Header.parseFromFASTA(description);
-            return header.getAccession();
+            if (header.getAccession() != null) {
+                return header.getAccession();
+            } else {
+                return header.getRest();
+            }
         } catch (Exception e) {
             return description.substring(1);
         }

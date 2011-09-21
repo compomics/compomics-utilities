@@ -307,6 +307,9 @@ public class SequenceFactory {
             if (line.startsWith(">")) {
                 fastaHeader = Header.parseFromFASTA(line);
                 accession = fastaHeader.getAccession();
+                if (accession == null) {
+                    accession = fastaHeader.getRest();
+                }
                 indexes.put(accession, index);
                 if (!isDecoy(accession)) {
                     nTarget++;

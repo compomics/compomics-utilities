@@ -1130,9 +1130,11 @@ public abstract class GraphicsPanel extends JPanel {
              * bounds of the component).
              */
             public void mouseDragged(MouseEvent e) {
-                iDragged = true;
-                iDragXLoc = e.getX();
-                repaint();
+                if (SwingUtilities.isLeftMouseButton(e)) { 
+                    iDragged = true;
+                    iDragXLoc = e.getX();
+                    repaint();
+                }
             }
 
             /**

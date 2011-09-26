@@ -4,6 +4,8 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.FragmentFactory;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
@@ -241,6 +243,7 @@ public class SpectrumAnnotator {
 
     /**
      * Returns the neutral losses map by default for a given peptide and a given list of neutral losses.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @param peptide the peptide of interest
      * @param imposedNeutralLosses a given list of neutral losses
@@ -248,6 +251,9 @@ public class SpectrumAnnotator {
      */
     public static HashMap<NeutralLoss, Integer> getDefaultLosses(Peptide peptide, ArrayList<NeutralLoss> imposedNeutralLosses) {
 
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
+        
         HashMap<NeutralLoss, Integer> likelyNeutralLosses = new HashMap<NeutralLoss, Integer>();
         int aaMin;
         for (NeutralLoss neutralLoss : imposedNeutralLosses) {
@@ -288,7 +294,8 @@ public class SpectrumAnnotator {
             } else if (neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                 aaMin = peptide.getSequence().length();
                 for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    if (Math.abs(modMatch.getTheoreticPtm().getMass() - 79.9663) < 0.01) {
+                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                    if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
                         if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'Y') {
                             aaMin = Math.min(aaMin, modMatch.getModificationSite());
                         }
@@ -300,7 +307,8 @@ public class SpectrumAnnotator {
             } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)) {
                 aaMin = peptide.getSequence().length();
                 for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    if (Math.abs(modMatch.getTheoreticPtm().getMass() - 79.9663) < 0.01) {
+                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                    if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
                         if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
                                 || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {
                             aaMin = Math.min(aaMin, modMatch.getModificationSite());
@@ -313,7 +321,8 @@ public class SpectrumAnnotator {
             } else if (neutralLoss.isSameAs(NeutralLoss.CH4OS)) {
                 aaMin = peptide.getSequence().length();
                 for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    if (Math.abs(modMatch.getTheoreticPtm().getMass() - 15.9949) < 0.01) {
+                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                    if (Math.abs(ptm.getMass() - 15.9949) < 0.01) {
                         if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'M') {
                             aaMin = Math.min(aaMin, modMatch.getModificationSite());
                         }
@@ -330,12 +339,16 @@ public class SpectrumAnnotator {
 
     /**
      * Returns the possible neutral losses expected by default for a given peptide.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @param peptide the peptide of interest
      * @return the expected possible neutral losses
      */
     public static HashMap<NeutralLoss, Integer> getDefaultLosses(Peptide peptide) {
 
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
+        
         HashMap<NeutralLoss, Integer> likelyNeutralLosses = new HashMap<NeutralLoss, Integer>();
         int aaMin = peptide.getSequence().length();
         if (peptide.getSequence().indexOf("D") != -1) {
@@ -375,14 +388,15 @@ public class SpectrumAnnotator {
         int aaMaxH3PO4 = peptide.getSequence().length();
         int aaMaxCH4OS = peptide.getSequence().length();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-            if (Math.abs(modMatch.getTheoreticPtm().getMass() - 79.9663) < 0.01) {
+                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+            if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
                 if (peptide.getSequence().charAt(modMatch.getModificationSite()-1) == 'Y') {
                     aaMaxHPO3 = Math.min(aaMaxHPO3, modMatch.getModificationSite() + 1);
                 } else if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
                         || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {
                     aaMaxH3PO4 = Math.min(aaMaxH3PO4, modMatch.getModificationSite());
                 }
-            } else if (Math.abs(modMatch.getTheoreticPtm().getMass() - 15.9949) < 0.01) {
+            } else if (Math.abs(ptm.getMass() - 15.9949) < 0.01) {
                 if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'M') {
                     aaMaxCH4OS = Math.min(aaMaxCH4OS, modMatch.getModificationSite());
                 }

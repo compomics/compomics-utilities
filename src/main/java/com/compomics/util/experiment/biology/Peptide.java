@@ -32,11 +32,11 @@ public class Peptide extends ExperimentObject {
     /**
      * The parent proteins
      */
-    private ArrayList<String> parentProteins;
+    private ArrayList<String> parentProteins = new ArrayList<String>();
     /**
      * The modifications carried by the peptide
      */
-    private ArrayList<ModificationMatch> modifications;
+    private ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
 
     /**
      * Constructor for the peptide
@@ -55,8 +55,12 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
         this.mass = mass;
-        this.parentProteins = parentProteins;
-        this.modifications = modifications;
+        for (String protein : parentProteins) {
+            this.parentProteins.add(protein);
+        }
+        for (ModificationMatch mod : modifications) {
+            this.modifications.add(mod);
+        }
     }
 
     /**
@@ -169,7 +173,7 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch mod : getModificationMatches()) {
             if (mod.isVariable()) {
                 if (mod.getTheoreticPtm() != null) {
-                    tempModifications.add(mod.getTheoreticPtm().getName());
+                    tempModifications.add(mod.getTheoreticPtm());
                 } else {
                     tempModifications.add("unknown-modification");
                 }
@@ -243,7 +247,7 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch modificationMatch1 : modifications) {
             found = false;
             for (ModificationMatch modificationMatch2 : anotherPeptide.getModificationMatches()) {
-                if (modificationMatch1.getTheoreticPtm().getName().equals(modificationMatch2.getTheoreticPtm().getName())
+                if (modificationMatch1.getTheoreticPtm().equals(modificationMatch2.getTheoreticPtm())
                         && modificationMatch1.getModificationSite() == modificationMatch2.getModificationSite()) {
                     found = true;
                     break;
@@ -259,17 +263,21 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the N-terminal of the peptide as a String. Returns "NH3" if the 
      * terminal is not modified, otherwise returns the name of the modification.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @return the N-terminal of the peptide as a String, e.g., "NH3"
      */
     public String getNTerminal() {
 
         String nTerm = "NH3";
-
+        
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
         for (int i = 0; i < modifications.size(); i++) {
             if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
-                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
-                    nTerm = modifications.get(i).getTheoreticPtm().getShortName();
+                ptm = pTMFactory.getPTM(modifications.get(i).getTheoreticPtm());
+                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                    nTerm = ptm.getShortName();
                 }
             }
         }
@@ -282,6 +290,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the C-terminal of the peptide as a String. Returns "COOH" if the 
      * terminal is not modified, otherwise returns the name of the modification.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @return the C-terminal of the peptide as a String, e.g., "COOH"
      */
@@ -289,10 +298,13 @@ public class Peptide extends ExperimentObject {
 
         String cTerm = "COOH";
 
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
         for (int i = 0; i < modifications.size(); i++) {
             if (modifications.get(i).getModificationSite() == sequence.length()) {
-                if (modifications.get(i).getTheoreticPtm().getType() != PTM.MODAA && modifications.get(i).getTheoreticPtm().getType() != PTM.MODMAX) {
-                    cTerm = modifications.get(i).getTheoreticPtm().getShortName();
+                ptm = pTMFactory.getPTM(modifications.get(i).getTheoreticPtm());
+                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                    cTerm = ptm.getShortName();
                 }
             }
         }
@@ -305,6 +317,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the modified sequence as an HTML string with modification 
      * color coding.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @param colors                    the ptm name to color mapping  
      * @param includeHtmlStartEndTag    if true, start and end html tags are added
@@ -312,6 +325,9 @@ public class Peptide extends ExperimentObject {
      */
     public String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag) {
 
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
+        
         String modifiedSequence = "";
         
         if (includeHtmlStartEndTag) {
@@ -325,12 +341,12 @@ public class Peptide extends ExperimentObject {
             boolean modifiedResidue = false;
 
             for (int j = 0; j < modifications.size(); j++) {
-
-                if (modifications.get(j).getTheoreticPtm().getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
+                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
 
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
 
-                        Color ptmColor = colors.get(modifications.get(j).getTheoreticPtm().getName());
+                        Color ptmColor = colors.get(modifications.get(j).getTheoreticPtm());
 
                         modifiedSequence +=
                                 //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
@@ -362,11 +378,15 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH. 
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @param includeTerminals      if true, the terminals are included
      * @return                      the modified sequence as a string
      */
     public String getModifiedSequenceAsString(boolean includeTerminals) {
+
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
 
         String modifiedSequence = "";
 
@@ -379,11 +399,12 @@ public class Peptide extends ExperimentObject {
             boolean modifiedResidue = false;
 
             for (int j = 0; j < modifications.size(); j++) {
+                ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
-                if (modifications.get(j).getTheoreticPtm().getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
 
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
-                        modifiedSequence += sequence.charAt(i) + "<" + modifications.get(j).getTheoreticPtm().getShortName() + ">";
+                        modifiedSequence += sequence.charAt(i) + "<" + ptm.getShortName() + ">";
                         modifiedResidue = true;
                     }
                 }

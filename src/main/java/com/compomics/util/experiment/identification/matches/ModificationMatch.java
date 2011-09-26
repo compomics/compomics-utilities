@@ -18,9 +18,9 @@ public class ModificationMatch extends ExperimentObject {
      */
     static final long serialVersionUID = 7129515983284796207L;
     /**
-     * the theoretic modiffication
+     * the theoretic modiffication name. The modification can be accessed via the PTM factory
      */
-    private PTM theoreticPtm;
+    private String theoreticPtm;
     /**
      * is the modification variable?
      */
@@ -37,7 +37,7 @@ public class ModificationMatch extends ExperimentObject {
      * @param variable     true for variable modifications, false otherwise
      * @param modifiedSite the position of the modification in the sequence
      */
-    public ModificationMatch(PTM theoreticPtm, boolean variable, int modifiedSite) {
+    public ModificationMatch(String theoreticPtm, boolean variable, int modifiedSite) {
         this.theoreticPtm = theoreticPtm;
         this.variable = variable;
         this.modifiedSite = modifiedSite;
@@ -53,19 +53,19 @@ public class ModificationMatch extends ExperimentObject {
     }
 
     /**
-     * getter for the theoretic PTM
+     * getter for the theoretic PTM name
      *
-     * @return the theoretic PTM
+     * @return the theoretic PTM name
      */
-    public PTM getTheoreticPtm() {
+    public String getTheoreticPtm() {
         return theoreticPtm;
     }
     
     /**
      * Sets the theoretic PTM
-     * @param ptm the theoretic PTM
+     * @param ptm the theoretic PTM name
      */
-    public void setTheoreticPtm(PTM ptm) {
+    public void setTheoreticPtm(String ptm) {
         this.theoreticPtm = ptm;
     }
 

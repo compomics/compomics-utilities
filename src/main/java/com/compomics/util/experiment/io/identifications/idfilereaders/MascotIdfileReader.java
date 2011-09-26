@@ -158,7 +158,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         Double measuredMass = aPeptideHit.getPeptideMr() + aPeptideHit.getDeltaMass();
         ArrayList<ModificationMatch> foundModifications = new ArrayList();
         Modification handledModification;
-        PTM correspondingPTM;
         int modificationSite;
         for (int l = 0; l < aPeptideHit.getModifications().length; l++) {
             if (l == 0) {
@@ -170,8 +169,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             }
             handledModification = aPeptideHit.getModifications()[l];
             if (handledModification != null) {
-                correspondingPTM = new PTM(0, handledModification.getType(), handledModification.getMass(), new String[]{aPeptideHit.getSequence().charAt(modificationSite-1) + ""});
-                foundModifications.add(new ModificationMatch(correspondingPTM, !handledModification.isFixed(), modificationSite));
+                // the modification is named mass@residue for later identification
+                foundModifications.add(new ModificationMatch(handledModification.getMass() + "@" + aPeptideHit.getSequence().charAt(modificationSite-1), !handledModification.isFixed(), modificationSite));
             }
         }
         Double mascotEValue = aPeptideHit.getExpectancy();

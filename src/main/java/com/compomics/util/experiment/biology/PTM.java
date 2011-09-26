@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 
 /**
  * This class models a post-translational modification.
@@ -63,7 +64,7 @@ public class PTM extends ExperimentObject {
     /**
      * the residues affected by this modification. '[' denotes N-term and ']' C-term
      */
-    private String[] residuesArray;
+    private ArrayList<String> residuesArray = new ArrayList<String>();
     /**
      * Name of the modification
      */
@@ -91,11 +92,11 @@ public class PTM extends ExperimentObject {
      * @param mass              Mass difference produced by the modification
      * @param residuesArray     Residue array affected by this modification
      */
-    public PTM(int type, String name, double mass, String[] residuesArray) {
+    public PTM(int type, String name, double mass, ArrayList<String> residuesArray) {
         this.type = type;
         this.name = name;
         this.mass = mass;
-        this.residuesArray = residuesArray;
+        this.residuesArray.addAll(residuesArray);
     }
     
     /**
@@ -107,12 +108,12 @@ public class PTM extends ExperimentObject {
      * @param mass              Mass difference produced by the modification
      * @param residuesArray     Residue array affected by this modification
      */
-    public PTM(int type, String name, String shortName, double mass, String[] residuesArray) {
+    public PTM(int type, String name, String shortName, double mass, ArrayList<String> residuesArray) {
         this.type = type;
         this.name = name;
         this.shortName = shortName;
         this.mass = mass;
-        this.residuesArray = residuesArray;
+        this.residuesArray.addAll(residuesArray);
     }
 
     /**
@@ -172,7 +173,7 @@ public class PTM extends ExperimentObject {
      * 
      * @return an array containing potentially modified residues
      */
-    public String[] getResiduesArray() {
+    public ArrayList<String> getResidues() {
         return residuesArray;
     }
 }

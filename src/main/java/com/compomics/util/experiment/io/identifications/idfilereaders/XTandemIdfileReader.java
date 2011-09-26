@@ -143,55 +143,46 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         } catch (Exception e) {
             accession = description;
         }
-        
+
         // final test to check that the accession number was correctly parsed
         if (accession == null) {
             JOptionPane.showMessageDialog(null, "Unable to extract the accession number from protein description: \n"
                     + "\'" + description + "\'"
                     + "\n\nVerify your FASTA file!", "Unknown Protein!", JOptionPane.ERROR_MESSAGE);
-            
+
             throw new IllegalArgumentException(
                     "Unable to extract the accession number from protein description: \n"
                     + "\'" + description + "\'.\n"
                     + "Please verify your FASTA file!");
         }
-        
+
         proteins.add(accession);
         eValue = domain.getDomainExpect();
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
-        PTM currentPTM;
         ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();
         for (Modification currentModification : foundFixedModifications) {
             String[] parsedName = currentModification.getName().split("@");
-            double mass = new Double(parsedName[0]);
             String aa = parsedName[1].toUpperCase();
-            currentPTM = new PTM(0, currentModification.getName(), mass, new String[]{aa});
-            for (String residue : currentPTM.getResiduesArray()) {
-                if (residue.equals("[")) {
-                    foundModifications.add(new ModificationMatch(currentPTM, false, 0));
-                } else if (residue.equals("]")) {
-                    foundModifications.add(new ModificationMatch(currentPTM, false, sequence.length() - 1));
-                } else {
-                    String tempSequence = "#" + sequence + "#";
-                    String[] sequenceFragments = tempSequence.split(residue);
-                    if (sequenceFragments.length > 0) {
-                        int cpt = 0;
-                        for (int f = 0; f < sequenceFragments.length - 1; f++) {
-                            cpt = cpt + sequenceFragments[f].length();
-                            foundModifications.add(new ModificationMatch(currentPTM, false, cpt - 1));
-                        }
+            if (aa.equals("[")) {
+                foundModifications.add(new ModificationMatch(currentModification.getName(), false, 0));
+            } else if (aa.equals("]")) {
+                foundModifications.add(new ModificationMatch(currentModification.getName(), false, sequence.length() - 1));
+            } else {
+                String tempSequence = "#" + sequence + "#";
+                String[] sequenceFragments = tempSequence.split(aa);
+                if (sequenceFragments.length > 0) {
+                    int cpt = 0;
+                    for (int f = 0; f < sequenceFragments.length - 1; f++) {
+                        cpt = cpt + sequenceFragments[f].length();
+                        foundModifications.add(new ModificationMatch(currentModification.getName(), false, cpt - 1));
                     }
                 }
             }
         }
         ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(domain.getDomainID());
         for (Modification currentModification : foundVariableModifications) {
-            String[] parsedName = currentModification.getName().split("@");
-            double mass = new Double(parsedName[0]);
-            String aa = parsedName[1];
             int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;
-            currentPTM = new PTM(0, currentModification.getName(), mass, new String[]{aa});
-            foundModifications.add(new ModificationMatch(currentPTM, true, location));
+            foundModifications.add(new ModificationMatch(currentModification.getName(), true, location));
         }
         peptide = new com.compomics.util.experiment.biology.Peptide(sequence, domain.getDomainMh(), proteins, foundModifications);
         return new PeptideAssumption(peptide, 1, Advocate.XTANDEM, measuredMass, eValue, getFileName());

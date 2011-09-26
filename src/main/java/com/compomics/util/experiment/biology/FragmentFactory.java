@@ -39,6 +39,7 @@ public class FragmentFactory {
 
     /**
      * This method returns the theoretic fragment ions expected from a peptide sequence.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
      * @param peptide       The considered peptide
      * @return              the expected fragment ions
@@ -48,9 +49,10 @@ public class FragmentFactory {
         String sequence = peptide.getSequence().toUpperCase();
         HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<Integer, ArrayList<PTM>>();
         int location;
+        PTMFactory ptmFactory = PTMFactory.getInstance();
         for (ModificationMatch ptmMatch : peptide.getModificationMatches()) {
             location = ptmMatch.getModificationSite();
-            PTM ptm = ptmMatch.getTheoreticPtm();
+            PTM ptm = ptmFactory.getPTM(ptmMatch.getTheoreticPtm());
             if (!modifications.containsKey(location)) {
                 modifications.put(location, new ArrayList<PTM>());
             }

@@ -168,20 +168,20 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             int msMod = msModHit.MSModHit_modtype.MSMod;
             currentPTM = ptmFactory.getPTM(msMod);   // This has to be changed if the mod file is not OMSSA based anymore
             int location = msModHit.MSModHit_site + 1;
-            modificationsFound.add(new ModificationMatch(currentPTM, true, location));
+            modificationsFound.add(new ModificationMatch(currentPTM.getName(), true, location));
         }
         // inspect fixed modifications
         List<Integer> fixedMods = msRequest.get(responseIndex).MSRequest_settings.MSSearchSettings.MSSearchSettings_fixed.MSMod;
         String tempSequence;
         for (int msMod : fixedMods) {
             currentPTM = ptmFactory.getPTM(msMod);
-            String[] residuesArray = currentPTM.getResiduesArray();
+            ArrayList<String> residuesArray = currentPTM.getResidues();
             for (String location : residuesArray) {
                 tempSequence = currentMsHit.MSHits_pepstring;
                 if (location.compareTo("[") == 0) {
-                    modificationsFound.add(new ModificationMatch(currentPTM, false, 1));
+                    modificationsFound.add(new ModificationMatch(currentPTM.getName(), false, 1));
                 } else if (location.compareTo("]") == 0) {
-                    modificationsFound.add(new ModificationMatch(currentPTM, false, tempSequence.length()));
+                    modificationsFound.add(new ModificationMatch(currentPTM.getName(), false, tempSequence.length()));
                 } else {
                     tempSequence = "#" + tempSequence + "#";
                     String[] sequenceFragments = tempSequence.split(location);
@@ -189,7 +189,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         int cpt = 0;
                         for (int f = 0; f < sequenceFragments.length - 1; f++) {
                             cpt = cpt + sequenceFragments[f].length();
-                            modificationsFound.add(new ModificationMatch(currentPTM, false, cpt));
+                            modificationsFound.add(new ModificationMatch(currentPTM.getName(), false, cpt));
                         }
                     }
                 }

@@ -29,10 +29,6 @@ public class PTMFactory {
      */
     private XmlPullParser parser;
     /**
-     * A map linking mascot names with modifications
-     */
-    private HashMap<String, PTM> mascotNameToPTMMap = new HashMap<String, PTM>();
-    /**
      * A map linking indexes with modifications
      */
     private HashMap<Integer, PTM> indexToPTMMap = new HashMap<Integer, PTM>();
@@ -47,7 +43,7 @@ public class PTMFactory {
     /**
      * unknown modification to be returned when the modification is not found
      */
-    private static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new String[0]);
+    private static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new ArrayList<String>());
 
     /**
      * Constructor for the factory
@@ -78,6 +74,23 @@ public class PTMFactory {
             return indexToPTMMap.get(index);
         }
         return unknownPTM;
+    }
+
+    /**
+     * replaces an old ptm by a new
+     * @param oldName the name of the old ptm
+     * @param newPTM  the new ptm
+     */
+    public void replacePTM(String oldName, PTM newPTM) {
+        int index = nameToIndexMap.get(oldName);
+        if (!oldName.equals(newPTM.getName())) {
+            nameToIndexMap.put(newPTM.getName(), index);
+            nameToIndexMap.remove(oldName);
+        }
+        PTM oldPtm = indexToPTMMap.get(index);
+        indexToPTMMap.put(index, newPTM);
+        ptmSet.remove(oldPtm);
+        ptmSet.add(newPTM);
     }
 
     /**
@@ -127,7 +140,7 @@ public class PTMFactory {
                     || currentPTM.getType() == PTM.MODNAA
                     || currentPTM.getType() == PTM.MODNPAA) {
                 if (Math.abs(currentPTM.getMass() - mass) < 0.01) {
-                    for (String residue : currentPTM.getResiduesArray()) {
+                    for (String residue : currentPTM.getResidues()) {
                         if (location.equals(residue)) {
                             return currentPTM;
                         }
@@ -270,18 +283,15 @@ public class PTMFactory {
                 residues.add("]");
             }
         }
-        String[] residuesArray = new String[residues.size()];
-        residues.toArray(residuesArray);
         // Move the parser to the end tag of this modification.
-            type = parser.next();
+        type = parser.next();
         while (!(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
             type = parser.next();
         }
 
         // Create and implement modification.
-        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residuesArray);
+        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residues);
         ptmSet.add(currentPTM);
-        mascotNameToPTMMap.put("", currentPTM);
         indexToPTMMap.put(number, currentPTM);
         nameToIndexMap.put(currentPTM.getName().toLowerCase(), number);
     }
@@ -332,23 +342,23 @@ public class PTMFactory {
      * @throws IOException an IOException is thrown in case an issue is encountered while reading or writing a file.
      */
     public void writeOmssaModificationsFiles(File aFolder, File utilitiesModFile, File utilitiesUserModFile) throws IOException {
-            int c;
-            BufferedReader br = new BufferedReader(new FileReader(utilitiesModFile));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(aFolder, "mods.xml")));
-            while ((c = br.read()) != -1) {
-                    bw.write(c);
-            }
-            bw.flush();
-            bw.close();
-            br.close();
+        int c;
+        BufferedReader br = new BufferedReader(new FileReader(utilitiesModFile));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(aFolder, "mods.xml")));
+        while ((c = br.read()) != -1) {
+            bw.write(c);
+        }
+        bw.flush();
+        bw.close();
+        br.close();
 
-            br = new BufferedReader(new FileReader(utilitiesUserModFile));
-            bw = new BufferedWriter(new FileWriter(new File(aFolder, "usermods.xml")));
-            while ((c = br.read()) != -1) {
-                    bw.write(c);
-            }
-            bw.flush();
-            bw.close();
-            br.close();
+        br = new BufferedReader(new FileReader(utilitiesUserModFile));
+        bw = new BufferedWriter(new FileWriter(new File(aFolder, "usermods.xml")));
+        while ((c = br.read()) != -1) {
+            bw.write(c);
+        }
+        bw.flush();
+        bw.close();
+        br.close();
     }
 }

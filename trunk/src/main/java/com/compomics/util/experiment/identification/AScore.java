@@ -30,9 +30,21 @@ import java.util.HashSet;
  */
 public class AScore {
 
+    /**
+     * Returns the A-score for the best PTM location. In case the two best locations score the same they are both given with the score of 50.
+     * @param peptide               The peptide of interest
+     * @param ptm                   The name of the PTM to score
+     * @param nPTM                  The number of occurrences where this PTM is expected on this peptide
+     * @param spectrum              The corresponding spectrum
+     * @param expectedFragmentIons  The fragment ions to look for
+     * @param neutralLosses         The neutral losses to look for
+     * @param charges               The fragment ions charges to look for
+     * @param mzTolerance           The m/z tolerance to use
+     * @return a map containing the best or two best PTM location(s) and the corresponding A-score
+     */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses,
-            ArrayList<Integer> charges, double intensityLimit, double mzTolerance, boolean debug) {
+            ArrayList<Integer> charges, double mzTolerance) {
 
         // here annotation should be sequence independant
         for (NeutralLoss neutralLoss : neutralLosses.keySet()) {
@@ -70,16 +82,6 @@ public class AScore {
                 N += fragmentIons.size();
             }
             int bestI = 0, pos1 = 0, pos2 = 0;
-            ArrayList<Integer> debugN3 = new ArrayList<Integer>();
-            ArrayList<Integer> debugN5 = new ArrayList<Integer>();
-            ArrayList<Integer> debugN6 = new ArrayList<Integer>();
-            ArrayList<Integer> debugN19 = new ArrayList<Integer>();
-            ArrayList<Integer> debugN21 = new ArrayList<Integer>();
-            ArrayList<Double> debugP3 = new ArrayList<Double>();
-            ArrayList<Double> debugP5 = new ArrayList<Double>();
-            ArrayList<Double> debugP6 = new ArrayList<Double>();
-            ArrayList<Double> debugP19 = new ArrayList<Double>();
-            ArrayList<Double> debugP21 = new ArrayList<Double>();
             for (int i = 0; i < spectrumMap.keySet().size(); i++) {
                 rawMap.put(i, new HashMap<Double, ArrayList<Integer>>());
                 p = ((double) i + 1) / Math.max(spectrumMap.keySet().size(), 100);
@@ -97,47 +99,6 @@ public class AScore {
                         rawMap.get(i).put(score, new ArrayList<Integer>());
                     }
                     rawMap.get(i).get(score).add(possibleSites.get(pos) + 1);
-                    if (debug) {
-                        if (pos == 0) {
-                            debugN3.add(n);
-                            debugP3.add(-score);
-                        } else if (pos == 1) {
-                            debugN5.add(n);
-                            debugP5.add(-score);
-                        } else if (pos == 2) {
-                            debugN6.add(n);
-                            debugP6.add(-score);
-                        } else if (pos == 3) {
-                            debugN19.add(n);
-                            debugP19.add(-score);
-                        } else if (pos == 4) {
-                            debugN21.add(n);
-                            debugP21.add(-score);
-                        }
-                    }
-                }
-            }
-            if (debug) {
-                String report = "i\tN3\tN5\tN6\tN19\tN21\tscore3\tscore5\tscore6\tscore19\tscore21\n";
-                for (int i = 0; i < debugN3.size(); i++) {
-                    report += i + "\t" + debugN3.get(i) + "\t" + debugN5.get(i) + "\t" + debugN6.get(i) + "\t" + debugN19.get(i) + "\t" + debugN21.get(i) + "\t" + debugP3.get(i) + "\t" + debugP5.get(i) + "\t" + debugP6.get(i) + "\t" + debugP19.get(i) + "\t" + debugP21.get(i) + "\n";
-                }
-                try {
-                    int i = 0;
-                    String fileName = peptide.getSequence() + "_" + i + ".txt";
-                    File debugFile = new File(fileName);
-                    while (debugFile.exists()) {
-                        i++;
-                        fileName = peptide.getSequence() + "_" + i + ".txt";
-                        debugFile = new File(fileName);
-                    }
-                    FileWriter f = new FileWriter(debugFile);
-                    BufferedWriter b = new BufferedWriter(f);
-                    b.write(report);
-                    b.close();
-                    f.close();
-                } catch (Exception e) {
-                    int a = 1;
                 }
             }
             double maxDiff = -1;
@@ -219,13 +180,20 @@ public class AScore {
         } else {
             ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
             for (int pos : possibleSites) {
-                modificationProfile.add(pos);
+                modificationProfile.add(pos+1);
             }
             result.put(modificationProfile, 100.0);
         }
         return result;
     }
 
+    /**
+     * Generates a map containing the spectra filtered on intensity with a basis of 20*mz tolerance indexed by the depth used. (see A-score paper for more details)
+     * 
+     * @param baseSpectrum  the base spectrum
+     * @param mzTolerance   the m/z tolerance
+     * @return a map containing the spectra filtered indexed by peak depth.
+     */
     public static HashMap<Integer, MSnSpectrum> getReducedSpectra(MSnSpectrum baseSpectrum, double mzTolerance) {
         HashMap<Integer, MSnSpectrum> result = new HashMap<Integer, MSnSpectrum>();
         HashMap<Double, Peak> tempMap, peakMap = baseSpectrum.getPeakMap();

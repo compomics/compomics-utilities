@@ -127,7 +127,7 @@ public class PeptideAssumption extends ExperimentObject {
      * @return the precursor mass error (in ppm)
      */
     public double getDeltaMass() {
-        return (measuredMass-peptide.getMass())/peptide.getMass()*1000000;
+        return Math.abs(measuredMass-peptide.getMass())/peptide.getMass()*1000000;
     }
 
     /**

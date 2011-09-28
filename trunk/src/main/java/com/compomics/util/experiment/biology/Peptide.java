@@ -223,6 +223,27 @@ public class Peptide extends ExperimentObject {
         }
         return result;
     }
+    
+    /**
+     * returns the potential modification sites as an ordered list of string. 0 is the first aa.
+     * @param sequence  the sequence of the peptide of interest
+     * @param ptm       the PTM considered
+     * @return          a list of potential modification sites
+     */
+    public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) {
+        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+        String tempSequence;
+        int tempIndex, ref = 0;
+        for (String aa : ptm.getResidues()) {
+            tempSequence = sequence;
+            while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
+                possibleSites.add(ref + tempIndex);
+                tempSequence = tempSequence.substring(tempIndex + 1);
+                ref += tempIndex + 1;
+            }
+        }
+        return possibleSites;
+    }
 
     /**
      * a method which compares to peptides. Two same peptides present the same sequence and same modifications at the same place.

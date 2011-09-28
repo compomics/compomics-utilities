@@ -52,17 +52,7 @@ public class AScore {
         }
 
         HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
-        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
-        String tempSequence;
-        int tempIndex, ref = 0;
-        for (String aa : ptm.getResidues()) {
-            tempSequence = peptide.getSequence();
-            while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
-                possibleSites.add(ref + tempIndex);
-                tempSequence = tempSequence.substring(tempIndex + 1);
-                ref += tempIndex + 1;
-            }
-        }
+        ArrayList<Integer> possibleSites = Peptide.getPotentialModificationSites(peptide.getSequence(), ptm);
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
             ArrayList<IonMatch> matches;

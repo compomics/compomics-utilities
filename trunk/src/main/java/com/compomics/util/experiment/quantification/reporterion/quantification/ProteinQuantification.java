@@ -3,6 +3,7 @@ package com.compomics.util.experiment.quantification.reporterion.quantification;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.Ratio;
+import com.compomics.util.experiment.quantification.reporterion.QuantificationMatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.HashMap;
  * Date: Sep 1, 2010
  * Time: 3:31:25 PM
  */
-public class ProteinQuantification extends ExperimentObject {
+public class ProteinQuantification extends QuantificationMatch {
 
     /**
      * The identification protein match key
@@ -23,12 +24,7 @@ public class ProteinQuantification extends ExperimentObject {
     /**
      * The peptide quantification corresponding
      */
-    private HashMap<String, PeptideQuantification> peptideQuantification = new HashMap<String, PeptideQuantification>();
-
-    /**
-     * The estimated protein ratios
-     */
-    private HashMap<Integer, Ratio> proteinRatios = new HashMap<Integer, Ratio>();
+    private ArrayList<String> peptideQuantification = new ArrayList<String>();
 
     /**
      * Constructor for the protein quantification
@@ -42,9 +38,9 @@ public class ProteinQuantification extends ExperimentObject {
      * @param proteinKey              the identified protein match key
      * @param peptideQuantification     the corresponding peptide quantification
      */
-    public ProteinQuantification(String proteinKey, HashMap<String, PeptideQuantification> peptideQuantification) {
+    public ProteinQuantification(String proteinKey, ArrayList<String> peptideQuantification) {
         this.proteinKey = proteinKey;
-        this.peptideQuantification = peptideQuantification;
+        this.peptideQuantification.addAll(peptideQuantification);
     }
 
     /**
@@ -53,57 +49,29 @@ public class ProteinQuantification extends ExperimentObject {
      * @param proteinRatios             the estimated protein ratios
      * @param peptideQuantification     the corresponding peptide quantification
      */
-    public ProteinQuantification(String proteinKey, HashMap<String, PeptideQuantification> peptideQuantification, HashMap<Integer, Ratio> proteinRatios) {
+    public ProteinQuantification(String proteinKey, ArrayList<String> peptideQuantification, HashMap<Integer, Ratio> ratios) {
         this.proteinKey = proteinKey;
-        this.proteinRatios = proteinRatios;
-        this.peptideQuantification = peptideQuantification;
-    }
-
-    /**
-     * sets new protein ratios
-     * @param ratios    estimated protein ratios
-     */
-    public void setProteinRatios(HashMap<Integer, Ratio> ratios) {
-        this.proteinRatios = ratios;
-    }
-
-    /**
-     * Getter for the ratios
-     * @return the estimated ratios
-     */
-    public HashMap<Integer, Ratio> getProteinRatios() {
-        return proteinRatios;
+        this.ratios = ratios;
+        this.peptideQuantification.addAll(peptideQuantification);
     }
 
     /**
      * Getter for the corresponding peptide quantification
      * @return list of peptide quantification
      */
-    public HashMap<String, PeptideQuantification> getPeptideQuantification() {
+    public ArrayList<String> getPeptideQuantification() {
         return peptideQuantification;
-    }
-
-    /**
-     * Returns a specific peptide quantification
-     * @param index the index of the desired peptide quantification
-     * @return      the desired peptide quantification
-     */
-    public PeptideQuantification getPeptideQuantification(String index) {
-        return peptideQuantification.get(index);
     }
 
     /**
      * Adds a new peptide quantification in the protein quantification
      * @param newPeptideQuantification the new peptide quantification
      */
-    public void addPeptideQuantification(PeptideQuantification newPeptideQuantification) {
-        peptideQuantification.put(newPeptideQuantification.getKey(), newPeptideQuantification);
+    public void addPeptideQuantification(String newPeptideQuantification) {
+        peptideQuantification.add(newPeptideQuantification);
     }
 
-    /**
-     * Returns the indexing key of the protein quantification
-     * @return the indexing key of the protein quantification
-     */
+    @Override
     public String getKey() {
         return proteinKey;
     }

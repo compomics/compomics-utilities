@@ -24,7 +24,7 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * The reporter method
      */
-    ReporterMethod reporterMethod;
+    private ReporterMethod reporterMethod;
 
     /**
      * Constructor for the reporter ion quantification

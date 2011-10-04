@@ -2,6 +2,8 @@ package com.compomics.util.experiment.quantification.reporterion.quantification;
 
 import com.compomics.util.experiment.quantification.Ratio;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.experiment.quantification.reporterion.QuantificationMatch;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 
@@ -10,7 +12,7 @@ import java.util.HashMap;
  * 
  * @author Marc Vaudel
  */
-public class PeptideQuantification extends ExperimentObject {
+public class PeptideQuantification extends QuantificationMatch {
 
     /**
      * The identification peptide match
@@ -20,12 +22,7 @@ public class PeptideQuantification extends ExperimentObject {
     /**
      * The corresponding spectrum quantification
      */
-    private HashMap<String, PsmQuantification> psmQuantification = new HashMap<String, PsmQuantification>();
-
-    /**
-     * The estimated ratios
-     */
-    private HashMap<Integer, Ratio> ratios = new HashMap<Integer, Ratio>();
+    private ArrayList<String> psmQuantification = new ArrayList<String>();
 
     /**
      * Constructor for the peptide quantification
@@ -39,9 +36,9 @@ public class PeptideQuantification extends ExperimentObject {
      * @param peptideKey              the key of the identification peptide match
      * @param psmQuantification         the corresponding spectrum quantification 
      */
-    public PeptideQuantification(String peptideKey, HashMap<String, PsmQuantification> psmQuantification) {
+    public PeptideQuantification(String peptideKey, ArrayList<String> psmQuantification) {
         this.peptideKey = peptideKey;
-        this.psmQuantification = psmQuantification;
+        this.psmQuantification.addAll(psmQuantification);
     }
 
     /**
@@ -50,56 +47,29 @@ public class PeptideQuantification extends ExperimentObject {
      * @param psmQuantification         the corresponding spectrum quantification
      * @param ratios                    the estimated ratios
      */
-    public PeptideQuantification(String peptideKey, HashMap<String, PsmQuantification> psmQuantification, HashMap<Integer, Ratio> ratios) {
+    public PeptideQuantification(String peptideKey, ArrayList<String> psmQuantification, HashMap<Integer, Ratio> ratios) {
         this.peptideKey = peptideKey;
-        this.psmQuantification = psmQuantification;
+        this.psmQuantification.addAll(psmQuantification);
         this.ratios = ratios;
-    }
-
-    /**
-     * sets new peptide ratios
-     * @param ratios    the new peptide ratios
-     */
-    public void setPeptideRatios(HashMap<Integer, Ratio> ratios) {
-        this.ratios = ratios;
-    }
-
-    /**
-     * Getter for the peptide ratios
-     * @return the peptide ratios
-     */
-    public HashMap<Integer, Ratio> getRatios() {
-        return ratios;
     }
 
     /**
      * Getter for the corresponding spectrum quantification
      * @return List of spectrum quantification
      */
-    public HashMap<String, PsmQuantification> getPsmQuantification() {
+    public ArrayList<String> getPsmQuantification() {
         return psmQuantification;
-    }
-    /**
-     * returns a specific psm quantification
-     * @param index the index of the quantification 
-     * @return the desired psm
-     */
-    public PsmQuantification getPsm(String index) {
-        return psmQuantification.get(index);
     }
 
     /**
      * Adds a new psm quantification in the psm quantification map
      * @param newPsmQuantification the new psm quantification
      */
-    public void addPsmQuantification(PsmQuantification newPsmQuantification) {
-        psmQuantification.put(newPsmQuantification.getKey(), newPsmQuantification);
+    public void addPsmQuantification(String newPsmQuantification) {
+        psmQuantification.add(newPsmQuantification);
     }
 
-    /**
-     * Returns the key of the peptide quantification
-     * @return the key of the peptide quantification
-     */
+    @Override
     public String getKey() {
         return peptideKey;
     }

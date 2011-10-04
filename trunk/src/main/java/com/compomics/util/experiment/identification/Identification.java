@@ -469,7 +469,7 @@ public abstract class Identification extends ExperimentObject {
      * @param match
      * @throws Exception  
      */
-    public void setMatchChanged(Match match) throws Exception {
+    public void setMatchChanged(IdentificationMatch match) throws Exception {
         String key = match.getKey();
         if (loadedMatches.contains(match.getKey())) {
             modifiedMatches.put(key, true);

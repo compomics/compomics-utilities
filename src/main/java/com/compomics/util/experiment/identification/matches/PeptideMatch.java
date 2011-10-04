@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.Match;
+import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Date: Jun 18, 2010
  * Time: 8:58:46 AM
  */
-public class PeptideMatch extends Match {
+public class PeptideMatch extends IdentificationMatch {
 
     /**
      * The version UID for Serialization/Deserialization compatibility

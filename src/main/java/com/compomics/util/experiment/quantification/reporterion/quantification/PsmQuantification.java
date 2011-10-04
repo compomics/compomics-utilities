@@ -3,6 +3,7 @@ package com.compomics.util.experiment.quantification.reporterion.quantification;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.quantification.Ratio;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.experiment.quantification.reporterion.QuantificationMatch;
 
 import java.util.HashMap;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * 
  * @author Marc Vaudel
  */
-public class PsmQuantification extends ExperimentObject {
+public class PsmQuantification extends QuantificationMatch {
 
     /**
      * The corresponding spectrum key
@@ -25,10 +26,6 @@ public class PsmQuantification extends ExperimentObject {
      * The matches of the reporter ions
      */
     private HashMap<Integer, IonMatch> reporterMatches = new HashMap<Integer, IonMatch>();
-    /**
-     * The estimated ratios
-     */
-    private HashMap<Integer, Ratio> ratios = new HashMap();
 
     /**
      * Constructor for a spectrumQuantification
@@ -48,19 +45,7 @@ public class PsmQuantification extends ExperimentObject {
         reporterMatches.put(reporterIndex, match);
     }
 
-    /**
-     * Method to add an estimated ratio
-     * @param reporterIndex     The static index of the reporter ion which is divided by the reference
-     * @param ratio             The estimated ratio
-     */
-    public void addRatio(int reporterIndex, Ratio ratio) {
-        ratios.put(reporterIndex, ratio);
-    }
-
-    /**
-     * Getter for the spectrum key
-     * @return the corresponding spectrum key
-     */
+    @Override
     public String getKey() {
         return spectrumKey;
     }
@@ -79,13 +64,5 @@ public class PsmQuantification extends ExperimentObject {
      */
     public HashMap<Integer, IonMatch> getReporterMatches() {
         return reporterMatches;
-    }
-
-    /**
-     * Getter for the estimated ratio
-     * @return map containing the reporter static index and the estimated ratio
-     */
-    public HashMap<Integer, Ratio> getRatios() {
-        return ratios;
     }
 }

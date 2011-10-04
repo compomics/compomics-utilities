@@ -11,7 +11,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  *
  * @author marc
  */
-public abstract class Match extends ExperimentObject {
+public abstract class IdentificationMatch extends ExperimentObject {
     
     /**
      * returns the key of a match

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -130,7 +129,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         ArrayList<String> proteins = new ArrayList<String>();
         double eValue;
         com.compomics.util.experiment.biology.Peptide peptide;
-        double measuredMass = domain.getDomainMh() + domain.getDomainDeltaMh();
+        double measuredMass = domain.getDomainMh() + domain.getDomainDeltaMh();   
         String sequence = domain.getDomainSequence();
         String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
         String accession = "";

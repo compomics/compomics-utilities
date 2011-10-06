@@ -121,6 +121,7 @@ public class SequenceModificationPanel extends JPanel {
         Double belowSequenceHeight = yLocation + lFontHeight * 0.15;
 
         for (int i = 0; i < iSequenceComponents.length; i++) {
+            
             // reset base color to black.
             g2.setColor(Color.black);
 
@@ -128,33 +129,37 @@ public class SequenceModificationPanel extends JPanel {
             g2.setColor(Color.black);
             g2.drawString(iSequenceComponents[i], xLocation, yLocation);
 
-
-            // draw bars below the sequence
-            int lBarHeight = 0;
-//            // bIon Bar
-//            if (i <= bIons.length - 1) {
-//                if (bIons[i] != 0) {
-//                    lBarHeight = (new Double(bIons[i] * iMaxBarHeight).intValue());
-//                    if (lBarHeight < 5) {
-//                        lBarHeight = 7;
-//                    }
-//                    g2.setColor(Color.BLUE);
-//                    Rectangle tempRectangle = new Rectangle(xLocation, belowSequenceHeight.intValue(), iBarWidth, lBarHeight);
-//                    g2.fill(tempRectangle);
-//                    
-//                    g2.setColor(new Color(100, 100, 255));
-//                    tempRectangle = new Rectangle(xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i]) - iBarWidth, belowSequenceHeight.intValue(), iBarWidth, (int) (lBarHeight*0.5));
-//                    g2.fill(tempRectangle);
-//                    
-//                    fragmentIonRectangles.put("b" + (i+1), tempRectangle);
-//                }
-//            }
-
             int tempXLocation = xLocation;
 
             // special case for modifications on the first reidue
             if (i == 0) {
                 xLocation += g2.getFontMetrics().stringWidth(iSequenceComponents[i]) - g2.getFontMetrics().stringWidth("X");
+            }
+            
+            // draw bars below the sequence
+            for (int j = 0; j < profiles.size(); j++) {
+
+                ModificationProfile currentModificationProfile = profiles.get(j);
+
+                if (currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] > 0) {
+                    g2.setColor(currentModificationProfile.getColor());
+
+                    int lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
+                    if (lBarHeight < 5) {
+                        lBarHeight = 7;
+                    }
+
+                    int barStart = belowSequenceHeight.intValue() + 1;
+
+                    Rectangle tempRectangle = new Rectangle(xLocation+1, barStart, g2.getFontMetrics().stringWidth("X")-2, lBarHeight);
+
+                    g2.fill(tempRectangle);
+                    fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
+                            + " [a-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX], 2) + "]",
+                            tempRectangle);
+
+                    g2.setColor(Color.black);
+                }
             }
 
             // draw bars above the sequence
@@ -165,34 +170,16 @@ public class SequenceModificationPanel extends JPanel {
                 if (currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] > 0) {
                     g2.setColor(currentModificationProfile.getColor());
 
-                    lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
+                    int lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }
 
-                    int barStart = aboveSequenceHeight.intValue() - 1 - lBarHeight;
-                    Rectangle tempRectangle = new Rectangle(xLocation, barStart, iBarWidth, lBarHeight);
+                    int barStart = aboveSequenceHeight.intValue() - 2 - lBarHeight;
+                    Rectangle tempRectangle = new Rectangle(xLocation+1, barStart, g2.getFontMetrics().stringWidth("X")-2, lBarHeight);
                     g2.fill(tempRectangle);
                     fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
                             + " [d-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX], 2) + "]",
-                            tempRectangle);
-
-                    g2.setColor(Color.black);
-                }
-
-                if (currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] > 0) {
-                    g2.setColor(currentModificationProfile.getColor());
-
-                    lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
-                    if (lBarHeight < 5) {
-                        lBarHeight = 7;
-                    }
-
-                    int barStart = aboveSequenceHeight.intValue() - 1 - lBarHeight;
-                    Rectangle tempRectangle = new Rectangle(xLocation + g2.getFontMetrics().stringWidth("X") - iBarWidth, barStart, iBarWidth, lBarHeight);
-                    g2.fill(tempRectangle);
-                    fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
-                            + " [a-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX], 2) + "]",
                             tempRectangle);
 
                     g2.setColor(Color.black);

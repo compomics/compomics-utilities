@@ -170,7 +170,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             handledModification = aPeptideHit.getModifications()[l];
             if (handledModification != null) {
                 // the modification is named mass@residue for later identification
-                foundModifications.add(new ModificationMatch(handledModification.getMass() + "@" + aPeptideHit.getSequence().charAt(modificationSite-1), !handledModification.isFixed(), modificationSite));
+                foundModifications.add(new ModificationMatch(handledModification.getMass() + "@" + aPeptideHit.getSequence().charAt(modificationSite - 1), !handledModification.isFixed(), modificationSite));
             }
         }
         Double mascotEValue = aPeptideHit.getExpectancy();
@@ -178,15 +178,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         ArrayList<String> proteins = new ArrayList();
         for (int j = 0; j < aPeptideHit.getProteinHits().size(); j++) {
             String accession = ((ProteinHit) aPeptideHit.getProteinHits().get(j)).getAccession();
-            if (accession.lastIndexOf('|') != -1) {
-                int start = accession.indexOf("|");
-                int end = accession.indexOf("|", ++start);
-                accession = accession.substring(start, end);
-            }
             proteins.add(accession);
         }
 
-        Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);
+        Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), proteins, foundModifications);
         PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, measuredMass, mascotEValue, getFileName());
         MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
         currentAssumption.addUrParam(scoreParam);

@@ -69,7 +69,7 @@ public class FragmentFactory {
         for (int aa = 0; aa < sequence.length() - 1; aa++) {
 
             faa = aa + 1;
-            currentAA = getAminoAcid(sequence.charAt(aa));
+            currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
             forwardMass += currentAA.monoisotopicMass;
 
             if (modifications.get(faa) != null) {
@@ -184,7 +184,7 @@ public class FragmentFactory {
 
 
             raa = sequence.length() - aa - 1;
-            currentAA = getAminoAcid(sequence.charAt(raa));
+            currentAA = AminoAcid.getAminoAcid(sequence.charAt(raa));
             rewindMass += currentAA.monoisotopicMass;
 
             if (modifications.get(raa+1) != null) {
@@ -281,7 +281,7 @@ public class FragmentFactory {
             loss.clear();
         }
 
-        currentAA = getAminoAcid(sequence.charAt(sequence.length() - 1));
+        currentAA = AminoAcid.getAminoAcid(sequence.charAt(sequence.length() - 1));
         forwardMass += currentAA.monoisotopicMass;
 
         if (modifications.get(sequence.length()) != null) {
@@ -368,61 +368,6 @@ public class FragmentFactory {
         loss.add(neutralLoss2);
         result.add(new PeptideFragmentIon(PeptideFragmentIonType.PRECURSOR_ION, sequence.length(), forwardMass + Atom.H.mass + Atom.O.mass - neutralLoss.mass - neutralLoss2.mass, loss));
         loss.clear();
-
-
         return result;
-    }
-
-    /**
-     * Returns the amino acid corresponding to the letter given, null if not implemented.
-     * 
-     * @param letter    the letter given
-     * @return          the corresponding amino acid.
-     */
-    private AminoAcid getAminoAcid(char letter) {
-        switch (letter) {
-            case 'A':
-                return AminoAcid.A;
-            case 'C':
-                return AminoAcid.C;
-            case 'D':
-                return AminoAcid.D;
-            case 'E':
-                return AminoAcid.E;
-            case 'F':
-                return AminoAcid.F;
-            case 'G':
-                return AminoAcid.G;
-            case 'H':
-                return AminoAcid.H;
-            case 'I':
-                return AminoAcid.I;
-            case 'K':
-                return AminoAcid.K;
-            case 'L':
-                return AminoAcid.L;
-            case 'M':
-                return AminoAcid.M;
-            case 'N':
-                return AminoAcid.N;
-            case 'P':
-                return AminoAcid.P;
-            case 'Q':
-                return AminoAcid.Q;
-            case 'R':
-                return AminoAcid.R;
-            case 'S':
-                return AminoAcid.S;
-            case 'T':
-                return AminoAcid.T;
-            case 'V':
-                return AminoAcid.V;
-            case 'W':
-                return AminoAcid.W;
-            case 'Y':
-                return AminoAcid.Y;
-            default:
-                return null;
-        }
     }
 }

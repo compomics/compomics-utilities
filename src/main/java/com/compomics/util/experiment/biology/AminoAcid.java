@@ -49,10 +49,79 @@ public abstract class AminoAcid {
     public static final AminoAcid W = new Tryptophan();
     public static final AminoAcid Y = new Tyrosine();
 
+    /**
+     * Single letter code of the amino acid
+     */
     public String singleLetterCode;
+    /**
+     * Three letter code of the amino acid
+     */
     public String threeLetterCode;
+    /**
+     * Name of the amino acid
+     */
     public String name;
+    /**
+     * average mass of the amino acid
+     */
     public double averageMass;
+    /**
+     * Monoisotopic mass of the amino acid
+     */
     public double monoisotopicMass;
+    
+
+    /**
+     * Returns the amino acid corresponding to the letter given, null if not implemented.
+     * 
+     * @param letter    the letter given
+     * @return          the corresponding amino acid.
+     */
+    public static AminoAcid getAminoAcid(char letter) {
+        switch (letter) {
+            case 'A':
+                return AminoAcid.A;
+            case 'C':
+                return AminoAcid.C;
+            case 'D':
+                return AminoAcid.D;
+            case 'E':
+                return AminoAcid.E;
+            case 'F':
+                return AminoAcid.F;
+            case 'G':
+                return AminoAcid.G;
+            case 'H':
+                return AminoAcid.H;
+            case 'I':
+                return AminoAcid.I;
+            case 'K':
+                return AminoAcid.K;
+            case 'L':
+                return AminoAcid.L;
+            case 'M':
+                return AminoAcid.M;
+            case 'N':
+                return AminoAcid.N;
+            case 'P':
+                return AminoAcid.P;
+            case 'Q':
+                return AminoAcid.Q;
+            case 'R':
+                return AminoAcid.R;
+            case 'S':
+                return AminoAcid.S;
+            case 'T':
+                return AminoAcid.T;
+            case 'V':
+                return AminoAcid.V;
+            case 'W':
+                return AminoAcid.W;
+            case 'Y':
+                return AminoAcid.Y;
+            default:
+                return null;
+        }
+    }
 
 }

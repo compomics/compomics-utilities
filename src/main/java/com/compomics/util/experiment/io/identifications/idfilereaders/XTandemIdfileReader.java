@@ -107,7 +107,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                     for (Peptide peptide : spectrumPeptides) {
                         for (Domain domain : peptide.getDomains()) {
-                            currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain));
+                            currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain, charge.value));
                         }
                     }
                     foundPeptides.add(currentMatch);
@@ -123,13 +123,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * Returns a utilities peptide assumption from an X!Tandem peptide.
      * 
      * @param domain the domain of the X!Tandem peptide
+     * @param charge the charge of the precursor of the inspected spectrum
      * @return the corresponding peptide assumption
      */
-    private PeptideAssumption getPeptideAssumption(Domain domain) {
+    private PeptideAssumption getPeptideAssumption(Domain domain, int charge) {
         ArrayList<String> proteins = new ArrayList<String>();
         double eValue;
         com.compomics.util.experiment.biology.Peptide peptide;
-        double measuredMass = domain.getDomainMh() + domain.getDomainDeltaMh();   
+        double measuredMass = domain.getDomainMh() + domain.getDomainDeltaMh() - 1;
         String sequence = domain.getDomainSequence();
         String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
         String accession = "";
@@ -183,7 +184,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;
             foundModifications.add(new ModificationMatch(currentModification.getName(), true, location));
         }
-        peptide = new com.compomics.util.experiment.biology.Peptide(sequence, domain.getDomainMh(), proteins, foundModifications);
+        peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
         return new PeptideAssumption(peptide, 1, Advocate.XTANDEM, measuredMass, eValue, getFileName());
     }
 }

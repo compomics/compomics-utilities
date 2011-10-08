@@ -62,7 +62,7 @@ public class AScore {
 
             double p, P, score;
             int n, N = 0;
-            Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getMass(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+            Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
                 if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
                     noModPeptide.addModificationMatch(modificationMatch);
@@ -76,7 +76,7 @@ public class AScore {
                 rawMap.put(i, new HashMap<Double, ArrayList<Integer>>());
                 p = ((double) i + 1) / Math.max(spectrumMap.keySet().size(), 100);
                 for (int pos = 0; pos < possibleSites.size(); pos++) {
-                    tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getMass(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+                    tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
                     tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, possibleSites.get(pos) + 1));
                     matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(i), tempPeptide, 0, mzTolerance);
                     n = matches.size();
@@ -136,7 +136,7 @@ public class AScore {
                 }
             }
             p = ((double) bestI + 1) / Math.max(spectrumMap.keySet().size(), 100);
-            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getMass(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos1));
             matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance);
             n = matches.size();

@@ -149,6 +149,9 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         for (MSPepHit msPepHit : (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring)) {       // There might be redundancies in the map.
             Boolean taken = false;
             String accession = getProteinAccession(msPepHit.MSPepHit_defline);
+            if (accession == null) {
+                accession = msPepHit.MSPepHit_accession;
+            }
             for (String protein : proteins) {
                 if (protein.compareTo(accession) == 0) {
                     taken = true;
@@ -196,7 +199,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             }
         }
         double eValue = currentMsHit.MSHits_evalue;
-        Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, calcMass, proteins, modificationsFound);
+        Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, proteins, modificationsFound);
         return new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, expMass, eValue, getFileName());
     }
 
@@ -212,7 +215,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             if (header.getAccession() != null) {
                 return header.getAccession();
             } else {
-                return header.getRest();
+                return null;
             }
         } catch (Exception e) {
             return description.substring(1);

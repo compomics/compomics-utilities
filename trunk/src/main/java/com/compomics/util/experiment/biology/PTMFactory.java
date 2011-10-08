@@ -102,6 +102,14 @@ public class PTMFactory {
         if (indexToPTMMap.get(nameToIndexMap.get(name)) != null) {
             return indexToPTMMap.get(nameToIndexMap.get(name));
         }
+        if (name.indexOf("@")> 1) {
+            try {
+                double mass = new Double(name.substring(0, name.indexOf("@")));
+            return new PTM(-1, name, mass, new ArrayList<String>());
+            }catch (Exception e) {
+                return unknownPTM;
+            }
+        }
         return unknownPTM;
     }
 

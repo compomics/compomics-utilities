@@ -48,18 +48,17 @@ public class Peptide extends ExperimentObject {
      * Constructor for the peptide
      *
      * @param aSequence      The peptide sequence
-     * @param mass           The peptide mass
      * @param parentProteins The parent proteins
      * @param modifications  The PTM of this peptide
      */
-    public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
+    public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
-        this.mass = mass;
-        for (String protein : parentProteins) {
-            this.parentProteins.add(protein);
-        }
         for (ModificationMatch mod : modifications) {
             this.modifications.add(mod);
+        }
+        estimateTheoreticMass();
+        for (String protein : parentProteins) {
+            this.parentProteins.add(protein);
         }
     }
 
@@ -223,7 +222,7 @@ public class Peptide extends ExperimentObject {
         }
         return result;
     }
-    
+
     /**
      * returns the potential modification sites as an ordered list of string. 0 is the first aa.
      * @param sequence  the sequence of the peptide of interest
@@ -291,7 +290,7 @@ public class Peptide extends ExperimentObject {
     public String getNTerminal() {
 
         String nTerm = "NH3";
-        
+
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
         for (int i = 0; i < modifications.size(); i++) {
@@ -348,9 +347,9 @@ public class Peptide extends ExperimentObject {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
-        
+
         String modifiedSequence = "";
-        
+
         if (includeHtmlStartEndTag) {
             modifiedSequence += "<html>";
         }
@@ -389,7 +388,7 @@ public class Peptide extends ExperimentObject {
         }
 
         modifiedSequence = modifiedSequence + "-" + getCTerminal();
-   
+
         if (includeHtmlStartEndTag) {
             modifiedSequence += "</html>";
         }
@@ -441,5 +440,24 @@ public class Peptide extends ExperimentObject {
         }
 
         return modifiedSequence;
+    }
+
+    /**
+     * Estimates the theoretic mass of the peptide
+     */
+    private void estimateTheoreticMass() {
+        mass = Atom.H.mass;
+
+        AminoAcid currentAA;
+        for (int aa = 0; aa < sequence.length(); aa++) {
+            currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
+            mass += currentAA.monoisotopicMass;
+        }
+        mass += Atom.H.mass + Atom.O.mass;
+
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        for (ModificationMatch ptmMatch : modifications) {
+            mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+        }
     }
 }

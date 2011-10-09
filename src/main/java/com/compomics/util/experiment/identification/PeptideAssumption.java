@@ -9,10 +9,8 @@ import java.util.HashSet;
 /**
  * This object will models the assumption made by an advocate.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 25, 2010
- * Time: 2:45:46 PM
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PeptideAssumption extends ExperimentObject {
 
@@ -122,12 +120,19 @@ public class PeptideAssumption extends ExperimentObject {
     }
 
     /**
-     * returns the precursor mass error (in ppm)
+     * Returns the precursor mass error (in ppm or Da). Note that the value is 
+     * returns as (experimental mass - theoretical mass) and that negative values 
+     * thus can occur.
      *
-     * @return the precursor mass error (in ppm)
+     * @param ppm   if true the error is returns in ppm, false returns the error in Da
+     * @return      the precursor mass error (in ppm or Da)
      */
-    public double getDeltaMass() {
-        return Math.abs(measuredMass-peptide.getMass())/peptide.getMass()*1000000;
+    public double getDeltaMass(boolean ppm) {
+        if (ppm) {
+            return (measuredMass-peptide.getMass())/peptide.getMass()*1000000;
+        } else {
+            return measuredMass-peptide.getMass();
+        }
     }
 
     /**

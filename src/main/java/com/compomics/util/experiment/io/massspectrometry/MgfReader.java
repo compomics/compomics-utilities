@@ -164,7 +164,7 @@ public class MgfReader {
                     progressBar.setValue((int) (currentIndex/progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
-                indexes.put(line.substring(line.indexOf('=') + 1), currentIndex);
+                indexes.put(line.substring(line.indexOf('=') + 1).trim(), currentIndex);
             }
         }
         

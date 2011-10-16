@@ -92,11 +92,16 @@ public class SequenceFactory {
      * @return the desired protein
      * @throws IOException exception thrown whenever an error is encountered while reading the fasta file
      */
-    public Protein getProtein(String accession) throws IOException {
+    public Protein getProtein(String accession) throws IOException, IllegalArgumentException {
         Protein currentProtein = currentProteinMap.get(accession);
         if (currentProtein == null) {
             Header currentHeader = null;
-            long index = fastaIndex.getIndex(accession);
+            long index;
+            try {
+                 index = fastaIndex.getIndex(accession);
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("Protein not found: " + accession + ".");
+            }
             currentFastaFile.seek(index);
             String line, sequence = "";
             while ((line = currentFastaFile.readLine()) != null) {
@@ -122,6 +127,9 @@ public class SequenceFactory {
             currentProteinMap.put(accession, currentProtein);
             currentHeaderMap.put(accession, currentHeader);
         }
+        if (currentProtein == null) {
+            throw new IllegalArgumentException("Protein not found: " + accession + ".");
+        }
         return currentProtein;
     }
 
@@ -131,11 +139,17 @@ public class SequenceFactory {
      * @param accession accession of the desired protein
      * @return  the corresponding header
      * @throws IOException exception thrown whenever an error occurred while reading the fasta file
+     * @throws IllegalArgumentException exception thrown whenever a protein is not found
      */
-    public Header getHeader(String accession) throws IOException {
+    public Header getHeader(String accession) throws IOException, IllegalArgumentException {
         Header result = currentHeaderMap.get(accession);
         if (result == null) {
-            long index = fastaIndex.getIndex(accession);
+            long index;
+            try {
+                index = fastaIndex.getIndex(accession);
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("Protein not found: " + accession + ".");
+            }
             currentFastaFile.seek(index);
             result = Header.parseFromFASTA(currentFastaFile.readLine());
         }
@@ -384,8 +398,9 @@ public class SequenceFactory {
      * @param destinationFile   the destination file
      * @param progressBar    the progress bar
      * @throws IOException exception thrown whenever an error occurred while reading or writing a file 
+     * @throws IllegalArgumentException exdeption thrown whenever a protein is not found
      */
-    public void appendDecoySequences(File destinationFile, JProgressBar progressBar) throws IOException {
+    public void appendDecoySequences(File destinationFile, JProgressBar progressBar) throws IOException, IllegalArgumentException {
 
         if (progressBar != null) {
             progressBar.setIndeterminate(false);

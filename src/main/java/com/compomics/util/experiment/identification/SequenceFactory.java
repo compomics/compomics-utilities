@@ -88,9 +88,11 @@ public class SequenceFactory {
 
     /**
      * Returns the desired protein.
-     * @param accession     accession of the desired protein
-     * @return the desired protein
-     * @throws IOException exception thrown whenever an error is encountered while reading the fasta file
+     * 
+     * @param accession                     accession of the desired protein
+     * @return                              the desired protein
+     * @throws IOException                  thrown whenever an error is encountered while reading the FASTA file
+     * @throws IllegalArgumentException     thrown whenever an error is encountered while reading the FASTA file
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException {
         Protein currentProtein = currentProteinMap.get(accession);

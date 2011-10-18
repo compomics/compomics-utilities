@@ -1,7 +1,10 @@
 package com.compomics.util;
 
+import com.compomics.util.gui.dialogs.ProgressDialogX;
 import java.awt.Color;
 import java.io.File;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Includes general help methods that are used by the other classes.
@@ -92,5 +95,49 @@ public class Util {
         }
         
         return tempFileName;
+    }
+    
+    /**
+     * Returns the table as a separated text file.
+     * 
+     * @param table             the table to turn in to text
+     * @param separator         the text separator
+     * @param progressDialog    the progress dialog
+     * @param removeHtml        if true, html is converted to text
+     * @return                  the table as a separated text file
+     */
+    public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
+
+        String tableAsString = "";
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            tableAsString += ((DefaultTableModel) table.getModel()).getColumnName(i) + separator;
+        }
+
+        progressDialog.setIndeterminate(false);
+        progressDialog.setMax(table.getRowCount());
+
+        tableAsString += "\n";
+
+        for (int i = 0; i < table.getRowCount(); i++) {
+
+            progressDialog.incrementValue();
+
+            for (int j = 0; j < table.getColumnCount(); j++) {
+                
+                String tempValue = table.getValueAt(i, j).toString();
+                
+                // remove html tags
+                if (tempValue.indexOf("<html>") != -1 && removeHtml) {
+                    tempValue = tempValue.replaceAll("\\<[^>]*>","");
+                }
+                
+                tableAsString += tempValue + separator;
+            }
+
+            tableAsString += "\n";
+        }
+
+        return tableAsString;
     }
 }

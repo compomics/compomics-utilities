@@ -24,6 +24,11 @@ import org.jfree.data.statistics.HistogramType;
 public class IntensityHistogram extends JPanel {
 
     /**
+     * The chart panel for external access.
+     */
+    private ChartPanel chartPanel;
+    
+    /**
      * Creates an IntensityHistogram plot
      *
      * @param annotations                   the full list of spectrum annotations
@@ -100,7 +105,7 @@ public class IntensityHistogram extends JPanel {
             JFreeChart chart = ChartFactory.createHistogram(null, null, null,
                     dataset, PlotOrientation.VERTICAL, false, true, false);
 
-            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel = new ChartPanel(chart);
             chartPanel.setBorder(null);
             chart.setBorderVisible(false);
 
@@ -127,5 +132,14 @@ public class IntensityHistogram extends JPanel {
 
             this.add(chartPanel);
         }
+    }
+    
+    /**
+     * Returns the chart panel.
+     * 
+     * @return the chart panel
+     */
+    public ChartPanel getChartPanel() {
+        return chartPanel;
     }
 }

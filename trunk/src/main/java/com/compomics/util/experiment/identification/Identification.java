@@ -205,7 +205,7 @@ public abstract class Identification extends ExperimentObject {
      * @return              the desired match
      * @throws Exception    exception thrown whenever an error occurred while retrieving the match
      */
-    private Object getMatch(String matchKey) throws Exception {
+    private Object getMatch(String matchKey) throws IllegalArgumentException {
         int index = loadedMatches.indexOf(matchKey);
         if (index == -1) {
             try {
@@ -221,7 +221,7 @@ public abstract class Identification extends ExperimentObject {
                 return spectrumMatch;
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new Exception("Error while loading " + matchKey);
+                throw new IllegalArgumentException("Error while loading " + matchKey);
             }
         } else {
             if (index < 0.25 * loadedMatches.size()) {
@@ -244,21 +244,22 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns a peptide match
-     * @param peptideKey    the key of the match
-     * @return              the desired match
-     * @throws Exception    exception thrown whenever an error occurred while retrieving the match
+     * @param peptideKey                    the key of the match
+     * @return                              the desired match
+     * @throws IllegalArgumentException     exception thrown whenever an error occurred while retrieving the match
      */
-    public PeptideMatch getPeptideMatch(String peptideKey) throws Exception {
+    public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException {
         return (PeptideMatch) getMatch(peptideKey);
     }
 
     /**
-     * Returns a protein match
-     * @param proteinKey    the key of the match
-     * @return              the desired match
-     * @throws Exception    exception thrown whenever an error occurred while retrieving the match
+     * Returns a protein match.
+     * 
+     * @param proteinKey                    the key of the match
+     * @return                              the desired match
+     * @throws IllegalArgumentException     exception thrown whenever an error occurred while retrieving the match
      */
-    public ProteinMatch getProteinMatch(String proteinKey) throws Exception {
+    public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException {
         return (ProteinMatch) getMatch(proteinKey);
     }
 
@@ -467,9 +468,9 @@ public abstract class Identification extends ExperimentObject {
      * Indicates that a match was changed, it will thus be serialized again if needed.
      * 
      * @param match
-     * @throws Exception  
+     * @throws IllegalArgumentException  
      */
-    public void setMatchChanged(IdentificationMatch match) throws Exception {
+    public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException {
         String key = match.getKey();
         if (loadedMatches.contains(match.getKey())) {
             modifiedMatches.put(key, true);
@@ -481,7 +482,7 @@ public abstract class Identification extends ExperimentObject {
                 oos.writeObject(match);
                 oos.close();
             } catch (Exception e) {
-                throw new Exception("Error while writing match " + key);
+                throw new IllegalArgumentException("Error while writing match " + key);
             }
         }
     }

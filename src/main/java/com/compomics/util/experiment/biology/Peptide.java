@@ -449,9 +449,14 @@ public class Peptide extends ExperimentObject {
         mass = Atom.H.mass;
 
         AminoAcid currentAA;
-        for (int aa = 0; aa < sequence.length(); aa++) {
-            currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
-            mass += currentAA.monoisotopicMass;
+        for (int aa = 0; aa < sequence.length(); aa++) {  
+            try {
+                currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
+                mass += currentAA.monoisotopicMass;
+            } catch (NullPointerException e) {
+                System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
+                e.printStackTrace();
+            }
         }
         mass += Atom.H.mass + Atom.O.mass;
 

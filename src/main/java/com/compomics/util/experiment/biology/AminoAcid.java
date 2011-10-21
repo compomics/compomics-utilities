@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.aminoacids.Alanine;
 import com.compomics.util.experiment.biology.aminoacids.Arginine;
 import com.compomics.util.experiment.biology.aminoacids.Asparagine;
 import com.compomics.util.experiment.biology.aminoacids.AsparticAcid;
+import com.compomics.util.experiment.biology.aminoacids.B;
 import com.compomics.util.experiment.biology.aminoacids.Cysteine;
 import com.compomics.util.experiment.biology.aminoacids.GlutamicAcid;
 import com.compomics.util.experiment.biology.aminoacids.Glutamine;
@@ -20,6 +21,8 @@ import com.compomics.util.experiment.biology.aminoacids.Threonine;
 import com.compomics.util.experiment.biology.aminoacids.Tryptophan;
 import com.compomics.util.experiment.biology.aminoacids.Tyrosine;
 import com.compomics.util.experiment.biology.aminoacids.Valine;
+import com.compomics.util.experiment.biology.aminoacids.X;
+import com.compomics.util.experiment.biology.aminoacids.Z;
 
 /**
  * Class representing amino acids
@@ -48,7 +51,9 @@ public abstract class AminoAcid {
     public static final AminoAcid V = new Valine();
     public static final AminoAcid W = new Tryptophan();
     public static final AminoAcid Y = new Tyrosine();
-
+    public static final AminoAcid B = new B();
+    public static final AminoAcid Z = new Z();
+    public static final AminoAcid X = new X();
     /**
      * Single letter code of the amino acid
      */
@@ -69,7 +74,6 @@ public abstract class AminoAcid {
      * Monoisotopic mass of the amino acid
      */
     public double monoisotopicMass;
-    
 
     /**
      * Returns the amino acid corresponding to the letter given, null if not implemented.
@@ -119,9 +123,14 @@ public abstract class AminoAcid {
                 return AminoAcid.W;
             case 'Y':
                 return AminoAcid.Y;
+            case 'B':
+                return AminoAcid.B;
+            case 'Z':
+                return AminoAcid.Z;
+            case 'X':
+                return AminoAcid.X;
             default:
                 return null;
         }
     }
-
 }

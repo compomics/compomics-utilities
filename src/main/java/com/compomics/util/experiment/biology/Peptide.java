@@ -47,16 +47,36 @@ public class Peptide extends ExperimentObject {
     /**
      * Constructor for the peptide
      *
-     * @param aSequence      The peptide sequence
-     * @param parentProteins The parent proteins
-     * @param modifications  The PTM of this peptide
+     * @param aSequence                     The peptide sequence
+     * @param parentProteins                The parent proteins
+     * @param modifications                 The PTM of this peptide
+     * @throws IllegalArgumentException     Thrown if the peptide sequence contains unknown amino acids
      */
-    public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
+    public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         for (ModificationMatch mod : modifications) {
             this.modifications.add(mod);
         }
         estimateTheoreticMass();
+        for (String protein : parentProteins) {
+            this.parentProteins.add(protein);
+        }
+    }
+    
+    /**
+     * Constructor for the peptide
+     *
+     * @param aSequence      The peptide sequence
+     * @param mass           The peptide mass
+     * @param parentProteins The parent proteins
+     * @param modifications  The PTM of this peptide
+     */
+    public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
+        this.sequence = aSequence;
+        this.mass = mass;
+        for (ModificationMatch mod : modifications) {
+            this.modifications.add(mod);
+        }
         for (String protein : parentProteins) {
             this.parentProteins.add(protein);
         }
@@ -444,8 +464,10 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Estimates the theoretic mass of the peptide
+     * 
+     * @throws IllegalArgumentException if the peptide sequence contains unknown amino acids
      */
-    private void estimateTheoreticMass() {
+    private void estimateTheoreticMass() throws IllegalArgumentException {
         mass = Atom.H.mass;
 
         AminoAcid currentAA;
@@ -454,8 +476,7 @@ public class Peptide extends ExperimentObject {
                 currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
                 mass += currentAA.monoisotopicMass;
             } catch (NullPointerException e) {
-                System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
-                e.printStackTrace();
+                throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
             }
         }
         mass += Atom.H.mass + Atom.O.mass;

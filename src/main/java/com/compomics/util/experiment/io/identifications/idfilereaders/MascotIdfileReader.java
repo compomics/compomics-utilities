@@ -8,7 +8,6 @@ import com.compomics.mascotdatfile.util.mascot.ProteinHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -181,7 +180,15 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             proteins.add(accession);
         }
 
-        Peptide thePeptide = new Peptide(aPeptideHit.getSequence(), proteins, foundModifications);
+        Peptide thePeptide;
+        
+        try {
+            thePeptide = new Peptide(aPeptideHit.getSequence(), proteins, foundModifications); 
+        } catch (IllegalArgumentException e) {
+            thePeptide = new Peptide(aPeptideHit.getSequence(), aPeptideHit.getPeptideMr(), proteins, foundModifications);
+            e.printStackTrace();
+        }
+        
         PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, measuredMass, mascotEValue, getFileName());
         MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
         currentAssumption.addUrParam(scoreParam);

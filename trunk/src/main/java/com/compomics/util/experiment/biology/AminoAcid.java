@@ -16,6 +16,7 @@ import com.compomics.util.experiment.biology.aminoacids.Lysine;
 import com.compomics.util.experiment.biology.aminoacids.Methionine;
 import com.compomics.util.experiment.biology.aminoacids.Phenylalanine;
 import com.compomics.util.experiment.biology.aminoacids.Proline;
+import com.compomics.util.experiment.biology.aminoacids.Selenocysteine;
 import com.compomics.util.experiment.biology.aminoacids.Serine;
 import com.compomics.util.experiment.biology.aminoacids.Threonine;
 import com.compomics.util.experiment.biology.aminoacids.Tryptophan;
@@ -54,6 +55,7 @@ public abstract class AminoAcid {
     public static final AminoAcid B = new B();
     public static final AminoAcid Z = new Z();
     public static final AminoAcid X = new X();
+    public static final AminoAcid U = new Selenocysteine();
     /**
      * Single letter code of the amino acid
      */
@@ -129,6 +131,8 @@ public abstract class AminoAcid {
                 return AminoAcid.Z;
             case 'X':
                 return AminoAcid.X;
+            case 'U':
+                return AminoAcid.U;
             default:
                 return null;
         }

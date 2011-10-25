@@ -9,7 +9,9 @@ import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.dialogs.ProgressDialogX;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -90,7 +92,7 @@ public abstract class Identification extends ExperimentObject {
      * Map of long keys which will be referenced by their index for file creation
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
-    
+
     /**
      * adds a parameter with a corresponding match key which will be loaded in the memory. Use this method only for frequently used parameters, otherwise attach the parameters to the matches.
      * @param key           the key of the parameter
@@ -203,7 +205,7 @@ public abstract class Identification extends ExperimentObject {
      * Returns a match
      * @param matchKey      the key of the match
      * @return              the desired match
-     * @throws Exception    exception thrown whenever an error occurred while retrieving the match
+     * @throws IllegalArgumentException    exception thrown whenever an error occurred while retrieving the match
      */
     private Object getMatch(String matchKey) throws IllegalArgumentException {
         int index = loadedMatches.indexOf(matchKey);
@@ -236,9 +238,9 @@ public abstract class Identification extends ExperimentObject {
      * Returns a spectrum match
      * @param spectrumKey   the key of the match
      * @return              the desired match
-     * @throws Exception    exception thrown whenever an error occurred while retrieving the match
+     * @throws IllegalArgumentException    exception thrown whenever an error occurred while retrieving the match
      */
-    public SpectrumMatch getSpectrumMatch(String spectrumKey) throws Exception {
+    public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException {
         return (SpectrumMatch) getMatch(spectrumKey);
     }
 
@@ -294,9 +296,10 @@ public abstract class Identification extends ExperimentObject {
      * Add a spectrum match to the spectrum matches map.
      *
      * @param newMatch the new spectrum match
-     * @throws Exception  
+     * @throws FileNotFoundException  
+     * @throws IOException  
      */
-    public void addSpectrumMatch(SpectrumMatch newMatch) throws Exception {
+    public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException {
         String spectrumKey = newMatch.getKey();
         if (spectrumIdentification.contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey);
@@ -315,9 +318,10 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * updates the cache according to the memory settings.
-     * @throws Exception exception thrown whenever an error occurred while serializing a match
+     * @throws FileNotFoundException exception thrown whenever an error occurred while serializing a match
+     * @throws IOException exception thrown whenever an error occurred while serializing a match
      */
-    public void updateCache() throws Exception {
+    public void updateCache() throws FileNotFoundException, IOException {
         if (!inMemory) {
             while (!automatedMemoryManagement && loadedMatches.size() > cacheSize
                     || !memoryCheck()) {
@@ -329,8 +333,10 @@ public abstract class Identification extends ExperimentObject {
                         ObjectOutputStream oos = new ObjectOutputStream(fos);
                         oos.writeObject(loadedMatchesMap.get(key));
                         oos.close();
-                    } catch (Exception e) {
-                        throw new Exception("Error while writing match " + key);
+                    } catch (FileNotFoundException e) {
+                        throw new FileNotFoundException("Error while writing match " + key);
+                    } catch (IOException e) {
+                        throw new IOException("Error while writing match " + key);
                     }
                 }
                 loadedMatches.remove(0);
@@ -355,10 +361,8 @@ public abstract class Identification extends ExperimentObject {
      * Creates the peptides and protein instances based on the spectrum matches. Note that the attribute 
      * bestAssumption should be set for every spectrum match at this point. This operation will be very 
      * slow if the cache is already full.
-     * 
-     * @throws Exception 
      */
-    public void buildPeptidesAndProteins() throws Exception {
+    public void buildPeptidesAndProteins() {
         String peptideKey, proteinKey;
         Peptide peptide;
         SpectrumMatch spectrumMatch;
@@ -406,9 +410,10 @@ public abstract class Identification extends ExperimentObject {
      * Empties the cache and serializes everything in the specified serialization folder
      * 
      * @param progressDialog 
-     * @throws Exception exception thrown whenever an error occurred while serializing a match
+     * @throws FileNotFoundException exception thrown whenever an error occurred while serializing a match
+     * @throws IOException exception thrown whenever an error occurred while serializing a match
      */
-    public void emptyCache(ProgressDialogX progressDialog) throws Exception {
+    public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
             progressDialog.setMax(loadedMatchesMap.size());
@@ -422,8 +427,10 @@ public abstract class Identification extends ExperimentObject {
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
-                } catch (Exception e) {
-                    throw new Exception("Error while writing match " + key);
+                } catch (FileNotFoundException e) {
+                    throw new FileNotFoundException("Error while writing match " + key);
+                } catch (IOException e) {
+                    throw new IOException("Error while writing match " + key);
                 }
             }
             if (progressDialog != null) {
@@ -439,9 +446,10 @@ public abstract class Identification extends ExperimentObject {
      * Add a set of spectrumMatches to the model
      *
      * @param spectrumMatches The spectrum matches
-     * @throws Exception exception thrown when one tries to assign more than one identification per advocate to the same spectrum
+     * @throws FileNotFoundException exception thrown when one tries to assign more than one identification per advocate to the same spectrum
+     * @throws IOException exception thrown when one tries to assign more than one identification per advocate to the same spectrum
      */
-    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws Exception {
+    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws FileNotFoundException, IOException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
             addSpectrumMatch(spectrumMatch);
         }
@@ -492,9 +500,10 @@ public abstract class Identification extends ExperimentObject {
      * 
      * @param newFolder         the new folder
      * @param progressDialog    a progress dialog to display the progress (can be null)
-     * @throws Exception        Exception thrown whenever a problem occurred during the serialization process
+     * @throws FileNotFoundException        Exception thrown whenever a problem occurred during the serialization process
+     * @throws IOException        Exception thrown whenever a problem occurred during the serialization process
      */
-    public void save(File newFolder, ProgressDialogX progressDialog) throws Exception {
+    public void save(File newFolder, ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
         String newPath = newFolder.getPath();
         ArrayList<String> keys = new ArrayList<String>(spectrumIdentification);
         keys.addAll(peptideIdentification);
@@ -513,8 +522,10 @@ public abstract class Identification extends ExperimentObject {
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
                     modifiedMatches.put(key, false);
-                } catch (Exception e) {
-                    throw new Exception("Error while writing match " + key);
+                } catch (FileNotFoundException e) {
+                    throw new FileNotFoundException("Error while writing match " + key);
+                } catch (IOException e) {
+                    throw new IOException("Error while writing match " + key);
                 }
             } else {
                 File oldFile = new File(serializationDirectory, getFileName(key));
@@ -527,20 +538,20 @@ public abstract class Identification extends ExperimentObject {
         }
         serializationDirectory = newFolder.getPath();
     }
-    
+
     /**
      * Returns the name of the file to use for serialization/deserialization
      * @param key   the key of the match
      * @return      the name of the corresponding file
      */
     public String getFileName(String key) {
-        if (key.length()<100) {
+        if (key.length() < 100) {
             return key + EXTENTION;
         } else {
             int index = longKeys.indexOf(key);
             if (index == -1) {
                 index = longKeys.size();
-                longKeys.add(key);                
+                longKeys.add(key);
             }
             return index + EXTENTION;
         }

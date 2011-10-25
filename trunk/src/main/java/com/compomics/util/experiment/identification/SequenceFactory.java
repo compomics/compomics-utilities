@@ -15,7 +15,7 @@ import java.util.HashMap;
 import javax.swing.JProgressBar;
 
 /**
- * factory retrieving the information of the loaded fasta file
+ * Factory retrieving the information of the loaded FASTA file
  *
  * @author marc
  */
@@ -34,11 +34,11 @@ public class SequenceFactory {
      */
     private HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
     /**
-     * Index of the fasta file
+     * Index of the FASTA file
      */
     private FastaIndex fastaIndex;
     /**
-     * Random access file of the current fasta file
+     * Random access file of the current FASTA file
      */
     private RandomAccessFile currentFastaFile;
     /**
@@ -95,17 +95,21 @@ public class SequenceFactory {
      * @throws IllegalArgumentException     thrown whenever an error is encountered while reading the FASTA file
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException {
+        
         Protein currentProtein = currentProteinMap.get(accession);
+        
         if (currentProtein == null) {
-            Header currentHeader = null;
-            long index;
-            try {
-                 index = fastaIndex.getIndex(accession);
-            } catch (NullPointerException e) {
+            
+            Long index = fastaIndex.getIndex(accession);
+            
+            if (index == null) {
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
-            }
+            }   
+            
             currentFastaFile.seek(index);
             String line, sequence = "";
+            Header currentHeader = null;
+            
             while ((line = currentFastaFile.readLine()) != null) {
                 line = line.trim();
 
@@ -118,6 +122,7 @@ public class SequenceFactory {
                     sequence += line;
                 }
             }
+            
             currentProtein = new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoy(accession));
 
             if (loadedProteins.size() == nCache) {
@@ -125,6 +130,7 @@ public class SequenceFactory {
                 currentHeaderMap.remove(loadedProteins.get(0));
                 loadedProteins.remove(0);
             }
+            
             loadedProteins.add(accession);
             currentProteinMap.put(accession, currentProtein);
             currentHeaderMap.put(accession, currentHeader);
@@ -136,34 +142,38 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the desired header for the protein in the fasta file.
+     * Returns the desired header for the protein in the FASTA file.
      * 
      * @param accession accession of the desired protein
      * @return  the corresponding header
-     * @throws IOException exception thrown whenever an error occurred while reading the fasta file
+     * @throws IOException exception thrown whenever an error occurred while reading the FASTA file
      * @throws IllegalArgumentException exception thrown whenever a protein is not found
      */
     public Header getHeader(String accession) throws IOException, IllegalArgumentException {
+        
         Header result = currentHeaderMap.get(accession);
+        
         if (result == null) {
-            long index;
-            try {
-                index = fastaIndex.getIndex(accession);
-            } catch (NullPointerException e) {
+  
+            Long index = fastaIndex.getIndex(accession);
+            
+            if (index == null) {
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
-            }
+            } 
+
             currentFastaFile.seek(index);
             result = Header.parseFromFASTA(currentFastaFile.readLine());
         }
+        
         return result;
     }
 
     /**
-     * Loads a new fasta file in the factory. Only one fasta file can be loaded at a time.
+     * Loads a new FASTA file in the factory. Only one FASTA file can be loaded at a time.
      * 
-     * @param fastaFile the fasta file to load
+     * @param fastaFile the FASTA file to load
      * @throws FileNotFoundException    exception thrown if the file was not found
-     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws IOException  exception thrown if an error occurred while reading the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
     public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -172,12 +182,12 @@ public class SequenceFactory {
     }
 
     /**
-     * Loads a new fasta file in the factory. Only one fasta file can be loaded at a time.
+     * Loads a new FASTA file in the factory. Only one FASTA file can be loaded at a time.
      * 
-     * @param fastaFile the fasta file to load
+     * @param fastaFile the FASTA file to load
      * @param progressBar a progress bar showing the progress
      * @throws FileNotFoundException    exception thrown if the file was not found
-     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws IOException  exception thrown if an error occurred while reading the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
     public void loadFastaFile(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -186,12 +196,12 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the file index of a fasta file.
+     * Returns the file index of a FASTA file.
      * 
-     * @param fastaFile the fasta file
-     * @return the index of the fasta file
+     * @param fastaFile the FASTA file
+     * @return the index of the FASTA file
      * @throws FileNotFoundException    exception thrown if the file was not found
-     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws IOException  exception thrown if an error occurred while reading the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
     public FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -210,13 +220,13 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the file index of a fasta file.
+     * Returns the file index of a FASTA file.
      * 
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      * @param progressBar a progress bar showing the progress
-     * @return the index of the fasta file
+     * @return the index of the FASTA file
      * @throws FileNotFoundException    exception thrown if the file was not found
-     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws IOException  exception thrown if an error occurred while reading the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
     public FastaIndex getFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -235,9 +245,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Serializes the fasta file index in a given directory.
+     * Serializes the FASTA file index in a given directory.
      * 
-     * @param fastaIndex    the index of the fasta file
+     * @param fastaIndex    the index of the FASTA file
      * @param directory     the directory where to write the file
      * @throws IOException  exception thrown whenever an error occurred while writing the file
      */
@@ -250,12 +260,12 @@ public class SequenceFactory {
     }
 
     /**
-     * Deserializes the index of the fasta file.
+     * Deserializes the index of the FASTA file.
      * 
-     * @param fastaIndex    the fasta cui index file
+     * @param fastaIndex    the FASTA cui index file
      * @return the corresponding FastaIndex instance
      * @throws FileNotFoundException    exception thrown if the file was not found
-     * @throws IOException  exception thrown if an error occurred while reading the fasta file
+     * @throws IOException  exception thrown if an error occurred while reading the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing the file index
      */
     public FastaIndex getIndex(File fastaIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -278,11 +288,11 @@ public class SequenceFactory {
     }
 
     /**
-     * Static method to create a fasta index for a fasta file.
+     * Static method to create a FASTA index for a FASTA file.
      * 
-     * @param fastaFile the fasta file
-     * @return  the corresponding fasta index
-     * @throws FileNotFoundException    exception thrown if the fasta file was not found
+     * @param fastaFile the FASTA file
+     * @return  the corresponding FASTA index
+     * @throws FileNotFoundException    exception thrown if the FASTA file was not found
      * @throws IOException  exception thrown whenever an error occurred while reading the file
      */
     public static FastaIndex createFastaIndex(File fastaFile) throws FileNotFoundException, IOException {
@@ -290,12 +300,12 @@ public class SequenceFactory {
     }
 
     /**
-     * Static method to create a fasta index for a fasta file.
+     * Static method to create a FASTA index for a FASTA file.
      * 
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      * @param progressBar a progress bar showing the progress
-     * @return  the corresponding fasta index
-     * @throws FileNotFoundException    exception thrown if the fasta file was not found
+     * @return  the corresponding FASTA index
+     * @throws FileNotFoundException    exception thrown if the FASTA file was not found
      * @throws IOException  exception thrown whenever an error occurred while reading the file
      */
     public static FastaIndex createFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
@@ -450,7 +460,6 @@ public class SequenceFactory {
 
         FastaIndex newIndex = new FastaIndex(indexes, destinationFile.getName(), true, counter - 1);
         writeIndex(newIndex, destinationFile.getParentFile());
-
 
         newFile.close();
     }

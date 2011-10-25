@@ -36,9 +36,11 @@ public class MgfReader {
      *
      * @param aFile         the mgf file
      * @return              list of MSnSpectra imported from the file
-     * @throws Exception    Exeption thrown if a problem is encountered reading the file
+     * @throws FileNotFoundException    Exeption thrown if a problem is encountered reading the file
+     * @throws IOException    Exception thrown if a problem is encountered reading the file
+     * @throws IllegalArgumentException thrown when a parameter in the file cannot be parsed correctly 
      */
-    public ArrayList<MSnSpectrum> getSpectra(File aFile) throws Exception {
+    public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
@@ -70,8 +72,8 @@ public class MgfReader {
                     String value = line.substring(line.indexOf('=') + 1);
                     String[] temp = Pattern.compile("\\D").split(value);
                     rt = new Double(temp[0]);
-                } catch (Exception e) {
-                    throw new Exception("Cannot parse retention time.");
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Cannot parse retention time.");
                 }
             } else if (line.startsWith("TOLU")) {
                 // peptide tolerance unit not implemented
@@ -88,8 +90,8 @@ public class MgfReader {
             } else if (line.startsWith("SCANS")) {
                 try {
                     scanNumber = line.substring(line.indexOf('=') + 1);
-                } catch (Exception e) {
-                    throw new Exception("Cannot parse scan number.");
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Cannot parse scan number.");
                 }
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
@@ -130,7 +132,7 @@ public class MgfReader {
     public static MgfIndex getIndexMap(File mgfFile) throws FileNotFoundException, IOException {
         return getIndexMap(mgfFile, null);
     }
-    
+
     /**
      * Returns the index of all spectra in the given mgf file
      * @param mgfFile                   the given mgf file
@@ -145,7 +147,7 @@ public class MgfReader {
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
         String line;
         long currentIndex = 0;
-        
+
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
             progressBar.setStringPainted(true);
@@ -153,21 +155,21 @@ public class MgfReader {
             progressBar.setValue(0);
         }
 
-        long progressUnit = randomAccessFile.length()/100;
+        long progressUnit = randomAccessFile.length() / 100;
 
         while ((line = randomAccessFile.readLine()) != null) {
             line = line.trim();
             if (line.equals("BEGIN IONS")) {
                 currentIndex = randomAccessFile.getFilePointer();
-                
+
                 if (progressBar != null) {
-                    progressBar.setValue((int) (currentIndex/progressUnit));
+                    progressBar.setValue((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
                 indexes.put(line.substring(line.indexOf('=') + 1).trim(), currentIndex);
             }
         }
-        
+
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.setStringPainted(false);
@@ -185,9 +187,9 @@ public class MgfReader {
      * @param fileName          The name of the mgf file (@TODO get this from the random access file?)
      * @return                  The next spectrum encountered
      * @throws IOException      Exception thrown whenever an error is encountered while reading the spectrum
-     * @throws Exception        Exception thrown whenever the file is not of a compatible format
+     * @throws IllegalArgumentException Exception thrown whenever the file is not of a compatible format
      */
-    public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, Exception {
+    public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
         randomAccessFile.seek(index);
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
@@ -216,8 +218,8 @@ public class MgfReader {
                     String value = line.substring(line.indexOf('=') + 1);
                     String[] temp = Pattern.compile("\\D").split(value);
                     rt = new Double(temp[0]);
-                } catch (Exception e) {
-                    throw new Exception("Cannot parse retention time.");
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Cannot parse retention time.");
                 }
             } else if (line.startsWith("TOLU")) {
                 // peptide tolerance unit not implemented
@@ -235,7 +237,7 @@ public class MgfReader {
                 try {
                     scanNumber = line.substring(line.indexOf('=') + 1);
                 } catch (Exception e) {
-                    throw new Exception("Cannot parse scan number.");
+                    throw new IllegalArgumentException("Cannot parse scan number.");
                 }
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
@@ -261,7 +263,7 @@ public class MgfReader {
                 }
             }
         }
-        throw new Exception("End of the file reached before encountering the tag \"END IONS\".");
+        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
     }
 
     /**
@@ -271,9 +273,9 @@ public class MgfReader {
      * @param fileName          The name of the mgf file (@TODO get this from the random access file?)
      * @return                  The next spectrum encountered
      * @throws IOException      Exception thrown whenever an error is encountered while reading the spectrum
-     * @throws Exception        Exception thrown whenever the file is not of a compatible format
+     * @throws IllegalArgumentException        Exception thrown whenever the file is not of a compatible format
      */
-    public static Precursor getPrecursor(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, Exception {
+    public static Precursor getPrecursor(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
         randomAccessFile.seek(index);
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
@@ -292,7 +294,7 @@ public class MgfReader {
                     || line.startsWith("INSTRUMENT")) {
             } else if (line.startsWith("CHARGE")) {
                 if (line.endsWith("+") || line.endsWith("-")) {
-                    line = line.substring(0, line.length()-1);
+                    line = line.substring(0, line.length() - 1);
                 }
                 precursorCharge = new Integer(line.substring(line.indexOf('=') + 1));
             } else if (line.startsWith("PEPMASS")) {
@@ -310,6 +312,6 @@ public class MgfReader {
                 return new Precursor(rt, precursorMass, precursorIntensity, new Charge(Charge.PLUS, precursorCharge));
             }
         }
-        throw new Exception("End of the file reached before encountering the tag \"END IONS\".");
+        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
     }
 }

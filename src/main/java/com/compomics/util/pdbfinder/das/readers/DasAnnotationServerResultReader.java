@@ -25,7 +25,7 @@ public class DasAnnotationServerResultReader {
     /**
      * Get the next feature in the xml string.
      * 
-     * @return 
+     * @return the next feature in the xml string
      */
     public DasFeature getNextFeature() {
         String feature = iXml.substring(iXml.indexOf("<FEATURE", lastFeatureEndPosition + 9), iXml.indexOf("</FEATURE>", lastFeatureEndPosition + 9) + 10);
@@ -35,9 +35,9 @@ public class DasAnnotationServerResultReader {
     }
     
     /**
-     * Get the next feature in the xml string.
+     * Get all features in the xml string.
      * 
-     * @return 
+     * @return all features in the xml string
      */
     public DasFeature[] getAllFeatures() {
         Vector feats = new Vector();

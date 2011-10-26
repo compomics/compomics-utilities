@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.quantification.reporterion.quantification;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.quantification.Ratio;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.reporterion.QuantificationMatch;
 
 import java.util.HashMap;
@@ -29,7 +27,8 @@ public class PsmQuantification extends QuantificationMatch {
 
     /**
      * Constructor for a spectrumQuantification
-     * @param spectrumKey  the corresponding spectrum
+     * @param spectrumKey the corresponding spectrum key
+     * @param spectrumMatchKey  the corresponding spectrum match key
      */
     public PsmQuantification(String spectrumKey, String spectrumMatchKey) {
         this.spectrumKey = spectrumKey;
@@ -52,7 +51,7 @@ public class PsmQuantification extends QuantificationMatch {
 
     /**
      * Getter for the key of the spectrum match
-     * @return
+     * @return the key of the spectrum match
      */
     public String getSpectrumMatchKey() {
         return spectrumMatchKey;

@@ -119,7 +119,7 @@ public class PeptideFragmentIon extends Ion {
      * Construction for a peptide fragment.
      *
      * @param type      the type of ion according to static fields
-     * @param number    the ion number
+     * @param residue    the ion number
      * @param mass      the ion mass
      */
     public PeptideFragmentIon(PeptideFragmentIonType type, String residue, double mass) {

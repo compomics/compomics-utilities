@@ -213,7 +213,7 @@ public abstract class Quantification extends ExperimentObject {
 
     /**
      * Removes a quantification from the model
-     * @param matchKey the key of the match to remove
+     * @param quantificationKey the key of the match to remove
      */
     public void removeQuantification(String quantificationKey) {
         if (proteinQuantification.contains(quantificationKey)) {
@@ -267,10 +267,11 @@ public abstract class Quantification extends ExperimentObject {
     }
 
     /**
-     * Returns a list of PSM quantification matches corresponding to the given psm identification key
-     * @param spectrumKey   the key of the identification match
-     * @return              the desired matches
-     * @throws Exception    exception thrown whenever an error occurred while retrieving the match
+     * Returns a list of PSM quantification matches corresponding to the given psm identification key.
+     * 
+     * @param identificationMatchKey   the key of the identification match
+     * @return                         the desired matches
+     * @throws Exception               exception thrown whenever an error occurred while retrieving the match
      */
     public ArrayList<PsmQuantification> getSpectrumMatches(String identificationMatchKey) throws Exception {
         ArrayList<PsmQuantification> result = new ArrayList<PsmQuantification>();
@@ -313,7 +314,7 @@ public abstract class Quantification extends ExperimentObject {
     /**
      * Add a spectrum quantification to the spectrum quantification matches map and overwrites if already implemented.
      *
-     * @param newMatch the new spectrum match
+     * @param match the new spectrum match
      * @throws Exception  
      */
     public void addPsmQuantification(PsmQuantification match) throws Exception {
@@ -336,7 +337,7 @@ public abstract class Quantification extends ExperimentObject {
     /**
      * Add a peptide quantification match to the peptide quantification matches map if not already implemented.
      *
-     * @param newMatch the new spectrum match
+     * @param match the new spectrum match
      * @throws Exception  
      */
     public void addPeptideQuantification(PeptideQuantification match) throws Exception {
@@ -353,7 +354,7 @@ public abstract class Quantification extends ExperimentObject {
     /**
      * Add a protein quantification match to the peptide quantification matches map if not already implemented.
      *
-     * @param newMatch the new spectrum match
+     * @param match the new spectrum match
      * @throws Exception  
      */
     public void addProteinQuantification(ProteinQuantification match) throws Exception {

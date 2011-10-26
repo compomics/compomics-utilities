@@ -1,7 +1,5 @@
 package com.compomics.util.experiment.quantification.reporterion.quantification;
 
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.Ratio;
 import com.compomics.util.experiment.quantification.reporterion.QuantificationMatch;
 
@@ -49,9 +47,9 @@ public class ProteinQuantification extends QuantificationMatch {
      * @param proteinRatios             the estimated protein ratios
      * @param peptideQuantification     the corresponding peptide quantification
      */
-    public ProteinQuantification(String proteinKey, ArrayList<String> peptideQuantification, HashMap<Integer, Ratio> ratios) {
+    public ProteinQuantification(String proteinKey, ArrayList<String> peptideQuantification, HashMap<Integer, Ratio> proteinRatios) {
         this.proteinKey = proteinKey;
-        this.ratios = ratios;
+        this.ratios = proteinRatios;
         this.peptideQuantification.addAll(peptideQuantification);
     }
 

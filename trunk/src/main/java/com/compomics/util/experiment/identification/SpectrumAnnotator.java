@@ -83,8 +83,8 @@ public class SpectrumAnnotator {
      * This method matches the potential fragment ions of a given peptide with a given peak.
      * 
      * @param peptide       The peptide
-     * @param fragmentTypes The fragment ions selected
-     * @param charge        The charges of the fragment to search for 
+     * @param iontypes      The fragment ions selected
+     * @param charges       The charges of the fragment to search for 
      * @param neutralLosses Map of expected neutral losses: neutral loss -> maximal position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      * @param peak          The peak to match
      * @param massTolerance The mass tolerance to use (in Dalton)
@@ -547,14 +547,15 @@ public class SpectrumAnnotator {
      * @param neutralLosses         Map of expected neutral losses: neutral loss -> first position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      * @param charges               List of expected charges
      * @param peptide               The peptide of interest
-     * @param intensityLimit        The intensity limit to use
-     * @param mzTolerance           The m/z tolerance to use
+     * @param precursorCharge       The precursor charge
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
-    public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
+    public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons, 
+            HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
+        
         HashMap<Integer, ArrayList<PeptideFragmentIon>> result = new HashMap<Integer, ArrayList<PeptideFragmentIon>>();
         setPeptide(peptide);
-        String key;
+        
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
             if (expectedFragmentIons.contains(fragmentIon.getType())
                     && lossesValidated(neutralLosses, fragmentIon, peptide)) {

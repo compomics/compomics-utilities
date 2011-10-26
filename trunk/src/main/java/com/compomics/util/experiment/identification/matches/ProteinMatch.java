@@ -1,17 +1,13 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class models a protein match.
@@ -49,7 +45,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * Constructor for the protein match
      *
-     * @param protein the matching protein
+     * @param proteinAccession the matching protein
      */
     public ProteinMatch(String proteinAccession) {
         theoreticProtein.add(proteinAccession);
@@ -59,7 +55,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * Constructor for the protein match
      *
-     * @param peptideMatch The corresponding peptide match
+     * @param peptide The corresponding peptide match
      */
     public ProteinMatch(Peptide peptide) {
         ArrayList<String> parentProteins = peptide.getParentProteins();
@@ -82,7 +78,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * setter for the matching protein
      *
-     * @param protein the matching protein
+     * @param proteinAccession the matching protein
      */
     public void addTheoreticProtein(String proteinAccession) {
         theoreticProtein.add(proteinAccession);
@@ -116,7 +112,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * add a subordinated peptide match
      *
-     * @param peptideMatch a peptide match
+     * @param peptideMatchKey a peptide match
      */
     public void addPeptideMatch(String peptideMatchKey) {
         peptideMatches.add(peptideMatchKey);

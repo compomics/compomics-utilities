@@ -695,7 +695,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * Returns the peak color to be used for the given peak label. The
      * colors used are based on the color coding used in MascotDatfile.
      *
-     * @param fragmentIonType
+     * @param fragmentIon
      * @return the peak color
      */
     public static Color determineFragmentIonColor(PeptideFragmentIon fragmentIon) {

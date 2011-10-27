@@ -106,8 +106,9 @@ public class IdentificationParametersReader {
     public static final String CHARGE_ESTIMATION = "OMSSA_CHARGE_ESTIMATION";
 
     /**
-     * Loads the search properties from a SearchGUI parameters file
-     * @param aFile                     a searchGUI parameter file
+     * Loads the search properties from a SearchGUI properties file.
+     * 
+     * @param aFile                     a searchGUI properties file
      * @return                          the corresponding properties, indexed by the static fields
      * @throws FileNotFoundException    exception thrown if the file is not found
      * @throws IOException              exception thrown whenever a problem occurs while reading the file

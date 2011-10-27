@@ -163,4 +163,27 @@ public class Protein extends ExperimentObject {
         }
         return nCleavages;
     }
+    
+    /**
+     * Returns the proteins molecular weight.
+     * 
+     * @return the proteins molecular weight
+     */
+    public double computeMolecularWeight() {
+        
+        double mass = Atom.H.mass;
+
+        for (int aa = 0; aa < sequence.length(); aa++) {  
+            try {
+                AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
+                mass += currentAA.monoisotopicMass;
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
+            }
+        }
+        
+        mass += Atom.H.mass + Atom.O.mass;
+        
+        return mass;
+    }
 }

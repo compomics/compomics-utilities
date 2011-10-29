@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology.neutrallosses;
 
 import com.compomics.util.experiment.biology.Atom;
@@ -13,12 +9,12 @@ import com.compomics.util.experiment.biology.NeutralLoss;
  * @author marc
  */
 public class HPO3 extends NeutralLoss {
-    
+
     /**
      * Constructor
      */
     public HPO3() {
         this.name = "HPO3";
-        this.mass = Atom.H.mass + Atom.P.mass + 3*Atom.O.mass;
+        this.mass = Atom.H.mass + Atom.P.mass + 3 * Atom.O.mass;
     }
 }

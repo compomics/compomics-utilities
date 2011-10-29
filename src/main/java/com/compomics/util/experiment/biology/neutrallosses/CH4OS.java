@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology.neutrallosses;
 
 import com.compomics.util.experiment.biology.Atom;
@@ -19,7 +15,6 @@ public class CH4OS extends NeutralLoss {
      */
     public CH4OS() {
         this.name = "CH4OS";
-        this.mass = Atom.C.mass + 4*Atom.H.mass + Atom.O.mass + Atom.S.mass;
+        this.mass = Atom.C.mass + 4 * Atom.H.mass + Atom.O.mass + Atom.S.mass;
     }
-    
 }

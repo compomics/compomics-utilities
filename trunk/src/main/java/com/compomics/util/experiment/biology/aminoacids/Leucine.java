@@ -16,4 +16,4 @@ public class Leucine extends AminoAcid {
         averageMass = 113.15980;
         monoisotopicMass = 113.08407;
     }
-    }
+}

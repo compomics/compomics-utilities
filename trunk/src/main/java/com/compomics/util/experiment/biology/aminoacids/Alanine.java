@@ -16,5 +16,4 @@ public class Alanine extends AminoAcid {
         averageMass = 71.07870;
         monoisotopicMass = 71.03712;
     }
-
 }

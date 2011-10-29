@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.neutrallosses.CH4OS;
@@ -10,7 +6,6 @@ import com.compomics.util.experiment.biology.neutrallosses.HPO3;
 import com.compomics.util.experiment.biology.neutrallosses.H3PO4;
 import com.compomics.util.experiment.biology.neutrallosses.NH3;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import java.util.ArrayList;
 
 /**
  * This class represents a neutral loss.
@@ -18,7 +13,7 @@ import java.util.ArrayList;
  * @author marc
  */
 public abstract class NeutralLoss extends ExperimentObject {
-    
+
     /**
      * H2O loss
      */
@@ -38,7 +33,7 @@ public abstract class NeutralLoss extends ExperimentObject {
     /**
      * CH4OS loss
      */
-    public static final NeutralLoss CH4OS = new CH4OS();    
+    public static final NeutralLoss CH4OS = new CH4OS();
     /**
      * The mass lost
      */
@@ -47,7 +42,7 @@ public abstract class NeutralLoss extends ExperimentObject {
      * The name of the neutral loss
      */
     public String name;
-    
+
     /**
      * Method indicating whether another neutral loss is the same as the one considered
      * @param anotherNeutralLoss    another neutral loss
@@ -56,5 +51,4 @@ public abstract class NeutralLoss extends ExperimentObject {
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
         return anotherNeutralLoss.name.equals(name);
     }
-    
 }

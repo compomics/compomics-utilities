@@ -70,11 +70,6 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private final int iXStart = 10;
     /**
-     * This boolean decides whether to markup the modified sequence in
-     * red for y-ion coverage and underline for b-ion coverage.
-     */
-    private boolean iBoolHighlightSequence = false;
-    /**
      * This boolean holds whether or not the given sequence is a modified 
      * sequence or a normal peptide sequence.
      *
@@ -82,6 +77,10 @@ public class SequenceFragmentationPanel extends JPanel {
      * Modified: NH2-K<Ace>ENNY-COOH
      */
     private boolean isModifiedSequence;
+    /**
+     * If true the modification are highlighted by adding a start above the modified residue.
+     */
+    private boolean iStarModifications;
 
     /**
      * Creates a new SequenceFragmentationPanel.
@@ -89,15 +88,19 @@ public class SequenceFragmentationPanel extends JPanel {
      * @param aSequence                  String with the Modified Sequence of an peptide identification.
      * @param aIonMatches                ArrayList with Fragmentation ion matches.
      * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
+     * @param aStarModifications         boolean decides whether the modification are highlighted by adding a star above the modified residue instead if 
+     *                                   displaying the PTM short name
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence) throws HeadlessException {
+    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence, boolean aStarModifications) throws HeadlessException {
         super();
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
         iIonMatches = aIonMatches;
+        iStarModifications = aStarModifications;
+        
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
         
@@ -146,44 +149,31 @@ public class SequenceFragmentationPanel extends JPanel {
              * A. Draw the component.
              *  --------------------
              */
-            int length = iSequenceComponents.length;
+            
+            String residue = iSequenceComponents[i];
 
-            if (iBoolHighlightSequence) {
-                if (i == 0) {
-                    // b-ion fragment of this component found?
-                    if (bIons[i] != 0) {
-                        g2.setColor(Color.black);
-                        g2.drawLine(xLocation - iHorizontalSpace, (yLocation + 2),
-                                xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i])
-                                + iHorizontalSpace, (yLocation + 2));
-                    }
-                } else if (i == (length - 1)) {
-                    // y-ions fragment of this component found?
-                    if (yIons[yIons.length - (i)] != 0) {
-                        g2.setColor(Color.red);
-                    }
-                } else {
-                    // Aha, two ions needed here.
-                    // b-ion fragment of this component found?
-                    if (bIons[i] != 0 && (bIons[i - 1] != 0 || bIons[i + 1] != 0)) {
-                        g2.setColor(Color.black);
-                        g2.drawLine(xLocation - iHorizontalSpace, (yLocation + 2),
-                                xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i])
-                                + iHorizontalSpace, (yLocation + 2));
-                    }
-                    // y-ions fragment of this component found?
-                    if (yIons[yIons.length - (i)] != 0 && (yIons[yIons.length - (i + 1)] != 0
-                            || yIons[yIons.length - (i - 1)] != 0)) {
-                        g2.setColor(Color.red);
-                    }
-                }
+            // check if it's a modified sequence
+            boolean modified = residue.indexOf("<") != -1;
+            if (modified && iStarModifications) {
+                residue = residue.substring(0, residue.indexOf("<")) + residue.substring(residue.lastIndexOf(">") + 1);   
+            }
+            
+            // Draw this component.
+            g2.drawString(residue, xLocation, yLocation);
+            
+            // if modified, add a '*' above the residue
+            if (modified && iStarModifications && i == iSequenceComponents.length - 1) { 
+                g2.drawString("*", xLocation, yLocation - 10); 
             }
 
-            // Draw this component.
-            g2.drawString(iSequenceComponents[i], xLocation, yLocation);
-
             // Move the XLocation forwards with the component's length and the horizontal spacer..
-            xLocation = xLocation + g2.getFontMetrics().stringWidth(iSequenceComponents[i]) + iHorizontalSpace;
+            xLocation += g2.getFontMetrics().stringWidth(residue) + iHorizontalSpace;
+            
+            // if modified, add a '*' above the residue
+            if (modified && iStarModifications && i < iSequenceComponents.length - 1) { 
+                g2.drawString("*", xLocation - g2.getFontMetrics().stringWidth("*") - iHorizontalSpace, yLocation - 10); 
+            }
+            
 
             /**
              * B. Draw the bars.

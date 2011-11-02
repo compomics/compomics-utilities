@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology.ions;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Ion;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class models a peptide fragment ion.
@@ -178,9 +179,14 @@ public class PeptideFragmentIon extends Ion {
      * @return the neutral loss
      */
     public String getNeutralLoss() {
-        String result = "";
+        ArrayList<String> names = new ArrayList<String>();
         for (NeutralLoss neutralLoss : neutralLosses) {
-            result += "-" + neutralLoss.name;
+            names.add(neutralLoss.name);
+        }
+        Collections.sort(names);
+        String result = "";
+        for (String name : names) {
+            result += "-" + name;
         }
         return result;
     }
@@ -193,9 +199,9 @@ public class PeptideFragmentIon extends Ion {
     public ArrayList<NeutralLoss> getNeutralLosses() {
         return neutralLosses;
     }
-    
+
     @Override
     public String toString() {
-        return getIonType() + getNeutralLoss();       
+        return getIonType() + getNeutralLoss();
     }
 }

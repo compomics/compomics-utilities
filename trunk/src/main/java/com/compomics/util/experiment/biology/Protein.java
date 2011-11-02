@@ -64,7 +64,7 @@ public class Protein extends ExperimentObject {
         this.sequence = sequence;
         this.decoy = isDecoy;
     }
-    
+
     /**
      * Constructor for a protein.
      *
@@ -79,7 +79,7 @@ public class Protein extends ExperimentObject {
         this.sequence = sequence;
         this.decoy = isDecoy;
     }
-    
+
     /**
      * Indicates if the protein is factice (from a decoy database for instance)
      * 
@@ -97,7 +97,7 @@ public class Protein extends ExperimentObject {
     public String getAccession() {
         return accession;
     }
-    
+
     /**
      * Getter for the protein database type.
      *
@@ -163,27 +163,30 @@ public class Protein extends ExperimentObject {
         }
         return nCleavages;
     }
-    
+
     /**
      * Returns the proteins molecular weight.
      * 
      * @return the proteins molecular weight
      */
     public double computeMolecularWeight() {
-        
-        double mass = Atom.H.mass;
 
-        for (int aa = 0; aa < sequence.length(); aa++) {  
+        double mass = Atom.H.mass;
+        char aa;
+        for (int iaa = 0; iaa < sequence.length(); iaa++) {
+            aa = sequence.charAt(iaa);
             try {
-                AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
-                mass += currentAA.monoisotopicMass;
+                if (aa != '*') {
+                    AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
+                    mass += currentAA.monoisotopicMass;
+                }
             } catch (NullPointerException e) {
-                throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
+                throw new IllegalArgumentException("Unknown amino acid: " + aa + "!");
             }
         }
-        
+
         mass += Atom.H.mass + Atom.O.mass;
-        
+
         return mass;
     }
 }

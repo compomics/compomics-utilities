@@ -92,6 +92,10 @@ public abstract class Identification extends ExperimentObject {
      * Map of long keys which will be referenced by their index for file creation
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
+    /**
+     * Forbidden characters to get rid of when serializing
+     */
+    public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
      * adds a parameter with a corresponding match key which will be loaded in the memory. Use this method only for frequently used parameters, otherwise attach the parameters to the matches.
@@ -551,6 +555,14 @@ public abstract class Identification extends ExperimentObject {
      * @return      the name of the corresponding file
      */
     public String getFileName(String key) {
+        
+        for (String fc : forbiddenCharacters) {
+            String[] split = key.split(fc);
+            key = "";
+            for (String splitPart : split) {
+                key += splitPart;
+            }
+        }
         if (key.length() < 100) {
             return key + EXTENTION;
         } else {

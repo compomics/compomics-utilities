@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.NeutralLoss;
@@ -14,26 +10,22 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * This class scores PTM locations using the A-score.
+ * This class scores PTM locations using various A-scores.
  *
  * @author Marc
  */
-public class AScore {
+public class PTMLocationScores {
 
     /**
      * Returns the A-score for the best PTM location. In case the two best locations score the same they are both given with the score of 50.
      * @param peptide               The peptide of interest
-     * @param ptm                   The name of the PTM to score
+     * @param ptm                   The PTM to score
      * @param nPTM                  The number of occurrences where this PTM is expected on this peptide
      * @param spectrum              The corresponding spectrum
      * @param expectedFragmentIons  The fragment ions to look for
@@ -170,7 +162,7 @@ public class AScore {
         } else {
             ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
             for (int pos : possibleSites) {
-                modificationProfile.add(pos+1);
+                modificationProfile.add(pos + 1);
             }
             result.put(modificationProfile, 100.0);
         }
@@ -179,7 +171,7 @@ public class AScore {
 
     /**
      * Generates a map containing the spectra filtered on intensity with a basis of 20*mz tolerance indexed by the depth used. (see A-score paper for more details)
-     * 
+     *
      * @param baseSpectrum  the base spectrum
      * @param mzTolerance   the m/z tolerance
      * @return a map containing the spectra filtered indexed by peak depth.
@@ -230,5 +222,61 @@ public class AScore {
             currentmzMin += 200 * mzTolerance;
         }
         return result;
+    }
+
+    /**
+     * Returns the ptm plot series in the jfreechert format for one psm.
+     * @param peptide               The peptide of interest
+     * @param ptm                   The PTM to score
+     * @param spectrum              The corresponding spectrum
+     * @param expectedFragmentIons  The fragment ions to look for
+     * @param neutralLosses         The neutral losses to look for
+     * @param charges               The fragment ions charges to look for
+     * @param mzTolerance           The m/z tolerance to use
+     * @return the ptm plot series in the jfreechert format for one psm.
+     */
+    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, MSnSpectrum spectrum,
+            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses,
+            ArrayList<Integer> charges, double mzTolerance, double intensityLimit) {
+        Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+            if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                noModPeptide.addModificationMatch(modificationMatch);
+            }
+        }
+        ArrayList<Integer> possibleSites = Peptide.getPotentialModificationSites(peptide.getSequence(), ptm);
+        Collections.sort(possibleSites);
+        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+        HashMap<Integer, ArrayList<PeptideFragmentIon>> fragmentIons = spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, noModPeptide, spectrum.getPrecursor().getCharge().value);
+        HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
+        PeptideFragmentIon peptideFragmentIon;
+        ArrayList<IonMatch> matches;
+        for (int pos : possibleSites) {
+            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+            tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos + 1));
+            matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrum, tempPeptide, intensityLimit, mzTolerance);
+            for (IonMatch ionMatch : matches) {
+                peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+                if (peptideFragmentIon.getType() == PeptideFragmentIonType.A_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.B_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.C_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.X_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.Y_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.Z_ION) {
+                    for (PeptideFragmentIon noModIon : fragmentIons.get(ionMatch.charge.value)) {
+                        if (noModIon.getType() == peptideFragmentIon.getType()
+                                && noModIon.getNumber() == peptideFragmentIon.getNumber()
+                                && noModIon.getNeutralLoss().equals(peptideFragmentIon.getNeutralLoss())) {
+                            if (!map.containsKey(noModIon)) {
+                                map.put(noModIon, new ArrayList<IonMatch>());
+                            }
+                            map.get(noModIon).add(ionMatch);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return map;
     }
 }

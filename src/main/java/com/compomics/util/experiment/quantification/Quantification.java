@@ -540,6 +540,14 @@ public abstract class Quantification extends ExperimentObject {
      * @return      the name of the corresponding file
      */
     public String getFileName(String key) {
+        
+        for (String fc : Identification.forbiddenCharacters) {
+            String[] split = key.split(fc);
+            key = "";
+            for (String splitPart : split) {
+                key += splitPart;
+            }
+        }
         if (key.length() < 100) {
             return key + EXTENTION;
         } else {

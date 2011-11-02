@@ -24,6 +24,10 @@ public class PsmQuantification extends QuantificationMatch {
      * The matches of the reporter ions
      */
     private HashMap<Integer, IonMatch> reporterMatches = new HashMap<Integer, IonMatch>();
+    /**
+     * The deisotoped intensities
+     */
+    private HashMap<Integer, Double> deisotopedIntensities = new HashMap<Integer, Double>();
 
     /**
      * Constructor for a spectrumQuantification
@@ -63,5 +67,21 @@ public class PsmQuantification extends QuantificationMatch {
      */
     public HashMap<Integer, IonMatch> getReporterMatches() {
         return reporterMatches;
+    }
+
+    /**
+     * returns the deisotoped intensities
+     * @return the deisotoped intensities 
+     */
+    public HashMap<Integer, Double> getDeisotopedIntensities() {
+        return deisotopedIntensities;
+    }
+
+    /**
+     * Sets the deisotoped intensities
+     * @param deisotopedIntensities the deisotoped intensities
+     */
+    public void setDeisotopedIntensities(HashMap<Integer, Double> deisotopedIntensities) {
+        this.deisotopedIntensities = deisotopedIntensities;
     }
 }

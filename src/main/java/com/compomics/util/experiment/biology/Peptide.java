@@ -252,8 +252,9 @@ public class Peptide extends ExperimentObject {
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         String tempSequence;
-        int tempIndex, ref = 0;
+        int tempIndex, ref;
         for (String aa : ptm.getResidues()) {
+            ref = 0;
             tempSequence = sequence;
             while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
                 possibleSites.add(ref + tempIndex);

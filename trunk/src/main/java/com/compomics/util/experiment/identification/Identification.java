@@ -206,6 +206,19 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Indicates whether a match indexed by the given key exists
+     * @param matchKey the key of the match looked for
+     * @return a boolean indicating whether a match indexed by the given key exists
+     */
+    public boolean matchExists(String matchKey) {
+        if (loadedMatches.contains(matchKey)) {
+            return true;
+        }
+        File newMatch = new File(serializationDirectory, getFileName(matchKey));
+        return newMatch.exists();
+    }
+
+    /**
      * Returns a match
      * @param matchKey      the key of the match
      * @return              the desired match
@@ -555,7 +568,7 @@ public abstract class Identification extends ExperimentObject {
      * @return      the name of the corresponding file
      */
     public String getFileName(String key) {
-        
+
         for (String fc : forbiddenCharacters) {
             String[] split = key.split(fc);
             key = "";

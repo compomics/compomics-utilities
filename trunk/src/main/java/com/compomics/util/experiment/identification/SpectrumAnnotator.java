@@ -72,6 +72,10 @@ public class SpectrumAnnotator {
      * The mass tolerance for peak matching
      */
     private double massTolerance;
+    /**
+     * m/z shift applied to all theoretic peaks
+     */
+    private double massShift = 0;
 
     /**
      * Constructor
@@ -236,6 +240,11 @@ public class SpectrumAnnotator {
         if (this.peptide == null || !this.peptide.isSameAs(peptide) || !this.peptide.sameModificationsAs(peptide)) {
             this.peptide = peptide;
             fragmentIons = fragmentFactory.getFragmentIons(peptide);
+            if (massShift != 0) {
+                for (PeptideFragmentIon fragmentIon : fragmentIons) {
+                    fragmentIon.theoreticMass += massShift;
+                }
+            }
             spectrumAnnotation.clear();
             unmatchedIons.clear();
         }
@@ -253,7 +262,7 @@ public class SpectrumAnnotator {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
-        
+
         HashMap<NeutralLoss, Integer> likelyNeutralLosses = new HashMap<NeutralLoss, Integer>();
         int aaMin;
         for (NeutralLoss neutralLoss : imposedNeutralLosses) {
@@ -348,7 +357,7 @@ public class SpectrumAnnotator {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
-        
+
         HashMap<NeutralLoss, Integer> likelyNeutralLosses = new HashMap<NeutralLoss, Integer>();
         int aaMin = peptide.getSequence().length();
         if (peptide.getSequence().indexOf("D") != -1) {
@@ -388,9 +397,9 @@ public class SpectrumAnnotator {
         int aaMaxH3PO4 = peptide.getSequence().length();
         int aaMaxCH4OS = peptide.getSequence().length();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+            ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
             if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
-                if (peptide.getSequence().charAt(modMatch.getModificationSite()-1) == 'Y') {
+                if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'Y') {
                     aaMaxHPO3 = Math.min(aaMaxHPO3, modMatch.getModificationSite() + 1);
                 } else if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
                         || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {
@@ -537,7 +546,6 @@ public class SpectrumAnnotator {
         return result;
     }
 
-    
     /**
      * Returns the expected ions in a map indexed by the possible charges
      * 
@@ -550,12 +558,12 @@ public class SpectrumAnnotator {
      * @param precursorCharge       The precursor charge
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
-    public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons, 
+    public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons,
             HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
-        
+
         HashMap<Integer, ArrayList<PeptideFragmentIon>> result = new HashMap<Integer, ArrayList<PeptideFragmentIon>>();
         setPeptide(peptide);
-        
+
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
             if (expectedFragmentIons.contains(fragmentIon.getType())
                     && lossesValidated(neutralLosses, fragmentIon, peptide)) {
@@ -622,5 +630,26 @@ public class SpectrumAnnotator {
      */
     public Peptide getCurrentlyLoadedPeptide() {
         return peptide;
+    }
+
+    /**
+     * Returns the m/z shift applied to the fragment ions
+     * @return the m/z shift applied to the fragment ions 
+     */
+    public double getMassShift() {
+        return massShift;
+    }
+
+    /**
+     * Sets an m/z shift on all ions. The previous mass shift will be removed
+     * @param massShift the m/z shift to apply
+     */
+    public void setMassShift(double massShift) {
+        spectrumAnnotation.clear();
+        unmatchedIons.clear();
+        for (PeptideFragmentIon fragmentIon : fragmentIons) {
+            fragmentIon.theoreticMass += massShift - this.massShift;
+        }
+        this.massShift = massShift;
     }
 }

@@ -228,6 +228,7 @@ public class PTMLocationScores {
      * Returns the ptm plot series in the jfreechert format for one psm.
      * @param peptide               The peptide of interest
      * @param ptm                   The PTM to score
+     * @param nPTM                  The amount of times the PTM is expected
      * @param spectrum              The corresponding spectrum
      * @param expectedFragmentIons  The fragment ions to look for
      * @param neutralLosses         The neutral losses to look for
@@ -235,26 +236,23 @@ public class PTMLocationScores {
      * @param mzTolerance           The m/z tolerance to use
      * @return the ptm plot series in the jfreechert format for one psm.
      */
-    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, MSnSpectrum spectrum,
+    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses,
             ArrayList<Integer> charges, double mzTolerance, double intensityLimit) {
-        Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
             if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
                 noModPeptide.addModificationMatch(modificationMatch);
             }
         }
-        ArrayList<Integer> possibleSites = Peptide.getPotentialModificationSites(peptide.getSequence(), ptm);
-        Collections.sort(possibleSites);
         SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
         HashMap<Integer, ArrayList<PeptideFragmentIon>> fragmentIons = spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, noModPeptide, spectrum.getPrecursor().getCharge().value);
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
         PeptideFragmentIon peptideFragmentIon;
         ArrayList<IonMatch> matches;
-        for (int pos : possibleSites) {
-            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-            tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos + 1));
-            matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrum, tempPeptide, intensityLimit, mzTolerance);
+        for (int i = 0 ; i <= nPTM ; i++) {
+            spectrumAnnotator.setMassShift(i*ptm.getMass());
+            matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrum, noModPeptide, intensityLimit, mzTolerance);
             for (IonMatch ionMatch : matches) {
                 peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
                 if (peptideFragmentIon.getType() == PeptideFragmentIonType.A_ION

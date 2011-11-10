@@ -185,6 +185,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             foundModifications.add(new ModificationMatch(currentModification.getName(), true, location));
         }
         peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
-        return new PeptideAssumption(peptide, 1, Advocate.XTANDEM, measuredMass, eValue, getFileName());
+        return new PeptideAssumption(peptide, 1, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), eValue, getFileName());
     }
 }

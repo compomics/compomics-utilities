@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header;
 import de.proteinms.omxparser.OmssaOmxFile;
@@ -118,11 +119,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                         Charge charge = new Charge(Charge.PLUS, bestMsHit.MSHits_charge);
                         String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
                         Double expMass = ((double) bestMsHit.MSHits_mass) / msResponseScale;
-                        Precursor precursor = new Precursor(-1, expMass, charge);
-                        String filename = Util.getFileName(tempFile);
-                        MSnSpectrum spectrum = new MSnSpectrum(2, precursor, name, filename);
-                        String spectrumKey = spectrum.getSpectrumKey();
-                        SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey, getPeptideAssumption(bestMsHit, i));
+                        SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name), getPeptideAssumption(bestMsHit, i));
                         for (MSHits msHits : hitSet) {
                             if (msHits != bestMsHit) {
                                 currentMatch.addHit(Advocate.OMSSA, getPeptideAssumption(msHits, i));
@@ -141,8 +138,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     private PeptideAssumption getPeptideAssumption(MSHits currentMsHit, int responseIndex) {
         List<MSRequest> msRequest = omxFile.getParserResult().MSSearch_request.MSRequest;
 
-        Double calcMass = ((double) currentMsHit.MSHits_theomass) / msResponseScale;
-        Double expMass = ((double) currentMsHit.MSHits_mass) / msResponseScale;
+        Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
 
         ArrayList<String> proteins = new ArrayList<String>();
         HashMap peptideToProteinMap = omxFile.getPeptideToProteinMap();
@@ -200,7 +196,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         }
         double eValue = currentMsHit.MSHits_evalue;
         Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, proteins, modificationsFound);
-        return new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, expMass, eValue, getFileName());
+        return new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, charge, eValue, getFileName());
     }
 
     /**

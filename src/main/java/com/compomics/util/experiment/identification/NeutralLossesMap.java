@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.NeutralLoss;
@@ -12,7 +8,7 @@ import java.util.HashMap;
 /**
  * This class contains the informations relative to the accounting of neutral losses
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class NeutralLossesMap implements Serializable {
 

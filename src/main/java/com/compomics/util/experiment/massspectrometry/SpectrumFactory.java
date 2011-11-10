@@ -184,6 +184,20 @@ public class SpectrumFactory {
      * @throws IllegalArgumentException    exception thrown whenever the file was not parsed correctly
      */
     public Precursor getPrecursor(String spectrumKey) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+        return getPrecursor(spectrumKey, true);
+    }
+
+    /**
+     * Returns the precursor of the desired spectrum.
+     * 
+     * @param spectrumKey   the key of the spectrum
+     * @param save          boolean indicating whether the loaded precursor should be stored in the factory
+     * @return              the corresponding precursor
+     * @throws IOException    exception thrown whenever the file was not parsed correctly
+     * @throws MzMLUnmarshallerException    exception thrown whenever the file was not parsed correctly
+     * @throws IllegalArgumentException    exception thrown whenever the file was not parsed correctly
+     */
+    public Precursor getPrecursor(String spectrumKey, boolean save) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
         if (currentSpectrumMap.containsKey(spectrumKey)) {
             return ((MSnSpectrum) currentSpectrumMap.get(spectrumKey)).getPrecursor();
         }
@@ -238,7 +252,9 @@ public class SpectrumFactory {
             } else {
                 throw new IllegalArgumentException("Spectrum file format not supported.");
             }
-            loadedPrecursors.put(spectrumKey, currentPrecursor);
+            if (save) {
+                loadedPrecursors.put(spectrumKey, currentPrecursor);
+            }
         }
         return currentPrecursor;
     }
@@ -278,17 +294,17 @@ public class SpectrumFactory {
                 if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
                     throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found!");
                 }
-                
+
                 currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {
-                
+
                 if (mzMLUnmarshallers.get(name) == null) {
                     throw new IOException("mzML file not found: \'" + name + "\'!");
                 }
                 if (mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle) == null) {
                     throw new IOException("Spectrum \'" + spectrumTitle + "\' in mzML file \'" + name + "\' not found!");
                 }
-                
+
                 uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
                 int level = 2;
                 double mzPrec = 0.0;

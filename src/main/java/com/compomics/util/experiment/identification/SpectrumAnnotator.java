@@ -94,7 +94,7 @@ public class SpectrumAnnotator {
      * @param massTolerance The mass tolerance to use (in Dalton)
      * @return              A list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, ArrayList<PeptideFragmentIonType> iontypes, ArrayList<Integer> charges, HashMap<NeutralLoss, Integer> neutralLosses, Peak peak, double massTolerance) {
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, ArrayList<PeptideFragmentIonType> iontypes, ArrayList<Integer> charges, NeutralLossesMap neutralLosses, Peak peak, double massTolerance) {
 
         setPeptide(peptide);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
@@ -249,103 +249,7 @@ public class SpectrumAnnotator {
             unmatchedIons.clear();
         }
     }
-
-    /**
-     * Returns the neutral losses map by default for a given peptide and a given list of neutral losses.
-     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
-     * 
-     * @param peptide the peptide of interest
-     * @param imposedNeutralLosses a given list of neutral losses
-     * @return the expected possible neutral losses
-     */
-    public static HashMap<NeutralLoss, Integer> getDefaultLosses(Peptide peptide, ArrayList<NeutralLoss> imposedNeutralLosses) {
-
-        PTMFactory pTMFactory = PTMFactory.getInstance();
-        PTM ptm;
-
-        HashMap<NeutralLoss, Integer> likelyNeutralLosses = new HashMap<NeutralLoss, Integer>();
-        int aaMin;
-        for (NeutralLoss neutralLoss : imposedNeutralLosses) {
-            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                aaMin = peptide.getSequence().length();
-                if (peptide.getSequence().indexOf("D") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("D"), aaMin);
-                }
-                if (peptide.getSequence().indexOf("E") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("E"), aaMin);
-                }
-                if (peptide.getSequence().indexOf("S") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("S"), aaMin);
-                }
-                if (peptide.getSequence().indexOf("T") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("T"), aaMin);
-                }
-                if (aaMin >= 0) {
-                    likelyNeutralLosses.put(NeutralLoss.H2O, aaMin + 1);
-                }
-            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                aaMin = peptide.getSequence().length();
-                if (peptide.getSequence().indexOf("K") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("K"), aaMin);
-                }
-                if (peptide.getSequence().indexOf("R") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("R"), aaMin);
-                }
-                if (peptide.getSequence().indexOf("N") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("N"), aaMin);
-                }
-                if (peptide.getSequence().indexOf("Q") != -1) {
-                    aaMin = Math.min(peptide.getSequence().indexOf("Q"), aaMin);
-                }
-                if (aaMin >= 0) {
-                    likelyNeutralLosses.put(NeutralLoss.NH3, aaMin + 1);
-                }
-            } else if (neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                aaMin = peptide.getSequence().length();
-                for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-                    if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
-                        if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'Y') {
-                            aaMin = Math.min(aaMin, modMatch.getModificationSite());
-                        }
-                    }
-                    if (aaMin < peptide.getSequence().length()) {
-                        likelyNeutralLosses.put(NeutralLoss.HPO3, aaMin);
-                    }
-                }
-            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)) {
-                aaMin = peptide.getSequence().length();
-                for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-                    if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
-                        if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
-                                || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {
-                            aaMin = Math.min(aaMin, modMatch.getModificationSite());
-                        }
-                    }
-                    if (aaMin < peptide.getSequence().length()) {
-                        likelyNeutralLosses.put(NeutralLoss.H3PO4, aaMin);
-                    }
-                }
-            } else if (neutralLoss.isSameAs(NeutralLoss.CH4OS)) {
-                aaMin = peptide.getSequence().length();
-                for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-                    if (Math.abs(ptm.getMass() - 15.9949) < 0.01) {
-                        if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'M') {
-                            aaMin = Math.min(aaMin, modMatch.getModificationSite());
-                        }
-                    }
-                    if (aaMin < peptide.getSequence().length()) {
-                        likelyNeutralLosses.put(NeutralLoss.H3PO4, aaMin);
-                    }
-                }
-            }
-        }
-
-        return likelyNeutralLosses;
-    }
-
+    
     /**
      * Returns the possible neutral losses expected by default for a given peptide.
      * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
@@ -353,100 +257,116 @@ public class SpectrumAnnotator {
      * @param peptide the peptide of interest
      * @return the expected possible neutral losses
      */
-    public static HashMap<NeutralLoss, Integer> getDefaultLosses(Peptide peptide) {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
+        NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
-        HashMap<NeutralLoss, Integer> likelyNeutralLosses = new HashMap<NeutralLoss, Integer>();
         int aaMin = peptide.getSequence().length();
+        int aaMax = 0;
         if (peptide.getSequence().indexOf("D") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("D"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("D"), aaMax);
         }
         if (peptide.getSequence().indexOf("E") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("E"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("E"), aaMax);
         }
         if (peptide.getSequence().indexOf("S") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("S"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("S"), aaMax);
         }
         if (peptide.getSequence().indexOf("T") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("T"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("T"), aaMax);
         }
         if (aaMin >= 0) {
-            likelyNeutralLosses.put(NeutralLoss.H2O, aaMin + 1);
+            neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin+1, peptide.getSequence().length()-aaMax);
         }
 
         aaMin = peptide.getSequence().length();
+        aaMax = 0;
         if (peptide.getSequence().indexOf("K") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("K"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("K"), aaMax);
         }
         if (peptide.getSequence().indexOf("R") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("R"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("R"), aaMax);
         }
         if (peptide.getSequence().indexOf("N") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("N"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("N"), aaMax);
         }
         if (peptide.getSequence().indexOf("Q") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("Q"), aaMin);
+            aaMax = Math.max(peptide.getSequence().lastIndexOf("Q"), aaMax);
         }
         if (aaMin >= 0) {
-            likelyNeutralLosses.put(NeutralLoss.NH3, aaMin + 1);
+            neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin+1, peptide.getSequence().length()-aaMax);
         }
 
-        int aaMaxHPO3 = peptide.getSequence().length();
-        int aaMaxH3PO4 = peptide.getSequence().length();
-        int aaMaxCH4OS = peptide.getSequence().length();
+        int aaMinHPO3 = peptide.getSequence().length();
+        int aaMinH3PO4 = peptide.getSequence().length();
+        int aaMinCH4OS = peptide.getSequence().length();
+        int aaMaxHPO3 = 0;
+        int aaMaxH3PO4 = 0;
+        int aaMaxCH4OS = 0;
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
             if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
                 if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'Y') {
-                    aaMaxHPO3 = Math.min(aaMaxHPO3, modMatch.getModificationSite() + 1);
+                    aaMinHPO3 = Math.min(aaMinHPO3, modMatch.getModificationSite() + 1);
+                    aaMaxHPO3 = Math.max(aaMaxHPO3, modMatch.getModificationSite() + 1);
                 } else if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
                         || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {
-                    aaMaxH3PO4 = Math.min(aaMaxH3PO4, modMatch.getModificationSite());
+                    aaMinH3PO4 = Math.min(aaMinH3PO4, modMatch.getModificationSite());
+                    aaMaxH3PO4 = Math.max(aaMaxH3PO4, modMatch.getModificationSite());
                 }
             } else if (Math.abs(ptm.getMass() - 15.9949) < 0.01) {
                 if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'M') {
-                    aaMaxCH4OS = Math.min(aaMaxCH4OS, modMatch.getModificationSite());
+                    aaMinCH4OS = Math.min(aaMinCH4OS, modMatch.getModificationSite());
+                    aaMaxCH4OS = Math.max(aaMaxCH4OS, modMatch.getModificationSite());
                 }
             }
         }
         if (aaMaxHPO3 < peptide.getSequence().length()) {
-            likelyNeutralLosses.put(NeutralLoss.HPO3, aaMaxHPO3);
+            neutralLossesMap.addNeutralLoss(NeutralLoss.HPO3, aaMinHPO3+1, peptide.getSequence().length()-aaMaxHPO3);
         }
         if (aaMaxH3PO4 < peptide.getSequence().length()) {
-            likelyNeutralLosses.put(NeutralLoss.H3PO4, aaMaxHPO3);
+            neutralLossesMap.addNeutralLoss(NeutralLoss.H3PO4, aaMinH3PO4+1, peptide.getSequence().length()-aaMaxH3PO4);
         }
         if (aaMaxCH4OS < peptide.getSequence().length()) {
-            likelyNeutralLosses.put(NeutralLoss.CH4OS, aaMaxHPO3);
+            neutralLossesMap.addNeutralLoss(NeutralLoss.CH4OS, aaMinCH4OS+1, peptide.getSequence().length()-aaMaxCH4OS);
         }
 
-        return likelyNeutralLosses;
+        return neutralLossesMap;
     }
 
     /**
      * Returns a boolean indicating whether the neutral loss should be accounted for
      * 
-     * @param neutralLosses     Map of expected neutral losses: neutral loss -> first position in the sequence (first aa is 1). let null if neutral losses should not be considered.
+     * @param neutralLosses     Map of expected neutral losses
      * @param neutralLoss       the neutral loss of interest
      * @param fragmentIon       the fragment ion of interest
      * @param peptide           the peptide of interest
      * @return boolean indicating whether the neutral loss should be considered
      */
-    public boolean isAccounted(HashMap<NeutralLoss, Integer> neutralLosses, NeutralLoss neutralLoss, PeptideFragmentIon fragmentIon, Peptide peptide) {
+    public boolean isAccounted(NeutralLossesMap neutralLosses, NeutralLoss neutralLoss, PeptideFragmentIon fragmentIon, Peptide peptide) {
         if (neutralLosses == null || neutralLosses.isEmpty() || fragmentIon.getType() == PeptideFragmentIonType.IMMONIUM) {
             return false;
         }
-        for (NeutralLoss neutralLossRef : neutralLosses.keySet()) {
+        for (NeutralLoss neutralLossRef : neutralLosses.getAccountedNeutralLosses()) {
             if (neutralLoss.isSameAs(neutralLossRef)) {
                 if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION
                         || fragmentIon.getType() == PeptideFragmentIonType.UNKNOWN) {
                     return true;
                 } else if (fragmentIon.getType() == PeptideFragmentIonType.A_ION
                         || fragmentIon.getType() == PeptideFragmentIonType.B_ION) {
-                    return neutralLosses.get(neutralLossRef) <= fragmentIon.getNumber();
+                    return neutralLosses.getBStart(neutralLossRef) <= fragmentIon.getNumber();
                 } else if (fragmentIon.getType() == PeptideFragmentIonType.Y_ION) {
-                    return neutralLosses.get(neutralLossRef) >= peptide.getSequence().length() - fragmentIon.getNumber() + 1;
+                    return neutralLosses.getYStart(neutralLossRef) <= fragmentIon.getNumber();
                 }
                 return false;
             }
@@ -457,12 +377,12 @@ public class SpectrumAnnotator {
     /**
      * Returns a boolean indicating whether the neutral losses of the given fragment ion are fit the requirement of the given neutral losses map
      * 
-     * @param neutralLosses     Map of expected neutral losses: neutral loss -> first position in the sequence (first aa is 1). let null if neutral losses should not be considered.
+     * @param neutralLosses     Map of expected neutral losses: neutral loss.
      * @param fragmentIon       the fragment ion of interest
      * @param peptide           the inspected peptide
      * @return a boolean indicating whether the neutral losses of the given fragment ion are fit the requirement of the given neutral losses map
      */
-    public boolean lossesValidated(HashMap<NeutralLoss, Integer> neutralLosses, PeptideFragmentIon fragmentIon, Peptide peptide) {
+    public boolean lossesValidated(NeutralLossesMap neutralLosses, PeptideFragmentIon fragmentIon, Peptide peptide) {
         for (NeutralLoss neutralLoss : fragmentIon.getNeutralLosses()) {
             if (!isAccounted(neutralLosses, neutralLoss, fragmentIon, peptide)) {
                 return false;
@@ -507,7 +427,7 @@ public class SpectrumAnnotator {
      * @param mzTolerance           The m/z tolerance to use
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         if (spectrum != null) {
             setSpectrum(spectrum, intensityLimit);
@@ -559,7 +479,7 @@ public class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
     public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons,
-            HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
 
         HashMap<Integer, ArrayList<PeptideFragmentIon>> result = new HashMap<Integer, ArrayList<PeptideFragmentIon>>();
         setPeptide(peptide);
@@ -595,7 +515,7 @@ public class SpectrumAnnotator {
      * @param charges               List of expected charges
      * @return the currently matched ions with the given settings
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, HashMap<NeutralLoss, Integer> neutralLosses, ArrayList<Integer> charges) {
+    public ArrayList<IonMatch> getCurrentAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
         return getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, null, peptide, intensityLimit, massTolerance);
     }
 

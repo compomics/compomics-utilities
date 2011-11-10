@@ -17,6 +17,7 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 
@@ -111,7 +112,6 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     testPeptide = mascotDecoyPeptideHits.get(0);
                 }
                 if (testPeptide != null) {
-                    Double measuredMass = testPeptide.getPeptideMr() + testPeptide.getDeltaMass();
                     String measuredCharge = iMascotDatfile.getQuery(i + 1).getChargeString();
                     String sign = String.valueOf(measuredCharge.charAt(1));
                     Charge charge;
@@ -120,20 +120,18 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     } else {
                         charge = new Charge(Charge.MINUS, Integer.valueOf(measuredCharge.substring(0, 1)));
                     }
-                    Precursor precursor = new Precursor(-1, measuredMass, charge); // The RT is not known at this stage
                     String spectrumId = iMascotDatfile.getQuery(i + 1).getTitle();
-                    MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumId, getMgfFileName());
-                    SpectrumMatch currentMatch = new SpectrumMatch(spectrum.getSpectrumKey());
+                    SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(getMgfFileName(), spectrumId));
 
                     // Get all hits
                     if (mascotPeptideHits != null) {
                         for (PeptideHit peptideHit : mascotPeptideHits) {
-                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, i + 1, false));
+                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, charge));
                         }
                     }
                     if (mascotDecoyPeptideHits != null) {
                         for (PeptideHit peptideHit : mascotDecoyPeptideHits) {
-                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, i + 1, true));
+                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, charge));
                         }
                     }
                     assignedPeptideHits.add(currentMatch);
@@ -147,14 +145,13 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
     /**
      * parses a peptide assumption out of a peptideHit
+     * (this is a separated function because in the good old times I used to parse the target and decoy sections separately. Now, for the sake of search engine compatibility the decoy option should be disabled.)
      *
      * @param aPeptideHit  the peptide hit to parse
-     * @param query        the corresponding query
-     * @param decoySection is it in the decoy section?
+     * @param vharge       the corresponding charge
      * @return a peptide assumption
      */
-    private PeptideAssumption getPeptideAssumption(PeptideHit aPeptideHit, int query, boolean decoySection) {
-        Double measuredMass = aPeptideHit.getPeptideMr() + aPeptideHit.getDeltaMass();
+    private PeptideAssumption getPeptideAssumption(PeptideHit aPeptideHit, Charge charge) {
         ArrayList<ModificationMatch> foundModifications = new ArrayList();
         Modification handledModification;
         int modificationSite;
@@ -189,7 +186,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             e.printStackTrace();
         }
         
-        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, measuredMass, mascotEValue, getFileName());
+        PeptideAssumption currentAssumption = new PeptideAssumption(thePeptide, 1, Advocate.MASCOT, charge, mascotEValue, getFileName());
         MascotScore scoreParam = new MascotScore(aPeptideHit.getIonsScore());
         currentAssumption.addUrParam(scoreParam);
         return currentAssumption;

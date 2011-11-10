@@ -1,7 +1,9 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.HashSet;
@@ -31,21 +33,13 @@ public class PeptideAssumption extends ExperimentObject {
      */
     private int advocate;
     /**
-     * The measured mass of the precursor ion (according to the search engine)
+     * The charge used for identification
      */
-    private double measuredMass;
+    private Charge identificationCharge;
     /**
      * The e-value
      */
     private double eValue;
-    /**
-     * The number of 1Da intervals between the measured mass and the theoretical mass
-     */
-    private int c13;
-    /**
-     * The fragment ion annotation
-     */
-    private HashSet<IonMatch> annotations = new HashSet<IonMatch>();
     /**
      * the correspondig file
      */
@@ -61,18 +55,17 @@ public class PeptideAssumption extends ExperimentObject {
      * @param aPeptide              the theoretic peptide
      * @param rank                  the identification rank
      * @param advocate              the advocate used
-     * @param measuredMass          the precursor measured mass
+     * @param identificationCharge  the charge used by the search engine for identification
      * @param eValue                the e-value
      * @param identificationFile    the identification file
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, double measuredMass, double eValue, String identificationFile) {
+    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double eValue, String identificationFile) {
         this.peptide = aPeptide;
         this.rank = rank;
         this.advocate = advocate;
-        this.measuredMass = measuredMass;
+        this.identificationCharge = identificationCharge;
         this.eValue = eValue;
         this.file = identificationFile;
-        this.c13 = (new Double(measuredMass - peptide.getMass())).intValue();
     }
 
     /**
@@ -103,35 +96,29 @@ public class PeptideAssumption extends ExperimentObject {
     }
 
     /**
-     * Returns the measured precursor mass according to the search engine
-     * @return the measured precursor mass according to the search engine
+     * Returns the distance in Da between the experimental mass and theoretic mass, image of the error between the precursor mass and the peptide monoisotopic mass (typically for the C13 option)
+     * @param precursorMZ the precursor m/z
+     * @return  the distance in Da between the experimental mass and theoretic mass
      */
-    public double getMeasuredMass() {
-        return measuredMass;
-    }
-
-    /**
-     * Returns the number of 1Da intervals between the measured mass and the theoretical mass
-     * 
-     * @return the number of 1Da intervals between the measured mass and the theoretical mass
-     */
-    public int getC13() {
-        return c13;
+    public int getC13(double precursorMZ) {
+        return (int) Math.round(precursorMZ*identificationCharge.value-identificationCharge.value*Ion.proton().theoreticMass-peptide.getMass());
     }
 
     /**
      * Returns the precursor mass error (in ppm or Da). Note that the value is 
      * returns as (experimental mass - theoretical mass) and that negative values 
      * thus can occur.
+     * If an error of more than 1 Da it will be substracted from the error. The C13 error can be retrieved by the function getC13().
      *
-     * @param ppm   if true the error is returns in ppm, false returns the error in Da
-     * @return      the precursor mass error (in ppm or Da)
+     * @param precursorMZ   the precursor m/z
+     * @param ppm           if true the error is returns in ppm, false returns the error in Da
+     * @return              the precursor mass error (in ppm or Da)
      */
-    public double getDeltaMass(boolean ppm) {
+    public double getDeltaMass(double precursorMZ, boolean ppm) {
         if (ppm) {
-            return (measuredMass-peptide.getMass())/peptide.getMass()*1000000;
+            return (precursorMZ*identificationCharge.value-identificationCharge.value*Ion.proton().theoreticMass-peptide.getMass()+getC13(precursorMZ))/peptide.getMass()*1000000;
         } else {
-            return measuredMass-peptide.getMass();
+            return precursorMZ*identificationCharge.value-identificationCharge.value*Ion.proton().theoreticMass-peptide.getMass()+getC13(precursorMZ);
         }
     }
 
@@ -142,24 +129,6 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public double getEValue() {
         return eValue;
-    }
-
-    /**
-     * add a fragment ion annotation
-     *
-     * @param ionMatch an ion match
-     */
-    public void addAnnotation(IonMatch ionMatch) {
-        annotations.add(ionMatch);
-    }
-
-    /**
-     * retrieves all fragment ion annotation
-     *
-     * @return all fragment ion annotations
-     */
-    public HashSet<IonMatch> getAnnotations() {
-        return annotations;
     }
 
     /**

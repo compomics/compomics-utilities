@@ -51,7 +51,7 @@ public class SequenceModificationPanel extends JPanel {
     /**
      * The x-axis start position.
      */
-    private final int iXStart = 50;
+    private final int iXStart = 30;
     /**
      * The y-axis start position.
      */

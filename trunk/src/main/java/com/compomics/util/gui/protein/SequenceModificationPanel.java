@@ -120,6 +120,22 @@ public class SequenceModificationPanel extends JPanel {
         Double aboveSequenceHeight = yLocation - lFontHeight * 0.5;
         Double belowSequenceHeight = yLocation + lFontHeight * 0.15;
 
+        
+        // find max a score
+        double maxAScore = 0;
+        
+        for (int i = 0; i < iSequenceComponents.length; i++) {
+            for (int j = 0; j < profiles.size(); j++) {
+             
+                ModificationProfile currentModificationProfile = profiles.get(j);
+                
+                if (maxAScore < currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX]) {
+                    maxAScore = currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX];
+                }
+            }
+        }
+        
+        
         for (int i = 0; i < iSequenceComponents.length; i++) {
             
             // reset base color to black.
@@ -144,7 +160,7 @@ public class SequenceModificationPanel extends JPanel {
                 if (currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] > 0) {
                     g2.setColor(currentModificationProfile.getColor());
 
-                    int lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
+                    int lBarHeight = (new Double((currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / maxAScore) * iMaxBarHeight).intValue());
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }
@@ -170,7 +186,7 @@ public class SequenceModificationPanel extends JPanel {
                 if (currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] > 0) {
                     g2.setColor(currentModificationProfile.getColor());
 
-                    int lBarHeight = (new Double(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100 * iMaxBarHeight).intValue());
+                    int lBarHeight = (new Double((currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100) * iMaxBarHeight).intValue());
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }

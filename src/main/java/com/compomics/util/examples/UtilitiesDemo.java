@@ -319,9 +319,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 lIso.setLabelDifference(labelDifferencePeptideA);
             }
 
-            while (peptideAJXTable.getRowCount() > 0) {
-                ((DefaultTableModel) peptideAJXTable.getModel()).removeRow(0);
-            }
+            DefaultTableModel dm = (DefaultTableModel) peptideAJXTable.getModel();
+            dm.getDataVector().removeAllElements();
 
             for (int i = 0; i < 15; i++) {
                 if (Util.roundDouble(lIso.getPercTot()[i], 2) > 0) {
@@ -370,9 +369,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     lIso.setLabelDifference(labelDifferencePeptideB);
                 }
 
-                while (peptideBJXTable.getRowCount() > 0) {
-                    ((DefaultTableModel) peptideBJXTable.getModel()).removeRow(0);
-                }
+                dm = (DefaultTableModel) peptideBJXTable.getModel();
+                dm.getDataVector().removeAllElements();
 
                 for (int i = 0; i < 15; i++) {
                     if (Util.roundDouble(lIso.getPercTot()[i], 2) > 0) {
@@ -401,9 +399,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 peptideBMzJTextField.setText("");
                 peptideBCompositionJTextField.setText("");
 
-                while (peptideBJXTable.getRowCount() > 0) {
-                    ((DefaultTableModel) peptideBJXTable.getModel()).removeRow(0);
-                }
+                dm = (DefaultTableModel) peptideBJXTable.getModel();
+                dm.getDataVector().removeAllElements();
             }
 
             // remove the default isotopic distribution panel border, given that our
@@ -2501,9 +2498,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             peptideAMzJTextField.setText("");
             peptideACompositionJTextField.setText("");
 
-            while (peptideAJXTable.getRowCount() > 0) {
-                ((DefaultTableModel) peptideAJXTable.getModel()).removeRow(0);
-            }
+            DefaultTableModel dm = (DefaultTableModel) peptideAJXTable.getModel();
+            dm.getDataVector().removeAllElements();
 
             // remove previuos isotopic distributions
             isotopicDistributionAJPanel.removeAll();
@@ -2528,9 +2524,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             peptideBMzJTextField.setText("");
             peptideBCompositionJTextField.setText("");
 
-            while (peptideBJXTable.getRowCount() > 0) {
-                ((DefaultTableModel) peptideBJXTable.getModel()).removeRow(0);
-            }
+            DefaultTableModel dm = (DefaultTableModel) peptideBJXTable.getModel();
+            dm.getDataVector().removeAllElements();
 
             // remove previuos isotopic distributions
             //isotopicDistributionAJPanel.removeAll();
@@ -2624,9 +2619,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void updateInSilicoDigestion() {
 
         // clear previous results from the peptide table
-        while (peptidesJXTable.getRowCount() > 0) {
-            ((DefaultTableModel) peptidesJXTable.getModel()).removeRow(0);
-        }
+        DefaultTableModel dm = (DefaultTableModel) peptidesJXTable.getModel();
+        dm.getDataVector().removeAllElements();
 
         // and clear the peptide sequence coverage details
         proteinSequenceCoverageJEditorPane.setText("");
@@ -2647,9 +2641,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 Protein protein = new Protein(currentSequence);
                 String fullHeader = protein.getHeader().getFullHeaderWithAddenda();
 
-                while (proteinHeaderJTable.getModel().getRowCount() > 0) {
-                    ((DefaultTableModel) proteinHeaderJTable.getModel()).removeRow(0);
-                }
+                dm = (DefaultTableModel) proteinHeaderJTable.getModel();
+                dm.getDataVector().removeAllElements();
 
                 if (peffFormat) {
                     keyValuePairs = getHeaderValuePairsPeffFormat(fullHeader);
@@ -2973,13 +2966,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             peffFormat = currentSequenceFile.getAbsolutePath().toLowerCase().endsWith(".peff");
 
-            while (peffHeaderJTable.getModel().getRowCount() > 0) {
-                ((DefaultTableModel) peffHeaderJTable.getModel()).removeRow(0);
-            }
+            DefaultTableModel dm = (DefaultTableModel) peffHeaderJTable.getModel();
+            dm.getDataVector().removeAllElements();
 
-            while (peffAnnotationsJTable.getModel().getRowCount() > 0) {
-                ((DefaultTableModel) peffAnnotationsJTable.getModel()).removeRow(0);
-            }
+            dm = (DefaultTableModel) peffAnnotationsJTable.getModel();
+            dm.getDataVector().removeAllElements();
 
             try {
                 int colorCounter = 0;

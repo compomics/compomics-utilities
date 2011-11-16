@@ -313,9 +313,10 @@ public class SpectrumAnnotator {
         int aaMaxHPO3 = 0;
         int aaMaxH3PO4 = 0;
         int aaMaxCH4OS = 0;
+        
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-            if (Math.abs(ptm.getMass() - 79.9663) < 0.01) {
+            if (Math.abs(ptm.getMass() - 79.9663) < 0.01) { // @TODO: why are these masses hard coded here?!
                 if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'Y') {
                     aaMinHPO3 = Math.min(aaMinHPO3, modMatch.getModificationSite() + 1);
                     aaMaxHPO3 = Math.max(aaMaxHPO3, modMatch.getModificationSite() + 1);
@@ -324,20 +325,20 @@ public class SpectrumAnnotator {
                     aaMinH3PO4 = Math.min(aaMinH3PO4, modMatch.getModificationSite());
                     aaMaxH3PO4 = Math.max(aaMaxH3PO4, modMatch.getModificationSite());
                 }
-            } else if (Math.abs(ptm.getMass() - 15.9949) < 0.01) {
+            } else if (Math.abs(ptm.getMass() - 15.9949) < 0.01) { // @TODO: why are these masses hard coded here?!
                 if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'M') {
                     aaMinCH4OS = Math.min(aaMinCH4OS, modMatch.getModificationSite());
                     aaMaxCH4OS = Math.max(aaMaxCH4OS, modMatch.getModificationSite());
                 }
             }
         }
-        if (aaMaxHPO3 < peptide.getSequence().length()) {
+        if (aaMinHPO3 < peptide.getSequence().length()) {
             neutralLossesMap.addNeutralLoss(NeutralLoss.HPO3, aaMinHPO3+1, peptide.getSequence().length()-aaMaxHPO3);
         }
-        if (aaMaxH3PO4 < peptide.getSequence().length()) {
+        if (aaMinH3PO4 < peptide.getSequence().length()) {
             neutralLossesMap.addNeutralLoss(NeutralLoss.H3PO4, aaMinH3PO4+1, peptide.getSequence().length()-aaMaxH3PO4);
         }
-        if (aaMaxCH4OS < peptide.getSequence().length()) {
+        if (aaMinCH4OS < peptide.getSequence().length()) {
             neutralLossesMap.addNeutralLoss(NeutralLoss.CH4OS, aaMinCH4OS+1, peptide.getSequence().length()-aaMaxCH4OS);
         }
 

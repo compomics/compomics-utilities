@@ -281,7 +281,7 @@ public class SpectrumAnnotator {
             aaMin = Math.min(peptide.getSequence().indexOf("T"), aaMin);
             aaMax = Math.max(peptide.getSequence().lastIndexOf("T"), aaMax);
         }
-        if (aaMin >= 0) {
+        if (aaMin < peptide.getSequence().length()) {
             neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin+1, peptide.getSequence().length()-aaMax);
         }
 
@@ -291,10 +291,6 @@ public class SpectrumAnnotator {
             aaMin = Math.min(peptide.getSequence().indexOf("K"), aaMin);
             aaMax = Math.max(peptide.getSequence().lastIndexOf("K"), aaMax);
         }
-        if (peptide.getSequence().indexOf("R") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("R"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("R"), aaMax);
-        }
         if (peptide.getSequence().indexOf("N") != -1) {
             aaMin = Math.min(peptide.getSequence().indexOf("N"), aaMin);
             aaMax = Math.max(peptide.getSequence().lastIndexOf("N"), aaMax);
@@ -303,7 +299,7 @@ public class SpectrumAnnotator {
             aaMin = Math.min(peptide.getSequence().indexOf("Q"), aaMin);
             aaMax = Math.max(peptide.getSequence().lastIndexOf("Q"), aaMax);
         }
-        if (aaMin >= 0) {
+        if (aaMin < peptide.getSequence().length()) {
             neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin+1, peptide.getSequence().length()-aaMax);
         }
 

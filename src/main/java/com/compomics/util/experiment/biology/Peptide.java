@@ -62,7 +62,7 @@ public class Peptide extends ExperimentObject {
             this.parentProteins.add(protein);
         }
     }
-    
+
     /**
      * Constructor for the peptide
      *
@@ -418,6 +418,51 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns a map of the ptm short names to the ptm colors. E.g., key: <ox>, 
+     * element: oxidation of m.
+     * 
+     * @param ptmColors  the ptm color map
+     * @return           a map of the ptm short names to the ptm colors
+     */
+    public HashMap<String, Color> getPTMShortNameColorMap(HashMap<String,Color> ptmColors) {
+
+        HashMap<String, Color> shortNameColorMap = new HashMap<String, Color>();
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+
+        for (int j = 0; j < modifications.size(); j++) {
+            PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
+
+            if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                shortNameColorMap.put("<" + ptm.getShortName() + ">", ptmColors.get(modifications.get(j).getTheoreticPtm()));
+            }
+        }
+
+        return shortNameColorMap;
+    }
+    
+    /**
+     * Returns a map of the ptm short names to the ptm long names for the 
+     * modification in this peptide. E.g., key: <ox>, element oxidation of m.
+     * 
+     * @return a map of the ptm short names to the ptm long names
+     */
+    public HashMap<String, String> getPTMShortNameMap() {
+
+        HashMap<String, String> shortNameMap = new HashMap<String, String>();
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+
+        for (int j = 0; j < modifications.size(); j++) {
+            PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
+
+            if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                shortNameMap.put("<" + ptm.getShortName() + ">", ptm.getName());
+            }
+        }
+
+        return shortNameMap;
+    }
+
+    /**
      * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH. 
      * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
      * 
@@ -427,7 +472,6 @@ public class Peptide extends ExperimentObject {
     public String getModifiedSequenceAsString(boolean includeTerminals) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
-        PTM ptm;
 
         String modifiedSequence = "";
 
@@ -440,7 +484,7 @@ public class Peptide extends ExperimentObject {
             boolean modifiedResidue = false;
 
             for (int j = 0; j < modifications.size(); j++) {
-                ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
+                PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
                 if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
 
@@ -469,10 +513,11 @@ public class Peptide extends ExperimentObject {
      * @throws IllegalArgumentException if the peptide sequence contains unknown amino acids
      */
     private void estimateTheoreticMass() throws IllegalArgumentException {
+        
         mass = Atom.H.mass;
-
         AminoAcid currentAA;
-        for (int aa = 0; aa < sequence.length(); aa++) {  
+        
+        for (int aa = 0; aa < sequence.length(); aa++) {
             try {
                 currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
                 mass += currentAA.monoisotopicMass;
@@ -480,9 +525,11 @@ public class Peptide extends ExperimentObject {
                 throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
             }
         }
+        
         mass += Atom.H.mass + Atom.O.mass;
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
+        
         for (ModificationMatch ptmMatch : modifications) {
             mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
         }

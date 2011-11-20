@@ -23,10 +23,10 @@ import java.util.Iterator;
 public class SequenceFragmentationPanel extends JPanel {
 
     /**
-     * A map of the rectangles used to draw each fragment ion peak. This map is 
-     * later used for the tooltip for each peak.
+     * A map of the rectangles that have tooltips, i.e., the fragement ion 
+     * peaks and the PTM highlighting.
      */
-    private HashMap<String, Rectangle> fragmentIonRectangles;
+    private HashMap<String, Rectangle> tooltipRectangles;
     /**
      * Elementary data for composing the Panel.
      */
@@ -78,9 +78,17 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private boolean isModifiedSequence;
     /**
-     * If true the modification are highlighted by adding a start above the modified residue.
+     * If true the modification are highlighted with a background color.
      */
-    private boolean iStarModifications;
+    private boolean iHighlightModifications;
+    /**
+     * The modification colors. The keys as <mox>, <p>, etc.
+     */
+    private HashMap<String, Color> iModificationColors;
+    /**
+     * The modification names map. E.g., key <ox>, element: oxidation of m.
+     */
+    private HashMap<String, String> iModificationNames;
 
     /**
      * Creates a new SequenceFragmentationPanel.
@@ -88,23 +96,29 @@ public class SequenceFragmentationPanel extends JPanel {
      * @param aSequence                  String with the Modified Sequence of an peptide identification.
      * @param aIonMatches                ArrayList with Fragmentation ion matches.
      * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
-     * @param aStarModifications         boolean decides whether the modification are highlighted by adding a star above the modified residue instead if 
-     *                                   displaying the PTM short name
+     * @param aHighlightModifications    boolean decides whether the modification are highlighted by adding a star above the modified residue instead if 
+     *                                   displaying the PTM short name        
+     * @param aModificationColors        the modification colors, keys as <mox>, <p>, etc  
+     * @param aModificationNames         the modification names, e.g., keys as <mox>, elements as Oxidation.
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence, boolean aStarModifications) throws HeadlessException {
+    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
+            boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
+            HashMap<String, String> aModificationNames) throws HeadlessException {
         super();
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
         iIonMatches = aIonMatches;
-        iStarModifications = aStarModifications;
-        
+        iHighlightModifications = aHighlightModifications;
+        iModificationColors = aModificationColors;
+        iModificationNames = aModificationNames;
+
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
-        
-        fragmentIonRectangles = new HashMap<String, Rectangle> ();
+
+        tooltipRectangles = new HashMap<String, Rectangle>();
 
         addMouseMotionListener(new MouseMotionAdapter() {
 
@@ -149,31 +163,69 @@ public class SequenceFragmentationPanel extends JPanel {
              * A. Draw the component.
              *  --------------------
              */
-            
             String residue = iSequenceComponents[i];
+            String modification = "";
 
             // check if it's a modified sequence
             boolean modified = residue.indexOf("<") != -1;
-            if (modified && iStarModifications) {
-                residue = residue.substring(0, residue.indexOf("<")) + residue.substring(residue.lastIndexOf(">") + 1);   
+
+            // remove the modification from the residue
+            if (modified && iHighlightModifications) {
+                modification = residue.substring(residue.indexOf("<"), residue.lastIndexOf(">") + 1);
+                residue = residue.substring(0, residue.indexOf("<")) + residue.substring(residue.lastIndexOf(">") + 1);
             }
-            
-            // Draw this component.
-            g2.drawString(residue, xLocation, yLocation);
-            
-            // if modified, add a '*' above the residue
-            if (modified && iStarModifications && i == iSequenceComponents.length - 1) { 
-                g2.drawString("*", xLocation, yLocation - 10); 
+
+            // if modified, highlight the modification if highlighting is selected
+            if (modified) {
+                
+                if (iModificationColors.containsKey(modification)) {
+                    g2.setColor(iModificationColors.get(modification));
+                } else {
+                    g2.setColor(Color.LIGHT_GRAY);
+                }
+
+                if (i == 0) {
+                    String nTerminal = residue.substring(0, residue.length() - 1);
+                    Rectangle tempRectangle = new Rectangle(xLocation - 1 + g2.getFontMetrics().stringWidth(nTerminal), yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
+                            g2.getFontMetrics().stringWidth(residue.substring(residue.length() - 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
+                    g2.fill(tempRectangle);
+                    if (iModificationNames.containsKey(modification)) {
+                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i+1) + ")</html>", tempRectangle);
+                    }
+                    g2.setColor(Color.BLACK);
+                    g2.drawString(nTerminal, xLocation, yLocation);
+                    g2.setColor(Color.WHITE);
+                    g2.drawString(residue.substring(residue.length() - 1), xLocation + g2.getFontMetrics().stringWidth(nTerminal), yLocation);
+                    g2.setColor(Color.BLACK);
+                } else if (i == iSequenceComponents.length - 1) {
+                    Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
+                            g2.getFontMetrics().stringWidth(residue.substring(0, 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
+                    g2.fill(tempRectangle);
+                    if (iModificationNames.containsKey(modification)) {
+                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i+1) + ")</html>", tempRectangle);
+                    }
+                    g2.setColor(Color.WHITE);
+                    g2.drawString(residue.substring(0, 1), xLocation, yLocation);
+                    g2.setColor(Color.BLACK);
+                    g2.drawString(residue.substring(1), xLocation + g2.getFontMetrics().stringWidth(residue.substring(0, 1)), yLocation); 
+                } else {
+                    Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
+                            g2.getFontMetrics().stringWidth(residue) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
+                    g2.fill(tempRectangle);
+                    if (iModificationNames.containsKey(modification)) {
+                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i+1) + ")</html>", tempRectangle);
+                    }
+                    g2.setColor(Color.WHITE);
+                    g2.drawString(residue, xLocation, yLocation);
+                    g2.setColor(Color.BLACK);
+                }
+            } else {
+                // Draw this component.
+                g2.drawString(residue, xLocation, yLocation);
             }
 
             // Move the XLocation forwards with the component's length and the horizontal spacer..
             xLocation += g2.getFontMetrics().stringWidth(residue) + iHorizontalSpace;
-            
-            // if modified, add a '*' above the residue
-            if (modified && iStarModifications && i < iSequenceComponents.length - 1) { 
-                g2.drawString("*", xLocation - g2.getFontMetrics().stringWidth("*") - iHorizontalSpace, yLocation - 10); 
-            }
-            
 
             /**
              * B. Draw the bars.
@@ -190,8 +242,8 @@ public class SequenceFragmentationPanel extends JPanel {
                     g2.setColor(Color.BLUE);
                     Rectangle tempRectangle = new Rectangle(xLocation, lMidStringHeight.intValue() + 1, iBarWidth, lBarHeight);
                     g2.fill(tempRectangle);
-                    
-                    fragmentIonRectangles.put("b" + (i+1), tempRectangle);
+
+                    tooltipRectangles.put("<html>b<sub>" + (i + 1) + "</sub></html>", tempRectangle);
                 }
             }
 
@@ -207,8 +259,8 @@ public class SequenceFragmentationPanel extends JPanel {
                     int yBarStart = lMidStringHeight.intValue() - 1 - lBarHeight;
                     Rectangle tempRectangle = new Rectangle(xLocation, yBarStart, iBarWidth, lBarHeight);
                     g2.fill(tempRectangle);
-                    
-                    fragmentIonRectangles.put("y" + (yIons.length - i), tempRectangle);
+
+                    tooltipRectangles.put("<html>y<sub>" + (yIons.length - i) + "</sub></html>", tempRectangle);
                 }
             }
 
@@ -405,44 +457,29 @@ public class SequenceFragmentationPanel extends JPanel {
 
     /**
      * If the mouse hovers over one of the fragment ion peaks the tooltip is 
-     * set to the fragment ion type and number. If not the tooltip is set 
+     * set to the fragment ion type and number. And if hovering over a modified 
+     * residue the modification name is shown. If not the tooltip is set 
      * to null.
      */
     private void mouseMovedHandler(MouseEvent me) {
-        
-        String tooltip = null;
-        
-        Iterator<String> ions = fragmentIonRectangles.keySet().iterator();
-        
-        boolean matchFound = false;
-        
-        // iterate the peak rectangles and look for matches
-        while (ions.hasNext() && !matchFound) {
-            
-            String key = ions.next();
 
-            if (fragmentIonRectangles.get(key).contains(me.getPoint())) {
+        String tooltip = null;
+
+        Iterator<String> rectangles = tooltipRectangles.keySet().iterator();
+
+        boolean matchFound = false;
+
+        // iterate the rectangles and look for matches
+        while (rectangles.hasNext() && !matchFound) {
+
+            String key = rectangles.next();
+
+            if (tooltipRectangles.get(key).contains(me.getPoint())) {
                 tooltip = key;
                 matchFound = true;
             }
         }
-        
-        // add subscripts for the ion indexes
-        if (tooltip != null) {
-            
-            String temp = "<html>";
-            
-            for (int i=0; i < tooltip.length(); i++) {
-                if (Character.isDigit(tooltip.charAt(i))) {
-                    temp += "<sub>" + tooltip.charAt(i) + "<sub>";
-                } else {
-                    temp += tooltip.charAt(i);
-                }
-            }
-            
-            tooltip = temp + "</html>";
-        }
-        
+
         this.setToolTipText(tooltip);
     }
 }

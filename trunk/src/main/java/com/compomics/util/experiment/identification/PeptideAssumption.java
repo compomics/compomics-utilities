@@ -157,4 +157,12 @@ public class PeptideAssumption extends ExperimentObject {
         }
         return isDecoy;
     }
+    
+    /**
+     * Returns the charge used for identification
+     * @return the charge used for identification 
+     */
+    public Charge getIdentificationCharge() {
+        return identificationCharge;
+    }
 }

@@ -216,6 +216,17 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns a boolean indicating whether the peptide has the given variable modification based on its key
+     * @param peptideKey the peptide key
+     * @param modification the name of the modification
+     * @return a boolean indicating whether the peptide has variable modifications
+     */
+    public static boolean isModified(String peptideKey, String modification) {
+        return peptideKey.contains(modification);
+    }
+    
+
+    /**
      * Returns the sequence of the peptide indexed by the given key
      * @param peptideKey the peptide key
      * @return the corresponding sequence

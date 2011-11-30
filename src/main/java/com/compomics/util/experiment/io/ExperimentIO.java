@@ -29,6 +29,7 @@ public class ExperimentIO {
     public void save(File file, MsExperiment experiment) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
+        fos.close();
         oos.writeObject(experiment);
         oos.close();
     }
@@ -45,6 +46,7 @@ public class ExperimentIO {
         FileInputStream fis = new FileInputStream(utilitiesFile);
         ObjectInputStream in = new ObjectInputStream(fis);
         MsExperiment experiment = (MsExperiment) in.readObject();
+        fis.close();
         in.close();
         return experiment;
     }

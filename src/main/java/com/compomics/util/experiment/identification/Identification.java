@@ -232,6 +232,7 @@ public abstract class Identification extends ExperimentObject {
                 FileInputStream fis = new FileInputStream(newMatch);
                 ObjectInputStream in = new ObjectInputStream(fis);
                 Object spectrumMatch = in.readObject();
+                fis.close();
                 in.close();
                 loadedMatchesMap.put(matchKey, spectrumMatch);
                 loadedMatches.add(matchKey);

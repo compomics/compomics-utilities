@@ -247,6 +247,7 @@ public abstract class Quantification extends ExperimentObject {
                 FileInputStream fis = new FileInputStream(newMatch);
                 ObjectInputStream in = new ObjectInputStream(fis);
                 Object spectrumMatch = in.readObject();
+                fis.close();
                 in.close();
                 loadedMatchesMap.put(quantificationKey, spectrumMatch);
                 loadedMatches.add(quantificationKey);

@@ -81,7 +81,6 @@ public class MonitorableFileInputStream extends MonitorableInputStream {
      */
     public MonitorableFileInputStream(String aFile) throws IOException {
         this(new File(aFile));
-
     }
 
     /**

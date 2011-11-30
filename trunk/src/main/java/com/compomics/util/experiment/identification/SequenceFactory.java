@@ -272,6 +272,7 @@ public class SequenceFactory {
         FileInputStream fis = new FileInputStream(fastaIndex);
         ObjectInputStream in = new ObjectInputStream(fis);
         FastaIndex index = (FastaIndex) in.readObject();
+        fis.close();
         in.close();
         return index;
     }

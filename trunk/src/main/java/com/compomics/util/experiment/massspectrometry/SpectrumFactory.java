@@ -396,6 +396,7 @@ public class SpectrumFactory {
         FileInputStream fis = new FileInputStream(mgfIndex);
         ObjectInputStream in = new ObjectInputStream(fis);
         MgfIndex index = (MgfIndex) in.readObject();
+        fis.close();
         in.close();
         return index;
     }

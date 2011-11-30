@@ -2,11 +2,9 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
-import java.util.HashSet;
 
 /**
  * This object will models the assumption made by an advocate.

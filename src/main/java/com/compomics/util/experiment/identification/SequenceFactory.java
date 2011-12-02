@@ -438,11 +438,12 @@ public class SequenceFactory {
 
             currentProtein = getProtein(accession);
             currentHeader = getHeader(accession);
-
+            
             decoyAccession = currentProtein.getAccession() + "_" + decoyFlags[0];
             decoyHeader = Header.parseFromFASTA(currentHeader.toString());
             decoyHeader.setAccession(decoyAccession);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlags[0]);
+            
             decoySequence = reverseSequence(currentProtein.getSequence());
 
             indexes.put(currentProtein.getAccession(), newFile.getFilePointer());
@@ -450,6 +451,12 @@ public class SequenceFactory {
             newFile.writeBytes(currentProtein.getSequence() + "\n");
 
             indexes.put(decoyAccession, newFile.getFilePointer());
+            
+            // @TODO: this might not be the best way of doing this, but was easier than trying to change the parsing in the Header class...
+            if (decoyHeader.toString().equalsIgnoreCase(currentHeader.toString())) {
+                decoyHeader.setRest(decoyAccession);
+            }
+            
             newFile.writeBytes(decoyHeader.toString() + "\n");
             newFile.writeBytes(decoySequence + "\n");
         }

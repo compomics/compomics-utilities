@@ -78,9 +78,10 @@ public class Header implements Cloneable, Serializable {
 
         UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis, 
         Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, 
-        Listeria, Generic_Header, 
+        Listeria, Generic_Header
+        //, GAFFA // >gaffa_"accession_something"|"species"/unknown
     }
-    
+
     /**
      * The foreign accession String is an accession String in another database of significance.
      * Most notably used for SwissProt accessions that are kept in the NCBI database. <br />

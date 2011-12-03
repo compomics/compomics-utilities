@@ -1,40 +1,39 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.HashMap;
 
 /**
- * This class contains the index of a fasta file
+ * This class contains the index of a FASTA file.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class FastaIndex extends ExperimentObject {
 
     /**
-     * The indexes of the inspected fasta file
+     * The indexes of the inspected FASTA file
      */
     private HashMap<String, Long> indexes;
     /**
-     * The fasta file name
+     * The FASTA file name
      */
     private String fileName;
     /**
-     * boolean indicating whether the database contains decoy sequences
+     * Boolean indicating whether the database contains decoy sequences.
      */
     private boolean isDecoy;
     /**
-     * number of target sequences found in the database
+     * Number of target sequences found in the database.
      */
     private int nTarget;
 
     /**
      * Constructor
-     * @param indexes   The indexes of the inspected fasta file
-     * @param fileName  The fasta file name
+     * 
+     * @param indexes   The indexes of the inspected FASTA file
+     * @param fileName  The FASTA file name
+     * @param isDecoy   If the FASTA file contains decoys or nor
+     * @param nTarget   Number of target sequences found in the database
      */
     public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean isDecoy, int nTarget) {
         this.indexes = indexes;
@@ -44,15 +43,17 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns a map of all indexes of the fasta file (accession -> index)
-     * @return a map of all indexes of the fasta file (accession -> index) 
+     * Returns a map of all indexes of the FASTA file (accession -> index).
+     * 
+     * @return a map of all indexes of the FASTA file (accession -> index) 
      */
     public HashMap<String, Long> getIndexes() {
         return indexes;
     }
 
     /**
-     * Returns the index of the accession of interest
+     * Returns the index of the accession of interest.
+     * 
      * @param accession the accession of interest
      * @return the index of the accession of interest
      */
@@ -61,15 +62,17 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the file name of the inspected fasta file
-     * @return the file name of the inspected fasta file
+     * Returns the file name of the inspected FASTA file.
+     * 
+     * @return the file name of the inspected FASTA file
      */
     public String getFileName() {
         return fileName;
     }
 
     /**
-     * Returns a boolean indicating whether the database contains decoy sequences
+     * Returns a boolean indicating whether the database contains decoy sequences.
+     * 
      * @return a boolean indicating whether the database contains decoy sequences 
      */
     public boolean isDecoy() {
@@ -77,7 +80,8 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the number of target sequences in the database
+     * Returns the number of target sequences in the database.
+     * 
      * @return the number of target sequences in the database 
      */
     public int getNTarget() {

@@ -424,7 +424,8 @@ public class SpectrumAnnotator {
      * @param mzTolerance           The m/z tolerance to use
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses,
+            ArrayList<Integer> charges, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         if (spectrum != null) {
             setSpectrum(spectrum, intensityLimit);

@@ -263,7 +263,7 @@ public class PTMLocationScores {
     }
 
     /**
-     * Returns the ptm plot series in the jfreechert format for one psm.
+     * Returns the ptm plot series in the jfreechart format for one psm.
      * 
      * @param peptide               The peptide of interest
      * @param ptm                   The PTM to score
@@ -299,7 +299,7 @@ public class PTMLocationScores {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
             matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrum, noModPeptide, intensityLimit, mzTolerance);
-
+  
             for (IonMatch ionMatch : matches) {
 
                 peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;

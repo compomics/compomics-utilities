@@ -5,7 +5,6 @@ import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyKrupp;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * This class contains a list of GUI defaults to be used across the tools 
@@ -43,8 +42,9 @@ public class UtilitiesGUIDefaults {
             try {
                 PlasticLookAndFeel.setPlasticTheme(new SkyKrupp());
                 UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-            } catch (UnsupportedLookAndFeelException ex) {
+            } catch (Exception ex) {
                 // this should not be possible...
+                // use default look and feel
             }
         }
 

@@ -16,6 +16,8 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
@@ -105,10 +107,23 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     String spectrumKey = spectrum.getSpectrumKey();
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
+                    HashMap<Double, ArrayList<Domain>> hitMap = new HashMap<Double, ArrayList<Domain>>();
                     for (Peptide peptide : spectrumPeptides) {
                         for (Domain domain : peptide.getDomains()) {
-                            currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain, charge.value));
+                            if (!hitMap.containsKey(domain.getDomainExpect())) {
+                                hitMap.put(domain.getDomainExpect(), new ArrayList<Domain>());
+                            }
+                            hitMap.get(domain.getDomainExpect()).add(domain);
                         }
+                    }
+                    ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
+                    Collections.sort(eValues);
+                    int rank = 1;
+                    for (Double eValue : eValues) {
+                        for (Domain domain : hitMap.get(eValue)) {
+                            currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain, charge.value, rank));
+                        }
+                        rank += hitMap.get(eValue).size();
                     }
                     foundPeptides.add(currentMatch);
                 }
@@ -124,9 +139,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * 
      * @param domain the domain of the X!Tandem peptide
      * @param charge the charge of the precursor of the inspected spectrum
+     * @param rank   the rank of the peptide hit
      * @return the corresponding peptide assumption
      */
-    private PeptideAssumption getPeptideAssumption(Domain domain, int charge) {
+    private PeptideAssumption getPeptideAssumption(Domain domain, int charge, int rank) {
         ArrayList<String> proteins = new ArrayList<String>();
         double eValue;
         com.compomics.util.experiment.biology.Peptide peptide;
@@ -185,6 +201,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             foundModifications.add(new ModificationMatch(currentModification.getName(), true, location));
         }
         peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
-        return new PeptideAssumption(peptide, 1, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), eValue, getFileName());
+        return new PeptideAssumption(peptide, rank, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), eValue, getFileName());
     }
 }

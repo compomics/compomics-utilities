@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.ptm.PtmtableContent;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
@@ -327,4 +328,47 @@ public class PTMLocationScores {
         }
         return map;
     }
+    
+    public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses,
+            ArrayList<Integer> charges, double mzTolerance, double intensityLimit) {
+
+        PtmtableContent ptmTableContent = new PtmtableContent();
+        
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+
+        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+            if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                noModPeptide.addModificationMatch(modificationMatch);
+            }
+        }
+
+        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+        spectrumAnnotator.setPeptide(noModPeptide);
+        PeptideFragmentIon peptideFragmentIon;
+        ArrayList<IonMatch> matches;
+
+        for (int i = 0; i <= nPTM; i++) {
+
+            spectrumAnnotator.setMassShift(i * ptm.getMass());
+            matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, spectrum, noModPeptide, intensityLimit, mzTolerance);
+  
+            for (IonMatch ionMatch : matches) {
+
+                peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+
+                if (peptideFragmentIon.getType() == PeptideFragmentIonType.A_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.B_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.C_ION) {
+                    ptmTableContent.addIntensity(i, peptideFragmentIon.getType(), peptideFragmentIon.getNumber(), ionMatch.peak.intensity);
+                } else if (peptideFragmentIon.getType() == PeptideFragmentIonType.X_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.Y_ION
+                        || peptideFragmentIon.getType() == PeptideFragmentIonType.Z_ION) {
+                    ptmTableContent.addIntensity(i, peptideFragmentIon.getType(), peptide.getSequence().length() - peptideFragmentIon.getNumber() + 1, ionMatch.peak.intensity);
+                }
+            }
+        }
+        return ptmTableContent;
+    }
+    
 }

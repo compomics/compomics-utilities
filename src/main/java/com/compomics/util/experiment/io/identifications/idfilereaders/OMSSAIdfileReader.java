@@ -18,6 +18,7 @@ import de.proteinms.omxparser.util.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -108,20 +109,23 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                 for (MSHitSet msHitSet : msHitSetMap.values()) {
                     List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;
                     if (hitSet.size() > 0) {
-                        MSHits bestMsHit = hitSet.get(0);
+                        HashMap<Double, ArrayList<MSHits>> hitMap = new HashMap<Double, ArrayList<MSHits>>();
                         for (MSHits msHits : hitSet) {
-                            if (msHits.MSHits_evalue < bestMsHit.MSHits_evalue) {
-                                bestMsHit = msHits;
+                            if (!hitMap.containsKey(msHits.MSHits_evalue)) {
+                                hitMap.put(msHits.MSHits_evalue, new ArrayList<MSHits>());
                             }
+                            hitMap.get(msHits.MSHits_evalue).add(msHits);
                         }
-                        Charge charge = new Charge(Charge.PLUS, bestMsHit.MSHits_charge);
+                        ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
+                        Collections.sort(eValues);
                         String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
-                        Double expMass = ((double) bestMsHit.MSHits_mass) / msResponseScale;
-                        SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name), getPeptideAssumption(bestMsHit, i));
-                        for (MSHits msHits : hitSet) {
-                            if (msHits != bestMsHit) {
-                                currentMatch.addHit(Advocate.OMSSA, getPeptideAssumption(msHits, i));
+                        SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name));
+                        int rank = 1;
+                        for (double eValue : eValues) {
+                            for (MSHits msHits : hitMap.get(eValue)) {
+                            currentMatch.addHit(Advocate.OMSSA, getPeptideAssumption(msHits, i, rank));
                             }
+                            rank+= hitMap.get(eValue).size();
                         }
                         assignedSpectra.add(currentMatch);
                     }
@@ -133,7 +137,14 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         return assignedSpectra;
     }
 
-    private PeptideAssumption getPeptideAssumption(MSHits currentMsHit, int responseIndex) {
+    /**
+     * Returns a peptide assumption based on the OMSSA MSHits
+     * @param currentMsHit  the MSHits of interest
+     * @param responseIndex the response index in the msrequest
+     * @param rank          the rank of the assumption in the spectrum match
+     * @return the corresponding peptide assumption
+     */
+    private PeptideAssumption getPeptideAssumption(MSHits currentMsHit, int responseIndex, int rank) {
         List<MSRequest> msRequest = omxFile.getParserResult().MSSearch_request.MSRequest;
 
         Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
@@ -194,7 +205,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         }
         double eValue = currentMsHit.MSHits_evalue;
         Peptide thePeptide = new Peptide(currentMsHit.MSHits_pepstring, proteins, modificationsFound);
-        return new PeptideAssumption(thePeptide, 1, Advocate.OMSSA, charge, eValue, getFileName());
+        return new PeptideAssumption(thePeptide, rank, Advocate.OMSSA, charge, eValue, getFileName());
     }
 
     /**

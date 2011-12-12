@@ -236,7 +236,7 @@ public class SpectrumAnnotator {
      * Sets a new peptide to match
      * @param peptide   the new peptide
      */
-    private void setPeptide(Peptide peptide) {
+    public void setPeptide(Peptide peptide) {
         if (this.peptide == null || !this.peptide.isSameAs(peptide) || !this.peptide.sameModificationsAs(peptide)) {
             this.peptide = peptide;
             fragmentIons = fragmentFactory.getFragmentIons(peptide);

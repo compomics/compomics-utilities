@@ -351,6 +351,7 @@ public abstract class Identification extends ExperimentObject {
                         ObjectOutputStream oos = new ObjectOutputStream(fos);
                         oos.writeObject(loadedMatchesMap.get(key));
                         oos.close();
+                        fos.close();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         throw new FileNotFoundException("Error while writing match " + key);
@@ -447,6 +448,7 @@ public abstract class Identification extends ExperimentObject {
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    fos.close();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     throw new FileNotFoundException("Error while writing match " + key);
@@ -511,6 +513,7 @@ public abstract class Identification extends ExperimentObject {
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(match);
                 oos.close();
+                fos.close();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Error while writing match " + key);
             }
@@ -543,6 +546,7 @@ public abstract class Identification extends ExperimentObject {
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    fos.close();
                     modifiedMatches.put(key, false);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

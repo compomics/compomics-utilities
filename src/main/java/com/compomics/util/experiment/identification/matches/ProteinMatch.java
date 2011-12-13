@@ -115,7 +115,9 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKey a peptide match
      */
     public void addPeptideMatch(String peptideMatchKey) {
-        peptideMatches.add(peptideMatchKey);
+        if (!peptideMatches.contains(peptideMatchKey)) {
+            peptideMatches.add(peptideMatchKey);
+        }
     }
 
     /**

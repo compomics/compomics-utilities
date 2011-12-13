@@ -119,7 +119,9 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchKey  a spectrum match
      */
     public void addSpectrumMatch(String spectrumMatchKey) {
+        if (!spectrumMatches.contains(spectrumMatchKey)) {
         spectrumMatches.add(spectrumMatchKey);
+        }
     }
 
     /**

@@ -186,7 +186,7 @@ public class FragmentIonTable extends JTable {
         getTableHeader().setReorderingAllowed(false);
         getTableHeader().setReorderingAllowed(false);
 
-        // controll the cell selection
+        // control the cell selection
         setColumnSelectionAllowed(false);
         setRowSelectionAllowed(false);
         setCellSelectionEnabled(true);

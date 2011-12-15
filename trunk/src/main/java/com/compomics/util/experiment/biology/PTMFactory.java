@@ -112,6 +112,15 @@ public class PTMFactory {
         }
         return unknownPTM;
     }
+    
+    /**
+     * Returns a boolean indicating whether the PTM is loaded in the factory
+     * @param name the name of the PTM
+     * @return a boolean indicating whether the PTM is loaded in the factory
+     */
+    public boolean containsPTM(String name) {
+        return getPTM(name) != unknownPTM;
+    }
 
     /**
      * Returns the index of the desired modification

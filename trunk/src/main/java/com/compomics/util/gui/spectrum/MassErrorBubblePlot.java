@@ -389,15 +389,22 @@ public class MassErrorBubblePlot extends JPanel {
 
             // create the interval marker
             IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
-            intervalMarker.setLabel(fragmentIonType);
+            
+            String tempKey = fragmentIonType;
+            tempKey = tempKey.replaceAll("<html>", "");
+            tempKey = tempKey.replaceAll("<sub>", "");
+            tempKey = tempKey.replaceAll("</html>", "");
+            tempKey = tempKey.replaceAll("</sub>", "");
+            
+            intervalMarker.setLabel(tempKey);
             intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
             intervalMarker.setLabelPaint(Color.GRAY);
             intervalMarker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
 
             // set the fragment ion marker color
-            if (fragmentIonType.startsWith("b")) {
+            if (tempKey.startsWith("b")) {
                 intervalMarker.setPaint(bFragmentIonColor);
-            } else if (fragmentIonType.startsWith("y")) {
+            } else if (tempKey.startsWith("y")) {
                 intervalMarker.setPaint(yFragmentIonColor);
             } else {
                 intervalMarker.setPaint(otherFragmentIonColor);
@@ -412,42 +419,42 @@ public class MassErrorBubblePlot extends JPanel {
 
             // set the horizontal location of the markers label
             // this is need so that not all labels appear on top of each other
-            if (fragmentIonType.startsWith("y")) {
+            if (tempKey.startsWith("y")) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
             }
 
-            if (fragmentIonType.lastIndexOf("H2O") != -1) {
+            if (tempKey.lastIndexOf("H2O") != -1) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
             }
 
-            if (fragmentIonType.lastIndexOf("NH3") != -1) {
+            if (tempKey.lastIndexOf("NH3") != -1) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
             }
 
-            if (fragmentIonType.lastIndexOf("Prec") != -1) {
+            if (tempKey.lastIndexOf("Prec") != -1) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
 
-                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                if (tempKey.lastIndexOf("H2O") != -1) {
                     intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
                 }
 
-                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                if (tempKey.lastIndexOf("NH3") != -1) {
                     intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 6, 0, horizontalFontPadding * 6, 0));
                 }
             }
 
-            if (fragmentIonType.startsWith("i")) {
+            if (tempKey.startsWith("i")) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
             }
 
-            if (fragmentIonType.lastIndexOf("++") != -1) {
+            if (tempKey.lastIndexOf("++") != -1) {
                 intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
 
-                if (fragmentIonType.lastIndexOf("H2O") != -1) {
+                if (tempKey.lastIndexOf("H2O") != -1) {
                     intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
                 }
 
-                if (fragmentIonType.lastIndexOf("NH3") != -1) {
+                if (tempKey.lastIndexOf("NH3") != -1) {
                     intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
                 }
             }

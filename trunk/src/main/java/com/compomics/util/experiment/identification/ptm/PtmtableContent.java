@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.ptm;
 
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
@@ -60,6 +56,33 @@ public class PtmtableContent {
             return intensities.get(index);
         } else {
             return 0.0;
+        }
+    }
+
+    public int[] getHistogram(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, int bins) {
+        ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
+
+        int[] values = new int[bins];
+
+        if (intensities.size() > 0) {
+
+            for (int i = 0; i < intensities.size(); i++) {
+
+                double currentIntensity = intensities.get(i);
+
+                for (int j = 0; j < bins; j++) {
+                    
+                    double index = (double) j;
+                    
+                    if (((index / bins) < currentIntensity) && (currentIntensity < (index + 1) / bins)) {
+                        values[j]++;
+                    }
+                }
+            }
+
+            return values;
+        } else {
+            return values;
         }
     }
 

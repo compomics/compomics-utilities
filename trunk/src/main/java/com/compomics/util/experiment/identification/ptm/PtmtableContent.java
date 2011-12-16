@@ -7,7 +7,8 @@ import java.util.HashMap;
 /**
  * Convenience class for the content of a ptm table
  *
- * @author Marc
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PtmtableContent {
 
@@ -15,13 +16,30 @@ public class PtmtableContent {
      * The content of the table: modification status -> fragment ion type -> aa number -> list of intensities
      */
     private HashMap<Integer, HashMap<PeptideFragmentIonType, HashMap<Integer, ArrayList<Double>>>> map;
+    /**
+     * The total intensity.
+     */
     private double totalIntensity = 0;
+    /**
+     * The max intensity.
+     */
     private double maxIntensity = 0;
 
+    /**
+     * Constructor.
+     */
     public PtmtableContent() {
         map = new HashMap<Integer, HashMap<PeptideFragmentIonType, HashMap<Integer, ArrayList<Double>>>>();
     }
 
+    /**
+     * Add intensity.
+     * 
+     * @param nMod
+     * @param peptideFragmentIonType
+     * @param aa
+     * @param intensity 
+     */
     public void addIntensity(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, double intensity) {
         if (!map.containsKey(nMod)) {
             map.put(nMod, new HashMap<PeptideFragmentIonType, HashMap<Integer, ArrayList<Double>>>());
@@ -39,6 +57,14 @@ public class PtmtableContent {
         }
     }
 
+    /**
+     * Get intensity.
+     * 
+     * @param nMod
+     * @param peptideFragmentIonType
+     * @param aa
+     * @return 
+     */
     public ArrayList<Double> getIntensities(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa) {
         if (map.containsKey(nMod)
                 && map.get(nMod).containsKey(peptideFragmentIonType)
@@ -49,6 +75,15 @@ public class PtmtableContent {
         }
     }
 
+    /**
+     * Get the quantile.
+     * 
+     * @param nMod
+     * @param peptideFragmentIonType
+     * @param aa
+     * @param quantile
+     * @return 
+     */
     public Double getQuantile(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, double quantile) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
         if (intensities.size() > 0) {
@@ -59,6 +94,15 @@ public class PtmtableContent {
         }
     }
 
+    /**
+     * Get histogram.
+     * 
+     * @param nMod
+     * @param peptideFragmentIonType
+     * @param aa
+     * @param bins
+     * @return 
+     */
     public int[] getHistogram(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, int bins) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
 
@@ -68,7 +112,7 @@ public class PtmtableContent {
 
             for (int i = 0; i < intensities.size(); i++) {
 
-                double currentIntensity = intensities.get(i);
+                double currentIntensity = intensities.get(i) / maxIntensity;
 
                 for (int j = 0; j < bins; j++) {
                     
@@ -78,6 +122,11 @@ public class PtmtableContent {
                         values[j]++;
                     }
                 }
+                
+                // make sure that the max value is included
+                if (currentIntensity == 1) {
+                     values[values.length-1]++;   
+                }
             }
 
             return values;
@@ -86,10 +135,20 @@ public class PtmtableContent {
         }
     }
 
+    /**
+     * Get the map
+     * 
+     * @return the map
+     */
     public HashMap<Integer, HashMap<PeptideFragmentIonType, HashMap<Integer, ArrayList<Double>>>> getMap() {
         return map;
     }
 
+    /**
+     * Add all.
+     * 
+     * @param anotherContent 
+     */
     public void addAll(PtmtableContent anotherContent) {
         for (int nPTM : anotherContent.getMap().keySet()) {
             for (PeptideFragmentIonType peptideFragmentIonType : anotherContent.getMap().get(nPTM).keySet()) {
@@ -102,6 +161,9 @@ public class PtmtableContent {
         }
     }
 
+    /**
+     * Normalize intesities.
+     */
     public void normalize() {
         if (totalIntensity > 0) {
             double normalization = totalIntensity;
@@ -122,6 +184,11 @@ public class PtmtableContent {
         }
     }
 
+    /**
+     * Returns the max intensity.
+     * 
+     * @return the max intensity
+     */
     public double getMaxIntensity() {
         return maxIntensity;
     }

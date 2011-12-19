@@ -224,6 +224,17 @@ public class Peptide extends ExperimentObject {
     public static boolean isModified(String peptideKey, String modification) {
         return peptideKey.contains(modification);
     }
+
+    /**
+     * Returns how many of the given modification was found in the given peptide 
+     * @param peptideKey the peptide key
+     * @param modification the name of the modification
+     * @return the amount of modifications
+     */
+    public static int getModificationCount(String peptideKey, String modification) {
+        String test = "_" + peptideKey + "_";
+        return test.split(modification).length;
+    }
     
 
     /**

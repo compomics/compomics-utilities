@@ -182,7 +182,7 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
         ArrayList<String> noCleavage = new ArrayList<String>();
-        String tempPeptide, tempSequence1, tempSequence = sequence;
+        String tempPeptide, tempSequence = sequence;
         int tempCleavage, cleavage;
         while (tempSequence.length() > 1) {
             cleavage = 0;
@@ -196,7 +196,6 @@ public class Enzyme extends ExperimentObject {
                 }
             }
             for (Character aa : getAminoAcidBefore()) {
-                tempSequence1 = tempSequence;
                 tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
                 while (getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);

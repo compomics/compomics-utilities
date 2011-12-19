@@ -75,7 +75,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      */
     public String getMgfFileName() {
         String temp = iMascotDatfile.getParametersSection().getFile();
-        return Util.getFileName(temp);
+        String fileName = Util.getFileName(temp);
+        if (!fileName.toLowerCase().endsWith("mgf")
+                || fileName.toLowerCase().endsWith("mzml")) {
+            fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".mgf";
+        }
+        return fileName;
     }
 
     /**

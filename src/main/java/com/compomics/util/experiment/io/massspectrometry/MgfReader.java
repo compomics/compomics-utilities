@@ -181,6 +181,87 @@ public class MgfReader {
     }
 
     /**
+     * Splits an mgf file into smaller ones and returns the indexes of the generated files
+     * @param mgfFile                   the mgf file to split
+     * @param nSpectra                  the number of spectra allowed in the smaller files
+     * @param progressBar               the progress bar showing the progress
+     * @return  a list of indexes of the generated files
+     * @throws FileNotFoundException    exception thrown whenever a file was not found
+     * @throws IOException              exception thrown whenever a problem occurred while reading/writing a file
+     */
+    public static ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, JProgressBar progressBar) throws FileNotFoundException, IOException {
+        String fileName = mgfFile.getName();
+
+        if (fileName.endsWith(".mgf")) {
+
+            ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
+
+            String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
+
+            RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
+            String line;
+            long currentIndex = 0;
+            if (progressBar != null) {
+                progressBar.setIndeterminate(false);
+                progressBar.setStringPainted(true);
+                progressBar.setMaximum(100);
+                progressBar.setValue(0);
+            }
+            int fileCounter = 1;
+            int spectrumCounter = 0;
+
+            HashMap<String, Long> indexes = new HashMap<String, Long>();
+            String currentName = splittedName + "_" + fileCounter + ".mgf";
+            File testFile = new File(mgfFile.getParent(), currentName);
+            RandomAccessFile writeFile = new RandomAccessFile(testFile, "rw");
+
+            long progressUnit = readAccessFile.length() / 100;
+            while ((line = readAccessFile.readLine()) != null) {
+                line = line.trim();
+                if (line.equals("BEGIN IONS")) {
+                    spectrumCounter++;
+
+                    if (spectrumCounter > nSpectra) {
+                        writeFile.close();
+                        mgfIndexes.add(new MgfIndex(indexes, currentName));
+
+                        fileCounter++;
+                        currentName = splittedName + "_" + fileCounter + ".mgf";
+                        testFile = new File(mgfFile.getParent(), currentName);
+                        writeFile = new RandomAccessFile(testFile, "rw");
+                        spectrumCounter = 0;
+                        indexes = new HashMap<String, Long>();
+                    }
+
+                    currentIndex = writeFile.getFilePointer();
+
+
+                    if (progressBar != null) {
+                        progressBar.setValue((int) (readAccessFile.getFilePointer() / progressUnit));
+                    }
+                } else if (line.startsWith("TITLE")) {
+                    indexes.put(line.substring(line.indexOf('=') + 1).trim(), currentIndex);
+                }
+                writeFile.writeBytes(line + "\\n");
+            }
+
+            writeFile.close();
+            mgfIndexes.add(new MgfIndex(indexes, currentName));
+            if (progressBar != null) {
+                progressBar.setIndeterminate(true);
+                progressBar.setStringPainted(false);
+            }
+
+            readAccessFile.close();
+            writeFile.close();
+            return mgfIndexes;
+
+        } else {
+            throw new IllegalArgumentException("Spectrum file format not supported.");
+        }
+    }
+
+    /**
      * Returns the next spectrum starting from the given index
      * @param randomAccessFile  The random access file of the inspected mgf file
      * @param index             The index where to start looking for the spectrum

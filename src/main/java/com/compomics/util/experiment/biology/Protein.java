@@ -133,6 +133,57 @@ public class Protein extends ExperimentObject {
     public String getProteinKey() {
         return accession;
     }
+    
+    /**
+     * Returns the number of amino acids in the sequence
+     * @return the number of amino acids in the sequence
+     */
+    public int getLength() {
+        return sequence.length();
+    }
+    
+    /**
+     * Returns the number of observable amino acids of the sequence
+     * @return the number of observable amino acids of the sequence
+     */
+    public int getObservableLength(Enzyme enzyme, int pepMaxLength) {
+        int length = 0;
+        String tempPeptide, tempSequence = sequence;
+        int tempCleavage, cleavage;
+        while (tempSequence.length() > 1) {
+            cleavage = 0;
+            for (Character aa : enzyme.getAminoAcidAfter()) {
+                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
+                while (enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
+                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
+                }
+                if (tempCleavage > cleavage && !enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
+                    cleavage = tempCleavage;
+                }
+            }
+            for (Character aa : enzyme.getAminoAcidBefore()) {
+                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
+                while (enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
+                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
+                }
+                if (tempCleavage > cleavage && !enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
+                    cleavage = tempCleavage;
+                }
+            }
+            if (cleavage == 0) {
+                if (tempSequence.length() <= pepMaxLength) {
+                    length += tempSequence.length();
+                }
+                break;
+            }
+            tempPeptide = tempSequence.substring(cleavage + 1);
+            if (tempPeptide.length() <= pepMaxLength) {
+                    length += tempPeptide.length();
+            }
+            tempSequence = tempSequence.substring(0, cleavage + 1);
+        }
+        return length;
+    }
 
     /**
      * Returns the number of possible peptides (not accounting PTMs nor missed cleavages) with the selected enzyme

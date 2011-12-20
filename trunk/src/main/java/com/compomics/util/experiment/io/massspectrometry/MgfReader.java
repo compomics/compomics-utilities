@@ -200,7 +200,7 @@ public class MgfReader {
 
             RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
             String line;
-            long currentIndex = 0;
+            long readIndex, writeIndex = 0;
             if (progressBar != null) {
                 progressBar.setIndeterminate(false);
                 progressBar.setStringPainted(true);
@@ -209,6 +209,7 @@ public class MgfReader {
             }
             int fileCounter = 1;
             int spectrumCounter = 0;
+            long typicalSize = 0;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -220,27 +221,32 @@ public class MgfReader {
                 line = line.trim();
                 if (line.equals("BEGIN IONS")) {
                     spectrumCounter++;
+                    writeIndex = writeFile.getFilePointer();
+                    readIndex = readAccessFile.getFilePointer();
 
                     if (spectrumCounter > nSpectra) {
-                        writeFile.close();
-                        mgfIndexes.add(new MgfIndex(indexes, currentName));
 
-                        fileCounter++;
-                        currentName = splittedName + "_" + fileCounter + ".mgf";
-                        testFile = new File(mgfFile.getParent(), currentName);
-                        writeFile = new RandomAccessFile(testFile, "rw");
-                        spectrumCounter = 0;
-                        indexes = new HashMap<String, Long>();
+                        typicalSize = Math.max(writeIndex, typicalSize);
+
+                        if (readAccessFile.length() - readIndex > typicalSize / 2) { // try to avoid leftovers
+
+                            writeFile.close();
+                            mgfIndexes.add(new MgfIndex(indexes, currentName));
+
+                            fileCounter++;
+                            currentName = splittedName + "_" + fileCounter + ".mgf";
+                            testFile = new File(mgfFile.getParent(), currentName);
+                            writeFile = new RandomAccessFile(testFile, "rw");
+                            spectrumCounter = 0;
+                            indexes = new HashMap<String, Long>();
+                        }
                     }
-
-                    currentIndex = writeFile.getFilePointer();
-
 
                     if (progressBar != null) {
-                        progressBar.setValue((int) (readAccessFile.getFilePointer() / progressUnit));
+                        progressBar.setValue((int) (writeIndex / progressUnit));
                     }
                 } else if (line.startsWith("TITLE")) {
-                    indexes.put(line.substring(line.indexOf('=') + 1).trim(), currentIndex);
+                    indexes.put(line.substring(line.indexOf('=') + 1).trim(), writeIndex);
                 }
                 writeFile.writeBytes(line + "\\n");
             }

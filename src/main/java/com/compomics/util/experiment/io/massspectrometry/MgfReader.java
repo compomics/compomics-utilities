@@ -248,7 +248,7 @@ public class MgfReader {
                 } else if (line.startsWith("TITLE")) {
                     indexes.put(line.substring(line.indexOf('=') + 1).trim(), writeIndex);
                 }
-                writeFile.writeBytes(line + "\\n");
+                writeFile.writeBytes(line + "\n");
             }
 
             writeFile.close();

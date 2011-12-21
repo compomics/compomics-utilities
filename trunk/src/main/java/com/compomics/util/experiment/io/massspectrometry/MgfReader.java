@@ -363,10 +363,13 @@ public class MgfReader {
      * @throws IllegalArgumentException        Exception thrown whenever the file is not of a compatible format
      */
     public static Precursor getPrecursor(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+
         randomAccessFile.seek(index);
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         int precursorCharge = 1;
+        //ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        
         while ((line = randomAccessFile.readLine()) != null) {
             line = line.trim();
             if (line.equals("BEGIN IONS")
@@ -380,10 +383,35 @@ public class MgfReader {
                     || line.startsWith("SCANS")
                     || line.startsWith("INSTRUMENT")) {
             } else if (line.startsWith("CHARGE")) {
-                if (line.endsWith("+") || line.endsWith("-")) {
-                    line = line.substring(0, line.length() - 1);
+                
+                if (line.indexOf("and") != -1) {
+                    precursorCharge = 2; // @TODO: this is just a quick and dirty fix to be able to read the file!!
+                } else {
+                    if (line.endsWith("+") || line.endsWith("-")) {
+                        line = line.substring(0, line.length() - 1);
+                    }
+                    precursorCharge = new Integer(line.substring(line.indexOf('=') + 1));
                 }
-                precursorCharge = new Integer(line.substring(line.indexOf('=') + 1));
+                     
+//                precursorCharges = new ArrayList<Charge>();
+//                String tempLine = line.substring(line.indexOf('=') + 1);
+//                String[] charges = tempLine.split("and");
+//                
+//                for (int i=0; i<charges.length; i++) {
+//                    String tempCharge = charges[i].trim();
+//                    if (tempCharge.endsWith("+") || tempCharge.endsWith("-")) {
+//                        tempCharge = tempCharge.substring(0, tempCharge.length() - 1);
+//                    }
+//                    
+//                    int charge = new Integer(tempCharge);
+//                    
+//                    if (charge > 0) {
+//                        precursorCharges.add(new Charge(new Integer(tempCharge), Charge.PLUS));
+//                    } else {
+//                        precursorCharges.add(new Charge(new Integer(tempCharge), Charge.MINUS));
+//                    }   
+//                }
+                
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -397,6 +425,7 @@ public class MgfReader {
                 rt = new Double(line.substring(line.indexOf('=') + 1));
             } else {
                 return new Precursor(rt, precursorMass, precursorIntensity, new Charge(Charge.PLUS, precursorCharge));
+                //return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
             }
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");

@@ -33,6 +33,10 @@ public class SpectrumAnnotator {
      */
     private Peptide peptide;
     /**
+     * The precursor charge as deduced by the search engine
+     */
+    private int precursorCharge;
+    /**
      * The theoretic fragment ions for the selected peptide
      */
     private ArrayList<PeptideFragmentIon> fragmentIons;
@@ -89,14 +93,15 @@ public class SpectrumAnnotator {
      * @param peptide       The peptide
      * @param iontypes      The fragment ions selected
      * @param charges       The charges of the fragment to search for 
+     * @param precursorCharge The precursor charge as deduced by the search engine
      * @param neutralLosses Map of expected neutral losses: neutral loss -> maximal position in the sequence (first aa is 1). let null if neutral losses should not be considered.
      * @param peak          The peak to match
      * @param massTolerance The mass tolerance to use (in Dalton)
      * @return              A list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, ArrayList<PeptideFragmentIonType> iontypes, ArrayList<Integer> charges, NeutralLossesMap neutralLosses, Peak peak, double massTolerance) {
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, ArrayList<PeptideFragmentIonType> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak, double massTolerance) {
 
-        setPeptide(peptide);
+        setPeptide(peptide, precursorCharge);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
@@ -235,10 +240,12 @@ public class SpectrumAnnotator {
     /**
      * Sets a new peptide to match
      * @param peptide   the new peptide
+     * @param precursorChareg the new precursor charge
      */
-    public void setPeptide(Peptide peptide) {
-        if (this.peptide == null || !this.peptide.isSameAs(peptide) || !this.peptide.sameModificationsAs(peptide)) {
+    public void setPeptide(Peptide peptide, int precursorCharge) {
+        if (this.peptide == null || !this.peptide.isSameAs(peptide) || !this.peptide.sameModificationsAs(peptide) || this.precursorCharge != precursorCharge) {
             this.peptide = peptide;
+            this.precursorCharge = precursorCharge;
             fragmentIons = fragmentFactory.getFragmentIons(peptide);
             if (massShift != 0) {
                 for (PeptideFragmentIon fragmentIon : fragmentIons) {
@@ -425,12 +432,12 @@ public class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
+            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         if (spectrum != null) {
             setSpectrum(spectrum, intensityLimit);
         }
-        setPeptide(peptide);
+        setPeptide(peptide, precursorCharge);
         setMassTolerance(mzTolerance);
         String key;
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
@@ -449,7 +456,6 @@ public class SpectrumAnnotator {
                     }
                 }
                 if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION) {
-                    int precursorCharge = spectrum.getPrecursor().getCharge().value;
                     key = getTheoreticFragmentKey(fragmentIon, precursorCharge);
                     if (!spectrumAnnotation.containsKey(key)
                             && !unmatchedIons.contains(key)) {
@@ -477,10 +483,10 @@ public class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the given settings
      */
     public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, Peptide peptide, int precursorCharge) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, Peptide peptide) {
 
         HashMap<Integer, ArrayList<PeptideFragmentIon>> result = new HashMap<Integer, ArrayList<PeptideFragmentIon>>();
-        setPeptide(peptide);
+        setPeptide(peptide, precursorCharge);
 
         for (PeptideFragmentIon fragmentIon : fragmentIons) {
             if (expectedFragmentIons.contains(fragmentIon.getType())
@@ -514,7 +520,7 @@ public class SpectrumAnnotator {
      * @return the currently matched ions with the given settings
      */
     public ArrayList<IonMatch> getCurrentAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
-        return getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, null, peptide, intensityLimit, massTolerance);
+        return getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, precursorCharge, null, peptide, intensityLimit, massTolerance);
     }
 
     /**

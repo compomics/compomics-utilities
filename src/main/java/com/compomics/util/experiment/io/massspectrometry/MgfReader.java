@@ -44,7 +44,7 @@ public class MgfReader {
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
-        int precursorCharge = 1;
+        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashSet<Peak> spectrum = new HashSet<Peak>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
@@ -57,7 +57,7 @@ public class MgfReader {
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
             } else if (line.startsWith("CHARGE")) {
-                precursorCharge = new Integer(line.substring(line.indexOf('=') + 1, line.indexOf('=') + 2));
+                precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -97,7 +97,7 @@ public class MgfReader {
                 // ion series not implemented
             } else if (line.equals("END IONS")) {
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, new Precursor(
-                        rt, precursorMass, precursorIntensity, new Charge(Charge.PLUS, precursorCharge)), spectrumTitle, spectrum, aFile.getName());
+                        rt, precursorMass, precursorIntensity, precursorCharges), spectrumTitle, spectrum, aFile.getName());
                 msnSpectrum.setScanNumber(scanNumber);
                 spectra.add(msnSpectrum);
             } else if (!line.equals("")) {
@@ -228,7 +228,7 @@ public class MgfReader {
 
                         typicalSize = Math.max(writeIndex, typicalSize);
 
-                        if (readAccessFile.length() - readIndex > typicalSize / 2) { // try to avoid leftovers
+                        if (readAccessFile.length() - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeFile.close();
                             mgfIndexes.add(new MgfIndex(indexes, currentName));
@@ -280,7 +280,7 @@ public class MgfReader {
         randomAccessFile.seek(index);
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
-        int precursorCharge = 1;
+        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashSet<Peak> spectrum = new HashSet<Peak>();
         while ((line = randomAccessFile.readLine()) != null) {
@@ -290,7 +290,7 @@ public class MgfReader {
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
             } else if (line.startsWith("CHARGE")) {
-                precursorCharge = new Integer(line.substring(line.indexOf('=') + 1, line.indexOf('=') + 2));
+                precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -330,7 +330,7 @@ public class MgfReader {
                 // ion series not implemented
             } else if (line.equals("END IONS")) {
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, new Precursor(
-                        rt, precursorMass, precursorIntensity, new Charge(Charge.PLUS, precursorCharge)), spectrumTitle, spectrum, fileName);
+                        rt, precursorMass, precursorIntensity, precursorCharges), spectrumTitle, spectrum, fileName);
                 msnSpectrum.setScanNumber(scanNumber);
                 return msnSpectrum;
             } else if (!line.equals("")) {
@@ -352,6 +352,32 @@ public class MgfReader {
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
     }
+    
+    /**
+     * Parses the charge line of an mgf files
+     * @param chargeLine    the charge line
+     * @return the possible charges found
+     */
+    private static ArrayList<Charge> parseCharges(String chargeLine) {
+        ArrayList<Charge> result = new ArrayList<Charge>();
+        String tempLine = chargeLine.substring(chargeLine.indexOf("=")+1);
+        String[] charges = tempLine.split(" and ");
+        Integer value;
+        for (String charge : charges) {
+            charge = charge.trim();
+            if (charge.endsWith("+")) {
+                value = new Integer(charge.substring(0, charge.length()-1));
+                result.add(new Charge(Charge.PLUS, value));
+            } else if (charge.endsWith("-")) {
+                value = new Integer(charge.substring(0, charge.length()-1));
+                result.add(new Charge(Charge.MINUS, value));
+            } else {
+                result.add(new Charge(Charge.PLUS, new Integer(charge)));
+            }
+        }
+        
+        return result;
+    }
 
     /**
      * Returns the next precursor starting from the given index
@@ -368,7 +394,7 @@ public class MgfReader {
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         int precursorCharge = 1;
-        //ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         
         while ((line = randomAccessFile.readLine()) != null) {
             line = line.trim();
@@ -383,35 +409,7 @@ public class MgfReader {
                     || line.startsWith("SCANS")
                     || line.startsWith("INSTRUMENT")) {
             } else if (line.startsWith("CHARGE")) {
-                
-                if (line.indexOf("and") != -1) {
-                    precursorCharge = 2; // @TODO: this is just a quick and dirty fix to be able to read the file!!
-                } else {
-                    if (line.endsWith("+") || line.endsWith("-")) {
-                        line = line.substring(0, line.length() - 1);
-                    }
-                    precursorCharge = new Integer(line.substring(line.indexOf('=') + 1));
-                }
-                     
-//                precursorCharges = new ArrayList<Charge>();
-//                String tempLine = line.substring(line.indexOf('=') + 1);
-//                String[] charges = tempLine.split("and");
-//                
-//                for (int i=0; i<charges.length; i++) {
-//                    String tempCharge = charges[i].trim();
-//                    if (tempCharge.endsWith("+") || tempCharge.endsWith("-")) {
-//                        tempCharge = tempCharge.substring(0, tempCharge.length() - 1);
-//                    }
-//                    
-//                    int charge = new Integer(tempCharge);
-//                    
-//                    if (charge > 0) {
-//                        precursorCharges.add(new Charge(new Integer(tempCharge), Charge.PLUS));
-//                    } else {
-//                        precursorCharges.add(new Charge(new Integer(tempCharge), Charge.MINUS));
-//                    }   
-//                }
-                
+                precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -424,8 +422,7 @@ public class MgfReader {
             } else if (line.startsWith("RTINSECONDS")) {
                 rt = new Double(line.substring(line.indexOf('=') + 1));
             } else {
-                return new Precursor(rt, precursorMass, precursorIntensity, new Charge(Charge.PLUS, precursorCharge));
-                //return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
             }
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");

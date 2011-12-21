@@ -101,10 +101,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     String tempFile = xTandemFile.getInputParameters().getSpectrumPath();
                     String filename = Util.getFileName(tempFile);
                     Charge charge = new Charge(Charge.PLUS, currentSpectrum.getPrecursorCharge());
-                    double measuredMass = testDomain.getDomainMh() + testDomain.getDomainDeltaMh();
-                    Precursor precursor = new Precursor(-1, measuredMass, charge); // The retention time is not known at this stage
-                    MSnSpectrum spectrum = new MSnSpectrum(2, precursor, spectrumName, filename);
-                    String spectrumKey = spectrum.getSpectrumKey();
+                    String spectrumKey = com.compomics.util.experiment.massspectrometry.Spectrum.getSpectrumKey(filename, spectrumName);
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
                     HashMap<Double, ArrayList<Domain>> hitMap = new HashMap<Double, ArrayList<Domain>>();
@@ -146,7 +143,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         ArrayList<String> proteins = new ArrayList<String>();
         double eValue;
         com.compomics.util.experiment.biology.Peptide peptide;
-        double measuredMass = domain.getDomainMh() + domain.getDomainDeltaMh() - 1;
         String sequence = domain.getDomainSequence();
         String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
         String accession = "";

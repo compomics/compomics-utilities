@@ -94,12 +94,22 @@ public class MSnSpectrum extends Spectrum {
      * 
      * @return the peak list as mgf bloc
      */
-    public String asMgf() {    
+    public String asMgf() {
         String result = "BEGIN IONS\n\n";
         result += "TITLE=" + spectrumTitle + "\n";
         result += "PEPMASS=" + precursor.getMz() + "\n";
         result += "RTINSECONDS=" + precursor.getRt() + "\n";
-        result += "CHARGE=" + precursor.getCharge().toString() + "\n\n";
+        result += "CHARGE=";
+        boolean first = true;
+        for (Charge charge : precursor.getPossibleCharges()) {
+            if (first) {
+                first = false;
+            } else {
+                result += " and ";
+            }
+            result += charge.toString();
+        }
+        result += "\n\n";
 
         // add the values to a tree map to get them sorted in mz    
         TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();

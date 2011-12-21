@@ -376,6 +376,11 @@ public class MgfReader {
             }
         }
         
+        // if empty, add a default charge of 1
+        if (result.isEmpty()) {
+            result.add(new Charge(Charge.PLUS, 1));
+        }
+        
         return result;
     }
 

@@ -64,7 +64,8 @@ public class ModificationProfile {
     }
 
     /**
-     * Returns the profile.
+     * Returns the profile. Delta scores in the first row and a score in the second row, 
+     * i.e., [d1][DELTA_SCORE_ROW_INDEX] and [a1][A_SCORE_ROW_INDEX].
      * 
      * @return the profile
      */
@@ -73,7 +74,8 @@ public class ModificationProfile {
     }
 
     /**
-     * Sets the profile.
+     * Sets the profile. Delta scores in the first row and a score in the second row, 
+     * i.e., [d1][DELTA_SCORE_ROW_INDEX] and [a1][A_SCORE_ROW_INDEX].
      * 
      * @param profile the profile to set
      */

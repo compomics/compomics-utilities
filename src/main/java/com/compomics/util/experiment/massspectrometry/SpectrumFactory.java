@@ -207,6 +207,12 @@ public class SpectrumFactory {
             String name = fileName;
             String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
+                
+                // a special fix for mgf files with strange headers...
+                if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
+                    spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+                }
+                
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {
                 uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);

@@ -253,7 +253,8 @@ public class SpectrumFactory {
                 if (level == 1) {
                     throw new IllegalArgumentException("MS1 spectrum");
                 } else {
-                    currentPrecursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
+                    //@TODO: update the charge here
+//                    currentPrecursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
                 }
             } else {
                 throw new IllegalArgumentException("Spectrum file format not supported.");
@@ -358,8 +359,9 @@ public class SpectrumFactory {
                 if (level == 1) {
                     currentSpectrum = new MS1Spectrum(fileName, spectrumTitle, scanTime, peakList);
                 } else {
-                    Precursor precursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
-                    currentSpectrum = new MSnSpectrum(level, precursor, spectrumTitle, peakList, fileName, scanTime);
+                    //@TODO: update the charge here
+                    //Precursor precursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
+                    //currentSpectrum = new MSnSpectrum(level, precursor, spectrumTitle, peakList, fileName, scanTime);
                 }
             } else {
                 throw new IllegalArgumentException("Spectrum file format not supported.");

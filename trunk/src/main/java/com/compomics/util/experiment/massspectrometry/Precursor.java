@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 
 /**
  * This class modilizes the precursor.
@@ -29,19 +30,19 @@ public class Precursor extends ExperimentObject {
     /**
      * The charge of the precursor.
      */
-    private Charge charge;
+    private ArrayList<Charge> possibleCharges;
 
     /**
      * Constructor for the precursor.
      * 
-     * @param rt
-     * @param mz
-     * @param charge
+     * @param rt                the retention time
+     * @param mz                the m/z
+     * @param possibleCharges   the possible charges
      */
-    public Precursor(double rt, double mz, Charge charge) {
+    public Precursor(double rt, double mz, ArrayList<Charge> possibleCharges) {
         this.rt = rt;
         this.mz = mz;
-        this.charge = charge;
+        this.possibleCharges = possibleCharges;
     }
     
     /**
@@ -52,11 +53,11 @@ public class Precursor extends ExperimentObject {
      * @param intensity 
      * @param charge
      */
-    public Precursor(double rt, double mz, double intensity, Charge charge) {
+    public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges) {
         this.rt = rt;
         this.mz = mz;
         this.intensity = intensity;
-        this.charge = charge;
+        this.possibleCharges = possibleCharges;
     }
 
     /**
@@ -87,11 +88,11 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Getter for the charge.
+     * Getter for the possible charges
      * 
-     * @return precursor charge
+     * @return the possible charges
      */
-    public Charge getCharge() {
-        return charge;
+    public ArrayList<Charge> getPossibleCharges() {
+        return possibleCharges;
     }
 }

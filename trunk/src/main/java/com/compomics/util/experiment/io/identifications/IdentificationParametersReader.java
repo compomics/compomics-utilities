@@ -131,7 +131,9 @@ public class IdentificationParametersReader {
      * This method parses a modification line from a properties file.
      *
      * @param aLine String with the modification line from the properties file.
+     * @param ptmFactory 
      * @return ArrayList with the parsed PTM indexes.
+     * @throws Exception  
      */
     public static ArrayList<String> parseModificationLine(String aLine, PTMFactory ptmFactory) throws Exception {
 
@@ -139,7 +141,7 @@ public class IdentificationParametersReader {
 
         // Split the different modifications.
         int start = -1;
-
+        
         while ((start = aLine.indexOf(IdentificationParametersReader.MODIFICATION_SEPARATOR)) >= 0) {
             String name = aLine.substring(0, start);
             aLine = aLine.substring(start + 2);
@@ -148,7 +150,7 @@ public class IdentificationParametersReader {
                 if (modId != null) {
                     result.add(name);
                 } else {
-                    throw new Exception("Unable to find modification " + name);
+                    throw new Exception("Unable to find modification \'" + name + "\'.");
                 }
             }
         }
@@ -159,7 +161,7 @@ public class IdentificationParametersReader {
             if (modId != null) {
                 result.add(aLine);
             } else {
-                throw new Exception("Unable to find modification " + aLine);
+                throw new Exception("Unable to find modification \'" + aLine + "\'.");
             }
         }
 

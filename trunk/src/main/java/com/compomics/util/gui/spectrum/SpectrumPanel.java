@@ -321,7 +321,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aXAxisData            double[] with all the x-axis values.
      * @param aYAxisData            double[] with all the y-axis values.
      * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
+     * @param aPrecursorCharge      String with the precursor charge.
      * @param aFileName             String with the title of the Query.
      * @param aMaxPadding           int the sets the maximum padding size.
      * @param aShowFileName         boolean that specifies if the file name should be shown in the panel

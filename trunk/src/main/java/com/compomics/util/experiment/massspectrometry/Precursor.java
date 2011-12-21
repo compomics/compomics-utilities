@@ -95,4 +95,22 @@ public class Precursor extends ExperimentObject {
     public ArrayList<Charge> getPossibleCharges() {
         return possibleCharges;
     }
+    
+    /**
+     * Returns the possible charges as a string
+     * @return the possible charges as a string
+     */
+    public String getPossibleChargesAsString() {
+        String result = "";
+        boolean first = true;
+        for (Charge charge : possibleCharges) {
+            if (first) {
+                first = false;
+            } else {
+                result += ", ";
+            }
+            result += charge.toString();
+        }
+        return result;
+    }
 }

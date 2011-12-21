@@ -235,7 +235,6 @@ public class Peptide extends ExperimentObject {
         String test = "_" + peptideKey + "_";
         return test.split(modification).length;
     }
-    
 
     /**
      * Returns the sequence of the peptide indexed by the given key
@@ -378,6 +377,72 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns the modified sequence as an HTML string with potential modification sites
+     * color coding.
+     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
+     * 
+     * @param colors                    the ptm name to color mapping  
+     * @param includeHtmlStartEndTag    if true, start and end html tags are added
+     * @return                          the modified sequence as an HTML string
+     */
+    public static String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag, Peptide peptide,
+            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites) {
+
+        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTM ptm;
+        
+        String sequence = peptide.sequence;
+
+        String modifiedSequence = "";
+
+        if (includeHtmlStartEndTag) {
+            modifiedSequence += "<html>";
+        }
+
+        modifiedSequence += peptide.getNTerminal() + "-";
+
+        for (int i = 0; i < sequence.length(); i++) {
+
+            if (mainModificationSites.containsKey(i+1)) { // @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that
+                for (String ptmName : mainModificationSites.get(i+1)) { //There should be only one
+                    ptm = pTMFactory.getPTM(ptmName);
+                    if (ptm.getType() == PTM.MODAA) {
+                        Color ptmColor = colors.get(ptmName);
+                        modifiedSequence +=
+                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
+                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
+                                "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
+                                + sequence.charAt(i)
+                                + "</span>";
+                    }
+                }
+            } else if (secondaryModificationSites.containsKey(i+1)) {
+                for (String ptmName : secondaryModificationSites.get(i+1)) { //There should be only one
+                    ptm = pTMFactory.getPTM(ptmName);
+                    if (ptm.getType() == PTM.MODAA) {
+                        Color ptmColor = colors.get(ptmName);
+                        modifiedSequence +=
+                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
+                                "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
+                                + sequence.charAt(i)
+                                + "</span>";
+                    }
+                }
+            } else {
+                modifiedSequence += sequence.charAt(i);
+            }
+        }
+
+        modifiedSequence += "-" + peptide.getCTerminal();
+
+        if (includeHtmlStartEndTag) {
+            modifiedSequence += "</html>";
+        }
+
+        return modifiedSequence;
+    }
+
+    /**
      * Returns the modified sequence as an HTML string with modification 
      * color coding.
      * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
@@ -446,7 +511,7 @@ public class Peptide extends ExperimentObject {
      * @param ptmColors  the ptm color map
      * @return           a map of the ptm short names to the ptm colors
      */
-    public HashMap<String, Color> getPTMShortNameColorMap(HashMap<String,Color> ptmColors) {
+    public HashMap<String, Color> getPTMShortNameColorMap(HashMap<String, Color> ptmColors) {
 
         HashMap<String, Color> shortNameColorMap = new HashMap<String, Color>();
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -461,7 +526,7 @@ public class Peptide extends ExperimentObject {
 
         return shortNameColorMap;
     }
-    
+
     /**
      * Returns a map of the ptm short names to the ptm long names for the 
      * modification in this peptide. E.g., key: <ox>, element oxidation of m.
@@ -535,10 +600,10 @@ public class Peptide extends ExperimentObject {
      * @throws IllegalArgumentException if the peptide sequence contains unknown amino acids
      */
     private void estimateTheoreticMass() throws IllegalArgumentException {
-        
+
         mass = Atom.H.mass;
         AminoAcid currentAA;
-        
+
         for (int aa = 0; aa < sequence.length(); aa++) {
             try {
                 currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
@@ -547,11 +612,11 @@ public class Peptide extends ExperimentObject {
                 throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
             }
         }
-        
+
         mass += Atom.H.mass + Atom.O.mass;
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        
+
         for (ModificationMatch ptmMatch : modifications) {
             mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
         }

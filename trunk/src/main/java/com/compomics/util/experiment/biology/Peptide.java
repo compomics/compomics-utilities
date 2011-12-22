@@ -383,16 +383,16 @@ public class Peptide extends ExperimentObject {
      * 
      * @param colors                    the ptm name to color mapping  
      * @param includeHtmlStartEndTag    if true, start and end html tags are added
+     * @param peptide 
+     * @param mainModificationSites 
+     * @param secondaryModificationSites 
      * @return                          the modified sequence as an HTML string
      */
     public static String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag, Peptide peptide,
             HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
-        PTM ptm;
-        
         String sequence = peptide.sequence;
-
         String modifiedSequence = "";
 
         if (includeHtmlStartEndTag) {
@@ -403,9 +403,9 @@ public class Peptide extends ExperimentObject {
 
         for (int i = 0; i < sequence.length(); i++) {
 
-            if (mainModificationSites.containsKey(i+1)) { // @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that
+            if (mainModificationSites.containsKey(i+1)) { // @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
                 for (String ptmName : mainModificationSites.get(i+1)) { //There should be only one
-                    ptm = pTMFactory.getPTM(ptmName);
+                    PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = colors.get(ptmName);
                         modifiedSequence +=
@@ -418,7 +418,7 @@ public class Peptide extends ExperimentObject {
                 }
             } else if (secondaryModificationSites.containsKey(i+1)) {
                 for (String ptmName : secondaryModificationSites.get(i+1)) { //There should be only one
-                    ptm = pTMFactory.getPTM(ptmName);
+                    PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = colors.get(ptmName);
                         modifiedSequence +=

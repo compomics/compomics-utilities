@@ -400,11 +400,12 @@ public class Peptide extends ExperimentObject {
         }
 
         modifiedSequence += peptide.getNTerminal() + "-";
-
+int aa;
         for (int i = 0; i < sequence.length(); i++) {
-
-            if (mainModificationSites.containsKey(i+1)) { // @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
-                for (String ptmName : mainModificationSites.get(i+1)) { //There should be only one
+aa = i+1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
+            if (mainModificationSites.containsKey(aa)
+                    && !mainModificationSites.get(aa).isEmpty()) { 
+                for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = colors.get(ptmName);
@@ -416,8 +417,9 @@ public class Peptide extends ExperimentObject {
                                 + "</span>";
                     }
                 }
-            } else if (secondaryModificationSites.containsKey(i+1)) {
-                for (String ptmName : secondaryModificationSites.get(i+1)) { //There should be only one
+            } else if (secondaryModificationSites.containsKey(aa)
+                    && !secondaryModificationSites.get(aa).isEmpty()) {
+                for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = colors.get(ptmName);

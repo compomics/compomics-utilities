@@ -34,6 +34,7 @@ public class PTMLocationScores {
      * @param expectedFragmentIons  The fragment ions to look for
      * @param neutralLosses         The neutral losses to look for
      * @param charges               The fragment ions charges to look for
+     * @param precursorCharge       The precursor charge
      * @param mzTolerance           The m/z tolerance to use
      * @return a map containing the best or two best PTM location(s) and the corresponding A-score
      */
@@ -42,7 +43,7 @@ public class PTMLocationScores {
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
 
         NeutralLossesMap scoringLossesMap = new NeutralLossesMap();
-        
+
         // here annotation should be sequence and modification independant
         for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
             if (neutralLoss != NeutralLoss.CH4OS
@@ -54,7 +55,7 @@ public class PTMLocationScores {
 
         HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
         ArrayList<Integer> possibleSites = Peptide.getPotentialModificationSites(peptide.getSequence(), ptm);
-        
+
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
             ArrayList<IonMatch> matches;
@@ -65,24 +66,24 @@ public class PTMLocationScores {
             double p, P, score;
             int n, N = 0;
             Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
-            
+
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
                 if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
                     noModPeptide.addModificationMatch(modificationMatch);
                 }
             }
-            
+
             for (ArrayList<PeptideFragmentIon> fragmentIons : spectrumAnnotator.getExpectedIons(expectedFragmentIons, neutralLosses, charges, precursorCharge, peptide).values()) {
                 N += fragmentIons.size();
             }
-            
+
             int bestI = 0, pos1 = 0, pos2 = 0;
-            
+
             for (int i = 0; i < spectrumMap.keySet().size(); i++) {
-                
+
                 rawMap.put(i, new HashMap<Double, ArrayList<Integer>>());
                 p = ((double) i + 1) / Math.max(spectrumMap.keySet().size(), 100);
-                
+
                 for (int pos = 0; pos < possibleSites.size(); pos++) {
                     tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
                     tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, possibleSites.get(pos) + 1));
@@ -99,15 +100,15 @@ public class PTMLocationScores {
                     rawMap.get(i).get(score).add(possibleSites.get(pos) + 1);
                 }
             }
-            
+
             double maxDiff = -1;
             ArrayList<Double> scores;
-            
+
             for (int i = 0; i < spectrumMap.keySet().size(); i++) {
-                
+
                 scores = new ArrayList<Double>(rawMap.get(i).keySet());
                 Collections.sort(scores);
-                
+
                 if (rawMap.get(i).get(scores.get(0)).size() == 1) {
                     if (scores.get(1) - scores.get(0) > maxDiff) {
                         pos1 = rawMap.get(i).get(scores.get(0)).get(0);
@@ -124,15 +125,15 @@ public class PTMLocationScores {
                     }
                 }
             }
-            
+
             N = 0;
             int aa;
             int posMin = Math.min(pos1, pos2);
             int posMax = Math.max(pos1, pos2);
-            
+
             for (ArrayList<PeptideFragmentIon> fragmentIons : spectrumAnnotator.getExpectedIons(
                     expectedFragmentIons, neutralLosses, charges, precursorCharge, peptide).values()) {
-                
+
                 for (PeptideFragmentIon peptideFragmentIon : fragmentIons) {
                     if (peptideFragmentIon.getType() == PeptideFragmentIonType.A_ION
                             || peptideFragmentIon.getType() == PeptideFragmentIonType.B_ION
@@ -151,27 +152,27 @@ public class PTMLocationScores {
                     }
                 }
             }
-            
+
             p = ((double) bestI + 1) / Math.max(spectrumMap.keySet().size(), 100);
             tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos1));
             matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance);
             n = matches.size();
             double p1 = 0;
-            
+
             for (int k = n; k <= N; k++) {
                 p1 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
             }
-            
+
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos2));
             matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance);
             n = matches.size();
             double p2 = 0;
-            
+
             for (int k = n; k <= N; k++) {
                 p2 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
             }
-            
+
             if (p1 == p2) {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
                 modificationProfile.add(pos1);
@@ -207,7 +208,7 @@ public class PTMLocationScores {
      * @return a map containing the spectra filtered indexed by peak depth.
      */
     public static HashMap<Integer, MSnSpectrum> getReducedSpectra(MSnSpectrum baseSpectrum, double mzTolerance) {
-        
+
         HashMap<Integer, MSnSpectrum> result = new HashMap<Integer, MSnSpectrum>();
         HashMap<Double, Peak> tempMap, peakMap = baseSpectrum.getPeakMap();
         ArrayList<Double> intensities, mz = new ArrayList<Double>(peakMap.keySet());
@@ -216,7 +217,7 @@ public class PTMLocationScores {
         int cpt = 0;
         int cptTemp, nMax = 0;
         double currentmzMin = 0;
-        
+
         while (currentmzMin < mzMax) {
             cptTemp = 0;
             while (cpt < mz.size()
@@ -229,19 +230,19 @@ public class PTMLocationScores {
             }
             currentmzMin += 200 * mzTolerance;
         }
-        
+
         for (int i = 0; i < nMax; i++) {
             result.put(i, new MSnSpectrum(2, baseSpectrum.getPrecursor(), baseSpectrum.getSpectrumTitle() + "_" + i, new HashSet<Peak>(), "a score"));
         }
-        
+
         cpt = 0;
         currentmzMin = 0;
         Peak tempPeak;
-        
+
         while (currentmzMin < mzMax) {
             intensities = new ArrayList<Double>();
             tempMap = new HashMap<Double, Peak>();
-            
+
             while (cpt < mz.size()
                     && mz.get(cpt) < currentmzMin + 20 * mzTolerance) {
                 tempPeak = peakMap.get(mz.get(cpt));
@@ -249,15 +250,15 @@ public class PTMLocationScores {
                 tempMap.put(-tempPeak.intensity, tempPeak);
                 cpt++;
             }
-            
+
             Collections.sort(intensities);
-            
+
             for (int i = 0; i < intensities.size(); i++) {
                 for (int j = i; j < nMax; j++) {
                     result.get(j).addPeak(tempMap.get(intensities.get(i)));
                 }
             }
-            
+
             currentmzMin += 200 * mzTolerance;
         }
         return result;
@@ -273,6 +274,7 @@ public class PTMLocationScores {
      * @param expectedFragmentIons  The fragment ions to look for
      * @param neutralLosses         The neutral losses to look for
      * @param charges               The fragment ions charges to look for
+     * @param precursorCharge       The precursor charge
      * @param mzTolerance           The m/z tolerance to use
      * @param intensityLimit 
      * @return the ptm plot series in the jfreechert format for one psm.
@@ -300,7 +302,7 @@ public class PTMLocationScores {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
             matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance);
-  
+
             for (IonMatch ionMatch : matches) {
 
                 peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
@@ -328,13 +330,13 @@ public class PTMLocationScores {
         }
         return map;
     }
-    
+
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
-        
+
         Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
 
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
@@ -352,7 +354,7 @@ public class PTMLocationScores {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
             matches = spectrumAnnotator.getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance);
-  
+
             for (IonMatch ionMatch : matches) {
 
                 peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
@@ -370,5 +372,4 @@ public class PTMLocationScores {
         }
         return ptmTableContent;
     }
-    
 }

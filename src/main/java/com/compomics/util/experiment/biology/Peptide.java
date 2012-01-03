@@ -400,11 +400,11 @@ public class Peptide extends ExperimentObject {
         }
 
         modifiedSequence += peptide.getNTerminal() + "-";
-int aa;
+        int aa;
         for (int i = 0; i < sequence.length(); i++) {
-aa = i+1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
+            aa = i + 1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
             if (mainModificationSites.containsKey(aa)
-                    && !mainModificationSites.get(aa).isEmpty()) { 
+                    && !mainModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
@@ -560,7 +560,7 @@ aa = i+1;// @TODO: use a single reference for the amino acid indexing and remove
      */
     public String getModifiedSequenceAsString(boolean includeTerminals) {
 
-        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTMFactory ptmFactory = PTMFactory.getInstance();
 
         String modifiedSequence = "";
 
@@ -573,7 +573,7 @@ aa = i+1;// @TODO: use a single reference for the amino acid indexing and remove
             boolean modifiedResidue = false;
 
             for (int j = 0; j < modifications.size(); j++) {
-                PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
+                PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
                 if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
 

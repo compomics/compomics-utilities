@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.io.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -10,7 +6,7 @@ import java.util.HashMap;
 /**
  * This class contains the indexes of an mgf file after indexing mapped with the title of the spectrum
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class MgfIndex extends ExperimentObject {
 
@@ -27,6 +23,7 @@ public class MgfIndex extends ExperimentObject {
     /**
      * Constructor
      * @param indexMap map of all indexes: spectrum title -> index in the file
+     * @param fileName  
      */
     public MgfIndex(HashMap<String, Long> indexMap, String fileName) {
         this.indexMap = indexMap;

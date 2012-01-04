@@ -207,12 +207,10 @@ public class SpectrumFactory {
             String name = fileName;
             String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
-                
-                // a special fix for mgf files with strange headers...
-                if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
-                    spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
-                }
-                
+                 
+                // a special fix for mgf files with strange titles...
+                spectrumTitle = fixMgfTitle(spectrumTitle, name);
+
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {
                 uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
@@ -295,6 +293,10 @@ public class SpectrumFactory {
             String name = fileName;
             String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
+                 
+                // a special fix for mgf files with strange titles...
+                spectrumTitle = fixMgfTitle(spectrumTitle, name);
+                 
                 if (mgfIndexesMap.get(name) == null) {
                     throw new IOException("Mgf file not found: \'" + name + "\'!");
                 }
@@ -446,5 +448,27 @@ public class SpectrumFactory {
      */
     public ArrayList<String> getSpectrumTitles(String mgfFile) {
         return new ArrayList<String>(mgfIndexesMap.get(mgfFile).getIndexes().keySet());
+    }
+    
+    /**
+     * Returns the fixed mgf title.
+     * 
+     * @param spectrumTitle
+     * @param fileName
+     * @return the fixed mgf title
+     */
+    private String fixMgfTitle(String spectrumTitle, String fileName) {
+        
+        // a special fix for mgf files with titles containing %3b instead if ;
+        if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
+            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+        }
+
+        // a special fix for mgf files with titles containing \\ instead \
+        if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
+            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\"); 
+        }
+        
+        return spectrumTitle;
     }
 }

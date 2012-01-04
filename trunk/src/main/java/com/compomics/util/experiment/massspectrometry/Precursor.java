@@ -51,7 +51,7 @@ public class Precursor extends ExperimentObject {
      * @param rt
      * @param mz
      * @param intensity 
-     * @param charge
+     * @param possibleCharges
      */
     public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges) {
         this.rt = rt;

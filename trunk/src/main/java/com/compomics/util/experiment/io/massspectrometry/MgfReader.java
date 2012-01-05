@@ -181,11 +181,12 @@ public class MgfReader {
     }
 
     /**
-     * Splits an mgf file into smaller ones and returns the indexes of the generated files
+     * Splits an mgf file into smaller ones and returns the indexes of the generated files.
+     * 
      * @param mgfFile                   the mgf file to split
      * @param nSpectra                  the number of spectra allowed in the smaller files
      * @param progressBar               the progress bar showing the progress
-     * @return  a list of indexes of the generated files
+     * @return                          a list of indexes of the generated files
      * @throws FileNotFoundException    exception thrown whenever a file was not found
      * @throws IOException              exception thrown whenever a problem occurred while reading/writing a file
      */
@@ -233,17 +234,17 @@ public class MgfReader {
                             writeFile.close();
                             mgfIndexes.add(new MgfIndex(indexes, currentName));
                             
-                            fileCounter++;
-                            currentName = splittedName + "_" + fileCounter + ".mgf";
-                            testFile = new File(mgfFile.getParent(), currentName);
+                            currentName = splittedName + "_" + ++fileCounter + ".mgf";
+                            testFile = new File(mgfFile.getParent(), currentName);                    
                             writeFile = new RandomAccessFile(testFile, "rw");
+                            writeIndex = 0;
                             spectrumCounter = 0;
                             indexes = new HashMap<String, Long>();
                         }
                     }
                     
                     if (progressBar != null) {
-                        progressBar.setValue((int) (writeIndex / progressUnit));
+                        progressBar.setValue((int) (readIndex / progressUnit));
                     }
                 } else if (line.startsWith("TITLE")) {
                     indexes.put(line.substring(line.indexOf('=') + 1).trim(), writeIndex);
@@ -251,8 +252,8 @@ public class MgfReader {
                 writeFile.writeBytes(line + "\n");
             }
             
-            writeFile.close();
             mgfIndexes.add(new MgfIndex(indexes, currentName));
+            
             if (progressBar != null) {
                 progressBar.setIndeterminate(true);
                 progressBar.setStringPainted(false);
@@ -268,7 +269,8 @@ public class MgfReader {
     }
 
     /**
-     * Returns the next spectrum starting from the given index
+     * Returns the next spectrum starting from the given index.
+     * 
      * @param randomAccessFile  The random access file of the inspected mgf file
      * @param index             The index where to start looking for the spectrum
      * @param fileName          The name of the mgf file (@TODO get this from the random access file?)
@@ -394,9 +396,9 @@ public class MgfReader {
      * @throws IllegalArgumentException        Exception thrown whenever the file is not of a compatible format
      */
     public static Precursor getPrecursor(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
-        
+         
         randomAccessFile.seek(index);
-        String line;
+        String line, title = null;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
@@ -404,7 +406,6 @@ public class MgfReader {
         while ((line = randomAccessFile.readLine()) != null) {
             line = line.trim();
             if (line.equals("BEGIN IONS")
-                    || line.startsWith("TITLE")
                     || line.startsWith("TOLU")
                     || line.startsWith("TOL")
                     || line.startsWith("SEQ")
@@ -413,6 +414,8 @@ public class MgfReader {
                     || line.startsWith("TAG")
                     || line.startsWith("SCANS")
                     || line.startsWith("INSTRUMENT")) {
+            } else if (line.startsWith("TITLE")) {
+                    title = line.substring(line.indexOf("=") + 1);
             } else if (line.startsWith("CHARGE")) {
                 precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
@@ -430,6 +433,6 @@ public class MgfReader {
                 return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
             }
         }
-        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
+        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);
     }
 }

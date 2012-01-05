@@ -210,7 +210,14 @@ public class SpectrumFactory {
                  
                 // a special fix for mgf files with strange titles...
                 spectrumTitle = fixMgfTitle(spectrumTitle, name);
-
+                
+                if (mgfIndexesMap.get(name) == null) {
+                    throw new IOException("Mgf file not found: \'" + name + "\'!");
+                }
+                if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
+                    throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found!");
+                }
+                
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {
                 uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);

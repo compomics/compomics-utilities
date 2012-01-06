@@ -78,8 +78,7 @@ public class Header implements Cloneable, Serializable {
 
         UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis, 
         Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, 
-        Listeria, Generic_Header
-        //, GAFFA // >gaffa_"accession_something"|"species"/unknown
+        Listeria, Generic_Header, GAFFA
     }
 
     /**
@@ -654,6 +653,25 @@ public class Header implements Cloneable, Serializable {
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
                         result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
+                } 
+                else if (aFASTAHeader.toLowerCase().startsWith("gaffa")) {
+
+                    // A Genome Annotation Framework for Flexible Analysis (GAFFA) header.
+                    // Should look like this:
+                    // >GAFFA|"accession"|"species"/unknown
+                    // Example:
+                    //  >GAFFA|cgb_GMPQSG401A00X3_1_cgb_pilot_F1_1|unknown
+
+                    result.databaseType = DatabaseType.GAFFA;
+                    try {
+                        result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
+                        result.iDescription = aFASTAHeader.substring(aFASTAHeader.lastIndexOf("|") + 1);
+                    } catch (IndexOutOfBoundsException e) {
+                        result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
+                        result.iDescription = "";
+                    }
+                    result.iID = "GAFFA";
+                     
                 } else {
                     // Okay, try the often-used 'generic' approach. If this fails, we go to the worse-case scenario, ie. do not process at all.
                     // Testing for this is somewhat more complicated.

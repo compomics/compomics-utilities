@@ -257,6 +257,6 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the corresponding list of accessions
      */
     public static String[] getAccessions(String key) {
-        return key.split(" ");
+        return key.split(" "); // @TODO: what about accessions with spaces in them???
     }
 }

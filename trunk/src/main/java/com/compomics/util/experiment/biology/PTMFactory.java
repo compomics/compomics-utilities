@@ -545,8 +545,8 @@ public class PTMFactory implements Serializable {
         result += "\t\t</MSModSpec_type>\n";
         result += "\t\t<MSModSpec_name>" + ptm.getName() + "</MSModSpec_name>\n";
         result += "\t\t<MSModSpec_monomass>" + ptm.getMass() + "</MSModSpec_monomass>\n"
-                + "\t\t\t<MSModSpec_averagemass>0</MSModSpec_averagemass>\n"
-                + "\t\t\t<MSModSpec_n15mass>0</MSModSpec_n15mass>\n";
+                + "\t\t<MSModSpec_averagemass>0</MSModSpec_averagemass>\n"
+                + "\t\t<MSModSpec_n15mass>0</MSModSpec_n15mass>\n";
         if (ptm.getType() == PTM.MODAA
                 || ptm.getType() == PTM.MODNAA
                 || ptm.getType() == PTM.MODNPAA

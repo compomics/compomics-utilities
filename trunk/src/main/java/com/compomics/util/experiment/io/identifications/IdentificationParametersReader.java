@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.identifications;
 
-import com.compomics.util.experiment.biology.PTMFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -132,7 +131,7 @@ public class IdentificationParametersReader {
      * @return ArrayList with the parsed PTM indexes.
      * @throws Exception  
      */
-    public static ArrayList<String> parseModificationLine(String aLine, PTMFactory ptmFactory) throws Exception {
+    public static ArrayList<String> parseModificationLine(String aLine) {
 
         ArrayList<String> result = new ArrayList<String>();
 
@@ -143,21 +142,13 @@ public class IdentificationParametersReader {
             String name = aLine.substring(0, start);
             aLine = aLine.substring(start + 2);
             if (!name.trim().equals("")) {
-                if (ptmFactory.containsPTM(name)) {
                     result.add(name);
-                } else {
-                    throw new Exception("Unable to find modification \'" + name + "\'.");
-                }
             }
         }
 
         // Fence post.
         if (!aLine.trim().equals("")) {
-            if (ptmFactory.containsPTM(aLine)) {
                 result.add(aLine);
-            } else {
-                throw new Exception("Unable to find modification \'" + aLine + "\'.");
-            }
         }
 
         return result;

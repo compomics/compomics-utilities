@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.util.Iterator;
+import junit.framework.Assert;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,21 +16,24 @@ import java.util.Iterator;
  * This test will display the xml parsing.
  */
 public class PTMFactoryTest extends TestCase {
-
+    
     public PTMFactoryTest() {
         
     }
-
+    
     public void testImport() {
         PTMFactory ptmFactory = PTMFactory.getInstance();
+        ptmFactory.clearFactory();
+        ptmFactory = PTMFactory.getInstance();
         File ptmFile = new File("src/test/resources/experiment/mods.xml");
         try {
-            ptmFactory.importModifications(ptmFile);
-            Iterator<PTM> ptmIt = ptmFactory.getPtmIterator();
-            PTM currentPtm;
-            while (ptmIt.hasNext()) {
-                currentPtm = ptmIt.next();
-            }
+            ptmFactory.importModifications(ptmFile, false);
+            String ptmName = ptmFactory.getPTMs().get(0);
+            PTM testPTM = ptmFactory.getPTM(ptmName);
+            String name = "methylation of K";
+            Assert.assertEquals(testPTM.getName(), name.toLowerCase());
+            Assert.assertEquals(testPTM.getMass(), 14.015650);
+            Assert.assertEquals(testPTM.getType(), PTM.MODAA);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -164,6 +164,6 @@ public class fastaTest extends TestCase {
         } catch (Exception e) {
             int debug = 1;
         }
-    }
-     **/
+    }**/
+    
 }

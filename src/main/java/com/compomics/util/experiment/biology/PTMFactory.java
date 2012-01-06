@@ -526,21 +526,21 @@ public class PTMFactory implements Serializable {
         if (ptm.getType() == PTM.MODAA) {
             result += "\t\t\t<MSModType value=\"modaa\">" + PTM.MODAA + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODN) {
-            result += "\t\t\t<MSModType value=\"modn\">" + PTM.MODN + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modn\">" + PTM.MODN + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODNAA) {
-            result += "\t\t\t<MSModType value=\"modnaa\">" + PTM.MODNAA + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modnaa\">" + PTM.MODNAA + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODNP) {
-            result += "\t\t\t<MSModType value=\"modnp\">" + PTM.MODNP + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modnp\">" + PTM.MODNP + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODNPAA) {
-            result += "\t\t\t<MSModType value=\"modnpaa\">" + PTM.MODNPAA + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modnpaa\">" + PTM.MODNPAA + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODC) {
-            result += "\t\t\t<MSModType value=\"modc\">" + PTM.MODC + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modc\">" + PTM.MODC + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODCAA) {
-            result += "\t\t\t<MSModType value=\"modcaa\">" + PTM.MODCAA + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modcaa\">" + PTM.MODCAA + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODCP) {
-            result += "\t\t\t<MSModType value=\"modcp\">" + PTM.MODCP + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modcp\">" + PTM.MODCP + "</MSModType>\n";
         } else if (ptm.getType() == PTM.MODCPAA) {
-            result += "\t\t\t<MSModType value=\"modcpaa\">" + PTM.MODCPAA + "</MSModType>\"\n";
+            result += "\t\t\t<MSModType value=\"modcpaa\">" + PTM.MODCPAA + "</MSModType>\n";
         }
         result += "\t\t</MSModSpec_type>\n";
         result += "\t\t<MSModSpec_name>" + ptm.getName() + "</MSModSpec_name>\n";

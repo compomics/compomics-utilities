@@ -15,7 +15,6 @@ import java.util.Properties;
  */
 public class IdentificationParametersReader {
 
-
     /**
      * Reference for the database file
      */
@@ -125,8 +124,6 @@ public class IdentificationParametersReader {
         return screenProps;
     }
 
-
-
     /**
      * This method parses a modification line from a properties file.
      *
@@ -141,13 +138,12 @@ public class IdentificationParametersReader {
 
         // Split the different modifications.
         int start = -1;
-        
+
         while ((start = aLine.indexOf(IdentificationParametersReader.MODIFICATION_SEPARATOR)) >= 0) {
             String name = aLine.substring(0, start);
             aLine = aLine.substring(start + 2);
             if (!name.trim().equals("")) {
-                Integer modId = ptmFactory.getPTMIndex(name);
-                if (modId != null) {
+                if (ptmFactory.containsPTM(name)) {
                     result.add(name);
                 } else {
                     throw new Exception("Unable to find modification \'" + name + "\'.");
@@ -157,8 +153,7 @@ public class IdentificationParametersReader {
 
         // Fence post.
         if (!aLine.trim().equals("")) {
-            Integer modId = ptmFactory.getPTMIndex(aLine);
-            if (modId != null) {
+            if (ptmFactory.containsPTM(aLine)) {
                 result.add(aLine);
             } else {
                 throw new Exception("Unable to find modification \'" + aLine + "\'.");

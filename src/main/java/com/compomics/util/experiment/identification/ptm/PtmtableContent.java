@@ -112,7 +112,7 @@ public class PtmtableContent {
 
             for (int i = 0; i < intensities.size(); i++) {
 
-                double currentIntensity = intensities.get(i) / maxIntensity;
+                double currentIntensity = intensities.get(i);// / maxIntensity;
 
                 for (int j = 0; j < bins; j++) {
                     

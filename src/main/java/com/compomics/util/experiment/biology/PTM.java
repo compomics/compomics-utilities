@@ -176,4 +176,23 @@ public class PTM extends ExperimentObject {
     public ArrayList<String> getResidues() {
         return residuesArray;
     }
+    
+    /**
+     * Compares two PTMs
+     * @param anotherPTM another PTM
+     * @return true if the given PTM is the same as the current ptm
+     */
+    public boolean isSameAs(PTM anotherPTM) {
+        if (type != anotherPTM.getType()
+                || mass != anotherPTM.getMass()
+                || residuesArray.size() != anotherPTM.getResidues().size()) {
+            return false;
+        }
+        for (String aa : anotherPTM.getResidues()) {
+            if (!residuesArray.contains(aa)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

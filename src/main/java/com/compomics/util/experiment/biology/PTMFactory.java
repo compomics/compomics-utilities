@@ -7,8 +7,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * This factory will load PTM from an XML file and provide them on demand as standard class.
@@ -18,28 +16,32 @@ import java.util.Iterator;
  * Date: Jun 22, 2010
  * Time: 8:26:09 PM
  */
-public class PTMFactory {
+public class PTMFactory implements Serializable {
 
     /**
      * Instance of the factory
      */
     private static PTMFactory instance = null;
     /**
-     * Parser used to parse modification files
+     * user ptm file
      */
-    private XmlPullParser parser;
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory.cus";
     /**
      * A map linking indexes with modifications
      */
-    private HashMap<Integer, PTM> indexToPTMMap = new HashMap<Integer, PTM>();
+    private HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
     /**
-     * A map linking modification names to their index
+     * List of the indexes of default modifications
      */
-    private HashMap<String, Integer> nameToIndexMap = new HashMap<String, Integer>();
+    private ArrayList<String> defaultMods = new ArrayList<String>();
     /**
-     * The set of imported PTM
+     * List of the indexes of user modifications
      */
-    private HashSet<PTM> ptmSet = new HashSet<PTM>();
+    private ArrayList<String> userMods = new ArrayList<String>();
+    /**
+     * Map of omssa indexes
+     */
+    private HashMap<String, Integer> omssaIndexes = new HashMap<String, Integer>();
     /**
      * unknown modification to be returned when the modification is not found
      */
@@ -58,20 +60,69 @@ public class PTMFactory {
      */
     public static PTMFactory getInstance() {
         if (instance == null) {
-            instance = new PTMFactory();
+            try {
+                File savedFile = new File(SERIALIZATION_FILE);
+                FileInputStream fis = new FileInputStream(savedFile);
+                ObjectInputStream in = new ObjectInputStream(fis);
+                Object factory = in.readObject();
+                fis.close();
+                in.close();
+                instance = (PTMFactory) factory;
+            } catch (Exception e) {
+                instance = new PTMFactory();
+            }
         }
         return instance;
     }
 
     /**
-     * get a PTM according to its index
+     * Clears the factory
+     * getInstance() needs to be called afterwards
+     */
+    public void clearFactory() {
+        instance = new PTMFactory();
+    }
+    
+    /**
+     * Reloads the factory
+     * getInstance() needs to be called afterwards
+     */
+    public void reloadFactory() {
+        instance = null;
+    }
+
+    /**
+     * Saves the factory in the user folder
+     * @throws IOException exception thrown whenever an error occurred while saving the ptmFactory
+     */
+    public void saveFactory() throws IOException {
+        File factoryFile = new File(SERIALIZATION_FILE);
+        if (!factoryFile.getParentFile().exists()) {
+            factoryFile.getParentFile().mkdir();
+        }
+        FileOutputStream fos = new FileOutputStream(factoryFile);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(instance);
+        oos.close();
+        fos.close();
+    }
+
+    /**
+     * get a PTM according to its omssa index
      *
      * @param index the PTM index
      * @return the selected PTM
      */
     public PTM getPTM(int index) {
-        if (indexToPTMMap.get(index) != null) {
-            return indexToPTMMap.get(index);
+        String name = null;
+        for (String ptm : omssaIndexes.keySet()) {
+            if (omssaIndexes.get(ptm) == index) {
+                name = ptm;
+                break;
+            }
+        }
+        if (name != null) {
+            return ptmMap.get(name);
         }
         return unknownPTM;
     }
@@ -82,15 +133,58 @@ public class PTMFactory {
      * @param newPTM  the new ptm
      */
     public void replacePTM(String oldName, PTM newPTM) {
-        int index = nameToIndexMap.get(oldName);
-        if (!oldName.equals(newPTM.getName())) {
-            nameToIndexMap.put(newPTM.getName(), index);
-            nameToIndexMap.remove(oldName);
+        if (userMods.contains(oldName)) {
+            userMods.remove(oldName);
+            userMods.add(newPTM.getName());
         }
-        PTM oldPtm = indexToPTMMap.get(index);
-        indexToPTMMap.put(index, newPTM);
-        ptmSet.remove(oldPtm);
-        ptmSet.add(newPTM);
+        if (defaultMods.contains(oldName)) {
+            defaultMods.remove(oldName);
+            defaultMods.add(newPTM.getName());
+        }
+        if (!oldName.equals(newPTM.getName())) {
+            ptmMap.remove(oldName);
+        }
+        ptmMap.put(newPTM.getName(), newPTM);
+    }
+
+    /**
+     * Adds a new user modification
+     * @param ptm the new modification to add
+     */
+    public void addUserPTM(PTM ptm) {
+        ptmMap.put(ptm.getName(), ptm);
+        userMods.add(ptm.getName());
+        int omssaIndex = userMods.size() + 118;
+        if (omssaIndex > 128) {
+            omssaIndex += 13;
+        }
+        omssaIndexes.put(ptm.getName(), omssaIndex);
+    }
+
+    /**
+     * Sets the omssa indexes of all loaded user ptms
+     */
+    private void setUserOmssaIndexes() {
+        String ptm;
+        for (int rank = 1; rank <= userMods.size(); rank++) {
+            int omssaIndex = rank + 118;
+            if (omssaIndex > 128) {
+                omssaIndex += 13;
+            }
+            ptm = userMods.get(rank - 1);
+            omssaIndexes.put(ptm, omssaIndex);
+        }
+    }
+
+    /**
+     * Removes a user ptm
+     * @param ptmName the name of the ptm to remove 
+     */
+    public void removeUserPtm(String ptmName) {
+        ptmMap.remove(ptmName);
+        userMods.remove(ptmName);
+        omssaIndexes.remove(ptmName);
+        setUserOmssaIndexes(); // I'm too lazy to move indexes here so I recalculate all of them. Should not take long.
     }
 
     /**
@@ -99,27 +193,27 @@ public class PTMFactory {
      * @return      The desired PTM
      */
     public PTM getPTM(String name) {
-        if (indexToPTMMap.get(nameToIndexMap.get(name)) != null) {
-            return indexToPTMMap.get(nameToIndexMap.get(name));
+        if (ptmMap.containsKey(name)) {
+            return ptmMap.get(name);
         }
-        if (name.indexOf("@")> 1) {
+        if (name.indexOf("@") > 1) {
             try {
                 double mass = new Double(name.substring(0, name.indexOf("@")));
-            return new PTM(-1, name, mass, new ArrayList<String>());
-            }catch (Exception e) {
+                return new PTM(-1, name, mass, new ArrayList<String>());
+            } catch (Exception e) {
                 return unknownPTM;
             }
         }
         return unknownPTM;
     }
-    
+
     /**
      * Returns a boolean indicating whether the PTM is loaded in the factory
      * @param name the name of the PTM
      * @return a boolean indicating whether the PTM is loaded in the factory
      */
     public boolean containsPTM(String name) {
-        return getPTM(name) != unknownPTM;
+        return ptmMap.containsKey(name);
     }
 
     /**
@@ -127,17 +221,8 @@ public class PTMFactory {
      * @param modificationName  the desired modification name to lower case
      * @return the corresponding index
      */
-    public Integer getPTMIndex(String modificationName) {
-        return nameToIndexMap.get(modificationName);
-    }
-
-    /**
-     * getter for the index to PTM map
-     *
-     * @return the index to ptem map
-     */
-    public HashMap<Integer, PTM> getPtmMap() {
-        return indexToPTMMap;
+    public Integer getOMSSAIndex(String modificationName) {
+        return omssaIndexes.get(modificationName);
     }
 
     /**
@@ -150,7 +235,7 @@ public class PTMFactory {
      * @return the candidate modification, null if none is found
      */
     public PTM getPTM(double mass, String location, String sequence) {
-        for (PTM currentPTM : ptmSet) {
+        for (PTM currentPTM : ptmMap.values()) {
             if (currentPTM.getType() == PTM.MODAA
                     || currentPTM.getType() == PTM.MODCAA
                     || currentPTM.getType() == PTM.MODCPAA
@@ -177,27 +262,19 @@ public class PTMFactory {
     }
 
     /**
-     * returns an iterator on the imported PTM
-     *
-     * @return an iterator on imported PTM
-     */
-    public Iterator<PTM> getPtmIterator() {
-        return ptmSet.iterator();
-    }
-
-    /**
      * Import modifications from a modification file
      *
      * @param modificationsFile         A file containing modifications
+     * @param userMod                   A boolean indicating whether the file comprises user designed modification
      * @throws XmlPullParserException   exception thrown whenever an error is encountered while parsing
      * @throws IOException              exception thrown whenever an error is encountered reading the file
      */
-    public void importModifications(File modificationsFile) throws XmlPullParserException, IOException {
+    public void importModifications(File modificationsFile, boolean userMod) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
         factory.setNamespaceAware(true);
-        parser = factory.newPullParser();
+        XmlPullParser parser = factory.newPullParser();
         // Create a reader for the input file.
         BufferedReader br = new BufferedReader(new FileReader(modificationsFile));
         // Set the XML Pull Parser to read from this reader.
@@ -209,10 +286,11 @@ public class PTMFactory {
             // If we find a 'MSModSpec' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec")) {
-                parseMSModSpec();
+                parseMSModSpec(parser, userMod);
             }
             type = parser.next();
         }
+        setUserOmssaIndexes();
         br.close();
     }
 
@@ -224,7 +302,7 @@ public class PTMFactory {
      * @throws XmlPullParserException when the pull parser failed.
      * @throws IOException            when the pull parser could not access the underlying file.
      */
-    private void parseMSModSpec() throws XmlPullParserException, IOException {
+    private void parseMSModSpec(XmlPullParser parser, boolean userMod) throws XmlPullParserException, IOException {
         // Check whether the XmlPullParser is correctly positioned (i.e. directly on the 'MSModSpec' start tag)
         if (!(parser.getName().equals("MSModSpec") && parser.getEventType() == XmlPullParser.START_TAG)) {
             throw new IllegalArgumentException("XmlPullParser should have been on the start tag for 'MSModSpec', but was on '" + parser.getName() + "' instead!");
@@ -308,9 +386,19 @@ public class PTMFactory {
 
         // Create and implement modification.
         PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residues);
-        ptmSet.add(currentPTM);
-        indexToPTMMap.put(number, currentPTM);
-        nameToIndexMap.put(currentPTM.getName().toLowerCase(), number);
+        if (!currentPTM.getName().startsWith("user modification ")) {
+            ptmMap.put(currentPTM.getName(), currentPTM);
+            if (userMod) {
+                if (!userMods.contains(currentPTM.getName())) {
+                    userMods.add(currentPTM.getName());
+                }
+            } else {
+                if (!defaultMods.contains(currentPTM.getName())) {
+                    defaultMods.add(currentPTM.getName());
+                }
+                omssaIndexes.put(currentPTM.getName(), number);
+            }
+        }
     }
 
     /**
@@ -324,28 +412,20 @@ public class PTMFactory {
             return PTM.MODAA;
         } else if (modType.compareTo("modn") == 0) {
             return PTM.MODN;
-        } else if (modType.compareTo("modc") == 0) {
-            return PTM.MODC;
-        } else if (modType.compareTo("modcpaa") == 0) {
-            return PTM.MODCPAA;
-        } else if (modType.compareTo("modcp") == 0) {
-            return PTM.MODCP;
+        } else if (modType.compareTo("modnaa") == 0) {
+            return PTM.MODNAA;
         } else if (modType.compareTo("modnp") == 0) {
             return PTM.MODNP;
-        } else if (modType.compareTo("modnaa") == 0) {
-            return PTM.MODNAA;
         } else if (modType.compareTo("modnpaa") == 0) {
             return PTM.MODNPAA;
+        } else if (modType.compareTo("modc") == 0) {
+            return PTM.MODC;
         } else if (modType.compareTo("modcaa") == 0) {
             return PTM.MODCAA;
+        } else if (modType.compareTo("modcp") == 0) {
+            return PTM.MODCP;
         } else if (modType.compareTo("modcpaa") == 0) {
             return PTM.MODCPAA;
-        } else if (modType.compareTo("modnaa") == 0) {
-            return PTM.MODNAA;
-        } else if (modType.compareTo("modnpaa") == 0) {
-            return PTM.MODCPAA;
-        } else if (modType.compareTo("modcaa") == 0) {
-            return PTM.MODCAA;
         }
         return -1;
     }
@@ -377,5 +457,133 @@ public class PTMFactory {
         bw.flush();
         bw.close();
         br.close();
+    }
+
+    /**
+     * Writes the omssa modification file corresponding to the PTMs loaded in the factory in the given file
+     * @param file          the file
+     * @throws IOException  exception thrown whenever an error occurred while writing the file
+     */
+    public void writeOmssaUserModificationFile(File file) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        String toWrite = "<?xml version=\"1.0\"?>\n<MSModSpecSet\n"
+                + "xmlns=\"http://www.ncbi.nlm.nih.gov\"\n"
+                + "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                + "xs:schemaLocation=\"http://www.ncbi.nlm.nih.gov OMSSA.xsd\"\n>\n\n";
+        bw.write(toWrite);
+        String ptmName;
+        for (int cpt = 1; cpt <= userMods.size(); cpt++) {
+            ptmName = userMods.get(cpt - 1);
+            toWrite = getOmssaUserModBloc(ptmName, cpt);
+            bw.write(toWrite);
+        }
+        for (int cpt = userMods.size() + 1; cpt <= 30; cpt++) {
+            int omssaIndex = cpt + 118;
+            if (omssaIndex > 128) {
+                omssaIndex += 13;
+            }
+            toWrite = "\t<MSModSpec>\n"
+                    + "\t\t<MSModSpec_mod>\n"
+                    + "\t\t\t<MSMod value=\"usermod" + cpt + "\">" + omssaIndex + "</MSMod>\n"
+                    + "\t\t</MSModSpec_mod>\n"
+                    + "\t\t<MSModSpec_type>\n"
+                    + "\t\t\t<MSModType value=\"modaa\">0</MSModType>\n"
+                    + "\t\t</MSModSpec_type>\n"
+                    + "\t\t<MSModSpec_name>User modification " + cpt + "</MSModSpec_name>\n"
+                    + "\t\t<MSModSpec_monomass>0</MSModSpec_monomass>\n"
+                    + "\t\t<MSModSpec_averagemass>0</MSModSpec_averagemass>\n"
+                    + "\t\t<MSModSpec_n15mass>0</MSModSpec_n15mass>\n"
+                    + "\t\t<MSModSpec_residues>\n"
+                    + "\t\t\t<MSModSpec_residues_E>X</MSModSpec_residues_E>\n"
+                    + "\t\t</MSModSpec_residues>\n"
+                    + "\t</MSModSpec>\n";
+            bw.write(toWrite);
+        }
+        toWrite = "</MSModSpecSet>";
+        bw.write(toWrite);
+        bw.flush();
+        bw.close();
+    }
+
+    /**
+     * Returns an MSModSpec bloc as present in the OMSSA user modification files for a given PTM
+     * @param ptmName   the name of the PTM
+     * @param cpt       the index of this PTM
+     * @return a string containing the xml bloc
+     */
+    public String getOmssaUserModBloc(String ptmName, int cpt) {
+        int omssaIndex = cpt + 118;
+        if (omssaIndex > 128) {
+            omssaIndex += 13;
+        }
+        PTM ptm = ptmMap.get(ptmName);
+
+        String result = "\t<MSModSpec>\n";
+        result += "\t\t<MSModSpec_mod>\n";
+        result += "\t\t\t<MSMod value=\"usermod" + cpt + "\">" + omssaIndex + "</MSMod>\n";
+        result += "\t\t</MSModSpec_mod>\n"
+                + "\t\t<MSModSpec_type>\n";
+        if (ptm.getType() == PTM.MODAA) {
+            result += "\t\t\t<MSModType value=\"modaa\">" + PTM.MODAA + "</MSModType>\n";
+        } else if (ptm.getType() == PTM.MODN) {
+            result += "\t\t\t<MSModType value=\"modn\">" + PTM.MODN + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODNAA) {
+            result += "\t\t\t<MSModType value=\"modnaa\">" + PTM.MODNAA + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODNP) {
+            result += "\t\t\t<MSModType value=\"modnp\">" + PTM.MODNP + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODNPAA) {
+            result += "\t\t\t<MSModType value=\"modnpaa\">" + PTM.MODNPAA + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODC) {
+            result += "\t\t\t<MSModType value=\"modc\">" + PTM.MODC + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODCAA) {
+            result += "\t\t\t<MSModType value=\"modcaa\">" + PTM.MODCAA + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODCP) {
+            result += "\t\t\t<MSModType value=\"modcp\">" + PTM.MODCP + "</MSModType>\"\n";
+        } else if (ptm.getType() == PTM.MODCPAA) {
+            result += "\t\t\t<MSModType value=\"modcpaa\">" + PTM.MODCPAA + "</MSModType>\"\n";
+        }
+        result += "\t\t</MSModSpec_type>\n";
+        result += "\t\t<MSModSpec_name>" + ptm.getName() + "</MSModSpec_name>\n";
+        result += "\t\t<MSModSpec_monomass>" + ptm.getMass() + "</MSModSpec_monomass>\n"
+                + "\t\t\t<MSModSpec_averagemass>0</MSModSpec_averagemass>\n"
+                + "\t\t\t<MSModSpec_n15mass>0</MSModSpec_n15mass>\n";
+        if (ptm.getType() == PTM.MODAA
+                || ptm.getType() == PTM.MODNAA
+                || ptm.getType() == PTM.MODNPAA
+                || ptm.getType() == PTM.MODCAA
+                || ptm.getType() == PTM.MODCPAA) {
+            result += "\t\t<MSModSpec_residues>\n";
+            for (String aa : ptm.getResidues()) {
+                result += "\t\t\t<MSModSpec_residues_E>" + aa + "</MSModSpec_residues_E>\n";
+            }
+            result += "\t\t</MSModSpec_residues>\n";
+        }
+        result += "\t</MSModSpec>\n";
+
+        return result;
+    }
+
+    /**
+     * returns the names of the default modifications
+     * @return the names of the default modifications
+     */
+    public ArrayList<String> getDefaultModifications() {
+        return defaultMods;
+    }
+
+    /**
+     * Returns the names of the user defined modifications
+     * @return the names of the user defined modifications
+     */
+    public ArrayList<String> getUserModifications() {
+        return userMods;
+    }
+
+    /**
+     * Returns the names of all imported PTMs
+     * @return the names of all imported PTMs
+     */
+    public ArrayList<String> getPTMs() {
+        return new ArrayList<String>(ptmMap.keySet());
     }
 }

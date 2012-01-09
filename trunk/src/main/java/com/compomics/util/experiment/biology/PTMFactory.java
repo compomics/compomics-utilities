@@ -19,6 +19,10 @@ import java.util.HashMap;
 public class PTMFactory implements Serializable {
 
     /**
+     * Serial number for serialization compatibility
+     */
+    static final long serialVersionUID = -4745977677605392706L;
+    /**
      * Instance of the factory
      */
     private static PTMFactory instance = null;
@@ -41,7 +45,7 @@ public class PTMFactory implements Serializable {
     /**
      * Map of omssa indexes
      */
-    private HashMap<String, Integer> omssaIndexes = new HashMap<String, Integer>();
+    private HashMap<String, ArrayList<Integer>> omssaIndexes = new HashMap<String, ArrayList<Integer>>();
     /**
      * unknown modification to be returned when the modification is not found
      */
@@ -51,6 +55,8 @@ public class PTMFactory implements Serializable {
      * Constructor for the factory
      */
     private PTMFactory() {
+        ptmMap.put(unknownPTM.getName(), unknownPTM);
+        defaultMods.add("unknown");
     }
 
     /**
@@ -82,7 +88,7 @@ public class PTMFactory implements Serializable {
     public void clearFactory() {
         instance = new PTMFactory();
     }
-    
+
     /**
      * Reloads the factory
      * getInstance() needs to be called afterwards
@@ -116,7 +122,7 @@ public class PTMFactory implements Serializable {
     public PTM getPTM(int index) {
         String name = null;
         for (String ptm : omssaIndexes.keySet()) {
-            if (omssaIndexes.get(ptm) == index) {
+            if (omssaIndexes.get(ptm).contains(index)) {
                 name = ptm;
                 break;
             }
@@ -133,18 +139,26 @@ public class PTMFactory implements Serializable {
      * @param newPTM  the new ptm
      */
     public void replacePTM(String oldName, PTM newPTM) {
+        String newName = newPTM.getName();
         if (userMods.contains(oldName)) {
             userMods.remove(oldName);
-            userMods.add(newPTM.getName());
+            userMods.add(newName);
         }
         if (defaultMods.contains(oldName)) {
             defaultMods.remove(oldName);
-            defaultMods.add(newPTM.getName());
+            defaultMods.add(newName);
         }
-        if (!oldName.equals(newPTM.getName())) {
+        if (!oldName.equals(newName)) {
             ptmMap.remove(oldName);
         }
-        ptmMap.put(newPTM.getName(), newPTM);
+        ptmMap.put(newName, newPTM);
+        if (!newName.equals(oldName)) {
+            if (!omssaIndexes.containsKey(newName)) {
+                omssaIndexes.put(newName, new ArrayList<Integer>());
+            }
+            omssaIndexes.get(newName).addAll(omssaIndexes.get(oldName));
+            omssaIndexes.remove(oldName);
+        }
     }
 
     /**
@@ -158,7 +172,7 @@ public class PTMFactory implements Serializable {
         if (omssaIndex > 128) {
             omssaIndex += 13;
         }
-        omssaIndexes.put(ptm.getName(), omssaIndex);
+        omssaIndexes.get(ptm.getName()).add(omssaIndex);
     }
 
     /**
@@ -172,7 +186,10 @@ public class PTMFactory implements Serializable {
                 omssaIndex += 13;
             }
             ptm = userMods.get(rank - 1);
-            omssaIndexes.put(ptm, omssaIndex);
+            if (!omssaIndexes.containsKey(ptm)) {
+                omssaIndexes.put(ptm, new ArrayList<Integer>());
+            }
+            omssaIndexes.get(ptm).add(omssaIndex);
         }
     }
 
@@ -221,7 +238,7 @@ public class PTMFactory implements Serializable {
      * @param modificationName  the desired modification name to lower case
      * @return the corresponding index
      */
-    public Integer getOMSSAIndex(String modificationName) {
+    public ArrayList<Integer> getOMSSAIndexes(String modificationName) {
         return omssaIndexes.get(modificationName);
     }
 
@@ -396,7 +413,8 @@ public class PTMFactory implements Serializable {
                 if (!defaultMods.contains(currentPTM.getName())) {
                     defaultMods.add(currentPTM.getName());
                 }
-                omssaIndexes.put(currentPTM.getName(), number);
+                omssaIndexes.put(currentPTM.getName(), new ArrayList<Integer>());
+                omssaIndexes.get(currentPTM.getName()).add(number);
             }
         }
     }

@@ -439,7 +439,7 @@ public class SequenceFactory {
             currentProtein = getProtein(accession);
             currentHeader = getHeader(accession);
             
-            decoyAccession = decoyFlags[0] + "_" + currentProtein.getAccession();
+            decoyAccession = currentProtein.getAccession() + "_" + decoyFlags[0];
             decoyHeader = Header.parseFromFASTA(currentHeader.toString());
             decoyHeader.setAccession(decoyAccession);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlags[0]);

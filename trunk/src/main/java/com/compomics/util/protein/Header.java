@@ -78,7 +78,7 @@ public class Header implements Cloneable, Serializable {
 
         UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis, 
         Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, 
-        Listeria, Generic_Header, GAFFA
+        Listeria, Generic_Header, GAFFA, UPS
     }
 
     /**
@@ -653,8 +653,7 @@ public class Header implements Cloneable, Serializable {
                         result.iStart = Integer.parseInt(temp.substring(open, minus));
                         result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
-                } 
-                else if (aFASTAHeader.toLowerCase().startsWith("gaffa")) {
+                } else if (aFASTAHeader.toLowerCase().startsWith("gaffa")) {
 
                     // A Genome Annotation Framework for Flexible Analysis (GAFFA) header.
                     // Should look like this:
@@ -671,7 +670,32 @@ public class Header implements Cloneable, Serializable {
                         result.iDescription = "";
                     }
                     result.iID = "GAFFA";
-                     
+                } else if (aFASTAHeader.contains("_HUMAN_UPS")) {
+                    // UPS sequences, processed like SGD
+                    int accessionEndLoc = aFASTAHeader.indexOf(" ");
+                    if (accessionEndLoc < 0) {
+                        throw new IllegalArgumentException("Non-standard UPS header passed. Expecting something like '>xxxx xxxxx_HUMAN_UPS xxxxxxx xxx', but was '" + aFASTAHeader + "'.");
+                    }
+                    // Now we have to see if there is location information present.
+                    if (aFASTAHeader.charAt(accessionEndLoc + 1) == '(' && Character.isDigit(aFASTAHeader.charAt(accessionEndLoc + 2))) {
+                        // start and end found. Add it to the accession number and remove it from the description.
+                        accessionEndLoc = aFASTAHeader.indexOf(")", accessionEndLoc) + 1;
+                    }
+                    result.databaseType = DatabaseType.UPS;
+                    result.iID = "";
+                    result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
+                    // Check for the presence of a location.
+                    int index = -1;
+                    if ((index = result.iAccession.indexOf(" (")) > 0) {
+                        String temp = result.iAccession.substring(index);
+                        result.iAccession = result.iAccession.substring(0, index);
+                        int open = 2;
+                        int minus = temp.indexOf("-");
+                        int end = temp.indexOf(")");
+                        result.iStart = Integer.parseInt(temp.substring(open, minus));
+                        result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
+                    }
+                    result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
                 } else {
                     // Okay, try the often-used 'generic' approach. If this fails, we go to the worse-case scenario, ie. do not process at all.
                     // Testing for this is somewhat more complicated.

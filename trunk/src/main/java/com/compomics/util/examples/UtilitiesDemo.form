@@ -1473,13 +1473,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="peptidesJPanel" pref="444" max="32767" attributes="1"/>
+                                  <Component id="peptidesJPanel" pref="451" max="32767" attributes="1"/>
                                   <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="sequenceCoverageJPanel" pref="728" max="32767" attributes="3"/>
-                                  <Component id="jPanel3" alignment="0" pref="728" max="32767" attributes="3"/>
+                                  <Component id="sequenceCoverageJPanel" pref="721" max="32767" attributes="3"/>
+                                  <Component id="jPanel3" alignment="0" pref="721" max="32767" attributes="3"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -1563,10 +1563,10 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="inhibitorsJTextField" alignment="0" pref="319" max="32767" attributes="1"/>
-                              <Component id="siteJTextField" alignment="1" pref="319" max="32767" attributes="1"/>
-                              <Component id="positionJTextField" alignment="1" pref="319" max="32767" attributes="1"/>
-                              <Component id="enzymesJComboBox" alignment="0" pref="319" max="32767" attributes="0"/>
+                              <Component id="inhibitorsJTextField" alignment="0" pref="326" max="32767" attributes="1"/>
+                              <Component id="siteJTextField" alignment="1" pref="326" max="32767" attributes="1"/>
+                              <Component id="positionJTextField" alignment="1" pref="326" max="32767" attributes="1"/>
+                              <Component id="enzymesJComboBox" alignment="0" pref="326" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="missedCleavagesJSpinner" min="-2" pref="69" max="-2" attributes="1"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -1738,11 +1738,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="sequenceJTabbedPane" alignment="0" pref="696" max="32767" attributes="0"/>
+                              <Component id="sequenceJTabbedPane" alignment="0" pref="689" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="sequenceFileJTextField" pref="462" max="32767" attributes="0"/>
+                                  <Component id="sequenceFileJTextField" pref="455" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="browseJButton" linkSize="24" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -1819,9 +1819,9 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="691" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="684" max="32767" attributes="0"/>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane2" alignment="0" pref="691" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane2" alignment="0" pref="684" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1857,6 +1857,9 @@
                               <Events>
                                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peffAnnotationsJTableMouseClicked"/>
                               </Events>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    protected JTableHeader createDefaultTableHeader() { &#xa;        return new JTableHeader(columnModel) {        &#xa;            public String getToolTipText(MouseEvent e) { &#xa;                String tip = null;                 &#xa;                java.awt.Point p = e.getPoint();       &#xa;                int index = columnModel.getColumnIndexAtX(p.x);                 &#xa;                int realIndex = columnModel.getColumn(index).getModelIndex();                 &#xa;                tip = (String) sequenceAnnotationColumnHeaderTooltips.get(realIndex);                 &#xa;                return tip;             &#xa;            }         &#xa;        };     &#xa;    } &#xa;};"/>
+                              </AuxValues>
                             </Component>
                           </SubComponents>
                         </Container>
@@ -1874,9 +1877,9 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="691" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="684" max="32767" attributes="0"/>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane3" alignment="0" pref="691" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane3" alignment="0" pref="684" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1924,9 +1927,9 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="691" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="684" max="32767" attributes="0"/>
                               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane1" alignment="0" pref="691" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" alignment="0" pref="684" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1983,7 +1986,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="peptidesJScrollPane" pref="412" max="32767" attributes="0"/>
+                          <Component id="peptidesScrollPane" pref="419" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1992,37 +1995,33 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="peptidesJScrollPane" pref="321" max="32767" attributes="0"/>
+                          <Component id="peptidesScrollPane" pref="321" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="peptidesJScrollPane">
+                <Container class="javax.swing.JScrollPane" name="peptidesScrollPane">
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                   </AuxValues>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="org.jdesktop.swingx.JXTable" name="peptidesJXTable">
+                    <Component class="javax.swing.JTable" name="peptidesJTable">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="5" rowCount="0">
                             <Column editable="false" title=" " type="java.lang.Integer"/>
                             <Column editable="false" title="Sequence" type="java.lang.String"/>
-                            <Column editable="false" title="Mass" type="java.lang.Double"/>
+                            <Column editable="false" title="Mass" type="java.lang.Float"/>
                             <Column editable="false" title="Start" type="java.lang.Integer"/>
                             <Column editable="false" title="End" type="java.lang.Integer"/>
                           </Table>
                         </Property>
                         <Property name="opaque" type="boolean" value="false"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptidesJXTableMouseClicked"/>
-                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="peptidesJXTableKeyReleased"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -2048,7 +2047,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="proteinCoverageJScrollPane" pref="696" max="32767" attributes="0"/>
+                          <Component id="proteinCoverageJScrollPane" pref="689" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>

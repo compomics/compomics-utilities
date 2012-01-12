@@ -153,6 +153,7 @@ public class SpectrumFactory {
             }
             mgfFilesMap.put(fileName, new RandomAccessFile(spectrumFile, "r"));
             mgfIndexesMap.put(fileName, mgfIndex);
+            checkIndexVersion(spectrumFile.getParentFile(), fileName);
         } else if (fileName.endsWith(".mzml")) {
             MzMLUnmarshaller mzMLUnmarshaller = new MzMLUnmarshaller(spectrumFile);
             mzMLUnmarshallers.put(fileName, mzMLUnmarshaller);
@@ -188,6 +189,24 @@ public class SpectrumFactory {
     }
 
     /**
+     * Returns the maximal RT for the desired file
+     * @param fileName the file of interest
+     * @return the max RT
+     */
+    public Double getMaxRT(String fileName) {
+        return mgfIndexesMap.get(fileName).getMaxRT();
+    }
+
+    /**
+     * Returns the number of spectra in the desired file
+     * @param fileName the file of interest
+     * @return the number of spectra
+     */
+    public int getNSpectra(String fileName) {
+        return mgfIndexesMap.get(fileName).getNSpectra();
+    }
+
+    /**
      * Returns the precursor of the desired spectrum.
      * 
      * @param spectrumKey   the key of the spectrum
@@ -207,17 +226,17 @@ public class SpectrumFactory {
             String name = fileName;
             String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
-                 
+
                 // a special fix for mgf files with strange titles...
                 spectrumTitle = fixMgfTitle(spectrumTitle, name);
-                
+
                 if (mgfIndexesMap.get(name) == null) {
                     throw new IOException("Mgf file not found: \'" + name + "\'!");
                 }
                 if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
                     throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found!");
                 }
-                
+
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
             } else if (name.endsWith(".mzml")) {
                 uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
@@ -300,10 +319,10 @@ public class SpectrumFactory {
             String name = fileName;
             String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
             if (name.endsWith(".mgf")) {
-                 
+
                 // a special fix for mgf files with strange titles...
                 spectrumTitle = fixMgfTitle(spectrumTitle, name);
-                 
+
                 if (mgfIndexesMap.get(name) == null) {
                     throw new IOException("Mgf file not found: \'" + name + "\'!");
                 }
@@ -456,7 +475,7 @@ public class SpectrumFactory {
     public ArrayList<String> getSpectrumTitles(String mgfFile) {
         return new ArrayList<String>(mgfIndexesMap.get(mgfFile).getIndexes().keySet());
     }
-    
+
     /**
      * Returns the fixed mgf title.
      * 
@@ -465,7 +484,7 @@ public class SpectrumFactory {
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {
-        
+
         // a special fix for mgf files with titles containing %3b instead if ;
         if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
             spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
@@ -473,9 +492,36 @@ public class SpectrumFactory {
 
         // a special fix for mgf files with titles containing \\ instead \
         if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
-            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\"); 
+            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
         }
-        
+
         return spectrumTitle;
+    }
+
+    /**
+     * Checks and updates the MgfIndex if this one is from an older version
+     * @param directory the directory where to write the new index in case it has been changed
+     * @param mgfIndex the MgfIndex to check
+     * @throws IOException Exception thrown whenever an error occurred while reading the mgf file or writing the index. If a reading error happens at this point we are in trouble...
+     */
+    private void checkIndexVersion(File directory, String fileName) throws IOException {
+        MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
+        if (mgfIndex.getMaxRT() == null) {
+            double rt, maxRT = -1;
+            String spectrumKey;
+            for (String spectrumTitle : getSpectrumTitles(fileName)) {
+                spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+                try {
+                    rt = getPrecursor(spectrumKey, false).getRt();
+                    if (rt > maxRT) {
+                        maxRT = rt;
+                    }
+                } catch (MzMLUnmarshallerException e) {
+                    // Should not happen when working with mgf files
+                }
+            }
+            mgfIndex.setMaxRT(maxRT);
+            writeIndex(mgfIndex, directory);
+        }
     }
 }

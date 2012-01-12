@@ -19,15 +19,20 @@ public class MgfIndex extends ExperimentObject {
      * The name of the indexed file
      */
     private String fileName;
+    /**
+     * The maximal RT found in the spectra
+     */
+    private Double maxRT;
 
     /**
      * Constructor
      * @param indexMap map of all indexes: spectrum title -> index in the file
      * @param fileName  
      */
-    public MgfIndex(HashMap<String, Long> indexMap, String fileName) {
+    public MgfIndex(HashMap<String, Long> indexMap, String fileName, double maxRT) {
         this.indexMap = indexMap;
         this.fileName = fileName;
+        this.maxRT = maxRT;
     }
 
     /**
@@ -53,5 +58,29 @@ public class MgfIndex extends ExperimentObject {
      */
     public String getFileName() {
         return fileName;
+    }
+
+    /**
+     * Returns the maximal RT in this file
+     * @return the maximal RT in this file
+     */
+    public Double getMaxRT() {
+        return maxRT;
+    }
+
+    /**
+     * Sets the maximal RT in this file
+     * @param maxRT the maximal RT in this file
+     */
+    public void setMaxRT(Double maxRT) {
+        this.maxRT = maxRT;
+    }
+    
+    /**
+     * Returns the number of imported spectra
+     * @return the number of imported spectra
+     */
+    public int getNSpectra() {
+        return indexMap.size();
     }
 }

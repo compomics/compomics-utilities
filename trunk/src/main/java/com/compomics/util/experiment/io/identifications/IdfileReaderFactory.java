@@ -12,15 +12,12 @@ import org.xml.sax.SAXException;
  * This factory will provide the appropriate identification file reader for each type of file.
  * Null when the format is not supported.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 23, 2010
- * Time: 5:33:24 PM
+ * @author Marc Vaudel
  */
 public class IdfileReaderFactory {
 
     /**
-     * The factory instance
+     * The factory instance.
      */
     private static IdfileReaderFactory singleton = null;
 
@@ -28,11 +25,10 @@ public class IdfileReaderFactory {
      * the factory constructor
      */
     private IdfileReaderFactory() {
-
     }
 
     /**
-     * A static method to retrieve the instance of the factory
+     * A static method to retrieve the instance of the factory.
      *
      * @return the factory instance
      */
@@ -44,10 +40,11 @@ public class IdfileReaderFactory {
     }
 
     /**
-     * This method returns the proper identification file reader depending on the format of the provided file
+     * This method returns the proper identification file reader depending on the format of the provided file.
      *
      * @param aFile the file to parse
      * @return an adapted file reader
+     * @throws SAXException  
      */
     public IdfileReader getFileReader(File aFile) throws SAXException {
         String name = aFile.getName().toLowerCase();
@@ -63,6 +60,7 @@ public class IdfileReaderFactory {
 
     /**
      * This method return the search engine corresponding to the given file.
+     * 
      * @param aFile     an identification file
      * @return the index of the search engine
      */

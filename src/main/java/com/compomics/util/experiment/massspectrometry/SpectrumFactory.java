@@ -189,7 +189,8 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the maximal RT for the desired file
+     * Returns the maximal RT for the desired file.
+     * 
      * @param fileName the file of interest
      * @return the max RT
      */
@@ -198,7 +199,8 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the number of spectra in the desired file
+     * Returns the number of spectra in the desired file.
+     * 
      * @param fileName the file of interest
      * @return the number of spectra
      */
@@ -499,12 +501,16 @@ public class SpectrumFactory {
     }
 
     /**
-     * Checks and updates the MgfIndex if this one is from an older version
+     * Checks and updates the MgfIndex if this one is from an older version.
+     * 
      * @param directory the directory where to write the new index in case it has been changed
      * @param mgfIndex the MgfIndex to check
      * @throws IOException Exception thrown whenever an error occurred while reading the mgf file or writing the index. If a reading error happens at this point we are in trouble...
      */
     private void checkIndexVersion(File directory, String fileName) throws IOException {
+
+        // @TODO: add use of progressbar?
+
         MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
         if (mgfIndex.getMaxRT() == null) {
             double rt, maxRT = -1;

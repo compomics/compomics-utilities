@@ -7,10 +7,8 @@ import java.util.ArrayList;
 /**
  * This class models a protein.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 8:56:22 AM
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class Protein extends ExperimentObject {
 
@@ -81,7 +79,7 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Indicates if the protein is factice (from a decoy database for instance)
+     * Indicates if the protein is factice (from a decoy database for instance).
      * 
      * @return a boolean indicating if the protein is factice
      */
@@ -90,7 +88,7 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Getter for the protein accession
+     * Getter for the protein accession.
      *
      * @return the protein accession
      */
@@ -108,7 +106,7 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Getter for the protein sequence
+     * Getter for the protein sequence.
      *
      * @return the protein sequence
      */
@@ -128,6 +126,7 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the key for protein indexing. For now the protein accession.
+     * 
      * @return  the key for protein indexing.
      */
     public String getProteinKey() {
@@ -135,7 +134,8 @@ public class Protein extends ExperimentObject {
     }
     
     /**
-     * Returns the number of amino acids in the sequence
+     * Returns the number of amino acids in the sequence.
+     * 
      * @return the number of amino acids in the sequence
      */
     public int getLength() {
@@ -143,15 +143,21 @@ public class Protein extends ExperimentObject {
     }
     
     /**
-     * Returns the number of observable amino acids of the sequence
+     * Returns the number of observable amino acids of the sequence.
+     * 
+     * @param enzyme    the enzyme to use
+     * @param pepMaxLength  the max peptide length
      * @return the number of observable amino acids of the sequence
      */
     public int getObservableLength(Enzyme enzyme, int pepMaxLength) {
+        
         int length = 0;
         String tempPeptide, tempSequence = sequence;
         int tempCleavage, cleavage;
+        
         while (tempSequence.length() > 1) {
             cleavage = 0;
+            
             for (Character aa : enzyme.getAminoAcidAfter()) {
                 tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
                 while (enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
@@ -161,6 +167,7 @@ public class Protein extends ExperimentObject {
                     cleavage = tempCleavage;
                 }
             }
+            
             for (Character aa : enzyme.getAminoAcidBefore()) {
                 tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
                 while (enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
@@ -170,23 +177,29 @@ public class Protein extends ExperimentObject {
                     cleavage = tempCleavage;
                 }
             }
+            
             if (cleavage == 0) {
                 if (tempSequence.length() <= pepMaxLength) {
                     length += tempSequence.length();
                 }
                 break;
             }
+            
             tempPeptide = tempSequence.substring(cleavage + 1);
+            
             if (tempPeptide.length() <= pepMaxLength) {
                     length += tempPeptide.length();
             }
+            
             tempSequence = tempSequence.substring(0, cleavage + 1);
         }
+        
         return length;
     }
 
     /**
-     * Returns the number of possible peptides (not accounting PTMs nor missed cleavages) with the selected enzyme
+     * Returns the number of possible peptides (not accounting PTMs nor missed cleavages) with the selected enzyme.
+     * 
      * @param enzyme    The selected enzyme
      * @return  the number of possible peptides
      */
@@ -197,6 +210,7 @@ public class Protein extends ExperimentObject {
         ArrayList<Character> aminoAcidAfter = enzyme.getAminoAcidAfter();
         ArrayList<Character> restrictionBefore = enzyme.getRestrictionBefore();
         ArrayList<Character> restrictionAfter = enzyme.getRestrictionAfter();
+        
         try {
             char[] sequenceCharacters = sequence.toCharArray();
             char aaBefore, aaAfter;
@@ -212,6 +226,7 @@ public class Protein extends ExperimentObject {
         } catch (Exception e) {
             // exception thrown when the sequence was not implemented. Ignore and return 0.
         }
+        
         return nCleavages;
     }
 
@@ -223,9 +238,9 @@ public class Protein extends ExperimentObject {
     public double computeMolecularWeight() {
 
         double mass = Atom.H.mass;
-        char aa;
+        
         for (int iaa = 0; iaa < sequence.length(); iaa++) {
-            aa = sequence.charAt(iaa);
+            char aa = sequence.charAt(iaa);
             try {
                 if (aa != '*') {
                     AminoAcid currentAA = AminoAcid.getAminoAcid(aa);

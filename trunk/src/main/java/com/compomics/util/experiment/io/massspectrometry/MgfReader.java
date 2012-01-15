@@ -147,7 +147,7 @@ public class MgfReader {
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
         String line;
         long currentIndex = 0;
-        double rt, maxRT = -1;
+        double rt, maxRT = -1, minRT = Double.MAX_VALUE;
 
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
@@ -176,6 +176,9 @@ public class MgfReader {
                     if (rt > maxRT) {
                         maxRT = rt;
                     }
+                    if (rt < minRT) {
+                        minRT = rt;
+                    }
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Cannot parse retention time.");
                 }
@@ -189,7 +192,7 @@ public class MgfReader {
 
         randomAccessFile.close();
 
-        return new MgfIndex(indexes, mgfFile.getName(), maxRT);
+        return new MgfIndex(indexes, mgfFile.getName(), minRT, maxRT);
     }
 
     /**
@@ -223,7 +226,7 @@ public class MgfReader {
             int fileCounter = 1;
             int spectrumCounter = 0;
             long typicalSize = 0;
-            double rt, maxRT = -1;
+            double rt, maxRT = -1, minRT = Double.MAX_VALUE;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -245,7 +248,7 @@ public class MgfReader {
                         if (readAccessFile.length() - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeFile.close();
-                            mgfIndexes.add(new MgfIndex(indexes, currentName, maxRT));
+                            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -253,6 +256,7 @@ public class MgfReader {
                             writeIndex = 0;
                             spectrumCounter = 0;
                             maxRT = -1;
+                            minRT = Double.MAX_VALUE;
                             indexes = new HashMap<String, Long>();
                         }
                     }
@@ -270,6 +274,9 @@ public class MgfReader {
                         if (rt > maxRT) {
                             maxRT = rt;
                         }
+                        if (rt < minRT) {
+                            minRT = rt;
+                        }
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Cannot parse retention time.");
                     }
@@ -277,7 +284,7 @@ public class MgfReader {
                 writeFile.writeBytes(line + "\n");
             }
 
-            mgfIndexes.add(new MgfIndex(indexes, currentName, maxRT));
+            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT));
 
             if (progressBar != null) {
                 progressBar.setIndeterminate(true);
@@ -304,12 +311,14 @@ public class MgfReader {
      * @throws IllegalArgumentException Exception thrown whenever the file is not of a compatible format
      */
     public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+        
         randomAccessFile.seek(index);
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashSet<Peak> spectrum = new HashSet<Peak>();
+        
         while ((line = randomAccessFile.readLine()) != null) {
             line = line.trim();
             if (line.equals("BEGIN IONS")) {

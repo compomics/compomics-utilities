@@ -13,6 +13,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.JProgressBar;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
@@ -153,7 +154,7 @@ public class SpectrumFactory {
             }
             mgfFilesMap.put(fileName, new RandomAccessFile(spectrumFile, "r"));
             mgfIndexesMap.put(fileName, mgfIndex);
-            checkIndexVersion(spectrumFile.getParentFile(), fileName);
+            checkIndexVersion(spectrumFile.getParentFile(), fileName, progressBar);
         } else if (fileName.endsWith(".mzml")) {
             MzMLUnmarshaller mzMLUnmarshaller = new MzMLUnmarshaller(spectrumFile);
             mzMLUnmarshallers.put(fileName, mzMLUnmarshaller);
@@ -189,13 +190,69 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the maximal RT for the desired file.
+     * Returns the maximum RT for the desired file.
      * 
      * @param fileName the file of interest
      * @return the max RT
      */
     public Double getMaxRT(String fileName) {
         return mgfIndexesMap.get(fileName).getMaxRT();
+    }
+    
+    /**
+     * Returns the minimum RT for the desired file.
+     * 
+     * @param fileName the file of interest
+     * @return the min RT
+     */
+    public Double getMinRT(String fileName) {
+        return mgfIndexesMap.get(fileName).getMinRT();
+    }
+    
+    /**
+     * Returns the maximum RT for the whole project.
+     * 
+     * @return the max RT
+     */
+    public Double getMaxRT() {
+        
+        double maxRT = 0;
+        
+        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
+        
+        while (keys.hasNext()) {
+            
+            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
+            
+            if (getMaxRT(tempFileName) > maxRT) {
+                maxRT = getMaxRT(tempFileName);
+            }
+        }
+        
+        return maxRT;
+    }
+    
+    /**
+     * Returns the minimum RT for the whole project.
+     * 
+     * @return the min RT
+     */
+    public Double getMinRT() {
+        
+        double minRT = Double.MAX_VALUE;
+        
+        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
+        
+        while (keys.hasNext()) {
+            
+            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
+            
+            if (getMinRT(tempFileName) < minRT) {
+                minRT = getMinRT(tempFileName);
+            }
+        }
+        
+        return minRT;
     }
 
     /**
@@ -507,26 +564,42 @@ public class SpectrumFactory {
      * @param mgfIndex the MgfIndex to check
      * @throws IOException Exception thrown whenever an error occurred while reading the mgf file or writing the index. If a reading error happens at this point we are in trouble...
      */
-    private void checkIndexVersion(File directory, String fileName) throws IOException {
-
-        // @TODO: add use of progressbar?
+    private void checkIndexVersion(File directory, String fileName, JProgressBar progressBar) throws IOException {
 
         MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
-        if (mgfIndex.getMaxRT() == null) {
-            double rt, maxRT = -1;
-            String spectrumKey;
+        
+        if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null) {
+            
+            double rt, maxRT = -1, minRT = Double.MAX_VALUE;
+            
+            int counter = 0;
+            progressBar.setIndeterminate(false);
+            progressBar.setStringPainted(true);
+            progressBar.setMaximum(getSpectrumTitles(fileName).size());
+            progressBar.setValue(0);
+            
             for (String spectrumTitle : getSpectrumTitles(fileName)) {
-                spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+                
+                progressBar.setValue(counter++);
+                
+                String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
                 try {
                     rt = getPrecursor(spectrumKey, false).getRt();
                     if (rt > maxRT) {
                         maxRT = rt;
                     }
+                    if (rt < minRT) {
+                        minRT = rt;
+                    }
                 } catch (MzMLUnmarshallerException e) {
                     // Should not happen when working with mgf files
                 }
             }
+            
+            progressBar.setIndeterminate(true);
+            
             mgfIndex.setMaxRT(maxRT);
+            mgfIndex.setMinRT(minRT);
             writeIndex(mgfIndex, directory);
         }
     }

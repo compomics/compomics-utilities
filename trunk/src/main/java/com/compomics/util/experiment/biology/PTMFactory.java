@@ -168,11 +168,7 @@ public class PTMFactory implements Serializable {
     public void addUserPTM(PTM ptm) {
         ptmMap.put(ptm.getName(), ptm);
         userMods.add(ptm.getName());
-        int omssaIndex = userMods.size() + 118;
-        if (omssaIndex > 128) {
-            omssaIndex += 13;
-        }
-        omssaIndexes.get(ptm.getName()).add(omssaIndex);
+        setUserOmssaIndexes();
     }
 
     /**

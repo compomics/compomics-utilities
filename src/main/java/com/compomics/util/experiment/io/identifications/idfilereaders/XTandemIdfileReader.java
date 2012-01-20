@@ -86,18 +86,20 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * @return a set containing all spectrum matches
      */
     public HashSet<SpectrumMatch> getAllSpectrumMatches() {
+        
         HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
         try {
             Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
+            
             while (spectraIt.hasNext()) {
                 Spectrum currentSpectrum = spectraIt.next();
                 int nSpectrum = currentSpectrum.getSpectrumNumber();
                 SupportData supportData = xTandemFile.getSupportData(nSpectrum);
                 String spectrumName = supportData.getFragIonSpectrumDescription();
                 ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
+                
                 if (spectrumPeptides.size() > 0) {
-                    Peptide testPeptide = spectrumPeptides.get(0);
-                    Domain testDomain = testPeptide.getDomains().get(0);
+                    
                     String tempFile = xTandemFile.getInputParameters().getSpectrumPath();
                     String filename = Util.getFileName(tempFile);
                     Charge charge = new Charge(Charge.PLUS, currentSpectrum.getPrecursorCharge());
@@ -105,6 +107,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
 
                     HashMap<Double, ArrayList<Domain>> hitMap = new HashMap<Double, ArrayList<Domain>>();
+                    
                     for (Peptide peptide : spectrumPeptides) {
                         for (Domain domain : peptide.getDomains()) {
                             if (!hitMap.containsKey(domain.getDomainExpect())) {
@@ -113,15 +116,18 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             hitMap.get(domain.getDomainExpect()).add(domain);
                         }
                     }
+                    
                     ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
                     Collections.sort(eValues);
                     int rank = 1;
+                    
                     for (Double eValue : eValues) {
                         for (Domain domain : hitMap.get(eValue)) {
                             currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain, charge.value, rank));
                         }
                         rank += hitMap.get(eValue).size();
                     }
+                    
                     foundPeptides.add(currentMatch);
                 }
             }
@@ -140,12 +146,12 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * @return the corresponding peptide assumption
      */
     private PeptideAssumption getPeptideAssumption(Domain domain, int charge, int rank) {
+        
         ArrayList<String> proteins = new ArrayList<String>();
-        double eValue;
-        com.compomics.util.experiment.biology.Peptide peptide;
         String sequence = domain.getDomainSequence();
         String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
         String accession = "";
+        
         try {
             Header fastaHeader = Header.parseFromFASTA(description);
             accession = fastaHeader.getAccession();
@@ -169,34 +175,42 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
 
         proteins.add(accession);
-        eValue = domain.getDomainExpect();
+        
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
         ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();
+        
         for (Modification currentModification : foundFixedModifications) {
-            String[] parsedName = currentModification.getName().split("@");
+            
+            String modificationName = currentModification.getName();
+            String[] parsedName = modificationName.split("@");
             String aa = parsedName[1].toUpperCase();
+            
             if (aa.equals("[")) {
-                foundModifications.add(new ModificationMatch(currentModification.getName(), false, 0));
+                foundModifications.add(new ModificationMatch(modificationName, false, 0));
             } else if (aa.equals("]")) {
-                foundModifications.add(new ModificationMatch(currentModification.getName(), false, sequence.length() - 1));
+                foundModifications.add(new ModificationMatch(modificationName, false, sequence.length() - 1));
             } else {
                 String tempSequence = "#" + sequence + "#";
                 String[] sequenceFragments = tempSequence.split(aa);
+                
                 if (sequenceFragments.length > 0) {
                     int cpt = 0;
                     for (int f = 0; f < sequenceFragments.length - 1; f++) {
-                        cpt = cpt + sequenceFragments[f].length();
-                        foundModifications.add(new ModificationMatch(currentModification.getName(), false, cpt - 1));
+                        cpt += sequenceFragments[f].length();
+                        foundModifications.add(new ModificationMatch(modificationName, false, cpt - 1));
                     }
                 }
             }
         }
+        
         ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(domain.getDomainID());
+        
         for (Modification currentModification : foundVariableModifications) {
             int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;
             foundModifications.add(new ModificationMatch(currentModification.getName(), true, location));
         }
-        peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
-        return new PeptideAssumption(peptide, rank, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), eValue, getFileName());
+        
+        com.compomics.util.experiment.biology.Peptide peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
+        return new PeptideAssumption(peptide, rank, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), domain.getDomainExpect(), getFileName());
     }
 }

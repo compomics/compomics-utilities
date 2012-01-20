@@ -61,7 +61,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     public MascotIdfileReader(File aFile) {
         inspectedFile = aFile;
         try {
-            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY);
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); // @TODO: why does INDEX not seem to work??
         } catch (IOException e) {
             System.exit(1);
         }
@@ -105,8 +105,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         
         try {
             QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
-            //QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap(false); // @TODO: this method does not exist but ought to, 'false' would be used to remove the 'no decoys found' message
-            QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
+            QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap(false);
             
             int numberOfQueries = iMascotDatfile.getNumberOfQueries();
             

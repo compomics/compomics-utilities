@@ -24,6 +24,11 @@ import javax.swing.JProgressBar;
  * @author Harald Barsnes
  */
 public class MgfReader {
+    
+    /**
+     * The pattern used to pick up double values.
+     */
+    private static Pattern doublePattern = Pattern.compile("\\D");
 
     /**
      * General constructor for an mgf reader.
@@ -51,7 +56,9 @@ public class MgfReader {
         String line = null;
 
         while ((line = br.readLine()) != null) {
+            
             line = line.trim();
+            
             if (line.equals("BEGIN IONS")) {
                 spectrum = new HashSet<Peak>();
             } else if (line.startsWith("TITLE")) {
@@ -70,7 +77,7 @@ public class MgfReader {
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
                     String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = Pattern.compile("\\D").split(value);
+                    String[] temp = doublePattern.split(value);
                     rt = new Double(temp[0]);
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Cannot parse retention time.");
@@ -144,9 +151,7 @@ public class MgfReader {
     public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
         
         HashMap<String, Long> indexes = new HashMap<String, Long>();
-
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
-        String line;
         long currentIndex = 0;
         double rt, maxRT = -1, minRT = Double.MAX_VALUE;
 
@@ -159,6 +164,8 @@ public class MgfReader {
 
         long progressUnit = randomAccessFile.length() / 100;
 
+        String line;
+        
         while ((line = randomAccessFile.readLine()) != null) {
             
             line = line.trim();
@@ -174,7 +181,7 @@ public class MgfReader {
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
                     String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = Pattern.compile("\\D").split(value);
+                    String[] temp = doublePattern.split(value);
                     rt = new Double(temp[0]);
                     if (rt > maxRT) {
                         maxRT = rt;
@@ -209,23 +216,25 @@ public class MgfReader {
      * @throws IOException              exception thrown whenever a problem occurred while reading/writing a file
      */
     public static ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, JProgressBar progressBar) throws FileNotFoundException, IOException {
+        
         String fileName = mgfFile.getName();
 
         if (fileName.endsWith(".mgf")) {
 
             ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
-
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
 
             RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
             String line;
             long readIndex, writeIndex = 0;
+            
             if (progressBar != null) {
                 progressBar.setIndeterminate(false);
                 progressBar.setStringPainted(true);
                 progressBar.setMaximum(100);
                 progressBar.setValue(0);
             }
+            
             int fileCounter = 1;
             int spectrumCounter = 0;
             long typicalSize = 0;
@@ -236,10 +245,15 @@ public class MgfReader {
             File testFile = new File(mgfFile.getParent(), currentName);
             RandomAccessFile writeFile = new RandomAccessFile(testFile, "rw");
 
-            long progressUnit = readAccessFile.length() / 100;
+            long sizeOfReadAccessFile = readAccessFile.length();
+            long progressUnit = sizeOfReadAccessFile / 100;
+            
             while ((line = readAccessFile.readLine()) != null) {
+                
                 line = line.trim();
+                
                 if (line.equals("BEGIN IONS")) {
+                    
                     spectrumCounter++;
                     writeIndex = writeFile.getFilePointer();
                     readIndex = readAccessFile.getFilePointer();
@@ -248,7 +262,7 @@ public class MgfReader {
 
                         typicalSize = Math.max(writeIndex, typicalSize);
 
-                        if (readAccessFile.length() - readIndex > typicalSize / 2) { // try to avoid small leftovers
+                        if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeFile.close();
                             mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT));
@@ -267,12 +281,13 @@ public class MgfReader {
                     if (progressBar != null) {
                         progressBar.setValue((int) (readIndex / progressUnit));
                     }
+                    
                 } else if (line.startsWith("TITLE")) {
                     indexes.put(line.substring(line.indexOf('=') + 1).trim(), writeIndex);
                 } else if (line.startsWith("RTINSECONDS")) {
                     try {
                         String value = line.substring(line.indexOf('=') + 1);
-                        String[] temp = Pattern.compile("\\D").split(value);
+                        String[] temp = doublePattern.split(value);
                         rt = new Double(temp[0]);
                         if (rt > maxRT) {
                             maxRT = rt;
@@ -323,7 +338,9 @@ public class MgfReader {
         HashSet<Peak> spectrum = new HashSet<Peak>();
         
         while ((line = randomAccessFile.readLine()) != null) {
+            
             line = line.trim();
+            
             if (line.equals("BEGIN IONS")) {
                 spectrum = new HashSet<Peak>();
             } else if (line.startsWith("TITLE")) {
@@ -342,7 +359,7 @@ public class MgfReader {
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
                     String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = Pattern.compile("\\D").split(value);
+                    String[] temp = doublePattern.split(value);
                     rt = new Double(temp[0]);
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Cannot parse retention time.");
@@ -398,12 +415,16 @@ public class MgfReader {
      * @return the possible charges found
      */
     private static ArrayList<Charge> parseCharges(String chargeLine) {
+        
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
         String[] charges = tempLine.split(" and ");
-        Integer value;
+        
         for (String charge : charges) {
+            
+            Integer value;
             charge = charge.trim();
+            
             if (charge.endsWith("+")) {
                 value = new Integer(charge.substring(0, charge.length() - 1));
                 result.add(new Charge(Charge.PLUS, value));
@@ -441,7 +462,9 @@ public class MgfReader {
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = randomAccessFile.readLine()) != null) {
+            
             line = line.trim();
+            
             if (line.equals("BEGIN IONS")
                     || line.startsWith("TOLU")
                     || line.startsWith("TOL")
@@ -464,8 +487,15 @@ public class MgfReader {
                 } else {
                     precursorIntensity = 0.0;
                 }
-            } else if (line.startsWith("RTINSECONDS")) {
-                rt = new Double(line.substring(line.indexOf('=') + 1));
+            } else if (line.startsWith("RTINSECONDS")) { 
+                rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest...
+//                try {
+//                    String value = line.substring(line.indexOf('=') + 1);
+//                    String[] temp = doublePattern.split(value);
+//                    rt = new Double(temp[0]);
+//                } catch (NumberFormatException e) {
+//                    throw new IllegalArgumentException("Cannot parse retention time.");
+//                }
             } else {
                 return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
             }

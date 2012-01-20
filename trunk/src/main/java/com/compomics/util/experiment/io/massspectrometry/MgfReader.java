@@ -142,6 +142,7 @@ public class MgfReader {
      * @throws IOException              Exception thrown whenever an error occurs while reading the file
      */
     public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
+        
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
@@ -159,7 +160,9 @@ public class MgfReader {
         long progressUnit = randomAccessFile.length() / 100;
 
         while ((line = randomAccessFile.readLine()) != null) {
+            
             line = line.trim();
+            
             if (line.equals("BEGIN IONS")) {
                 currentIndex = randomAccessFile.getFilePointer();
 

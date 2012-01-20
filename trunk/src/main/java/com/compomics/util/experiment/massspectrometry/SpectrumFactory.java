@@ -137,10 +137,14 @@ public class SpectrumFactory {
      * @throws IllegalArgumentException Exception thrown if an unknown format was detected.
      */
     public void addSpectra(File spectrumFile, JProgressBar progressBar) throws FileNotFoundException, IOException, IllegalArgumentException {
+        
         String fileName = spectrumFile.getName();
+        
         if (fileName.endsWith(".mgf")) {
+            
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
             MgfIndex mgfIndex;
+            
             if (indexFile.exists()) {
                 try {
                     mgfIndex = getIndex(indexFile);
@@ -152,6 +156,7 @@ public class SpectrumFactory {
                 mgfIndex = MgfReader.getIndexMap(spectrumFile, progressBar);
                 writeIndex(mgfIndex, spectrumFile.getParentFile());
             }
+            
             mgfFilesMap.put(fileName, new RandomAccessFile(spectrumFile, "r"));
             mgfIndexesMap.put(fileName, mgfIndex);
             checkIndexVersion(spectrumFile.getParentFile(), fileName, progressBar);

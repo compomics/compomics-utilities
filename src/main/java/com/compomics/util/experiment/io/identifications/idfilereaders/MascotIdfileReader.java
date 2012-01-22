@@ -68,6 +68,21 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     /**
+     * Constructor for the MascotIdilereader
+     *
+     * @param aFile a file to read
+     * @param mascotDatfileType MascotDatfileType indicating whether the parsing shall be indexed or in memory
+     */
+    public MascotIdfileReader(File aFile, MascotDatfileType mascotDatfileType) {
+        inspectedFile = aFile;
+        try {
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), mascotDatfileType); //getPath might have to be changed into getcanonicalPath
+        } catch (IOException e) {
+            System.exit(1);
+        }
+    }
+
+    /**
      * get the spectrum file name
      *
      * @return the spectrum file name
@@ -112,9 +127,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             for (int i = 0; i < numberOfQueries; i++) {
                 
                 Vector<PeptideHit> mascotDecoyPeptideHits = null;
-                
-                if (lDecoyQueryToPeptideMap != null) {
+                try {
                     mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
+                } catch (Exception e) {
+                    // Looks like there is no decoy section
                 }
                 
                 Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);

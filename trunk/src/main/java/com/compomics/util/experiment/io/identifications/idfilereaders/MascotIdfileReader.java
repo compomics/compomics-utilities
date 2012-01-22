@@ -61,7 +61,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     public MascotIdfileReader(File aFile) {
         inspectedFile = aFile;
         try {
-            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY); // @TODO: why does INDEX not seem to work??
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY);
         } catch (IOException e) {
             System.exit(1);
         }
@@ -76,7 +76,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     public MascotIdfileReader(File aFile, MascotDatfileType mascotDatfileType) {
         inspectedFile = aFile;
         try {
-            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), mascotDatfileType); //getPath might have to be changed into getcanonicalPath
+            iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), mascotDatfileType);
         } catch (IOException e) {
             System.exit(1);
         }

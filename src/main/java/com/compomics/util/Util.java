@@ -2,7 +2,9 @@ package com.compomics.util;
 
 import com.compomics.util.gui.dialogs.ProgressDialogX;
 import java.awt.Color;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,12 +35,10 @@ public class Util {
      */
     public static boolean deleteDir(File dir) {
 
-        boolean success = false;
-
         if (dir.isDirectory()) {
             String[] children = dir.list();
             for (int i = 0; i < children.length; i++) {
-                success = deleteDir(new File(dir, children[i]));
+                boolean success = deleteDir(new File(dir, children[i]));
                 if (!success) {
                     return false;
                 }
@@ -139,5 +139,50 @@ public class Util {
         }
 
         return tableAsString;
+    }
+    
+    /**
+     * Writes the table to a file as separated text.
+     * 
+     * @param table             the table to write to file
+     * @param separator         the text separator
+     * @param progressDialog    the progress dialog
+     * @param removeHtml        if true, html is converted to text
+     * @param writer            the writer where the file is to be written
+     * @throws IOException  
+     */
+    public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            writer.write(((DefaultTableModel) table.getModel()).getColumnName(i) + separator);
+        }
+
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMax(table.getRowCount());
+        }
+
+        writer.write("\n");
+
+        for (int i = 0; i < table.getRowCount(); i++) {
+
+            if (progressDialog != null) {
+                progressDialog.incrementValue();
+            }
+
+            for (int j = 0; j < table.getColumnCount(); j++) {
+                
+                String tempValue = table.getValueAt(i, j).toString();
+                
+                // remove html tags
+                if (tempValue.indexOf("<html>") != -1 && removeHtml) {
+                    tempValue = tempValue.replaceAll("\\<[^>]*>","");
+                }
+                
+                writer.write(tempValue + separator);
+            }
+
+            writer.write("\n");
+        }
     }
 }

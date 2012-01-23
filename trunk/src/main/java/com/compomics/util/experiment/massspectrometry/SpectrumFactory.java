@@ -257,6 +257,10 @@ public class SpectrumFactory {
             }
         }
         
+        if (minRT == Double.MAX_VALUE) {
+            minRT = 0;
+        }
+        
         return minRT;
     }
 

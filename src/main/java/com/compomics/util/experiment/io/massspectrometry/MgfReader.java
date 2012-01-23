@@ -201,6 +201,10 @@ public class MgfReader {
         }
 
         randomAccessFile.close();
+        
+        if (minRT == Double.MAX_VALUE) {
+            minRT = 0;
+        }
 
         return new MgfIndex(indexes, mgfFile.getName(), minRT, maxRT);
     }

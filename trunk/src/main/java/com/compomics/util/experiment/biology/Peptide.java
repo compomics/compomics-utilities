@@ -103,7 +103,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Clears the list of imported modification matches
      */
-    public void clearModificationMAtches() {
+    public void clearModificationMatches() {
         modifications.clear();
     }
 

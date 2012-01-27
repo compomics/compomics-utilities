@@ -577,9 +577,10 @@ public class SpectrumFactory {
 
         MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
         
-        if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null) {
+        if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null || mgfIndex.getMaxMz() == null) {
             
-            double rt, maxRT = -1, minRT = Double.MAX_VALUE;
+            double rt, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+            Precursor precursor;
             
             int counter = 0;
             progressBar.setIndeterminate(false);
@@ -590,15 +591,18 @@ public class SpectrumFactory {
             for (String spectrumTitle : getSpectrumTitles(fileName)) {
                 
                 progressBar.setValue(counter++);
-                
                 String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
                 try {
-                    rt = getPrecursor(spectrumKey, false).getRt();
+                precursor = getPrecursor(spectrumKey, false);
+                    rt = precursor.getRt();
                     if (rt > maxRT) {
                         maxRT = rt;
                     }
                     if (rt < minRT) {
                         minRT = rt;
+                    }
+                    if (precursor.getMz() > maxMz) {
+                        maxMz = precursor.getMz();
                     }
                 } catch (MzMLUnmarshallerException e) {
                     // Should not happen when working with mgf files
@@ -606,9 +610,11 @@ public class SpectrumFactory {
             }
             
             progressBar.setIndeterminate(true);
+            progressBar.setStringPainted(false);
             
             mgfIndex.setMaxRT(maxRT);
             mgfIndex.setMinRT(minRT);
+            mgfIndex.setMaxMz(maxMz);
             writeIndex(mgfIndex, directory);
         }
     }

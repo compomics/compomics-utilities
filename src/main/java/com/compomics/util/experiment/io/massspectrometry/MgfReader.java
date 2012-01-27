@@ -24,7 +24,7 @@ import javax.swing.JProgressBar;
  * @author Harald Barsnes
  */
 public class MgfReader {
-    
+
     /**
      * The pattern used to pick up double values.
      */
@@ -56,9 +56,9 @@ public class MgfReader {
         String line = null;
 
         while ((line = br.readLine()) != null) {
-            
+
             line = line.trim();
-            
+
             if (line.equals("BEGIN IONS")) {
                 spectrum = new HashSet<Peak>();
             } else if (line.startsWith("TITLE")) {
@@ -149,11 +149,11 @@ public class MgfReader {
      * @throws IOException              Exception thrown whenever an error occurs while reading the file
      */
     public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
-        
+
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
         long currentIndex = 0;
-        double rt, maxRT = -1, minRT = Double.MAX_VALUE;
+        double rt, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
@@ -165,11 +165,11 @@ public class MgfReader {
         long progressUnit = randomAccessFile.length() / 100;
 
         String line;
-        
+
         while ((line = randomAccessFile.readLine()) != null) {
-            
+
             line = line.trim();
-            
+
             if (line.equals("BEGIN IONS")) {
                 currentIndex = randomAccessFile.getFilePointer();
 
@@ -178,6 +178,13 @@ public class MgfReader {
                 }
             } else if (line.startsWith("TITLE")) {
                 indexes.put(line.substring(line.indexOf('=') + 1).trim(), currentIndex);
+            } else if (line.startsWith("PEPMASS")) {
+                String temp = line.substring(line.indexOf("=") + 1);
+                String[] values = temp.split("\\s");
+                precursorMass = Double.parseDouble(values[0]);
+                if (precursorMass > maxMz) {
+                    maxMz = precursorMass;
+                }
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
                     String value = line.substring(line.indexOf('=') + 1);
@@ -201,12 +208,12 @@ public class MgfReader {
         }
 
         randomAccessFile.close();
-        
+
         if (minRT == Double.MAX_VALUE) {
             minRT = 0;
         }
 
-        return new MgfIndex(indexes, mgfFile.getName(), minRT, maxRT);
+        return new MgfIndex(indexes, mgfFile.getName(), minRT, maxRT, maxMz);
     }
 
     /**
@@ -220,7 +227,7 @@ public class MgfReader {
      * @throws IOException              exception thrown whenever a problem occurred while reading/writing a file
      */
     public static ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, JProgressBar progressBar) throws FileNotFoundException, IOException {
-        
+
         String fileName = mgfFile.getName();
 
         if (fileName.endsWith(".mgf")) {
@@ -231,18 +238,18 @@ public class MgfReader {
             RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
             String line;
             long readIndex, writeIndex = 0;
-            
+
             if (progressBar != null) {
                 progressBar.setIndeterminate(false);
                 progressBar.setStringPainted(true);
                 progressBar.setMaximum(100);
                 progressBar.setValue(0);
             }
-            
+
             int fileCounter = 1;
             int spectrumCounter = 0;
             long typicalSize = 0;
-            double rt, maxRT = -1, minRT = Double.MAX_VALUE;
+            double rt, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -251,13 +258,13 @@ public class MgfReader {
 
             long sizeOfReadAccessFile = readAccessFile.length();
             long progressUnit = sizeOfReadAccessFile / 100;
-            
+
             while ((line = readAccessFile.readLine()) != null) {
-                
+
                 line = line.trim();
-                
+
                 if (line.equals("BEGIN IONS")) {
-                    
+
                     spectrumCounter++;
                     writeIndex = writeFile.getFilePointer();
                     readIndex = readAccessFile.getFilePointer();
@@ -269,7 +276,7 @@ public class MgfReader {
                         if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeFile.close();
-                            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT));
+                            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT, maxMz));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -285,9 +292,16 @@ public class MgfReader {
                     if (progressBar != null) {
                         progressBar.setValue((int) (readIndex / progressUnit));
                     }
-                    
+
                 } else if (line.startsWith("TITLE")) {
                     indexes.put(line.substring(line.indexOf('=') + 1).trim(), writeIndex);
+                } else if (line.startsWith("PEPMASS")) {
+                    String temp = line.substring(line.indexOf("=") + 1);
+                    String[] values = temp.split("\\s");
+                    precursorMass = Double.parseDouble(values[0]);
+                    if (precursorMass > maxMz) {
+                        maxMz = precursorMass;
+                    }
                 } else if (line.startsWith("RTINSECONDS")) {
                     try {
                         String value = line.substring(line.indexOf('=') + 1);
@@ -306,7 +320,7 @@ public class MgfReader {
                 writeFile.writeBytes(line + "\n");
             }
 
-            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT));
+            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT, maxMz));
 
             if (progressBar != null) {
                 progressBar.setIndeterminate(true);
@@ -333,18 +347,18 @@ public class MgfReader {
      * @throws IllegalArgumentException Exception thrown whenever the file is not of a compatible format
      */
     public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
-        
+
         randomAccessFile.seek(index);
         String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashSet<Peak> spectrum = new HashSet<Peak>();
-        
+
         while ((line = randomAccessFile.readLine()) != null) {
-            
+
             line = line.trim();
-            
+
             if (line.equals("BEGIN IONS")) {
                 spectrum = new HashSet<Peak>();
             } else if (line.startsWith("TITLE")) {
@@ -419,16 +433,16 @@ public class MgfReader {
      * @return the possible charges found
      */
     private static ArrayList<Charge> parseCharges(String chargeLine) {
-        
+
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
         String[] charges = tempLine.split(" and ");
-        
+
         for (String charge : charges) {
-            
+
             Integer value;
             charge = charge.trim();
-            
+
             if (charge.endsWith("+")) {
                 value = new Integer(charge.substring(0, charge.length() - 1));
                 result.add(new Charge(Charge.PLUS, value));
@@ -466,9 +480,9 @@ public class MgfReader {
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = randomAccessFile.readLine()) != null) {
-            
+
             line = line.trim();
-            
+
             if (line.equals("BEGIN IONS")
                     || line.startsWith("TOLU")
                     || line.startsWith("TOL")
@@ -491,7 +505,7 @@ public class MgfReader {
                 } else {
                     precursorIntensity = 0.0;
                 }
-            } else if (line.startsWith("RTINSECONDS")) { 
+            } else if (line.startsWith("RTINSECONDS")) {
                 rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest...
 //                try {
 //                    String value = line.substring(line.indexOf('=') + 1);

@@ -27,6 +27,10 @@ public class MgfIndex extends ExperimentObject {
      * The minimum RT found in the spectra
      */
     private Double minRT;
+    /**
+     * The maximal m/z in all precursors of the file
+     */
+    private Double maxMz;
 
     /**
      * Constructor
@@ -35,11 +39,12 @@ public class MgfIndex extends ExperimentObject {
      * @param maxRT
      * @param minRT  
      */
-    public MgfIndex(HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT) {
+    public MgfIndex(HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz) {
         this.indexMap = indexMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
         this.minRT = minRT;
+        this.maxMz = maxMz;
     }
 
     /**
@@ -81,6 +86,22 @@ public class MgfIndex extends ExperimentObject {
      */
     public void setMaxRT(Double maxRT) {
         this.maxRT = maxRT;
+    }
+
+    /**
+     * Returns the maximal m/z in this file
+     * @return the maximal m/z in this file
+     */
+    public Double getMaxMz() {
+        return maxMz;
+    }
+
+    /**
+     * Sets the maximal m/z in this file
+     * @param maxRT the maximal m/z in this file
+     */
+    public void setMaxMz(Double maxMz) {
+        this.maxMz = maxMz;
     }
     
     /**

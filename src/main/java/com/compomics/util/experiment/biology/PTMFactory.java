@@ -248,6 +248,9 @@ public class PTMFactory implements Serializable {
      * @return the candidate modification, null if none is found
      */
     public PTM getPTM(double mass, String location, String sequence) {
+        if (location.contains("K")) {
+            int debug = 1;
+        }
         for (PTM currentPTM : ptmMap.values()) {
             if (currentPTM.getType() == PTM.MODAA
                     || currentPTM.getType() == PTM.MODCAA

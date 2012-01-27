@@ -196,7 +196,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 if (sequenceFragments.length > 0) {
                     int cpt = 0;
                     for (int f = 0; f < sequenceFragments.length - 1; f++) {
-                        cpt += sequenceFragments[f].length();
+                        cpt += sequenceFragments[f].length()+1;
                         foundModifications.add(new ModificationMatch(modificationName, false, cpt - 1));
                     }
                 }

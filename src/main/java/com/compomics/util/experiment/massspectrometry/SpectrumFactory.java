@@ -195,6 +195,39 @@ public class SpectrumFactory {
     }
 
     /**
+     * Returns the maximum m/z for the desired file.
+     * 
+     * @param fileName the file of interest
+     * @return the max m/z
+     */
+    public Double getMaxMz(String fileName) {
+        return mgfIndexesMap.get(fileName).getMaxMz();
+    }
+
+    /**
+     * Returns the maximum m/z for the whole project.
+     * 
+     * @return the max m/z
+     */
+    public Double getMaxMz() {
+
+        double maxMz = 0;
+
+        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
+
+        while (keys.hasNext()) {
+
+            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
+
+            if (getMaxRT(tempFileName) > maxMz) {
+                maxMz = getMaxMz(tempFileName);
+            }
+        }
+
+        return maxMz;
+    }
+
+    /**
      * Returns the maximum RT for the desired file.
      * 
      * @param fileName the file of interest

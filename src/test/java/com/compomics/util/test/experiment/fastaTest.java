@@ -45,8 +45,8 @@ public class fastaTest extends TestCase {
 /**
     public void testComparison() {
         try {
-            System.out.println("Importing human peptides");
-            File fastaFile = new File("src/test/resources/experiment/uniprot_pfu_2261_03.08.2011.fasta");
+            System.out.println("Importing archaea peptides");
+            File fastaFile = new File("src/test/resources/experiment/uniprot Archaea [2157] 25.7.2011.fasta");
             sequenceFactory.loadFastaFile(fastaFile);
             String sequence;
             EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
@@ -66,10 +66,10 @@ public class fastaTest extends TestCase {
                     }
                 }
             }
-            System.out.println("Pfu:" + humanSequences.size());
+            System.out.println("archaea:" + humanSequences.size());
 
             System.out.println("importing yeast peptides");
-            fastaFile = new File("src/test/resources/experiment/uniprot saccharomyces cerevisiae 09 01 12.fasta");
+            fastaFile = new File("src/test/resources/experiment/ABRF_yeast.fasta");
             sequenceFactory.loadFastaFile(fastaFile);
             ArrayList<String> yeastSequences = new ArrayList<String>();
             for (String proteinKey : sequenceFactory.getAccessions()) {
@@ -81,7 +81,7 @@ public class fastaTest extends TestCase {
                     }
                 }
             }
-            System.out.println("Yeast:" + yeastSequences.size());
+            System.out.println("ABRF_yeast:" + yeastSequences.size());
 
             System.out.println("comparing peptides");
             ArrayList<String> commonSequences = new ArrayList<String>();
@@ -92,7 +92,7 @@ public class fastaTest extends TestCase {
             }
 
             System.out.println("writing results");
-            File outputFile = new File("src/test/resources/experiment/human-yeast common.txt");
+            File outputFile = new File("src/test/resources/experiment/archaea-yeast common.txt");
             FileWriter f = new FileWriter(outputFile);
             BufferedWriter b = new BufferedWriter(f);
             for (String peptide : commonSequences) {

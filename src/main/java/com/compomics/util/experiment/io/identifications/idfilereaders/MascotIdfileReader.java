@@ -63,6 +63,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         try {
             iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), MascotDatfileType.MEMORY);
         } catch (IOException e) {
+            e.printStackTrace();
             System.exit(1);
         }
     }
@@ -78,6 +79,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         try {
             iMascotDatfile = MascotDatfileFactory.create(inspectedFile.getCanonicalPath(), mascotDatfileType);
         } catch (IOException e) {
+            e.printStackTrace();
             System.exit(1);
         }
     }
@@ -120,8 +122,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         
         try {
             QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
-            QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap(false);
-            
+            QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
+
             int numberOfQueries = iMascotDatfile.getNumberOfQueries();
             
             for (int i = 0; i < numberOfQueries; i++) {

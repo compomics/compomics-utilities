@@ -49,7 +49,7 @@ public class PTMFactory implements Serializable {
     /**
      * unknown modification to be returned when the modification is not found
      */
-    private static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new ArrayList<String>());
+    public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new ArrayList<String>());
 
     /**
      * Constructor for the factory
@@ -248,9 +248,6 @@ public class PTMFactory implements Serializable {
      * @return the candidate modification, null if none is found
      */
     public PTM getPTM(double mass, String location, String sequence) {
-        if (location.contains("K")) {
-            int debug = 1;
-        }
         for (PTM currentPTM : ptmMap.values()) {
             if (currentPTM.getType() == PTM.MODAA
                     || currentPTM.getType() == PTM.MODCAA

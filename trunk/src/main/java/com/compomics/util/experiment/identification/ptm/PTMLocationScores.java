@@ -9,7 +9,6 @@ import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.ptm.PtmtableContent;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
@@ -333,6 +332,21 @@ public class PTMLocationScores {
         return map;
     }
 
+    /**
+     * Get the PTM table content.
+     * 
+     * @param peptide
+     * @param ptm
+     * @param nPTM
+     * @param spectrum
+     * @param expectedFragmentIons
+     * @param neutralLosses
+     * @param charges
+     * @param precursorCharge
+     * @param mzTolerance
+     * @param intensityLimit
+     * @return the PtmtableContent object
+     */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             ArrayList<PeptideFragmentIon.PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {

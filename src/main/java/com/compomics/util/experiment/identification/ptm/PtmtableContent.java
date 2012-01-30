@@ -13,7 +13,8 @@ import java.util.HashMap;
 public class PtmtableContent {
 
     /**
-     * The content of the table: modification status -> fragment ion type -> aa number -> list of intensities
+     * The content of the table: modification status -> fragment ion type -> aa
+     * number -> list of intensities
      */
     private HashMap<Integer, HashMap<PeptideFragmentIonType, HashMap<Integer, ArrayList<Double>>>> map;
     /**
@@ -34,11 +35,11 @@ public class PtmtableContent {
 
     /**
      * Add intensity.
-     * 
+     *
      * @param nMod
      * @param peptideFragmentIonType
      * @param aa
-     * @param intensity 
+     * @param intensity
      */
     public void addIntensity(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, double intensity) {
         if (!map.containsKey(nMod)) {
@@ -59,11 +60,11 @@ public class PtmtableContent {
 
     /**
      * Get intensity.
-     * 
+     *
      * @param nMod
      * @param peptideFragmentIonType
      * @param aa
-     * @return 
+     * @return the list of intensities
      */
     public ArrayList<Double> getIntensities(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa) {
         if (map.containsKey(nMod)
@@ -77,12 +78,12 @@ public class PtmtableContent {
 
     /**
      * Get the quantile.
-     * 
+     *
      * @param nMod
      * @param peptideFragmentIonType
      * @param aa
      * @param quantile
-     * @return 
+     * @return the quantile
      */
     public Double getQuantile(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, double quantile) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
@@ -96,12 +97,12 @@ public class PtmtableContent {
 
     /**
      * Get histogram.
-     * 
+     *
      * @param nMod
      * @param peptideFragmentIonType
      * @param aa
      * @param bins
-     * @return 
+     * @return the histogram
      */
     public int[] getHistogram(int nMod, PeptideFragmentIonType peptideFragmentIonType, int aa, int bins) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
@@ -115,17 +116,17 @@ public class PtmtableContent {
                 double currentIntensity = intensities.get(i);// / maxIntensity;
 
                 for (int j = 0; j < bins; j++) {
-                    
+
                     double index = (double) j;
-                    
+
                     if (((index / bins) < currentIntensity) && (currentIntensity < (index + 1) / bins)) {
                         values[j]++;
                     }
                 }
-                
+
                 // make sure that the max value is included
                 if (currentIntensity == 1) {
-                     values[values.length-1]++;   
+                    values[values.length - 1]++;
                 }
             }
 
@@ -136,8 +137,8 @@ public class PtmtableContent {
     }
 
     /**
-     * Get the map
-     * 
+     * Get the map.
+     *
      * @return the map
      */
     public HashMap<Integer, HashMap<PeptideFragmentIonType, HashMap<Integer, ArrayList<Double>>>> getMap() {
@@ -146,8 +147,8 @@ public class PtmtableContent {
 
     /**
      * Add all.
-     * 
-     * @param anotherContent 
+     *
+     * @param anotherContent
      */
     public void addAll(PtmtableContent anotherContent) {
         for (int nPTM : anotherContent.getMap().keySet()) {
@@ -186,7 +187,7 @@ public class PtmtableContent {
 
     /**
      * Returns the max intensity.
-     * 
+     *
      * @return the max intensity
      */
     public double getMaxIntensity() {

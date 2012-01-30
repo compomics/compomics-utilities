@@ -4,40 +4,44 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.HashMap;
 
 /**
- * This class contains the indexes of an mgf file after indexing mapped with the title of the spectrum
+ * This class contains the indexes of an mgf file after indexing mapped with the
+ * title of the spectrum
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class MgfIndex extends ExperimentObject {
 
     static final long serialVersionUID = -5591103342266964263L;
     /**
-     * The map of all indexes: spectrum title -> index in the file
+     * The map of all indexes: spectrum title -> index in the file.
      */
     private HashMap<String, Long> indexMap;
     /**
-     * The name of the indexed file
+     * The name of the indexed file.
      */
     private String fileName;
     /**
-     * The maximum RT found in the spectra
+     * The maximum RT found in the spectra.
      */
     private Double maxRT;
     /**
-     * The minimum RT found in the spectra
+     * The minimum RT found in the spectra.
      */
     private Double minRT;
     /**
-     * The maximal m/z in all precursors of the file
+     * The maximal m/z in all precursors of the file.
      */
     private Double maxMz;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param indexMap map of all indexes: spectrum title -> index in the file
-     * @param fileName
-     * @param maxRT
-     * @param minRT  
+     * @param fileName the mgf file name
+     * @param maxRT the maximum retention time
+     * @param minRT the minimum retention tome
+     * @param maxMz
      */
     public MgfIndex(HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz) {
         this.indexMap = indexMap;
@@ -48,7 +52,8 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the index corresponding to the desired spectrum
+     * Returns the index corresponding to the desired spectrum.
+     *
      * @param spectrumTitle the desired spectrum
      * @return the corresponding index
      */
@@ -57,7 +62,8 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the index map
+     * Returns the index map.
+     *
      * @return the index mapF
      */
     public HashMap<String, Long> getIndexes() {
@@ -65,7 +71,8 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the name of the indexed file
+     * Returns the name of the indexed file.
+     *
      * @return the name of the indexed file
      */
     public String getFileName() {
@@ -73,7 +80,8 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the maximal RT in this file
+     * Returns the maximal RT in this file.
+     *
      * @return the maximal RT in this file
      */
     public Double getMaxRT() {
@@ -81,7 +89,8 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Sets the maximal RT in this file
+     * Sets the maximal RT in this file.
+     *
      * @param maxRT the maximal RT in this file
      */
     public void setMaxRT(Double maxRT) {
@@ -89,23 +98,26 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the maximal m/z in this file
-     * @return the maximal m/z in this file
+     * Returns the maximum m/z in this file.
+     *
+     * @return the maximum m/z in this file
      */
     public Double getMaxMz() {
         return maxMz;
     }
 
     /**
-     * Sets the maximal m/z in this file
-     * @param maxRT the maximal m/z in this file
+     * Sets the maximum m/z in this file.
+     *
+     * @param maxMz the maximum m/z in this file
      */
     public void setMaxMz(Double maxMz) {
         this.maxMz = maxMz;
     }
-    
+
     /**
-     * Returns the minimum RT in this file
+     * Returns the minimum RT in this file.
+     *
      * @return the minimum RT in this file
      */
     public Double getMinRT() {
@@ -113,15 +125,17 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Sets the minimum RT in this file
+     * Sets the minimum RT in this file.
+     *
      * @param minRT the minimum RT in this file
      */
     public void setMinRT(Double minRT) {
         this.minRT = minRT;
     }
-    
+
     /**
-     * Returns the number of imported spectra
+     * Returns the number of imported spectra.
+     *
      * @return the number of imported spectra
      */
     public int getNSpectra() {

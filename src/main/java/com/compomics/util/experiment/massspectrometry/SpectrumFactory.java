@@ -564,7 +564,7 @@ public class SpectrumFactory {
      * @return a list of loaded mzML files
      */
     public ArrayList<String> getMzMLFileNames() {
-        return new ArrayList<String>(mzMLUnmarshallers.keySet());
+        return new ArrayList<String>(mzMLUnmarshallers.keySet()); // TODO: the ordering should be the same as in the mzML file!?
     }
 
     /**
@@ -574,7 +574,7 @@ public class SpectrumFactory {
      * @return a list of titles from indexed spectra in the given file
      */
     public ArrayList<String> getSpectrumTitles(String mgfFile) {
-        return new ArrayList<String>(mgfIndexesMap.get(mgfFile).getIndexes().keySet());
+        return new ArrayList<String>(mgfIndexesMap.get(mgfFile).getIndexes().keySet()); // TODO: the ordering should be the same as in the mgf file!?
     }
 
     /**

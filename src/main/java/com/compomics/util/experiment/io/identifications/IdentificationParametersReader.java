@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * The identification parameters reader returns the parameters used for identification from a searchGUI parameters file
+ * The identification parameters reader returns the parameters used for
+ * identification from a searchGUI parameters file
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class IdentificationParametersReader {
 
@@ -79,7 +80,8 @@ public class IdentificationParametersReader {
      */
     public static final String MAXIMUM_HITLIST_LENGTH = "MAXIMUM_HITLIST_LENGTH";
     /**
-     * Reference for the precursor charge to start considering multiply charged fragments
+     * Reference for the precursor charge to start considering multiply charged
+     * fragments
      */
     public static final String PRECURSOR_CHARGE_TO_CONSIDER_MULTIPLY_CHARGED_FRAGMENTS = "OMSSA_PRECURSOR_CHARGE_TO_CONSIDER_MULTIPLY_CHARGED_FRAGMENTS";
     /**
@@ -105,11 +107,12 @@ public class IdentificationParametersReader {
 
     /**
      * Loads the search properties from a SearchGUI properties file.
-     * 
-     * @param aFile                     a searchGUI properties file
-     * @return                          the corresponding properties, indexed by the static fields
-     * @throws FileNotFoundException    exception thrown if the file is not found
-     * @throws IOException              exception thrown whenever a problem occurs while reading the file
+     *
+     * @param aFile a searchGUI properties file
+     * @return the corresponding properties, indexed by the static fields
+     * @throws FileNotFoundException exception thrown if the file is not found
+     * @throws IOException exception thrown whenever a problem occurs while
+     * reading the file
      */
     public static Properties loadProperties(File aFile) throws FileNotFoundException, IOException {
         Properties screenProps = new Properties();
@@ -127,28 +130,26 @@ public class IdentificationParametersReader {
      * This method parses a modification line from a properties file.
      *
      * @param aLine String with the modification line from the properties file.
-     * @param ptmFactory 
      * @return ArrayList with the parsed PTM indexes.
-     * @throws Exception  
      */
     public static ArrayList<String> parseModificationLine(String aLine) {
 
         ArrayList<String> result = new ArrayList<String>();
 
         // Split the different modifications.
-        int start = -1;
+        int start;
 
         while ((start = aLine.indexOf(IdentificationParametersReader.MODIFICATION_SEPARATOR)) >= 0) {
             String name = aLine.substring(0, start);
             aLine = aLine.substring(start + 2);
             if (!name.trim().equals("")) {
-                    result.add(name);
+                result.add(name);
             }
         }
 
         // Fence post.
         if (!aLine.trim().equals("")) {
-                result.add(aLine);
+            result.add(aLine);
         }
 
         return result;

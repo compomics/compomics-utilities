@@ -151,8 +151,12 @@ public class MgfReader {
     public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
+        ArrayList<String> spectrumTitles = new ArrayList<String>();
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
-        long currentIndex = 0;
+        long beginIndex = 0, currentIndex = 0;
+        String title = null;
+        int cpt = 0;
+        boolean needTitle = false;
         double rt, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
         if (progressBar != null) {
@@ -172,12 +176,15 @@ public class MgfReader {
 
             if (line.equals("BEGIN IONS")) {
                 currentIndex = randomAccessFile.getFilePointer();
-
+                beginIndex = currentIndex;
+                cpt++;
                 if (progressBar != null) {
                     progressBar.setValue((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
-                indexes.put(line.substring(line.indexOf('=') + 1).trim(), currentIndex);
+                title = line.substring(line.indexOf('=') + 1).trim();
+                spectrumTitles.add(title);
+                indexes.put(title, currentIndex);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -199,6 +206,15 @@ public class MgfReader {
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Cannot parse retention time.");
                 }
+            } else if (line.equals("END IONS")) {
+                if (title == null) {
+                    needTitle = true;
+                }
+                if (needTitle) {
+                    title = cpt + "";
+                    indexes.put(title, beginIndex);
+                    spectrumTitles.add(title);
+                }
             }
         }
 
@@ -213,7 +229,7 @@ public class MgfReader {
             minRT = 0;
         }
 
-        return new MgfIndex(indexes, mgfFile.getName(), minRT, maxRT, maxMz);
+        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz);
     }
 
     /**
@@ -233,11 +249,14 @@ public class MgfReader {
         if (fileName.endsWith(".mgf")) {
 
             ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
+            ArrayList<String> spectrumTitles = new ArrayList<String>();
+            String title = null;
+            boolean needTitle = false;
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
 
             RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
             String line;
-            long readIndex, writeIndex = 0;
+            long readIndex, writeIndex = 0, beginIndex = 0;
 
             if (progressBar != null) {
                 progressBar.setIndeterminate(false);
@@ -267,6 +286,8 @@ public class MgfReader {
 
                     spectrumCounter++;
                     writeIndex = writeFile.getFilePointer();
+                    beginIndex = writeIndex;
+
                     readIndex = readAccessFile.getFilePointer();
 
                     if (spectrumCounter > nSpectra) {
@@ -276,7 +297,7 @@ public class MgfReader {
                         if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeFile.close();
-                            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT, maxMz));
+                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -286,6 +307,7 @@ public class MgfReader {
                             maxRT = -1;
                             minRT = Double.MAX_VALUE;
                             indexes = new HashMap<String, Long>();
+                            spectrumTitles = new ArrayList<String>();
                         }
                     }
 
@@ -294,7 +316,9 @@ public class MgfReader {
                     }
 
                 } else if (line.startsWith("TITLE")) {
-                    indexes.put(line.substring(line.indexOf('=') + 1).trim(), writeIndex);
+                    title = line.substring(line.indexOf('=') + 1).trim();
+                    spectrumTitles.add(title);
+                    indexes.put(title, writeIndex);
                 } else if (line.startsWith("PEPMASS")) {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
@@ -316,11 +340,20 @@ public class MgfReader {
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Cannot parse retention time.");
                     }
+                } else if (line.equals("END IONS")) {
+                    if (title == null) {
+                        needTitle = true;
+                    }
+                    if (needTitle) {
+                        title = spectrumCounter + "";
+                        indexes.put(title, beginIndex);
+                        spectrumTitles.add(title);
+                    }
                 }
                 writeFile.writeBytes(line + "\n");
             }
 
-            mgfIndexes.add(new MgfIndex(indexes, currentName, minRT, maxRT, maxMz));
+            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz));
 
             if (progressBar != null) {
                 progressBar.setIndeterminate(true);

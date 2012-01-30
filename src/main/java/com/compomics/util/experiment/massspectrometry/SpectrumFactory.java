@@ -574,7 +574,7 @@ public class SpectrumFactory {
      * @return a list of titles from indexed spectra in the given file
      */
     public ArrayList<String> getSpectrumTitles(String mgfFile) {
-        return new ArrayList<String>(mgfIndexesMap.get(mgfFile).getIndexes().keySet()); // TODO: the ordering should be the same as in the mgf file!?
+        return mgfIndexesMap.get(mgfFile).getSpectrumTitles();
     }
 
     /**

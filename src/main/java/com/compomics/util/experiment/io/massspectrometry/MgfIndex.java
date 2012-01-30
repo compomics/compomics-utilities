@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -17,6 +18,10 @@ public class MgfIndex extends ExperimentObject {
      * The map of all indexes: spectrum title -> index in the file.
      */
     private HashMap<String, Long> indexMap;
+    /**
+     * List of all spectra
+     */
+    private ArrayList<String> spectrumTitles = null;
     /**
      * The name of the indexed file.
      */
@@ -37,13 +42,15 @@ public class MgfIndex extends ExperimentObject {
     /**
      * Constructor.
      *
+     * @param spectrumTitles an ordered list of all spectrum titles
      * @param indexMap map of all indexes: spectrum title -> index in the file
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
      * @param maxMz
      */
-    public MgfIndex(HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz) {
+        this.spectrumTitles = spectrumTitles;
         this.indexMap = indexMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
@@ -62,12 +69,15 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the index map.
-     *
-     * @return the index mapF
+     * Returns an ordered list of all spectrum titles
+     * @return an ordered list of all spectrum titles
      */
-    public HashMap<String, Long> getIndexes() {
-        return indexMap;
+    public ArrayList<String> getSpectrumTitles() {
+        if (spectrumTitles != null) {
+            return spectrumTitles;
+        } else {
+            return new ArrayList<String>(indexMap.keySet());
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -31,7 +32,7 @@ public class MS1Spectrum extends Spectrum {
      * @param fileName          name of the file
      * @param scanStartTime     scan start time
      */
-    public MS1Spectrum(String fileName, String spectrumTitle, double scanStartTime, HashSet<Peak> spectrum) {
+    public MS1Spectrum(String fileName, String spectrumTitle, double scanStartTime, HashMap<Double, Peak> spectrum) {
         this.spectrumTitle = spectrumTitle;
         this.peakList = spectrum;
         this.fileName = fileName;
@@ -41,6 +42,6 @@ public class MS1Spectrum extends Spectrum {
 
     @Override
     public void removePeakList() {
-        this.peakList = new HashSet<Peak>();
+        this.peakList.clear();
     }
 }

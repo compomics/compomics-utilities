@@ -2,6 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * peak list
      */
-    protected HashSet<Peak> peakList;
+    protected HashMap<Double, Peak> peakList;
     /**
      * scan number or range
      */
@@ -105,7 +106,7 @@ public abstract class Spectrum extends ExperimentObject {
         double[] mz = new double[peakList.size()];
         double[] intensity = new double[peakList.size()];
         int cpt = 0;
-        for (Peak currentPeak : peakList) {
+        for (Peak currentPeak : peakList.values()) {
             mz[cpt] = currentPeak.mz;
             intensity[cpt] = currentPeak.intensity;
             cpt++;
@@ -128,11 +129,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return a peak map
      */
     public HashMap<Double, Peak> getPeakMap() {
-        HashMap<Double, Peak> result = new HashMap<Double, Peak>();
-        for (Peak peak : peakList) {
-            result.put(peak.mz, peak);
-        }
-        return result;
+        return peakList;
     }
     
     /**
@@ -140,7 +137,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @param aPeak the peak to add
      */
     public void addPeak(Peak aPeak) {
-        this.peakList.add(aPeak);
+        this.peakList.put(aPeak.mz, aPeak);
     }
 
     /**
@@ -184,15 +181,15 @@ public abstract class Spectrum extends ExperimentObject {
      * 
      * @return the peak list
      */
-    public HashSet<Peak> getPeakList() {
-        return peakList;
+    public Collection<Peak> getPeakList() {
+        return peakList.values();
     }
     
     /**
      * Sets the peak list
      * @param peakList HashSet of peaks containing the peaks of the spectrum
      */
-    public void setPeakList(HashSet<Peak> peakList) {
+    public void setPeakList(HashMap<Double, Peak> peakList) {
         this.peakList = peakList;
     }
 
@@ -234,8 +231,8 @@ public abstract class Spectrum extends ExperimentObject {
 
         int counter = 0;
 
-        for (Peak currentPeak : peakList) {
-            mz[counter] = currentPeak.mz;
+        for (double currentMz : peakList.keySet()) {
+            mz[counter] = currentMz;
             counter++;
         }
 
@@ -253,7 +250,7 @@ public abstract class Spectrum extends ExperimentObject {
 
         int counter = 0;
 
-        for (Peak currentPeak : peakList) {
+        for (Peak currentPeak : peakList.values()) {
             intensity[counter] = currentPeak.intensity;
             counter++;
         }
@@ -270,7 +267,7 @@ public abstract class Spectrum extends ExperimentObject {
 
         double tempIntensity = 0;
 
-        for (Peak currentPeak : peakList) {
+        for (Peak currentPeak : peakList.values()) {
             tempIntensity += currentPeak.intensity;
         }
 
@@ -286,7 +283,7 @@ public abstract class Spectrum extends ExperimentObject {
 
         double maxIntensity = Double.MIN_VALUE;
 
-        for (Peak currentPeak : peakList) {
+        for (Peak currentPeak : peakList.values()) {
             if (currentPeak.intensity > maxIntensity) {
                 maxIntensity = currentPeak.intensity;
             }
@@ -304,9 +301,9 @@ public abstract class Spectrum extends ExperimentObject {
 
         double maxMz = Double.MIN_VALUE;
 
-        for (Peak currentPeak : peakList) {
-            if (currentPeak.mz > maxMz) {
-                maxMz = currentPeak.mz;
+        for (double currentmz : peakList.keySet()) {
+            if (currentmz > maxMz) {
+                maxMz = currentmz;
             }
         }
 
@@ -322,9 +319,9 @@ public abstract class Spectrum extends ExperimentObject {
 
         double minMz = Double.MAX_VALUE;
 
-        for (Peak currentPeak : peakList) {
-            if (currentPeak.mz < minMz) {
-                minMz = currentPeak.mz;
+        for (double currentmz : peakList.keySet()) {
+            if (currentmz < minMz) {
+                minMz = currentmz;
             }
         }
 
@@ -343,7 +340,7 @@ public abstract class Spectrum extends ExperimentObject {
 
         ArrayList<Double> peakIntensities = new ArrayList<Double>();
 
-        for (Peak currentPeak : peakList) {
+        for (Peak currentPeak : peakList.values()) {
             if (currentPeak.intensity > threshold) {
                 peakIntensities.add(currentPeak.intensity);
             }
@@ -362,7 +359,7 @@ public abstract class Spectrum extends ExperimentObject {
         
             ArrayList<Double> intensities = new ArrayList<Double>();
             
-            for (Peak peak : peakList) {
+            for (Peak peak : peakList.values()) {
                 intensities.add(peak.intensity);
             }
             

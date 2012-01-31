@@ -481,9 +481,9 @@ public class SpectrumFactory {
                 Number[] mzNumbers = mzBinaryDataArray.getBinaryDataAsNumberArray();
                 BinaryDataArray intBinaryDataArray = (BinaryDataArray) bdal.get(1);
                 Number[] intNumbers = intBinaryDataArray.getBinaryDataAsNumberArray();
-                HashSet<Peak> peakList = new HashSet<Peak>();
+                HashMap<Double, Peak> peakList = new HashMap<Double, Peak>();
                 for (int i = 0; i < mzNumbers.length; i++) {
-                    peakList.add(new Peak(mzNumbers[i].doubleValue(), intNumbers[i].doubleValue(), scanTime));
+                    peakList.put(mzNumbers[i].doubleValue(), new Peak(mzNumbers[i].doubleValue(), intNumbers[i].doubleValue(), scanTime));
                 }
                 if (level == 1) {
                     currentSpectrum = new MS1Spectrum(fileName, spectrumTitle, scanTime, peakList);

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,11 +54,11 @@ public class MSnSpectrum extends Spectrum {
      * @param spectrum           set of peaks
      * @param fileName           file name
      */
-    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashSet<Peak> spectrum, String fileName) {
+    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName) {
         this.level = level;
         this.precursor = precursor;
         this.spectrumTitle = spectrumTitle;
-        this.peakList = spectrum;
+        this.peakList = peakMap;
         this.fileName = fileName;
     }
 
@@ -71,11 +72,11 @@ public class MSnSpectrum extends Spectrum {
      * @param fileName           file name
      * @param scanStartTime      The timepoint when the spectrum was recorded
      */
-    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashSet<Peak> spectrum, String fileName, double scanStartTime) {
+    public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName, double scanStartTime) {
         this.level = level;
         this.precursor = precursor;
         this.spectrumTitle = spectrumTitle;
-        this.peakList = spectrum;
+        this.peakList = peakMap;
         this.fileName = fileName;
         this.scanStartTime = scanStartTime;
     }
@@ -114,7 +115,7 @@ public class MSnSpectrum extends Spectrum {
         // add the values to a tree map to get them sorted in mz    
         TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();
 
-        for (Peak peak : peakList) {
+        for (Peak peak : peakList.values()) {
             sortedPeakList.put(peak.mz, peak.intensity);
         }
 

@@ -233,7 +233,7 @@ public class PTMLocationScores {
         }
 
         for (int i = 0; i < nMax; i++) {
-            result.put(i, new MSnSpectrum(2, baseSpectrum.getPrecursor(), baseSpectrum.getSpectrumTitle() + "_" + i, new HashSet<Peak>(), "a score"));
+            result.put(i, new MSnSpectrum(2, baseSpectrum.getPrecursor(), baseSpectrum.getSpectrumTitle() + "_" + i, new HashMap<Double, Peak>(), "a score"));
         }
 
         cpt = 0;

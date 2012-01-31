@@ -6,12 +6,16 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Pattern;
@@ -51,7 +55,7 @@ public class MgfReader {
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
-        HashSet<Peak> spectrum = new HashSet<Peak>();
+        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
         String line = null;
 
@@ -60,7 +64,7 @@ public class MgfReader {
             line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
-                spectrum = new HashSet<Peak>();
+                spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
             } else if (line.startsWith("CHARGE")) {
@@ -111,13 +115,13 @@ public class MgfReader {
                 try {
                     Double mz = new Double(line.substring(0, line.indexOf(' ')));
                     Double intensity = new Double(line.substring(line.indexOf(' ')));
-                    spectrum.add(new Peak(mz, intensity));
+                    spectrum.put(mz, new Peak(mz, intensity));
                 } catch (Exception e1) {
                     // try with tab separated
                     try {
                         Double mz = new Double(line.substring(0, line.indexOf('\t')));
                         Double intensity = new Double(line.substring(line.indexOf('\t')));
-                        spectrum.add(new Peak(mz, intensity));
+                        spectrum.put(mz, new Peak(mz, intensity));
                     } catch (Exception e2) {
                         // ignore comments and all other lines
                     }
@@ -386,14 +390,14 @@ public class MgfReader {
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
-        HashSet<Peak> spectrum = new HashSet<Peak>();
+        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
 
         while ((line = randomAccessFile.readLine()) != null) {
 
             line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
-                spectrum = new HashSet<Peak>();
+                spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
             } else if (line.startsWith("CHARGE")) {
@@ -444,13 +448,13 @@ public class MgfReader {
                 try {
                     Double mz = new Double(line.substring(0, line.indexOf(' ')));
                     Double intensity = new Double(line.substring(line.indexOf(' ')));
-                    spectrum.add(new Peak(mz, intensity));
+                    spectrum.put(mz, new Peak(mz, intensity));
                 } catch (Exception e1) {
                     // try with tab separated
                     try {
                         Double mz = new Double(line.substring(0, line.indexOf('\t')));
                         Double intensity = new Double(line.substring(line.indexOf('\t')));
-                        spectrum.add(new Peak(mz, intensity));
+                        spectrum.put(mz, new Peak(mz, intensity));
                     } catch (Exception e2) {
                         // ignore comments and all other lines
                     }
@@ -504,7 +508,7 @@ public class MgfReader {
      * @throws IOException      Exception thrown whenever an error is encountered while reading the spectrum
      * @throws IllegalArgumentException        Exception thrown whenever the file is not of a compatible format
      */
-    public static Precursor getPrecursor(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+    public static Precursor getPrecursor(RandomAccessFile randomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 
         randomAccessFile.seek(index);
         String line, title = null;
@@ -525,6 +529,7 @@ public class MgfReader {
                     || line.startsWith("TAG")
                     || line.startsWith("SCANS")
                     || line.startsWith("INSTRUMENT")) {
+                // not supported yet
             } else if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf("=") + 1);
             } else if (line.startsWith("CHARGE")) {
@@ -552,5 +557,58 @@ public class MgfReader {
             }
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);
+    }
+    
+    /**
+     * Writes an apl file from an mgf file
+     * @param mgfFile                   the mgf file
+     * @param aplFile                   the target apl file
+     * @param fragmentation             the fragmentation method used
+     * @throws FileNotFoundException    exception thrown whenever a file was not found
+     * @throws IOException              exception thrown whenever an error occurred while reading/writing a file
+     * @throws IllegalArgumentException exception thrown whenever the mgf file is truncated in the middle of a spectrum
+     */
+    public static void writeAplFile(File mgfFile, File aplFile, String fragmentation) throws FileNotFoundException, IOException, IllegalArgumentException {
+        if (fragmentation == null) {
+            fragmentation = "Unknown";
+        }
+            Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
+            
+        MgfIndex mgfIndex = getIndexMap(mgfFile);
+        HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<Double, ArrayList<String>>();
+        Precursor precursor;
+        RandomAccessFile mgfRFile = new RandomAccessFile(mgfFile, "r");
+        for (String title : mgfIndex.getSpectrumTitles()) {
+            precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
+            if (!spectrumTitleMap.containsKey(precursor.getMz())) {
+                spectrumTitleMap.put(precursor.getMz(), new ArrayList<String>()); 
+            }
+            spectrumTitleMap.get(precursor.getMz()).add(title);
+        }
+        ArrayList<Double> masses = new ArrayList<Double>(spectrumTitleMap.keySet());
+        Collections.sort(masses);
+        MSnSpectrum spectrum;
+        ArrayList<Double> fragmentMasses;
+        HashMap<Double, Peak> peakMap;
+        for (double mz : masses) {
+            for (String title : spectrumTitleMap.get(mz)) {
+                spectrum = getSpectrum(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
+                
+                aplWriter.write("peaklist start\n");
+                aplWriter.write("mz=" + mz + "\n");
+                aplWriter.write("fragmentation=" + fragmentation + "\n");
+                aplWriter.write("charge=" + spectrum.getPrecursor().getPossibleCharges().get(0).value + "\n"); //@TODO what if many/no charge is present?
+                aplWriter.write("header=" + spectrum.getSpectrumTitle() + "\n");
+                peakMap = spectrum.getPeakMap();
+                fragmentMasses = new ArrayList<Double>(peakMap.keySet());
+                Collections.sort(fragmentMasses);
+                for (double fragmentMass : fragmentMasses) {
+                    aplWriter.write(fragmentMass + "\t" + peakMap.get(fragmentMass).intensity + "\n");
+                }
+                aplWriter.write("peaklist end\n\n");
+            }
+        }
+        mgfRFile.close();
+        aplWriter.close();
     }
 }

@@ -370,7 +370,11 @@ public class SequenceFactory {
      */
     public static boolean isDecoy(String proteinAccession) {
         for (String flag : decoyFlags) {
-            if (proteinAccession.endsWith(flag) || proteinAccession.startsWith(flag)) {
+            
+            String start = flag + ".*"; // @TODO: perhaps this can be further optimized?
+            String end =  ".*" + flag;
+
+            if (proteinAccession.matches(start) || proteinAccession.matches(end)) {
                 return true;
             }
         }

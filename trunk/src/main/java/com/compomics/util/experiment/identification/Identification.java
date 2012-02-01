@@ -18,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import javax.swing.JProgressBar;
 
 /**
  * This class contains identification results.
@@ -379,16 +380,61 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Reduces the amount of identification saved in memory by 20%
+     * @throws FileNotFoundException exception thrown whenever an error occurred while serializing a match
+     * @throws IOException exception thrown whenever an error occurred while serializing a match
+     */
+    public void reduceMemoryConsumtion(JProgressBar progressBar) throws FileNotFoundException, IOException {
+        if (progressBar != null) {
+            progressBar.setValue(0);
+            progressBar.setMaximum((int) 0.20 * loadedMatches.size());
+        }
+        for (int cpt = 0; cpt < 0.20 * loadedMatches.size(); cpt++) {
+            String key = loadedMatches.get(0);
+            if (modifiedMatches.get(key)) {
+                try {
+                    File matchFile = new File(serializationDirectory, getFileName(key));
+                    FileOutputStream fos = new FileOutputStream(matchFile);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(loadedMatchesMap.get(key));
+                    oos.close();
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    throw new FileNotFoundException("Error while writing match " + key);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IOException("Error while writing match " + key);
+                }
+            }
+            loadedMatches.remove(0);
+            loadedMatchesMap.remove(key);
+            modifiedMatches.remove(key);
+            if (progressBar != null) {
+                progressBar.setValue(cpt);
+            }
+            if (loadedMatches.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    /**
      * Creates the peptides and protein instances based on the spectrum matches. Note that the attribute 
      * bestAssumption should be set for every spectrum match at this point. This operation will be very 
      * slow if the cache is already full.
      */
-    public void buildPeptidesAndProteins() {
+    public void buildPeptidesAndProteins(JProgressBar progressBar) {
         String peptideKey, proteinKey;
         Peptide peptide;
         SpectrumMatch spectrumMatch;
         PeptideMatch peptideMatch;
         ProteinMatch proteinMatch;
+        if (progressBar != null) {
+            progressBar.setValue(0);
+            progressBar.setMaximum(getSpectrumIdentification().size());
+        }
+        int cpt = 0;
         for (String spectrumMatchKey : getSpectrumIdentification()) {
             spectrumMatch = getSpectrumMatch(spectrumMatchKey);
             peptide = spectrumMatch.getBestAssumption().getPeptide();
@@ -423,6 +469,9 @@ public abstract class Identification extends ExperimentObject {
                     }
                     proteinMap.get(protein).add(proteinKey);
                 }
+            }
+            if (progressBar != null) {
+                progressBar.setValue(++cpt);
             }
         }
     }

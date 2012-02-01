@@ -21,10 +21,9 @@ import java.util.Set;
 import javax.swing.JProgressBar;
 
 /**
- * This class contains identification results.
- * User: Marc
- * Date: Nov 11, 2010
- * Time: 3:56:15 PM
+ * This class contains identification results. 
+ * 
+ * @author Marc Vaudel
  */
 public abstract class Identification extends ExperimentObject {
 
@@ -57,7 +56,8 @@ public abstract class Identification extends ExperimentObject {
      */
     protected int methodUsed;
     /**
-     * The cache size in number of matches. 20000 by default: should be enough to contain a velos file.
+     * The cache size in number of matches. 20000 by default: should be enough
+     * to contain a velos file.
      */
     protected int cacheSize = 20000;
     /**
@@ -65,12 +65,15 @@ public abstract class Identification extends ExperimentObject {
      */
     protected String serializationDirectory;
     /**
-     * boolean indicating whether the identification should be stored in memory or not. 
-     * True by default, the serialization directory should be set otherwise!
+     * boolean indicating whether the identification should be stored in memory
+     * or not. True by default, the serialization directory should be set
+     * otherwise!
      */
     protected boolean inMemory = true;
     /**
-     * boolean indicating whether the memory management should be done automatically. If true, the cache size will be extended to reach 90% of the available heap size when inMemory is wrong. True by default.
+     * boolean indicating whether the memory management should be done
+     * automatically. If true, the cache size will be extended to reach 90% of
+     * the available heap size when inMemory is wrong. True by default.
      */
     protected boolean automatedMemoryManagement = true;
     /**
@@ -82,7 +85,8 @@ public abstract class Identification extends ExperimentObject {
      */
     protected ArrayList<String> loadedMatches = new ArrayList<String>();
     /**
-     * Map indicating whether a match is modified. Only modified matches will be serialized.
+     * Map indicating whether a match is modified. Only modified matches will be
+     * serialized.
      */
     protected HashMap<String, Boolean> modifiedMatches = new HashMap<String, Boolean>();
     /**
@@ -90,7 +94,8 @@ public abstract class Identification extends ExperimentObject {
      */
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
-     * Map of long keys which will be referenced by their index for file creation
+     * Map of long keys which will be referenced by their index for file
+     * creation
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
@@ -99,9 +104,12 @@ public abstract class Identification extends ExperimentObject {
     public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
-     * adds a parameter with a corresponding match key which will be loaded in the memory. Use this method only for frequently used parameters, otherwise attach the parameters to the matches.
-     * @param key           the key of the parameter
-     * @param urParameter   the additional parameter
+     * Adds a parameter with a corresponding match key which will be loaded in
+     * the memory. Use this method only for frequently used parameters,
+     * otherwise attach the parameters to the matches.
+     *
+     * @param key the key of the parameter
+     * @param urParameter the additional parameter
      */
     public void addMatchParameter(String key, UrParameter urParameter) {
         if (!urParameters.containsKey(key)) {
@@ -112,9 +120,10 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns the personalization parameter of the given match
-     * @param matchKey      the match key
-     * @param urParameter   example of parameter to retrieve
-     * @return              the personalization parameter
+     *
+     * @param matchKey the match key
+     * @param urParameter example of parameter to retrieve
+     * @return the personalization parameter
      */
     public UrParameter getMatchParameter(String matchKey, UrParameter urParameter) {
         return urParameters.get(matchKey).get(ExperimentObject.getParameterKey(urParameter));
@@ -122,6 +131,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns whether the memory management is automated.
+     *
      * @return whether the memory management is automated.
      */
     public boolean isAutomatedMemoryManagement() {
@@ -130,7 +140,9 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Sets whether the memory management should be automated
-     * @param automatedMemoryManagement a boolean indicating whether the memory management should be automated
+     *
+     * @param automatedMemoryManagement a boolean indicating whether the memory
+     * management should be automated
      */
     public void setAutomatedMemoryManagement(boolean automatedMemoryManagement) {
         this.automatedMemoryManagement = automatedMemoryManagement;
@@ -138,6 +150,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns the cache size in number of matches
+     *
      * @return the cache size in number of matches
      */
     public int getCacheSize() {
@@ -146,6 +159,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Sets the cache size
+     *
      * @param cacheSize number of matches to allow in the cache size
      */
     public void setCacheSize(int cacheSize) {
@@ -154,6 +168,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Indicates whether matches will be stored in memory
+     *
      * @return a boolean indicating whether matches will be stored in memory
      */
     public boolean isInMemory() {
@@ -162,7 +177,9 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Sets whether matches shall be stored in memory
-     * @param inMemory a boolean indicating whether matches shall be stored in memory
+     *
+     * @param inMemory a boolean indicating whether matches shall be stored in
+     * memory
      */
     public void setInMemory(boolean inMemory) {
         this.inMemory = inMemory;
@@ -170,6 +187,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns the serialization directory
+     *
      * @return the serialization directory
      */
     public String getSerializationDirectory() {
@@ -178,6 +196,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * sets the serialization directory
+     *
      * @param serializationDirectory the path of the serialization directory
      */
     public void setSerializationDirectory(String serializationDirectory) {
@@ -186,6 +205,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Removes a match from the model
+     *
      * @param matchKey the key of the match to remove
      */
     public void removeMatch(String matchKey) {
@@ -208,8 +228,10 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Indicates whether a match indexed by the given key exists
+     *
      * @param matchKey the key of the match looked for
-     * @return a boolean indicating whether a match indexed by the given key exists
+     * @return a boolean indicating whether a match indexed by the given key
+     * exists
      */
     public boolean matchExists(String matchKey) {
         if (loadedMatches.contains(matchKey)) {
@@ -220,10 +242,12 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a match
-     * @param matchKey      the key of the match
-     * @return              the desired match
-     * @throws IllegalArgumentException    exception thrown whenever an error occurred while retrieving the match
+     * Returns a match.
+     *
+     * @param matchKey the key of the match
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
      */
     private Object getMatch(String matchKey) throws IllegalArgumentException {
         int index = loadedMatches.indexOf(matchKey);
@@ -255,9 +279,11 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns a spectrum match
-     * @param spectrumKey   the key of the match
-     * @return              the desired match
-     * @throws IllegalArgumentException    exception thrown whenever an error occurred while retrieving the match
+     *
+     * @param spectrumKey the key of the match
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
      */
     public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException {
         return (SpectrumMatch) getMatch(spectrumKey);
@@ -265,9 +291,11 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns a peptide match
-     * @param peptideKey                    the key of the match
-     * @return                              the desired match
-     * @throws IllegalArgumentException     exception thrown whenever an error occurred while retrieving the match
+     *
+     * @param peptideKey the key of the match
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
      */
     public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException {
         return (PeptideMatch) getMatch(peptideKey);
@@ -275,10 +303,11 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns a protein match.
-     * 
-     * @param proteinKey                    the key of the match
-     * @return                              the desired match
-     * @throws IllegalArgumentException     exception thrown whenever an error occurred while retrieving the match
+     *
+     * @param proteinKey the key of the match
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
      */
     public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException {
         return (ProteinMatch) getMatch(proteinKey);
@@ -315,8 +344,8 @@ public abstract class Identification extends ExperimentObject {
      * Add a spectrum match to the spectrum matches map.
      *
      * @param newMatch the new spectrum match
-     * @throws FileNotFoundException  
-     * @throws IOException  
+     * @throws FileNotFoundException
+     * @throws IOException
      */
     public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException {
         String spectrumKey = newMatch.getKey();
@@ -336,9 +365,12 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * updates the cache according to the memory settings.
-     * @throws FileNotFoundException exception thrown whenever an error occurred while serializing a match
-     * @throws IOException exception thrown whenever an error occurred while serializing a match
+     * Updates the cache according to the memory settings.
+     *
+     * @throws FileNotFoundException exception thrown whenever an error occurred
+     * while serializing a match
+     * @throws IOException exception thrown whenever an error occurred while
+     * serializing a match
      */
     public void updateCache() throws FileNotFoundException, IOException {
         if (!inMemory) {
@@ -372,22 +404,29 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Indicates whether the memory used by the application is lower than 99% of the heap size
-     * @return a boolean indicating whether the memory used by the application is lower than 99% of the heap
+     * Indicates whether the memory used by the application is lower than 99% of
+     * the heap size.
+     *
+     * @return a boolean indicating whether the memory used by the application
+     * is lower than 99% of the heap
      */
     public boolean memoryCheck() {
         return Runtime.getRuntime().totalMemory() < (long) (0.99 * Runtime.getRuntime().maxMemory());
     }
 
     /**
-     * Reduces the amount of identification saved in memory by 20%
-     * @throws FileNotFoundException exception thrown whenever an error occurred while serializing a match
-     * @throws IOException exception thrown whenever an error occurred while serializing a match
+     * Reduces the amount of identification saved in memory by 20%.
+     *
+     * @param progressBar the progress bar
+     * @throws FileNotFoundException exception thrown whenever an error occurred
+     * while serializing a match
+     * @throws IOException exception thrown whenever an error occurred while
+     * serializing a match
      */
     public void reduceMemoryConsumtion(JProgressBar progressBar) throws FileNotFoundException, IOException {
         if (progressBar != null) {
             progressBar.setValue(0);
-            progressBar.setMaximum((int) 0.20 * loadedMatches.size());
+            progressBar.setMaximum((int) (0.20 * loadedMatches.size()));
         }
         for (int cpt = 0; cpt < 0.20 * loadedMatches.size(); cpt++) {
             String key = loadedMatches.get(0);
@@ -420,9 +459,12 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Creates the peptides and protein instances based on the spectrum matches. Note that the attribute 
-     * bestAssumption should be set for every spectrum match at this point. This operation will be very 
-     * slow if the cache is already full.
+     * Creates the peptides and protein instances based on the spectrum matches.
+     * Note that the attribute bestAssumption should be set for every spectrum
+     * match at this point. This operation will be very slow if the cache is
+     * already full.
+     *
+     * @param progressBar the progress bar
      */
     public void buildPeptidesAndProteins(JProgressBar progressBar) {
         String peptideKey, proteinKey;
@@ -477,11 +519,14 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Empties the cache and serializes everything in the specified serialization folder
-     * 
-     * @param progressDialog 
-     * @throws FileNotFoundException exception thrown whenever an error occurred while serializing a match
-     * @throws IOException exception thrown whenever an error occurred while serializing a match
+     * Empties the cache and serializes everything in the specified
+     * serialization folder
+     *
+     * @param progressDialog
+     * @throws FileNotFoundException exception thrown whenever an error occurred
+     * while serializing a match
+     * @throws IOException exception thrown whenever an error occurred while
+     * serializing a match
      */
     public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
         if (progressDialog != null) {
@@ -519,8 +564,10 @@ public abstract class Identification extends ExperimentObject {
      * Add a set of spectrumMatches to the model
      *
      * @param spectrumMatches The spectrum matches
-     * @throws FileNotFoundException exception thrown when one tries to assign more than one identification per advocate to the same spectrum
-     * @throws IOException exception thrown when one tries to assign more than one identification per advocate to the same spectrum
+     * @throws FileNotFoundException exception thrown when one tries to assign
+     * more than one identification per advocate to the same spectrum
+     * @throws IOException exception thrown when one tries to assign more than
+     * one identification per advocate to the same spectrum
      */
     public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws FileNotFoundException, IOException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
@@ -538,18 +585,22 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a map of all the protein matches which can be ascribed to a protein indexed by its accession.
-     * @return a map of all the protein matches which can be ascribed to a protein indexed by its accession.
+     * Returns a map of all the protein matches which can be ascribed to a
+     * protein indexed by its accession.
+     *
+     * @return a map of all the protein matches which can be ascribed to a
+     * protein indexed by its accession.
      */
     public HashMap<String, ArrayList<String>> getProteinMap() {
         return proteinMap;
     }
 
     /**
-     * Indicates that a match was changed, it will thus be serialized again if needed.
-     * 
+     * Indicates that a match was changed, it will thus be serialized again if
+     * needed.
+     *
      * @param match
-     * @throws IllegalArgumentException  
+     * @throws IllegalArgumentException
      */
     public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException {
         String key = match.getKey();
@@ -571,11 +622,14 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Saves the identification matches in the desired folder
-     * 
-     * @param newFolder         the new folder
-     * @param progressDialog    a progress dialog to display the progress (can be null)
-     * @throws FileNotFoundException        Exception thrown whenever a problem occurred during the serialization process
-     * @throws IOException        Exception thrown whenever a problem occurred during the serialization process
+     *
+     * @param newFolder the new folder
+     * @param progressDialog a progress dialog to display the progress (can be
+     * null)
+     * @throws FileNotFoundException Exception thrown whenever a problem
+     * occurred during the serialization process
+     * @throws IOException Exception thrown whenever a problem occurred during
+     * the serialization process
      */
     public void save(File newFolder, ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
         String newPath = newFolder.getPath();
@@ -618,8 +672,9 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Returns the name of the file to use for serialization/deserialization
-     * @param key   the key of the match
-     * @return      the name of the corresponding file
+     *
+     * @param key the key of the match
+     * @return the name of the corresponding file
      */
     public String getFileName(String key) {
 

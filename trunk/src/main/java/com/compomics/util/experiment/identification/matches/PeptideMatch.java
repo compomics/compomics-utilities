@@ -150,4 +150,9 @@ public class PeptideMatch extends IdentificationMatch {
         }
         return isDecoy;
     }
+
+    @Override
+    public MatchType getType() {
+        return MatchType.Peptide;
+    }
 }

@@ -259,4 +259,9 @@ public class ProteinMatch extends IdentificationMatch {
     public static String[] getAccessions(String key) {
         return key.split(" "); // @TODO: what about accessions with spaces in them???
     }
+
+    @Override
+    public MatchType getType() {
+        return MatchType.Protein;
+    }
 }

@@ -170,4 +170,9 @@ public class SpectrumMatch extends IdentificationMatch {
     public ArrayList<Integer> getAdvocates() {
         return advocates;
     }
+
+    @Override
+    public MatchType getType() {
+        return MatchType.Spectrum;
+    }
 }

@@ -211,6 +211,14 @@ public abstract class Identification extends ExperimentObject {
     public void removeMatch(String matchKey) {
         if (proteinIdentification.contains(matchKey)) {
             proteinIdentification.remove(matchKey);
+            for (String protein : ProteinMatch.getAccessions(matchKey)) {
+                if (proteinMap.get(protein).contains(matchKey)) {
+                    proteinMap.get(protein).remove(matchKey);
+                    if (proteinMap.get(protein).isEmpty()) {
+                        proteinMap.remove(protein);
+                    }
+                }
+            }
         } else if (peptideIdentification.contains(matchKey)) {
             peptideIdentification.remove(matchKey);
         } else if (spectrumIdentification.contains(matchKey)) {
@@ -221,8 +229,8 @@ public abstract class Identification extends ExperimentObject {
             loadedMatchesMap.remove(matchKey);
             modifiedMatches.remove(matchKey);
         } else {
-            File match = new File(serializationDirectory, getFileName(matchKey));
-            match.delete();
+            File matchFile = new File(serializationDirectory, getFileName(matchKey));
+            matchFile.delete();
         }
     }
 
@@ -467,17 +475,33 @@ public abstract class Identification extends ExperimentObject {
      * @param progressBar the progress bar
      */
     public void buildPeptidesAndProteins(JProgressBar progressBar) {
-        String peptideKey, proteinKey;
-        Peptide peptide;
-        SpectrumMatch spectrumMatch;
-        PeptideMatch peptideMatch;
-        ProteinMatch proteinMatch;
         if (progressBar != null) {
             progressBar.setValue(0);
             progressBar.setMaximum(getSpectrumIdentification().size());
         }
         int cpt = 0;
         for (String spectrumMatchKey : getSpectrumIdentification()) {
+            buildPeptidesAndProteins(spectrumMatchKey);
+            if (progressBar != null) {
+                progressBar.setValue(++cpt);
+            }
+        }
+    }
+    
+    /**
+     * Creates the peptides and protein instances based on the given spectrum match.
+     * Note that the attribute bestAssumption should be set for every spectrum
+     * match at this point. This operation will be very slow if the cache is
+     * already full.
+     * 
+     * @param spectrumMatchKey The key of the spectrum match to add
+     */
+    public void buildPeptidesAndProteins(String spectrumMatchKey) {
+        String peptideKey, proteinKey;
+        Peptide peptide;
+        SpectrumMatch spectrumMatch;
+        PeptideMatch peptideMatch;
+        ProteinMatch proteinMatch;
             spectrumMatch = getSpectrumMatch(spectrumMatchKey);
             peptide = spectrumMatch.getBestAssumption().getPeptide();
             peptideKey = peptide.getKey();
@@ -512,10 +536,6 @@ public abstract class Identification extends ExperimentObject {
                     proteinMap.get(protein).add(proteinKey);
                 }
             }
-            if (progressBar != null) {
-                progressBar.setValue(++cpt);
-            }
-        }
     }
 
     /**

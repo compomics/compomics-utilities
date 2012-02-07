@@ -78,7 +78,7 @@ public class Header implements Cloneable, Serializable {
 
         UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis, 
         Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, 
-        Listeria, Generic_Header, GAFFA, UPS
+        Listeria, Generic_Header, Generic_Split_Header, GAFFA, UPS
     }
 
     /**
@@ -470,6 +470,18 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
+                } else if (aFASTAHeader.startsWith("generic")) {
+
+                    // try to parse as a generic header with splitters
+                    // should look something like this: 
+                    // >generic_some_tag|proten_accession|a description for this protein
+                    
+                    result.databaseType = DatabaseType.Generic_Split_Header;
+                    
+                    result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
+                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.lastIndexOf("|") + 1).trim();
+                    result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
+                    
                 } else if (aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*")) {
                     // Old (everything before 9.0 release (31 Oct 2006)) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -911,15 +923,21 @@ public class Header implements Cloneable, Serializable {
      * @return  String  with the full header.
      */
     public String toString() {
-        String result = null;
-        if (this.iID == null) {
-            result = this.getAbbreviatedFASTAHeader();
+        String result;
+        
+        if (databaseType == DatabaseType.Generic_Split_Header) { // @TODO: this special case is perhaps not needed?
+            result = ">" + this.iID + "|" + this.iAccession + "|" + this.iDescription;
         } else {
-            result = this.getAbbreviatedFASTAHeader();
-            if (this.iRest != null) {
-                result += " " + this.iRest;
+            if (this.iID == null) {
+                result = this.getAbbreviatedFASTAHeader();
+            } else {
+                result = this.getAbbreviatedFASTAHeader();
+                if (this.iRest != null) {
+                    result += " " + this.iRest;
+                }
             }
         }
+        
         return result;
     }
 

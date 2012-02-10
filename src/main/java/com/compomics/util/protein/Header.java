@@ -583,7 +583,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(aFASTAHeader.substring(separation + 1, index2));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc+1).trim();
-                } else if(aFASTAHeader.matches("^[^|\t]* [|] Symbols:[^|]*[|] [^|]* [|].*")) {
+                } else if(aFASTAHeader.matches("^[^|\t]* [|] Symbol[^|]*[|] [^|]* [|].*")) {
                     // The Arabidopsis thaliana database; TAIR format
                     // We need to find two elements, separated by pipes:
                     //   - the accession number with version (retrieved as the part before the first pipe).

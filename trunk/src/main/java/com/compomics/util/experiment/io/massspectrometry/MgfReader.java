@@ -473,7 +473,13 @@ public class MgfReader {
 
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
-        String[] charges = tempLine.split(" and ");
+        String[] chargesAnd = tempLine.split(" and ");
+        ArrayList<String> charges = new ArrayList<String>();
+        for (String charge : chargesAnd) {
+            for (String charge2 : charge.split(",")) {
+                charges.add(charge2.trim());
+            }
+        }
 
         for (String charge : charges) {
 
@@ -558,7 +564,7 @@ public class MgfReader {
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);
     }
-    
+
     /**
      * Writes an apl file from an mgf file
      * @param mgfFile                   the mgf file
@@ -572,8 +578,8 @@ public class MgfReader {
         if (fragmentation == null) {
             fragmentation = "Unknown";
         }
-            Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
-            
+        Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
+
         MgfIndex mgfIndex = getIndexMap(mgfFile);
         HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<Double, ArrayList<String>>();
         Precursor precursor;
@@ -581,7 +587,7 @@ public class MgfReader {
         for (String title : mgfIndex.getSpectrumTitles()) {
             precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
             if (!spectrumTitleMap.containsKey(precursor.getMz())) {
-                spectrumTitleMap.put(precursor.getMz(), new ArrayList<String>()); 
+                spectrumTitleMap.put(precursor.getMz(), new ArrayList<String>());
             }
             spectrumTitleMap.get(precursor.getMz()).add(title);
         }
@@ -593,7 +599,7 @@ public class MgfReader {
         for (double mz : masses) {
             for (String title : spectrumTitleMap.get(mz)) {
                 spectrum = getSpectrum(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
-                
+
                 aplWriter.write("peaklist start\n");
                 aplWriter.write("mz=" + mz + "\n");
                 aplWriter.write("fragmentation=" + fragmentation + "\n");

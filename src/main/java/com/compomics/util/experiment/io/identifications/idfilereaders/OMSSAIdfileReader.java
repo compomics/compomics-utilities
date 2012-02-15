@@ -132,7 +132,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
                         ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
                         Collections.sort(eValues);
-                        String name = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
+                        String name = fixMgfTitle(msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0));
                         SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name));
                         int rank = 1;
 
@@ -252,5 +252,22 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         } catch (Exception e) {
             return description.substring(1);
         }
+    }
+
+    /**
+     * Returns the fixed mgf title.
+     * 
+     * @param spectrumTitle
+     * @return the fixed mgf title
+     */
+    private String fixMgfTitle(String spectrumTitle) {
+
+        // a special fix for mgf files with titles containing %3b instead if ;
+            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+
+        // a special fix for mgf files with titles containing \\ instead \
+            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+
+        return spectrumTitle;
     }
 }

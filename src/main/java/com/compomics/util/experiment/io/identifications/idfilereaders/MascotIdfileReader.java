@@ -144,7 +144,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
                 if (testPeptide != null) {
                     Query tempQuery = iMascotDatfile.getQuery(i + 1);
-                    String spectrumId = tempQuery.getTitle();
+                    String spectrumId = fixMgfTitle(tempQuery.getTitle());
                     String measuredCharge = tempQuery.getChargeString();
                     String sign = String.valueOf(measuredCharge.charAt(1));
                     Charge charge;
@@ -262,5 +262,22 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         currentAssumption.addUrParam(scoreParam);
 
         return currentAssumption;
+    }
+
+    /**
+     * Returns the fixed mgf title.
+     * 
+     * @param spectrumTitle
+     * @return the fixed mgf title
+     */
+    private String fixMgfTitle(String spectrumTitle) {
+
+        // a special fix for mgf files with titles containing %3b instead if ;
+            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+
+        // a special fix for mgf files with titles containing \\ instead \
+            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+
+        return spectrumTitle;
     }
 }

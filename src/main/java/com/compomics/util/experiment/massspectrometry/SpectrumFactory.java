@@ -425,7 +425,7 @@ public class SpectrumFactory {
                 spectrumTitle = fixMgfTitle(spectrumTitle, name);
 
                 if (mgfIndexesMap.get(name) == null) {
-                    throw new IOException("Mgf file not found: \'" + name + "\'!");
+                    throw new FileNotFoundException("Mgf file not found: \'" + name + "\'!");
                 }
                 if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
                     throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found!");

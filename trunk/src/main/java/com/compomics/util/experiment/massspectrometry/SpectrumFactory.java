@@ -12,7 +12,6 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JProgressBar;
@@ -219,7 +218,7 @@ public class SpectrumFactory {
 
             String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
 
-            if (getMaxRT(tempFileName) > maxMz) {
+            if (getMaxMz(tempFileName) > maxMz) {
                 maxMz = getMaxMz(tempFileName);
             }
         }

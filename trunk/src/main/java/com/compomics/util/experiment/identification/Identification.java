@@ -624,7 +624,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException {
         String key = match.getKey();
-        if (loadedMatches.contains(match.getKey())) {
+        if (loadedMatches.contains(key)) {
             modifiedMatches.put(key, true);
         } else {
             try {

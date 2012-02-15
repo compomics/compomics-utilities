@@ -95,7 +95,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 Spectrum currentSpectrum = spectraIt.next();
                 int nSpectrum = currentSpectrum.getSpectrumNumber();
                 SupportData supportData = xTandemFile.getSupportData(nSpectrum);
-                String spectrumName = supportData.getFragIonSpectrumDescription();
+                String spectrumName = fixMgfTitle(supportData.getFragIonSpectrumDescription());
                 ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
                 
                 if (spectrumPeptides.size() > 0) {
@@ -212,5 +212,22 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         
         com.compomics.util.experiment.biology.Peptide peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
         return new PeptideAssumption(peptide, rank, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), domain.getDomainExpect(), getFileName());
+    }
+
+    /**
+     * Returns the fixed mgf title.
+     * 
+     * @param spectrumTitle
+     * @return the fixed mgf title
+     */
+    private String fixMgfTitle(String spectrumTitle) {
+
+        // a special fix for mgf files with titles containing %3b instead if ;
+            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+
+        // a special fix for mgf files with titles containing \\ instead \
+            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+
+        return spectrumTitle;
     }
 }

@@ -273,7 +273,6 @@ public abstract class Identification extends ExperimentObject {
                 updateCache();
                 return spectrumMatch;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new IllegalArgumentException("Error while loading " + matchKey);
             }
         } else {

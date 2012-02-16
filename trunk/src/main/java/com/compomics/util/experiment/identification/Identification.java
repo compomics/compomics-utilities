@@ -487,7 +487,7 @@ public abstract class Identification extends ExperimentObject {
             }
         }
     }
-    
+
     /**
      * Creates the peptides and protein instances based on the given spectrum match.
      * Note that the attribute bestAssumption should be set for every spectrum
@@ -502,40 +502,42 @@ public abstract class Identification extends ExperimentObject {
         SpectrumMatch spectrumMatch;
         PeptideMatch peptideMatch;
         ProteinMatch proteinMatch;
-            spectrumMatch = getSpectrumMatch(spectrumMatchKey);
-            peptide = spectrumMatch.getBestAssumption().getPeptide();
-            peptideKey = peptide.getKey();
-            if (peptideIdentification.contains(peptideKey)) {
-                peptideMatch = getPeptideMatch(peptideKey);
-                peptideMatch.addSpectrumMatch(spectrumMatchKey);
-                setMatchChanged(peptideMatch);
-            } else {
-                peptideMatch = new PeptideMatch(peptide, spectrumMatchKey);
-                peptideIdentification.add(peptideKey);
-                loadedMatches.add(peptideKey);
-                loadedMatchesMap.put(peptideKey, peptideMatch);
-                modifiedMatches.put(peptideKey, true);
+        spectrumMatch = getSpectrumMatch(spectrumMatchKey);
+        peptide = spectrumMatch.getBestAssumption().getPeptide();
+        peptideKey = peptide.getKey();
+        if (peptideIdentification.contains(peptideKey)) {
+            peptideMatch = getPeptideMatch(peptideKey);
+            peptideMatch.addSpectrumMatch(spectrumMatchKey);
+            setMatchChanged(peptideMatch);
+        } else {
+            peptideMatch = new PeptideMatch(peptide, spectrumMatchKey);
+            peptideIdentification.add(peptideKey);
+            loadedMatches.add(peptideKey);
+            loadedMatchesMap.put(peptideKey, peptideMatch);
+            modifiedMatches.put(peptideKey, true);
+        }
+        proteinKey = ProteinMatch.getProteinMatchKey(peptide);
+        if (proteinIdentification.contains(proteinKey)) {
+            proteinMatch = getProteinMatch(proteinKey);
+            if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
+                proteinMatch.addPeptideMatch(peptideKey);
+                setMatchChanged(proteinMatch);
             }
-            proteinKey = ProteinMatch.getProteinMatchKey(peptide);
-            if (proteinIdentification.contains(proteinKey)) {
-                proteinMatch = getProteinMatch(proteinKey);
-                if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
-                    proteinMatch.addPeptideMatch(peptideKey);
-                    setMatchChanged(proteinMatch);
+        } else {
+            proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
+            proteinIdentification.add(proteinKey);
+            loadedMatches.add(proteinKey);
+            loadedMatchesMap.put(proteinKey, proteinMatch);
+            modifiedMatches.put(proteinKey, true);
+            for (String protein : peptide.getParentProteins()) {
+                if (!proteinMap.containsKey(protein)) {
+                    proteinMap.put(protein, new ArrayList<String>());
                 }
-            } else {
-                proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
-                proteinIdentification.add(proteinKey);
-                loadedMatches.add(proteinKey);
-                loadedMatchesMap.put(proteinKey, proteinMatch);
-                modifiedMatches.put(proteinKey, true);
-                for (String protein : peptide.getParentProteins()) {
-                    if (!proteinMap.containsKey(protein)) {
-                        proteinMap.put(protein, new ArrayList<String>());
-                    }
+                if (!proteinMap.get(protein).contains(proteinKey)) {
                     proteinMap.get(protein).add(proteinKey);
                 }
             }
+        }
     }
 
     /**

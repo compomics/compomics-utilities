@@ -327,8 +327,9 @@ FASTA files can be loaded into the structure. The proteins are loaded into the S
 	SequenceDataBase db = new SequenceDataBase("SGD", "test");
 
 	// Create a FastaHeaderParser which will be used to parse the fasta header
-  // (here the accession is given surrounded by '|')
+        // (here the accession is given surrounded by '|')
 	FastaHeaderParser fastaHeaderParser = new FastaHeaderParser("|", "|");
+
 	// Import your fasta file
 	db.importDataBase(fastaHeaderParser, fastaFile);
 
@@ -381,7 +382,6 @@ Usage:
 java -cp utilities-X.Y.Z.jar com.compomics.util.db.DBAccessorGenerator
 
 Usage:
-
         DBAccessGenerator [--user <username> --password <password>] <DBDriver> <DBURL> <tablename> <outputpackage>
 }}}
 

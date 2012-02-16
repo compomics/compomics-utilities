@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -51,7 +50,7 @@ public class MSnSpectrum extends Spectrum {
      * @param level              MS level
      * @param precursor          precursor
      * @param spectrumTitle      spectrum title
-     * @param spectrum           set of peaks
+     * @param peakMap            set of peaks
      * @param fileName           file name
      */
     public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName) {
@@ -68,7 +67,7 @@ public class MSnSpectrum extends Spectrum {
      * @param level              MS level
      * @param precursor          precursor
      * @param spectrumTitle      spectrum title
-     * @param spectrum           set of peaks
+     * @param peakMap            set of peaks
      * @param fileName           file name
      * @param scanStartTime      The timepoint when the spectrum was recorded
      */

@@ -17,6 +17,7 @@ import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JProgressBar;
 
 /**
  * This reader will import identifications from an OMSSA omx file.
@@ -47,10 +49,6 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      * the modification file usermods.xml
      */
     private File userModsFile;
-    /**
-     * the scale used in OMSSA response
-     */
-    private Integer msResponseScale;
     /**
      * the PTM factory
      */
@@ -93,12 +91,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         }
     }
 
-    /**
-     * returns all spectrum matches found in the inspected file
-     *
-     * @return a set of all spectrum matches
-     */
-    public HashSet<SpectrumMatch> getAllSpectrumMatches() {
+    @Override
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) {
 
         HashSet<SpectrumMatch> assignedSpectra = new HashSet<SpectrumMatch>();
         HashMap<String,LinkedList<MSPepHit>> peptideToProteinMap = omxFile.getPeptideToProteinMap();
@@ -108,10 +102,13 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             List<MSRequest> msRequest = omxFile.getParserResult().MSSearch_request.MSRequest;
 
             int searchResponseSize = msSearchResponse.size();
+            
+            if (jProgressBar != null) {
+                jProgressBar.setMaximum(searchResponseSize);
+            }
 
             for (int i = 0; i < searchResponseSize; i++) {
 
-                msResponseScale = msSearchResponse.get(i).MSResponse_scale;
                 Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
                 String tempFile = msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile;
 
@@ -145,6 +142,10 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
                         assignedSpectra.add(currentMatch);
                     }
+                }
+                
+                if (jProgressBar != null) {
+                    jProgressBar.setValue(i);
                 }
             }
         } catch (Exception e) {
@@ -269,5 +270,10 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
         return spectrumTitle;
+    }
+
+    @Override
+    public void close() throws IOException {
+        omxFile = null;
     }
 }

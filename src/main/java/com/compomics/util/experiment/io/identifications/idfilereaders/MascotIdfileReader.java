@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
+import javax.swing.JProgressBar;
 
 /**
  * This reader will import identifications from a Mascot dat file.
@@ -106,12 +107,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         return iMascotDatfile.getFileName();
     }
 
-    /**
-     * A method to get all the spectrum matches.
-     *
-     * @return a set containing all spectrum matches
-     */
-    public HashSet<SpectrumMatch> getAllSpectrumMatches() {
+    @Override
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) {
 
         String mgfFileName = getMgfFileName();
         HashSet<SpectrumMatch> assignedPeptideHits = new HashSet<SpectrumMatch>();
@@ -121,6 +118,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
 
             int numberOfQueries = iMascotDatfile.getNumberOfQueries();
+            
+            if (jProgressBar != null) {
+                jProgressBar.setMaximum(numberOfQueries);
+            }
 
             for (int i = 0; i < numberOfQueries; i++) {
 
@@ -189,6 +190,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                     }
 
                     assignedPeptideHits.add(currentMatch);
+                }
+                
+                if (jProgressBar != null) {
+                    jProgressBar.setValue(i);
                 }
             }
         } catch (Exception e) {
@@ -279,5 +284,10 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
         return spectrumTitle;
+    }
+
+    @Override
+    public void close() throws IOException {
+        iMascotDatfile = null;
     }
 }

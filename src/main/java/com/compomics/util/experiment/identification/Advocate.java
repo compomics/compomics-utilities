@@ -32,6 +32,14 @@ public interface Advocate extends Serializable {
      * Peptizer index
      */
     public static final int PEPTIZER = 3;
+    /**
+     * Andromeda index
+     */
+    public static final int ANDROMEDA = 4;
+    /**
+     * PeptideShaker
+     */
+    public static final int PEPTIDE_SHAKER = 5;
 
     /**
      * getter for the name of the Advocate

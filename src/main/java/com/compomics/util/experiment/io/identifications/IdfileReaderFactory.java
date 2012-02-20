@@ -1,11 +1,15 @@
 package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
+import com.compomics.util.experiment.io.identifications.idfilereaders.AndromedaIdfileReader;
 import com.compomics.util.experiment.io.identifications.idfilereaders.MascotIdfileReader;
 import com.compomics.util.experiment.io.identifications.idfilereaders.OMSSAIdfileReader;
 import com.compomics.util.experiment.io.identifications.idfilereaders.XTandemIdfileReader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.swing.JProgressBar;
 import org.xml.sax.SAXException;
 
 /**
@@ -41,12 +45,14 @@ public class IdfileReaderFactory {
 
     /**
      * This method returns the proper identification file reader depending on the format of the provided file.
+     * It is very important to close the file reader after creation.
      *
      * @param aFile the file to parse
+     * @param jProgressBar a progress bar to display the results. Can be null
      * @return an adapted file reader
      * @throws SAXException  
      */
-    public IdfileReader getFileReader(File aFile) throws SAXException {
+    public IdfileReader getFileReader(File aFile, JProgressBar jProgressBar) throws SAXException, FileNotFoundException, IOException {
         String name = aFile.getName().toLowerCase();
         if (name.endsWith("dat")) {
             return new MascotIdfileReader(aFile);
@@ -54,6 +60,8 @@ public class IdfileReaderFactory {
             return new OMSSAIdfileReader(aFile);
         } else if (name.endsWith("xml")) {
             return new XTandemIdfileReader(aFile);
+        } else if (name.endsWith("res")) {
+            return new AndromedaIdfileReader(aFile, jProgressBar);
         }
         return null;
     }

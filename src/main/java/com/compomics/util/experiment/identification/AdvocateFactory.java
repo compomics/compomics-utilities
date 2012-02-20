@@ -53,8 +53,12 @@ public class AdvocateFactory {
                 return new SearchEngine(Advocate.OMSSA);
             case Advocate.XTANDEM:
                 return new SearchEngine(Advocate.XTANDEM);
+            case Advocate.ANDROMEDA:
+                return new SearchEngine(Advocate.ANDROMEDA);
             case Advocate.PEPTIZER:
                 return new PostProcessor(Advocate.PEPTIZER);
+            case Advocate.PEPTIDE_SHAKER:
+                return new PostProcessor(Advocate.PEPTIDE_SHAKER);
             default:
                 return null;
         }
@@ -70,7 +74,9 @@ public class AdvocateFactory {
         possibilities.add(new SearchEngine(Advocate.MASCOT));
         possibilities.add(new SearchEngine(Advocate.OMSSA));
         possibilities.add(new SearchEngine(Advocate.XTANDEM));
+        possibilities.add(new SearchEngine(Advocate.ANDROMEDA));
         possibilities.add(new PostProcessor(Advocate.PEPTIZER));
+        possibilities.add(new PostProcessor(Advocate.PEPTIDE_SHAKER));
         return possibilities;
     }
 

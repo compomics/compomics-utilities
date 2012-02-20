@@ -50,6 +50,8 @@ public class SearchEngine extends ExperimentObject implements Advocate {
                 return "OMSSA";
             case XTANDEM:
                 return "X!Tandem";
+            case ANDROMEDA:
+                return "Andromeda";
             default:
                 return "Unknown";
         }

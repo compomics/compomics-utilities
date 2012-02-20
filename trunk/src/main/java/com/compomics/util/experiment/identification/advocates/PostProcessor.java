@@ -46,6 +46,8 @@ public class PostProcessor extends ExperimentObject implements Advocate {
         switch (id) {
             case Advocate.PEPTIZER:
                 return "Peptizer";
+            case Advocate.PEPTIDE_SHAKER:
+                return "PeptideShaker";
             default:
                 return "unknown";
         }

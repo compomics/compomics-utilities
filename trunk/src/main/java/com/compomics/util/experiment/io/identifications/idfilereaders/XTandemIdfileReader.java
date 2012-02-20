@@ -12,6 +12,7 @@ import com.compomics.util.protein.Header;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
 import de.proteinms.xtandemparser.xtandem.Spectrum;
+import java.io.IOException;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 
 /**
  * This reader will import identifications from an X!Tandem xml result file.
@@ -80,16 +82,16 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return tempFile.getName();
     }
 
-    /**
-     * Method which returns all spectrum matches found in the file.
-     *
-     * @return a set containing all spectrum matches
-     */
-    public HashSet<SpectrumMatch> getAllSpectrumMatches() {
+    @Override
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) {
         
         HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
         try {
             Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
+            
+            if (jProgressBar != null) {
+                jProgressBar.setMaximum(xTandemFile.getSpectraNumber());
+            }
             
             while (spectraIt.hasNext()) {
                 Spectrum currentSpectrum = spectraIt.next();
@@ -129,6 +131,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     }
                     
                     foundPeptides.add(currentMatch);
+                }
+                
+                if (jProgressBar != null) {
+                    jProgressBar.setValue(jProgressBar.getValue() + 1);
                 }
             }
         } catch (Exception e) {
@@ -229,5 +235,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
         return spectrumTitle;
+    }
+
+    @Override
+    public void close() throws IOException {
+        xTandemFile = null;
     }
 }

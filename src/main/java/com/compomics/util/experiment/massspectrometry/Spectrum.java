@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class models a spectrum
@@ -16,31 +15,32 @@ import java.util.HashSet;
 public abstract class Spectrum extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 7152424141470431489L;
     /**
-     * spectrum title
+     * Spectrum title.
      */
     protected String spectrumTitle;
     /**
-     * spectrum file name
+     * Spectrum file name.
      */
     protected String fileName;
     /**
-     * The MS level
+     * The MS level.
      */
     protected int level;
     /**
-     * peak list
+     * Peak list.
      */
     protected HashMap<Double, Peak> peakList;
     /**
-     * scan number or range
+     * Scan number or range.
      */
     protected String scanNumber;
     /**
-     * The timepoint when the spectrum was recorded (scan start time in mzML files)
+     * The timepoint when the spectrum was recorded (scan start time in mzML
+     * files).
      */
     protected double scanStartTime;
     /**
@@ -50,10 +50,10 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Convenience method returning the key for a spectrum.
-     * 
-     * @param spectrumFile      The spectrum file
-     * @param spectrumTitle     The spectrum title
-     * @return                  the corresponding spectrum key
+     *
+     * @param spectrumFile The spectrum file
+     * @param spectrumTitle The spectrum title
+     * @return the corresponding spectrum key
      */
     public static String getSpectrumKey(String spectrumFile, String spectrumTitle) {
         return spectrumFile + SPECTRUM_KEY_SPLITTER + spectrumTitle;
@@ -61,19 +61,20 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Convenience method to retrieve the name of a file from the spectrum key.
-     * 
-     * @param spectrumKey   the spectrum key
-     * @return              the name of the file containing the spectrum
+     *
+     * @param spectrumKey the spectrum key
+     * @return the name of the file containing the spectrum
      */
     public static String getSpectrumFile(String spectrumKey) {
         return spectrumKey.split(SPECTRUM_KEY_SPLITTER)[0];
     }
 
     /**
-     * Convenience method to retrieve the name of a spectrum from the spectrum key.
-     * 
-     * @param spectrumKey   the spectrum key
-     * @return              the title of the spectrum
+     * Convenience method to retrieve the name of a spectrum from the spectrum
+     * key.
+     *
+     * @param spectrumKey the spectrum key
+     * @return the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
         return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 5);
@@ -81,7 +82,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns the key of the spectrum.
-     * 
+     *
      * @return the key of the spectrum
      */
     public String getSpectrumKey() {
@@ -131,9 +132,10 @@ public abstract class Spectrum extends ExperimentObject {
     public HashMap<Double, Peak> getPeakMap() {
         return peakList;
     }
-    
+
     /**
-     * Adds a peak to the spectrum peak list
+     * Adds a peak to the spectrum peak list.
+     *
      * @param aPeak the peak to add
      */
     public void addPeak(Peak aPeak) {
@@ -142,7 +144,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Getter for the scan number.
-     * 
+     *
      * @return the spectrum scan number
      */
     public String getScanNumber() {
@@ -151,7 +153,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Setter for the scan number or range.
-     * 
+     *
      * @param scanNumber or range
      */
     public void setScanNumber(String scanNumber) {
@@ -160,7 +162,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns the file name.
-     * 
+     *
      * @return the file name
      */
     public String getFileName() {
@@ -169,7 +171,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns at which level the spectrum was recorded.
-     * 
+     *
      * @return at which level the spectrum was recorded
      */
     public int getLevel() {
@@ -178,15 +180,16 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns the peak list.
-     * 
+     *
      * @return the peak list
      */
     public Collection<Peak> getPeakList() {
         return peakList.values();
     }
-    
+
     /**
-     * Sets the peak list
+     * Sets the peak list.
+     *
      * @param peakList HashSet of peaks containing the peaks of the spectrum
      */
     public void setPeakList(HashMap<Double, Peak> peakList) {
@@ -195,7 +198,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns the scan start time.
-     * 
+     *
      * @return the scan start time
      */
     public double getScanStartTime() {
@@ -204,7 +207,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Sets the scan start time.
-     * 
+     *
      * @param scanStartTime the timepoint when the spectrum was recorded
      */
     public void setScanStartTime(double scanStartTime) {
@@ -212,7 +215,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * This method will remove the peak list in order to reduce memory consumption of the model.
+     * This method will remove the peak list in order to reduce memory
+     * consumption of the model.
      */
     public void removePeakList() {
         if (peakList != null) {
@@ -256,6 +260,27 @@ public abstract class Spectrum extends ExperimentObject {
         }
 
         return intensity;
+    }
+
+    /**
+     * Returns the m/z and intensity values as an array in acending order sorted
+     * on m/z value.
+     *
+     * @return the m/z and intensity values as an array
+     */
+    public double[][] getMzAndIntensityAsArray() {
+
+        double[][] values = new double[2][peakList.size()];
+        ArrayList<Double> mz = new ArrayList<Double>(peakList.keySet());
+        Collections.sort(mz);
+
+        for (int i = 0; i < mz.size(); i++) {
+            Peak currentPeak = peakList.get(mz.get(i));
+            values[0][i] = currentPeak.mz;
+            values[1][i] = currentPeak.intensity;
+        }
+
+        return values;
     }
 
     /**
@@ -329,12 +354,12 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns an array containing the intensity of all peak above the
-     * provided threshold.
+     * Returns an array containing the intensity of all peak above the provided
+     * threshold.
      *
-     * @param threshold     the lower threshold
-     * @return              an array containing the intensity of all peak above the
-     *                      provided threshold
+     * @param threshold the lower threshold
+     * @return an array containing the intensity of all peak above the provided
+     * threshold
      */
     public ArrayList<Double> getPeaksAboveIntensityThreshold(double threshold) {
 
@@ -352,23 +377,23 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * Returns the intensity limit.
      *
-     * @param intensityLimit            the intensity limit in percent, e.g., 0.75
-     * @return                          the intensity limit
+     * @param intensityLimit the intensity limit in percent, e.g., 0.75
+     * @return the intensity limit
      */
-    public double getIntensityLimit(double intensityLimit) { 
-        
-            ArrayList<Double> intensities = new ArrayList<Double>();
-            
-            for (Peak peak : peakList.values()) {
-                intensities.add(peak.intensity);
-            }
-            
-            if (intensities.isEmpty()) {
-                return 0;
-            }
-            
-            Collections.sort(intensities);
-            int index = (int) ((intensities.size() - 1) * intensityLimit);
-            return intensities.get(index);
+    public double getIntensityLimit(double intensityLimit) {
+
+        ArrayList<Double> intensities = new ArrayList<Double>();
+
+        for (Peak peak : peakList.values()) {
+            intensities.add(peak.intensity);
+        }
+
+        if (intensities.isEmpty()) {
+            return 0;
+        }
+
+        Collections.sort(intensities);
+        int index = (int) ((intensities.size() - 1) * intensityLimit);
+        return intensities.get(index);
     }
 }

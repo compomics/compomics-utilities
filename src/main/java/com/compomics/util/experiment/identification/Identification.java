@@ -341,7 +341,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Returns a list of the keys of all encountered psms.
      *
-     * @return the corresponding identification resutls
+     * @return the corresponding identification results
      */
     public ArrayList<String> getSpectrumIdentification() {
         return spectrumIdentification;

@@ -7,35 +7,33 @@ import java.util.TreeMap;
 /**
  * This class models an MSn spectrum.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 9:00:36 AM
+ * @author Marc Vaudel
  */
 public class MSnSpectrum extends Spectrum {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -7144961253807359274L;
     /**
-     * the precursor
+     * The precursor.
      */
     private Precursor precursor;
 
     /**
-     * Constructor for the spectrum
+     * Constructor for the spectrum.
      */
     public MSnSpectrum() {
     }
 
     /**
-     * Minimal constructor for the spectrum. The peak list is not loaded in order to reduce memory consumption.
+     * Minimal constructor for the spectrum. The peak list is not loaded in
+     * order to reduce memory consumption.
      *
-     * @param level              MS level
-     * @param precursor          precursor
-     * @param spectrumTitle      spectrum title
-     * @param fileName           file name
+     * @param level MS level
+     * @param precursor precursor
+     * @param spectrumTitle spectrum title
+     * @param fileName file name
      */
     public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, String fileName) {
         this.level = level;
@@ -45,13 +43,13 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * constructor for the spectrum
+     * Constructor for the spectrum.
      *
-     * @param level              MS level
-     * @param precursor          precursor
-     * @param spectrumTitle      spectrum title
-     * @param peakMap            set of peaks
-     * @param fileName           file name
+     * @param level MS level
+     * @param precursor precursor
+     * @param spectrumTitle spectrum title
+     * @param peakMap set of peaks
+     * @param fileName file name
      */
     public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName) {
         this.level = level;
@@ -62,14 +60,14 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * constructor for the spectrum
+     * Constructor for the spectrum.
      *
-     * @param level              MS level
-     * @param precursor          precursor
-     * @param spectrumTitle      spectrum title
-     * @param peakMap            set of peaks
-     * @param fileName           file name
-     * @param scanStartTime      The timepoint when the spectrum was recorded
+     * @param level MS level
+     * @param precursor precursor
+     * @param spectrumTitle spectrum title
+     * @param peakMap set of peaks
+     * @param fileName file name
+     * @param scanStartTime The timepoint when the spectrum was recorded
      */
     public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName, double scanStartTime) {
         this.level = level;
@@ -81,7 +79,7 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * returns the precursor
+     * Returns the precursor.
      *
      * @return precursor charge
      */
@@ -90,8 +88,8 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * return the peak list as mgf bloc
-     * 
+     * Returns the peak list as mgf bloc.
+     *
      * @return the peak list as mgf bloc
      */
     public String asMgf() {

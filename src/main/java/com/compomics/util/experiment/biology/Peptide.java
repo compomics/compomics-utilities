@@ -9,48 +9,46 @@ import java.util.*;
 
 /**
  * This class models a peptide.
- * <p/>
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 8:56:40 AM
+ * 
+ * @author Marc Vaudel
  */
 public class Peptide extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 5632064601627536034L;
     /**
-     * The peptide sequence
+     * The peptide sequence.
      */
     private String sequence;
     /**
-     * The peptide mass
+     * The peptide mass.
      */
     private Double mass;
     /**
-     * The parent proteins
+     * The parent proteins.
      */
     private ArrayList<String> parentProteins = new ArrayList<String>();
     /**
-     * The modifications carried by the peptide
+     * The modifications carried by the peptide.
      */
     private ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
 
     /**
-     * Constructor for the peptide
+     * Constructor for the peptide.
      */
     public Peptide() {
     }
 
     /**
-     * Constructor for the peptide
+     * Constructor for the peptide.
      *
-     * @param aSequence                     The peptide sequence
-     * @param parentProteins                The parent proteins
-     * @param modifications                 The PTM of this peptide
-     * @throws IllegalArgumentException     Thrown if the peptide sequence contains unknown amino acids
+     * @param aSequence The peptide sequence
+     * @param parentProteins The parent proteins
+     * @param modifications The PTM of this peptide
+     * @throws IllegalArgumentException Thrown if the peptide sequence contains
+     * unknown amino acids
      */
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
@@ -64,12 +62,12 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Constructor for the peptide
+     * Constructor for the peptide.
      *
-     * @param aSequence      The peptide sequence
-     * @param mass           The peptide mass
+     * @param aSequence The peptide sequence
+     * @param mass The peptide mass
      * @param parentProteins The parent proteins
-     * @param modifications  The PTM of this peptide
+     * @param modifications The PTM of this peptide
      */
     public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
@@ -83,7 +81,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * getter for the mass
+     * Getter for the mass.
      *
      * @return the peptide mass
      */
@@ -92,7 +90,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * getter for the modifications carried by this peptide
+     * Getter for the modifications carried by this peptide.
      *
      * @return the modifications matches as found by the search engine
      */
@@ -101,14 +99,15 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Clears the list of imported modification matches
+     * Clears the list of imported modification matches.
      */
     public void clearModificationMatches() {
         modifications.clear();
     }
 
     /**
-     * Adds a modification match
+     * Adds a modification match.
+     *
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
@@ -116,7 +115,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * getter for the sequence
+     * Getter for the sequence.
      *
      * @return the peptide sequence
      */
@@ -125,7 +124,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the amount of missed cleavages using the specified enzyme
+     * Returns the amount of missed cleavages using the specified enzyme.
+     *
      * @param enzyme the enzyme used
      * @return the amount of missed cleavages
      */
@@ -145,10 +145,12 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the amount of missed cleavages using the specified enzyme for the given sequence
-     * @param sequence      the peptide sequence
-     * @param enzyme        the enzyme used
-     * @return              the amount of missed cleavages
+     * Returns the amount of missed cleavages using the specified enzyme for the
+     * given sequence.
+     *
+     * @param sequence the peptide sequence
+     * @param enzyme the enzyme used
+     * @return the amount of missed cleavages
      */
     public static int getNMissedCleavages(String sequence, Enzyme enzyme) {
         int mc = 0;
@@ -166,7 +168,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Getter for the parent proteins
+     * Getter for the parent proteins.
      *
      * @return the parent proteins
      */
@@ -175,7 +177,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Sets the parent proteins
+     * Sets the parent proteins.
+     *
      * @param parentProteins the parent proteins as list
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
@@ -183,7 +186,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the index of a peptide. index = SEQUENCE_mod1_mod2 with modifications ordered alphabetically.
+     * Returns the index of a peptide. index = SEQUENCE_mod1_mod2 with
+     * modifications ordered alphabetically.
      *
      * @return the index of a peptide
      */
@@ -207,26 +211,33 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a boolean indicating whether the peptide has variable modifications based on its key
+     * Returns a boolean indicating whether the peptide has variable
+     * modifications based on its key.
+     *
      * @param peptideKey the peptide key
-     * @return a boolean indicating whether the peptide has variable modifications
+     * @return a boolean indicating whether the peptide has variable
+     * modifications
      */
     public static boolean isModified(String peptideKey) {
         return peptideKey.contains("_");
     }
 
     /**
-     * Returns a boolean indicating whether the peptide has the given variable modification based on its key
+     * Returns a boolean indicating whether the peptide has the given variable
+     * modification based on its key.
+     *
      * @param peptideKey the peptide key
      * @param modification the name of the modification
-     * @return a boolean indicating whether the peptide has variable modifications
+     * @return a boolean indicating whether the peptide has variable
+     * modifications
      */
     public static boolean isModified(String peptideKey, String modification) {
         return peptideKey.contains(modification);
     }
 
     /**
-     * Returns how many of the given modification was found in the given peptide 
+     * Returns how many of the given modification was found in the given peptide.
+     *
      * @param peptideKey the peptide key
      * @param modification the name of the modification
      * @return the amount of modifications
@@ -237,7 +248,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the sequence of the peptide indexed by the given key
+     * Returns the sequence of the peptide indexed by the given key.
+     *
      * @param peptideKey the peptide key
      * @return the corresponding sequence
      */
@@ -251,7 +263,9 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a list of names of the variable modifications found in the key of a peptide
+     * Returns a list of names of the variable modifications found in the key of
+     * a peptide.
+     *
      * @param peptideKey the key of a peptide
      * @return a list of names of the variable modifications found in the key
      */
@@ -265,10 +279,12 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * returns the potential modification sites as an ordered list of string. 0 is the first aa.
-     * @param sequence  the sequence of the peptide of interest
-     * @param ptm       the PTM considered
-     * @return          a list of potential modification sites
+     * Returns the potential modification sites as an ordered list of string. 0
+     * is the first aa.
+     *
+     * @param sequence the sequence of the peptide of interest
+     * @param ptm the PTM considered
+     * @return a list of potential modification sites
      */
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
@@ -287,7 +303,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * a method which compares to peptides. Two same peptides present the same sequence and same modifications at the same place.
+     * A method which compares to peptides. Two same peptides present the same
+     * sequence and same modifications at the same place.
      *
      * @param anotherPeptide another peptide
      * @return a boolean indicating if the other peptide is the same.
@@ -297,9 +314,13 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Indicates whether another peptide has the same modifications at the same localization as this peptide. This method comes as a complement of isSameAs which does not account for PTM location.
-     * @param anotherPeptide    another peptide
-     * @return true if the other peptide has the same positions at the same location as the considered peptide
+     * Indicates whether another peptide has the same modifications at the same
+     * localization as this peptide. This method comes as a complement of
+     * isSameAs which does not account for PTM location.
+     *
+     * @param anotherPeptide another peptide
+     * @return true if the other peptide has the same positions at the same
+     * location as the considered peptide
      */
     public boolean sameModificationsAs(Peptide anotherPeptide) {
         if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
@@ -323,10 +344,11 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the N-terminal of the peptide as a String. Returns "NH3" if the 
+     * Returns the N-terminal of the peptide as a String. Returns "NH3" if the
      * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
-     * 
+     * /!\ this method will work only if the ptm found in the peptide are in the
+     * PTMFactory.
+     *
      * @return the N-terminal of the peptide as a String, e.g., "NH3"
      */
     public String getNTerminal() {
@@ -350,10 +372,11 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the C-terminal of the peptide as a String. Returns "COOH" if the 
+     * Returns the C-terminal of the peptide as a String. Returns "COOH" if the
      * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
-     * 
+     * /!\ this method will work only if the ptm found in the peptide are in the
+     * PTMFactory.
+     *
      * @return the C-terminal of the peptide as a String, e.g., "COOH"
      */
     public String getCTerminal() {
@@ -377,16 +400,16 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the modified sequence as an HTML string with potential modification sites
-     * color coding.
-     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
-     * 
-     * @param colors                    the ptm name to color mapping  
-     * @param includeHtmlStartEndTag    if true, start and end html tags are added
-     * @param peptide 
-     * @param mainModificationSites 
-     * @param secondaryModificationSites 
-     * @return                          the modified sequence as an HTML string
+     * Returns the modified sequence as an HTML string with potential
+     * modification sites color coding. /!\ this method will work only if the
+     * ptm found in the peptide are in the PTMFactory.
+     *
+     * @param colors the ptm name to color mapping
+     * @param includeHtmlStartEndTag if true, start and end html tags are added
+     * @param peptide
+     * @param mainModificationSites
+     * @param secondaryModificationSites
+     * @return the modified sequence as an HTML string
      */
     public static String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag, Peptide peptide,
             HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites) {
@@ -410,8 +433,6 @@ public class Peptide extends ExperimentObject {
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = colors.get(ptmName);
                         modifiedSequence +=
-                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
-                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
                                 + sequence.charAt(i)
                                 + "</span>";
@@ -424,7 +445,6 @@ public class Peptide extends ExperimentObject {
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = colors.get(ptmName);
                         modifiedSequence +=
-                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
                                 "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
                                 + sequence.charAt(i)
                                 + "</span>";
@@ -445,13 +465,13 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the modified sequence as an HTML string with modification 
-     * color coding.
-     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
-     * 
-     * @param colors                    the ptm name to color mapping  
-     * @param includeHtmlStartEndTag    if true, start and end html tags are added
-     * @return                          the modified sequence as an HTML string
+     * Returns the modified sequence as an HTML string with modification color
+     * coding. /!\ this method will work only if the ptm found in the peptide
+     * are in the PTMFactory.
+     *
+     * @param colors the ptm name to color mapping
+     * @param includeHtmlStartEndTag if true, start and end html tags are added
+     * @return the modified sequence as an HTML string
      */
     public String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag) {
 
@@ -507,11 +527,11 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a map of the ptm short names to the ptm colors. E.g., key: <ox>, 
+     * Returns a map of the ptm short names to the ptm colors. E.g., key: <ox>,
      * element: oxidation of m.
-     * 
-     * @param ptmColors  the ptm color map
-     * @return           a map of the ptm short names to the ptm colors
+     *
+     * @param ptmColors the ptm color map
+     * @return a map of the ptm short names to the ptm colors
      */
     public HashMap<String, Color> getPTMShortNameColorMap(HashMap<String, Color> ptmColors) {
 
@@ -530,9 +550,9 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a map of the ptm short names to the ptm long names for the 
+     * Returns a map of the ptm short names to the ptm long names for the
      * modification in this peptide. E.g., key: <ox>, element oxidation of m.
-     * 
+     *
      * @return a map of the ptm short names to the ptm long names
      */
     public HashMap<String, String> getPTMShortNameMap() {
@@ -552,11 +572,12 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH. 
-     * /!\ this method will work only if the ptm found in the peptide are in the PTMFactory
-     * 
-     * @param includeTerminals      if true, the terminals are included
-     * @return                      the modified sequence as a string
+     * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH.
+     * /!\ this method will work only if the ptm found in the peptide are in the
+     * PTMFactory.
+     *
+     * @param includeTerminals if true, the terminals are included
+     * @return the modified sequence as a string
      */
     public String getModifiedSequenceAsString(boolean includeTerminals) {
 
@@ -597,9 +618,10 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Estimates the theoretic mass of the peptide
-     * 
-     * @throws IllegalArgumentException if the peptide sequence contains unknown amino acids
+     * Estimates the theoretic mass of the peptide.
+     *
+     * @throws IllegalArgumentException if the peptide sequence contains unknown
+     * amino acids
      */
     private void estimateTheoreticMass() throws IllegalArgumentException {
 

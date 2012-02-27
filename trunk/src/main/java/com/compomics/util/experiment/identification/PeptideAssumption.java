@@ -163,4 +163,11 @@ public class PeptideAssumption extends ExperimentObject {
     public Charge getIdentificationCharge() {
         return identificationCharge;
     }
+
+    /**
+     * Set the rank of the PeptideAssumption
+     */
+    public void setRank(int aRank){
+        rank = aRank;
+    }
 }

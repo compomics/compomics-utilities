@@ -42,15 +42,23 @@ public class SpectrumFactory {
     /**
      * Map of already loaded precursors.
      */
-    private HashMap<String, Precursor> loadedPrecursors = new HashMap<String, Precursor>();
+    private HashMap<String, Precursor> loadedPrecursorsMap = new HashMap<String, Precursor>();
     /**
-     * Amount of proteins in cache, one by default.
+     * Amount of spectra in cache, one by default.
      */
-    private int nCache = 1;
+    private int nSpectraCache = 1;
     /**
-     * List of the implemented spectrum keys.
+     * Amount of precursors in cache
+     */
+    private int nPrecursorsCache = 50000;
+    /**
+     * List of the loaded spectra.
      */
     private ArrayList<String> loadedSpectra = new ArrayList<String>();
+    /**
+     * List of the loaded precursors.
+     */
+    private ArrayList<String> loadedPrecursors = new ArrayList<String>();
 
     /**
      * Constructor
@@ -95,23 +103,27 @@ public class SpectrumFactory {
      * Map of the mzML unmarshallers (fileName -> unmarshaller)
      */
     private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
+    /**
+     * Map of the spectrum file mapped according to the name used by the search engine
+     */
+    private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
 
     /**
-     * Sets the cache size.
+     * Sets the spectrum cache size.
      * 
      * @param nCache the new cache size
      */
     public void setCacheSize(int nCache) {
-        this.nCache = nCache;
+        this.nSpectraCache = nCache;
     }
 
     /**
-     * Returns the cache size.
+     * Returns the spectrum cache size.
      * 
      * @return the cache size 
      */
     public int getCacheSize() {
-        return nCache;
+        return nSpectraCache;
     }
 
     /**
@@ -320,7 +332,7 @@ public class SpectrumFactory {
         if (currentSpectrumMap.containsKey(spectrumKey)) {
             return ((MSnSpectrum) currentSpectrumMap.get(spectrumKey)).getPrecursor();
         }
-        Precursor currentPrecursor = loadedPrecursors.get(spectrumKey);
+        Precursor currentPrecursor = loadedPrecursorsMap.get(spectrumKey);
         if (currentPrecursor == null) {
             String fileName = Spectrum.getSpectrumFile(spectrumKey);
             String name = fileName;
@@ -384,7 +396,12 @@ public class SpectrumFactory {
                 throw new IllegalArgumentException("Spectrum file format not supported.");
             }
             if (save) {
-                loadedPrecursors.put(spectrumKey, currentPrecursor);
+                loadedPrecursorsMap.put(spectrumKey, currentPrecursor);
+                loadedPrecursors.add(spectrumKey);
+                while (loadedPrecursors.size() > nPrecursorsCache) {
+                    loadedPrecursorsMap.remove(loadedPrecursors.get(0));
+                    loadedPrecursors.remove(0);
+                }
             }
         }
         return currentPrecursor;
@@ -494,7 +511,7 @@ public class SpectrumFactory {
             } else {
                 throw new IllegalArgumentException("Spectrum file format not supported.");
             }
-            if (loadedSpectra.size() == nCache) {
+            if (loadedSpectra.size() == nSpectraCache) {
                 currentSpectrumMap.remove(loadedSpectra.get(0));
                 loadedSpectra.remove(0);
             }
@@ -563,7 +580,7 @@ public class SpectrumFactory {
      * @return a list of loaded mzML files
      */
     public ArrayList<String> getMzMLFileNames() {
-        return new ArrayList<String>(mzMLUnmarshallers.keySet()); // TODO: the ordering should be the same as in the mzML file!?
+        return new ArrayList<String>(mzMLUnmarshallers.keySet());
     }
 
     /**
@@ -596,6 +613,24 @@ public class SpectrumFactory {
         }
 
         return spectrumTitle;
+    }
+    
+    /**
+     * Adds an id to spectrum name in the mapping
+     * @param idName        name according to the id file
+     * @param spectrumName  actual name of the spectrum file
+     */
+    public void addIdNameMapping(String idName, File spectrumFile) {
+            idToSpectrumName.put(idName, spectrumFile);
+    }
+    
+    /**
+     * Returns the spectrum file corresponding to the name of the file used for identification
+     * @param idName the name of the spectrum file according to the identification file
+     * @return the spectrum file
+     */
+    public File getSpectrumFileFromIdName(String idName) {
+        return idToSpectrumName.get(idName);
     }
 
     /**

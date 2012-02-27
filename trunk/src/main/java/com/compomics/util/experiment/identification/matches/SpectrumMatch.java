@@ -94,7 +94,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public String getKey() {
         return spectrumKey;
     }
-
+    
     /**
      * Return all assumptions for the specified search engine indexed by their e-value
      *
@@ -175,4 +175,13 @@ public class SpectrumMatch extends IdentificationMatch {
     public MatchType getType() {
         return MatchType.Spectrum;
     }
+    
+    /**
+     * Replaces the new key. The key of the PSM should always be the same as the spectrum key it links to
+     * @param newKey the new key
+     */
+    public void setKey(String newKey) {
+        this.spectrumKey = newKey;
+    }
+    
 }

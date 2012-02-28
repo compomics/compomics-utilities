@@ -257,7 +257,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the corresponding list of accessions
      */
     public static String[] getAccessions(String key) {
-        return key.split(" "); // @TODO: what about accessions with spaces in them???
+        return key.split(" "); // @TODO: change the separator the next time we release a version without backward compatibility
     }
 
     @Override

@@ -50,7 +50,7 @@ public class SpectrumFactory {
     /**
      * Amount of precursors in cache
      */
-    private int nPrecursorsCache = 50000;
+    private int nPrecursorsCache = 10000;
     /**
      * List of the loaded spectra.
      */

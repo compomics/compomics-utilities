@@ -14,9 +14,14 @@ import javax.swing.table.DefaultTableModel;
  * @author  Harald Barsnes
  */
 public class Util {
+    
+    /**
+     * Forbidden characters in file names
+     */
+    public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
-     * Rounds a double value to the wanted number of decimalplaces.
+     * Rounds a double value to the wanted number of decimal places.
      *
      * @param d the double to round of
      * @param places number of decimal places wanted

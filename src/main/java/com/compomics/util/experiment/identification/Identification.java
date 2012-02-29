@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -98,10 +99,6 @@ public abstract class Identification extends ExperimentObject {
      * creation
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
-    /**
-     * Forbidden characters to get rid of when serializing
-     */
-    public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
      * Adds a parameter with a corresponding match key which will be loaded in
@@ -699,7 +696,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public String getFileName(String key) {
 
-        for (String fc : forbiddenCharacters) {
+        for (String fc : Util.forbiddenCharacters) {
             String[] split = key.split(fc);
             key = "";
             for (String splitPart : split) {

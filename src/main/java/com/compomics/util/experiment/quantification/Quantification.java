@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.quantification;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -542,7 +543,7 @@ public abstract class Quantification extends ExperimentObject {
      */
     public String getFileName(String key) {
         
-        for (String fc : Identification.forbiddenCharacters) {
+        for (String fc : Util.forbiddenCharacters) {
             String[] split = key.split(fc);
             key = "";
             for (String splitPart : split) {

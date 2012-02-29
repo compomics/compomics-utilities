@@ -3,7 +3,7 @@ package com.compomics.util.experiment.io;
 import com.compomics.util.experiment.MsExperiment;
 
 import java.io.*;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
+
 
 /**
  * This class takes care of the saving and opening of Compomics utilities
@@ -28,9 +28,11 @@ public class ExperimentIO {
      */
     public void save(File file, MsExperiment experiment) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(experiment);
         fos.close();
+        bos.close();
         oos.close();
     }
 
@@ -44,9 +46,11 @@ public class ExperimentIO {
      */
     public MsExperiment loadExperiment(File utilitiesFile) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(utilitiesFile);
-        ObjectInputStream in = new ObjectInputStream(fis);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        ObjectInputStream in = new ObjectInputStream(bis);
         MsExperiment experiment = (MsExperiment) in.readObject();
         fis.close();
+        bis.close();
         in.close();
         return experiment;
     }

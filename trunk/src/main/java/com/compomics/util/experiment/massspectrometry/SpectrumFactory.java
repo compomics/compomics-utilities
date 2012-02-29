@@ -2,14 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -531,9 +524,12 @@ public class SpectrumFactory {
     public void writeIndex(MgfIndex mgfIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
         FileOutputStream fos = new FileOutputStream(new File(directory, mgfIndex.getFileName() + ".cui"));
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(mgfIndex);
         oos.close();
+        bos.close();
+        fos.close();
     }
 
     /**
@@ -547,9 +543,11 @@ public class SpectrumFactory {
      */
     public MgfIndex getIndex(File mgfIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(mgfIndex);
-        ObjectInputStream in = new ObjectInputStream(fis);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        ObjectInputStream in = new ObjectInputStream(bis);
         MgfIndex index = (MgfIndex) in.readObject();
         fis.close();
+        bis.close();
         in.close();
         return index;
     }
@@ -618,7 +616,7 @@ public class SpectrumFactory {
     /**
      * Adds an id to spectrum name in the mapping
      * @param idName        name according to the id file
-     * @param spectrumName  actual name of the spectrum file
+     * @param spectrumFile  the spectrum file
      */
     public void addIdNameMapping(String idName, File spectrumFile) {
             idToSpectrumName.put(idName, spectrumFile);

@@ -8,13 +8,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.dialogs.ProgressDialogX;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -260,9 +254,11 @@ public abstract class Identification extends ExperimentObject {
             try {
                 File newMatch = new File(serializationDirectory, getFileName(matchKey));
                 FileInputStream fis = new FileInputStream(newMatch);
-                ObjectInputStream in = new ObjectInputStream(fis);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream in = new ObjectInputStream(bis);
                 Object spectrumMatch = in.readObject();
                 fis.close();
+                bis.close();
                 in.close();
                 loadedMatchesMap.put(matchKey, spectrumMatch);
                 loadedMatches.add(matchKey);
@@ -385,9 +381,11 @@ public abstract class Identification extends ExperimentObject {
                     try {
                         File matchFile = new File(serializationDirectory, getFileName(key));
                         FileOutputStream fos = new FileOutputStream(matchFile);
-                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        BufferedOutputStream bos = new BufferedOutputStream(fos);
+                        ObjectOutputStream oos = new ObjectOutputStream(bos);
                         oos.writeObject(loadedMatchesMap.get(key));
                         oos.close();
+                        bos.close();
                         fos.close();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -438,9 +436,11 @@ public abstract class Identification extends ExperimentObject {
                 try {
                     File matchFile = new File(serializationDirectory, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    bos.close();
                     fos.close();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -493,14 +493,12 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumMatchKey The key of the spectrum match to add
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) {
-        String peptideKey, proteinKey;
-        Peptide peptide;
-        SpectrumMatch spectrumMatch;
+        
+        SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
+        Peptide peptide = spectrumMatch.getBestAssumption().getPeptide();
+        String peptideKey = peptide.getKey();
         PeptideMatch peptideMatch;
-        ProteinMatch proteinMatch;
-        spectrumMatch = getSpectrumMatch(spectrumMatchKey);
-        peptide = spectrumMatch.getBestAssumption().getPeptide();
-        peptideKey = peptide.getKey();
+        
         if (peptideIdentification.contains(peptideKey)) {
             peptideMatch = getPeptideMatch(peptideKey);
             peptideMatch.addSpectrumMatch(spectrumMatchKey);
@@ -512,22 +510,25 @@ public abstract class Identification extends ExperimentObject {
             loadedMatchesMap.put(peptideKey, peptideMatch);
             modifiedMatches.put(peptideKey, true);
         }
-        proteinKey = ProteinMatch.getProteinMatchKey(peptide);
+        
+        String proteinKey = ProteinMatch.getProteinMatchKey(peptide);
+        
         if (proteinIdentification.contains(proteinKey)) {
-            proteinMatch = getProteinMatch(proteinKey);
+            ProteinMatch proteinMatch = getProteinMatch(proteinKey);
             if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
                 proteinMatch.addPeptideMatch(peptideKey);
                 setMatchChanged(proteinMatch);
             }
         } else {
-            proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
+            ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
             proteinIdentification.add(proteinKey);
             loadedMatches.add(proteinKey);
             loadedMatchesMap.put(proteinKey, proteinMatch);
             modifiedMatches.put(proteinKey, true);
+            
             for (String protein : peptide.getParentProteins()) {
                 if (!proteinMap.containsKey(protein)) {
-                    proteinMap.put(protein, new ArrayList<String>());
+                    proteinMap.put(protein, new ArrayList<String>(5));
                 }
                 if (!proteinMap.get(protein).contains(proteinKey)) {
                     proteinMap.get(protein).add(proteinKey);
@@ -557,9 +558,11 @@ public abstract class Identification extends ExperimentObject {
                 try {
                     File matchFile = new File(serializationDirectory, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    bos.close();
                     fos.close();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -621,16 +624,20 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      */
     public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException {
+        
         String key = match.getKey();
+        
         if (loadedMatches.contains(key)) {
             modifiedMatches.put(key, true);
         } else {
             try {
                 File matchFile = new File(serializationDirectory, getFileName(key));
                 FileOutputStream fos = new FileOutputStream(matchFile);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
                 oos.writeObject(match);
                 oos.close();
+                bos.close();
                 fos.close();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Error while writing match " + key);
@@ -664,9 +671,11 @@ public abstract class Identification extends ExperimentObject {
                 try {
                     File matchFile = new File(newPath, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    bos.close();
                     fos.close();
                     modifiedMatches.put(key, false);
                 } catch (FileNotFoundException e) {

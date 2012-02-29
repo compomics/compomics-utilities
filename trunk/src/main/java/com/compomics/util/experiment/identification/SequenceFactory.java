@@ -2,14 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.protein.Header;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
@@ -254,9 +247,12 @@ public class SequenceFactory {
     public void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
         FileOutputStream fos = new FileOutputStream(new File(directory, fastaIndex.getFileName() + ".cui"));
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(fastaIndex);
         oos.close();
+        bos.close();
+        fos.close();
     }
 
     /**
@@ -270,9 +266,11 @@ public class SequenceFactory {
      */
     public FastaIndex getIndex(File fastaIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(fastaIndex);
-        ObjectInputStream in = new ObjectInputStream(fis);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        ObjectInputStream in = new ObjectInputStream(bis);
         FastaIndex index = (FastaIndex) in.readObject();
         fis.close();
+        bis.close();
         in.close();
         return index;
     }
@@ -324,7 +322,7 @@ public class SequenceFactory {
 
         long progressUnit = randomAccessFile.length() / 100;
 
-        String line, accession = "";
+        String line;
         boolean decoy = false;
         int nTarget = 0;
         Header fastaHeader;
@@ -333,7 +331,7 @@ public class SequenceFactory {
         while ((line = randomAccessFile.readLine()) != null) {
             if (line.startsWith(">")) {
                 fastaHeader = Header.parseFromFASTA(line);
-                accession = fastaHeader.getAccession();
+                String accession = fastaHeader.getAccession();
                 if (accession == null) {
                     accession = fastaHeader.getRest();
                 }

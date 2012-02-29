@@ -72,6 +72,8 @@ public class PropertiesManager {
 
     /**
      * DO NOT RUN. For testing purpose.
+     * 
+     * @param args 
      */
     public static void main(String[] args) {
         new PropertiesManager();
@@ -80,6 +82,7 @@ public class PropertiesManager {
     /**
      * Get a Properties instance for the parameter properties filename.
      *
+     * @param aTool 
      * @param aPropertiesFileName - e.g.: "mascotdaemon.properties"
      * @return Properties instance of the given properties file. Null if the filename was not found.
      */
@@ -141,9 +144,11 @@ public class PropertiesManager {
                         lOutput.createNewFile();
                     }
                     FileOutputStream fos = new FileOutputStream(lOutput);
-                    lClassPathProperties.store(fos, aPropertiesFileName + " properties file");
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
+                    lClassPathProperties.store(bos, aPropertiesFileName + " properties file");
                     fos.flush();
                     fos.close();
+                    bos.close();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
@@ -197,6 +202,7 @@ public class PropertiesManager {
     /**
      * Update the content of a user properties instance to the ms_lims properties directory.
      *
+     * @param aTool 
      * @param aNewProperties      The Properties instance.
      * @param aPropertiesFileName The properties filename (e.g., dbconnection.properties)
      */
@@ -233,16 +239,17 @@ public class PropertiesManager {
      * @param lProperties
      */
     private void storeProperties(String aPropertiesFileName, CompomicsTools aTool, Properties lProperties) {
-        File lOutput = null;
-        lOutput = getFile(aTool, aPropertiesFileName);
+        File lOutput = getFile(aTool, aPropertiesFileName);
         try {
             if (!lOutput.exists()) {
                 lOutput.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(lOutput);
-            lProperties.store(fos, aPropertiesFileName + " properties file");
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            lProperties.store(bos, aPropertiesFileName + " properties file");
             fos.flush();
             fos.close();
+            bos.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -252,6 +259,7 @@ public class PropertiesManager {
      * This method will delete the log4j log file in the folder of the package and will create a log file in the
      * CompomicsTools specific .compomics folder
      *
+     * @param aLogger 
      * @param aCompomicsTools The tool
      */
     public void updateLog4jConfiguration(final org.apache.log4j.Logger aLogger, CompomicsTools aCompomicsTools) {
@@ -287,7 +295,7 @@ public class PropertiesManager {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < lElements.length; i++) {
                         StackTraceElement lElement = lElements[i];
-                        sb.append(lElement.toString() +"\n");
+                        sb.append(lElement.toString() + "\n");
                     }
                     aLogger.error(sb.toString());
                 }

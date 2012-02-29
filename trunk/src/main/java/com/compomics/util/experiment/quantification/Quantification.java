@@ -11,11 +11,7 @@ import com.compomics.util.experiment.quantification.reporterion.QuantificationMa
 import com.compomics.util.experiment.quantification.reporterion.quantification.PeptideQuantification;
 import com.compomics.util.experiment.quantification.reporterion.quantification.PsmQuantification;
 import com.compomics.util.gui.dialogs.ProgressDialogX;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -246,9 +242,11 @@ public abstract class Quantification extends ExperimentObject {
             try {
                 File newMatch = new File(serializationDirectory, getFileName(quantificationKey));
                 FileInputStream fis = new FileInputStream(newMatch);
-                ObjectInputStream in = new ObjectInputStream(fis);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream in = new ObjectInputStream(bis);
                 Object spectrumMatch = in.readObject();
                 fis.close();
+                bis.close();
                 in.close();
                 loadedMatchesMap.put(quantificationKey, spectrumMatch);
                 loadedMatches.add(quantificationKey);
@@ -383,9 +381,12 @@ public abstract class Quantification extends ExperimentObject {
                     try {
                         File matchFile = new File(serializationDirectory, getFileName(key));
                         FileOutputStream fos = new FileOutputStream(matchFile);
-                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        BufferedOutputStream bos = new BufferedOutputStream(fos);
+                        ObjectOutputStream oos = new ObjectOutputStream(bos);
                         oos.writeObject(loadedMatchesMap.get(key));
                         oos.close();
+                        bos.close();
+                        fos.close();
                     } catch (Exception e) {
                         throw new Exception("Error while writing match " + key);
                     }
@@ -412,23 +413,27 @@ public abstract class Quantification extends ExperimentObject {
      * Creates the peptides and protein quantification instances based on the identification and the psm quantification. 
      * This operation will be extremely slow if the cache is already full.
      * 
+     * @param identification 
      * @throws Exception 
      */
     public void buildPeptidesAndProteinQuantifications(Identification identification) throws Exception {
-        ProteinMatch proteinMatch;
-        ProteinQuantification proteinQuantification;
+
+        ProteinQuantification tempProteinQuantification;
+        
         for (String proteinKey : identification.getProteinIdentification()) {
-            proteinMatch = identification.getProteinMatch(proteinKey);
-            proteinQuantification = new ProteinQuantification(proteinKey, proteinMatch.getPeptideMatches());
-            addProteinQuantification(proteinQuantification);
+            ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
+            tempProteinQuantification = new ProteinQuantification(proteinKey, proteinMatch.getPeptideMatches());
+            addProteinQuantification(tempProteinQuantification);
         }
-        PeptideMatch peptideMatch;
-        PeptideQuantification peptideQuantification;
+
+        PeptideQuantification tempPeptideQuantification;
+        
         for (String peptideKey : identification.getPeptideIdentification()) {
-            peptideMatch = identification.getPeptideMatch(peptideKey);
-            peptideQuantification = new PeptideQuantification(peptideKey, peptideMatch.getSpectrumMatches());
-            addPeptideQuantification(peptideQuantification);
+            PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
+            tempPeptideQuantification = new PeptideQuantification(peptideKey, peptideMatch.getSpectrumMatches());
+            addPeptideQuantification(tempPeptideQuantification);
         }
+        
         for (String psmKey : identification.getSpectrumIdentification()) {
             if (!psmIDentificationToQuantification.containsKey(psmKey)) {
                 psmIDentificationToQuantification.put(psmKey, new ArrayList<String>());
@@ -453,9 +458,12 @@ public abstract class Quantification extends ExperimentObject {
                 try {
                     File matchFile = new File(serializationDirectory, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    bos.close();
+                    fos.close();
                 } catch (Exception e) {
                     throw new Exception("Error while writing match " + key);
                 }
@@ -483,9 +491,12 @@ public abstract class Quantification extends ExperimentObject {
             try {
                 File matchFile = new File(serializationDirectory, getFileName(key));
                 FileOutputStream fos = new FileOutputStream(matchFile);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
                 oos.writeObject(match);
                 oos.close();
+                bos.close();
+                fos.close();
             } catch (Exception e) {
                 throw new Exception("Error while writing match " + key);
             }
@@ -517,9 +528,12 @@ public abstract class Quantification extends ExperimentObject {
                 try {
                     File matchFile = new File(newPath, getFileName(key));
                     FileOutputStream fos = new FileOutputStream(matchFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    BufferedOutputStream bos = new BufferedOutputStream(fos);
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
                     oos.writeObject(loadedMatchesMap.get(key));
                     oos.close();
+                    bos.close();
+                    fos.close();
                     modifiedMatches.put(key, false);
                 } catch (Exception e) {
                     throw new Exception("Error while writing match " + key);

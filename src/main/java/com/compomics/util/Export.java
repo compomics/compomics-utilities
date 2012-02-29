@@ -3,12 +3,7 @@ package com.compomics.util;
 import com.compomics.util.enumeration.ImageType;
 import java.awt.Component;
 import java.awt.Rectangle;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import javax.swing.JComponent;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
@@ -119,10 +114,12 @@ public class Export {
         }
 
         OutputStream outputStream = new FileOutputStream(svgFile);
-        Writer out = new OutputStreamWriter(outputStream, "UTF-8");
+        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+        Writer out = new OutputStreamWriter(bos, "UTF-8");
         svgGenerator.stream(out, true /* use css */);
         outputStream.flush();
         outputStream.close();
+        bos.close();
 
         // if selected image format is not svg, convert the image
         if (imageType != ImageType.SVG) {
@@ -132,7 +129,8 @@ public class Export {
             TranscoderInput svgInputFile = new TranscoderInput(svgURI);
 
             OutputStream outstream = new FileOutputStream(exportFile);
-            TranscoderOutput output = new TranscoderOutput(outstream);
+            bos = new BufferedOutputStream(outstream);
+            TranscoderOutput output = new TranscoderOutput(bos);
 
             if (imageType == ImageType.PDF) {
 
@@ -168,6 +166,7 @@ public class Export {
             //close the stream
             outstream.flush();
             outstream.close();
+            bos.close();
 
             // delete the svg file given that the selected format is not svg
             if (svgFile.exists()) {

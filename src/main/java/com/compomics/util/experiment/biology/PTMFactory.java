@@ -69,9 +69,11 @@ public class PTMFactory implements Serializable {
             try {
                 File savedFile = new File(SERIALIZATION_FILE);
                 FileInputStream fis = new FileInputStream(savedFile);
-                ObjectInputStream in = new ObjectInputStream(fis);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream in = new ObjectInputStream(bis);
                 Object factory = in.readObject();
                 fis.close();
+                bis.close();
                 in.close();
                 instance = (PTMFactory) factory;
             } catch (Exception e) {
@@ -107,9 +109,11 @@ public class PTMFactory implements Serializable {
             factoryFile.getParentFile().mkdir();
         }
         FileOutputStream fos = new FileOutputStream(factoryFile);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(instance);
         oos.close();
+        bos.close();
         fos.close();
     }
 
@@ -380,7 +384,7 @@ public class PTMFactory implements Serializable {
                 parser.next();
                 aminoAcids.add(parser.getText().trim());
                 parser.next();
-                type = parser.next();
+                parser.next();
                 type = parser.next();
             }
             if (aminoAcids.size() > 1) {

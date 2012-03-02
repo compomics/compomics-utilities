@@ -45,10 +45,8 @@ public class FileSystemAccessor {
      * @return the user home folder
      */
     public static File getHomeFolder(){
-        File lFile = null;
         String lHomeDirectory = System.getProperty("user.home");
-        lFile = new File(lHomeDirectory);
-
+        File lFile = new File(lHomeDirectory);
         return lFile;
     }
 
@@ -64,6 +62,8 @@ public class FileSystemAccessor {
         path = PropertiesManager.getInstance().getClass().getProtectionDomain().getCodeSource().getLocation().toString();
         path = path.substring(5, path.lastIndexOf(lFileSeparator) + 1);
         path = path.replace("%20", " ");
+        path = path.replace("%5b", "[");
+        path = path.replace("%5d", "]");
 
         return path;
     }

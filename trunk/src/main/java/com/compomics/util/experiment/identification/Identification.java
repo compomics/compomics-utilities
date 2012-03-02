@@ -16,8 +16,8 @@ import java.util.Set;
 import javax.swing.JProgressBar;
 
 /**
- * This class contains identification results. 
- * 
+ * This class contains identification results.
+ *
  * @author Marc Vaudel
  */
 public abstract class Identification extends ExperimentObject {
@@ -266,6 +266,7 @@ public abstract class Identification extends ExperimentObject {
                 updateCache();
                 return spectrumMatch;
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new IllegalArgumentException("Error while loading " + matchKey);
             }
         } else {
@@ -485,20 +486,20 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Creates the peptides and protein instances based on the given spectrum match.
-     * Note that the attribute bestAssumption should be set for every spectrum
-     * match at this point. This operation will be very slow if the cache is
-     * already full.
-     * 
+     * Creates the peptides and protein instances based on the given spectrum
+     * match. Note that the attribute bestAssumption should be set for every
+     * spectrum match at this point. This operation will be very slow if the
+     * cache is already full.
+     *
      * @param spectrumMatchKey The key of the spectrum match to add
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) {
-        
+
         SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
         Peptide peptide = spectrumMatch.getBestAssumption().getPeptide();
         String peptideKey = peptide.getKey();
         PeptideMatch peptideMatch;
-        
+
         if (peptideIdentification.contains(peptideKey)) {
             peptideMatch = getPeptideMatch(peptideKey);
             peptideMatch.addSpectrumMatch(spectrumMatchKey);
@@ -510,9 +511,9 @@ public abstract class Identification extends ExperimentObject {
             loadedMatchesMap.put(peptideKey, peptideMatch);
             modifiedMatches.put(peptideKey, true);
         }
-        
+
         String proteinKey = ProteinMatch.getProteinMatchKey(peptide);
-        
+
         if (proteinIdentification.contains(proteinKey)) {
             ProteinMatch proteinMatch = getProteinMatch(proteinKey);
             if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
@@ -525,7 +526,7 @@ public abstract class Identification extends ExperimentObject {
             loadedMatches.add(proteinKey);
             loadedMatchesMap.put(proteinKey, proteinMatch);
             modifiedMatches.put(proteinKey, true);
-            
+
             for (String protein : peptide.getParentProteins()) {
                 if (!proteinMap.containsKey(protein)) {
                     proteinMap.put(protein, new ArrayList<String>(5));
@@ -624,9 +625,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      */
     public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException {
-        
+
         String key = match.getKey();
-        
+
         if (loadedMatches.contains(key)) {
             modifiedMatches.put(key, true);
         } else {
@@ -640,6 +641,7 @@ public abstract class Identification extends ExperimentObject {
                 bos.close();
                 fos.close();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new IllegalArgumentException("Error while writing match " + key);
             }
         }

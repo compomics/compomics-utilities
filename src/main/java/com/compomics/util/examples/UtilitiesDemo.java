@@ -698,6 +698,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         if (path.lastIndexOf("/utilities-") != -1) {
             path = path.substring(5, path.lastIndexOf("/utilities-"));
             path = path.replace("%20", " ");
+            path = path.replace("%5b", "[");
+            path = path.replace("%5d", "]");
         } else {
             path = ".";
         }
@@ -824,11 +826,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             protected JTableHeader createDefaultTableHeader() {
                 return new JTableHeader(columnModel) {
                     public String getToolTipText(MouseEvent e) {
-                        String tip = null;
                         java.awt.Point p = e.getPoint();
                         int index = columnModel.getColumnIndexAtX(p.x);
                         int realIndex = columnModel.getColumn(index).getModelIndex();
-                        tip = (String) sequenceAnnotationColumnHeaderTooltips.get(realIndex);
+                        String tip = (String) sequenceAnnotationColumnHeaderTooltips.get(realIndex);
                         return tip;
                     }
                 };
@@ -2091,11 +2092,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             .add(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(sequenceJTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
+                    .add(sequenceJTabbedPane)
                     .add(jPanel3Layout.createSequentialGroup()
                         .add(jLabel24)
                         .add(18, 18, 18)
-                        .add(sequenceFileJTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                        .add(sequenceFileJTextField)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(browseJButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -2115,7 +2116,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     .add(nextJButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(browseJButton))
                 .add(18, 18, 18)
-                .add(sequenceJTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .add(sequenceJTabbedPane)
                 .addContainerGap())
         );
 
@@ -2196,7 +2197,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             sequenceCoverageJPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(sequenceCoverageJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(proteinCoverageJScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
+                .add(proteinCoverageJScrollPane)
                 .addContainerGap())
         );
         sequenceCoverageJPanelLayout.setVerticalGroup(
@@ -3560,7 +3561,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
         DefaultTableColumnModel colModel = (DefaultTableColumnModel) table.getColumnModel();
         TableColumn col = colModel.getColumn(colIndex);
-        int width = 0;
 
         // get width of column header
         TableCellRenderer renderer = col.getHeaderRenderer();
@@ -3569,7 +3569,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         }
 
         Component comp = renderer.getTableCellRendererComponent(table, col.getHeaderValue(), false, false, 0, 0);
-        width = comp.getPreferredSize().width;
+        int width = comp.getPreferredSize().width;
 
         // get maximum width of column data
         for (int r = 0; r < table.getRowCount(); r++) {

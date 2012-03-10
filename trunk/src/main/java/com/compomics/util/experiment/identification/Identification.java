@@ -697,6 +697,7 @@ public abstract class Identification extends ExperimentObject {
             }
         }
         serializationDirectory = newFolder.getPath();
+        emptyCache(progressDialog);
     }
 
     /**

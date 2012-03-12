@@ -14,6 +14,10 @@ import java.util.Arrays;
 public class Protocol implements PrideObject, Serializable {
 
     /**
+     * serialization number for backward compatibility
+     */
+    static final long serialVersionUID = -9045298216154032632L;
+    /**
      * The protcol name.
      */
     private String name;
@@ -60,20 +64,21 @@ public class Protocol implements PrideObject, Serializable {
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
         this.cvTerms = cvTerms;
     }
-    
+
     /**
      * Returns a list of default protocols
+     *
      * @return a list of default protocols
      */
     public static ArrayList<Protocol> getDefaultProtocols() {
         ArrayList<Protocol> result = new ArrayList<Protocol>();
-        
+
         result.add(new Protocol("In Gel Protein Digestion",
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("PRIDE", "PRIDE:0000025", "Reduction", "DTT"),
                 new CvTerm("PRIDE", "PRIDE:0000026", "Alkylation", "iodoacetamide"),
                 new CvTerm("PRIDE", "PRIDE:0000160", "Enzyme", "Trypsin")))));
-        
+
         return result;
     }
 

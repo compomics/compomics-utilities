@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFrag
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.pride.CvTerm;
 
 /**
  * This class will model the assignment of a peak to a theoretical ion.
@@ -140,5 +141,37 @@ public class IonMatch extends ExperimentObject {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Returns the pride CV term for the ion match m/z
+     * @return the pride CV term for the ion match m/z
+     */
+    public CvTerm getMZPrideCvTerm() {
+        return new CvTerm("PRIDE", "PRIDE:0000188", "product ion m/z", peak.mz + "");
+    }
+    
+    /**
+     * Returns the pride CV term for the ion match intensity
+     * @return the pride CV term for the ion match intensity
+     */
+    public CvTerm getIntensityPrideCvTerm() {
+        return new CvTerm("PRIDE", "PRIDE:0000189", "product ion intensity", peak.intensity + "");
+    }
+    
+    /**
+     * Returns the pride CV term for the ion match error
+     * @return the pride CV term for the ion match error
+     */
+    public CvTerm getIonMassErrorPrideCvTerm() {
+        return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError() + "");
+    }
+    
+    /**
+     * Returns the pride CV term for the ion match charge
+     * @return the pride CV term for the ion match charge
+     */
+    public CvTerm getChargePrideCvTerm() {
+        return new CvTerm("PRIDE", "PRIDE:0000204", "product ion charge", charge.value + "");
     }
 }

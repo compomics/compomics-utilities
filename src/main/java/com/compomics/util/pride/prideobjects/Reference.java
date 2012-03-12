@@ -6,11 +6,15 @@ import java.util.ArrayList;
 
 /**
  * A simple publication reference object.
- *  
+ *
  * @author Harald Barsnes
  */
 public class Reference implements PrideObject, Serializable {
 
+    /**
+     * serialization number for backward compatibility
+     */
+    static final long serialVersionUID = -5449836209751629549L;
     /**
      * The reference text.
      */
@@ -26,10 +30,10 @@ public class Reference implements PrideObject, Serializable {
 
     /**
      * Create a new Reference object.
-     * 
+     *
      * @param reference
      * @param pmid
-     * @param doi 
+     * @param doi
      */
     public Reference(String reference, String pmid, String doi) {
         this.reference = reference;
@@ -78,9 +82,10 @@ public class Reference implements PrideObject, Serializable {
     public void setDoi(String doi) {
         this.doi = doi;
     }
-    
+
     /**
      * Returns the default references
+     *
      * @return the default references
      */
     public static ArrayList<Reference> getDefaultReferences() {

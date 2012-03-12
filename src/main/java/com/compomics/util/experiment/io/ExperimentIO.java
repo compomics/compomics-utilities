@@ -31,9 +31,9 @@ public class ExperimentIO {
         BufferedOutputStream bos = new BufferedOutputStream(fos);
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(experiment);
-        fos.close();
-        bos.close();
         oos.close();
+        bos.close();
+        fos.close();
     }
 
     /**
@@ -49,9 +49,9 @@ public class ExperimentIO {
         BufferedInputStream bis = new BufferedInputStream(fis);
         ObjectInputStream in = new ObjectInputStream(bis);
         MsExperiment experiment = (MsExperiment) in.readObject();
+        in.close();
         fis.close();
         bis.close();
-        in.close();
         return experiment;
     }
 }

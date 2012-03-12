@@ -11,6 +11,10 @@ import java.io.*;
 public class Contact implements PrideObject, Serializable {
 
     /**
+     * serialization number for backward compatibility
+     */
+    static final long serialVersionUID = -9182316910747747823L;
+    /**
      * The contact's name.
      */
     private String name;

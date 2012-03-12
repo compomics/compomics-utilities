@@ -14,6 +14,10 @@ import java.util.Arrays;
 public class Sample implements PrideObject, Serializable {
 
     /**
+     * serialization number for backward compatibility
+     */
+    static final long serialVersionUID = -7142471175737857227L;
+    /**
      * The sample name.
      */
     private String name;
@@ -60,18 +64,19 @@ public class Sample implements PrideObject, Serializable {
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
         this.cvTerms = cvTerms;
     }
-    
+
     /**
      * Returns a list of default samples
-     * @return 
+     *
+     * @return
      */
     public static ArrayList<Sample> getDefaultSamples() {
         ArrayList<Sample> result = new ArrayList<Sample>();
-                result.add(new Sample("Example sample set", new ArrayList<CvTerm>(Arrays.asList(
-                        new CvTerm("NEWT", "9606", "Homo sapiens (Human)", null),
-                        new CvTerm("BTO", "BTO:0000763", "lung", null),
-                        new CvTerm("BTO", "BTO:0000762", "lung cancer cell line", null)))));
-                return result;
+        result.add(new Sample("Example sample set", new ArrayList<CvTerm>(Arrays.asList(
+                new CvTerm("NEWT", "9606", "Homo sapiens (Human)", null),
+                new CvTerm("BTO", "BTO:0000763", "lung", null),
+                new CvTerm("BTO", "BTO:0000762", "lung cancer cell line", null)))));
+        return result;
     }
 
     public String getFileName() {

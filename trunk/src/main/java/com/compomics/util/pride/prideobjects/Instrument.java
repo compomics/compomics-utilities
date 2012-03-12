@@ -14,6 +14,10 @@ import java.util.Arrays;
 public class Instrument implements PrideObject, Serializable {
 
     /**
+     * serialization number for backward compatibility
+     */
+    static final long serialVersionUID = -8802861658166703745L;
+    /**
      * The instrument name.
      */
     private String name;
@@ -100,42 +104,43 @@ public class Instrument implements PrideObject, Serializable {
     public void setDetector(CvTerm detector) {
         this.detector = detector;
     }
-    
+
     /**
      * Returns a list of predefined instruments
+     *
      * @return a list of predefined instruments
      */
     public static ArrayList<Instrument> getDefaultInstruments() {
         ArrayList<Instrument> result = new ArrayList<Instrument>();
-        result.add(new Instrument("Bruker Ultraflex", 
-                new CvTerm("MS", "MS:1000075", "Matrix-assisted Laser Desorption Ionization", null), 
-                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null), 
+        result.add(new Instrument("Bruker Ultraflex",
+                new CvTerm("MS", "MS:1000075", "Matrix-assisted Laser Desorption Ionization", null),
+                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null),
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("MS", "MS:1000202", "Bruker Daltonics ultraFlex TOF/TOF MS", null)))));
-        result.add(new Instrument("LCQ Duo", 
-                new CvTerm("MS", "MS:1000073", "Electrospray Ionization", null), 
-                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null), 
+        result.add(new Instrument("LCQ Duo",
+                new CvTerm("MS", "MS:1000073", "Electrospray Ionization", null),
+                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null),
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("MS", "MS:1000264", "Ion Trap", null)))));
-        result.add(new Instrument("LTQ-Orbitrap", 
-                new CvTerm("MS", "MS:1000073", "Electrospray Ionization", null), 
-                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null), 
+        result.add(new Instrument("LTQ-Orbitrap",
+                new CvTerm("MS", "MS:1000073", "Electrospray Ionization", null),
+                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null),
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("MS", "MS:1000449", "LTQ Orbitrap", null)))));
-        result.add(new Instrument("QSTAR Pulsar I", 
-                new CvTerm("MS", "MS:1000075", "Matrix-assisted Laser Desorption Ionization", null), 
-                new CvTerm("MS", "MS:1000108", "Conversion Dynode Electron Multiplier", null), 
+        result.add(new Instrument("QSTAR Pulsar I",
+                new CvTerm("MS", "MS:1000075", "Matrix-assisted Laser Desorption Ionization", null),
+                new CvTerm("MS", "MS:1000108", "Conversion Dynode Electron Multiplier", null),
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("MS", "MS:1000084", "Time-of-flight", null)))));
-        result.add(new Instrument("QToF Global", 
-                new CvTerm("MS", "MS:1000114", "Electrospray Ionization", null), 
-                new CvTerm("MS", "MS:1000111", "Microchannel Plate Detector", null), 
+        result.add(new Instrument("QToF Global",
+                new CvTerm("MS", "MS:1000114", "Electrospray Ionization", null),
+                new CvTerm("MS", "MS:1000111", "Microchannel Plate Detector", null),
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("MS", "MS:1000081", "Quadrupole", null),
                 new CvTerm("MS", "MS:1000084", "Time-of-flight", null)))));
-        result.add(new Instrument("QToF-Ultima", 
-                new CvTerm("MS", "MS:1000073", "Electrospray Ionization", null), 
-                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null), 
+        result.add(new Instrument("QToF-Ultima",
+                new CvTerm("MS", "MS:1000073", "Electrospray Ionization", null),
+                new CvTerm("MS", "MS:1000111", "Electron Multiplier Tube", null),
                 new ArrayList<CvTerm>(Arrays.asList(
                 new CvTerm("MS", "MS:1000188", "Q-Tof micro", null)))));
         return result;

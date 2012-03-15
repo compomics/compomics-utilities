@@ -170,6 +170,14 @@ public class Enzyme extends ExperimentObject {
     public ArrayList<Character> getRestrictionBefore() {
         return restrictionBefore;
     }
+    
+    /**
+     * Returns a boolean indicating whether a cleavage site was implemented for this enzyme
+     * @return a boolean indicating whether a cleavage site was implemented for this enzyme
+     */
+    public boolean enzymeCleaves() {
+        return !getAminoAcidBefore().isEmpty() || !getAminoAcidAfter().isEmpty();
+    }
 
     /**
      * Digests a protein sequence in a list of expected peptide sequences.

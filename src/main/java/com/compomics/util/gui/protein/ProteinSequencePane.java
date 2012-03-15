@@ -327,6 +327,8 @@ public class ProteinSequencePane {
         
 
         if (peffKeyValuePairs.containsKey("ModRes") && selectedAnnotationType.containsKey("ModRes_Foreground")) {
+            
+            // @TODO: support ModResPsi!!
 
             String modifications = peffKeyValuePairs.get("ModRes");
             modifications = modifications.substring(1, modifications.length() - 1);
@@ -630,7 +632,11 @@ public class ProteinSequencePane {
             int start = new Integer(tempValue[0]);
             int end = new Integer(tempValue[1]);
 
-            String sequence = tempValue[2];
+            String sequence = "";
+            
+            if (tempValue.length > 2) {
+                sequence = tempValue[2];
+            }
 
             if (start != end) {
                 for (int k = start; k <= end; k++) {

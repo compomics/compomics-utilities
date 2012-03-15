@@ -719,6 +719,7 @@ public class Header implements Cloneable, Serializable {
                     //   - the description
                     result.databaseType = DatabaseType.Generic_Header;
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
+                    
                     // Temporary storage variables.
                     int startSecAcc = -1;
                     int endSecAcc = -1;
@@ -726,6 +727,7 @@ public class Header implements Cloneable, Serializable {
                     String testDescription = null;
                     int testStart = -1;
                     int testEnd = -1;
+                    
                     if ((accessionEndLoc > 0) && (aFASTAHeader.indexOf("(") >= 0) && (aFASTAHeader.indexOf(")", aFASTAHeader.indexOf("(") + 1) >= 0)) {
                         // Now we have to see if there is location information present.
                         if (aFASTAHeader.substring(accessionEndLoc + 1, aFASTAHeader.indexOf(")", accessionEndLoc + 2) + 1).matches("[(][0-9]+-[0-9]+[)]") && !aFASTAHeader.substring(accessionEndLoc + 2, aFASTAHeader.indexOf(")", accessionEndLoc + 2)).equals(aFASTAHeader.substring(0, accessionEndLoc).trim())) {

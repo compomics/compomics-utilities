@@ -25,9 +25,30 @@ import java.util.HashMap;
 public abstract class Quantification extends ExperimentObject {
 
     /**
+     * The implemented quantification methods. Well implemented, as soon as you do it.
+     */
+    public enum QuantificationMethod {
+        /**
+         * relative quantification by comparison of peptide intensities extracted from the MS1 map or XIC
+         */
+        MS1_LABEL_FREE,
+        /**
+         * Relative quantification by comparison of labeled versions of the peptides in the same MS1 map (like SILAC)
+         */
+        MS1_LABEL,
+        /**
+         * Relative or absolute quantification by counting identified spectra (like emPAI or NSAF)
+         */
+        SPECTRUM_COUNTING,
+        /**
+         * Relative quantification by comparison of reporter ion intensities
+         */
+        REPORTER_IONS
+    }
+    /**
      * The quantification method used
      */
-    protected int methodUsed;
+    protected QuantificationMethod methodUsed;
     /**
      * Extention for a serialized hit. cuh for Compomics Utilities Hit.
      */
@@ -110,7 +131,7 @@ public abstract class Quantification extends ExperimentObject {
      * getter for the method used
      * @return the method used
      */
-    public int getMethodUsed() {
+    public QuantificationMethod getMethodUsed() {
         return methodUsed;
     }
 
@@ -118,7 +139,7 @@ public abstract class Quantification extends ExperimentObject {
      * setter for the method used
      * @param methodUsed the method used
      */
-    public void setMethodUsed(int methodUsed) {
+    public void setMethodUsed(QuantificationMethod methodUsed) {
         this.methodUsed = methodUsed;
     }
 

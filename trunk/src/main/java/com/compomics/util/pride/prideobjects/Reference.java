@@ -90,7 +90,7 @@ public class Reference implements PrideObject, Serializable {
      */
     public static ArrayList<Reference> getDefaultReferences() {
         ArrayList<Reference> result = new ArrayList<Reference>();
-        result.add(new Reference("PeptideShaker", "not available", "not available"));
+        //result.add(new Reference("PeptideShaker", "not available", "not available"));
         return result;
     }
 

@@ -14,6 +14,12 @@ import java.util.HashMap;
 public class ReporterIonQuantification extends Quantification {
 
     /**
+     * The implemented reporter ion quantification methods.
+     */
+    public enum ReporterIonMethod {
+        ITRAQ_4PLEX, ITRAQ_8PLEX, TMT2, TMT6;
+    }
+    /**
      * The sample assignement to the various ions indexed by their static indexes
      */
     private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
@@ -24,13 +30,13 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * The reporter method
      */
-    private ReporterMethod reporterMethod;
+    private ReporterIonMethod reporterMethod;
 
     /**
      * Constructor for the reporter ion quantification
      * @param methodUsed    the method used for this quantification
      */
-    public ReporterIonQuantification(int methodUsed) {
+    public ReporterIonQuantification(QuantificationMethod methodUsed) {
         this.methodUsed = methodUsed;
     }
 
@@ -70,7 +76,7 @@ public class ReporterIonQuantification extends Quantification {
      * returns the reporter method used
      * @return the method used
      */
-    public ReporterMethod getReporterMethod() {
+    public ReporterIonMethod getReporterMethod() {
         return reporterMethod;
     }
 
@@ -78,7 +84,7 @@ public class ReporterIonQuantification extends Quantification {
      * Sets the reporter method used
      * @param reporterMethod    the reporter method used
      */
-    public void setMethod(ReporterMethod reporterMethod) {
+    public void setMethod(ReporterIonMethod reporterMethod) {
         this.reporterMethod = reporterMethod;
     }
 

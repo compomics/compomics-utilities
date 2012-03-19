@@ -42,7 +42,7 @@ public class SearchEngine extends ExperimentObject implements Advocate {
      *
      * @return the search engine name
      */
-    public String getName() {
+    public static String getName(int id) {
         switch (id) {
             case MASCOT:
                 return "Mascot";
@@ -55,6 +55,15 @@ public class SearchEngine extends ExperimentObject implements Advocate {
             default:
                 return "Unknown";
         }
+    }
+    
+    /**
+     * getter for the search engine name
+     *
+     * @return the search engine name
+     */
+    public String getName() {
+        return getName(id);
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
-import com.compomics.util.experiment.quantification.QuantificationMethod;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.experiment.quantification.reporterion.ReporterIonQuantification.ReporterIonMethod;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -59,7 +59,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     public String[] getMethodsNames() {
         String[] names = new String[methods.size()];
         for (int i= 0 ; i < methods.size() ; i++) {
-            names[i] = methods.get(i).getMethodName();
+        //    names[i] = methods.get(i).getMethodName();
         }
         return names;
     }
@@ -97,7 +97,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             // If we find a 'reporterMethod' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
-                methods.add(parseMethod(parser));
+       //         methods.add(parseMethod(parser));
             }
             type = parser.next();
         }
@@ -112,7 +112,7 @@ public class ReporterMethodFactory extends ExperimentObject {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private ReporterMethod parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private void parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         int type = parser.next();
 
@@ -144,17 +144,16 @@ public class ReporterMethodFactory extends ExperimentObject {
                 type = parser.next();
             }
         }
-        int index = -1;
+        ReporterIonMethod index = ReporterIonMethod.ITRAQ_4PLEX;
         if (name.equals("iTRAQ 4Plex")) {
-            index = QuantificationMethod.ITRAQ_4PLEX;
+            index = ReporterIonMethod.ITRAQ_4PLEX;
         } else if (name.equals("iTRAQ 8Plex")) {
-            index = QuantificationMethod.ITRAQ_8PLEX;
+            index = ReporterIonMethod.ITRAQ_8PLEX;
         } else if (name.equals("TMT6")) {
-            index = QuantificationMethod.TMT6;
+            index = ReporterIonMethod.TMT6;
         }   else if (name.equals("TMT2")) {
-            index = QuantificationMethod.TMT2;
+            index = ReporterIonMethod.TMT2;
         }
-        return new ReporterMethod(index, name, reporterIons, correctionFactors);
     }
 
     /**

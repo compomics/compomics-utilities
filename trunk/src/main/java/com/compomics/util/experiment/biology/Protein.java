@@ -1,8 +1,11 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class models a protein.
@@ -258,5 +261,60 @@ public class Protein extends ExperimentObject {
         mass += Atom.H.mass + Atom.O.mass;
 
         return mass;
+    }
+
+    /**
+     * Returns the list of indexes where a peptide can be found in the protein
+     * sequence
+     *
+     * @param peptide the sequence of the peptide of interest
+     * @return the list of indexes where a peptide can be found in a protein
+     * sequence
+     */
+    public ArrayList<Integer> getPeptideStart(String peptide) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        String tempSequence = sequence;
+        while (tempSequence.lastIndexOf(peptide) >= 0) {
+            int startIndex = tempSequence.lastIndexOf(peptide);
+            result.add(startIndex + 1);
+            tempSequence = tempSequence.substring(0, startIndex);
+        }
+        return result;
+    }
+
+    /**
+     * Returns the amino acids surrounding a peptide in the sequence of the
+     * given protein in a map: peptide start index -> (amino acids before, amino
+     * acids after) The number of amino acids is taken from the display
+     * preferences
+     *
+     * @param peptide the sequence of the peptide of interest
+     * @param nAA the number of amino acids to include
+     * @return the amino acids surrounding a peptide in the protein sequence
+     * @throws IOException Exception thrown whenever an error occurred while
+     * parsing the protein sequence
+     */
+    public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA) throws IOException {
+        ArrayList<Integer> startIndexes = getPeptideStart(peptide);
+        HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();
+        String subsequence;
+        for (int startIndex : startIndexes) {
+            result.put(startIndex, new String[2]);
+            subsequence = "";
+            for (int aa = startIndex - nAA; aa < startIndex; aa++) {
+                if (aa >= 0 && aa < sequence.length()) {
+                    subsequence += sequence.charAt(aa);
+                }
+            }
+            result.get(startIndex)[0] = subsequence;
+            subsequence = "";
+            for (int aa = startIndex + peptide.length(); aa < startIndex + peptide.length() + nAA; aa++) {
+                if (aa >= 0 && aa < sequence.length()) {
+                    subsequence += sequence.charAt(aa);
+                }
+            }
+            result.get(startIndex)[1] = subsequence;
+        }
+        return result;
     }
 }

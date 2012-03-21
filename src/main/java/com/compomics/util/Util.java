@@ -20,6 +20,21 @@ public class Util {
     public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
+     * Indicates whether a string contains characters forbidden in file names
+     * @param string the string of interest
+     * @return a boolean indicating whether a string contains characters forbidden in file names
+     */
+    public static boolean containsForbiddenCharacter(String string) {
+        for (String forbiddenCharacter : forbiddenCharacters) {
+            if (string.contains(forbiddenCharacter)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    /**
      * Rounds a double value to the wanted number of decimal places.
      *
      * @param d the double to round of

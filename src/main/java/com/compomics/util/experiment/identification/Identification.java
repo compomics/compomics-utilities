@@ -249,6 +249,20 @@ public abstract class Identification extends ExperimentObject {
      * occurred while retrieving the match
      */
     private Object getMatch(String matchKey) throws IllegalArgumentException {
+        return getMatch(matchKey, 0);
+    }
+
+    /**
+     * Returns a match.
+     *
+     * @param matchKey the key of the match
+     * @param the number of exceptions found. If less than 100, the method will
+     * retry after a tempo of 50ms to avoid network related issues.
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
+     */
+    private synchronized Object getMatch(String matchKey, int errorCounter) throws IllegalArgumentException {
         int index = loadedMatches.indexOf(matchKey);
         if (index == -1) {
             try {
@@ -266,8 +280,16 @@ public abstract class Identification extends ExperimentObject {
                 updateCache();
                 return spectrumMatch;
             } catch (Exception e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Error while loading " + matchKey);
+                if (errorCounter <= 100) {
+                    try {
+                        wait(50);
+                    } catch (InterruptedException ie) {
+                    }
+                    return getMatch(matchKey, errorCounter + 1);
+                } else {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Error while loading " + matchKey);
+                }
             }
         } else {
             if (index < 0.25 * loadedMatches.size()) {

@@ -84,7 +84,7 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
-     * Returns the default references
+     * Returns the default references.
      *
      * @return the default references
      */

@@ -39,11 +39,11 @@ public class fastaTest extends TestCase {
             e.printStackTrace();
         }
     }
-
+/**
     public void testJulia() {
         try {
             
-            String fileName = "YPG_UP_N-terminal_NEW";
+            String fileName = "YPD_N-terminal_UP";
             
             ArrayList<String> peptides = new ArrayList<String>();
             HashMap<String, String> remarks = new HashMap<String, String>();

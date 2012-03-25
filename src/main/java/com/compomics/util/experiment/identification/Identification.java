@@ -23,7 +23,7 @@ import javax.swing.JProgressBar;
 public abstract class Identification extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -2551700699384242554L;
     /**
@@ -31,19 +31,19 @@ public abstract class Identification extends ExperimentObject {
      */
     public static final String EXTENTION = ".cuh";
     /**
-     * List of the keys of all imported proteins
+     * List of the keys of all imported proteins.
      */
     protected ArrayList<String> proteinIdentification = new ArrayList<String>();
     /**
-     * List of the keys of all imported peptides
+     * List of the keys of all imported peptides.
      */
     protected ArrayList<String> peptideIdentification = new ArrayList<String>();
     /**
-     * List of the keys of all imported psms
+     * List of the keys of all imported psms.
      */
     protected ArrayList<String> spectrumIdentification = new ArrayList<String>();
     /**
-     * a map linking protein accessions to all their protein matches keys
+     * a map linking protein accessions to all their protein matches keys.
      */
     protected HashMap<String, ArrayList<String>> proteinMap = new HashMap<String, ArrayList<String>>();
     /**
@@ -61,7 +61,7 @@ public abstract class Identification extends ExperimentObject {
     protected String serializationDirectory;
     /**
      * boolean indicating whether the identification should be stored in memory
-     * or not. True by default, the serialization directory should be set
+     * or not. True by default, the serialization directory should be set.
      * otherwise!
      */
     protected boolean inMemory = true;
@@ -72,11 +72,11 @@ public abstract class Identification extends ExperimentObject {
      */
     protected boolean automatedMemoryManagement = true;
     /**
-     * Map of the loaded matches
+     * Map of the loaded matches.
      */
     protected HashMap<String, Object> loadedMatchesMap = new HashMap<String, Object>();
     /**
-     * List of the loaded matches with the most used matches in the end
+     * List of the loaded matches with the most used matches in the end.
      */
     protected ArrayList<String> loadedMatches = new ArrayList<String>();
     /**
@@ -90,7 +90,7 @@ public abstract class Identification extends ExperimentObject {
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
      * Map of long keys which will be referenced by their index for file
-     * creation
+     * creation.
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
 
@@ -110,7 +110,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the personalization parameter of the given match
+     * Returns the personalization parameter of the given match.
      *
      * @param matchKey the match key
      * @param urParameter example of parameter to retrieve
@@ -130,7 +130,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Sets whether the memory management should be automated
+     * Sets whether the memory management should be automated.
      *
      * @param automatedMemoryManagement a boolean indicating whether the memory
      * management should be automated
@@ -140,7 +140,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the cache size in number of matches
+     * Returns the cache size in number of matches.
      *
      * @return the cache size in number of matches
      */
@@ -149,7 +149,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Sets the cache size
+     * Sets the cache size.
      *
      * @param cacheSize number of matches to allow in the cache size
      */
@@ -158,7 +158,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Indicates whether matches will be stored in memory
+     * Indicates whether matches will be stored in memory.
      *
      * @return a boolean indicating whether matches will be stored in memory
      */
@@ -167,7 +167,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Sets whether matches shall be stored in memory
+     * Sets whether matches shall be stored in memory.
      *
      * @param inMemory a boolean indicating whether matches shall be stored in
      * memory
@@ -177,7 +177,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the serialization directory
+     * Returns the serialization directory.
      *
      * @return the serialization directory
      */
@@ -186,7 +186,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * sets the serialization directory
+     * sets the serialization directory.
      *
      * @param serializationDirectory the path of the serialization directory
      */
@@ -195,18 +195,23 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Removes a match from the model
+     * Removes a match from the model.
      *
      * @param matchKey the key of the match to remove
+     * @throws IllegalArgumentException
      */
-    public void removeMatch(String matchKey) {
+    public void removeMatch(String matchKey) throws IllegalArgumentException {
         if (proteinIdentification.contains(matchKey)) {
             proteinIdentification.remove(matchKey);
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
-                if (proteinMap.get(protein).contains(matchKey)) {
-                    proteinMap.get(protein).remove(matchKey);
-                    if (proteinMap.get(protein).isEmpty()) {
-                        proteinMap.remove(protein);
+                if (proteinMap.get(protein) == null) {
+                    throw new IllegalArgumentException("Protein not found: " + protein + "!");
+                } else {
+                    if (proteinMap.get(protein).contains(matchKey)) {
+                        proteinMap.get(protein).remove(matchKey);
+                        if (proteinMap.get(protein).isEmpty()) {
+                            proteinMap.remove(protein);
+                        }
                     }
                 }
             }
@@ -226,7 +231,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Indicates whether a match indexed by the given key exists
+     * Indicates whether a match indexed by the given key exists.
      *
      * @param matchKey the key of the match looked for
      * @return a boolean indicating whether a match indexed by the given key
@@ -301,7 +306,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a spectrum match
+     * Returns a spectrum match.
      *
      * @param spectrumKey the key of the match
      * @return the desired match
@@ -313,7 +318,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a peptide match
+     * Returns a peptide match.
      *
      * @param peptideKey the key of the match
      * @return the desired match
@@ -562,7 +567,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Empties the cache and serializes everything in the specified
-     * serialization folder
+     * serialization folder.
      *
      * @param progressDialog
      * @throws FileNotFoundException exception thrown whenever an error occurred
@@ -605,7 +610,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Add a set of spectrumMatches to the model
+     * Add a set of spectrumMatches to the model.
      *
      * @param spectrumMatches The spectrum matches
      * @throws FileNotFoundException exception thrown when one tries to assign
@@ -620,7 +625,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Getter for the identification method used
+     * Getter for the identification method used.
      *
      * @return the identification method used
      */
@@ -723,7 +728,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the name of the file to use for serialization/deserialization
+     * Returns the name of the file to use for serialization/deserialization.
      *
      * @param key the key of the match
      * @return the name of the corresponding file

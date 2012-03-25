@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Map linking user modification names to MOD PSI CV terms
+ * Map linking user modification names to PSI-MOD CV terms.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -66,7 +66,7 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("carboxymethyl C")) {
             return new CvTerm("MOD", "MOD:01328", "Carboxymethyl", "58.005479");
         } else if (ptmName.equalsIgnoreCase("carbamidomethyl C")) {
-            return new CvTerm("MOD", "MOD:010900", "Carbamidomethyl", "57.021464");
+            return new CvTerm("MOD", "MOD:01090", "Carbamidomethyl", "57.021464");
         } else if (ptmName.equalsIgnoreCase("deamidation of N and Q")) {
             return new CvTerm("MOD", "MOD:00400", "Deamidated", "0.984016");
         } else if (ptmName.equalsIgnoreCase("propionamide C")) {
@@ -114,13 +114,13 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("beta-methylthiolation of D (duplicate of 13)")) {
             return new CvTerm("MOD", "MOD:01153", "Methylthio", "45.987721");
         } else if (ptmName.equalsIgnoreCase("carboxyamidomethylation of K")) {
-            return new CvTerm("MOD", "MOD:010900", "Carbamidomethyl", "57.021464");
+            return new CvTerm("MOD", "MOD:01090", "Carbamidomethyl", "57.021464");
         } else if (ptmName.equalsIgnoreCase("carboxyamidomethylation of H")) {
-            return new CvTerm("MOD", "MOD:010900", "Carbamidomethyl", "57.021464");
+            return new CvTerm("MOD", "MOD:01090", "Carbamidomethyl", "57.021464");
         } else if (ptmName.equalsIgnoreCase("carboxyamidomethylation of D")) {
-            return new CvTerm("MOD", "MOD:010900", "Carbamidomethyl", "57.021464");
+            return new CvTerm("MOD", "MOD:01090", "Carbamidomethyl", "57.021464");
         } else if (ptmName.equalsIgnoreCase("carboxyamidomethylation of E")) {
-            return new CvTerm("MOD", "MOD:010900", "Carbamidomethyl", "57.021464");
+            return new CvTerm("MOD", "MOD:01090", "Carbamidomethyl", "57.021464");
         } else if (ptmName.equalsIgnoreCase("carbamylation of K")) {
             return new CvTerm("MOD", "MOD:00398", "Carbamylation", "43.005814");
         } else if (ptmName.equalsIgnoreCase("carbamylation of n-term peptide")) {

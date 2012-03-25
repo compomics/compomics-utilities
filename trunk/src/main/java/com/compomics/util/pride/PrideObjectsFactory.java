@@ -6,7 +6,6 @@ import com.compomics.util.pride.prideobjects.Instrument;
 import com.compomics.util.pride.prideobjects.Reference;
 import com.compomics.util.pride.prideobjects.Contact;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -17,12 +16,12 @@ import java.util.HashMap;
 public class PrideObjectsFactory {
 
     /**
-     * Instance of the factory
+     * Instance of the factory.
      */
     private static PrideObjectsFactory instance = null;
 
     /**
-     * Method returning the instance of the factory
+     * Method returning the instance of the factory.
      *
      * @return the instance of the factory
      * @throws FileNotFoundException exception thrown whenever the file was not
@@ -39,7 +38,7 @@ public class PrideObjectsFactory {
         return instance;
     }
     /**
-     * The folder where pride related infos are stored
+     * The folder where pride related infos are stored.
      */
     public static final String prideFolder = System.getProperty("user.home") + "/.compomics/pride/";
     /**
@@ -48,32 +47,33 @@ public class PrideObjectsFactory {
      */
     public static final String extension = ".cus";
     /**
-     * List of all contacts
+     * List of all contacts.
      */
     private HashMap<String, Contact> contacts = new HashMap<String, Contact>();
     /**
-     * List of all instruments
+     * List of all instruments.
      */
     private HashMap<String, Instrument> instruments = new HashMap<String, Instrument>();
     /**
-     * List of all protocols
+     * List of all protocols.
      */
     private HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
     /**
-     * List of all references
+     * List of all references.
      */
     private HashMap<String, Reference> references = new HashMap<String, Reference>();
     /**
-     * List of all samples
+     * List of all samples.
      */
     private HashMap<String, Sample> samples = new HashMap<String, Sample>();
     /**
-     * utilities to PSI ptm mapping for the default PTMs
+     * utilities to PSI ptm mapping for the default PTMs.
      */
     private PtmToPrideMap ptmToPrideMap;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @throws FileNotFoundException exception thrown whenever the file was not
      * found
      * @throws IOException exception thrown whenever an error occurred while
@@ -87,7 +87,8 @@ public class PrideObjectsFactory {
 
     /**
      * Loads the objects from the pride folder or creates default objects if the
-     * folder is not existing
+     * folder is not existing.
+     *
      * @throws FileNotFoundException exception thrown whenever the file was not
      * found
      * @throws IOException exception thrown whenever an error occurred while
@@ -141,7 +142,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * creates the default objects
+     * Creates the default objects.
+     *
      * @throws FileNotFoundException exception thrown whenever the file was not
      * found
      * @throws IOException exception thrown whenever an error occurred while
@@ -176,65 +178,78 @@ public class PrideObjectsFactory {
         }
         ptmToPrideMap = new PtmToPrideMap();
     }
-    
+
     /**
-     * Adds a contact in the pride objects
-     * @param contact       the contact to add
-     * @throws IOException  exception thrown whenever an error occurred while saving
+     * Adds a contact in the pride objects.
+     *
+     * @param contact the contact to add
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving
      */
     public void addContact(Contact contact) throws IOException {
         contacts.put(contact.getFileName(), contact);
         File subFolder = new File(prideFolder, "contacts");
         saveObject(subFolder, contact);
     }
-    
+
     /**
-     * Adds a protocol in the pride objects
-     * @param protocol       the protocol to add
-     * @throws IOException  exception thrown whenever an error occurred while saving
+     * Adds a protocol in the pride objects.
+     *
+     * @param protocol the protocol to add
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving
      */
     public void addProtocol(Protocol protocol) throws IOException {
         protocols.put(protocol.getFileName(), protocol);
         File subFolder = new File(prideFolder, "protocols");
         saveObject(subFolder, protocol);
     }
-    
+
     /**
-     * Adds a instrument in the pride objects
-     * @param instrument       the instrument to add
-     * @throws IOException  exception thrown whenever an error occurred while saving
+     * Adds a instrument in the pride objects.
+     *
+     * @param instrument the instrument to add
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving
      */
     public void addInstrument(Instrument instrument) throws IOException {
         instruments.put(instrument.getFileName(), instrument);
         File subFolder = new File(prideFolder, "instruments");
         saveObject(subFolder, instrument);
     }
-    
+
     /**
-     * Adds a reference in the pride objects
-     * @param reference       the reference to add
-     * @throws IOException  exception thrown whenever an error occurred while saving
+     * Adds a reference in the pride objects.
+     *
+     * @param reference the reference to add
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving
      */
     public void addReference(Reference reference) throws IOException {
         references.put(reference.getFileName(), reference);
         File subFolder = new File(prideFolder, "references");
         saveObject(subFolder, reference);
     }
-    
+
     /**
-     * Adds a contact in the pride objects
-     * @param contact       the contact to add
-     * @throws IOException  exception thrown whenever an error occurred while saving
+     * Adds a sample in the pride objects.
+     *
+     * @param sample the sample to add
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving
      */
     public void addSample(Sample sample) throws IOException {
         samples.put(sample.getFileName(), sample);
         File subFolder = new File(prideFolder, "samples");
         saveObject(subFolder, sample);
     }
-    
+
     /**
-     * Sets a new ptm to pride map
+     * Sets a new ptm to pride map.
+     *
      * @param ptmToPrideMap a new ptm to pride map
+     * @throws FileNotFoundException
+     * @throws IOException
      */
     public void setPtmToPrideMap(PtmToPrideMap ptmToPrideMap) throws FileNotFoundException, IOException {
         this.ptmToPrideMap = ptmToPrideMap;
@@ -246,10 +261,10 @@ public class PrideObjectsFactory {
         oos.close();
         bos.close();
         fos.close();
-    } 
+    }
 
     /**
-     * Loads an object from the given file
+     * Loads an object from the given file.
      *
      * @param aFile the file of interest
      * @return the serialized object
@@ -272,7 +287,7 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Saves the object in a file
+     * Saves the object in a file.
      *
      * @param destinationFolder the folder where to save the object
      * @param object the object to save in a file
@@ -295,7 +310,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the contacts
+     * Returns the contacts.
+     *
      * @return the contacts
      */
     public HashMap<String, Contact> getContacts() {
@@ -303,7 +319,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the instruments
+     * Returns the instruments.
+     *
      * @return the instruments
      */
     public HashMap<String, Instrument> getInstruments() {
@@ -311,7 +328,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the protocols
+     * Returns the protocols.
+     *
      * @return the protocols
      */
     public HashMap<String, Protocol> getProtocols() {
@@ -319,7 +337,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the utilities ptm to pride map
+     * Returns the utilities ptm to pride map.
+     *
      * @return the utilities ptm to pride map
      */
     public PtmToPrideMap getPtmToPrideMap() {
@@ -327,7 +346,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the references
+     * Returns the references.
+     *
      * @return the references
      */
     public HashMap<String, Reference> getReferences() {
@@ -335,7 +355,8 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the samples
+     * Returns the samples.
+     *
      * @return the samples
      */
     public HashMap<String, Sample> getSamples() {

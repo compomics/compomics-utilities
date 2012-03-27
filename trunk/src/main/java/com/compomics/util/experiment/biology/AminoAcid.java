@@ -24,6 +24,7 @@ import com.compomics.util.experiment.biology.aminoacids.Tyrosine;
 import com.compomics.util.experiment.biology.aminoacids.Valine;
 import com.compomics.util.experiment.biology.aminoacids.X;
 import com.compomics.util.experiment.biology.aminoacids.Z;
+import java.util.ArrayList;
 
 /**
  * Class representing amino acids
@@ -77,6 +78,36 @@ public abstract class AminoAcid {
      */
     public double monoisotopicMass;
 
+    /**
+     * Convenience method returning an arrayList of all implemented amino-acids
+     * @return an arrayList of all implemented amino-acids represented by their character
+     */
+    public static ArrayList<String> getAminoAcids() {
+        ArrayList<String> aas = new ArrayList<String>();
+        aas.add("A");
+        aas.add("C");
+        aas.add("D");
+        aas.add("E");
+        aas.add("F");
+        aas.add("G");
+        aas.add("H");
+        aas.add("I");
+        aas.add("K");
+        aas.add("L");
+        aas.add("M");
+        aas.add("N");
+        aas.add("P");
+        aas.add("Q");
+        aas.add("R");
+        aas.add("S");
+        aas.add("T");
+        aas.add("V");
+        aas.add("W");
+        aas.add("Y");
+        aas.add("U");
+        return aas;
+    }
+    
     /**
      * Returns the amino acid corresponding to the letter given, null if not implemented.
      * 

@@ -104,40 +104,66 @@ public class PrideObjectsFactory {
             File subFolder = new File(prideFolder, "contacts");
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
-                    Contact contact = (Contact) loadObject(file);
-                    contacts.put(contact.getFileName(), contact);
+                    try {
+                        Contact contact = (Contact) loadObject(file);
+                        contacts.put(contact.getFileName(), contact);
+                    } catch (InvalidClassException e) {
+                        file.delete();
+                    }
                 }
             }
             subFolder = new File(prideFolder, "protocols");
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
-                    Protocol protocol = (Protocol) loadObject(file);
-                    protocols.put(protocol.getFileName(), protocol);
+                    try {
+                        Protocol protocol = (Protocol) loadObject(file);
+                        protocols.put(protocol.getFileName(), protocol);
+                    } catch (InvalidClassException e) {
+                        file.delete();
+                    }
                 }
             }
             subFolder = new File(prideFolder, "instruments");
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
-                    Instrument instrument = (Instrument) loadObject(file);
-                    instruments.put(instrument.getFileName(), instrument);
+                    try {
+                        Instrument instrument = (Instrument) loadObject(file);
+                        instruments.put(instrument.getFileName(), instrument);
+                    } catch (InvalidClassException e) {
+                        file.delete();
+                    }
                 }
             }
             subFolder = new File(prideFolder, "references");
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
-                    Reference reference = (Reference) loadObject(file);
-                    references.put(reference.getFileName(), reference);
+                    try {
+                        Reference reference = (Reference) loadObject(file);
+                        references.put(reference.getFileName(), reference);
+                    } catch (InvalidClassException e) {
+                        file.delete();
+                    }
                 }
             }
             subFolder = new File(prideFolder, "samples");
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
-                    Sample sample = (Sample) loadObject(file);
-                    samples.put(sample.getFileName(), sample);
+                    try {
+                        Sample sample = (Sample) loadObject(file);
+                        samples.put(sample.getFileName(), sample);
+                    } catch (InvalidClassException e) {
+                        file.delete();
+                    }
                 }
             }
             File ptmMapFile = new File(prideFolder, PtmToPrideMap.fileName);
-            ptmToPrideMap = (PtmToPrideMap) loadObject(ptmMapFile);
+            try {
+                ptmToPrideMap = (PtmToPrideMap) loadObject(ptmMapFile);
+            } catch (InvalidClassException e) {
+                ptmMapFile.delete();
+                ptmToPrideMap = new PtmToPrideMap();
+                setPtmToPrideMap(ptmToPrideMap);
+            }
         }
     }
 

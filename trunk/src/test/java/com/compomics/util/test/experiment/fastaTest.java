@@ -39,7 +39,7 @@ public class fastaTest extends TestCase {
             e.printStackTrace();
         }
     }
-/**
+
     public void testJulia() {
         try {
             

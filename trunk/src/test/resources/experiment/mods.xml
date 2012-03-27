@@ -5,20 +5,33 @@
     xs:schemaLocation="http://www.ncbi.nlm.nih.gov OMSSA.xsd"
 >
   <MSModSpec>
-    <MSModSpec_mod>
-      <MSMod value="methylk">0</MSMod>
-    </MSModSpec_mod>
-    <MSModSpec_type>
-      <MSModType value="modaa">0</MSModType>
-    </MSModSpec_type>
-    <MSModSpec_name>methylation of K</MSModSpec_name>
-    <MSModSpec_monomass>14.015650</MSModSpec_monomass>
-    <MSModSpec_averagemass>14.0266</MSModSpec_averagemass>
-    <MSModSpec_n15mass>0</MSModSpec_n15mass>
-    <MSModSpec_residues>
-      <MSModSpec_residues_E>K</MSModSpec_residues_E>
-    </MSModSpec_residues>
-    <MSModSpec_unimod>34</MSModSpec_unimod>
-    <MSModSpec_psi-ms>Methyl</MSModSpec_psi-ms>
-  </MSModSpec>
+        <MSModSpec_mod>
+            <MSMod value="modificationwithneutrallosses">1</MSMod>
+        </MSModSpec_mod>
+        <MSModSpec_type>
+            <MSModType value="modaa">0</MSModType>
+        </MSModSpec_type>
+        <MSModSpec_name>test modification with neutral losses</MSModSpec_name>
+        <MSModSpec_monomass>123.456789</MSModSpec_monomass>
+        <MSModSpec_averagemass>0</MSModSpec_averagemass>
+        <MSModSpec_n15mass>0</MSModSpec_n15mass>
+        <MSModSpec_residues>
+            <MSModSpec_residues_E>B</MSModSpec_residues_E>
+            <MSModSpec_residues_E>O</MSModSpec_residues_E>
+        </MSModSpec_residues>
+        <MSModSpec_neutralloss>
+            <MSMassSet>
+                <MSMassSet_monomass>456.789123</MSMassSet_monomass>
+                <MSMassSet_averagemass>0</MSMassSet_averagemass>
+                <MSMassSet_n15mass>0</MSMassSet_n15mass>
+            </MSMassSet>
+            <MSMassSet>
+                <MSMassSet_monomass>789.123456</MSMassSet_monomass>
+                <MSMassSet_averagemass>0</MSMassSet_averagemass>
+                <MSMassSet_n15mass>0</MSMassSet_n15mass>
+            </MSMassSet>
+        </MSModSpec_neutralloss>
+        <MSModSpec_unimod>00</MSModSpec_unimod>
+        <MSModSpec_psi-ms>testMod</MSModSpec_psi-ms>
+    </MSModSpec>
 </MSModSpecSet>

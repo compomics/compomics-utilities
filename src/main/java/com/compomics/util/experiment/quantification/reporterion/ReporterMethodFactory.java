@@ -184,7 +184,7 @@ public class ReporterMethodFactory extends ExperimentObject {
         while (type != XmlPullParser.END_TAG || !parser.getName().equals("reporterIon")) {
             type = parser.next();
         }
-        return new ReporterIon(id, name, mass);
+        return new ReporterIon(name, mass);
     }
 
     /**

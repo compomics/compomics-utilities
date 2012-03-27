@@ -1,10 +1,5 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.biology.neutrallosses.CH4OS;
-import com.compomics.util.experiment.biology.neutrallosses.H2O;
-import com.compomics.util.experiment.biology.neutrallosses.HPO3;
-import com.compomics.util.experiment.biology.neutrallosses.H3PO4;
-import com.compomics.util.experiment.biology.neutrallosses.NH3;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -12,28 +7,28 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  *
  * @author marc
  */
-public abstract class NeutralLoss extends ExperimentObject {
+public class NeutralLoss extends ExperimentObject {
 
     /**
      * H2O loss
      */
-    public static final NeutralLoss H2O = new H2O();
+    public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.mass + Atom.O.mass);
     /**
      * NH3 loss
      */
-    public static final NeutralLoss NH3 = new NH3();
+    public static final NeutralLoss NH3 = new NeutralLoss("NH3", Atom.N.mass + 3 * Atom.H.mass);
     /**
      * H3PO4 loss
      */
-    public static final NeutralLoss H3PO4 = new H3PO4();
+    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", 3 * Atom.H.mass + Atom.P.mass + 4 * Atom.O.mass);
     /**
      * H3PO3 loss
      */
-    public static final NeutralLoss HPO3 = new HPO3();
+    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", Atom.H.mass + Atom.P.mass + 3 * Atom.O.mass);
     /**
      * CH4OS loss
      */
-    public static final NeutralLoss CH4OS = new CH4OS();
+    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", Atom.C.mass + 4 * Atom.H.mass + Atom.O.mass + Atom.S.mass);
     /**
      * The mass lost
      */
@@ -50,5 +45,15 @@ public abstract class NeutralLoss extends ExperimentObject {
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
         return anotherNeutralLoss.name.equals(name);
+    }
+    
+    /**
+     * Constructor for a user defined neutral loss
+     * @param name name of the neutral loss
+     * @param mass mass of the neutral loss
+     */
+    public NeutralLoss(String name, double mass) {
+        this.name = name;
+        this.mass = mass;
     }
 }

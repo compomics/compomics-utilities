@@ -12,113 +12,76 @@ import com.compomics.util.experiment.biology.Ion;
 public class ReporterIon extends Ion {
 
     /**
-     * Reporter ion index
-     * iTRAQ 113
+     * Standard reporter ion iTRAQ 113
      */
-    public static final int ITRAQ_113 = 113;
+    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113);
     /**
-     * Reporter ion index
-     * iTRAQ 114
+     * Standard reporter ion iTRAQ 114
      */
-    public static final int ITRAQ_114 = 114;
+    public final static ReporterIon iTRAQ114 = new ReporterIon("iTRAQ114", 114.1112);
     /**
-     * Reporter ion index
-     * iTRAQ 115
+     * Standard reporter ion iTRAQ 115
      */
-    public static final int ITRAQ_115 = 115;
+    public final static ReporterIon iTRAQ115 = new ReporterIon("iTRAQ115", 115.1083);
     /**
-     * Reporter ion index
-     * iTRAQ 116
+     * Standard reporter ion iTRAQ 116
      */
-    public static final int ITRAQ_116 = 116;
+    public final static ReporterIon iTRAQ116 = new ReporterIon("iTRAQ116", 116.1116);
     /**
-     * Reporter ion index
-     * iTRAQ 117
+     * Standard reporter ion iTRAQ 117
      */
-    public static final int ITRAQ_117 = 117;
+    public final static ReporterIon iTRAQ117 = new ReporterIon("iTRAQ117", 117.1150);
     /**
-     * Reporter ion index
-     * iTRAQ 118
+     * Standard reporter ion iTRAQ 118
      */
-    public static final int ITRAQ_118 = 118;
+    public final static ReporterIon iTRAQ118 = new ReporterIon("iTRAQ118", 118);
     /**
-     * Reporter ion index
-     * iTRAQ 119
+     * Standard reporter ion iTRAQ 119
      */
-    public static final int ITRAQ_119 = 119;
+    public final static ReporterIon iTRAQ119 = new ReporterIon("iTRAQ119", 119);
     /**
-     * Reporter ion index
-     * iTRAQ 121
+     * Standard reporter ion iTRAQ 121
      */
-    public static final int ITRAQ_121 = 121;
+    public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121);
     /**
-     * Reporter ion index
-     * TMT 0
+     * Standard reporter ion TMT0
      */
-    public static final int TMT0 = 126;
+    public final static ReporterIon TMT0 = new ReporterIon("TMT0", 126);
     /**
-     * Reporter ion index
-     * TMT 1
+     * Standard reporter ion TMT1
      */
-    public static final int TMT1 = 127;
+    public final static ReporterIon TMT1 = new ReporterIon("TMT1", 127);
     /**
-     * Reporter ion index
-     * TMT 2
+     * Standard reporter ion TMT2
      */
-    public static final int TMT2 = 128;
+    public final static ReporterIon TMT2 = new ReporterIon("TMT2", 128);
     /**
-     * Reporter ion index
-     * TMT 3
+     * Standard reporter ion TMT3
      */
-    public static final int TMT3 = 129;
+    public final static ReporterIon TMT3 = new ReporterIon("TMT3", 129);
     /**
-     * Reporter ion index
-     * TMT 4
+     * Standard reporter ion TMT4
      */
-    public static final int TMT4 = 130;
+    public final static ReporterIon TMT4 = new ReporterIon("TMT4", 130);
     /**
-     * Reporter ion index
-     * TMT 5
+     * Standard reporter ion TMT5
      */
-    public static final int TMT5 = 131;
-    /**
-     * ion index according to the static fields or user definition
-     */
-    private int index;
+    public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131);
+    
     /**
      * ion name for user defined ions
      */
-    private String name = null;
-
-    /**
-     * Constructor for a reporter ion
-     * @param index reporter ion index according to the static fields
-     */
-    public ReporterIon(int index) {
-        this.index = index;
-        this.familyType = Ion.REPORTER_ION;
-        setReferenceMass();
-    }
+    private String name;
 
     /**
      * Constructor for a user-defined reporter ion
-     * @param index index of the reporter ion (for user-defined ions avoid static fields index)
      * @param name  name of the reporter ion
      * @param mass  theoretic mass of the reporter ion
      */
-    public ReporterIon(int index, String name, double mass) {
-        this.index = index;
+    public ReporterIon(String name, double mass) {
         this.familyType = Ion.REPORTER_ION;
         this.name = name;
         this.theoreticMass = mass;
-    }
-
-    /**
-     * Getter for the ion type
-     * @return the ion index according to the static fields
-     */
-    public int getIndex() {
-        return index;
     }
 
     /**
@@ -126,39 +89,7 @@ public class ReporterIon extends Ion {
      * @return name of the reporter ion
      */
     public String getName() {
-        switch (index) {
-            case ITRAQ_114:
-                return "iTRAQ 114";
-            case ITRAQ_115:
-                return "iTRAQ 115";
-            case ITRAQ_116:
-                return "iTRAQ 116";
-            case ITRAQ_117:
-                return "iTRAQ 117";
-            case ITRAQ_118:
-                return "iTRAQ 118";
-            case ITRAQ_119:
-                return "iTRAQ 119";
-            case ITRAQ_121:
-                return "iTRAQ 121";
-            case TMT0:
-                return "TMT 0";
-            case TMT1:
-                return "TMT 1";
-            case TMT2:
-                return "TMT 2";
-            case TMT3:
-                return "TMT 3";
-            case TMT4:
-                return "TMT 4";
-            case TMT5:
-                return "TMT 5";
-            default:
-                if (name != null) {
                     return name;
-                }
-                return "unknown";
-        }
     }
 
     /**
@@ -169,49 +100,4 @@ public class ReporterIon extends Ion {
         this.theoreticMass = referenceMass;
     }
 
-    /**
-     * This method sets default hard coded reference masses
-     */
-    private void setReferenceMass() {
-        switch (index) {
-            case ITRAQ_114:
-                this.theoreticMass = 114.1112;
-                return;
-            case ITRAQ_115:
-                this.theoreticMass = 115.1083;
-                return;
-            case ITRAQ_116:
-                this.theoreticMass = 116.1116;
-                return;
-            case ITRAQ_117:
-                this.theoreticMass = 117.1150;
-                return;
-            case ITRAQ_118:
-                this.theoreticMass = 118;
-                return;
-            case ITRAQ_119:
-                this.theoreticMass = 119;
-                return;
-            case ITRAQ_121:
-                this.theoreticMass = 121;
-                return;
-            case TMT0:
-                this.theoreticMass = 126;
-                return;
-            case TMT1:
-                this.theoreticMass = 127;
-                return;
-            case TMT2:
-                this.theoreticMass = 128;
-                return;
-            case TMT3:
-                this.theoreticMass = 129;
-                return;
-            case TMT4:
-                this.theoreticMass = 130;
-                return;
-            case TMT5:
-                this.theoreticMass = 131;
-        }
-    }
 }

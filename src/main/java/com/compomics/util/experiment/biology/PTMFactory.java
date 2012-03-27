@@ -9,19 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This factory will load PTM from an XML file and provide them on demand as standard class.
+ * This factory will load PTM from an XML file and provide them on demand as
+ * standard class.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 22, 2010
- * Time: 8:26:09 PM
+ * Created by IntelliJ IDEA. User: Marc Date: Jun 22, 2010 Time: 8:26:09 PM
  */
 public class PTMFactory implements Serializable {
 
     /**
      * Serial number for serialization compatibility
      */
-    static final long serialVersionUID = -4745977677605392706L;
+    static final long serialVersionUID = 7935264190312934466L;
     /**
      * Instance of the factory
      */
@@ -84,16 +82,14 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Clears the factory
-     * getInstance() needs to be called afterwards
+     * Clears the factory getInstance() needs to be called afterwards
      */
     public void clearFactory() {
         instance = new PTMFactory();
     }
 
     /**
-     * Reloads the factory
-     * getInstance() needs to be called afterwards
+     * Reloads the factory getInstance() needs to be called afterwards
      */
     public void reloadFactory() {
         instance = null;
@@ -101,7 +97,9 @@ public class PTMFactory implements Serializable {
 
     /**
      * Saves the factory in the user folder
-     * @throws IOException exception thrown whenever an error occurred while saving the ptmFactory
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving the ptmFactory
      */
     public void saveFactory() throws IOException {
         File factoryFile = new File(SERIALIZATION_FILE);
@@ -139,8 +137,9 @@ public class PTMFactory implements Serializable {
 
     /**
      * replaces an old ptm by a new
+     *
      * @param oldName the name of the old ptm
-     * @param newPTM  the new ptm
+     * @param newPTM the new ptm
      */
     public void replacePTM(String oldName, PTM newPTM) {
         String newName = newPTM.getName();
@@ -167,6 +166,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Adds a new user modification
+     *
      * @param ptm the new modification to add
      */
     public void addUserPTM(PTM ptm) {
@@ -195,7 +195,8 @@ public class PTMFactory implements Serializable {
 
     /**
      * Removes a user ptm
-     * @param ptmName the name of the ptm to remove 
+     *
+     * @param ptmName the name of the ptm to remove
      */
     public void removeUserPtm(String ptmName) {
         ptmMap.remove(ptmName);
@@ -206,8 +207,9 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the PTM indexed by its name
-     * @param name  the name of the desired PTM
-     * @return      The desired PTM
+     *
+     * @param name the name of the desired PTM
+     * @return The desired PTM
      */
     public PTM getPTM(String name) {
         if (ptmMap.containsKey(name)) {
@@ -226,6 +228,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns a boolean indicating whether the PTM is loaded in the factory
+     *
      * @param name the name of the PTM
      * @return a boolean indicating whether the PTM is loaded in the factory
      */
@@ -235,7 +238,8 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the index of the desired modification
-     * @param modificationName  the desired modification name to lower case
+     *
+     * @param modificationName the desired modification name to lower case
      * @return the corresponding index
      */
     public ArrayList<Integer> getOMSSAIndexes(String modificationName) {
@@ -243,12 +247,13 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * getter for a ptm according to its measured characteristics
-     * /!\ This method can generate inconsistent results in case a measurement matches to various PTMs.
+     * getter for a ptm according to its measured characteristics /!\ This
+     * method can generate inconsistent results in case a measurement matches to
+     * various PTMs.
      *
-     * @param mass      the measured mass induced by the modification
-     * @param location  the modification location
-     * @param sequence  the peptide sequence
+     * @param mass the measured mass induced by the modification
+     * @param location the modification location
+     * @param sequence the peptide sequence
      * @return the candidate modification, null if none is found
      */
     public PTM getPTM(double mass, String location, String sequence) {
@@ -281,10 +286,13 @@ public class PTMFactory implements Serializable {
     /**
      * Import modifications from a modification file
      *
-     * @param modificationsFile         A file containing modifications
-     * @param userMod                   A boolean indicating whether the file comprises user designed modification
-     * @throws XmlPullParserException   exception thrown whenever an error is encountered while parsing
-     * @throws IOException              exception thrown whenever an error is encountered reading the file
+     * @param modificationsFile A file containing modifications
+     * @param userMod A boolean indicating whether the file comprises user
+     * designed modification
+     * @throws XmlPullParserException exception thrown whenever an error is
+     * encountered while parsing
+     * @throws IOException exception thrown whenever an error is encountered
+     * reading the file
      */
     public void importModifications(File modificationsFile, boolean userMod) throws XmlPullParserException, IOException {
 
@@ -312,29 +320,31 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * This method parses a single MSModSpec tag's contents from the modifications XML file.
-     * It expects the XmlPullParser to be set on the starting 'MSModSpec' tag, and upon completion,
-     * the parser will be set on the closing 'MSModSpec' tag.
+     * This method parses a single MSModSpec tag's contents from the
+     * modifications XML file. It expects the XmlPullParser to be set on the
+     * starting 'MSModSpec' tag, and upon completion, the parser will be set on
+     * the closing 'MSModSpec' tag.
      *
      * @throws XmlPullParserException when the pull parser failed.
-     * @throws IOException            when the pull parser could not access the underlying file.
+     * @throws IOException when the pull parser could not access the underlying
+     * file.
      */
     private void parseMSModSpec(XmlPullParser parser, boolean userMod) throws XmlPullParserException, IOException {
         // Check whether the XmlPullParser is correctly positioned (i.e. directly on the 'MSModSpec' start tag)
         if (!(parser.getName().equals("MSModSpec") && parser.getEventType() == XmlPullParser.START_TAG)) {
-            throw new IllegalArgumentException("XmlPullParser should have been on the start tag for 'MSModSpec', but was on '" + parser.getName() + "' instead!");
+            throw new IllegalArgumentException("XmlPullParser should have been on the start tag for 'MSModSpec', but was on '" + parser.getName() + "' instead.");
         }
         // Structure now is: tag, whitespace, tag, NUMBER (which we need).
         // Start tag.
         parser.nextTag();
         // Validate correctness.
         if (!parser.getName().equals("MSModSpec_mod")) {
-            throw new XmlPullParserException("Found tag '" + parser.getName() + "' where 'MSModSpec_mod' was expected on line " + parser.getLineNumber() + "!");
+            throw new XmlPullParserException("Found tag '" + parser.getName() + "' where 'MSModSpec_mod' was expected on line " + parser.getLineNumber() + ".");
         }
         parser.nextTag();
         // Validate correctness.
         if (!parser.getName().equals("MSMod")) {
-            throw new XmlPullParserException("Found tag '" + parser.getName() + "' where 'MSMod' was expected on line " + parser.getLineNumber() + "!");
+            throw new XmlPullParserException("Found tag '" + parser.getName() + "' where 'MSMod' was expected on line " + parser.getLineNumber() + ".");
         }
         // We need the value here.
         parser.next();
@@ -343,7 +353,7 @@ public class PTMFactory implements Serializable {
         try {
             number = Integer.parseInt(numberString);
         } catch (NumberFormatException nfe) {
-            throw new XmlPullParserException("Found non-parseable text '" + numberString + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + "!");
+            throw new XmlPullParserException("Found non-parseable text '" + numberString + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");
         }
         // Modification type
         int type = parser.next();
@@ -387,22 +397,39 @@ public class PTMFactory implements Serializable {
                 parser.next();
                 type = parser.next();
             }
-            if (aminoAcids.size() > 1) {
-                residues.add("[");
-            }
             residues.addAll(aminoAcids);
-            if (aminoAcids.size() > 1) {
-                residues.add("]");
-            }
         }
-        // Move the parser to the end tag of this modification.
-        type = parser.next();
+        // Create and implement modification.
+        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residues);
+
+        while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_neutralloss"))
+                && !(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
+            type = parser.next();
+        }
+        if (parser.getName().equals("MSModSpec_neutralloss")) {
+            ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+            int cpt = 1;
+            while (!(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec_neutralloss"))) {
+                type = parser.next();
+                if (type == XmlPullParser.START_TAG && parser.getName().equals("MSMassSet_monomass")) {
+                    parser.next();
+                    String doubleString = "";
+                    try {
+                        doubleString = parser.getText().trim();
+                        double neutralLossMass = new Double(doubleString);
+                        neutralLosses.add(new NeutralLoss(name + cpt, neutralLossMass));
+                    } catch (Exception e) {
+                        throw new XmlPullParserException("Found non-parseable text '" + doubleString + "' for the value of the 'MSMassSet_monomass' neutral loss tag on line " + parser.getLineNumber() + ".");
+                    }
+                    cpt++;
+                }
+            }
+            currentPTM.setNeutralLosses(neutralLosses);
+        }
         while (!(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
             type = parser.next();
         }
 
-        // Create and implement modification.
-        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residues);
         if (!currentPTM.getName().startsWith("user modification ")) {
             ptmMap.put(currentPTM.getName(), currentPTM);
             if (userMod) {
@@ -422,7 +449,7 @@ public class PTMFactory implements Serializable {
     /**
      * get the index of a file
      *
-     * @param modType   modification type found
+     * @param modType modification type found
      * @return corresponding static index
      */
     private int getIndex(String modType) {
@@ -454,7 +481,8 @@ public class PTMFactory implements Serializable {
      * @param aFolder the folder to write the modification files to
      * @param utilitiesModFile the utilities corresponding mod file
      * @param utilitiesUserModFile the utilities corresponding usermod file
-     * @throws IOException an IOException is thrown in case an issue is encountered while reading or writing a file.
+     * @throws IOException an IOException is thrown in case an issue is
+     * encountered while reading or writing a file.
      */
     public void writeOmssaModificationsFiles(File aFolder, File utilitiesModFile, File utilitiesUserModFile) throws IOException {
         int c;
@@ -478,9 +506,12 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Writes the omssa modification file corresponding to the PTMs loaded in the factory in the given file
-     * @param file          the file
-     * @throws IOException  exception thrown whenever an error occurred while writing the file
+     * Writes the omssa modification file corresponding to the PTMs loaded in
+     * the factory in the given file
+     *
+     * @param file the file
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the file
      */
     public void writeOmssaUserModificationFile(File file) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -524,9 +555,11 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns an MSModSpec bloc as present in the OMSSA user modification files for a given PTM
-     * @param ptmName   the name of the PTM
-     * @param cpt       the index of this PTM
+     * Returns an MSModSpec bloc as present in the OMSSA user modification files
+     * for a given PTM
+     *
+     * @param ptmName the name of the PTM
+     * @param cpt the index of this PTM
      * @return a string containing the xml bloc
      */
     public String getOmssaUserModBloc(String ptmName, int cpt) {
@@ -576,13 +609,24 @@ public class PTMFactory implements Serializable {
             }
             result += "\t\t</MSModSpec_residues>\n";
         }
+        if (!ptm.getNeutralLosses().isEmpty()) {
+            result += "\t\t<MSModSpec_neutralloss>\n";
+            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                result += "\t\t\t<MSMassSet>\n";
+                result += "\t\t\t\t<MSMassSet_monomass>" + neutralLoss.mass + "</MSMassSet_monomass>\n";
+                result += "\t\t\t\t<MSMassSet_averagemass>0</MSMassSet_averagemass>";
+                result += "\t\t\t\t<MSMassSet_n15mass>0</MSMassSet_n15mass>";
+                result += "\t\t\t</MSMassSet>\n";
+            }
+            result += "\t\t</MSModSpec_neutralloss>\n";
+        }
         result += "\t</MSModSpec>\n";
-
         return result;
     }
 
     /**
      * returns the names of the default modifications
+     *
      * @return the names of the default modifications
      */
     public ArrayList<String> getDefaultModifications() {
@@ -591,6 +635,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the names of the user defined modifications
+     *
      * @return the names of the user defined modifications
      */
     public ArrayList<String> getUserModifications() {
@@ -599,9 +644,17 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the names of all imported PTMs
+     *
      * @return the names of all imported PTMs
      */
     public ArrayList<String> getPTMs() {
         return new ArrayList<String>(ptmMap.keySet());
+    }
+    
+    /**
+     * Convenience method returning a boolean indicating whether a ptm is user defined or default
+     */
+    public boolean isUserDefined(String ptmName) {
+        return !defaultMods.contains(ptmName);
     }
 }

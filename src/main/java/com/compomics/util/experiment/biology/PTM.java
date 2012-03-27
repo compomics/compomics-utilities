@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 
@@ -77,6 +78,14 @@ public class PTM extends ExperimentObject {
      * Mass difference produced by this modification
      */
     private double mass;
+    /**
+     * List of known neutral losses for this modification
+     */
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    /**
+     * List of known reporter ions for this modification
+     */
+    private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
 
     /**
      * Constructor for the modification
@@ -194,5 +203,37 @@ public class PTM extends ExperimentObject {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns the neutral losses possibly encountered with this modification
+     * @return the neutral losses possibly encountered with this modification
+     */
+    public ArrayList<NeutralLoss> getNeutralLosses() {
+        return neutralLosses;
+    }
+
+    /**
+     * Sets the neutral losses possibly encountered with this modification
+     * @param neutralLosses the neutral losses possibly encountered with this modification
+     */
+    public void setNeutralLosses(ArrayList<NeutralLoss> neutralLosses) {
+        this.neutralLosses = neutralLosses;
+    }
+
+    /**
+     * Returns the reporter ions possibly encountered with this modification
+     * @return the reporter ions possibly encountered with this modification
+     */
+    public ArrayList<ReporterIon> getReporterIons() {
+        return reporterIons;
+    }
+
+    /**
+     * Sets the reporter ions possibly encountered with this modification
+     * @param reporterIons the reporter ions possibly encountered with this modification
+     */
+    public void setReporterIons(ArrayList<ReporterIon> reporterIons) {
+        this.reporterIons = reporterIons;
     }
 }

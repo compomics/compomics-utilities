@@ -91,6 +91,14 @@ public class ReporterIon extends Ion {
     public String getName() {
                     return name;
     }
+    
+    /**
+     * Setter for the ion name
+     * @param name the new ion name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * Method to set the mass of the reporter ion

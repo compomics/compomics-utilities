@@ -1,14 +1,14 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.FragmentFactory;
+import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -37,13 +37,13 @@ public class SpectrumAnnotator {
      */
     private int precursorCharge;
     /**
-     * The theoretic fragment ions for the selected peptide.
+     * The theoretic ions for the selected peptide.
      */
-    private ArrayList<PeptideFragmentIon> fragmentIons;
+    private ArrayList<Ion> peptideIons;
     /**
      * The Fragment factory which will generate the fragment ions.
      */
-    private FragmentFactory fragmentFactory = FragmentFactory.getInstance();
+    private IonFactory fragmentFactory = IonFactory.getInstance();
     /**
      * The key of the currently loaded spectrum.
      */
@@ -69,13 +69,14 @@ public class SpectrumAnnotator {
      */
     private ArrayList<String> unmatchedIons = new ArrayList<String>();
     /**
-     * Separator for the theoretic fragment key components.
+     * The m/z tolerance for peak matching.
      */
-    public static final String SEPARATOR = "|";
+    private double mzTolerance;
     /**
-     * The mass tolerance for peak matching.
+     * boolean indicating whether the tolerance is in ppm (true) or in Dalton
+     * (false)
      */
-    private double massTolerance;
+    private boolean isPpm;
     /**
      * m/z shift applied to all theoretic peaks.
      */
@@ -100,20 +101,22 @@ public class SpectrumAnnotator {
      * maximal position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param peak The peak to match
-     * @param massTolerance The mass tolerance to use (in Dalton)
      * @return A list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, ArrayList<PeptideFragmentIonType> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak, double massTolerance) {
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak) {
 
         setPeptide(peptide, precursorCharge);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        IonMatch ionMatch;
 
-        for (PeptideFragmentIon fragmentIon : fragmentIons) {
-            if (iontypes.contains(fragmentIon.getType())) {
+        for (Ion peptideIon : peptideIons) {
+            if (iontypes.containsKey(peptideIon.getType())
+                    && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())) {
                 for (int charge : charges) {
-                    if (chargeValidated(fragmentIon, charge) && lossesValidated(neutralLosses, fragmentIon, peptide)) {
-                        if (Math.abs(fragmentIon.theoreticMass + charge * Atom.H.mass - peak.mz * charge) <= massTolerance) {
-                            result.add(new IonMatch(peak, fragmentIon, new Charge(Charge.PLUS, charge)));
+                    if (chargeValidated(peptideIon, charge) && lossesValidated(neutralLosses, peptideIon, peptide)) {
+                        ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
+                        if (ionMatch.getError(isPpm) <= mzTolerance) {
+                            result.add(ionMatch);
                         }
                     }
                 }
@@ -139,57 +142,57 @@ public class SpectrumAnnotator {
     }
 
     /**
-     * Annotates a spectrum and returns a map containing the annotations: ion
-     * type -> charge -> Ion match.
+     * Matches a theoretic ion in the spectrum
      *
-     * @param peptide The theoretic peptide to match
-     * @param spectrum The spectrum
-     * @param massTolerance The mass tolerance to use (in Dalton)
-     * @param intensityLimit The minimal intensity to search for
-     * @return a map containing the annotations
+     * @param theoreticIon the theoretic ion
+     * @param inspectedCharge the expected charge
      */
-    private void matchInSpectrum(PeptideFragmentIon peptideFragmentIon, int inspectedCharge) {
+    private void matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
 
-        double fragmentMass, currentMass;
-        IonMatch bestMatch = null;
+        Charge charge = new Charge(Charge.PLUS, inspectedCharge);
+        double fragmentMz, deltaMz, currentMz;
+        IonMatch tempMatch, bestMatch = null;
+        fragmentMz = (theoreticIon.getTheoreticMass() + inspectedCharge * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
+        if (isPpm) {
+            deltaMz = (mzTolerance / 1000000) * fragmentMz;
+        } else {
+            deltaMz = mzTolerance;
+        }
 
-        fragmentMass = peptideFragmentIon.theoreticMass + inspectedCharge * Ion.proton().theoreticMass;
-
-        if (!mz.isEmpty() && fragmentMass >= inspectedCharge * mz.get(0) - inspectedCharge * massTolerance
-                && fragmentMass <= inspectedCharge * mz.get(mz.size() - 1) + inspectedCharge * massTolerance) {
+        if (!mz.isEmpty() && fragmentMz >= mz.get(0) - deltaMz
+                && fragmentMz <= mz.get(mz.size() - 1) + deltaMz) {
 
             int indexMin = 0;
             int indexMax = mz.size() - 1;
             int index;
             Peak currentPeak;
 
-            currentMass = inspectedCharge * mz.get(indexMax);
-
-            if (Math.abs(currentMass - fragmentMass) <= inspectedCharge * massTolerance) {
+            tempMatch = new IonMatch(new Peak(mz.get(indexMax), 0), theoreticIon, charge);
+            if (tempMatch.getError(isPpm) <= mzTolerance) {
                 currentPeak = peakMap.get(mz.get(indexMax));
-                bestMatch = new IonMatch(currentPeak, peptideFragmentIon, new Charge(Charge.PLUS, inspectedCharge));
+                bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
             }
 
-            currentMass = inspectedCharge * mz.get(indexMin);
-
-            if (Math.abs(currentMass - fragmentMass) <= inspectedCharge * massTolerance) {
+            tempMatch = new IonMatch(new Peak(mz.get(indexMin), 0), theoreticIon, charge);
+            if (tempMatch.getError(isPpm) <= mzTolerance) {
                 currentPeak = peakMap.get(mz.get(indexMin));
                 if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-                    bestMatch = new IonMatch(currentPeak, peptideFragmentIon, new Charge(Charge.PLUS, inspectedCharge));
+                    bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
                 }
             }
 
             while (indexMax - indexMin > 1) {
                 index = (indexMax - indexMin) / 2 + indexMin;
-                currentMass = inspectedCharge * mz.get(index);
-                if (Math.abs(currentMass - fragmentMass) <= massTolerance * inspectedCharge) {
+                currentMz = mz.get(index);
+                tempMatch = new IonMatch(new Peak(currentMz, 0), theoreticIon, charge);
+                if (tempMatch.getError(isPpm) <= mzTolerance) {
                     currentPeak = peakMap.get(mz.get(index));
                     if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-                        bestMatch = new IonMatch(currentPeak, peptideFragmentIon, new Charge(Charge.PLUS, inspectedCharge));
+                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
                     }
                 }
 
-                if (currentMass < fragmentMass) {
+                if (currentMz < fragmentMz) {
                     indexMin = index;
                 } else {
                     indexMax = index;
@@ -197,9 +200,9 @@ public class SpectrumAnnotator {
             }
         }
         if (bestMatch != null) {
-            spectrumAnnotation.put(getTheoreticFragmentKey(peptideFragmentIon, inspectedCharge), bestMatch);
+            spectrumAnnotation.put(IonMatch.getPeakAnnotation(theoreticIon, charge), bestMatch);
         } else {
-            unmatchedIons.add(getTheoreticFragmentKey(peptideFragmentIon, inspectedCharge));
+            unmatchedIons.add(IonMatch.getPeakAnnotation(theoreticIon, charge));
         }
     }
 
@@ -234,15 +237,15 @@ public class SpectrumAnnotator {
     }
 
     /**
-     * Sets a new m/z for peak matching.
+     * Sets a new m/z tolerance for peak matching.
      *
-     * @param massTolerance the new m/z tolerance (in m/z, Th)
+     * @param mzTolerance the new m/z tolerance (in m/z, Th)
      */
-    private void setMassTolerance(double massTolerance) {
-        if (massTolerance != this.massTolerance) {
+    private void setMassTolerance(double mzTolerance) {
+        if (mzTolerance != this.mzTolerance) {
             spectrumAnnotation.clear();
             unmatchedIons.clear();
-            this.massTolerance = massTolerance;
+            this.mzTolerance = mzTolerance;
         }
     }
 
@@ -256,10 +259,10 @@ public class SpectrumAnnotator {
         if (this.peptide == null || !this.peptide.isSameAs(peptide) || !this.peptide.sameModificationsAs(peptide) || this.precursorCharge != precursorCharge) {
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
-            fragmentIons = fragmentFactory.getFragmentIons(peptide);
+            peptideIons = fragmentFactory.getFragmentIons(peptide);
             if (massShift != 0) {
-                for (PeptideFragmentIon fragmentIon : fragmentIons) {
-                    fragmentIon.theoreticMass += massShift;
+                for (Ion ion : peptideIons) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
                 }
             }
             spectrumAnnotation.clear();
@@ -321,39 +324,25 @@ public class SpectrumAnnotator {
             neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, peptide.getSequence().length() - aaMax);
         }
 
-        int aaMinHPO3 = peptide.getSequence().length();
-        int aaMinH3PO4 = peptide.getSequence().length();
-        int aaMinCH4OS = peptide.getSequence().length();
-        int aaMaxHPO3 = 0;
-        int aaMaxH3PO4 = 0;
-        int aaMaxCH4OS = 0;
-
+        int modMin;
+        int modMax;
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-            if (Math.abs(ptm.getMass() - 79.9663) < 0.01) { // @TODO: why are these masses hard coded here?!
-                if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'Y') {
-                    aaMinHPO3 = Math.min(aaMinHPO3, modMatch.getModificationSite() + 1);
-                    aaMaxHPO3 = Math.max(aaMaxHPO3, modMatch.getModificationSite() + 1);
-                } else if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'S'
-                        || peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'T') {
-                    aaMinH3PO4 = Math.min(aaMinH3PO4, modMatch.getModificationSite());
-                    aaMaxH3PO4 = Math.max(aaMaxH3PO4, modMatch.getModificationSite());
+            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                modMin = peptide.getSequence().length();
+                modMax = 0;
+                for (String aa : ptm.getResidues()) {
+                    if (aa.equals("[")) {
+                        modMin = 0;
+                    } else if (aa.equals("]")) {
+                        modMax = peptide.getSequence().length();
+                    } else {
+                        modMin = Math.min(modMin, peptide.getSequence().indexOf(aa));
+                        modMax = Math.max(modMax, peptide.getSequence().lastIndexOf(aa));
+                    }
                 }
-            } else if (Math.abs(ptm.getMass() - 15.9949) < 0.01) { // @TODO: why are these masses hard coded here?!
-                if (peptide.getSequence().charAt(modMatch.getModificationSite() - 1) == 'M') {
-                    aaMinCH4OS = Math.min(aaMinCH4OS, modMatch.getModificationSite());
-                    aaMaxCH4OS = Math.max(aaMaxCH4OS, modMatch.getModificationSite());
-                }
+                neutralLossesMap.addNeutralLoss(neutralLoss, aaMin + 1, peptide.getSequence().length() - aaMax);
             }
-        }
-        if (aaMinHPO3 < peptide.getSequence().length()) {
-            neutralLossesMap.addNeutralLoss(NeutralLoss.HPO3, aaMinHPO3 + 1, peptide.getSequence().length() - aaMaxHPO3);
-        }
-        if (aaMinH3PO4 < peptide.getSequence().length()) {
-            neutralLossesMap.addNeutralLoss(NeutralLoss.H3PO4, aaMinH3PO4 + 1, peptide.getSequence().length() - aaMaxH3PO4);
-        }
-        if (aaMinCH4OS < peptide.getSequence().length()) {
-            neutralLossesMap.addNeutralLoss(NeutralLoss.CH4OS, aaMinCH4OS + 1, peptide.getSequence().length() - aaMaxCH4OS);
         }
 
         return neutralLossesMap;
@@ -369,22 +358,30 @@ public class SpectrumAnnotator {
      * @param peptide the peptide of interest
      * @return boolean indicating whether the neutral loss should be considered
      */
-    public boolean isAccounted(NeutralLossesMap neutralLosses, NeutralLoss neutralLoss, PeptideFragmentIon fragmentIon, Peptide peptide) {
-        if (neutralLosses == null || neutralLosses.isEmpty() || fragmentIon.getType() == PeptideFragmentIonType.IMMONIUM) {
+    public boolean isAccounted(NeutralLossesMap neutralLosses, NeutralLoss neutralLoss, Ion ion, Peptide peptide) {
+        if (neutralLosses == null || neutralLosses.isEmpty()) {
             return false;
         }
         for (NeutralLoss neutralLossRef : neutralLosses.getAccountedNeutralLosses()) {
             if (neutralLoss.isSameAs(neutralLossRef)) {
-                if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION
-                        || fragmentIon.getType() == PeptideFragmentIonType.UNKNOWN) {
-                    return true;
-                } else if (fragmentIon.getType() == PeptideFragmentIonType.A_ION
-                        || fragmentIon.getType() == PeptideFragmentIonType.B_ION) {
-                    return neutralLosses.getBStart(neutralLossRef) <= fragmentIon.getNumber();
-                } else if (fragmentIon.getType() == PeptideFragmentIonType.Y_ION) {
-                    return neutralLosses.getYStart(neutralLossRef) <= fragmentIon.getNumber();
+                switch (ion.getType()) {
+                    case PEPTIDE_FRAGMENT_ION:
+                        PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) ion);
+                        switch (ion.getSubType()) {
+                            case PeptideFragmentIon.A_ION:
+                            case PeptideFragmentIon.B_ION:
+                            case PeptideFragmentIon.C_ION:
+                                return neutralLosses.getBStart(neutralLossRef) <= peptideFragmentIon.getNumber();
+                            case PeptideFragmentIon.X_ION:
+                            case PeptideFragmentIon.Y_ION:
+                            case PeptideFragmentIon.Z_ION:
+                                return neutralLosses.getYStart(neutralLossRef) <= peptideFragmentIon.getNumber();
+                            default:
+                                throw new UnsupportedOperationException("Fragment ion type " + ion.getSubTypeAsString() + " not implemented in the spectrum annotator.");
+                        }
+                    default:
+                        return true;
                 }
-                return false;
             }
         }
         return false;
@@ -395,14 +392,14 @@ public class SpectrumAnnotator {
      * fragment ion are fit the requirement of the given neutral losses map.
      *
      * @param neutralLosses Map of expected neutral losses: neutral loss.
-     * @param fragmentIon the fragment ion of interest
+     * @param theoreticIon the ion of interest
      * @param peptide the inspected peptide
      * @return a boolean indicating whether the neutral losses of the given
      * fragment ion are fit the requirement of the given neutral losses map
      */
-    public boolean lossesValidated(NeutralLossesMap neutralLosses, PeptideFragmentIon fragmentIon, Peptide peptide) {
-        for (NeutralLoss neutralLoss : fragmentIon.getNeutralLosses()) {
-            if (!isAccounted(neutralLosses, neutralLoss, fragmentIon, peptide)) {
+    public boolean lossesValidated(NeutralLossesMap neutralLosses, Ion theoreticIon, Peptide peptide) {
+        for (NeutralLoss neutralLoss : theoreticIon.getNeutralLosses()) {
+            if (!isAccounted(neutralLosses, neutralLoss, theoreticIon, peptide)) {
                 return false;
             }
         }
@@ -413,25 +410,24 @@ public class SpectrumAnnotator {
      * Returns a boolean indicating whether the given charge can be found on the
      * given fragment ion.
      *
-     * @param fragmentIon the fragment ion of interest
+     * @param theoreticIon the ion of interest
      * @param charge the candidate charge
      * @return a boolean indicating whether the given charge can be found on the
      * given fragment ion
      */
-    public boolean chargeValidated(PeptideFragmentIon fragmentIon, int charge) {
-        if (charge > 1) {
-            if (fragmentIon.getType() == PeptideFragmentIonType.IMMONIUM) {
-                return false;
-            } else if (fragmentIon.getType() == PeptideFragmentIonType.A_ION
-                    || fragmentIon.getType() == PeptideFragmentIonType.B_ION
-                    || fragmentIon.getType() == PeptideFragmentIonType.C_ION
-                    || fragmentIon.getType() == PeptideFragmentIonType.X_ION
-                    || fragmentIon.getType() == PeptideFragmentIonType.Y_ION
-                    || fragmentIon.getType() == PeptideFragmentIonType.Z_ION) {
-                return charge <= fragmentIon.getNumber();
-            }
+    public boolean chargeValidated(Ion theoreticIon, int charge) {
+        switch (theoreticIon.getType()) {
+            case IMMONIUM_ION:
+            case REPORTER_ION: // Note, it is possible to implement higher charges for the reporter ion but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
+                return charge == 1;
+            case PEPTIDE_FRAGMENT_ION:
+                PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) theoreticIon);
+                return charge <= peptideFragmentIon.getNumber();
+            case PRECURSOR_ION:
+                return true;
+            default:
+                throw new UnsupportedOperationException("Ion type " + theoreticIon.getTypeAsString() + " not implemented in the spectrum annotator.");
         }
-        return true;
     }
 
     /**
@@ -440,7 +436,7 @@ public class SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param expectedFragmentIons The expected fragment ions to look for
+     * @param expectedIons The expected ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
@@ -453,7 +449,7 @@ public class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses,
+    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         if (spectrum != null) {
@@ -462,29 +458,20 @@ public class SpectrumAnnotator {
         setPeptide(peptide, precursorCharge);
         setMassTolerance(mzTolerance);
         String key;
-        for (PeptideFragmentIon fragmentIon : fragmentIons) {
-            if (expectedFragmentIons.contains(fragmentIon.getType())
-                    && lossesValidated(neutralLosses, fragmentIon, peptide)) {
+        for (Ion peptideIon : peptideIons) {
+            if (iontypes.containsKey(peptideIon.getType())
+                    && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
+                    && lossesValidated(neutralLosses, peptideIon, peptide)) {
                 for (int charge : charges) {
-                    if (chargeValidated(fragmentIon, charge)) {
-                        key = getTheoreticFragmentKey(fragmentIon, charge);
+                    if (chargeValidated(peptideIon, charge)) {
+                        key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
                         if (!spectrumAnnotation.containsKey(key)
                                 && !unmatchedIons.contains(key)) {
-                            matchInSpectrum(fragmentIon, charge);
+                            matchInSpectrum(peptideIon, charge);
                         }
                         if (!unmatchedIons.contains(key)) {
                             result.add(spectrumAnnotation.get(key));
                         }
-                    }
-                }
-                if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION) {
-                    key = getTheoreticFragmentKey(fragmentIon, precursorCharge);
-                    if (!spectrumAnnotation.containsKey(key)
-                            && !unmatchedIons.contains(key)) {
-                        matchInSpectrum(fragmentIon, precursorCharge);
-                    }
-                    if (!unmatchedIons.contains(key)) {
-                        result.add(spectrumAnnotation.get(key));
                     }
                 }
             }
@@ -498,7 +485,7 @@ public class SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param expectedFragmentIons The expected fragment ions to look for
+     * @param iontypes The expected ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
@@ -508,29 +495,22 @@ public class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public HashMap<Integer, ArrayList<PeptideFragmentIon>> getExpectedIons(ArrayList<PeptideFragmentIonType> expectedFragmentIons,
+    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, Peptide peptide) {
 
-        HashMap<Integer, ArrayList<PeptideFragmentIon>> result = new HashMap<Integer, ArrayList<PeptideFragmentIon>>();
+        HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
         setPeptide(peptide, precursorCharge);
 
-        for (PeptideFragmentIon fragmentIon : fragmentIons) {
-            if (expectedFragmentIons.contains(fragmentIon.getType())
-                    && lossesValidated(neutralLosses, fragmentIon, peptide)) {
+        for (Ion peptideIon : peptideIons) {
+            if (iontypes.containsKey(peptideIon.getType())
+                    && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
+                    && lossesValidated(neutralLosses, peptideIon, peptide)) {
                 for (int charge : charges) {
-                    if (chargeValidated(fragmentIon, charge)) {
+                    if (chargeValidated(peptideIon, charge)) {
                         if (!result.containsKey(charge)) {
-                            result.put(charge, new ArrayList<PeptideFragmentIon>());
+                            result.put(charge, new ArrayList<Ion>());
                         }
-                        result.get(charge).add(fragmentIon);
-                    }
-                }
-                if (fragmentIon.getType() == PeptideFragmentIonType.PRECURSOR_ION) {
-                    if (chargeValidated(fragmentIon, precursorCharge)) {
-                        if (!result.containsKey(precursorCharge)) {
-                            result.put(precursorCharge, new ArrayList<PeptideFragmentIon>());
-                        }
-                        result.get(precursorCharge).add(fragmentIon);
+                        result.get(charge).add(peptideIon);
                     }
                 }
             }
@@ -541,33 +521,15 @@ public class SpectrumAnnotator {
     /**
      * Returns the currently matched ions with the given settings.
      *
-     * @param expectedFragmentIons The expected fragment ions to look for
+     * @param iontypes The expected fragment ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges
      * @return the currently matched ions with the given settings
      */
-    public ArrayList<IonMatch> getCurrentAnnotation(ArrayList<PeptideFragmentIonType> expectedFragmentIons, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
-        return getSpectrumAnnotation(expectedFragmentIons, neutralLosses, charges, precursorCharge, null, peptide, intensityLimit, massTolerance);
-    }
-
-    /**
-     * Returns the key of a theoretic fragment.
-     *
-     * @param fragmentIon the theoretic fragment ion
-     * @param charge the charge of the theoretic fragment
-     * @return the key of a theoretic fragment
-     */
-    public static String getTheoreticFragmentKey(PeptideFragmentIon fragmentIon, int charge) {
-        String result = "";
-        result += fragmentIon.getIonType() + SEPARATOR;
-        result += fragmentIon.getNumber() + SEPARATOR;
-        result += charge;
-        for (NeutralLoss neutralLoss : fragmentIon.getNeutralLosses()) {
-            result += neutralLoss.name;
-        }
-        return result;
+    public ArrayList<IonMatch> getCurrentAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
+        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, null, peptide, intensityLimit, mzTolerance);
     }
 
     /**
@@ -605,8 +567,8 @@ public class SpectrumAnnotator {
     public void setMassShift(double massShift) {
         spectrumAnnotation.clear();
         unmatchedIons.clear();
-        for (PeptideFragmentIon fragmentIon : fragmentIons) {
-            fragmentIon.theoreticMass += massShift - this.massShift;
+        for (Ion ion : peptideIons) {
+            ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
         }
         this.massShift = massShift;
     }

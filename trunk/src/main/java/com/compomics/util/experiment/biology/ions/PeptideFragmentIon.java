@@ -14,129 +14,57 @@ import java.util.Collections;
 public class PeptideFragmentIon extends Ion {
 
     /**
-     * An enumerator of the supported fragment ion types.
+     * identifier for an a ion.
      */
-    public enum PeptideFragmentIonType {
-
-        /**
-         * This int is the identifier for an a ion.
-         */
-        A_ION,
-        /**
-         * This int is the identifier for a b ion.
-         */
-        B_ION,
-        /**
-         * This int is the identifier for a c ion.
-         */
-        C_ION,
-        /**
-         * This int is the identifier for a x ion.
-         */
-        X_ION,
-        /**
-         * This int is the identifier for a y ion.
-         */
-        Y_ION,
-        /**
-         * This int is the identifier for a z ion.
-         */
-        Z_ION,
-        /**
-         * This int is the identifier for an MH ion. The number of H is not
-         * represented here.
-         */
-        PRECURSOR_ION,
-        /**
-         * This int is the identifier for an immonium ion.
-         */
-        IMMONIUM,
-        /**
-         * This int is the identifier for an unknown ion.
-         */
-        UNKNOWN;
-    }
+    public static final int A_ION = 0;
     /**
-     * Type of ion
+     * identifier for a b ion.
      */
-    private PeptideFragmentIonType type;
+    public static final int B_ION = 1;
+    /**
+     * identifier for a c ion.
+     */
+    public static final int C_ION = 2;
+    /**
+     * identifier for an x ion.
+     */
+    public static final int X_ION = 3;
+    /**
+     * identifier for a y ion.
+     */
+    public static final int Y_ION = 4;
+    /**
+     * identifier for a z ion.
+     */
+    public static final int Z_ION = 5;
     /**
      * the neutral losses found on the ion
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
-     * position of the ion in the peptide for peptide ions (for a, b, c, x, y
-     * and z ions)
+     * position of the ion in the peptide for peptide ions
      */
     private int number = -1;
     /**
-     * Amino-acid generating the ion (for immonium ions)
+     * The type of fragment
      */
-    private String residue;
+    private int subType;
 
     /**
-     * Construction for a peptide fragment.
+     * Constructor
      *
-     * @param type the type of ion according to static fields
-     * @param mass the ion mass
+     * @param fragmentType the type of peptide fragment ion as indexed by the
+     * static fields
+     * @param number the number of the fragment ion
+     * @param mass the mass of the fragment ion
+     * @param neutralLosses the neutral losses of the ion
      */
-    public PeptideFragmentIon(PeptideFragmentIonType type, double mass) {
-        this.type = type;
+    public PeptideFragmentIon(int fragmentType, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
+        this.subType = fragmentType;
+        type = IonType.PEPTIDE_FRAGMENT_ION;
         this.theoreticMass = mass;
-        this.familyType = Ion.PEPTIDE_FRAGMENT;
-    }
-
-    /**
-     * Construction for a peptide fragment with neutral loss.
-     *
-     * @param type the type of ion according to static fields
-     * @param mass the ion mass (accounting for neutral losses)
-     * @param number the ion number
-     * @param neutralLosses List of neutral losses detected
-     */
-    public PeptideFragmentIon(PeptideFragmentIonType type, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
-        this.type = type;
-        this.theoreticMass = mass;
-        this.familyType = Ion.PEPTIDE_FRAGMENT;
         this.neutralLosses.addAll(neutralLosses);
         this.number = number;
-    }
-
-    /**
-     * Construction for a peptide fragment.
-     *
-     * @param type the type of ion according to static fields
-     * @param number the ion number
-     * @param mass the ion mass
-     */
-    public PeptideFragmentIon(PeptideFragmentIonType type, int number, double mass) {
-        this.type = type;
-        this.number = number;
-        this.theoreticMass = mass;
-        this.familyType = Ion.PEPTIDE_FRAGMENT;
-    }
-
-    /**
-     * Construction for a peptide fragment.
-     *
-     * @param type the type of ion according to static fields
-     * @param residue the ion number
-     * @param mass the ion mass
-     */
-    public PeptideFragmentIon(PeptideFragmentIonType type, String residue, double mass) {
-        this.type = type;
-        this.residue = residue;
-        this.theoreticMass = mass;
-        this.familyType = Ion.PEPTIDE_FRAGMENT;
-    }
-
-    /**
-     * Getter for the ion type
-     *
-     * @return the ion type
-     */
-    public PeptideFragmentIonType getType() {
-        return type;
     }
 
     /**
@@ -148,68 +76,19 @@ public class PeptideFragmentIon extends Ion {
         return number;
     }
 
-    /**
-     * Returns the ion type (a, b, c, x, y, z) as a string.
-     *
-     * @return the ion type as a string.
-     */
-    public String getIonType() {
-        if (type == PeptideFragmentIonType.B_ION) {
-            return "b";
-        } else if (type == PeptideFragmentIonType.Y_ION) {
-            return "y";
-        } else if (type == PeptideFragmentIonType.A_ION) {
-            return "a";
-        } else if (type == PeptideFragmentIonType.C_ION) {
-            return "c";
-        } else if (type == PeptideFragmentIonType.X_ION) {
-            return "x";
-        } else if (type == PeptideFragmentIonType.Z_ION) {
-            return "z";
-        } else if (type == PeptideFragmentIonType.PRECURSOR_ION) {
-            return "Prec";
-        } else if (type == PeptideFragmentIonType.IMMONIUM) {
-            return "i" + residue;
-        }
-        return "?";
-    }
-
-    /**
-     * Returns the neutral loss (if any), the empty string if no loss.
-     *
-     * @return the neutral loss
-     */
-    public String getNeutralLoss() {
-        ArrayList<String> names = new ArrayList<String>();
-        for (NeutralLoss neutralLoss : neutralLosses) {
-            names.add(neutralLoss.name);
-        }
-        Collections.sort(names);
-        String result = "";
-        for (String name : names) {
-            result += "-" + name;
-        }
-        return result;
-    }
-
-    /**
-     * Returns the neutral losses for this fragment ion
-     *
-     * @return a list of neutral losses
-     */
+    @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
         return neutralLosses;
     }
 
-    /**
-     * Returns the pride cv term adapted to the fragment ion. null if none
-     * corresponding
-     *
-     * @return the pride cv term adapted to the fragment ion. null if none
-     * corresponding
-     */
+    @Override
+    public String getName() {
+        return getSubTypeAsString() + getNeutralLossesAsString();
+    }
+
+    @Override
     public CvTerm getPrideCvTerm() {
-        switch (type) {
+        switch (subType) {
             case A_ION:
                 if (neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000233", "a ion", null);
@@ -270,70 +149,71 @@ public class PeptideFragmentIon extends Ion {
                 } else {
                     return null;
                 }
-            case IMMONIUM:
-                char aa = residue.charAt(0);
-                switch (aa) {
-
-                    case 'A':
-                        return new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", null);
-                    case 'C':
-                        return new CvTerm("PRIDE", "PRIDE:0000241", "immonium C", null);
-                    case 'D':
-                        return new CvTerm("PRIDE", "PRIDE:0000242", "immonium D", null);
-                    case 'E':
-                        return new CvTerm("PRIDE", "PRIDE:0000243", "immonium E", null);
-                    case 'F':
-                        return new CvTerm("PRIDE", "PRIDE:0000244", "immonium F", null);
-                    case 'G':
-                        return new CvTerm("PRIDE", "PRIDE:0000245", "immonium G", null);
-                    case 'H':
-                        return new CvTerm("PRIDE", "PRIDE:0000246", "immonium H", null);
-                    case 'I':
-                        return new CvTerm("PRIDE", "PRIDE:0000247", "immonium I", null);
-                    case 'K':
-                        return new CvTerm("PRIDE", "PRIDE:0000248", "immonium K", null);
-                    case 'L':
-                        return new CvTerm("PRIDE", "PRIDE:0000249", "immonium L", null);
-                    case 'M':
-                        return new CvTerm("PRIDE", "PRIDE:0000250", "immonium M", null);
-                    case 'N':
-                        return new CvTerm("PRIDE", "PRIDE:0000251", "immonium N", null);
-                    case 'P':
-                        return new CvTerm("PRIDE", "PRIDE:0000252", "immonium P", null);
-                    case 'Q':
-                        return new CvTerm("PRIDE", "PRIDE:0000253", "immonium Q", null);
-                    case 'R':
-                        return new CvTerm("PRIDE", "PRIDE:0000254", "immonium R", null);
-                    case 'S':
-                        return new CvTerm("PRIDE", "PRIDE:0000255", "immonium S", null);
-                    case 'T':
-                        return new CvTerm("PRIDE", "PRIDE:0000256", "immonium T", null);
-                    case 'V':
-                        return new CvTerm("PRIDE", "PRIDE:0000257", "immonium V", null);
-                    case 'W':
-                        return new CvTerm("PRIDE", "PRIDE:0000258", "immonium W", null);
-                    case 'Y':
-                        return new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", null);
-                    default:
-                        return null;
-                }
-            case PRECURSOR_ION:
-                if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000263", "precursor ion", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000262", "precursor ion -H2O", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000261", "precursor ion -NH3", null);
-                } else {
-                    return null;
-                }
             default:
                 return null;
         }
     }
 
     @Override
-    public String toString() {
-        return getIonType() + getNeutralLoss();
+    public int getSubType() {
+        return subType;
+    }
+
+    @Override
+    public String getSubTypeAsString() {
+        try {
+            return getSubTypeAsString(subType);
+        } catch (UnsupportedOperationException e) {
+            throw new UnsupportedOperationException("No name for subtype: " + subType + " of " + getTypeAsString() + ".");
+        }
+    }
+
+    /**
+     * Returns the type of fragment ion as a letter
+     *
+     * @param subType the subtype
+     * @return the type of fragment ion as a letter
+     */
+    public static String getSubTypeAsString(int subType) {
+        switch (subType) {
+            case A_ION:
+                return "a";
+            case B_ION:
+                return "b";
+            case C_ION:
+                return "c";
+            case X_ION:
+                return "x";
+            case Y_ION:
+                return "y";
+            case Z_ION:
+                return "z";
+            default:
+                throw new UnsupportedOperationException("No name for subtype: " + subType + ".");
+        }
+    }
+
+    /**
+     * Returns an arraylist of possible subtypes
+     *
+     * @return an arraylist of possible subtypes
+     */
+    public static ArrayList<Integer> getPossibleSubtypes() {
+        ArrayList<Integer> possibleTypes = new ArrayList<Integer>();
+        possibleTypes.add(A_ION);
+        possibleTypes.add(B_ION);
+        possibleTypes.add(C_ION);
+        possibleTypes.add(X_ION);
+        possibleTypes.add(Y_ION);
+        possibleTypes.add(Z_ION);
+        return possibleTypes;
+    }
+
+    @Override
+    public boolean isSameAs(Ion anotherIon) {
+        return anotherIon.getType() == IonType.PEPTIDE_FRAGMENT_ION
+                && anotherIon.getSubType() == subType
+                && ((PeptideFragmentIon) anotherIon).getNumber() == number
+                && anotherIon.getNeutralLossesAsString().equals(getNeutralLossesAsString());
     }
 }

@@ -3,8 +3,11 @@ package com.compomics.util.examples;
 import com.compomics.util.Export;
 import com.compomics.util.Util;
 import com.compomics.util.enumeration.ImageType;
+import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
+import com.compomics.util.experiment.biology.ions.ImmoniumIon;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.gui.events.RescalingEvent;
@@ -3330,42 +3333,43 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }
 
     /**
-     * Returns an arraylist of the currently selected fragment ion types.
+     * Returns a map of the currently selected fragment ion types.
      *
-     * @return an arraylist of the currently selected fragment ion types
+     * @return a map of the currently selected fragment ion types
      */
-    private ArrayList<PeptideFragmentIonType> getCurrentFragmentIonTypes() {
+    private HashMap<IonType, ArrayList<Integer>> getCurrentFragmentIonTypes() {
 
-        ArrayList<PeptideFragmentIonType> fragmentIontypes = new ArrayList<PeptideFragmentIonType>();
+        HashMap<IonType, ArrayList<Integer>> fragmentIontypes = new HashMap<IonType, ArrayList<Integer>>();
+        fragmentIontypes.put(IonType.PEPTIDE_FRAGMENT_ION, new ArrayList<Integer>());
 
         if (aIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.A_ION);
+            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.A_ION);
         }
 
         if (bIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.B_ION);
+            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.B_ION);
         }
 
         if (cIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.C_ION);
+            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.C_ION);
         }
 
         if (xIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.X_ION);
+            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.X_ION);
         }
 
         if (yIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.Y_ION);
+            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.Y_ION);
         }
 
         if (zIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.Z_ION);
+            fragmentIontypes.get(IonType.PEPTIDE_FRAGMENT_ION).add(PeptideFragmentIon.Z_ION);
         }
 
         if (otherIonsJCheckBox.isSelected()) {
-            fragmentIontypes.add(PeptideFragmentIonType.IMMONIUM);
-            fragmentIontypes.add(PeptideFragmentIonType.PRECURSOR_ION);
-
+            fragmentIontypes.put(IonType.IMMONIUM_ION, Ion.getPossibleSubtypes(IonType.IMMONIUM_ION));
+            fragmentIontypes.put(IonType.PRECURSOR_ION, Ion.getPossibleSubtypes(IonType.PRECURSOR_ION));
+            fragmentIontypes.put(IonType.REPORTER_ION, Ion.getPossibleSubtypes(IonType.REPORTER_ION));
         }
 
         return fragmentIontypes;

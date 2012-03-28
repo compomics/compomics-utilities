@@ -1,14 +1,11 @@
 /**
- * Created by IntelliJ IDEA.
- * User: Lennart
- * Date: 11-mei-2004
- * Time: 16:34:34
+ * Created by IntelliJ IDEA. User: Lennart Date: 11-mei-2004 Time: 16:34:34
  */
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon.PeptideFragmentIonType;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
 import javax.swing.*;
@@ -20,12 +17,11 @@ import java.util.ArrayList;
 /*
  * CVS information:
  *
- * $Revision: 1.9 $
- * $Date: 2009/08/17 15:15:28 $
+ * $Revision: 1.9 $ $Date: 2009/08/17 15:15:28 $
  */
 /**
- * This class presents a JPanel that will hold and display a
- * mass spectrum in centroid or profile mode.
+ * This class presents a JPanel that will hold and display a mass spectrum in
+ * centroid or profile mode.
  *
  * @author Lennart Martens
  * @author Harald Barsnes
@@ -47,80 +43,84 @@ public class SpectrumPanel extends GraphicsPanel {
     private Color aSpectrumProfileModeLineColor = Color.PINK;
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile as an interactive lines plot.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile as an interactive lines plot.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
      */
     public SpectrumPanel(SpectrumFile aSpecFile) {
         this(aSpecFile, LINES, true);
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile as a line plot.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile as a line plot.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
      */
     public SpectrumPanel(SpectrumFile aSpecFile, boolean aEnableInteraction) {
         this(aSpecFile, LINES, aEnableInteraction);
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile with the specified drawing style.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile with the specified drawing
+     * style.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
-     *                      defined on this class.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aDrawStyle int with the drawing style to use. It should be one of
+     * the constants defined on this class.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, null);
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile with the specified drawing style.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile with the specified drawing
+     * style.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
-     *                      defined on this class.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
-     * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
-     *                                  can be 'null' for default coloring.
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aDrawStyle int with the drawing style to use. It should be one of
+     * the constants defined on this class.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
+     * @param aSpectrumFilenameColor Color with the color for the
+     * spectrumfilename on the panel can be 'null' for default coloring.
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true, true);
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile with the specified drawing style.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile with the specified drawing
+     * style.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
-     *                      defined on this class.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
-     * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
-     *                                  can be 'null' for default coloring.
-     * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aDrawStyle int with the drawing style to use. It should be one of
+     * the constants defined on this class.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
+     * @param aSpectrumFilenameColor Color with the color for the
+     * spectrumfilename on the panel can be 'null' for default coloring.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
             int aMaxPadding, boolean aShowFileName) {
@@ -128,22 +128,26 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile with the specified drawing style.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile with the specified drawing
+     * style.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
-     *                      defined on this class.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
-     * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
-     *                                  can be 'null' for default coloring.
-     * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
-     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
-     * @param aShowResolution boolean that specifies if the resolution should be shown in the panel
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aDrawStyle int with the drawing style to use. It should be one of
+     * the constants defined on this class.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
+     * @param aSpectrumFilenameColor Color with the color for the
+     * spectrumfilename on the panel can be 'null' for default coloring.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor
+     * details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be
+     * shown in the panel
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
             int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution) {
@@ -151,23 +155,27 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile with the specified drawing style.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile with the specified drawing
+     * style.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
-     *                      defined on this class.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
-     * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
-     *                                  can be 'null' for default coloring.
-     * @param aMaxPadding   int the sets the maximum padding size.
-     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
-     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
-     * @param aShowResolution boolean that specifies if the resolution should be shown in the panel
-     * @param aMSLevel  int with the ms level for the spectrum
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aDrawStyle int with the drawing style to use. It should be one of
+     * the constants defined on this class.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
+     * @param aSpectrumFilenameColor Color with the color for the
+     * spectrumfilename on the panel can be 'null' for default coloring.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor
+     * details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be
+     * shown in the panel
+     * @param aMSLevel int with the ms level for the spectrum
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
             int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
@@ -175,25 +183,31 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile with the specified drawing style.
+     * This constructor creates a SpectrumPanel based on the spectrum
+     * information in the specified SpectrumFile with the specified drawing
+     * style.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
-     * @param aDrawStyle    int with the drawing style to use. It should be one of the constants
-     *                      defined on this class.
-     * @param aEnableInteraction    boolean that specifies whether user-derived events should
-     *                              be caught and dealt with.
-     * @param aSpectrumFilenameColor    Color with the color for the spectrumfilename on the panel
-     *                                  can be 'null' for default coloring.
-     * @param aMaxPadding   int the sets the maximum padding size.
-    
-     * @param aShowFileName boolean that specifies if the file name should be shown in the panel
-     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
-     * @param aShowResolution   boolean that specifies if the resolution should be shown in the panel
-     * @param aMSLevel  int with the ms level for the spectrum, set to 0 if ms level is unknown
-     * @param aProfileMode boolean if set to true the spectrum will be drawn in profile mode
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
+     * @param aDrawStyle int with the drawing style to use. It should be one of
+     * the constants defined on this class.
+     * @param aEnableInteraction boolean that specifies whether user-derived
+     * events should be caught and dealt with.
+     * @param aSpectrumFilenameColor Color with the color for the
+     * spectrumfilename on the panel can be 'null' for default coloring.
+     * @param aMaxPadding int the sets the maximum padding size.
+     *
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor
+     * details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be
+     * shown in the panel
+     * @param aMSLevel int with the ms level for the spectrum, set to 0 if ms
+     * level is unknown
+     * @param aProfileMode boolean if set to true the spectrum will be drawn in
+     * profile mode
      */
     public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction,
             Color aSpectrumFilenameColor, int aMaxPadding,
@@ -226,28 +240,31 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     * This constructor will be used to annotate matched ions on the
+     * spectrumpannels.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
-     * @param aFileName             String with the title of the Query.
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values.
+     * @param aPrecursorMZ double with the precursor mass.
+     * @param aPrecursorCharge String with the precursor intensity.
+     * @param aFileName String with the title of the Query.
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName) {
         this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, false, true, true);
     }
 
     /**
-     * This constructor creates a SpectrumPanel based on the passed parameters. 
-     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     * This constructor creates a SpectrumPanel based on the passed parameters.
+     * This constructor will be used to annotate matched ions on the
+     * spectrumpannels.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
-     * @param aFileName             String with the title of the Query.
-     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel.
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values.
+     * @param aPrecursorMZ double with the precursor mass.
+     * @param aPrecursorCharge String with the precursor intensity.
+     * @param aFileName String with the title of the Query.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel.
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName,
             boolean aShowFileName) {
@@ -256,15 +273,17 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     * This constructor will be used to annotate matched ions on the
+     * spectrumpannels.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
-     * @param aFileName             String with the title of the Query.
-     * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel.
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values.
+     * @param aPrecursorMZ double with the precursor mass.
+     * @param aPrecursorCharge String with the precursor intensity.
+     * @param aFileName String with the title of the Query.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel.
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
             String aFileName, int aMaxPadding, boolean aShowFileName) {
@@ -273,17 +292,21 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     * This constructor will be used to annotate matched ions on the
+     * spectrumpannels.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
-     * @param aFileName             String with the title of the Query.
-     * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel
-     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
-     * @param aShowResolution       boolean that specifies if the resolution should be shown in the panel
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values.
+     * @param aPrecursorMZ double with the precursor mass.
+     * @param aPrecursorCharge String with the precursor intensity.
+     * @param aFileName String with the title of the Query.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor
+     * details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be
+     * shown in the panel
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
             String aFileName, int aMaxPadding, boolean aShowFileName,
@@ -294,18 +317,23 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     * This constructor will be used to annotate matched ions on the
+     * spectrumpannels.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor intensity.
-     * @param aFileName             String with the title of the Query.
-     * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel
-     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
-     * @param aShowResolution       boolean that specifies if the resolution should be shown in the panel
-     * @param aMSLevel              int with the ms level for the spectrum, set to 0 if ms level is unknown
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values.
+     * @param aPrecursorMZ double with the precursor mass.
+     * @param aPrecursorCharge String with the precursor intensity.
+     * @param aFileName String with the title of the Query.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor
+     * details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be
+     * shown in the panel
+     * @param aMSLevel int with the ms level for the spectrum, set to 0 if ms
+     * level is unknown
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
             String aFileName, int aMaxPadding, boolean aShowFileName,
@@ -316,19 +344,25 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the spectrumpannels.
+     * This constructor will be used to annotate matched ions on the
+     * spectrumpannels.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values.
-     * @param aPrecursorMZ          double with the precursor mass.
-     * @param aPrecursorCharge      String with the precursor charge.
-     * @param aFileName             String with the title of the Query.
-     * @param aMaxPadding           int the sets the maximum padding size.
-     * @param aShowFileName         boolean that specifies if the file name should be shown in the panel
-     * @param aShowPrecursorDetails boolean that specifies if the precursor details should be shown in the panel
-     * @param aShowResolution       boolean that specifies if the resolution should be shown in the panel
-     * @param aMSLevel              int with the ms level for the spectrum, set to 0 if ms level is unknown
-     * @param aProfileMode          boolean if set to true the spectrum will be drawn in profile mode
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values.
+     * @param aPrecursorMZ double with the precursor mass.
+     * @param aPrecursorCharge String with the precursor charge.
+     * @param aFileName String with the title of the Query.
+     * @param aMaxPadding int the sets the maximum padding size.
+     * @param aShowFileName boolean that specifies if the file name should be
+     * shown in the panel
+     * @param aShowPrecursorDetails boolean that specifies if the precursor
+     * details should be shown in the panel
+     * @param aShowResolution boolean that specifies if the resolution should be
+     * shown in the panel
+     * @param aMSLevel int with the ms level for the spectrum, set to 0 if ms
+     * level is unknown
+     * @param aProfileMode boolean if set to true the spectrum will be drawn in
+     * profile mode
      */
     public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
             String aFileName, int aMaxPadding, boolean aShowFileName,
@@ -360,13 +394,14 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * Adds an additional spectrum dataset to be displayed in the same Spectrum 
+     * Adds an additional spectrum dataset to be displayed in the same Spectrum
      * Panel. Remember to use different colors for the different datasets.
      *
-     * @param aXAxisData            double[] with all the x-axis values.
-     * @param aYAxisData            double[] with all the y-axis values
-     * @param dataPointAndLineColor the color to use for the data points and lines
-     * @param areaUnderCurveColor   the color to use for the area under the curve
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values
+     * @param dataPointAndLineColor the color to use for the data points and
+     * lines
+     * @param areaUnderCurveColor the color to use for the area under the curve
      */
     public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
@@ -391,10 +426,10 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * If true only the annotated peaks will be drawn. The default value is 
-     * false, and result in all peaks being drawn. Note that this setting 
-     * is ignored when in profile mode!
-     * 
+     * If true only the annotated peaks will be drawn. The default value is
+     * false, and result in all peaks being drawn. Note that this setting is
+     * ignored when in profile mode!
+     *
      * @param aAnnotatedPeaks if true only the annotated peaks will be drawn
      */
     public void showAnnotatedPeaksOnly(boolean aAnnotatedPeaks) {
@@ -402,12 +437,12 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * This method initializes a SpectrumPanel based on the spectrum information in
-     * the specified SpectrumFile.
+     * This method initializes a SpectrumPanel based on the spectrum information
+     * in the specified SpectrumFile.
      *
-     * @param aSpecFile SpectrumFile with the information about masses and intensities
-     *                  that will be copied here. Note that mass-sorting will take place
-     *                  in this step as well.
+     * @param aSpecFile SpectrumFile with the information about masses and
+     * intensities that will be copied here. Note that mass-sorting will take
+     * place in this step as well.
      */
     public void setSpectrumFile(SpectrumFile aSpecFile) {
         this.processSpectrumFile(aSpecFile, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
@@ -415,11 +450,13 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This method reads the peaks and their intensities from the specified
-     * SpectrumFile and stores these internally for drawing. The masses are sorted
-     * in this step.
+     * SpectrumFile and stores these internally for drawing. The masses are
+     * sorted in this step.
      *
-     * @param aSpecFile SpectrumFile from which the peaks and intensities will be copied.
-     * @param dataPointAndLineColor the color to use for the data points and line
+     * @param aSpecFile SpectrumFile from which the peaks and intensities will
+     * be copied.
+     * @param dataPointAndLineColor the color to use for the data points and
+     * line
      * @param areaUnderCurveColor the color to use for the area under the curve
      */
     private void processSpectrumFile(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
@@ -480,8 +517,8 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * Returns the peak color to be used for the given peak label. The
-     * colors used are based on the color coding used in MascotDatfile.
+     * Returns the peak color to be used for the given peak label. The colors
+     * used are based on the color coding used in MascotDatfile.
      *
      * @param peakLabel
      * @return the peak color
@@ -556,24 +593,28 @@ public class SpectrumPanel extends GraphicsPanel {
 
         return currentColor;
     }
-    
+
     /**
-     * Filters the annotations and returns the annotations matching the currently selected types.
+     * Filters the annotations and returns the annotations matching the
+     * currently selected types.
      *
-     * @param annotations                   the annotations to be filtered, the annotations are
-     *                                      assumed to have the following form:
-     *                                          ion type + [ion number] + [charge] + [neutral loss]
-     * @param fragmentIonTypes              the fragment ion types to include, assumed to be one of
-     *                                      the PeptideFragmentIon types, e.g, PeptideFragmentIon.B_ION
-     * @param neutralLosses                 list of neutral losses to display
-     * @param singleChargeSelected          if singly charged fragments are to be included
-     * @param doubleChargeSelected          if double charged fragments are to be included
-     * @param moreThanTwoChargesSelected    if fragments with more than two charges are to be included
-     * @return                              the filtered annotations
+     * @param annotations the annotations to be filtered, the annotations are
+     * assumed to have the following form: ion type + [ion number] + [charge] +
+     * [neutral loss]
+     * @param iontypes the fragment ion types to include, assumed to be one of
+     * the Ion types, e.g, IonType.PeptideFragmentIon > PeptideFragmentIon.B_ION
+     * @param neutralLosses list of neutral losses to display
+     * @param singleChargeSelected if singly charged fragments are to be
+     * included
+     * @param doubleChargeSelected if double charged fragments are to be
+     * included
+     * @param moreThanTwoChargesSelected if fragments with more than two charges
+     * are to be included
+     * @return the filtered annotations
      */
     public static Vector<DefaultSpectrumAnnotation> filterAnnotations(
             Vector<DefaultSpectrumAnnotation> annotations,
-            ArrayList<PeptideFragmentIonType> fragmentIonTypes,
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
             ArrayList<NeutralLoss> neutralLosses,
             boolean singleChargeSelected,
             boolean doubleChargeSelected,
@@ -589,32 +630,39 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // check ion type
             if (currentLabel.startsWith("a")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.A_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.A_ION)) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("b")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.B_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.B_ION)) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("c")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.C_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.C_ION)) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("x")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.X_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.X_ION)) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("y")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.Y_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.Y_ION)) {
                     useAnnotation = false;
                 }
             } else if (currentLabel.startsWith("z")) {
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.Z_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.Z_ION)) {
                     useAnnotation = false;
                 }
             } else { // other
-                if (!(fragmentIonTypes.contains(PeptideFragmentIonType.IMMONIUM)
-                        || fragmentIonTypes.contains(PeptideFragmentIonType.PRECURSOR_ION))) {
+                if (!iontypes.containsKey(Ion.IonType.IMMONIUM_ION)
+                        && !iontypes.containsKey(Ion.IonType.PRECURSOR_ION)
+                        && !iontypes.containsKey(Ion.IonType.IMMONIUM_ION)) {
                     useAnnotation = false;
                 }
             }
@@ -692,81 +740,92 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
-     * Returns the peak color to be used for the given peak label. The
-     * colors used are based on the color coding used in MascotDatfile.
+     * Returns the peak color to be used for the given peak label. The colors
+     * used are based on the color coding used in MascotDatfile.
      *
-     * @param fragmentIon
+     * @param ion the ion
      * @return the peak color
      */
-    public static Color determineFragmentIonColor(PeptideFragmentIon fragmentIon) {
+    public static Color determineFragmentIonColor(Ion ion) {
 
-        Color currentColor = Color.GRAY;
-
-        PeptideFragmentIonType fragmentIonType = fragmentIon.getType();
-        ArrayList<NeutralLoss> neutralLosses = fragmentIon.getNeutralLosses();
-
-        if (fragmentIonType == PeptideFragmentIonType.A_ION) {
-            // turquoise
-            currentColor = new Color(153, 0, 0);
-            for (NeutralLoss neutralLoss : neutralLosses) {
-                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                    // light purple-blue
-                    currentColor = new Color(171, 161, 255);
-                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                    // ugly purple pink
-                    currentColor = new Color(248, 151, 202);
+        switch (ion.getType()) {
+            case PEPTIDE_FRAGMENT_ION:
+                switch (ion.getSubType()) {
+                    case PeptideFragmentIon.A_ION:
+                        if (ion.getNeutralLosses().size() == 1) {
+                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                // light purple-blue
+                                return new Color(171, 161, 255);
+                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                // ugly purple pink
+                                return new Color(248, 151, 202);
+                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                return Color.BLACK;
+                            }
+                        } else if (ion.getNeutralLosses().size() > 1) {
+                            return Color.GRAY;
+                        }
+                        // turquoise
+                        return new Color(153, 0, 0);
+                    case PeptideFragmentIon.B_ION:
+                        if (ion.getNeutralLosses().size() == 1) {
+                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                // nice blue
+                                return new Color(0, 125, 200);
+                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                // another purple
+                                return new Color(153, 0, 255);
+                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                return Color.BLACK;
+                            }
+                        } else if (ion.getNeutralLosses().size() > 1) {
+                            return Color.GRAY;
+                        }
+                        // dark blue
+                        return new Color(0, 0, 255);
+                    case PeptideFragmentIon.C_ION:
+                        // purple blue
+                        return new Color(188, 0, 255);
+                    case PeptideFragmentIon.X_ION:
+                        // green
+                        return new Color(78, 200, 0);
+                    case PeptideFragmentIon.Y_ION:
+                        if (ion.getNeutralLosses().size() == 1) {
+                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                // ??
+                                return new Color(255, 150, 0);
+                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                // ??
+                                return new Color(255, 0, 150);
+                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                return Color.BLACK;
+                            }
+                        } else if (ion.getNeutralLosses().size() > 1) {
+                            return Color.GRAY;
+                        }
+                        // red
+                        return new Color(255, 0, 0);
+                    case PeptideFragmentIon.Z_ION:
+                        // dark green
+                        return new Color(64, 179, 0);
+                    default:
+                        return Color.GRAY;
                 }
-            }
-        } else if (fragmentIonType == PeptideFragmentIonType.B_ION) {
-            // dark blue
-            currentColor = new Color(0, 0, 255);
-            for (NeutralLoss neutralLoss : neutralLosses) {
-                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                    // nice blue
-                    currentColor = new Color(0, 125, 200);
-                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                    // another purple
-                    currentColor = new Color(153, 0, 255);
-                }
-            }
-        } else if (fragmentIonType == PeptideFragmentIonType.C_ION) {
-            // purple blue
-            currentColor = new Color(188, 0, 255); // ToDo: no colors for H2O and NH3??
-        } else if (fragmentIonType == PeptideFragmentIonType.X_ION) {
-            // green
-            currentColor = new Color(78, 200, 0); // ToDo: no colors for H2O and NH3??
-        } else if (fragmentIonType == PeptideFragmentIonType.Y_ION) {
-            // red
-            currentColor = new Color(255, 0, 0);
-            for (NeutralLoss neutralLoss : neutralLosses) {
-                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                    // ??
-                    currentColor = new Color(255, 150, 0);
-                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                    // ??
-                    currentColor = new Color(255, 0, 150);
-                }
-            }
-        } else if (fragmentIonType == PeptideFragmentIonType.Z_ION) {
-            // dark green
-            currentColor = new Color(64, 179, 0); // ToDo: no colors for H2O and NH3??
-        } else if (fragmentIonType == PeptideFragmentIonType.PRECURSOR_ION) {
-            // red
-            currentColor = Color.gray; // Color.red is used in MascotDatFile
-        } else if (fragmentIonType == PeptideFragmentIonType.IMMONIUM) {
-            // grey
-            currentColor = Color.gray;
+            case PRECURSOR_ION:
+            case IMMONIUM_ION:
+                return Color.GRAY;
+            case REPORTER_ION:
+                return Color.ORANGE;
+            default:
+                return Color.GRAY;
         }
 
-        for (NeutralLoss neutralLoss : neutralLosses) {
-            if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                // @TODO can we find better colors for the neutral losses? The phospho losses should definitively flash
-                currentColor = Color.black;
-            }
-        }
-
-        return currentColor;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
@@ -27,21 +28,24 @@ public class IntensityHistogram extends JPanel {
      * The chart panel for external access.
      */
     private ChartPanel chartPanel;
-    
+
     /**
      * Creates an IntensityHistogram plot
      *
-     * @param annotations                   the full list of spectrum annotations
-     * @param currentFragmentIons           the currently selected fragment ion types
-     * @param currentSpectrum               the current spectrum
-     * @param intensityLevel                annotation intensity level in percent, e.g., 0.75
-     * @param includeSinglyCharge           if singly charged fragment ions are to be included
-     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
-     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
+     * @param annotations the full list of spectrum annotations
+     * @param currentFragmentIons the currently selected fragment ion types
+     * @param currentSpectrum the current spectrum
+     * @param intensityLevel annotation intensity level in percent, e.g., 0.75
+     * @param includeSinglyCharge if singly charged fragment ions are to be
+     * included
+     * @param includeDoublyCharge if doubly charged fragment ions are to be
+     * included
+     * @param includeMoreThanTwoCharges if fragment ions with more than two
+     * charges are to be included
      */
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<Integer> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             double intensityLevel,
             boolean includeSinglyCharge,
@@ -62,23 +66,25 @@ public class IntensityHistogram extends JPanel {
         int currentCharge;
         for (IonMatch ionMatch : annotations) {
             currentCharge = ionMatch.charge.value;
+            if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
-            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
+                // set up the data for the mass error and instensity histograms
+                if (currentFragmentIons.contains(fragmentIon.getSubType())) {
 
-            // set up the data for the mass error and instensity histograms
-            if (currentFragmentIons.contains(fragmentIon.getType())) {
-
-                if ((currentCharge == 1 && includeSinglyCharge)
-                        || (currentCharge == 2 && includeDoublyCharge)
-                        || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                    annotatedPeakIntensities.add(ionMatch.peak.intensity);
-                    nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
+                    if ((currentCharge == 1 && includeSinglyCharge)
+                            || (currentCharge == 2 && includeDoublyCharge)
+                            || (currentCharge > 2 && includeMoreThanTwoCharges)) {
+                        annotatedPeakIntensities.add(ionMatch.peak.intensity);
+                        nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
+                    }
                 }
             }
         }
-
         // create the peak histograms
+        // @TODO use the Freedman–Diaconis rule
         int bins = 30; // @TODO: make this a user selection!
+        
 
         // the non annotated peaks histogram
         double[] nonAnnotatedIntensities = new double[nonAnnotatedPeakIntensities.size()];
@@ -132,10 +138,10 @@ public class IntensityHistogram extends JPanel {
             this.add(chartPanel);
         }
     }
-    
+
     /**
      * Returns the chart panel.
-     * 
+     *
      * @return the chart panel
      */
     public ChartPanel getChartPanel() {

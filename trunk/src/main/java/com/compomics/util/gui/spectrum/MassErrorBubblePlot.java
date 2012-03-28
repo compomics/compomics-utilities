@@ -1,6 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.XYZDataPoint;
+import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
@@ -61,7 +62,7 @@ public class MassErrorBubblePlot extends JPanel {
     /**
      * The currently selected fragment ion types.
      */
-    private ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons;
+    private ArrayList<Integer> currentFragmentIons;
     /**
      * If singly charged fragment ions are to be included.
      */
@@ -101,7 +102,7 @@ public class MassErrorBubblePlot extends JPanel {
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<Integer> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
             boolean includeSinglyCharge,
@@ -131,7 +132,7 @@ public class MassErrorBubblePlot extends JPanel {
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<Integer> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
             boolean includeSinglyCharge,
@@ -163,7 +164,7 @@ public class MassErrorBubblePlot extends JPanel {
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<Integer> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
             double bubbleScale,
@@ -474,11 +475,11 @@ public class MassErrorBubblePlot extends JPanel {
         currentlyUsedIonMatches = new ArrayList<IonMatch>();
 
         for (IonMatch ionMatch : annotations) {
-
+if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
             PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
             // set up the data for the mass error and instensity histograms
-            if (currentFragmentIons.contains(fragmentIon.getType())) {
+            if (currentFragmentIons.contains(fragmentIon.getSubType())) {
                 int currentCharge = ionMatch.charge.value;
                 if ((currentCharge == 1 && includeSinglyCharge)
                         || (currentCharge == 2 && includeDoublyCharge)
@@ -486,6 +487,7 @@ public class MassErrorBubblePlot extends JPanel {
                     currentlyUsedIonMatches.add(ionMatch);
                 }
             }
+}
         }
 
         return currentlyUsedIonMatches;

@@ -110,7 +110,7 @@ public class GlyconFactory {
         }
         type = parser.next();
         String shortName = parser.getText().trim();
-        Glycon currentGlycon = new Glycon(name, shortName);
+        Glycon currentGlycon = new Glycon(shortName, name);
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("underivatisedMass")) {
             type = parser.next();
         }

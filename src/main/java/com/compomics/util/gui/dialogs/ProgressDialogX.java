@@ -1,12 +1,11 @@
 package com.compomics.util.gui.dialogs;
 
 import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
 
 /**
  * A dialog for displaying information about progress.
  *
- * @author  Harald Barsnes
+ * @author Harald Barsnes
  */
 public class ProgressDialogX extends javax.swing.JDialog {
 
@@ -15,188 +14,134 @@ public class ProgressDialogX extends javax.swing.JDialog {
      */
     private ProgressDialogParent progressDialogFrame;
     /**
-     * If set to true, trying to close the progess bar will be ignored.
-     * Use this option if the process being monitored can not be stopped.
+     * If set to true, trying to close the progess bar will be ignored. Use this
+     * option if the process being monitored can not be stopped.
      */
     private boolean doNothingOnClose = false;
 
     /**
-     * Opens a new ProgressDialogX with a Frame as a parent
-     * 
+     * Opens a new ProgressDialogX with a Frame as a parent.
+     *
      * @param parent
-     * @param progressDialogFrame 
+     * @param progressDialogFrame
      * @param modal
      */
     public ProgressDialogX(java.awt.Frame parent, ProgressDialogParent progressDialogFrame, boolean modal) {
         super(parent, modal);
         initComponents();
-
         this.progressDialogFrame = progressDialogFrame;
-
-        // only works for Java 1.6 and newer
-//        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().
-//                getResource("...GIF")));
-
         setLocationRelativeTo(parent);
     }
 
     /**
-     * Opens a new ProgressDialog with a JDialog as a parent
-     * 
+     * Opens a new ProgressDialog with a JDialog as a parent.
+     *
      * @param parent
-     * @param progressDialogFrame 
+     * @param progressDialogFrame
      * @param modal
      */
     public ProgressDialogX(javax.swing.JDialog parent, ProgressDialogParent progressDialogFrame, boolean modal) {
         super(parent, modal);
-
         initComponents();
-
         this.progressDialogFrame = progressDialogFrame;
-
-        // only works for Java 1.6 and newer
-//        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().
-//                getResource("/no/uib/...GIF")));
-
         setLocationRelativeTo(parent);
     }
 
     /**
-     * Opens a new ProgressDialog with a ProgressDialogParent as a parent
+     * Opens a new ProgressDialog with a ProgressDialogParent as a parent.
      *
      * @param parent
      * @param modal
      */
     public ProgressDialogX(ProgressDialogParent parent, boolean modal) {
-
         this.setModal(true);
-
         initComponents();
-
         this.progressDialogFrame = parent;
-
-        // only works for Java 1.6 and newer
-//        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().
-//                getResource("/no/uib/...GIF")));
-
         setLocationRelativeTo(null);
     }
 
     /**
      * Sets the progress bar value.
-     * 
+     *
      * @param value the progress bar value
      */
     public void setValue(final int value) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setValue(value);
-            }
-        });
+        progressBar.setValue(value);
     }
 
     /**
-     * Increases the progress value by 1
+     * Increases the progress value by 1.
      */
     public void incrementValue() {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setValue(progressBar.getValue()+1);
-            }
-        });
+        progressBar.setValue(progressBar.getValue() + 1);
     }
 
     /**
-     * Increases the progress value by n
+     * Increases the progress value by n.
+     *
+     * @param increment the value to increment by
      */
-    public void incrementValue(int n) {
-        final int increment = n;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setValue(progressBar.getValue()+increment);
-            }
-        });
+    public void incrementValue(int increment) {
+        progressBar.setValue(progressBar.getValue() + increment);
     }
 
     /**
-     * Sets the maximum value of the progress bar
-     * 
+     * Sets the maximum value of the progress bar.
+     *
      * @param value the maximum value
      */
     public void setMax(final int value) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setMaximum(value);
-            }
-        });
+        progressBar.setMaximum(value);
     }
 
     /**
-     * Makes the dialog indeterminate or not indeterminate. Also 
-     * turns the paint progress string on or off.
-     * 
+     * Makes the dialog indeterminate or not indeterminate. Also turns the paint
+     * progress string on or off.
+     *
      * @param intermidiate
-     * 
+     *
      * @deprecated Replaced by setIndeterminate, from utilities 3.1.17.
-     * @see #setIndeterminate(boolean) 
+     * @see #setIndeterminate(boolean)
      */
     public void setIntermidiate(final boolean intermidiate) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setStringPainted(!intermidiate);
-                progressBar.setIndeterminate(intermidiate);
-            }
-        });
+        progressBar.setStringPainted(!intermidiate);
+        progressBar.setIndeterminate(intermidiate);
     }
-    
+
     /**
-     * Makes the dialog indeterminate or not indeterminate. Also 
-     * turns the paint progress string on or off.
-     * 
+     * Makes the dialog indeterminate or not indeterminate. Also turns the paint
+     * progress string on or off.
+     *
      * @param indeterminate
      */
     public void setIndeterminate(final boolean indeterminate) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setStringPainted(!indeterminate);
-                progressBar.setIndeterminate(indeterminate);
-            }
-        });
+        progressBar.setStringPainted(!indeterminate);
+        progressBar.setIndeterminate(indeterminate);
     }
 
     /**
-     * Sets the string to display in the progrss bar. For example to show 
-     * the name of the file currently being converted.
-     * 
+     * Sets the string to display in the progrss bar. For example to show the
+     * name of the file currently being converted.
+     *
      * @param currentFileName
      */
     public void setString(final String currentFileName) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setStringPainted(currentFileName != null);
-                progressBar.setString(currentFileName);
-            }
-        });
+        progressBar.setStringPainted(currentFileName != null);
+        progressBar.setString(currentFileName);
     }
 
     /**
-     * This method makes it impossible to close the dialog. Used when 
-     * the method monitored by the progres bar can not be stopped.
+     * This method makes it impossible to close the dialog. Used when the method
+     * monitored by the progres bar can not be stopped.
      */
     public void doNothingOnClose() {
         doNothingOnClose = true;
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -234,16 +179,15 @@ public class ProgressDialogX extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
     /**
      * Closes the dialog (if it can be closed).
-     * 
+     *
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if (!doNothingOnClose) {
-
             progressDialogFrame.cancelProgress();
-            
             this.setVisible(true);
             this.dispose();
         }
@@ -254,7 +198,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
 
     /**
      * Returns the progress bar for updates from external processes.
-     * 
+     *
      * @return the progress bar
      */
     public JProgressBar getProgressBar() {

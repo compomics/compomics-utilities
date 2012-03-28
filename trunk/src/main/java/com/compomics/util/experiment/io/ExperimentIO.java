@@ -4,7 +4,6 @@ import com.compomics.util.experiment.MsExperiment;
 
 import java.io.*;
 
-
 /**
  * This class takes care of the saving and opening of Compomics utilities
  * experiment objects via serialization.
@@ -20,11 +19,12 @@ public class ExperimentIO {
     }
 
     /**
-     * Method which saves an experiment
+     * Method which saves an experiment.
      *
-     * @param file          The destination file
-     * @param experiment    The experiment to be saved
-     * @throws IOException  Exception thrown whenever an error is encountered while writing the file
+     * @param file The destination file
+     * @param experiment The experiment to be saved
+     * @throws IOException Exception thrown whenever an error is encountered
+     * while writing the file
      */
     public void save(File file, MsExperiment experiment) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
@@ -37,12 +37,14 @@ public class ExperimentIO {
     }
 
     /**
-     * Method which loads an experiment
+     * Method which loads an experiment.
      *
-     * @param utilitiesFile             File to import
-     * @return                          the loaded experiment
-     * @throws IOException              Exception thrown if a problem occured while reading the file
-     * @throws ClassNotFoundException   Exception thrown if a problem occured while creating the experiment (typically a version issue)
+     * @param utilitiesFile File to import
+     * @return the loaded experiment
+     * @throws IOException Exception thrown if a problem occured while reading
+     * the file
+     * @throws ClassNotFoundException Exception thrown if a problem occured
+     * while creating the experiment (typically a version issue)
      */
     public MsExperiment loadExperiment(File utilitiesFile) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(utilitiesFile);

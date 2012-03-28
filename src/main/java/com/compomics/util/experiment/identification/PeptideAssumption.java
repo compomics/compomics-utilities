@@ -2,7 +2,11 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.PrecursorIon;
+import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 
@@ -95,11 +99,11 @@ public class PeptideAssumption extends ExperimentObject {
 
     /**
      * Returns the distance in Da between the experimental mass and theoretic mass, image of the error between the precursor mass and the peptide monoisotopic mass (typically for the C13 option)
-     * @param precursorMZ the precursor m/z
+     * @param measuredMZ the precursor m/z
      * @return  the distance in Da between the experimental mass and theoretic mass
      */
-    public int getC13(double precursorMZ) {
-        return (int) Math.round(precursorMZ*identificationCharge.value-identificationCharge.value*Ion.proton().theoreticMass-peptide.getMass());
+    public int getC13(double measuredMZ) {
+        return (int) Math.round(measuredMZ*identificationCharge.value-identificationCharge.value*ElementaryIon.proton.getTheoreticMass()-peptide.getMass());
     }
 
     /**
@@ -108,16 +112,12 @@ public class PeptideAssumption extends ExperimentObject {
      * thus can occur.
      * If an error of more than 1 Da it will be substracted from the error. The C13 error can be retrieved by the function getC13().
      *
-     * @param precursorMZ   the precursor m/z
+     * @param measuredMZ   the precursor m/z
      * @param ppm           if true the error is returns in ppm, false returns the error in Da
      * @return              the precursor mass error (in ppm or Da)
      */
-    public double getDeltaMass(double precursorMZ, boolean ppm) {
-        if (ppm) {
-            return (precursorMZ*identificationCharge.value-identificationCharge.value*Ion.proton().theoreticMass-peptide.getMass()+getC13(precursorMZ))/peptide.getMass()*1000000;
-        } else {
-            return precursorMZ*identificationCharge.value-identificationCharge.value*Ion.proton().theoreticMass-peptide.getMass()+getC13(precursorMZ);
-        }
+    public double getDeltaMass(double measuredMZ, boolean ppm) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm);
     }
 
     /**
@@ -170,4 +170,14 @@ public class PeptideAssumption extends ExperimentObject {
     public void setRank(int aRank){
         rank = aRank;
     }
+    
+    /**
+     * Returns the ion match between the 
+     * @param precursorPeak
+     * @return 
+     */
+    public IonMatch getPrecursorMatch(Peak precursorPeak) {
+        return new IonMatch(precursorPeak, new PrecursorIon(peptide), identificationCharge);
+    }
+    
 }

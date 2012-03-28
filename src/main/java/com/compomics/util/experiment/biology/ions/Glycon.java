@@ -1,6 +1,9 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.pride.CvTerm;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 
@@ -38,14 +41,6 @@ public class Glycon extends Ion {
      * Masses of this glycon.
      */
     private HashMap<Integer, Double> theoreticMasses = new HashMap<Integer, Double>();
-    /**
-     * Name of the glycon
-     */
-    private String name;
-    /**
-     * Short name of the glycon
-     */
-    private String shortName;
 
 
     /**
@@ -54,11 +49,19 @@ public class Glycon extends Ion {
      * @param aName         The name of the glycon
      * @param aShortName    A shortened name for the glycon
      */
-    public Glycon(String aName, String aShortName) {
-        this.name = aName;
-        this.shortName = aShortName;
-        this.familyType = Ion.GLYCON_FRAGMENT;
+    public Glycon(String name, String longName) {
+        type = IonType.GLYCON;
+        this.name = name;
+        this.longName = longName;
     }
+    /**
+     * The glycon short name which can be displayed on a spectrum
+     */
+    private String name;
+    /**
+     * The glycon full name
+     */
+    private String longName;
 
     /**
      * Add a mass for this glycon
@@ -80,21 +83,44 @@ public class Glycon extends Ion {
         return theoreticMasses.get(aType);
     }
 
-    /**
-     * Getter for the glycons name
-     *
-     * @return the glycons name
-     */
+    @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * Getter for the glycons short name
-     *
-     * @return the glycon short name
-     */
-    public String getShortName() {
-        return shortName;
+    @Override
+    public CvTerm getPrideCvTerm() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public int getSubType() {
+        //@TODO: implement all glycon types
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getSubTypeAsString() {
+        //@TODO: implement all glycon types
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Returns an arraylist of possible subtypes
+     * @return an arraylist of possible subtypes
+     */
+    public static ArrayList<Integer> getPossibleSubtypes() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ArrayList<NeutralLoss> getNeutralLosses() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isSameAs(Ion anotherIon) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
 }

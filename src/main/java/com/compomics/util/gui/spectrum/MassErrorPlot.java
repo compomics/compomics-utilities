@@ -1,5 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
@@ -30,7 +31,7 @@ public class MassErrorPlot extends JPanel {
     /**
      * The currently selected fragment ion types.
      */
-    private ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons;
+    private ArrayList<Integer> currentFragmentIons;
     /**
      * If singly charged fragment ions are to be included.
      */
@@ -52,24 +53,28 @@ public class MassErrorPlot extends JPanel {
      */
     private ChartPanel chartPanel;
     /**
-     * If true the relative error (ppm) is used instead of the absolute error (Da).
+     * If true the relative error (ppm) is used instead of the absolute error
+     * (Da).
      */
     private boolean useRelativeError = false;
 
     /**
      * Creates a new MassErrorPlot.
      *
-     * @param annotations                   the full list of spectrum annotations
-     * @param currentFragmentIons           the currently selected fragment ion types
-     * @param currentSpectrum               the current spectrum
-     * @param massTolerance                 the mass error tolerance
-     * @param includeSinglyCharge           if singly charged fragment ions are to be included
-     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
-     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
+     * @param annotations the full list of spectrum annotations
+     * @param currentFragmentIons the currently selected fragment ion types
+     * @param currentSpectrum the current spectrum
+     * @param massTolerance the mass error tolerance
+     * @param includeSinglyCharge if singly charged fragment ions are to be
+     * included
+     * @param includeDoublyCharge if doubly charged fragment ions are to be
+     * included
+     * @param includeMoreThanTwoCharges if fragment ions with more than two
+     * charges are to be included
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<Integer> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             double massTolerance,
             boolean includeSinglyCharge,
@@ -81,18 +86,22 @@ public class MassErrorPlot extends JPanel {
     /**
      * Creates a new MassErrorPlot.
      *
-     * @param annotations                   the full list of spectrum annotations
-     * @param currentFragmentIons           the currently selected fragment ion types
-     * @param currentSpectrum               the current spectrum
-     * @param massTolerance                 the mass error tolerance
-     * @param includeSinglyCharge           if singly charged fragment ions are to be included
-     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
-     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
-     * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da)
+     * @param annotations the full list of spectrum annotations
+     * @param currentFragmentIons the currently selected fragment ion types
+     * @param currentSpectrum the current spectrum
+     * @param massTolerance the mass error tolerance
+     * @param includeSinglyCharge if singly charged fragment ions are to be
+     * included
+     * @param includeDoublyCharge if doubly charged fragment ions are to be
+     * included
+     * @param includeMoreThanTwoCharges if fragment ions with more than two
+     * charges are to be included
+     * @param useRelativeError if true the relative error (ppm) is used instead
+     * of the absolute error (Da)
      */
     public MassErrorPlot(
             ArrayList<IonMatch> annotations,
-            ArrayList<PeptideFragmentIon.PeptideFragmentIonType> currentFragmentIons,
+            ArrayList<Integer> currentFragmentIons,
             MSnSpectrum currentSpectrum,
             double massTolerance,
             boolean includeSinglyCharge,
@@ -232,20 +241,20 @@ public class MassErrorPlot extends JPanel {
         currentlyUsedIonMatches = new ArrayList<IonMatch>();
 
         for (IonMatch ionMatch : annotations) {
+            if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
-            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
-
-            // set up the data for the mass error and instensity histograms
-            if (currentFragmentIons.contains(fragmentIon.getType())) {
-                int currentCharge = ionMatch.charge.value;
-                if ((currentCharge == 1 && includeSinglyCharge)
-                        || (currentCharge == 2 && includeDoublyCharge)
-                        || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                    currentlyUsedIonMatches.add(ionMatch);
+                // set up the data for the mass error and instensity histograms
+                if (currentFragmentIons.contains(fragmentIon.getSubType())) {
+                    int currentCharge = ionMatch.charge.value;
+                    if ((currentCharge == 1 && includeSinglyCharge)
+                            || (currentCharge == 2 && includeDoublyCharge)
+                            || (currentCharge > 2 && includeMoreThanTwoCharges)) {
+                        currentlyUsedIonMatches.add(ionMatch);
+                    }
                 }
             }
         }
-
         return currentlyUsedIonMatches;
     }
 
@@ -260,7 +269,7 @@ public class MassErrorPlot extends JPanel {
 
     /**
      * Returns the chart panel.
-     * 
+     *
      * @return the chart panel
      */
     public ChartPanel getChartPanel() {

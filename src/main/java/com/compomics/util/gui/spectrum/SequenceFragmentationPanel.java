@@ -1,5 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import java.awt.event.MouseEvent;
@@ -23,8 +24,8 @@ import java.util.Iterator;
 public class SequenceFragmentationPanel extends JPanel {
 
     /**
-     * A map of the rectangles that have tooltips, i.e., the fragement ion 
-     * peaks and the PTM highlighting.
+     * A map of the rectangles that have tooltips, i.e., the fragement ion peaks
+     * and the PTM highlighting.
      */
     private HashMap<String, Rectangle> tooltipRectangles;
     /**
@@ -36,17 +37,17 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private ArrayList<IonMatch> iIonMatches;
     /**
-     * Double array on b-ions for the sequence components.
-     * If '0', no corresponding ions were given for the component.
-     * Otherwise, a double between [0:1] is stored in the array that
-     * is relative with the intensity of the most intense fragmention.
+     * Double array on b-ions for the sequence components. If '0', no
+     * corresponding ions were given for the component. Otherwise, a double
+     * between [0:1] is stored in the array that is relative with the intensity
+     * of the most intense fragmention.
      */
     private double[] bIons;
     /**
-     * Double array on y-ions for the sequence components.
-     * If '0', no corresponding ions were given for the component.
-     * Otherwise, a double between [0:1] is stored in the array that
-     * is relative with the intensity of the most intense fragmention.
+     * Double array on y-ions for the sequence components. If '0', no
+     * corresponding ions were given for the component. Otherwise, a double
+     * between [0:1] is stored in the array that is relative with the intensity
+     * of the most intense fragmention.
      */
     private double[] yIons;
     /**
@@ -70,11 +71,10 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private final int iXStart = 10;
     /**
-     * This boolean holds whether or not the given sequence is a modified 
+     * This boolean holds whether or not the given sequence is a modified
      * sequence or a normal peptide sequence.
      *
-     * Normal: KENNY
-     * Modified: NH2-K<Ace>ENNY-COOH
+     * Normal: KENNY Modified: NH2-K<Ace>ENNY-COOH
      */
     private boolean isModifiedSequence;
     /**
@@ -89,18 +89,35 @@ public class SequenceFragmentationPanel extends JPanel {
      * The modification names map. E.g., key <ox>, element: oxidation of m.
      */
     private HashMap<String, String> iModificationNames;
+    /**
+     * the forward ion type (for instance B ion) as indexed by the
+     * PeptideFragmentIon static fields
+     */
+    private int forwardIon = PeptideFragmentIon.B_ION;
+    /**
+     * the rewind ion type (for instance B ion) as indexed by the
+     * PeptideFragmentIon static fields
+     */
+    private int rewindIon = PeptideFragmentIon.Y_ION;
 
     /**
      * Creates a new SequenceFragmentationPanel.
      *
-     * @param aSequence                  String with the Modified Sequence of an peptide identification.
-     * @param aIonMatches                ArrayList with Fragmentation ion matches.
-     * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
-     * @param aHighlightModifications    boolean decides whether the modification are highlighted by adding a star above the modified residue instead if 
-     *                                   displaying the PTM short name        
-     * @param aModificationColors        the modification colors, keys as <mox>, <p>, etc  
-     * @param aModificationNames         the modification names, e.g., keys as <mox>, elements as Oxidation.
-     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
+     * @deprecated use the panel with ion selection instead
+     * @param aSequence String with the Modified Sequence of an peptide
+     * identification.
+     * @param aIonMatches ArrayList with Fragmentation ion matches.
+     * @param boolModifiedSequence boolean describing the sequence. This
+     * constructor can be used to enter a ModifiedSequence or a normal sequence.
+     * @param aHighlightModifications boolean decides whether the modification
+     * are highlighted by adding a star above the modified residue instead if
+     * displaying the PTM short name
+     * @param aModificationColors the modification colors, keys as <mox>, <p>,
+     * etc
+     * @param aModificationNames the modification names, e.g., keys as <mox>,
+     * elements as Oxidation.
+     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
+     * returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
@@ -129,12 +146,63 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
+     * Creates a new SequenceFragmentationPanel working with B and Y ions
+     *
+     * @param aSequence String with the Modified Sequence of an peptide
+     * identification.
+     * @param aIonMatches ArrayList with Fragmentation ion matches.
+     * @param boolModifiedSequence boolean describing the sequence. This
+     * constructor can be used to enter a ModifiedSequence or a normal sequence.
+     * @param aHighlightModifications boolean decides whether the modification
+     * are highlighted by adding a star above the modified residue instead if
+     * displaying the PTM short name
+     * @param aModificationColors the modification colors, keys as <mox>, <p>,
+     * etc
+     * @param aModificationNames the modification names, e.g., keys as <mox>,
+     * elements as Oxidation.
+     * @param forwardIon the forward ion type (for instance B ion) as indexed by
+     * the PeptideFragmentIon static fields
+     * @param rewindIon the rewind ion type (for instance Y ion) as indexed by
+     * the PeptideFragmentIon static fields
+     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
+     * returns true.
+     * @see java.awt.GraphicsEnvironment#isHeadless
+     * @see javax.swing.JComponent#getDefaultLocale
+     */
+    public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
+            boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
+            HashMap<String, String> aModificationNames, int forwardIon, int rewindIon) throws HeadlessException {
+        super();
+        isModifiedSequence = boolModifiedSequence;
+        iSequenceComponents = parseSequenceIntoComponents(aSequence);
+        iIonMatches = aIonMatches;
+        iHighlightModifications = aHighlightModifications;
+        iModificationColors = aModificationColors;
+        iModificationNames = aModificationNames;
+
+        this.normalizeMatchedIons();
+        this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
+
+        tooltipRectangles = new HashMap<String, Rectangle>();
+
+        this.forwardIon = forwardIon;
+        this.rewindIon = rewindIon;
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+
+            public void mouseMoved(MouseEvent me) {
+                mouseMovedHandler(me);
+            }
+        });
+    }
+
+    /**
      * Paints the SequenceFragmentationPanel.
      *
-     * Based on the given ModifiedSequence Components and Fragmentions, a visualisation 
-     * (inspired by X!Tandem) is drawn on a Graphics object. Next to every possible
-     * fragmentation site of the peptide a bar is drawn wether b or y ions were found
-     * originating from this fragmentation side.
+     * Based on the given ModifiedSequence Components and Fragmentions, a
+     * visualisation (inspired by X!Tandem) is drawn on a Graphics object. Next
+     * to every possible fragmentation site of the peptide a bar is drawn wether
+     * b or y ions were found originating from this fragmentation side.
      *
      * @param g the specified Graphics window
      * @see java.awt.Component#update(java.awt.Graphics)
@@ -160,8 +228,7 @@ public class SequenceFragmentationPanel extends JPanel {
             g2.setColor(Color.black);
 
             /**
-             * A. Draw the component.
-             *  --------------------
+             * A. Draw the component. --------------------
              */
             String residue = iSequenceComponents[i];
             String modification = "";
@@ -177,7 +244,7 @@ public class SequenceFragmentationPanel extends JPanel {
 
             // if modified, highlight the modification if highlighting is selected
             if (modified) {
-                
+
                 if (iModificationColors.containsKey(modification)) {
                     g2.setColor(iModificationColors.get(modification));
                 } else {
@@ -190,7 +257,7 @@ public class SequenceFragmentationPanel extends JPanel {
                             g2.getFontMetrics().stringWidth(residue.substring(residue.length() - 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
                     if (iModificationNames.containsKey(modification)) {
-                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i+1) + ")</html>", tempRectangle);
+                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i + 1) + ")</html>", tempRectangle);
                     }
                     g2.setColor(Color.BLACK);
                     g2.drawString(nTerminal, xLocation, yLocation);
@@ -202,18 +269,18 @@ public class SequenceFragmentationPanel extends JPanel {
                             g2.getFontMetrics().stringWidth(residue.substring(0, 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
                     if (iModificationNames.containsKey(modification)) {
-                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i+1) + ")</html>", tempRectangle);
+                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i + 1) + ")</html>", tempRectangle);
                     }
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue.substring(0, 1), xLocation, yLocation);
                     g2.setColor(Color.BLACK);
-                    g2.drawString(residue.substring(1), xLocation + g2.getFontMetrics().stringWidth(residue.substring(0, 1)), yLocation); 
+                    g2.drawString(residue.substring(1), xLocation + g2.getFontMetrics().stringWidth(residue.substring(0, 1)), yLocation);
                 } else {
                     Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
                             g2.getFontMetrics().stringWidth(residue) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
                     if (iModificationNames.containsKey(modification)) {
-                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i+1) + ")</html>", tempRectangle);
+                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i + 1) + ")</html>", tempRectangle);
                     }
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue, xLocation, yLocation);
@@ -228,8 +295,7 @@ public class SequenceFragmentationPanel extends JPanel {
             xLocation += g2.getFontMetrics().stringWidth(residue) + iHorizontalSpace;
 
             /**
-             * B. Draw the bars.
-             *  --------------------
+             * B. Draw the bars. --------------------
              */
             int lBarHeight = 0;
             // bIon Bar
@@ -243,7 +309,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     Rectangle tempRectangle = new Rectangle(xLocation, lMidStringHeight.intValue() + 1, iBarWidth, lBarHeight);
                     g2.fill(tempRectangle);
 
-                    tooltipRectangles.put("<html>b<sub>" + (i + 1) + "</sub></html>", tempRectangle);
+                    tooltipRectangles.put("<html>" + PeptideFragmentIon.getSubTypeAsString(forwardIon) + "<sub>" + (i + 1) + "</sub></html>", tempRectangle);
                 }
             }
 
@@ -260,7 +326,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     Rectangle tempRectangle = new Rectangle(xLocation, yBarStart, iBarWidth, lBarHeight);
                     g2.fill(tempRectangle);
 
-                    tooltipRectangles.put("<html>y<sub>" + (yIons.length - i) + "</sub></html>", tempRectangle);
+                    tooltipRectangles.put("<html>" + PeptideFragmentIon.getSubTypeAsString(rewindIon) + "<sub>" + (yIons.length - i) + "</sub></html>", tempRectangle);
                 }
             }
 
@@ -272,19 +338,14 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * This method can parse a modified sequence String into a String[] with different components.
-     * Primitive analog to getModifiedSequenceComponents() on a peptidehit.
+     * This method can parse a modified sequence String into a String[] with
+     * different components. Primitive analog to getModifiedSequenceComponents()
+     * on a peptidehit.
      *
      * @param aSequence String with the Modified sequence of a peptideHit.
-     * @return the modified sequence of the peptidehit in a String[].
-     *         Example:
-     *         The peptide Ace-K<AceD3>ENNYR-COOH will return a String[] with
-     *         [0]Ace-K<AceD3>
-     *         [1]E
-     *         [2]N
-     *         [3]N
-     *         [4]Y
-     *         [5]R-COOH
+     * @return the modified sequence of the peptidehit in a String[]. Example:
+     * The peptide Ace-K<AceD3>ENNYR-COOH will return a String[] with
+     * [0]Ace-K<AceD3> [1]E [2]N [3]N [4]Y [5]R-COOH
      */
     private String[] parseSequenceIntoComponents(String aSequence) {
 
@@ -387,7 +448,8 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Build the normalized intensity indexes for the parts of the modified sequence that were covered by fragmentions.
+     * Build the normalized intensity indexes for the parts of the modified
+     * sequence that were covered by fragmentions.
      */
     private void normalizeMatchedIons() {
 
@@ -404,11 +466,10 @@ public class SequenceFragmentationPanel extends JPanel {
         }
 
         for (IonMatch lMatch : iIonMatches) {
-            double lRatio = lMatch.peak.intensity / lMaxIntensity;
-            PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
-            switch (lFragmentIon.getType()) {
-                //  Yion
-                case Y_ION:
+            if (lMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                double lRatio = lMatch.peak.intensity / lMaxIntensity;
+                PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
+                if (lFragmentIon.getSubType() == rewindIon) {
                     // If array unit is not '0', another ion for this fragmentation site is allready found.
                     if (yIons[lFragmentIon.getNumber() - 1] != 0) {
                         // We want to save the most intense.
@@ -419,8 +480,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     }
                     yIons[lFragmentIon.getNumber() - 1] = lRatio;
                     break;
-                // Bion
-                case B_ION:
+                } else if (lFragmentIon.getSubType() == forwardIon) {
                     if (bIons[lFragmentIon.getNumber() - 1] != 0) {
                         if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
                             lRatio = bIons[lFragmentIon.getNumber() - 1];
@@ -428,6 +488,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     }
                     bIons[lFragmentIon.getNumber() - 1] = lRatio;
                     break;
+                }
             }
         }
     }
@@ -435,9 +496,9 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * Set the Sequence for the SequenceFragmentationPanel.
      *
-     * @param lSequence            String with peptide sequence.
-     * @param boolModifiedSequence Boolean whether lSequence is a Modified Sequence
-     *                             "NH2-K<Ace>ENNY-COOH" or a Flat Sequence "KENNY".
+     * @param lSequence String with peptide sequence.
+     * @param boolModifiedSequence Boolean whether lSequence is a Modified
+     * Sequence "NH2-K<Ace>ENNY-COOH" or a Flat Sequence "KENNY".
      */
     public void setSequence(String lSequence, boolean boolModifiedSequence) {
         isModifiedSequence = boolModifiedSequence;
@@ -445,8 +506,8 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Set the ArrayList with FragmentIon matches.
-     * The double[] indexing b and y ion intensities will be recalculated.
+     * Set the ArrayList with FragmentIon matches. The double[] indexing b and y
+     * ion intensities will be recalculated.
      *
      * @param lIonMatches VeArrayListctor
      */
@@ -456,10 +517,10 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * If the mouse hovers over one of the fragment ion peaks the tooltip is 
-     * set to the fragment ion type and number. And if hovering over a modified 
-     * residue the modification name is shown. If not the tooltip is set 
-     * to null.
+     * If the mouse hovers over one of the fragment ion peaks the tooltip is set
+     * to the fragment ion type and number. And if hovering over a modified
+     * residue the modification name is shown. If not the tooltip is set to
+     * null.
      */
     private void mouseMovedHandler(MouseEvent me) {
 

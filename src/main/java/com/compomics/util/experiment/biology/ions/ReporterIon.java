@@ -1,13 +1,16 @@
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.pride.CvTerm;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
- * This class models a reporter ion.
- * Ion indexes should be the rounded mass.
- * User: Marc
- * Date: Sep 1, 2010
- * Time: 1:44:59 PM
+ * This class models a reporter ion and is its own factory
+ *
+ * User: Marc Date: Sep 1, 2010 Time: 1:44:59 PM
  */
 public class ReporterIon extends Ion {
 
@@ -67,33 +70,55 @@ public class ReporterIon extends Ion {
      * Standard reporter ion TMT5
      */
     public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131);
-    
     /**
      * ion name for user defined ions
      */
     private String name;
+    /**
+     * The ion subtype
+     */
+    private int subtype;
+    /**
+     * Map of the implemented reporter ions
+     */
+    private static HashMap<Integer, String> reporterIonTypes = new HashMap<Integer, String>();
 
     /**
      * Constructor for a user-defined reporter ion
-     * @param name  name of the reporter ion
-     * @param mass  theoretic mass of the reporter ion
+     *
+     * @param name name of the reporter ion. Should be unique to the ion.
+     * @param mass theoretic mass of the reporter ion
      */
     public ReporterIon(String name, double mass) {
-        this.familyType = Ion.REPORTER_ION;
+        type = IonType.REPORTER_ION;
         this.name = name;
         this.theoreticMass = mass;
+        boolean found = false;
+        for (int possibleType : reporterIonTypes.keySet()) {
+            if (reporterIonTypes.get(possibleType).equals(name)) {
+                this.subtype = possibleType;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            subtype = reporterIonTypes.size();
+            reporterIonTypes.put(subtype, name);
+        }
     }
 
     /**
      * This method returns the name of the reporter ion
+     *
      * @return name of the reporter ion
      */
     public String getName() {
-                    return name;
+        return name;
     }
-    
+
     /**
      * Setter for the ion name
+     *
      * @param name the new ion name
      */
     public void setName(String name) {
@@ -102,10 +127,56 @@ public class ReporterIon extends Ion {
 
     /**
      * Method to set the mass of the reporter ion
+     *
      * @param referenceMass the mass where the reporter ions should be found
      */
     public void setMass(double referenceMass) {
         this.theoreticMass = referenceMass;
     }
 
+    @Override
+    public CvTerm getPrideCvTerm() {
+        return null;
+    }
+
+    /**
+     * Compares the current reporter ion with another one based on their masses
+     *
+     * @param anotherReporterIon the other reporter ion
+     * @return a boolean indicating whether masses are equal
+     */
+    public boolean isSameAs(ReporterIon anotherReporterIon) {
+        return theoreticMass == anotherReporterIon.getTheoreticMass();
+    }
+
+    @Override
+    public int getSubType() {
+        return subtype;
+    }
+
+    @Override
+    public String getSubTypeAsString() {
+        return reporterIonTypes.get(subtype);
+    }
+
+    /**
+     * Returns an arraylist of possible subtypes
+     * @return an arraylist of possible subtypes
+     */
+    public static ArrayList<Integer> getPossibleSubtypes() {
+        ArrayList<Integer> possibleTypes = new ArrayList<Integer>(reporterIonTypes.keySet());
+        Collections.sort(possibleTypes);
+        return possibleTypes;
+    }
+
+    @Override
+    public ArrayList<NeutralLoss> getNeutralLosses() {
+        return new ArrayList<NeutralLoss>();
+    }
+
+    @Override
+    public boolean isSameAs(Ion anotherIon) {
+        return anotherIon.getType() == IonType.REPORTER_ION
+                && anotherIon.getSubType() == subtype;
+    }
 }

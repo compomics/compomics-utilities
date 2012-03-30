@@ -41,6 +41,10 @@ public class SpectrumPanel extends GraphicsPanel {
      * The color used for the profile mode spectra. Defaults to pink.
      */
     private Color aSpectrumProfileModeLineColor = Color.PINK;
+    /**
+     * color map for the ion annotation
+     */
+    private static HashMap<Ion.IonType, HashMap<Integer, HashMap<String, Color>>> colorMap = new HashMap<Ion.IonType, HashMap<Integer, HashMap<String, Color>>>();
 
     /**
      * This constructor creates a SpectrumPanel based on the spectrum
@@ -520,6 +524,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * Returns the peak color to be used for the given peak label. The colors
      * used are based on the color coding used in MascotDatfile.
      *
+     * @deprecated it is advised to use methods based on the ion type rather than on the peak label
      * @param peakLabel
      * @return the peak color
      */
@@ -598,6 +603,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * Filters the annotations and returns the annotations matching the
      * currently selected types.
      *
+     * @deprecated don't use method based on the peak labels but on the data type
      * @param annotations the annotations to be filtered, the annotations are
      * assumed to have the following form: ion type + [ion number] + [charge] +
      * [neutral loss]
@@ -738,7 +744,39 @@ public class SpectrumPanel extends GraphicsPanel {
 
         return filteredAnnotations;
     }
-
+    
+    /**
+     * Sets an annotation color for the given ion
+     * //@TODO for now the color cannot be saved. Do we want to do it?
+     * 
+     * @param ione          the ion
+     * @param color         the new color
+     */
+    public static void setIonColor(Ion ion, Color color) {
+        if (!colorMap.containsKey(ion.getType())) {
+            colorMap.put(ion.getType(), new HashMap<Integer, HashMap<String, Color>>());
+        }
+        if (colorMap.get(ion.getType()).containsKey(ion.getSubType())) {
+            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<String, Color>());
+        }
+        colorMap.get(ion.getType()).get(ion.getSubType()).put(ion.getNeutralLossesAsString(), color);
+    }
+    
+    /**
+     * Returns the peak color to be used for the given peak label according to the color map. If not implemented returns the default color.
+     *
+     * @param ion the ion
+     * @return the peak color
+     */
+    public static Color determineFragmentIonColor(Ion ion) {
+        if (colorMap.containsKey(ion.getType())
+                && colorMap.get(ion.getType()).containsKey(ion.getSubType())
+                && colorMap.get(ion.getType()).get(ion.getSubType()).containsKey(ion.getNeutralLossesAsString())) {
+            return colorMap.get(ion.getType()).get(ion.getSubType()).get(ion.getNeutralLossesAsString());
+        }
+        return determineDefaultFragmentIonColor(ion);
+    }
+    
     /**
      * Returns the peak color to be used for the given peak label. The colors
      * used are based on the color coding used in MascotDatfile.
@@ -746,7 +784,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param ion the ion
      * @return the peak color
      */
-    public static Color determineFragmentIonColor(Ion ion) {
+    public static Color determineDefaultFragmentIonColor(Ion ion) {
 
         switch (ion.getType()) {
             case PEPTIDE_FRAGMENT_ION:
@@ -831,6 +869,7 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * Returns the color to use for the given fragment ion label.
      *
+     * @deprecated use the method based on the Ion class instead
      * @param seriesLabel the series label
      * @return the fragment ion color
      */

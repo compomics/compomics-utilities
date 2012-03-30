@@ -22,7 +22,8 @@ public class IonFactory {
      */
     private static IonFactory instance = null;
     /**
-     * Neutral losses which will be looked for for every peptide independently from the modifications found
+     * Neutral losses which will be looked for for every peptide independently
+     * from the modifications found
      */
     private ArrayList<NeutralLoss> defaultNeutralLosses = new ArrayList<NeutralLoss>();
 
@@ -43,9 +44,11 @@ public class IonFactory {
         }
         return instance;
     }
-    
+
     /**
-     * Adds a default neutral loss to the default neutral losses if the corresponding loss was not here already
+     * Adds a default neutral loss to the default neutral losses if the
+     * corresponding loss was not here already
+     *
      * @param neutralLoss the new neutral loss
      */
     public void addDefaultNeutralLoss(NeutralLoss newNeutralLoss) {
@@ -57,8 +60,17 @@ public class IonFactory {
             }
         }
         if (!found) {
-        defaultNeutralLosses.add(newNeutralLoss);
+            defaultNeutralLosses.add(newNeutralLoss);
         }
+    }
+
+    /**
+     * Returns the default neutral losses
+     *
+     * @return the default neutral losses
+     */
+    public ArrayList<NeutralLoss> getDefaultNeutralLosses() {
+        return defaultNeutralLosses;
     }
 
     /**
@@ -121,22 +133,7 @@ public class IonFactory {
         }
 
         // We will account for up to two neutral losses per ion maximum
-        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<ArrayList<NeutralLoss>>();
-        ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>();
-        neutralLossesCombinations.add(tempList);
-        for (NeutralLoss neutralLoss1 : possibleNeutralLosses) {
-            tempList = new ArrayList<NeutralLoss>();
-            tempList.add(neutralLoss1);
-            neutralLossesCombinations.add(tempList);
-            for (NeutralLoss neutralLoss2 : possibleNeutralLosses) {
-                if (!neutralLoss1.isSameAs(neutralLoss2)) {
-                    tempList = new ArrayList<NeutralLoss>();
-                    tempList.add(neutralLoss1);
-                    tempList.add(neutralLoss2);
-                }
-            }
-
-        }
+        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);
 
         AminoAcid currentAA;
         double forwardMass = 0;
@@ -164,18 +161,18 @@ public class IonFactory {
             }
 
             // add the a-ions
-            for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass, loss));
+            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass-getLossesMass(losses), losses));
             }
 
             // add the b-ions
-            for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.B_ION, faa, forwardMass, loss));
+            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.B_ION, faa, forwardMass-getLossesMass(losses), losses));
             }
 
             // add the c-ion
-            for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass, loss));
+            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass-getLossesMass(losses), losses));
             }
 
 
@@ -190,18 +187,18 @@ public class IonFactory {
             }
 
             // add the x-ion
-            for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass, loss));
+            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass-getLossesMass(losses), losses));
             }
 
             // add the y-ions
-            for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.Y_ION, faa, rewindMass + 2 * Atom.H.mass, loss));
+            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.Y_ION, faa, rewindMass + 2 * Atom.H.mass-getLossesMass(losses), losses));
             }
 
             // add the z-ions
-            for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass, loss));
+            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass-getLossesMass(losses), losses));
             }
 
         }
@@ -215,10 +212,50 @@ public class IonFactory {
             }
         }
         // add the precursor ion
-        for (ArrayList<NeutralLoss> loss : neutralLossesCombinations) {
-            result.add(new PrecursorIon(forwardMass + Atom.H.mass + Atom.O.mass, loss));
+        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+            result.add(new PrecursorIon(forwardMass + Atom.H.mass + Atom.O.mass-getLossesMass(losses), losses));
         }
 
+        return result;
+    }
+
+    /**
+     * Convenience method returning the possible neutral losses combination as
+     * accounted by the factory. i.e. for now up to two neutral losses per peak.
+     *
+     * @param possibleNeutralLosses the possible neutral losses
+     * @return the possible combinations
+     */
+    public static ArrayList<ArrayList<NeutralLoss>> getAccountedNeutralLosses(ArrayList<NeutralLoss> possibleNeutralLosses) {
+        // We will account for up to two neutral losses per ion maximum
+        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<ArrayList<NeutralLoss>>();
+        ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>();
+        neutralLossesCombinations.add(tempList);
+        for (NeutralLoss neutralLoss1 : possibleNeutralLosses) {
+            tempList = new ArrayList<NeutralLoss>();
+            tempList.add(neutralLoss1);
+            neutralLossesCombinations.add(tempList);
+            for (NeutralLoss neutralLoss2 : possibleNeutralLosses) {
+                if (!neutralLoss1.isSameAs(neutralLoss2)) {
+                    tempList = new ArrayList<NeutralLoss>();
+                    tempList.add(neutralLoss1);
+                    tempList.add(neutralLoss2);
+                }
+            }
+        }
+        return neutralLossesCombinations;
+    }
+    
+    /**
+     * Convenience summing the masses of various neutral losses
+     * @param neutralLosses list of neutral losses
+     * @return the summ of the masses
+     */
+    public static double getLossesMass(ArrayList<NeutralLoss> neutralLosses) {
+        double result = 0;
+        for (NeutralLoss neutralLoss : neutralLosses) {
+            result += neutralLoss.mass;
+        }
         return result;
     }
 }

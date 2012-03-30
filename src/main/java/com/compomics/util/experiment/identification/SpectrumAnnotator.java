@@ -115,7 +115,7 @@ public class SpectrumAnnotator {
                 for (int charge : charges) {
                     if (chargeValidated(peptideIon, charge) && lossesValidated(neutralLosses, peptideIon, peptide)) {
                         ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
-                        if (ionMatch.getError(isPpm) <= mzTolerance) {
+                        if (Math.abs(ionMatch.getError(isPpm)) <= mzTolerance) {
                             result.add(ionMatch);
                         }
                     }
@@ -136,7 +136,7 @@ public class SpectrumAnnotator {
         Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
         for (IonMatch ionMatch : ionMatches) {
             currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(),
-                    SpectrumPanel.determineColorOfPeak(ionMatch.ion.toString()), ionMatch.getPeakAnnotation()));
+                    SpectrumPanel.determineFragmentIonColor(ionMatch.ion), ionMatch.getPeakAnnotation()));
         }
         return currentAnnotations;
     }
@@ -168,13 +168,13 @@ public class SpectrumAnnotator {
             Peak currentPeak;
 
             tempMatch = new IonMatch(new Peak(mz.get(indexMax), 0), theoreticIon, charge);
-            if (tempMatch.getError(isPpm) <= mzTolerance) {
+            if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
                 currentPeak = peakMap.get(mz.get(indexMax));
                 bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
             }
 
             tempMatch = new IonMatch(new Peak(mz.get(indexMin), 0), theoreticIon, charge);
-            if (tempMatch.getError(isPpm) <= mzTolerance) {
+            if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
                 currentPeak = peakMap.get(mz.get(indexMin));
                 if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                     bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
@@ -185,7 +185,7 @@ public class SpectrumAnnotator {
                 index = (indexMax - indexMin) / 2 + indexMin;
                 currentMz = mz.get(index);
                 tempMatch = new IonMatch(new Peak(currentMz, 0), theoreticIon, charge);
-                if (tempMatch.getError(isPpm) <= mzTolerance) {
+                if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
                     currentPeak = peakMap.get(mz.get(index));
                     if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                         bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
@@ -240,12 +240,15 @@ public class SpectrumAnnotator {
      * Sets a new m/z tolerance for peak matching.
      *
      * @param mzTolerance the new m/z tolerance (in m/z, Th)
+     * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
+     * in Da
      */
-    private void setMassTolerance(double mzTolerance) {
+    private void setMassTolerance(double mzTolerance, boolean isPpm) {
         if (mzTolerance != this.mzTolerance) {
             spectrumAnnotation.clear();
             unmatchedIons.clear();
             this.mzTolerance = mzTolerance;
+            this.isPpm = isPpm;
         }
     }
 
@@ -286,42 +289,46 @@ public class SpectrumAnnotator {
 
         int aaMin = peptide.getSequence().length();
         int aaMax = 0;
-        if (peptide.getSequence().indexOf("D") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("D"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("D"), aaMax);
-        }
-        if (peptide.getSequence().indexOf("E") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("E"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("E"), aaMax);
-        }
-        if (peptide.getSequence().indexOf("S") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("S"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("S"), aaMax);
-        }
-        if (peptide.getSequence().indexOf("T") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("T"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("T"), aaMax);
-        }
-        if (aaMin < peptide.getSequence().length()) {
-            neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin + 1, peptide.getSequence().length() - aaMax);
+        if (IonFactory.getInstance().getDefaultNeutralLosses().contains(NeutralLoss.H2O)) {
+            if (peptide.getSequence().indexOf("D") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("D"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("D"), aaMax);
+            }
+            if (peptide.getSequence().indexOf("E") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("E"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("E"), aaMax);
+            }
+            if (peptide.getSequence().indexOf("S") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("S"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("S"), aaMax);
+            }
+            if (peptide.getSequence().indexOf("T") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("T"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("T"), aaMax);
+            }
+            if (aaMin < peptide.getSequence().length()) {
+                neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin + 1, peptide.getSequence().length() - aaMax);
+            }
         }
 
         aaMin = peptide.getSequence().length();
         aaMax = 0;
-        if (peptide.getSequence().indexOf("K") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("K"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("K"), aaMax);
-        }
-        if (peptide.getSequence().indexOf("N") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("N"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("N"), aaMax);
-        }
-        if (peptide.getSequence().indexOf("Q") != -1) {
-            aaMin = Math.min(peptide.getSequence().indexOf("Q"), aaMin);
-            aaMax = Math.max(peptide.getSequence().lastIndexOf("Q"), aaMax);
-        }
-        if (aaMin < peptide.getSequence().length()) {
-            neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, peptide.getSequence().length() - aaMax);
+        if (IonFactory.getInstance().getDefaultNeutralLosses().contains(NeutralLoss.NH3)) {
+            if (peptide.getSequence().indexOf("K") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("K"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("K"), aaMax);
+            }
+            if (peptide.getSequence().indexOf("N") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("N"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("N"), aaMax);
+            }
+            if (peptide.getSequence().indexOf("Q") != -1) {
+                aaMin = Math.min(peptide.getSequence().indexOf("Q"), aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("Q"), aaMax);
+            }
+            if (aaMin < peptide.getSequence().length()) {
+                neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, peptide.getSequence().length() - aaMax);
+            }
         }
 
         int modMin;
@@ -446,17 +453,19 @@ public class SpectrumAnnotator {
      * @param peptide The peptide of interest
      * @param intensityLimit The intensity limit to use
      * @param mzTolerance The m/z tolerance to use
+     * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
+     * in Da
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance) {
+            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         if (spectrum != null) {
             setSpectrum(spectrum, intensityLimit);
         }
         setPeptide(peptide, precursorCharge);
-        setMassTolerance(mzTolerance);
+        setMassTolerance(mzTolerance, isPpm);
         String key;
         for (Ion peptideIon : peptideIons) {
             if (iontypes.containsKey(peptideIon.getType())
@@ -529,7 +538,7 @@ public class SpectrumAnnotator {
      * @return the currently matched ions with the given settings
      */
     public ArrayList<IonMatch> getCurrentAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
-        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, null, peptide, intensityLimit, mzTolerance);
+        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, null, peptide, intensityLimit, mzTolerance, isPpm);
     }
 
     /**

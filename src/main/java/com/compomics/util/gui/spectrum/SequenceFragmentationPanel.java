@@ -1,6 +1,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import java.awt.event.MouseEvent;
@@ -93,12 +94,20 @@ public class SequenceFragmentationPanel extends JPanel {
      * the forward ion type (for instance B ion) as indexed by the
      * PeptideFragmentIon static fields
      */
-    private int forwardIon = PeptideFragmentIon.B_ION;
+    private int forwardIon;
     /**
      * the rewind ion type (for instance B ion) as indexed by the
      * PeptideFragmentIon static fields
      */
-    private int rewindIon = PeptideFragmentIon.Y_ION;
+    private int rewindIon;
+    /**
+     * Color for the forward ion
+     */
+    private Color forwardColor;
+    /**
+     * Color for the rewind ion
+     */
+    private Color rewindColor;
 
     /**
      * Creates a new SequenceFragmentationPanel.
@@ -124,25 +133,7 @@ public class SequenceFragmentationPanel extends JPanel {
     public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
             boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
             HashMap<String, String> aModificationNames) throws HeadlessException {
-        super();
-        isModifiedSequence = boolModifiedSequence;
-        iSequenceComponents = parseSequenceIntoComponents(aSequence);
-        iIonMatches = aIonMatches;
-        iHighlightModifications = aHighlightModifications;
-        iModificationColors = aModificationColors;
-        iModificationNames = aModificationNames;
-
-        this.normalizeMatchedIons();
-        this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
-
-        tooltipRectangles = new HashMap<String, Rectangle>();
-
-        addMouseMotionListener(new MouseMotionAdapter() {
-
-            public void mouseMoved(MouseEvent me) {
-                mouseMovedHandler(me);
-            }
-        });
+        this(aSequence, aIonMatches, boolModifiedSequence, aHighlightModifications, aModificationColors, aModificationNames, PeptideFragmentIon.B_ION, PeptideFragmentIon.Y_ION);
     }
 
     /**
@@ -173,6 +164,12 @@ public class SequenceFragmentationPanel extends JPanel {
             boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
             HashMap<String, String> aModificationNames, int forwardIon, int rewindIon) throws HeadlessException {
         super();
+        
+        this.forwardIon = forwardIon;
+        forwardColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon));
+        this.rewindIon = rewindIon;
+        rewindColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon));
+        
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
         iIonMatches = aIonMatches;
@@ -184,9 +181,6 @@ public class SequenceFragmentationPanel extends JPanel {
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
 
         tooltipRectangles = new HashMap<String, Rectangle>();
-
-        this.forwardIon = forwardIon;
-        this.rewindIon = rewindIon;
 
         addMouseMotionListener(new MouseMotionAdapter() {
 
@@ -248,7 +242,7 @@ public class SequenceFragmentationPanel extends JPanel {
                 if (iModificationColors.containsKey(modification)) {
                     g2.setColor(iModificationColors.get(modification));
                 } else {
-                    g2.setColor(Color.LIGHT_GRAY);
+                    g2.setColor(forwardColor);
                 }
 
                 if (i == 0) {
@@ -305,7 +299,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }
-                    g2.setColor(Color.BLUE);
+                    g2.setColor(forwardColor);
                     Rectangle tempRectangle = new Rectangle(xLocation, lMidStringHeight.intValue() + 1, iBarWidth, lBarHeight);
                     g2.fill(tempRectangle);
 
@@ -320,7 +314,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }
-                    g2.setColor(Color.RED);
+                    g2.setColor(rewindColor);
                     // y bar height and y-axis start are somewhat different for yIons.
                     int yBarStart = lMidStringHeight.intValue() - 1 - lBarHeight;
                     Rectangle tempRectangle = new Rectangle(xLocation, yBarStart, iBarWidth, lBarHeight);
@@ -479,7 +473,6 @@ public class SequenceFragmentationPanel extends JPanel {
                         }
                     }
                     yIons[lFragmentIon.getNumber() - 1] = lRatio;
-                    break;
                 } else if (lFragmentIon.getSubType() == forwardIon) {
                     if (bIons[lFragmentIon.getNumber() - 1] != 0) {
                         if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
@@ -487,7 +480,6 @@ public class SequenceFragmentationPanel extends JPanel {
                         }
                     }
                     bIons[lFragmentIon.getNumber() - 1] = lRatio;
-                    break;
                 }
             }
         }

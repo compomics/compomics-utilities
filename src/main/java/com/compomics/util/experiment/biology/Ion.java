@@ -131,8 +131,17 @@ public abstract class Ion extends ExperimentObject {
      * @return the neutral loss
      */
     public String getNeutralLossesAsString() {
+        return getNeutralLossesAsString(getNeutralLosses());
+    }
+
+    /**
+     * Returns the neutral loss (if any), the empty string if no loss.
+     *
+     * @return the neutral loss
+     */
+    public static String getNeutralLossesAsString(ArrayList<NeutralLoss> neutralLosses) {
         ArrayList<String> names = new ArrayList<String>();
-        for (NeutralLoss neutralLoss : getNeutralLosses()) {
+        for (NeutralLoss neutralLoss : neutralLosses) {
             names.add(neutralLoss.name);
         }
         Collections.sort(names);
@@ -164,16 +173,38 @@ public abstract class Ion extends ExperimentObject {
     /**
      * Returns the ion type
      *
-     * @return
+     * @return the ion type
      */
     public IonType getType() {
         return type;
+    }
+    
+    /**
+     * Returns the implemented ion types
+     * @return the implemented ion types
+     */
+    public static ArrayList<IonType> getImplementedIonTypes() {
+        ArrayList<IonType> result = new ArrayList<IonType>();
+        result.add(IonType.ELEMENTARY_ION);
+        result.add(IonType.GLYCON);
+        result.add(IonType.IMMONIUM_ION);
+        result.add(IonType.PEPTIDE_FRAGMENT_ION);
+        result.add(IonType.PRECURSOR_ION);
+        result.add(IonType.REPORTER_ION);
+        return result;
     }
 
     /**
      * Returns the type of ion as string
      */
     public String getTypeAsString() {
+        return getTypeAsString(type);
+    }
+
+    /**
+     * Returns the type of ion as string
+     */
+    public static String getTypeAsString(IonType type) {
         switch (type) {
             case PEPTIDE_FRAGMENT_ION:
                 return "Peptide fragment ion";
@@ -191,6 +222,60 @@ public abstract class Ion extends ExperimentObject {
                 return "Unknown ion type";
             default:
                 throw new UnsupportedOperationException("No name for ion type " + type + ".");
+        }
+    }
+    
+    /**
+     * Convenience method returning a generic ion based on the given ion type
+     * @param ionType       the ion type
+     * @param subType       the ion subtype
+     * @param neutralLosses the neutral losses. An empty or null list if none.
+     * @return              a generic ion
+     */
+    public static Ion getGenericIon(IonType ionType, int subType, ArrayList<NeutralLoss> neutralLosses) {
+        if (neutralLosses == null) {
+            neutralLosses = new ArrayList<NeutralLoss>();
+        }
+        switch (ionType) {
+            case ELEMENTARY_ION:
+                return new ElementaryIon("new ElementaryIon", 0.0, subType);
+            case GLYCON:
+                return new Glycon("new Glycon", "new Glycon");
+            case IMMONIUM_ION:
+                return new ImmoniumIon(subType);
+            case PEPTIDE_FRAGMENT_ION:
+                return new PeptideFragmentIon(subType, neutralLosses);
+            case PRECURSOR_ION:
+                return new PrecursorIon(neutralLosses);
+            case REPORTER_ION:
+                return new ReporterIon(subType);
+            default:
+                throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
+        }
+    }
+    
+    /**
+     * Convenience method returning a generic ion based on the given ion type without neutral losses
+     * @param ionType       the ion type
+     * @param subType       the ion subtype
+     * @return              a generic ion
+     */
+    public static Ion getGenericIon(IonType ionType, int subType) {
+        switch (ionType) {
+            case ELEMENTARY_ION:
+                return new ElementaryIon("new ElementaryIon", 0.0, subType);
+            case GLYCON:
+                return new Glycon("new Glycon", "new Glycon");
+            case IMMONIUM_ION:
+                return new ImmoniumIon(subType);
+            case PEPTIDE_FRAGMENT_ION:
+                return new PeptideFragmentIon(subType);
+            case PRECURSOR_ION:
+                return new PrecursorIon();
+            case REPORTER_ION:
+                return new ReporterIon(subType);
+            default:
+                throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }
     }
 }

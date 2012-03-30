@@ -16,7 +16,11 @@ import java.util.Collections;
  * @author marc
  */
 public class PrecursorIon extends Ion {
-
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -2630586959372309153L;
         /**
          * For now only one type of precursor implemented
          */
@@ -32,9 +36,31 @@ public class PrecursorIon extends Ion {
      * @param neutralLosses the neutral losses
      */
     public PrecursorIon(double theoreticMass, ArrayList<NeutralLoss> neutralLosses) {
+        if (neutralLosses == null) {
+            neutralLosses = new ArrayList<NeutralLoss>();
+        }
         type = IonType.PRECURSOR_ION;
         this.neutralLosses.addAll(neutralLosses);
         this.theoreticMass = theoreticMass;
+    }
+
+    /**
+     * Constructor for a generic ion
+     * @param neutralLosses the neutral losses
+     */
+    public PrecursorIon(ArrayList<NeutralLoss> neutralLosses) {
+        if (neutralLosses == null) {
+            neutralLosses = new ArrayList<NeutralLoss>();
+        }
+        type = IonType.PRECURSOR_ION;
+        this.neutralLosses.addAll(neutralLosses);
+    }
+
+    /**
+     * Constructor for a generic ion without neutral losses
+     */
+    public PrecursorIon() {
+        type = IonType.PRECURSOR_ION;
     }
     
     /**

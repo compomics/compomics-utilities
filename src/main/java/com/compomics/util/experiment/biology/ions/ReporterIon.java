@@ -13,7 +13,15 @@ import java.util.HashMap;
  * User: Marc Date: Sep 1, 2010 Time: 1:44:59 PM
  */
 public class ReporterIon extends Ion {
-
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 1109011048958734120L;
+    /**
+     * Map of the implemented reporter ions
+     */
+    private static HashMap<Integer, String> reporterIonTypes = new HashMap<Integer, String>();
     /**
      * Standard reporter ion iTRAQ 113
      */
@@ -78,10 +86,6 @@ public class ReporterIon extends Ion {
      * The ion subtype
      */
     private int subtype;
-    /**
-     * Map of the implemented reporter ions
-     */
-    private static HashMap<Integer, String> reporterIonTypes = new HashMap<Integer, String>();
 
     /**
      * Constructor for a user-defined reporter ion
@@ -105,6 +109,17 @@ public class ReporterIon extends Ion {
             subtype = reporterIonTypes.size();
             reporterIonTypes.put(subtype, name);
         }
+    }
+
+    /**
+     * Constructor for a user-defined reporter ion
+     *
+     * @param name name of the reporter ion. Should be unique to the ion.
+     * @param mass theoretic mass of the reporter ion
+     */
+    public ReporterIon(int subType) {
+        type = IonType.REPORTER_ION;
+        this.name = reporterIonTypes.get(subType);
     }
 
     /**

@@ -16,7 +16,11 @@ import java.util.HashMap;
  * Time: 1:36:49 PM
  */
 public class Glycon extends Ion {
-
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -2278483206647518565L;
     /**
      * Final index for underivated masses
      */

@@ -86,6 +86,7 @@ public class MassErrorPlot extends JPanel {
     /**
      * Creates a new MassErrorPlot.
      *
+     * //@TODO improve charge compatibility
      * @param annotations the full list of spectrum annotations
      * @param currentFragmentIons the currently selected fragment ion types
      * @param currentSpectrum the current spectrum

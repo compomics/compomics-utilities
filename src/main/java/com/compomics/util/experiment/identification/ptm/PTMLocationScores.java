@@ -50,7 +50,7 @@ public class PTMLocationScores {
         // here annotation should be sequence and modification independant
         for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
             if (Math.abs(neutralLoss.mass - ptm.getMass()) > mzTolerance) {
-                scoringLossesMap.addNeutralLoss(neutralLoss, 0, 0);
+                scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }
         }
 
@@ -88,7 +88,7 @@ public class PTMLocationScores {
                 for (int pos = 0; pos < possibleSites.size(); pos++) {
                     tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
                     tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, possibleSites.get(pos) + 1));
-                    matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance);
+                    matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance, false);
                     n = matches.size();
                     P = 0;
                     for (int k = n; k <= N; k++) {
@@ -159,7 +159,7 @@ public class PTMLocationScores {
             p = ((double) bestI + 1) / Math.max(spectrumMap.keySet().size(), 100);
             tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos1));
-            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance);
+            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = matches.size();
             double p1 = 0;
 
@@ -168,7 +168,7 @@ public class PTMLocationScores {
             }
 
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos2));
-            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance);
+            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = matches.size();
             double p2 = 0;
 
@@ -305,7 +305,7 @@ public class PTMLocationScores {
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
-            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance);
+            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false);
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                     peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
@@ -357,8 +357,7 @@ public class PTMLocationScores {
 
         NeutralLossesMap lossesMap = new NeutralLossesMap();
         for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
-            if (neutralLoss != NeutralLoss.H3PO4
-                    && neutralLoss != NeutralLoss.HPO3) {
+            if (Math.abs(neutralLoss.mass - ptm.getMass()) > mzTolerance) {
                 lossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }
         }
@@ -372,7 +371,7 @@ public class PTMLocationScores {
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
-            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, lossesMap, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance);
+            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, lossesMap, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false);
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {

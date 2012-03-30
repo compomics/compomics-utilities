@@ -16,7 +16,11 @@ import java.util.ArrayList;
  * @author marc
  */
 public class ImmoniumIon extends Ion {
-
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -3403620196563864756L;
     /**
      * subtype int for an alanine immonium ion
      */
@@ -115,6 +119,19 @@ public class ImmoniumIon extends Ion {
         type = IonType.IMMONIUM_ION;
         this.subType = getSubtype(residue);
         AminoAcid currentAA = AminoAcid.getAminoAcid(residue);
+        theoreticMass = currentAA.monoisotopicMass - Atom.C.mass - Atom.O.mass;
+    }
+
+    /**
+     * Constructor for an immonium ion
+     *
+     * @param subType the type of immonium ion as integer as indexed by the static fields
+     */
+    public ImmoniumIon(int subType) {
+        type = IonType.IMMONIUM_ION;
+        this.subType = subType;
+        char aa = getResidue(subType);
+        AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
         theoreticMass = currentAA.monoisotopicMass - Atom.C.mass - Atom.O.mass;
     }
 

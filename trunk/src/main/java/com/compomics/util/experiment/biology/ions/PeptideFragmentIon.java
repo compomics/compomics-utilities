@@ -12,7 +12,11 @@ import java.util.Collections;
  * Created by IntelliJ IDEA. User: Marc Date: Jun 18, 2010 Time: 8:58:02 AM
  */
 public class PeptideFragmentIon extends Ion {
-
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 8283809283803740651L;
     /**
      * identifier for an a ion.
      */
@@ -60,11 +64,42 @@ public class PeptideFragmentIon extends Ion {
      * @param neutralLosses the neutral losses of the ion
      */
     public PeptideFragmentIon(int fragmentType, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
+        if (neutralLosses == null) {
+            neutralLosses = new ArrayList<NeutralLoss>();
+        }
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
         this.theoreticMass = mass;
         this.neutralLosses.addAll(neutralLosses);
         this.number = number;
+    }
+
+    /**
+     * Constructor for a generic ion
+     *
+     * @param fragmentType the type of peptide fragment ion as indexed by the
+     * static fields
+     * @param neutralLosses the neutral losses of the ion
+     */
+    public PeptideFragmentIon(int fragmentType, ArrayList<NeutralLoss> neutralLosses) {
+        if (neutralLosses == null) {
+            neutralLosses = new ArrayList<NeutralLoss>();
+        }
+        this.subType = fragmentType;
+        type = IonType.PEPTIDE_FRAGMENT_ION;
+        this.neutralLosses.addAll(neutralLosses);
+    }
+
+    /**
+     * Constructor for a generic ion without neutral losses
+     *
+     * @param fragmentType the type of peptide fragment ion as indexed by the
+     * static fields
+     * @param neutralLosses the neutral losses of the ion
+     */
+    public PeptideFragmentIon(int fragmentType) {
+        this.subType = fragmentType;
+        type = IonType.PEPTIDE_FRAGMENT_ION;
     }
 
     /**

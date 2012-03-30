@@ -11,7 +11,11 @@ import java.util.ArrayList;
  * @author marc
  */
 public class ElementaryIon extends Ion {
-
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -1578136397635015592L;
     /**
      * subtype int for a proton
      */

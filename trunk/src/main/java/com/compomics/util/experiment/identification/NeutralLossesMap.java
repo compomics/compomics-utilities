@@ -52,7 +52,7 @@ public class NeutralLossesMap implements Serializable {
                 break;
             }
         }
-        if (found) {
+        if (!found) {
             bBoundaries.put(neutralLoss, bStart);
         }
         found = false;
@@ -63,7 +63,7 @@ public class NeutralLossesMap implements Serializable {
                 break;
             }
         }
-        if (found) {
+        if (!found) {
             yBoundaries.put(neutralLoss, bStart);
         }
     }

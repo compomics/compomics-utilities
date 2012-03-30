@@ -10,6 +10,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class NeutralLoss extends ExperimentObject {
 
     /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 5540846193082177391L;
+    /**
      * H2O loss
      */
     public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.mass + Atom.O.mass);
@@ -39,16 +43,20 @@ public class NeutralLoss extends ExperimentObject {
     public String name;
 
     /**
-     * Method indicating whether another neutral loss is the same as the one considered
-     * @param anotherNeutralLoss    another neutral loss
-     * @return boolean indicating whether the other neutral loss is the same as the one considered
+     * Method indicating whether another neutral loss is the same as the one
+     * considered
+     *
+     * @param anotherNeutralLoss another neutral loss
+     * @return boolean indicating whether the other neutral loss is the same as
+     * the one considered
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
         return anotherNeutralLoss.name.equals(name);
     }
-    
+
     /**
      * Constructor for a user defined neutral loss
+     *
      * @param name name of the neutral loss
      * @param mass mass of the neutral loss
      */

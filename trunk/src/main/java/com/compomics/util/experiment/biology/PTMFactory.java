@@ -145,11 +145,15 @@ public class PTMFactory implements Serializable {
         String newName = newPTM.getName();
         if (userMods.contains(oldName)) {
             userMods.remove(oldName);
-            userMods.add(newName);
+            if (!userMods.contains(newName)) {
+                userMods.add(newName);
+            }
         }
         if (defaultMods.contains(oldName)) {
             defaultMods.remove(oldName);
-            defaultMods.add(newName);
+            if (!defaultMods.contains(newName)) {
+                defaultMods.add(newName);
+            }
         }
         if (!oldName.equals(newName)) {
             ptmMap.remove(oldName);
@@ -650,9 +654,10 @@ public class PTMFactory implements Serializable {
     public ArrayList<String> getPTMs() {
         return new ArrayList<String>(ptmMap.keySet());
     }
-    
+
     /**
-     * Convenience method returning a boolean indicating whether a ptm is user defined or default
+     * Convenience method returning a boolean indicating whether a ptm is user
+     * defined or default
      */
     public boolean isUserDefined(String ptmName) {
         return !defaultMods.contains(ptmName);

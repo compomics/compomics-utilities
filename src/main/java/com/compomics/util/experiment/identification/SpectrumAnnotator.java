@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
@@ -136,7 +135,7 @@ public class SpectrumAnnotator {
         Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
         for (IonMatch ionMatch : ionMatches) {
             currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(),
-                    SpectrumPanel.determineFragmentIonColor(ionMatch.ion), ionMatch.getPeakAnnotation()));
+                    SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()));
         }
         return currentAnnotations;
     }
@@ -361,7 +360,7 @@ public class SpectrumAnnotator {
      *
      * @param neutralLosses Map of expected neutral losses
      * @param neutralLoss the neutral loss of interest
-     * @param fragmentIon the fragment ion of interest
+     * @param ion the fragment ion of interest
      * @param peptide the peptide of interest
      * @return boolean indicating whether the neutral loss should be considered
      */
@@ -443,7 +442,7 @@ public class SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param expectedIons The expected ions to look for
+     * @param iontypes The expected ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.

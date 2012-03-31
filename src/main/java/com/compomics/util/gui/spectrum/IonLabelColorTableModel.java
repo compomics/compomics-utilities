@@ -1,26 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.spectrum;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
-import com.compomics.util.experiment.identification.Identification;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JColorChooser;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class IonLabelColorTableModel extends DefaultTableModel {
 
@@ -30,7 +22,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
     /**
      * Constructor which sets a new table.
      *
-     * @param peptideShakerGUI instance of the main GUI class
+     * @param iontypes 
+     * @param neutralLosses 
      */
     public IonLabelColorTableModel(HashMap<IonType, ArrayList<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
         ionMap = new HashMap<String, Ion>();
@@ -98,7 +91,7 @@ public class IonLabelColorTableModel extends DefaultTableModel {
             case 1:
                 return keys.get(row);
             case 2:
-                return SpectrumPanel.determineDefaultFragmentIonColor(ionMap.get(keys.get(row)));
+                return SpectrumPanel.determineDefaultFragmentIonColor(ionMap.get(keys.get(row)), true);
             default:
                 return "";
         }
@@ -121,7 +114,7 @@ public class IonLabelColorTableModel extends DefaultTableModel {
 
     @Override
     public void setValueAt(Object aValue, int row, int column) {
-        Color newColor = JColorChooser.showDialog(null, "Pick a Color", SpectrumPanel.determineDefaultFragmentIonColor(ionMap.get(keys.get(row))));
+        Color newColor = JColorChooser.showDialog(null, "Pick a Color", SpectrumPanel.determineDefaultFragmentIonColor(ionMap.get(keys.get(row)), true));
         SpectrumPanel.setIonColor(ionMap.get(keys.get(row)), newColor);
     }
 }

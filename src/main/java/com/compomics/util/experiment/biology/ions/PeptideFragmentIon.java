@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * This class models a peptide fragment ion.
@@ -95,7 +94,6 @@ public class PeptideFragmentIon extends Ion {
      *
      * @param fragmentType the type of peptide fragment ion as indexed by the
      * static fields
-     * @param neutralLosses the neutral losses of the ion
      */
     public PeptideFragmentIon(int fragmentType) {
         this.subType = fragmentType;

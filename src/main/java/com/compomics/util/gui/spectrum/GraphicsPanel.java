@@ -8,6 +8,7 @@ import com.compomics.util.gui.interfaces.SpectrumPanelListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Line2D;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -23,6 +24,10 @@ import java.util.ArrayList;
  */
 public abstract class GraphicsPanel extends JPanel {
 
+    /**
+     * The width used for the peaks.
+     */
+    private float peakWidth = 1.0f;
     /**
      * If true, all numbers in peak annotations are subscripted.
      */
@@ -605,7 +610,25 @@ public abstract class GraphicsPanel extends JPanel {
     public int getMaxPadding() {
         return maxPadding;
     }
-
+    
+    /**
+     * Returns the current width of the peaks.
+     * 
+     * @return the peak width
+     */
+    public float getPeakWidth() {
+        return peakWidth;
+    }
+    
+    /**
+     * Set the peak width.
+     * 
+     * @param peakWidth the new peak width
+     */
+    public void setPeakWidth(float peakWidth) {
+        this.peakWidth = peakWidth;
+    }
+    
     /**
      * This method sets all the annotations on this instance. Passing a 'null' value for
      * the Vector will result in simply removing all annotations. Do note that this method
@@ -1258,7 +1281,7 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Sets the color of data points and line for the dataset with the
-     * given dataset index.
+     * given dataset index. Index starts at 0.
      *
      * @param aColor the color to use
      * @param index the index of the dataset
@@ -1271,7 +1294,8 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Sets the color of the area under the curve for chromatograms and
-     * profile spectra for the dataset with the given dataset index.
+     * profile spectra for the dataset with the given dataset index. 
+     * Index starts at 0.
      *
      * @param aColor the color to use
      * @param index the index of the dataset
@@ -1283,7 +1307,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns the list of colors used for the datasets. Index on dataset.
+     * Returns the list of colors used for the datasets. Index on dataset. 
+     * Index starts at 0.
      *
      * @return the the list of colors used for the datasets
      */
@@ -1886,7 +1911,7 @@ public abstract class GraphicsPanel extends JPanel {
     protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow, int aAnnotationCounter) {
 
         int x = iXAxisDataInPixels.get(dataSetIndex)[aIndex];
-        int y = 0;
+        int y;
         
         if (aPixelsSpacer < 0) {
             y = iTopPadding;
@@ -1916,7 +1941,7 @@ public abstract class GraphicsPanel extends JPanel {
                     3);
             arrowSpacer = 13;
         }
-
+        
         // Now the x-value.
         // If there is any, print the comment instead of the x-value.
         if (aComment != null && !aComment.trim().equals("")) {
@@ -2220,21 +2245,33 @@ public abstract class GraphicsPanel extends JPanel {
 
                     // store the current peak color
                     Color currentColor = g.getColor();
+                                     
+                    // set the width of the peaks
+                    Graphics2D g2 = (Graphics2D) g;
+                    Stroke tempStroke = g2.getStroke();
 
                     // change the peak color if the peak is to be drawn in the background
                     if (!annotatedPeak && !showAllPeaks) {
                         g.setColor(peakWaterMarkColor);
+                        BasicStroke stroke = new BasicStroke(peakWidth);
+                        g2.setStroke(stroke);
+                    } else {
+                        BasicStroke stroke = new BasicStroke(peakWidth);
+                        g2.setStroke(stroke);
                     }
-
+                    
                     // draw the peak
                     if (iDrawStyle == LINES) {
                         // Draw the line.
-                        g.drawLine(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl);
+                        g2.draw(new Line2D.Double(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl));
                     } else if (iDrawStyle == DOTS) {
                         // Draw the dot.
                         g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
                     }
 
+                    // reset the width of lines to the previous width
+                    g2.setStroke(tempStroke);
+                    
                     g.setColor(currentColor);
                 }
             }

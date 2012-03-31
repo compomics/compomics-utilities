@@ -1,7 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import java.awt.event.MouseEvent;
@@ -164,12 +163,12 @@ public class SequenceFragmentationPanel extends JPanel {
             boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
             HashMap<String, String> aModificationNames, int forwardIon, int rewindIon) throws HeadlessException {
         super();
-        
+
         this.forwardIon = forwardIon;
-        forwardColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon));
+        forwardColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
         this.rewindIon = rewindIon;
-        rewindColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon));
-        
+        rewindColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
+
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
         iIonMatches = aIonMatches;
@@ -291,7 +290,7 @@ public class SequenceFragmentationPanel extends JPanel {
             /**
              * B. Draw the bars. --------------------
              */
-            int lBarHeight = 0;
+            int lBarHeight;
             // bIon Bar
             if (i <= bIons.length - 1) {
                 if (bIons[i] != 0) {

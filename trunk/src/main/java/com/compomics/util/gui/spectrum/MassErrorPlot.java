@@ -173,7 +173,7 @@ public class MassErrorPlot extends JPanel {
                 //colors.add(new Color(255, 0, 0, alphaLevel)); // @TODO: make color selectable by the user?
 
                 // use the same colors as for the SpectrumPanel annotation
-                colors.add(SpectrumPanel.determineFragmentIonColor(ionMatch.getPeakAnnotation()));
+                colors.add(SpectrumPanel.determineFragmentIonColor(ionMatch.ion, false));
             }
 
             JFreeChart chart = ChartFactory.createScatterPlot(null, null, null, xyDataset, PlotOrientation.VERTICAL, false, false, false);

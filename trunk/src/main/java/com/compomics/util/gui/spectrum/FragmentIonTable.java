@@ -164,12 +164,10 @@ public class FragmentIonTable extends JTable {
         return new JTableHeader(columnModel) {
 
             public String getToolTipText(MouseEvent e) {
-                String tip = null;
                 java.awt.Point p = e.getPoint();
                 int index = columnModel.getColumnIndexAtX(p.x);
                 int realIndex = columnModel.getColumn(index).getModelIndex();
-                tip = (String) tooltips.get(realIndex);
-                return tip;
+                return (String) tooltips.get(realIndex);
             }
         };
     }

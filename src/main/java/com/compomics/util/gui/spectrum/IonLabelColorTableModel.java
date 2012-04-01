@@ -4,26 +4,31 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JColorChooser;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * A table model to use for the ion label annotation colors.
  *
  * @author Marc Vaudel
  */
 public class IonLabelColorTableModel extends DefaultTableModel {
 
+    /**
+     * The list of ions.
+     */
     private HashMap<String, Ion> ionMap;
+    /**
+     * The keys.
+     */
     private ArrayList<String> keys;
 
     /**
      * Constructor which sets a new table.
      *
-     * @param iontypes 
-     * @param neutralLosses 
+     * @param iontypes
+     * @param neutralLosses
      */
     public IonLabelColorTableModel(HashMap<IonType, ArrayList<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
         ionMap = new HashMap<String, Ion>();
@@ -45,6 +50,16 @@ public class IonLabelColorTableModel extends DefaultTableModel {
                 }
             }
         }
+    }
+    
+    /**
+     * Returns the ion type at the given row.
+     * 
+     * @param rowIndex the table row index
+     * @return the ion type at the given row
+     */
+    public Ion getIonAtRow (int rowIndex) {
+        return ionMap.get(keys.get(rowIndex));
     }
 
     /**
@@ -77,7 +92,7 @@ public class IonLabelColorTableModel extends DefaultTableModel {
             case 1:
                 return "Ion";
             case 2:
-                return "Color";
+                return "  ";
             default:
                 return "";
         }
@@ -91,7 +106,7 @@ public class IonLabelColorTableModel extends DefaultTableModel {
             case 1:
                 return keys.get(row);
             case 2:
-                return SpectrumPanel.determineDefaultFragmentIonColor(ionMap.get(keys.get(row)), true);
+                return SpectrumPanel.determineFragmentIonColor(ionMap.get(keys.get(row)), true);
             default:
                 return "";
         }
@@ -110,11 +125,5 @@ public class IonLabelColorTableModel extends DefaultTableModel {
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex == 2;
-    }
-
-    @Override
-    public void setValueAt(Object aValue, int row, int column) {
-        Color newColor = JColorChooser.showDialog(null, "Pick a Color", SpectrumPanel.determineDefaultFragmentIonColor(ionMap.get(keys.get(row)), true));
-        SpectrumPanel.setIonColor(ionMap.get(keys.get(row)), newColor);
     }
 }

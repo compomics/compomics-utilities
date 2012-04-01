@@ -25,9 +25,13 @@ import java.util.ArrayList;
 public abstract class GraphicsPanel extends JPanel {
 
     /**
-     * The width used for the peaks.
+     * The width used for the annotated peaks.
      */
     private float peakWidth = 1.0f;
+    /**
+     * The width used for the bcakground peaks.
+     */
+    private float backgroundPeakWidth = 1.0f;
     /**
      * If true, all numbers in peak annotations are subscripted.
      */
@@ -630,6 +634,24 @@ public abstract class GraphicsPanel extends JPanel {
     }
     
     /**
+     * Returns the current width of the background peaks.
+     * 
+     * @return the peak width
+     */
+    public float getBackgroundPeakWidth() {
+        return backgroundPeakWidth;
+    }
+    
+    /**
+     * Set the backgroundPeakWidth peak width.
+     * 
+     * @param backgroundPeakWidth the new backgroundPeakWidth peak width
+     */
+    public void setBackgroundPeakWidth(float backgroundPeakWidth) {
+        this.backgroundPeakWidth = backgroundPeakWidth;
+    }
+    
+    /**
      * This method sets all the annotations on this instance. Passing a 'null' value for
      * the Vector will result in simply removing all annotations. Do note that this method
      * will attempt to remove duplicate annotations on a point by deleting any annotation
@@ -756,8 +778,8 @@ public abstract class GraphicsPanel extends JPanel {
                     int first = ((Integer) iClickedList.get(i)).intValue();
                     int firstDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i)).intValue();
 
-                    int second = -1;
-                    int secondDataSetIndex = -1;
+                    int second, secondDataSetIndex;
+                    
                     if ((i + 1) == liClickedSize) {
                         second = iClickedIndex;
                         secondDataSetIndex = iClickedDataSetIndex;
@@ -765,8 +787,8 @@ public abstract class GraphicsPanel extends JPanel {
                         second = ((Integer) iClickedList.get(i + 1)).intValue();
                         secondDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i + 1)).intValue();
                     }
-                    this.drawMeasurementLine(first, firstDataSetIndex,
-                            second, secondDataSetIndex, g, Color.black, 0);
+                    
+                    this.drawMeasurementLine(first, firstDataSetIndex, second, secondDataSetIndex, g, Color.black, 0);
                 }
             }
 
@@ -2253,7 +2275,7 @@ public abstract class GraphicsPanel extends JPanel {
                     // change the peak color if the peak is to be drawn in the background
                     if (!annotatedPeak && !showAllPeaks) {
                         g.setColor(peakWaterMarkColor);
-                        BasicStroke stroke = new BasicStroke(peakWidth);
+                        BasicStroke stroke = new BasicStroke(backgroundPeakWidth);
                         g2.setStroke(stroke);
                     } else {
                         BasicStroke stroke = new BasicStroke(peakWidth);

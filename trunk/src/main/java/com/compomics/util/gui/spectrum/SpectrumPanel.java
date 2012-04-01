@@ -757,7 +757,7 @@ public class SpectrumPanel extends GraphicsPanel {
         if (!colorMap.containsKey(ion.getType())) {
             colorMap.put(ion.getType(), new HashMap<Integer, HashMap<String, Color>>());
         }
-        if (colorMap.get(ion.getType()).containsKey(ion.getSubType())) {
+        if (!colorMap.get(ion.getType()).containsKey(ion.getSubType())) {
             colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<String, Color>());
         }
         colorMap.get(ion.getType()).get(ion.getSubType()).put(ion.getNeutralLossesAsString(), color);

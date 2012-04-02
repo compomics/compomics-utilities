@@ -11,7 +11,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>3.4.3</version.number>
+        <version.number>3.4.4</version.number>
         <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
@@ -418,6 +418,12 @@
             <groupId>no.uib</groupId>
             <artifactId>jsparklines</artifactId>
             <version>0.5.32</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>no.uib</groupId>
+            <artifactId>ols-dialog</artifactId>
+            <version>3.3.2</version>
         </dependency>
     </dependencies>
 

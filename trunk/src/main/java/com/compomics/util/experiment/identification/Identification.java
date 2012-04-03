@@ -570,18 +570,25 @@ public abstract class Identification extends ExperimentObject {
      * serialization folder.
      *
      * @param progressDialog
+     * @param cancelProgress set this to true to cancel the progress
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while serializing a match
      * @throws IOException exception thrown whenever an error occurred while
      * serializing a match
      */
-    public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
+    public void emptyCache(ProgressDialogX progressDialog, boolean cancelProgress) throws FileNotFoundException, IOException {
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
             progressDialog.setMax(loadedMatchesMap.size());
         }
         int cpt = 0;
         for (String key : loadedMatchesMap.keySet()) {
+
+            if (cancelProgress) {
+                break;
+            }
+
+
             if (modifiedMatches.get(key)) {
                 try {
                     File matchFile = new File(serializationDirectory, getFileName(key));
@@ -604,9 +611,12 @@ public abstract class Identification extends ExperimentObject {
                 progressDialog.setValue(++cpt);
             }
         }
-        loadedMatches.clear();
-        loadedMatchesMap.clear();
-        modifiedMatches.clear();
+
+        if (!cancelProgress) {
+            loadedMatches.clear();
+            loadedMatchesMap.clear();
+            modifiedMatches.clear();
+        }
     }
 
     /**
@@ -680,12 +690,13 @@ public abstract class Identification extends ExperimentObject {
      * @param newFolder the new folder
      * @param progressDialog a progress dialog to display the progress (can be
      * null)
+     * @param cancelProgress set to true to cancel the progress
      * @throws FileNotFoundException Exception thrown whenever a problem
      * occurred during the serialization process
      * @throws IOException Exception thrown whenever a problem occurred during
      * the serialization process
      */
-    public void save(File newFolder, ProgressDialogX progressDialog) throws FileNotFoundException, IOException {
+    public void save(File newFolder, ProgressDialogX progressDialog, boolean cancelProgress) throws FileNotFoundException, IOException {
         String newPath = newFolder.getPath();
         ArrayList<String> keys = new ArrayList<String>(spectrumIdentification);
         keys.addAll(peptideIdentification);
@@ -696,6 +707,11 @@ public abstract class Identification extends ExperimentObject {
         }
         int cpt = 0;
         for (String key : keys) {
+
+            if (cancelProgress) {
+                break;
+            }
+
             if (loadedMatches.contains(key)) {
                 try {
                     File matchFile = new File(newPath, getFileName(key));
@@ -723,8 +739,11 @@ public abstract class Identification extends ExperimentObject {
                 progressDialog.setValue(++cpt);
             }
         }
-        serializationDirectory = newFolder.getPath();
-        emptyCache(progressDialog);
+        
+        if (!cancelProgress) {
+            serializationDirectory = newFolder.getPath();
+            emptyCache(progressDialog, cancelProgress);
+        }
     }
 
     /**

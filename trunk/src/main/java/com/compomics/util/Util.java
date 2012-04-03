@@ -21,8 +21,10 @@ public class Util {
 
     /**
      * Indicates whether a string contains characters forbidden in file names
+     *
      * @param string the string of interest
-     * @return a boolean indicating whether a string contains characters forbidden in file names
+     * @return a boolean indicating whether a string contains characters
+     * forbidden in file names
      */
     public static boolean containsForbiddenCharacter(String string) {
         for (String forbiddenCharacter : forbiddenCharacters) {
@@ -32,8 +34,7 @@ public class Util {
         }
         return false;
     }
-    
-    
+
     /**
      * Rounds a double value to the wanted number of decimal places.
      *
@@ -127,10 +128,24 @@ public class Util {
      * @return the table as a separated text file
      */
     public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
+        return tableToText(table, separator, progressDialog, false, removeHtml);
+    }
+
+    /**
+     * Returns the table as a separated text file.
+     *
+     * @param table the table to turn in to text
+     * @param separator the text separator
+     * @param progressDialog the progress dialog
+     * @param cancelProgress set to true to cancel the export
+     * @param removeHtml if true, html is converted to text
+     * @return the table as a separated text file
+     */
+    public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean cancelProgress, boolean removeHtml) {
 
         String tableAsString = "";
 
-        for (int i = 0; i < table.getColumnCount(); i++) {
+        for (int i = 0; i < table.getColumnCount() && !cancelProgress; i++) {
             tableAsString += ((DefaultTableModel) table.getModel()).getColumnName(i) + separator;
         }
 
@@ -139,11 +154,11 @@ public class Util {
 
         tableAsString += "\n";
 
-        for (int i = 0; i < table.getRowCount(); i++) {
+        for (int i = 0; i < table.getRowCount() && !cancelProgress; i++) {
 
             progressDialog.incrementValue();
 
-            for (int j = 0; j < table.getColumnCount(); j++) {
+            for (int j = 0; j < table.getColumnCount() && !cancelProgress; j++) {
 
                 String tempValue = table.getValueAt(i, j).toString();
 
@@ -172,8 +187,23 @@ public class Util {
      * @throws IOException
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
+        tableToFile(table, separator, progressDialog, false, removeHtml, writer);
+    }
 
-        for (int i = 0; i < table.getColumnCount(); i++) {
+    /**
+     * Writes the table to a file as separated text.
+     *
+     * @param table the table to write to file
+     * @param separator the text separator
+     * @param progressDialog the progress dialog
+     * @param cancelProgress set to true to cancel the export
+     * @param removeHtml if true, html is converted to text
+     * @param writer the writer where the file is to be written
+     * @throws IOException
+     */
+    public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean cancelProgress, boolean removeHtml, BufferedWriter writer) throws IOException {
+
+        for (int i = 0; i < table.getColumnCount() && !cancelProgress; i++) {
             writer.write(((DefaultTableModel) table.getModel()).getColumnName(i) + separator);
         }
 
@@ -184,13 +214,13 @@ public class Util {
 
         writer.write("\n");
 
-        for (int i = 0; i < table.getRowCount(); i++) {
+        for (int i = 0; i < table.getRowCount() && !cancelProgress; i++) {
 
             if (progressDialog != null) {
                 progressDialog.incrementValue();
             }
 
-            for (int j = 0; j < table.getColumnCount(); j++) {
+            for (int j = 0; j < table.getColumnCount() && !cancelProgress; j++) {
 
                 String tempValue = table.getValueAt(i, j).toString();
 
@@ -208,10 +238,10 @@ public class Util {
 
     /**
      * Copy the content of one file to another.
-     * 
+     *
      * @param in the file to copy from
      * @param out the file to copy to
-     * @throws IOException 
+     * @throws IOException
      */
     public static void copyFile(File in, File out) throws IOException {
 

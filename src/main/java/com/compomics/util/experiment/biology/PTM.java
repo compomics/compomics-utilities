@@ -220,6 +220,14 @@ public class PTM extends ExperimentObject {
     public void setNeutralLosses(ArrayList<NeutralLoss> neutralLosses) {
         this.neutralLosses = neutralLosses;
     }
+    
+    /**
+     * Adds a neutral loss
+     * @param neutralLoss the new neutral loss
+     */
+    public void addNeutralLoss(NeutralLoss neutralLoss) {
+        neutralLosses.add(neutralLoss);
+    }
 
     /**
      * Returns the reporter ions possibly encountered with this modification
@@ -235,5 +243,13 @@ public class PTM extends ExperimentObject {
      */
     public void setReporterIons(ArrayList<ReporterIon> reporterIons) {
         this.reporterIons = reporterIons;
+    }
+    
+    /**
+     * Adds a reporter ion
+     * @param reporterIon the reporter ion to add
+     */
+    public void addReporterIon(ReporterIon reporterIon) {
+        reporterIons.add(reporterIon);
     }
 }

@@ -16,23 +16,23 @@ public class NeutralLoss extends ExperimentObject {
     /**
      * H2O loss
      */
-    public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.mass + Atom.O.mass);
+    public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.mass + Atom.O.mass, false);
     /**
      * NH3 loss
      */
-    public static final NeutralLoss NH3 = new NeutralLoss("NH3", Atom.N.mass + 3 * Atom.H.mass);
+    public static final NeutralLoss NH3 = new NeutralLoss("NH3", Atom.N.mass + 3 * Atom.H.mass, false);
     /**
      * H3PO4 loss
      */
-    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", 3 * Atom.H.mass + Atom.P.mass + 4 * Atom.O.mass);
+    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", 3 * Atom.H.mass + Atom.P.mass + 4 * Atom.O.mass, false);
     /**
      * H3PO3 loss
      */
-    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", Atom.H.mass + Atom.P.mass + 3 * Atom.O.mass);
+    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", Atom.H.mass + Atom.P.mass + 3 * Atom.O.mass, false);
     /**
      * CH4OS loss
      */
-    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", Atom.C.mass + 4 * Atom.H.mass + Atom.O.mass + Atom.S.mass);
+    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", Atom.C.mass + 4 * Atom.H.mass + Atom.O.mass + Atom.S.mass, false);
     /**
      * The mass lost
      */
@@ -41,6 +41,10 @@ public class NeutralLoss extends ExperimentObject {
      * The name of the neutral loss
      */
     public String name;
+    /**
+     * boolean indicating whether the neutral loss will always be accounted for
+     */
+    private Boolean fixed = false;
 
     /**
      * Method indicating whether another neutral loss is the same as the one
@@ -51,7 +55,8 @@ public class NeutralLoss extends ExperimentObject {
      * the one considered
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
-        return anotherNeutralLoss.name.equals(name);
+        return anotherNeutralLoss.name.equals(name)
+                || Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
     }
 
     /**
@@ -60,8 +65,28 @@ public class NeutralLoss extends ExperimentObject {
      * @param name name of the neutral loss
      * @param mass mass of the neutral loss
      */
-    public NeutralLoss(String name, double mass) {
+    public NeutralLoss(String name, double mass, boolean fixed) {
         this.name = name;
         this.mass = mass;
+        this.fixed = fixed;
+    }
+    
+    /**
+     * Returns a boolean indicating whether the neutral loss is fixed or not
+     * @return a boolean indicating whether the neutral loss is fixed or not
+     */
+    public boolean isFixed() {
+        if (fixed == null) {
+            fixed = false;
+        }
+            return fixed;
+    }
+    
+    /**
+     * Sets whether the loss is fixed or not
+     * @param fixed a boolean indicating whether the loss is fixed or not
+     */
+    public void setFixed(boolean fixed) {
+        this.fixed = fixed;
     }
 }

@@ -131,6 +131,7 @@ public class IonFactory {
                 taken.add(ptmName);
             }
         }
+        result.addAll(reporterIons);
 
         // We will account for up to two neutral losses per ion maximum
         ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);
@@ -162,17 +163,17 @@ public class IonFactory {
 
             // add the a-ions
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass-getLossesMass(losses), losses));
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - getLossesMass(losses), losses));
             }
 
             // add the b-ions
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.B_ION, faa, forwardMass-getLossesMass(losses), losses));
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.B_ION, faa, forwardMass - getLossesMass(losses), losses));
             }
 
             // add the c-ion
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass-getLossesMass(losses), losses));
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass - getLossesMass(losses), losses));
             }
 
 
@@ -188,17 +189,17 @@ public class IonFactory {
 
             // add the x-ion
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass-getLossesMass(losses), losses));
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass - getLossesMass(losses), losses));
             }
 
             // add the y-ions
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.Y_ION, faa, rewindMass + 2 * Atom.H.mass-getLossesMass(losses), losses));
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.Y_ION, faa, rewindMass + 2 * Atom.H.mass - getLossesMass(losses), losses));
             }
 
             // add the z-ions
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                result.add(new PeptideFragmentIon(PeptideFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass-getLossesMass(losses), losses));
+                result.add(new PeptideFragmentIon(PeptideFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass - getLossesMass(losses), losses));
             }
 
         }
@@ -213,7 +214,7 @@ public class IonFactory {
         }
         // add the precursor ion
         for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-            result.add(new PrecursorIon(forwardMass + Atom.H.mass + Atom.O.mass-getLossesMass(losses), losses));
+            result.add(new PrecursorIon(forwardMass + Atom.H.mass + Atom.O.mass - getLossesMass(losses), losses));
         }
 
         return result;
@@ -240,14 +241,16 @@ public class IonFactory {
                     tempList = new ArrayList<NeutralLoss>();
                     tempList.add(neutralLoss1);
                     tempList.add(neutralLoss2);
+                    neutralLossesCombinations.add(tempList);
                 }
             }
         }
         return neutralLossesCombinations;
     }
-    
+
     /**
      * Convenience summing the masses of various neutral losses
+     *
      * @param neutralLosses list of neutral losses
      * @return the summ of the masses
      */

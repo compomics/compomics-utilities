@@ -925,7 +925,7 @@ public class SpectrumPanel extends GraphicsPanel {
             case IMMONIUM_ION:
                 return Color.GRAY;
             case REPORTER_ION:
-                return Color.YELLOW;
+                return Color.ORANGE;
             default:
                 return Color.GRAY;
         }

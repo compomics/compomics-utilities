@@ -41,24 +41,31 @@ public class IonLabelColorTableModel extends DefaultTableModel {
                 keys.add("Immonium Ion");
             } else {
                 for (Integer subtype : iontypes.get(ionType)) {
-                    for (ArrayList<NeutralLoss> possibleCombination : IonFactory.getAccountedNeutralLosses(neutralLosses)) {
-                        currentIon = Ion.getGenericIon(ionType, subtype, possibleCombination);
+                    if (ionType == Ion.IonType.REPORTER_ION) {
+                        currentIon = Ion.getGenericIon(ionType, subtype);
                         String key = currentIon.getName();
                         ionMap.put(key, currentIon);
                         keys.add(key);
+                    } else {
+                        for (ArrayList<NeutralLoss> possibleCombination : IonFactory.getAccountedNeutralLosses(neutralLosses)) {
+                            currentIon = Ion.getGenericIon(ionType, subtype, possibleCombination);
+                            String key = currentIon.getName();
+                            ionMap.put(key, currentIon);
+                            keys.add(key);
+                        }
                     }
                 }
             }
         }
     }
-    
+
     /**
      * Returns the ion type at the given row.
-     * 
+     *
      * @param rowIndex the table row index
      * @return the ion type at the given row
      */
-    public Ion getIonAtRow (int rowIndex) {
+    public Ion getIonAtRow(int rowIndex) {
         return ionMap.get(keys.get(rowIndex));
     }
 

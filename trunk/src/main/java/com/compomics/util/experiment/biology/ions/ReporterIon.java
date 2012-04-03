@@ -25,59 +25,59 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion iTRAQ 113
      */
-    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113);
+    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 114
      */
-    public final static ReporterIon iTRAQ114 = new ReporterIon("iTRAQ114", 114.1112);
+    public final static ReporterIon iTRAQ114 = new ReporterIon("iTRAQ114", 114.1112 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 115
      */
-    public final static ReporterIon iTRAQ115 = new ReporterIon("iTRAQ115", 115.1083);
+    public final static ReporterIon iTRAQ115 = new ReporterIon("iTRAQ115", 115.1083 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 116
      */
-    public final static ReporterIon iTRAQ116 = new ReporterIon("iTRAQ116", 116.1116);
+    public final static ReporterIon iTRAQ116 = new ReporterIon("iTRAQ116", 116.1116 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 117
      */
-    public final static ReporterIon iTRAQ117 = new ReporterIon("iTRAQ117", 117.1150);
+    public final static ReporterIon iTRAQ117 = new ReporterIon("iTRAQ117", 117.1150 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 118
      */
-    public final static ReporterIon iTRAQ118 = new ReporterIon("iTRAQ118", 118);
+    public final static ReporterIon iTRAQ118 = new ReporterIon("iTRAQ118", 118 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 119
      */
-    public final static ReporterIon iTRAQ119 = new ReporterIon("iTRAQ119", 119);
+    public final static ReporterIon iTRAQ119 = new ReporterIon("iTRAQ119", 119 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion iTRAQ 121
      */
-    public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121);
+    public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion TMT0
      */
-    public final static ReporterIon TMT0 = new ReporterIon("TMT0", 126);
+    public final static ReporterIon TMT0 = new ReporterIon("TMT0", 126 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion TMT1
      */
-    public final static ReporterIon TMT1 = new ReporterIon("TMT1", 127);
+    public final static ReporterIon TMT1 = new ReporterIon("TMT1", 127 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion TMT2
      */
-    public final static ReporterIon TMT2 = new ReporterIon("TMT2", 128);
+    public final static ReporterIon TMT2 = new ReporterIon("TMT2", 128 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion TMT3
      */
-    public final static ReporterIon TMT3 = new ReporterIon("TMT3", 129);
+    public final static ReporterIon TMT3 = new ReporterIon("TMT3", 129 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion TMT4
      */
-    public final static ReporterIon TMT4 = new ReporterIon("TMT4", 130);
+    public final static ReporterIon TMT4 = new ReporterIon("TMT4", 130 - ElementaryIon.proton.getTheoreticMass());
     /**
      * Standard reporter ion TMT5
      */
-    public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131);
+    public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131 - ElementaryIon.proton.getTheoreticMass());
     /**
      * ion name for user defined ions
      */
@@ -120,6 +120,7 @@ public class ReporterIon extends Ion {
     public ReporterIon(int subType) {
         type = IonType.REPORTER_ION;
         this.name = reporterIonTypes.get(subType);
+        this.subtype = subType;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.biology.ions.ReporterIon;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -76,7 +77,14 @@ public class PTMFactory implements Serializable {
                 instance = (PTMFactory) factory;
             } catch (Exception e) {
                 instance = new PTMFactory();
+                try {
+                    instance.saveFactory();
+                } catch (IOException ioe) {
+                    // cancel save
+                    ioe.printStackTrace();
+                }
             }
+            instance.setDefaultReporterIons();
         }
         return instance;
     }
@@ -319,8 +327,10 @@ public class PTMFactory implements Serializable {
             }
             type = parser.next();
         }
-        setUserOmssaIndexes();
         br.close();
+        setUserOmssaIndexes();
+        setDefaultNeutralLosses();
+        setDefaultReporterIons();
     }
 
     /**
@@ -421,7 +431,7 @@ public class PTMFactory implements Serializable {
                     try {
                         doubleString = parser.getText().trim();
                         double neutralLossMass = new Double(doubleString);
-                        neutralLosses.add(new NeutralLoss(name + cpt, neutralLossMass));
+                        neutralLosses.add(new NeutralLoss(name + " " + cpt, neutralLossMass, true));
                     } catch (Exception e) {
                         throw new XmlPullParserException("Found non-parseable text '" + doubleString + "' for the value of the 'MSMassSet_monomass' neutral loss tag on line " + parser.getLineNumber() + ".");
                     }
@@ -613,15 +623,21 @@ public class PTMFactory implements Serializable {
             }
             result += "\t\t</MSModSpec_residues>\n";
         }
-        if (!ptm.getNeutralLosses().isEmpty()) {
-            result += "\t\t<MSModSpec_neutralloss>\n";
-            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+        boolean first = true;
+        for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+            if (neutralLoss.isFixed()) {
+                if (first) {
+                    result += "\t\t<MSModSpec_neutralloss>\n";
+                    first = false;
+                }
                 result += "\t\t\t<MSMassSet>\n";
                 result += "\t\t\t\t<MSMassSet_monomass>" + neutralLoss.mass + "</MSMassSet_monomass>\n";
                 result += "\t\t\t\t<MSMassSet_averagemass>0</MSMassSet_averagemass>";
                 result += "\t\t\t\t<MSMassSet_n15mass>0</MSMassSet_n15mass>";
                 result += "\t\t\t</MSMassSet>\n";
             }
+        }
+        if (!first) {
             result += "\t\t</MSModSpec_neutralloss>\n";
         }
         result += "\t</MSModSpec>\n";
@@ -661,5 +677,108 @@ public class PTMFactory implements Serializable {
      */
     public boolean isUserDefined(String ptmName) {
         return !defaultMods.contains(ptmName);
+    }
+
+    /**
+     * Sets the default neutral losses of PTMs when not implemented
+     */
+    public void setDefaultNeutralLosses() {
+        PTM ptm;
+        boolean changed = false;
+        for (String ptmName : defaultMods) {
+            // I hate hard coding this, any more elegant approach welcome...
+            if (ptmName.contains("phospho")) {
+                ptm = ptmMap.get(ptmName);
+                if (ptmName.contains(" s")
+                        || ptmName.contains(" t")) {
+                    boolean found = false;
+                    for (NeutralLoss implemented : ptm.getNeutralLosses()) {
+                        if (implemented.isSameAs(NeutralLoss.H3PO4)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        ptm.addNeutralLoss(NeutralLoss.H3PO4);
+                    }
+                }
+                if (ptmName.contains(" y")) {
+                    boolean found = false;
+                    for (NeutralLoss implemented : ptm.getNeutralLosses()) {
+                        if (implemented.isSameAs(NeutralLoss.HPO3)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        ptm.addNeutralLoss(NeutralLoss.HPO3);
+                    }
+                }
+            } else if (ptmName.contains("oxidation") && ptmName.contains("M")) {
+                ptm = ptmMap.get(ptmName);
+                boolean found = false;
+                for (NeutralLoss implemented : ptm.getNeutralLosses()) {
+                    if (implemented.isSameAs(NeutralLoss.CH4OS)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    ptm.addNeutralLoss(NeutralLoss.CH4OS);
+                }
+            }
+        if (changed) {
+            try {
+                saveFactory();
+            } catch (IOException e) {
+                // cancel save
+            }
+        }
+    }
+    }
+
+    /**
+     * Sets the default reporter ions of PTMs when not implemented
+     */
+    public void setDefaultReporterIons() {
+        PTM ptm;
+        boolean changed = false;
+        for (String ptmName : defaultMods) {
+            // I hate hard coding this, any more elegant approach welcome...
+            if (ptmName.contains("itraq")) {
+                ptm = ptmMap.get(ptmName);
+                if (ptm.getReporterIons().isEmpty()) {
+                    changed = true;
+                    ptm.addReporterIon(ReporterIon.iTRAQ114);
+                    ptm.addReporterIon(ReporterIon.iTRAQ115);
+                    ptm.addReporterIon(ReporterIon.iTRAQ116);
+                    ptm.addReporterIon(ReporterIon.iTRAQ117);
+                    ptm.addReporterIon(ReporterIon.iTRAQ113);
+                    ptm.addReporterIon(ReporterIon.iTRAQ118);
+                    ptm.addReporterIon(ReporterIon.iTRAQ119);
+                    ptm.addReporterIon(ReporterIon.iTRAQ121);
+                }
+            } else if (ptmName.contains("tmt")) {
+                changed = true;
+                ptm = ptmMap.get(ptmName);
+                if (ptm.getReporterIons().isEmpty()) {
+                    ptm.addReporterIon(ReporterIon.TMT0);
+                    ptm.addReporterIon(ReporterIon.TMT1);
+                    if (ptmName.contains("6")) {
+                        ptm.addReporterIon(ReporterIon.TMT2);
+                        ptm.addReporterIon(ReporterIon.TMT3);
+                        ptm.addReporterIon(ReporterIon.TMT4);
+                        ptm.addReporterIon(ReporterIon.TMT5);
+                    }
+                }
+            }
+        }
+        if (changed) {
+            try {
+                saveFactory();
+            } catch (IOException e) {
+                // cancel save
+            }
+        }
     }
 }

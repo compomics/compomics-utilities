@@ -107,12 +107,17 @@ public class SpectrumAnnotator {
         setPeptide(peptide, precursorCharge);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
         IonMatch ionMatch;
+        if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION)) {
+            charges.add(precursorCharge);
+            charges.add(precursorCharge+1);
+        }
 
         for (Ion peptideIon : peptideIons) {
             if (iontypes.containsKey(peptideIon.getType())
                     && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())) {
                 for (int charge : charges) {
-                    if (chargeValidated(peptideIon, charge) && lossesValidated(neutralLosses, peptideIon, peptide)) {
+                    if (chargeValidated(peptideIon, charge, precursorCharge) 
+                            && lossesValidated(neutralLosses, peptideIon, peptide)) {
                         ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
                         if (Math.abs(ionMatch.getError(isPpm)) <= mzTolerance) {
                             result.add(ionMatch);
@@ -421,16 +426,16 @@ public class SpectrumAnnotator {
      * @return a boolean indicating whether the given charge can be found on the
      * given fragment ion
      */
-    public boolean chargeValidated(Ion theoreticIon, int charge) {
+    public boolean chargeValidated(Ion theoreticIon, int charge, int precursorCharge) {
         switch (theoreticIon.getType()) {
             case IMMONIUM_ION:
             case REPORTER_ION: // Note, it is possible to implement higher charges for the reporter ion but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
                 return charge == 1;
             case PEPTIDE_FRAGMENT_ION:
                 PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) theoreticIon);
-                return charge <= peptideFragmentIon.getNumber();
+                return charge <= peptideFragmentIon.getNumber() && (charge < precursorCharge || precursorCharge == 1);
             case PRECURSOR_ION:
-                return true;
+                return charge >= precursorCharge; // @TODO take into account lower charge? Like precursor -iTRAQ+?
             default:
                 throw new UnsupportedOperationException("Ion type " + theoreticIon.getTypeAsString() + " not implemented in the spectrum annotator.");
         }
@@ -466,12 +471,16 @@ public class SpectrumAnnotator {
         setPeptide(peptide, precursorCharge);
         setMassTolerance(mzTolerance, isPpm);
         String key;
+        if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION)) {
+            charges.add(precursorCharge);
+            charges.add(precursorCharge+1); // Just by curiosity
+        }
         for (Ion peptideIon : peptideIons) {
             if (iontypes.containsKey(peptideIon.getType())
                     && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
                     && lossesValidated(neutralLosses, peptideIon, peptide)) {
                 for (int charge : charges) {
-                    if (chargeValidated(peptideIon, charge)) {
+                    if (chargeValidated(peptideIon, charge, precursorCharge)) {
                         key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
                         if (!spectrumAnnotation.containsKey(key)
                                 && !unmatchedIons.contains(key)) {
@@ -514,7 +523,7 @@ public class SpectrumAnnotator {
                     && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
                     && lossesValidated(neutralLosses, peptideIon, peptide)) {
                 for (int charge : charges) {
-                    if (chargeValidated(peptideIon, charge)) {
+                    if (chargeValidated(peptideIon, charge, precursorCharge)) {
                         if (!result.containsKey(charge)) {
                             result.put(charge, new ArrayList<Ion>());
                         }

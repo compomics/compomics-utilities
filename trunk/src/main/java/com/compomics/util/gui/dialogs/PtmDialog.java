@@ -6,9 +6,11 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.gui.renderers.ToolTipComboBoxRenderer;
 import com.compomics.util.pride.CvTerm;
+import com.compomics.util.pride.PrideObjectsFactory;
 import com.compomics.util.pride.PtmToPrideMap;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -95,7 +97,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         super(parent, true);
 
         this.ptmDialogParent = ptmDialogParent;
-        this.ptmToPrideMap = ptmToPrideMap; //searchPreferencesDialog.getPtmToPrideMap();
+        this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
 
         initComponents();
@@ -656,7 +658,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
             for (int row = 0; row < neutralLossesTable.getRowCount(); row++) {
                 tempNeutralLosses.add(new NeutralLoss((String) neutralLossesTable.getValueAt(row, 1),
-                        (Double) neutralLossesTable.getValueAt(row, 2)));
+                        (Double) neutralLossesTable.getValueAt(row, 2),
+                        (Boolean) neutralLossesTable.getValueAt(row, 3)));
             }
 
             newPTM.setNeutralLosses(tempNeutralLosses);
@@ -692,6 +695,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             
             ptmDialogParent.updateModifications();
+            
+            saveChanges();
 
             dispose();
         }
@@ -784,7 +789,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param evt
      */
     private void addNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNeutralLossActionPerformed
-        neutralLosses.add(new NeutralLoss("new neutral loss", 0.0));
+        neutralLosses.add(new NeutralLoss("new neutral loss", 0.0, false));
         updateTables();
     }//GEN-LAST:event_addNeutralLossActionPerformed
 
@@ -908,6 +913,23 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         ((DefaultTableModel) neutralLossesTable.getModel()).fireTableDataChanged();
         ((DefaultTableModel) reporterIonsTable.getModel()).fireTableDataChanged();
     }
+    
+    /**
+     * Saves the changes of the PTM factory
+     */
+    private void saveChanges() {
+        try {
+            ptmFactory.saveFactory();
+            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
+            prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
+                    "Saving Error", JOptionPane.WARNING_MESSAGE);
+        } catch (ClassNotFoundException ce) {
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
+                    "Saving Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
 
     /**
      * Table model for the neutral losses table
@@ -921,7 +943,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -933,6 +955,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                     return "Name";
                 case 2:
                     return "Mass";
+                case 3:
+                    return "Fixed";
                 default:
                     return "";
             }
@@ -947,6 +971,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                     return neutralLosses.get(row).name;
                 case 2:
                     return neutralLosses.get(row).mass;
+                case 3:
+                    return neutralLosses.get(row).isFixed();
                 default:
                     return "";
             }
@@ -975,6 +1001,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 neutralLoss.name = (String) aValue;
             } else if (column == 2) {
                 neutralLoss.mass = (Double) aValue;
+            } else if (column == 3) {
+                neutralLoss.setFixed((Boolean) aValue);
             }
         }
     }

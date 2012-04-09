@@ -15,17 +15,23 @@ import java.util.ArrayList;
 
 /**
  * This factory imports reporter methods details from an xml file.
- * User: Marc
- * Date: Sep 29, 2010
- * Time: 6:02:41 PM
+ *
+ * @author Marc Vaudel
+ *
  */
 public class ReporterMethodFactory extends ExperimentObject {
 
+    /**
+     * The reporter methods.
+     */
     private ArrayList<ReporterMethod> methods;
+    /**
+     * The reporter factory.
+     */
     private static ReporterMethodFactory instance = null;
 
     /**
-     * @TODO: JavaDoc missing.
+     * Constructor.
      */
     private ReporterMethodFactory() {
     }
@@ -58,8 +64,8 @@ public class ReporterMethodFactory extends ExperimentObject {
      */
     public String[] getMethodsNames() {
         String[] names = new String[methods.size()];
-        for (int i= 0 ; i < methods.size() ; i++) {
-        //    names[i] = methods.get(i).getMethodName();
+        for (int i = 0; i < methods.size(); i++) {
+            //    names[i] = methods.get(i).getMethodName();
         }
         return names;
     }
@@ -97,7 +103,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             // If we find a 'reporterMethod' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
-       //         methods.add(parseMethod(parser));
+                //         methods.add(parseMethod(parser));
             }
             type = parser.next();
         }
@@ -151,7 +157,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             index = ReporterIonMethod.ITRAQ_8PLEX;
         } else if (name.equals("TMT6")) {
             index = ReporterIonMethod.TMT6;
-        }   else if (name.equals("TMT2")) {
+        } else if (name.equals("TMT2")) {
             index = ReporterIonMethod.TMT2;
         }
     }

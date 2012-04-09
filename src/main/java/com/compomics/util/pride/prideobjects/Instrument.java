@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class Instrument implements PrideObject, Serializable {
 
     /**
-     * serialization number for backward compatibility
+     * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -8802861658166703745L;
     /**
@@ -50,6 +50,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the instrument name.
+     * 
      * @return the name
      */
     public String getName() {
@@ -57,6 +59,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Set the instrument name.
+     * 
      * @param name the name to set
      */
     public void setName(String name) {
@@ -64,6 +68,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the CV terms.
+     * 
      * @return the cvTerms
      */
     public ArrayList<CvTerm> getCvTerms() {
@@ -71,6 +77,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Set the CV terms.
+     * 
      * @param cvTerms the cvTerms to set
      */
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
@@ -78,6 +86,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the instrument source.
+     * 
      * @return the source
      */
     public CvTerm getSource() {
@@ -85,6 +95,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Set the instrument source.
+     * 
      * @param source the source to set
      */
     public void setSource(CvTerm source) {
@@ -92,6 +104,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the instrument detector.
+     * 
      * @return the detector
      */
     public CvTerm getDetector() {
@@ -99,6 +113,8 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
+     * Set the instrument detector.
+     * 
      * @param detector the detector to set
      */
     public void setDetector(CvTerm detector) {
@@ -106,7 +122,7 @@ public class Instrument implements PrideObject, Serializable {
     }
 
     /**
-     * Returns a list of predefined instruments
+     * Returns a list of predefined instruments.
      *
      * @return a list of predefined instruments
      */

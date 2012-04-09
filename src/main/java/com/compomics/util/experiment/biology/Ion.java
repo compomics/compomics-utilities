@@ -19,19 +19,19 @@ public abstract class Ion extends ExperimentObject {
     public enum IonType {
 
         /**
-         * identifier for a peptide fragment ion.
+         * Identifier for a peptide fragment ion.
          */
         PEPTIDE_FRAGMENT_ION,
         /**
-         * identifier for an MH ion. The number of H is not represented here.
+         * Identifier for an MH ion. The number of H is not represented here.
          */
         PRECURSOR_ION,
         /**
-         * identifier for an immonium ion.
+         * Identifier for an immonium ion.
          */
         IMMONIUM_ION,
         /**
-         * identifier for a reporter ion.
+         * Identifier for a reporter ion.
          */
         REPORTER_ION,
         /**
@@ -48,7 +48,7 @@ public abstract class Ion extends ExperimentObject {
         UNKNOWN;
     }
     /**
-     * Type of ion
+     * Type of ion.
      */
     protected IonType type = IonType.UNKNOWN;
     /**
@@ -64,7 +64,7 @@ public abstract class Ion extends ExperimentObject {
 
     /**
      * Returns the pride cv term adapted to the fragment ion. null if none
-     * corresponding
+     * corresponding.
      *
      * @return the pride cv term adapted to the fragment ion. null if none
      * corresponding
@@ -72,21 +72,21 @@ public abstract class Ion extends ExperimentObject {
     public abstract CvTerm getPrideCvTerm();
 
     /**
-     * Returns the ion subtype
+     * Returns the ion subtype.
      *
      * @return the ion subtype as integer
      */
     public abstract int getSubType();
 
     /**
-     * Returns the subtype as string
+     * Returns the subtype as string.
      *
      * @return the subtype as string
      */
     public abstract String getSubTypeAsString();
 
     /**
-     * Returns an arraylist of possible subtypes
+     * Returns an arraylist of possible subtypes.
      *
      * @return an arraylist of possible subtypes
      */
@@ -118,7 +118,7 @@ public abstract class Ion extends ExperimentObject {
     public abstract ArrayList<NeutralLoss> getNeutralLosses();
 
     /**
-     * Returns a boolean indicating whether the ion is the same as another ion
+     * Returns a boolean indicating whether the ion is the same as another ion.
      *
      * @param anotherIon the other ion
      * @return a boolean indicating whether the ion is the same as another ion
@@ -153,16 +153,16 @@ public abstract class Ion extends ExperimentObject {
     }
 
     /**
-     * Returns the theoretic mass
+     * Returns the theoretic mass.
      *
-     * @return
+     * @return the theoretic mass
      */
     public double getTheoreticMass() {
         return theoreticMass;
     }
 
     /**
-     * Sets a new theoretic mass
+     * Sets a new theoretic mass.
      *
      * @param theoreticMass a new theoretic mass
      */
@@ -171,16 +171,17 @@ public abstract class Ion extends ExperimentObject {
     }
 
     /**
-     * Returns the ion type
+     * Returns the ion type.
      *
      * @return the ion type
      */
     public IonType getType() {
         return type;
     }
-    
+
     /**
-     * Returns the implemented ion types
+     * Returns the implemented ion types.
+     *
      * @return the implemented ion types
      */
     public static ArrayList<IonType> getImplementedIonTypes() {
@@ -195,14 +196,18 @@ public abstract class Ion extends ExperimentObject {
     }
 
     /**
-     * Returns the type of ion as string
+     * Returns the type of ion as string.
+     * 
+     * @return the type of ion as string
      */
     public String getTypeAsString() {
         return getTypeAsString(type);
     }
 
     /**
-     * Returns the type of ion as string
+     * Returns the type of ion as string.
+     * 
+     * @return the type of ion as string
      */
     public static String getTypeAsString(IonType type) {
         switch (type) {
@@ -224,13 +229,14 @@ public abstract class Ion extends ExperimentObject {
                 throw new UnsupportedOperationException("No name for ion type " + type + ".");
         }
     }
-    
+
     /**
-     * Convenience method returning a generic ion based on the given ion type
-     * @param ionType       the ion type
-     * @param subType       the ion subtype
+     * Convenience method returning a generic ion based on the given ion type.
+     *
+     * @param ionType the ion type
+     * @param subType the ion subtype
      * @param neutralLosses the neutral losses. An empty or null list if none.
-     * @return              a generic ion
+     * @return a generic ion
      */
     public static Ion getGenericIon(IonType ionType, int subType, ArrayList<NeutralLoss> neutralLosses) {
         if (neutralLosses == null) {
@@ -253,12 +259,14 @@ public abstract class Ion extends ExperimentObject {
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }
     }
-    
+
     /**
-     * Convenience method returning a generic ion based on the given ion type without neutral losses
-     * @param ionType       the ion type
-     * @param subType       the ion subtype
-     * @return              a generic ion
+     * Convenience method returning a generic ion based on the given ion type
+     * without neutral losses.
+     *
+     * @param ionType the ion type
+     * @param subType the ion subtype
+     * @return a generic ion
      */
     public static Ion getGenericIon(IonType ionType, int subType) {
         switch (ionType) {

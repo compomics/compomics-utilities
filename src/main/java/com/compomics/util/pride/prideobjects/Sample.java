@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class Sample implements PrideObject, Serializable {
 
     /**
-     * serialization number for backward compatibility
+     * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -7142471175737857227L;
     /**
@@ -38,6 +38,8 @@ public class Sample implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the name of the sample.
+     * 
      * @return the name
      */
     public String getName() {
@@ -45,6 +47,8 @@ public class Sample implements PrideObject, Serializable {
     }
 
     /**
+     * Set the name of the sample.
+     * 
      * @param name the name to set
      */
     public void setName(String name) {
@@ -52,6 +56,8 @@ public class Sample implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the CV terms.
+     * 
      * @return the cvTerms
      */
     public ArrayList<CvTerm> getCvTerms() {
@@ -59,6 +65,8 @@ public class Sample implements PrideObject, Serializable {
     }
 
     /**
+     * Set the CV terms.
+     * 
      * @param cvTerms the cvTerms to set
      */
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
@@ -66,9 +74,9 @@ public class Sample implements PrideObject, Serializable {
     }
 
     /**
-     * Returns a list of default samples
+     * Returns a list of default samples.
      *
-     * @return
+     * @return a list of default samples
      */
     public static ArrayList<Sample> getDefaultSamples() {
         ArrayList<Sample> result = new ArrayList<Sample>();

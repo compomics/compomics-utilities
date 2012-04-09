@@ -10,35 +10,32 @@ import java.util.HashMap;
 /**
  * This class will models a glycon fragment.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 1:36:49 PM
+ * @author Marc Vaudel
  */
 public class Glycon extends Ion {
-    
+
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2278483206647518565L;
     /**
-     * Final index for underivated masses
+     * Final index for underivated masses.
      */
     public final static int UNDERIVATED_MASS = 0;
     /**
-     * Final index for permethylated masses
+     * Final index for permethylated masses.
      */
     public final static int PERMETHYLATED_MASS = 1;
     /**
-     * Final index for deuteromethylated masses
+     * Final index for deuteromethylated masses.
      */
     public final static int DEUTEROMETHYLATED_MASS = 2;
     /**
-     * Final index for peracetylated masses
+     * Final index for peracetylated masses.
      */
     public final static int PERACETYLATED_MASS = 3;
     /**
-     * Final index for deuteroacetylated masses
+     * Final index for deuteroacetylated masses.
      */
     public final static int DEUTEROACETYLATED_MASS = 4;
     /**
@@ -46,12 +43,11 @@ public class Glycon extends Ion {
      */
     private HashMap<Integer, Double> theoreticMasses = new HashMap<Integer, Double>();
 
-
     /**
-     * Constructor for a glycon
+     * Constructor for a glycon.
      *
-     * @param aName         The name of the glycon
-     * @param aShortName    A shortened name for the glycon
+     * @param name The name of the glycon
+     * @param longName A shortened name for the glycon
      */
     public Glycon(String name, String longName) {
         type = IonType.GLYCON;
@@ -59,26 +55,26 @@ public class Glycon extends Ion {
         this.longName = longName;
     }
     /**
-     * The glycon short name which can be displayed on a spectrum
+     * The glycon short name which can be displayed on a spectrum.
      */
     private String name;
     /**
-     * The glycon full name
+     * The glycon full name.
      */
     private String longName;
 
     /**
-     * Add a mass for this glycon
+     * Add a mass for this glycon.
      *
-     * @param massType  mass type indexed according to the static field
-     * @param value     Value of the mass
+     * @param massType mass type indexed according to the static field
+     * @param value Value of the mass
      */
     public void addMass(int massType, double value) {
         theoreticMasses.put(massType, value);
     }
 
     /**
-     * Get the glycon mass
+     * Get the glycon mass.
      *
      * @param aType Type of mass requested indexed according to static int.
      * @return the requested mass
@@ -110,7 +106,8 @@ public class Glycon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes
+     * Returns an arraylist of possible subtypes.
+     *
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
@@ -126,5 +123,4 @@ public class Glycon extends Ion {
     public boolean isSameAs(Ion anotherIon) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
 }

@@ -12,11 +12,9 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.IOException;
 import java.util.*;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 import no.uib.olsdialog.OLSDialog;
 import no.uib.olsdialog.OLSInputable;
 
@@ -124,6 +122,12 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         neutralLossesTable.getColumn(" ").setMinWidth(50);
         reporterIonsTable.getColumn(" ").setMaxWidth(50);
         reporterIonsTable.getColumn(" ").setMinWidth(50);
+        
+        // set the fixed clumn cell renderer
+        neutralLossesTable.getColumn("Fixed").setCellRenderer(new TrueFalseIconRenderer(
+                new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
+                null,
+                "Fixed", null));
 
         Vector comboboxTooltips = new Vector();
         comboboxTooltips.add("Modification at particular amino acids");

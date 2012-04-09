@@ -11,7 +11,7 @@ import java.io.*;
 public class Contact implements PrideObject, Serializable {
 
     /**
-     * serialization number for backward compatibility
+     * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -9182316910747747823L;
     /**
@@ -41,6 +41,8 @@ public class Contact implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the contact name.
+     * 
      * @return the name
      */
     public String getName() {
@@ -48,6 +50,8 @@ public class Contact implements PrideObject, Serializable {
     }
 
     /**
+     * Set the contact name.
+     * 
      * @param name the name to set
      */
     public void setName(String name) {
@@ -55,6 +59,8 @@ public class Contact implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the contact e-mail.
+     * 
      * @return the eMail
      */
     public String getEMail() {
@@ -62,6 +68,8 @@ public class Contact implements PrideObject, Serializable {
     }
 
     /**
+     * Set the contact e-mail.
+     * 
      * @param eMail the eMail to set
      */
     public void setEMail(String eMail) {
@@ -69,6 +77,8 @@ public class Contact implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the instituition.
+     * 
      * @return the institution
      */
     public String getInstitution() {
@@ -76,6 +86,8 @@ public class Contact implements PrideObject, Serializable {
     }
 
     /**
+     * Set the instituttion.
+     * 
      * @param institution the institution to set
      */
     public void setInstitution(String institution) {

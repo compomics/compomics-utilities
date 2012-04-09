@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class Protocol implements PrideObject, Serializable {
 
     /**
-     * serialization number for backward compatibility
+     * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -9045298216154032632L;
     /**
@@ -38,6 +38,8 @@ public class Protocol implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the protocol name.
+     * 
      * @return the name
      */
     public String getName() {
@@ -45,6 +47,8 @@ public class Protocol implements PrideObject, Serializable {
     }
 
     /**
+     * Set the protocol name.
+     * 
      * @param name the name to set
      */
     public void setName(String name) {
@@ -52,6 +56,8 @@ public class Protocol implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the CV terms.
+     * 
      * @return the cvTerms
      */
     public ArrayList<CvTerm> getCvTerms() {
@@ -59,6 +65,8 @@ public class Protocol implements PrideObject, Serializable {
     }
 
     /**
+     * Set the CV terms.
+     * 
      * @param cvTerms the cvTerms to set
      */
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
@@ -66,7 +74,7 @@ public class Protocol implements PrideObject, Serializable {
     }
 
     /**
-     * Returns a list of default protocols
+     * Returns a list of default protocols.
      *
      * @return a list of default protocols
      */

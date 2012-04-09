@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Reference implements PrideObject, Serializable {
 
     /**
-     * serialization number for backward compatibility
+     * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -5449836209751629549L;
     /**
@@ -42,6 +42,8 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the reference as a string.
+     * 
      * @return the reference
      */
     public String getReference() {
@@ -49,6 +51,8 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
+     * Set the reference.
+     * 
      * @param reference the reference to set
      */
     public void setReference(String reference) {
@@ -56,6 +60,8 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the PubMed ID of the reference.
+     * 
      * @return the pmid
      */
     public String getPmid() {
@@ -63,6 +69,8 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
+     * Set the PubMed ID of the reference.
+     * 
      * @param pmid the pmid to set
      */
     public void setPmid(String pmid) {
@@ -70,6 +78,8 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
+     * Returns the Digital Object Identifier (DOI) of the reference.
+     * 
      * @return the doi
      */
     public String getDoi() {
@@ -77,6 +87,8 @@ public class Reference implements PrideObject, Serializable {
     }
 
     /**
+     * Set the Digital Object Identifier (DOI) of the reference.
+     * 
      * @param doi the doi to set
      */
     public void setDoi(String doi) {

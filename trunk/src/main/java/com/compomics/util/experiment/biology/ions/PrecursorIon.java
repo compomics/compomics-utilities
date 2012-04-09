@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
@@ -12,26 +8,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ * A precursor ion.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class PrecursorIon extends Ion {
-    
+
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2630586959372309153L;
-        /**
-         * For now only one type of precursor implemented
-         */
-         public static final int PRECURSOR = 0;
     /**
-     * the neutral losses found on the ion
+     * For now only one type of precursor implemented.
+     */
+    public static final int PRECURSOR = 0;
+    /**
+     * the neutral losses found on the ion.
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param theoreticMass the theoretic mass
      * @param neutralLosses the neutral losses
      */
@@ -45,7 +43,8 @@ public class PrecursorIon extends Ion {
     }
 
     /**
-     * Constructor for a generic ion
+     * Constructor for a generic ion.
+     *
      * @param neutralLosses the neutral losses
      */
     public PrecursorIon(ArrayList<NeutralLoss> neutralLosses) {
@@ -57,21 +56,22 @@ public class PrecursorIon extends Ion {
     }
 
     /**
-     * Constructor for a generic ion without neutral losses
+     * Constructor for a generic ion without neutral losses.
      */
     public PrecursorIon() {
         type = IonType.PRECURSOR_ION;
     }
-    
+
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param peptide the theoretic peptide
      */
     public PrecursorIon(Peptide peptide) {
         type = IonType.PRECURSOR_ION;
         this.theoreticMass = peptide.getMass();
     }
-    
+
     @Override
     public String getName() {
         return getSubTypeAsString() + getNeutralLossesAsString();
@@ -101,7 +101,8 @@ public class PrecursorIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes
+     * Returns an arraylist of possible subtypes.
+     *
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {

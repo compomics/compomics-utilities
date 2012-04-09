@@ -33,7 +33,7 @@ public class PTMLocationScores {
      * @param nPTM The number of occurrences where this PTM is expected on this
      * peptide
      * @param spectrum The corresponding spectrum
-     * @param expectedFragmentIons The fragment ions to look for
+     * @param iontypes The fragment ions to look for
      * @param neutralLosses The neutral losses to look for
      * @param charges The fragment ions charges to look for
      * @param precursorCharge The precursor charge
@@ -205,7 +205,7 @@ public class PTMLocationScores {
     /**
      * Generates a map containing the spectra filtered on intensity with a basis
      * of 20*mz tolerance indexed by the depth used. (see A-score paper for more
-     * details)
+     * details).
      *
      * @param baseSpectrum the base spectrum
      * @param mzTolerance the m/z tolerance
@@ -275,7 +275,7 @@ public class PTMLocationScores {
      * @param ptm The PTM to score
      * @param nPTM The amount of times the PTM is expected
      * @param spectrum The corresponding spectrum
-     * @param expectedFragmentIons The fragment ions to look for
+     * @param iontypes The fragment ions to look for
      * @param neutralLosses The neutral losses to look for
      * @param charges The fragment ions charges to look for
      * @param precursorCharge The precursor charge
@@ -329,15 +329,15 @@ public class PTMLocationScores {
     /**
      * Get the PTM table content.
      *
-     * @param peptide
-     * @param ptm
-     * @param nPTM
-     * @param spectrum
-     * @param expectedFragmentIons
-     * @param neutralLosses
-     * @param charges
-     * @param precursorCharge
-     * @param mzTolerance
+     * @param peptide The peptide of interest
+     * @param ptm The PTM to score
+     * @param nPTM The amount of times the PTM is expected
+     * @param spectrum The corresponding spectrum
+     * @param iontypes The fragment ions to look for
+     * @param neutralLosses The neutral losses to look for
+     * @param charges The fragment ions charges to look for
+     * @param precursorCharge The precursor charge
+     * @param mzTolerance The m/z tolerance to use
      * @param intensityLimit
      * @return the PtmtableContent object
      */

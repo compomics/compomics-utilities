@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.experiment.biology.Peptide;
@@ -23,36 +19,37 @@ import java.util.HashSet;
 import javax.swing.JProgressBar;
 
 /**
- * This IdfileReader reads identifications out of an Andromeda result file
+ * This IdfileReader reads identifications out of an Andromeda result file.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AndromedaIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * A map of all spectrum titles and the associated index in the random access file
+     * A map of all spectrum titles and the associated index in the random
+     * access file.
      */
     private HashMap<String, Long> index;
     /**
-     * Andromeda result file in random access
+     * Andromeda result file in random access.
      */
     private RandomAccessFile randomAccessFile;
     /**
-     * The name of the Andromeda result file
+     * The name of the Andromeda result file.
      */
     private String fileName;
 
     /**
      * Constructor for an Andromeda result file reader.
-     * 
+     *
      * @param resFile
      * @param jProgressBar
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     public AndromedaIdfileReader(File resFile, JProgressBar jProgressBar) throws FileNotFoundException, IOException {
         randomAccessFile = new RandomAccessFile(resFile, "r");
-        
+
         fileName = resFile.getName();
 
         if (jProgressBar != null) {
@@ -101,39 +98,39 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
         return result;
     }
-    
+
     /**
-     * Returns a Peptide Assumption from an Andromeda line
-     * 
+     * Returns a Peptide Assumption from an Andromeda line.
+     *
      * @param line the line to parse
      * @param rank the rank of the assumption
-     * @return the corresponding assumption 
+     * @return the corresponding assumption
      */
     private PeptideAssumption getAssumptionFromLine(String line, int rank) {
         String[] temp = line.trim().split("\t");
-        
+
         String[] temp1 = temp[5].split(";");
         ArrayList<String> proteins = new ArrayList<String>();
         for (String accession : temp1) {
             proteins.add(accession.substring(1, accession.length()));
         }
-        
+
         temp1 = temp[4].split(",");
         ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
         String mod;
-        for (int aa = 0 ; aa < temp1.length ; aa++) {
+        for (int aa = 0; aa < temp1.length; aa++) {
             mod = temp1[aa];
             if (!mod.equals("A")) {
                 modMatches.add(new ModificationMatch(mod, true, aa));
             }
         }
-        
+
         Peptide peptide = new Peptide(temp[0], proteins, modMatches);
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         double score = new Double(temp[1]);
-        
+
         return new PeptideAssumption(peptide, rank, Advocate.ANDROMEDA, charge, -score, fileName);
-        
+
     }
 
     @Override

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.AminoAcid;
@@ -12,106 +8,107 @@ import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 
 /**
- *
- * @author marc
+ * Represents an immonium ion.
+ *  
+ * @author Marc Vaudel
  */
 public class ImmoniumIon extends Ion {
-    
+
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -3403620196563864756L;
     /**
-     * subtype int for an alanine immonium ion
+     * Subtype int for an alanine immonium ion.
      */
     public static final int ALANINE = 0;
     /**
-     * subtype int for an arginine immonium ion
+     * Subtype int for an arginine immonium ion.
      */
     public static final int ARGININE = 1;
     /**
-     * subtype int for an asparagine immonium ion
+     * Subtype int for an asparagine immonium ion.
      */
     public static final int ASPARAGINE = 2;
     /**
-     * subtype int for an aspartic acid immonium ion
+     * Subtype int for an aspartic acid immonium ion.
      */
     public static final int ASPARTIC_ACID = 3;
     /**
-     * subtype int for a cysteine immonium ion
+     * Subtype int for a cysteine immonium ion.
      */
     public static final int CYSTEINE = 4;
     /**
-     * subtype int for a glutamic acid immonium ion
+     * Subtype int for a glutamic acid immonium ion.
      */
     public static final int GLUTAMIC_ACID = 5;
     /**
-     * subtype int for a glutamine immonium ion
+     * Subtype int for a glutamine immonium ion.
      */
     public static final int GLUTAMINE = 6;
     /**
-     * subtype int for a glycine immonium ion
+     * Subtype int for a glycine immonium ion.
      */
     public static final int GLYCINE = 7;
     /**
-     * subtype int for an histidine immonium ion
+     * Subtype int for an histidine immonium ion.
      */
     public static final int HISTIDINE = 8;
     /**
-     * subtype int for an isoleucine immonium ion
+     * Subtype int for an isoleucine immonium ion.
      */
     public static final int ISOLEUCINE = 9;
     /**
-     * subtype int for a leucine immonium ion
+     * Subtype int for a leucine immonium ion.
      */
     public static final int LEUCINE = 10;
     /**
-     * subtype int for a lysine immonium ion
+     * Subtype int for a lysine immonium ion.
      */
     public static final int LYSINE = 11;
     /**
-     * subtype int for a methionine immonium ion
+     * Subtype int for a methionine immonium ion.
      */
     public static final int METHIONINE = 12;
     /**
-     * subtype int for a phenylananine immonium ion
+     * Subtype int for a phenylananine immonium ion.
      */
     public static final int PHENYLALANINE = 13;
     /**
-     * subtype int for a proline immonium ion
+     * Subtype int for a proline immonium ion.
      */
     public static final int PROLINE = 14;
     /**
-     * subtype int for a selenocysteine immonium ion
+     * Subtype int for a selenocysteine immonium ion.
      */
     public static final int SELENOCYSTEINE = 15;
     /**
-     * subtype int for a serine immonium ion
+     * Subtype int for a serine immonium ion.
      */
     public static final int SERINE = 16;
     /**
-     * subtype int for a threonine immonium ion
+     * Subtype int for a threonine immonium ion.
      */
     public static final int THREONINE = 17;
     /**
-     * subtype int for a tryptophan immonium ion
+     * Subtype int for a tryptophan immonium ion.
      */
     public static final int TRYPTOPHAN = 18;
     /**
-     * subtype int for a tyrosine immonium ion
+     * Subtype int for a tyrosine immonium ion.
      */
     public static final int TYROSINE = 19;
     /**
-     * subtype int for a valine immonium ion
+     * Subtype int for a valine immonium ion.
      */
     public static final int VALINE = 20;
     /**
-     * Subtype of immonium ion
+     * Subtype of immonium ion.
      */
     private int subType;
 
     /**
-     * Constructor for an immonium ion
+     * Constructor for an immonium ion.
      *
      * @param residue the type of immonium ion as char
      */
@@ -123,9 +120,10 @@ public class ImmoniumIon extends Ion {
     }
 
     /**
-     * Constructor for an immonium ion
+     * Constructor for an immonium ion.
      *
-     * @param subType the type of immonium ion as integer as indexed by the static fields
+     * @param subType the type of immonium ion as integer as indexed by the
+     * static fields
      */
     public ImmoniumIon(int subType) {
         type = IonType.IMMONIUM_ION;
@@ -136,7 +134,7 @@ public class ImmoniumIon extends Ion {
     }
 
     /**
-     * Returns the amino acid of the immonium ion based on the subtype index
+     * Returns the amino acid of the immonium ion based on the subtype index.
      *
      * @param subtype the subtype index from the static fields
      * @return the one letter code of the amino acid
@@ -305,7 +303,8 @@ public class ImmoniumIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes
+     * Returns an arraylist of possible subtypes.
+     *
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {

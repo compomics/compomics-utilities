@@ -16,19 +16,19 @@ import com.compomics.util.pride.CvTerm;
 public class IonMatch extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 5753142782728884464L;
     /**
-     * The matched peak
+     * The matched peak.
      */
     public Peak peak;
     /**
-     * The matching ion
+     * The matching ion.
      */
     public Ion ion;
     /**
-     * The supposed charge of the ion
+     * The supposed charge of the ion.
      */
     public Charge charge;
 
@@ -76,7 +76,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the error
+     * Returns the error.
      *
      * @param isPpm a boolean indicating whether the error should be retrieved
      * in ppm (true) or in Dalton (false)
@@ -102,7 +102,6 @@ public class IonMatch extends ExperimentObject {
     /**
      * Returns the annotation to use for a given ion and charge as a String.
      *
-     * @param html if true, returns the annotation as HTML with subscripts tags
      * @param ion the given ion
      * @param charge the given charge
      * @return the annotation to use for the given ion match
@@ -206,7 +205,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the pride CV term for the ion match m/z
+     * Returns the pride CV term for the ion match m/z.
      *
      * @return the pride CV term for the ion match m/z
      */
@@ -215,7 +214,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the pride CV term for the ion match intensity
+     * Returns the pride CV term for the ion match intensity.
      *
      * @return the pride CV term for the ion match intensity
      */
@@ -224,7 +223,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the pride CV term for the ion match error
+     * Returns the pride CV term for the ion match error.
      *
      * @return the pride CV term for the ion match error
      */
@@ -233,7 +232,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the pride CV term for the ion match charge
+     * Returns the pride CV term for the ion match charge.
      *
      * @return the pride CV term for the ion match charge
      */

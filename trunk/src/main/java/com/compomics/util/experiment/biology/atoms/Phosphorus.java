@@ -1,20 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology.atoms;
 
 import com.compomics.util.experiment.biology.Atom;
 
 /**
- * A phosphorus atom
+ * A phosphorus atom.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class Phosphorus extends Atom {
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Phosphorus() {
         this.mass = 30.9737615;

@@ -23,18 +23,18 @@ public class IonFactory {
     private static IonFactory instance = null;
     /**
      * Neutral losses which will be looked for for every peptide independently
-     * from the modifications found
+     * from the modifications found.
      */
     private ArrayList<NeutralLoss> defaultNeutralLosses = new ArrayList<NeutralLoss>();
 
     /**
-     * Constructor
+     * Constructor.
      */
     private IonFactory() {
     }
 
     /**
-     * Static method which returns the instance of the factory
+     * Static method which returns the instance of the factory.
      *
      * @return the instance of the factory
      */
@@ -47,9 +47,9 @@ public class IonFactory {
 
     /**
      * Adds a default neutral loss to the default neutral losses if the
-     * corresponding loss was not here already
+     * corresponding loss was not here already.
      *
-     * @param neutralLoss the new neutral loss
+     * @param newNeutralLoss the new neutral loss
      */
     public void addDefaultNeutralLoss(NeutralLoss newNeutralLoss) {
         boolean found = false;
@@ -65,7 +65,7 @@ public class IonFactory {
     }
 
     /**
-     * Returns the default neutral losses
+     * Returns the default neutral losses.
      *
      * @return the default neutral losses
      */
@@ -76,7 +76,7 @@ public class IonFactory {
     /**
      * This method returns the theoretic ions expected from a peptide. /!\ this
      * method will work only if the ptm found in the peptide are in the
-     * PTMFactory
+     * PTMFactory.
      *
      * @param peptide The considered peptide
      * @return the expected fragment ions
@@ -249,7 +249,7 @@ public class IonFactory {
     }
 
     /**
-     * Convenience summing the masses of various neutral losses
+     * Convenience summing the masses of various neutral losses.
      *
      * @param neutralLosses list of neutral losses
      * @return the summ of the masses

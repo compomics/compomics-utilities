@@ -14,28 +14,28 @@ import java.util.HashMap;
 public class NeutralLossesMap implements Serializable {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -4690159937753713106L;
     /**
-     * map indicating for each neutral loss when they should start being
-     * accounted for the forward ions (b ions for instance)
+     * Map indicating for each neutral loss when they should start being
+     * accounted for the forward ions (b ions for instance).
      */
     private HashMap<NeutralLoss, Integer> bBoundaries = new HashMap<NeutralLoss, Integer>();
     /**
-     * map indicating for each neutral loss when they should start being
-     * accounted for the reverse ions (y ions for instance)
+     * Map indicating for each neutral loss when they should start being
+     * accounted for the reverse ions (y ions for instance).
      */
     private HashMap<NeutralLoss, Integer> yBoundaries = new HashMap<NeutralLoss, Integer>();
 
     /**
-     * Constructor
+     * Constructor.
      */
     public NeutralLossesMap() {
     }
 
     /**
-     * Adds a new neutral loss to the map
+     * Adds a new neutral loss to the map.
      *
      * @param neutralLoss the new neutral loss
      * @param bStart the amino acid position where the neutral loss should start
@@ -69,7 +69,7 @@ public class NeutralLossesMap implements Serializable {
     }
 
     /**
-     * Clears the mapping
+     * Clears the mapping.
      */
     public void clearNeutralLosses() {
         bBoundaries.clear();
@@ -77,7 +77,7 @@ public class NeutralLossesMap implements Serializable {
     }
 
     /**
-     * Makes the neutral losses sequence independant
+     * Makes the neutral losses sequence independant.
      */
     public void makeSequenceIndependant() {
         for (NeutralLoss neutralLoss : bBoundaries.keySet()) {
@@ -87,7 +87,7 @@ public class NeutralLossesMap implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating if the mapping is empty
+     * Returns a boolean indicating if the mapping is empty.
      *
      * @return a boolean indicating if the mapping is empty
      */
@@ -96,7 +96,7 @@ public class NeutralLossesMap implements Serializable {
     }
 
     /**
-     * Returns an arraylist of implemented neutral losses
+     * Returns an arraylist of implemented neutral losses.
      *
      * @return an arraylist of implemented neutral losses
      */
@@ -106,7 +106,7 @@ public class NeutralLossesMap implements Serializable {
 
     /**
      * Returns the amino acid where a neutral loss should start being accounted
-     * for when predicting b ions (counting from N-terminus, first aa is 1)
+     * for when predicting b ions (counting from N-terminus, first aa is 1).
      *
      * @param neutralLoss the neutral loss of interest
      * @return the first amino acid where to account for the neutral loss
@@ -117,7 +117,7 @@ public class NeutralLossesMap implements Serializable {
 
     /**
      * Returns the amino acid where a neutral loss should start being accounted
-     * for when predicting b ions (counting from N-terminus, first aa is 1)
+     * for when predicting b ions (counting from N-terminus, first aa is 1).
      *
      * @param neutralLoss the neutral loss of interest
      * @return the first amino acid where to account for the neutral loss
@@ -127,7 +127,8 @@ public class NeutralLossesMap implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether a loss is implemented in the mapping
+     * Returns a boolean indicating whether a loss is implemented in the
+     * mapping.
      *
      * @param neutralLoss the neutral loss of interest
      * @return a boolean indicating whether a loss is implemented in the mapping

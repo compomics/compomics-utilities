@@ -27,41 +27,38 @@ import javax.swing.JProgressBar;
 /**
  * This reader will import identifications from an X!Tandem xml result file.
  * <p/>
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 23, 2010
- * Time: 9:45:54 AM
+ * @author Marc Vaudel
  */
 public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * the instance of the X!Tandem parser
+     * The instance of the X!Tandem parser.
      */
     private XTandemFile xTandemFile = null;
     /**
-     * the modification map
+     * The modification map.
      */
     private ModificationMap modificationMap;
     /**
-     * the protein map
+     * The protein map.
      */
     private ProteinMap proteinMap;
     /**
-     * the peptide map
+     * The peptide map.
      */
     private PeptideMap peptideMap;
 
     /**
-     * Constructor for the reader
+     * Constructor for the reader.
      */
     public XTandemIdfileReader() {
     }
 
     /**
-     * constructor for the reader
+     * Xonstructor for the reader.
      *
      * @param aFile the inspected file
-     * @throws SAXException  
+     * @throws SAXException
      */
     public XTandemIdfileReader(File aFile) throws SAXException {
         if (!aFile.getName().endsWith("mods.xml") || !aFile.getName().endsWith("usermods.xml")) {
@@ -73,7 +70,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     /**
-     * getter for the file name
+     * Getter for the file name.
      *
      * @return the file name
      */
@@ -83,81 +80,84 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) {
-        
-        HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
-        try {
-            Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
-            
-            if (jProgressBar != null) {
-                jProgressBar.setMaximum(xTandemFile.getSpectraNumber());
-            }
-            
-            while (spectraIt.hasNext()) {
-                Spectrum currentSpectrum = spectraIt.next();
-                int nSpectrum = currentSpectrum.getSpectrumNumber();
-                SupportData supportData = xTandemFile.getSupportData(nSpectrum);
-                String spectrumName = fixMgfTitle(supportData.getFragIonSpectrumDescription());
-                ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
-                
-                if (spectrumPeptides.size() > 0) {
-                    
-                    String tempFile = xTandemFile.getInputParameters().getSpectrumPath();
-                    String filename = Util.getFileName(tempFile);
-                    Charge charge = new Charge(Charge.PLUS, currentSpectrum.getPrecursorCharge());
-                    String spectrumKey = com.compomics.util.experiment.massspectrometry.Spectrum.getSpectrumKey(filename, spectrumName);
-                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
 
-                    HashMap<Double, ArrayList<Domain>> hitMap = new HashMap<Double, ArrayList<Domain>>();
-                    
-                    for (Peptide peptide : spectrumPeptides) {
-                        for (Domain domain : peptide.getDomains()) {
-                            if (!hitMap.containsKey(domain.getDomainExpect())) {
-                                hitMap.put(domain.getDomainExpect(), new ArrayList<Domain>());
-                            }
-                            hitMap.get(domain.getDomainExpect()).add(domain);
-                        }
-                    }
-                    
-                    ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
-                    Collections.sort(eValues);
-                    int rank = 1;
-                    
-                    for (Double eValue : eValues) {
-                        for (Domain domain : hitMap.get(eValue)) {
-                            currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain, charge.value, rank));
-                        }
-                        rank += hitMap.get(eValue).size();
-                    }
-                    
-                    foundPeptides.add(currentMatch);
-                }
-                
-                if (jProgressBar != null) {
-                    jProgressBar.setValue(jProgressBar.getValue() + 1);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
+
+        Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
+
+        if (jProgressBar != null) {
+            jProgressBar.setMaximum(xTandemFile.getSpectraNumber());
         }
+
+        while (spectraIt.hasNext()) {
+            Spectrum currentSpectrum = spectraIt.next();
+            int nSpectrum = currentSpectrum.getSpectrumNumber();
+            SupportData supportData = xTandemFile.getSupportData(nSpectrum);
+
+            if (supportData.getFragIonSpectrumDescription() == null) {
+                throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
+            }
+
+            String spectrumName = fixMgfTitle(supportData.getFragIonSpectrumDescription());
+            ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
+
+            if (spectrumPeptides.size() > 0) {
+
+                String tempFile = xTandemFile.getInputParameters().getSpectrumPath();
+                String filename = Util.getFileName(tempFile);
+                Charge charge = new Charge(Charge.PLUS, currentSpectrum.getPrecursorCharge());
+                String spectrumKey = com.compomics.util.experiment.massspectrometry.Spectrum.getSpectrumKey(filename, spectrumName);
+                SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
+
+                HashMap<Double, ArrayList<Domain>> hitMap = new HashMap<Double, ArrayList<Domain>>();
+
+                for (Peptide peptide : spectrumPeptides) {
+                    for (Domain domain : peptide.getDomains()) {
+                        if (!hitMap.containsKey(domain.getDomainExpect())) {
+                            hitMap.put(domain.getDomainExpect(), new ArrayList<Domain>());
+                        }
+                        hitMap.get(domain.getDomainExpect()).add(domain);
+                    }
+                }
+
+                ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
+                Collections.sort(eValues);
+                int rank = 1;
+
+                for (Double eValue : eValues) {
+                    for (Domain domain : hitMap.get(eValue)) {
+                        currentMatch.addHit(Advocate.XTANDEM, getPeptideAssumption(domain, charge.value, rank));
+                    }
+                    rank += hitMap.get(eValue).size();
+                }
+
+                foundPeptides.add(currentMatch);
+            }
+
+            if (jProgressBar != null) {
+                jProgressBar.setValue(jProgressBar.getValue() + 1);
+            }
+        }
+
         return foundPeptides;
     }
 
     /**
      * Returns a utilities peptide assumption from an X!Tandem peptide.
-     * 
+     *
      * @param domain the domain of the X!Tandem peptide
      * @param charge the charge of the precursor of the inspected spectrum
-     * @param rank   the rank of the peptide hit
+     * @param rank the rank of the peptide hit
      * @return the corresponding peptide assumption
      */
     private PeptideAssumption getPeptideAssumption(Domain domain, int charge, int rank) {
-        
+
         ArrayList<String> proteins = new ArrayList<String>();
         String sequence = domain.getDomainSequence();
         String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
-        String accession = "";
-        
+        String accession;
+
         try {
             Header fastaHeader = Header.parseFromFASTA(description);
             accession = fastaHeader.getAccession();
@@ -181,16 +181,16 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
 
         proteins.add(accession);
-        
+
         ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
         ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();
-        
+
         for (Modification currentModification : foundFixedModifications) {
-            
+
             String modificationName = currentModification.getName();
             String[] parsedName = modificationName.split("@");
             String aa = parsedName[1].toUpperCase();
-            
+
             if (aa.equals("[")) {
                 foundModifications.add(new ModificationMatch(modificationName, false, 0));
             } else if (aa.equals("]")) {
@@ -198,41 +198,41 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             } else {
                 String tempSequence = "#" + sequence + "#";
                 String[] sequenceFragments = tempSequence.split(aa);
-                
+
                 if (sequenceFragments.length > 0) {
                     int cpt = 0;
                     for (int f = 0; f < sequenceFragments.length - 1; f++) {
-                        cpt += sequenceFragments[f].length()+1;
+                        cpt += sequenceFragments[f].length() + 1;
                         foundModifications.add(new ModificationMatch(modificationName, false, cpt - 1));
                     }
                 }
             }
         }
-        
+
         ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(domain.getDomainID());
-        
+
         for (Modification currentModification : foundVariableModifications) {
             int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;
             foundModifications.add(new ModificationMatch(currentModification.getName(), true, location));
         }
-        
+
         com.compomics.util.experiment.biology.Peptide peptide = new com.compomics.util.experiment.biology.Peptide(sequence, proteins, foundModifications);
         return new PeptideAssumption(peptide, rank, Advocate.XTANDEM, new Charge(Charge.PLUS, charge), domain.getDomainExpect(), getFileName());
     }
 
     /**
      * Returns the fixed mgf title.
-     * 
+     *
      * @param spectrumTitle
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle) {
 
-        // a special fix for mgf files with titles containing %3b instead if ;
-            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+        // a special fix for mgf files with titles containing %3b instead of ;
+        spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
 
         // a special fix for mgf files with titles containing \\ instead \
-            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+        spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
         return spectrumTitle;
     }

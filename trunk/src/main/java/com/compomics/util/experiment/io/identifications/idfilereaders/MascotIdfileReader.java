@@ -46,7 +46,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     private MascotDatfileInf iMascotDatfile;
 
     /**
-     * Constructor for the MascotIdfilereader. Using the memory option for the 
+     * Constructor for the MascotIdfilereader. Using the memory option for the
      * parser.
      *
      * @param aFile a file to read
@@ -108,96 +108,97 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
 
         String mgfFileName = getMgfFileName();
         HashSet<SpectrumMatch> assignedPeptideHits = new HashSet<SpectrumMatch>();
 
-        try {
-            QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
-            QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
+        QueryToPeptideMapInf lQueryToPeptideMap = iMascotDatfile.getQueryToPeptideMap();
+        QueryToPeptideMapInf lDecoyQueryToPeptideMap = iMascotDatfile.getDecoyQueryToPeptideMap();
 
-            int numberOfQueries = iMascotDatfile.getNumberOfQueries();
-            
-            if (jProgressBar != null) {
-                jProgressBar.setMaximum(numberOfQueries);
+        int numberOfQueries = iMascotDatfile.getNumberOfQueries();
+
+        if (jProgressBar != null) {
+            jProgressBar.setMaximum(numberOfQueries);
+        }
+
+        for (int i = 0; i < numberOfQueries; i++) {
+
+            Vector<PeptideHit> mascotDecoyPeptideHits = null;
+            try {
+                mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
+            } catch (Exception e) {
+                // Looks like there is no decoy section
             }
 
-            for (int i = 0; i < numberOfQueries; i++) {
+            Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
 
-                Vector<PeptideHit> mascotDecoyPeptideHits = null;
-                try {
-                    mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
-                } catch (Exception e) {
-                    // Looks like there is no decoy section
+            // Get spectrum information
+            PeptideHit testPeptide = null;
+
+            if (mascotPeptideHits != null) {
+                testPeptide = mascotPeptideHits.get(0);
+            } else if (mascotDecoyPeptideHits != null) {
+                testPeptide = mascotDecoyPeptideHits.get(0);
+            }
+
+            if (testPeptide != null) {
+                Query tempQuery = iMascotDatfile.getQuery(i + 1);
+
+                if (tempQuery.getTitle() == null) {
+                    throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
                 }
 
-                Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
+                String spectrumId = fixMgfTitle(tempQuery.getTitle());
+                String measuredCharge = tempQuery.getChargeString();
+                String sign = String.valueOf(measuredCharge.charAt(1));
+                Charge charge;
 
-                // Get spectrum information
-                PeptideHit testPeptide = null;
+                if (sign.compareTo("+") == 0) {
+                    charge = new Charge(Charge.PLUS, Integer.valueOf(measuredCharge.substring(0, 1)));
+                } else {
+                    charge = new Charge(Charge.MINUS, Integer.valueOf(measuredCharge.substring(0, 1)));
+                }
 
+                SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFileName, spectrumId));
+                HashMap<Double, ArrayList<PeptideHit>> hitMap = new HashMap<Double, ArrayList<PeptideHit>>();
+
+                // Get all hits
                 if (mascotPeptideHits != null) {
-                    testPeptide = mascotPeptideHits.get(0);
-                } else if (mascotDecoyPeptideHits != null) {
-                    testPeptide = mascotDecoyPeptideHits.get(0);
+                    for (PeptideHit peptideHit : mascotPeptideHits) {
+                        if (!hitMap.containsKey(peptideHit.getExpectancy())) {
+                            hitMap.put(peptideHit.getExpectancy(), new ArrayList<PeptideHit>());
+                        }
+                        hitMap.get(peptideHit.getExpectancy()).add(peptideHit);
+                    }
                 }
 
-                if (testPeptide != null) {
-                    Query tempQuery = iMascotDatfile.getQuery(i + 1);
-                    String spectrumId = fixMgfTitle(tempQuery.getTitle());
-                    String measuredCharge = tempQuery.getChargeString();
-                    String sign = String.valueOf(measuredCharge.charAt(1));
-                    Charge charge;
-
-                    if (sign.compareTo("+") == 0) {
-                        charge = new Charge(Charge.PLUS, Integer.valueOf(measuredCharge.substring(0, 1)));
-                    } else {
-                        charge = new Charge(Charge.MINUS, Integer.valueOf(measuredCharge.substring(0, 1)));
-                    }
-
-                    SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFileName, spectrumId));
-                    HashMap<Double, ArrayList<PeptideHit>> hitMap = new HashMap<Double, ArrayList<PeptideHit>>();
-
-                    // Get all hits
-                    if (mascotPeptideHits != null) {
-                        for (PeptideHit peptideHit : mascotPeptideHits) {
-                            if (!hitMap.containsKey(peptideHit.getExpectancy())) {
-                                hitMap.put(peptideHit.getExpectancy(), new ArrayList<PeptideHit>());
-                            }
-                            hitMap.get(peptideHit.getExpectancy()).add(peptideHit);
+                if (mascotDecoyPeptideHits != null) {
+                    for (PeptideHit peptideHit : mascotDecoyPeptideHits) {
+                        if (!hitMap.containsKey(peptideHit.getExpectancy())) {
+                            hitMap.put(peptideHit.getExpectancy(), new ArrayList<PeptideHit>());
                         }
+                        hitMap.get(peptideHit.getExpectancy()).add(peptideHit);
                     }
-
-                    if (mascotDecoyPeptideHits != null) {
-                        for (PeptideHit peptideHit : mascotDecoyPeptideHits) {
-                            if (!hitMap.containsKey(peptideHit.getExpectancy())) {
-                                hitMap.put(peptideHit.getExpectancy(), new ArrayList<PeptideHit>());
-                            }
-                            hitMap.get(peptideHit.getExpectancy()).add(peptideHit);
-                        }
-                    }
-
-                    ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
-                    Collections.sort(eValues);
-                    int rank = 1;
-
-                    for (Double eValue : eValues) {
-                        for (PeptideHit peptideHit : hitMap.get(eValue)) {
-                            currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, charge, rank));
-                        }
-                        rank += hitMap.get(eValue).size();
-                    }
-
-                    assignedPeptideHits.add(currentMatch);
                 }
-                
-                if (jProgressBar != null) {
-                    jProgressBar.setValue(i);
+
+                ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
+                Collections.sort(eValues);
+                int rank = 1;
+
+                for (Double eValue : eValues) {
+                    for (PeptideHit peptideHit : hitMap.get(eValue)) {
+                        currentMatch.addHit(Advocate.MASCOT, getPeptideAssumption(peptideHit, charge, rank));
+                    }
+                    rank += hitMap.get(eValue).size();
                 }
+
+                assignedPeptideHits.add(currentMatch);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            if (jProgressBar != null) {
+                jProgressBar.setValue(i);
+            }
         }
 
         return assignedPeptideHits;
@@ -271,17 +272,17 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
     /**
      * Returns the fixed mgf title.
-     * 
+     *
      * @param spectrumTitle
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle) {
 
         // a special fix for mgf files with titles containing %3b instead if ;
-            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+        spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
 
         // a special fix for mgf files with titles containing \\ instead \
-            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+        spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
         return spectrumTitle;
     }

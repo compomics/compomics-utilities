@@ -19,7 +19,7 @@ import java.util.HashSet;
 import javax.swing.JProgressBar;
 
 /**
- * This IdfileReader reads identifications out of an Andromeda result file.
+ * This IdfileReader reads identifications from an Andromeda result file.
  *
  * @author Marc Vaudel
  */
@@ -78,16 +78,21 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
         HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
 
-        String line;
-        SpectrumMatch currentMatch;
-        int cpt;
-
         for (String title : index.keySet()) {
-            currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
-            cpt = 1;
+
+            // @TODO: need to implement a test like this to make sure that every spectrum has a title
+//            if (tempQuery.getTitle() == null) {
+//                throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
+//            }
+
+            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
+
+            int cpt = 1;
+            String line;
+
             while ((line = randomAccessFile.readLine()) != null
                     && !line.startsWith(">")) {
                 currentMatch.addHit(Advocate.ANDROMEDA, getAssumptionFromLine(line, cpt));
@@ -107,19 +112,20 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @return the corresponding assumption
      */
     private PeptideAssumption getAssumptionFromLine(String line, int rank) {
+        
         String[] temp = line.trim().split("\t");
-
         String[] temp1 = temp[5].split(";");
         ArrayList<String> proteins = new ArrayList<String>();
+        
         for (String accession : temp1) {
             proteins.add(accession.substring(1, accession.length()));
         }
 
         temp1 = temp[4].split(",");
         ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
-        String mod;
+
         for (int aa = 0; aa < temp1.length; aa++) {
-            mod = temp1[aa];
+            String mod = temp1[aa];
             if (!mod.equals("A")) {
                 modMatches.add(new ModificationMatch(mod, true, aa));
             }
@@ -130,7 +136,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         double score = new Double(temp[1]);
 
         return new PeptideAssumption(peptide, rank, Advocate.ANDROMEDA, charge, -score, fileName);
-
     }
 
     @Override

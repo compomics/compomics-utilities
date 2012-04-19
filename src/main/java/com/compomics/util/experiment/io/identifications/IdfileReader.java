@@ -9,26 +9,30 @@ import javax.swing.JProgressBar;
 /**
  * This interface will retrieve spectrum matches from any identification file.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 23, 2010
- * Time: 9:44:07 AM
+ * @author Marc Vaudel
  */
 public interface IdfileReader {
 
     /**
-     * This methods retrieves all the identifications from an identification 
-     * file as a list of spectrum matches
-     * It is very important to close the file reader after creation.
+     * This methods retrieves all the identifications from an identification
+     * file as a list of spectrum matches It is very important to close the file
+     * reader after creation.
      *
      * @param jProgressBar a progress bar displaying the progress (can be null)
      * @return a list of spectrum matches
-     * @throws IOException exception thrown whenever an error occurred while reading the file
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while
+     * parsing the file 
+     * @throws Exception exception thrown whenever an error occurred while
+     * working with the file
      */
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException;
-    
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception;
+
     /**
-     * Method closing the file reader
+     * Closes the file reader.
+     *
+     * @throws IOException
      */
     public void close() throws IOException;
 }

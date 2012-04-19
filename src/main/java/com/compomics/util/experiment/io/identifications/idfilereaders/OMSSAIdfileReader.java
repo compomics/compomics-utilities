@@ -30,44 +30,41 @@ import javax.swing.JProgressBar;
 /**
  * This reader will import identifications from an OMSSA omx file.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 23, 2010
- * Time: 9:45:45 AM
+ * Created by IntelliJ IDEA. User: Marc Date: Jun 23, 2010 Time: 9:45:45 AM
  */
 public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * the inspected OMSSA omx file
+     * The inspected OMSSA omx file.
      */
     private File identificationFile;
     /**
-     * the modification file mods.xml
+     * The modification file mods.xml.
      */
     private File modsFile;
     /**
-     * the modification file usermods.xml
+     * The modification file usermods.xml.
      */
     private File userModsFile;
     /**
-     * the PTM factory
+     * The PTM factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
     /**
-     * The instance of the inspected omx file
+     * The instance of the inspected omx file.
      */
     private OmssaOmxFile omxFile;
 
     /**
-     * constructor for the reader
+     * Constructor for the reader.
      */
     public OMSSAIdfileReader() {
     }
 
     /**
-     * Constructor for the reader
+     * Constructor for the reader.
      *
-     * @param idFile    the inspected file
+     * @param idFile the inspected file
      */
     public OMSSAIdfileReader(File idFile) {
         this.identificationFile = idFile;
@@ -75,7 +72,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     /**
-     * get the file name
+     * Get the file name.
      *
      * @return the file name
      */
@@ -92,83 +89,86 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
 
         HashSet<SpectrumMatch> assignedSpectra = new HashSet<SpectrumMatch>();
-        HashMap<String,LinkedList<MSPepHit>> peptideToProteinMap = omxFile.getPeptideToProteinMap();
+        HashMap<String, LinkedList<MSPepHit>> peptideToProteinMap = omxFile.getPeptideToProteinMap();
 
-        try {
-            List<MSResponse> msSearchResponse = omxFile.getParserResult().MSSearch_response.MSResponse;
-            List<MSRequest> msRequest = omxFile.getParserResult().MSSearch_request.MSRequest;
+        List<MSResponse> msSearchResponse = omxFile.getParserResult().MSSearch_response.MSResponse;
+        List<MSRequest> msRequest = omxFile.getParserResult().MSSearch_request.MSRequest;
 
-            int searchResponseSize = msSearchResponse.size();
-            
-            if (jProgressBar != null) {
-                jProgressBar.setMaximum(searchResponseSize);
-            }
+        int searchResponseSize = msSearchResponse.size();
 
-            for (int i = 0; i < searchResponseSize; i++) {
-
-                Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
-                String tempFile = msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile;
-
-                for (MSHitSet msHitSet : msHitSetMap.values()) {
-
-                    List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;
-
-                    if (hitSet.size() > 0) {
-
-                        HashMap<Double, ArrayList<MSHits>> hitMap = new HashMap<Double, ArrayList<MSHits>>();
-
-                        for (MSHits msHits : hitSet) {
-                            if (!hitMap.containsKey(msHits.MSHits_evalue)) {
-                                hitMap.put(msHits.MSHits_evalue, new ArrayList<MSHits>());
-                            }
-                            hitMap.get(msHits.MSHits_evalue).add(msHits);
-                        }
-
-                        ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
-                        Collections.sort(eValues);
-                        String name = fixMgfTitle(msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0));
-                        SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name));
-                        int rank = 1;
-
-                        for (double eValue : eValues) {
-                            for (MSHits msHits : hitMap.get(eValue)) {
-                                currentMatch.addHit(Advocate.OMSSA, getPeptideAssumption(msHits, i, rank, peptideToProteinMap, msRequest));
-                            }
-                            rank += hitMap.get(eValue).size();
-                        }
-
-                        assignedSpectra.add(currentMatch);
-                    }
-                }
-                
-                if (jProgressBar != null) {
-                    jProgressBar.setValue(i);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (jProgressBar != null) {
+            jProgressBar.setMaximum(searchResponseSize);
         }
+
+        for (int i = 0; i < searchResponseSize; i++) {
+
+            Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
+            String tempFile = msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile;
+
+            for (MSHitSet msHitSet : msHitSetMap.values()) {
+
+                List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;
+
+                if (hitSet.size() > 0) {
+
+                    HashMap<Double, ArrayList<MSHits>> hitMap = new HashMap<Double, ArrayList<MSHits>>();
+
+                    for (MSHits msHits : hitSet) {
+                        if (!hitMap.containsKey(msHits.MSHits_evalue)) {
+                            hitMap.put(msHits.MSHits_evalue, new ArrayList<MSHits>());
+                        }
+                        hitMap.get(msHits.MSHits_evalue).add(msHits);
+                    }
+
+                    ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
+                    Collections.sort(eValues);
+
+                    if (msHitSet.MSHitSet_ids.MSHitSet_ids_E.isEmpty()) {
+                        throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
+                    }
+
+                    String name = fixMgfTitle(msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0));
+                    SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name));
+                    int rank = 1;
+
+                    for (double eValue : eValues) {
+                        for (MSHits msHits : hitMap.get(eValue)) {
+                            currentMatch.addHit(Advocate.OMSSA, getPeptideAssumption(msHits, i, rank, peptideToProteinMap, msRequest));
+                        }
+                        rank += hitMap.get(eValue).size();
+                    }
+
+                    assignedSpectra.add(currentMatch);
+                }
+            }
+
+            if (jProgressBar != null) {
+                jProgressBar.setValue(i);
+            }
+        }
+
         return assignedSpectra;
     }
 
     /**
-     * Returns a peptide assumption based on the OMSSA MSHits
-     * @param currentMsHit  the MSHits of interest
+     * Returns a peptide assumption based on the OMSSA MSHits.
+     *
+     * @param currentMsHit the MSHits of interest
      * @param responseIndex the response index in the msrequest
-     * @param rank          the rank of the assumption in the spectrum match
+     * @param rank the rank of the assumption in the spectrum match
      * @return the corresponding peptide assumption
      */
-    private PeptideAssumption getPeptideAssumption(MSHits currentMsHit, int responseIndex, int rank, 
-            HashMap<String,LinkedList<MSPepHit>> peptideToProteinMap, List<MSRequest> msRequest) {
+    private PeptideAssumption getPeptideAssumption(MSHits currentMsHit, int responseIndex, int rank,
+            HashMap<String, LinkedList<MSPepHit>> peptideToProteinMap, List<MSRequest> msRequest) {
 
         Charge charge = new Charge(Charge.PLUS, currentMsHit.MSHits_charge);
         ArrayList<String> proteins = new ArrayList<String>();
-        
+
         for (MSPepHit msPepHit : (List<MSPepHit>) peptideToProteinMap.get(currentMsHit.MSHits_pepstring)) { // There might be redundancies in the map.
-            
+
             Boolean taken = false;
             String accession = getProteinAccession(msPepHit.MSPepHit_defline);
 
@@ -204,7 +204,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
         String tempSequence = currentMsHit.MSHits_pepstring;
         int tempSequenceLength = tempSequence.length();
-        
+
         for (int msMod : fixedMods) {
 
             PTM currentPTM = ptmFactory.getPTM(msMod);
@@ -212,7 +212,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             String currentPtmName = currentPTM.getName();
 
             for (String location : residuesArray) {
-                
+
                 if (location.compareTo("[") == 0) {
                     modificationsFound.add(new ModificationMatch(currentPtmName, false, 1));
                 } else if (location.compareTo("]") == 0) {
@@ -220,7 +220,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                 } else {
                     tempSequence = "#" + tempSequence + "#";
                     String[] sequenceFragments = tempSequence.split(location);
-                    
+
                     if (sequenceFragments.length > 0) {
                         int cpt = 0;
                         for (int f = 0; f < sequenceFragments.length - 1; f++) {
@@ -237,9 +237,9 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     /**
-     * parses omssa description to have the accession
+     * Parses omssa description to have the accession.
      *
-     * @param description   the protein description
+     * @param description the protein description
      * @return the protein accession
      */
     private String getProteinAccession(String description) {
@@ -257,17 +257,17 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
     /**
      * Returns the fixed mgf title.
-     * 
+     *
      * @param spectrumTitle
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle) {
 
         // a special fix for mgf files with titles containing %3b instead if ;
-            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+        spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
 
         // a special fix for mgf files with titles containing \\ instead \
-            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+        spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
         return spectrumTitle;
     }

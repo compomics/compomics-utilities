@@ -1,5 +1,6 @@
 package com.compomics.util.gui.dialogs;
 
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
 /**
@@ -15,9 +16,17 @@ public class ProgressDialogX extends javax.swing.JDialog {
     private ProgressDialogParent progressDialogFrame;
     /**
      * If set to true, trying to close the progess bar will be ignored. Use this
-     * option if the process being monitored can not be stopped.
+     * option if the process being monitored can not be stopped. <br> Note:
+     * replaced by unstoppable.
      */
     private boolean doNothingOnClose = false;
+    /**
+     * Set this to true of the process the progress bar is used for is not
+     * possible to stop, or not possble to stop nicely. If the user still tries
+     * to close the progress bar the a warning message is first shown were the
+     * user has to confirm that he/she still wants to close the progress bar.
+     */
+    private boolean unstoppable = false;
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
@@ -133,9 +142,23 @@ public class ProgressDialogX extends javax.swing.JDialog {
     /**
      * This method makes it impossible to close the dialog. Used when the method
      * monitored by the progres bar can not be stopped.
+     *
+     * @deprecated replace by setUnstoppable
      */
     public void doNothingOnClose() {
         doNothingOnClose = true;
+    }
+
+    /**
+     * Set this to true of the process the progress bar is used for is not
+     * possible to stop, or not possble to stop nicely. If the user still tries
+     * to close the progress bar the a warning message is first shown were the
+     * user has to confirm that he/she still wants to close the progress bar.
+     *
+     * @param unstoppable
+     */
+    public void setUnstoppable(boolean unstoppable) {
+        this.unstoppable = unstoppable;
     }
 
     /**
@@ -186,10 +209,23 @@ public class ProgressDialogX extends javax.swing.JDialog {
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if (!doNothingOnClose) {
+        if (!doNothingOnClose && !unstoppable) {
             progressDialogFrame.cancelProgress();
             this.setVisible(true);
             this.dispose();
+        }
+
+        if (unstoppable) {
+            int selection = JOptionPane.showConfirmDialog(this,
+                    "Cancelling this process is not directly supported.\n"
+                    + "Doing so may result in instability or errors.\n\n"
+                    + "Do you still want to cancel the process?", "Cancel Process?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (selection == JOptionPane.YES_OPTION) {
+                progressDialogFrame.cancelProgress();
+                this.setVisible(true);
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_formWindowClosing
     // Variables declaration - do not modify//GEN-BEGIN:variables

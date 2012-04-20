@@ -17,13 +17,12 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.regex.Pattern;
 import javax.swing.JProgressBar;
 
 /**
- * This class will read an mgf file.
- * 
+ * This class will read an MGF file.
+ *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
@@ -33,23 +32,42 @@ public class MgfReader {
      * The pattern used to pick up double values.
      */
     private static Pattern doublePattern = Pattern.compile("\\D");
+    /**
+     * Set this to true to cancel the current proces.
+     */
+    private static boolean cancelProcess = false;
 
     /**
      * General constructor for an mgf reader.
      */
     public MgfReader() {
+        cancelProcess = false;
     }
 
     /**
-     * Reads an mgf file and retrieves a list of spectra.
+     * If set to true the current process is canceled.
      *
-     * @param aFile         the mgf file
-     * @return              list of MSnSpectra imported from the file
-     * @throws FileNotFoundException    Exeption thrown if a problem is encountered reading the file
-     * @throws IOException    Exception thrown if a problem is encountered reading the file
-     * @throws IllegalArgumentException thrown when a parameter in the file cannot be parsed correctly 
+     * @param aCancelProcess set to true to cancel the current process
+     */
+    public void cancelProcess(boolean aCancelProcess) {
+        cancelProcess = aCancelProcess;
+    }
+
+    /**
+     * Reads an MGF file and retrieves a list of spectra.
+     *
+     * @param aFile the mgf file
+     * @return list of MSnSpectra imported from the file
+     * @throws FileNotFoundException Exeption thrown if a problem is encountered
+     * reading the file
+     * @throws IOException Exception thrown if a problem is encountered reading
+     * the file
+     * @throws IllegalArgumentException thrown when a parameter in the file
+     * cannot be parsed correctly
      */
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
+
+        cancelProcess = false;
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
@@ -57,9 +75,9 @@ public class MgfReader {
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
         BufferedReader br = new BufferedReader(new FileReader(aFile));
-        String line = null;
+        String line;
 
-        while ((line = br.readLine()) != null) {
+        while ((line = br.readLine()) != null && !cancelProcess) {
 
             line = line.trim();
 
@@ -134,26 +152,34 @@ public class MgfReader {
     }
 
     /**
-     * Returns the index of all spectra in the given mgf file
-     * @param mgfFile                   the given mgf file
-     * @return                          the index of all spectra
-     * @throws FileNotFoundException    Exception thrown whenever the file is not found
-     * @throws IOException              Exception thrown whenever an error occurs while reading the file
+     * Returns the index of all spectra in the given mgf file.
+     *
+     * @param mgfFile the given mgf file
+     * @return the index of all spectra
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
      */
     public static MgfIndex getIndexMap(File mgfFile) throws FileNotFoundException, IOException {
         return getIndexMap(mgfFile, null);
     }
 
     /**
-     * Returns the index of all spectra in the given mgf file
-     * @param mgfFile                   the given mgf file
-     * @param progressBar               a progress bar showing the progress
-     * @return                          the index of all spectra
-     * @throws FileNotFoundException    Exception thrown whenever the file is not found
-     * @throws IOException              Exception thrown whenever an error occurs while reading the file
+     * Returns the index of all spectra in the given MGF file.
+     *
+     * @param mgfFile the given MGF file
+     * @param progressBar a progress bar showing the progress
+     * @return the index of all spectra
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
      */
     public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
 
+        cancelProcess = false;
+        
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
@@ -174,7 +200,7 @@ public class MgfReader {
 
         String line;
 
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = randomAccessFile.readLine()) != null && !cancelProcess) {
 
             line = line.trim();
 
@@ -237,17 +263,21 @@ public class MgfReader {
     }
 
     /**
-     * Splits an mgf file into smaller ones and returns the indexes of the generated files.
-     * 
-     * @param mgfFile                   the mgf file to split
-     * @param nSpectra                  the number of spectra allowed in the smaller files
-     * @param progressBar               the progress bar showing the progress
-     * @return                          a list of indexes of the generated files
-     * @throws FileNotFoundException    exception thrown whenever a file was not found
-     * @throws IOException              exception thrown whenever a problem occurred while reading/writing a file
+     * Splits an mgf file into smaller ones and returns the indexes of the
+     * generated files.
+     *
+     * @param mgfFile the mgf file to split
+     * @param nSpectra the number of spectra allowed in the smaller files
+     * @param progressBar the progress bar showing the progress
+     * @return a list of indexes of the generated files
+     * @throws FileNotFoundException exception thrown whenever a file was not
+     * found
+     * @throws IOException exception thrown whenever a problem occurred while
+     * reading/writing a file
      */
-    public static ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, JProgressBar progressBar) throws FileNotFoundException, IOException {
+    public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, JProgressBar progressBar) throws FileNotFoundException, IOException {
 
+        cancelProcess = false;
         String fileName = mgfFile.getName();
 
         if (fileName.endsWith(".mgf")) {
@@ -282,7 +312,7 @@ public class MgfReader {
             long sizeOfReadAccessFile = readAccessFile.length();
             long progressUnit = sizeOfReadAccessFile / 100;
 
-            while ((line = readAccessFile.readLine()) != null) {
+            while ((line = readAccessFile.readLine()) != null && !cancelProcess) {
 
                 line = line.trim();
 
@@ -375,13 +405,16 @@ public class MgfReader {
 
     /**
      * Returns the next spectrum starting from the given index.
-     * 
-     * @param randomAccessFile  The random access file of the inspected mgf file
-     * @param index             The index where to start looking for the spectrum
-     * @param fileName          The name of the mgf file (@TODO get this from the random access file?)
-     * @return                  The next spectrum encountered
-     * @throws IOException      Exception thrown whenever an error is encountered while reading the spectrum
-     * @throws IllegalArgumentException Exception thrown whenever the file is not of a compatible format
+     *
+     * @param randomAccessFile The random access file of the inspected mgf file
+     * @param index The index where to start looking for the spectrum
+     * @param fileName The name of the MGF file (@TODO get this from the random
+     * access file?)
+     * @return The next spectrum encountered
+     * @throws IOException Exception thrown whenever an error is encountered
+     * while reading the spectrum
+     * @throws IllegalArgumentException Exception thrown whenever the file is
+     * not of a compatible format
      */
     public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
@@ -461,12 +494,14 @@ public class MgfReader {
                 }
             }
         }
+
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
     }
 
     /**
-     * Parses the charge line of an mgf files
-     * @param chargeLine    the charge line
+     * Parses the charge line of an MGF files.
+     *
+     * @param chargeLine the charge line
      * @return the possible charges found
      */
     private static ArrayList<Charge> parseCharges(String chargeLine) {
@@ -475,6 +510,7 @@ public class MgfReader {
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
         String[] chargesAnd = tempLine.split(" and ");
         ArrayList<String> charges = new ArrayList<String>();
+
         for (String charge : chargesAnd) {
             for (String charge2 : charge.split(",")) {
                 charges.add(charge2.trim());
@@ -506,20 +542,23 @@ public class MgfReader {
     }
 
     /**
-     * Returns the next precursor starting from the given index
-     * @param randomAccessFile  The random access file of the inspected mgf file
-     * @param index             The index where to start looking for the spectrum
-     * @param fileName          The name of the mgf file (@TODO get this from the random access file?)
-     * @return                  The next spectrum encountered
-     * @throws IOException      Exception thrown whenever an error is encountered while reading the spectrum
-     * @throws IllegalArgumentException        Exception thrown whenever the file is not of a compatible format
+     * Returns the next precursor starting from the given index.
+     *
+     * @param randomAccessFile The random access file of the inspected mgf file
+     * @param index The index where to start looking for the spectrum
+     * @param fileName The name of the mgf file (@TODO get this from the random
+     * access file?)
+     * @return The next spectrum encountered
+     * @throws IOException Exception thrown whenever an error is encountered
+     * while reading the spectrum
+     * @throws IllegalArgumentException Exception thrown whenever the file is
+     * not of a compatible format
      */
     public static Precursor getPrecursor(RandomAccessFile randomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 
         randomAccessFile.seek(index);
         String line, title = null;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
-
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = randomAccessFile.readLine()) != null) {
@@ -566,54 +605,70 @@ public class MgfReader {
     }
 
     /**
-     * Writes an apl file from an mgf file
-     * @param mgfFile                   the mgf file
-     * @param aplFile                   the target apl file
-     * @param fragmentation             the fragmentation method used
-     * @throws FileNotFoundException    exception thrown whenever a file was not found
-     * @throws IOException              exception thrown whenever an error occurred while reading/writing a file
-     * @throws IllegalArgumentException exception thrown whenever the mgf file is truncated in the middle of a spectrum
+     * Writes an apl file from an MGF file.
+     *
+     * @param mgfFile the mgf file
+     * @param aplFile the target apl file
+     * @param fragmentation the fragmentation method used
+     * @throws FileNotFoundException exception thrown whenever a file was not
+     * found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading/writing a file
+     * @throws IllegalArgumentException exception thrown whenever the mgf file
+     * is truncated in the middle of a spectrum
      */
     public static void writeAplFile(File mgfFile, File aplFile, String fragmentation) throws FileNotFoundException, IOException, IllegalArgumentException {
+
         if (fragmentation == null) {
             fragmentation = "Unknown";
         }
-        Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
 
+        Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
         MgfIndex mgfIndex = getIndexMap(mgfFile);
         HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<Double, ArrayList<String>>();
-        Precursor precursor;
         RandomAccessFile mgfRFile = new RandomAccessFile(mgfFile, "r");
+
         for (String title : mgfIndex.getSpectrumTitles()) {
-            precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
+            Precursor precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
             if (!spectrumTitleMap.containsKey(precursor.getMz())) {
                 spectrumTitleMap.put(precursor.getMz(), new ArrayList<String>());
             }
             spectrumTitleMap.get(precursor.getMz()).add(title);
         }
+
         ArrayList<Double> masses = new ArrayList<Double>(spectrumTitleMap.keySet());
         Collections.sort(masses);
-        MSnSpectrum spectrum;
-        ArrayList<Double> fragmentMasses;
-        HashMap<Double, Peak> peakMap;
-        for (double mz : masses) {
-            for (String title : spectrumTitleMap.get(mz)) {
-                spectrum = getSpectrum(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
 
+        for (double mz : masses) {
+
+            if (cancelProcess) {
+                break;
+            }
+
+            for (String title : spectrumTitleMap.get(mz)) {
+
+                if (cancelProcess) {
+                    break;
+                }
+
+                MSnSpectrum spectrum = getSpectrum(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
                 aplWriter.write("peaklist start\n");
                 aplWriter.write("mz=" + mz + "\n");
                 aplWriter.write("fragmentation=" + fragmentation + "\n");
                 aplWriter.write("charge=" + spectrum.getPrecursor().getPossibleCharges().get(0).value + "\n"); //@TODO what if many/no charge is present?
                 aplWriter.write("header=" + spectrum.getSpectrumTitle() + "\n");
-                peakMap = spectrum.getPeakMap();
-                fragmentMasses = new ArrayList<Double>(peakMap.keySet());
+                HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
+                ArrayList<Double> fragmentMasses = new ArrayList<Double>(peakMap.keySet());
                 Collections.sort(fragmentMasses);
+
                 for (double fragmentMass : fragmentMasses) {
                     aplWriter.write(fragmentMass + "\t" + peakMap.get(fragmentMass).intensity + "\n");
                 }
+
                 aplWriter.write("peaklist end\n\n");
             }
         }
+
         mgfRFile.close();
         aplWriter.close();
     }

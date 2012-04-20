@@ -11,11 +11,11 @@ import java.util.HashMap;
 public class FastaIndex extends ExperimentObject {
 
     /**
-     * The indexes of the inspected FASTA file
+     * The indexes of the inspected FASTA file.
      */
     private HashMap<String, Long> indexes;
     /**
-     * The FASTA file name
+     * The FASTA file name.
      */
     private String fileName;
     /**
@@ -28,7 +28,7 @@ public class FastaIndex extends ExperimentObject {
     private int nTarget;
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param indexes   The indexes of the inspected FASTA file
      * @param fileName  The FASTA file name

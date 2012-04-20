@@ -8,49 +8,55 @@ import java.util.HashMap;
 import javax.swing.JProgressBar;
 
 /**
- * Factory retrieving the information of the loaded FASTA file
+ * Factory retrieving the information of the loaded FASTA file.
  *
- * @author marc
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SequenceFactory {
 
     /**
-     * Instance of the factory
+     * Instance of the factory.
      */
     private static SequenceFactory instance = null;
     /**
-     * map of the currently loaded Headers
+     * Map of the currently loaded Headers.
      */
     private HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
     /**
-     * Map of the currently loaded proteins
+     * Map of the currently loaded proteins.
      */
     private HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
     /**
-     * Index of the FASTA file
+     * Index of the FASTA file.
      */
     private FastaIndex fastaIndex;
     /**
-     * Random access file of the current FASTA file
+     * Random access file of the current FASTA file.
      */
     private RandomAccessFile currentFastaFile;
     /**
-     * Number of proteins to keep in cache, 1 by default
+     * Number of proteins to keep in cache, 1 by default.
      */
     private int nCache = 1;
     /**
-     * List of accessions of the loaded proteins
+     * List of accessions of the loaded proteins.
      */
     private ArrayList<String> loadedProteins = new ArrayList<String>();
     /**
-     * Recognized flags for a decoy protein
+     * Recognized flags for a decoy protein.
      */
     public static final String[] decoyFlags = {"REVERSED", "RND", "SHUFFLED"};
+    /**
+     * Set this to true to cancel the current proces.
+     */
+    private static boolean cancelProcess = false;
 
     /**
-     * Constructor
+     * Constructor.
      */
     private SequenceFactory() {
+        cancelProcess = false;
     }
 
     /**
@@ -59,6 +65,7 @@ public class SequenceFactory {
      * @return the instance of the factory
      */
     public static SequenceFactory getInstance() {
+        cancelProcess = false;
         if (instance == null) {
             instance = new SequenceFactory();
         }
@@ -66,17 +73,27 @@ public class SequenceFactory {
     }
 
     /**
-     * returns the instance of the factory with the specified cache size.
+     * Returns the instance of the factory with the specified cache size.
      *
      * @param nCache the new cache size
      * @return the instance of the factory with the specified cache size
      */
     public static SequenceFactory getInstance(int nCache) {
+        cancelProcess = false;
         if (instance == null) {
             instance = new SequenceFactory();
         }
         instance.setnCache(nCache);
         return instance;
+    }
+
+    /**
+     * If set to true the current process is canceled.
+     *
+     * @param aCancelProcess set to true to cancel the current process
+     */
+    public void cancelProcess(boolean aCancelProcess) {
+        cancelProcess = aCancelProcess;
     }
 
     /**
@@ -91,6 +108,7 @@ public class SequenceFactory {
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException {
 
+        cancelProcess = false;
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null) {
@@ -105,7 +123,7 @@ public class SequenceFactory {
             String line, sequence = "";
             Header currentHeader = null;
 
-            while ((line = currentFastaFile.readLine()) != null) {
+            while ((line = currentFastaFile.readLine()) != null && !cancelProcess) {
                 line = line.trim();
 
                 if (line.startsWith(">")) {
@@ -177,6 +195,7 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      */
     public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+        cancelProcess = false;
         currentFastaFile = new RandomAccessFile(fastaFile, "r");
         fastaIndex = getFastaIndex(fastaFile);
     }
@@ -194,6 +213,7 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      */
     public void loadFastaFile(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
+        cancelProcess = false;
         currentFastaFile = new RandomAccessFile(fastaFile, "r");
         fastaIndex = getFastaIndex(fastaFile, progressBar);
     }
@@ -209,18 +229,17 @@ public class SequenceFactory {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
      */
-    public FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+    private FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
         FastaIndex tempFastaIndex;
         if (indexFile.exists()) {
-            try {
-                tempFastaIndex = getIndex(indexFile);
-                return tempFastaIndex;
-            } catch (Exception e) {
-            }
+            tempFastaIndex = getIndex(indexFile);
+            return tempFastaIndex;
         }
         tempFastaIndex = createFastaIndex(fastaFile);
-        writeIndex(tempFastaIndex, fastaFile.getParentFile());
+        if (!cancelProcess) {
+            writeIndex(tempFastaIndex, fastaFile.getParentFile());
+        }
         return tempFastaIndex;
     }
 
@@ -236,18 +255,18 @@ public class SequenceFactory {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
      */
-    public FastaIndex getFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
+    private FastaIndex getFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException, ClassNotFoundException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
         FastaIndex tempFastaIndex;
         if (indexFile.exists()) {
-            try {
-                tempFastaIndex = getIndex(indexFile);
-                return tempFastaIndex;
-            } catch (Exception e) {
-            }
+            tempFastaIndex = getIndex(indexFile);
+            return tempFastaIndex;
         }
         tempFastaIndex = createFastaIndex(fastaFile, progressBar);
-        writeIndex(tempFastaIndex, fastaFile.getParentFile());
+
+        if (!cancelProcess) {
+            writeIndex(tempFastaIndex, fastaFile.getParentFile());
+        }
         return tempFastaIndex;
     }
 
@@ -259,7 +278,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the file
      */
-    public void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
+    private void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
         FileOutputStream fos = new FileOutputStream(new File(directory, fastaIndex.getFileName() + ".cui"));
         BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -281,7 +300,7 @@ public class SequenceFactory {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
      */
-    public FastaIndex getIndex(File fastaIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
+    private FastaIndex getIndex(File fastaIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(fastaIndex);
         BufferedInputStream bis = new BufferedInputStream(fis);
         ObjectInputStream in = new ObjectInputStream(bis);
@@ -314,7 +333,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public static FastaIndex createFastaIndex(File fastaFile) throws FileNotFoundException, IOException {
+    private static FastaIndex createFastaIndex(File fastaFile) throws FileNotFoundException, IOException {
         return createFastaIndex(fastaFile, null);
     }
 
@@ -329,10 +348,9 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public static FastaIndex createFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
+    private static FastaIndex createFastaIndex(File fastaFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
-
         RandomAccessFile randomAccessFile = new RandomAccessFile(fastaFile, "r");
 
         if (progressBar != null) {
@@ -347,12 +365,11 @@ public class SequenceFactory {
         String line;
         boolean decoy = false;
         int nTarget = 0;
-        Header fastaHeader;
         long index = randomAccessFile.getFilePointer();
 
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = randomAccessFile.readLine()) != null && !cancelProcess) {
             if (line.startsWith(">")) {
-                fastaHeader = Header.parseFromFASTA(line);
+                Header fastaHeader = Header.parseFromFASTA(line);
                 String accession = fastaHeader.getAccession();
                 if (accession == null) {
                     accession = fastaHeader.getRest();
@@ -444,6 +461,8 @@ public class SequenceFactory {
      */
     public void appendDecoySequences(File destinationFile, JProgressBar progressBar) throws IOException, IllegalArgumentException {
 
+        cancelProcess = false;
+
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
             progressBar.setStringPainted(true);
@@ -455,25 +474,26 @@ public class SequenceFactory {
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         int counter = 1;
-        Header decoyHeader, currentHeader;
-        Protein currentProtein;
-        String decoySequence, decoyAccession;
 
         for (String accession : fastaIndex.getIndexes().keySet()) {
+
+            if (cancelProcess) {
+                break;
+            }
 
             if (progressBar != null) {
                 progressBar.setValue(counter++);
             }
 
-            currentProtein = getProtein(accession);
-            currentHeader = getHeader(accession);
+            Protein currentProtein = getProtein(accession);
+            Header currentHeader = getHeader(accession);
 
-            decoyAccession = currentProtein.getAccession() + "_" + decoyFlags[0];
-            decoyHeader = Header.parseFromFASTA(currentHeader.toString());
+            String decoyAccession = currentProtein.getAccession() + "_" + decoyFlags[0];
+            Header decoyHeader = Header.parseFromFASTA(currentHeader.toString());
             decoyHeader.setAccession(decoyAccession);
             decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlags[0]);
 
-            decoySequence = reverseSequence(currentProtein.getSequence());
+            String decoySequence = reverseSequence(currentProtein.getSequence());
 
             indexes.put(currentProtein.getAccession(), newFile.getFilePointer());
             newFile.writeBytes(currentHeader.toString() + "\n");
@@ -494,11 +514,15 @@ public class SequenceFactory {
             progressBar.setIndeterminate(true);
             progressBar.setStringPainted(false);
         }
-
-        FastaIndex newIndex = new FastaIndex(indexes, destinationFile.getName(), true, counter - 1);
-        writeIndex(newIndex, destinationFile.getParentFile());
-
+        
         newFile.close();
+
+        if (!cancelProcess) {
+            FastaIndex newIndex = new FastaIndex(indexes, destinationFile.getName(), true, counter - 1);
+            writeIndex(newIndex, destinationFile.getParentFile());
+        } else {
+            destinationFile.delete();
+        }   
     }
 
     /**
@@ -539,7 +563,7 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the occurrence of every amino acid in the database
+     * Returns the occurrence of every amino acid in the database.
      *
      * @param progressBar a progress bar, can be null
      * @return a map containing all amino acid occurrence in the database
@@ -547,20 +571,28 @@ public class SequenceFactory {
      * reading the database
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException {
+
+        cancelProcess = false;
+
         HashMap<String, Integer> aaMap = new HashMap<String, Integer>();
-        Protein protein;
-        Integer n;
         ArrayList<String> accessions = getAccessions();
+
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
             progressBar.setMaximum(accessions.size());
             progressBar.setValue(0);
         }
+
         for (String accession : accessions) {
+
+            if (cancelProcess) {
+                break;
+            }
+
             if (!isDecoy(accession)) {
-                protein = getProtein(accession);
+                Protein protein = getProtein(accession);
                 for (String aa : protein.getSequence().split("")) {
-                    n = aaMap.get(aa);
+                    Integer n = aaMap.get(aa);
                     if (n == null) {
                         n = 0;
                     }
@@ -571,9 +603,11 @@ public class SequenceFactory {
                 progressBar.setValue(progressBar.getValue() + 1);
             }
         }
+
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
         }
+
         return aaMap;
     }
 }

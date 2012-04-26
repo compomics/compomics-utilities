@@ -182,7 +182,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
         proteins.add(accession);
 
-        ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainID());
+        ArrayList<Modification> foundFixedModifications = modificationMap.getFixedModifications(domain.getDomainKey());
         ArrayList<ModificationMatch> foundModifications = new ArrayList<ModificationMatch>();
 
         for (Modification currentModification : foundFixedModifications) {
@@ -209,7 +209,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             }
         }
 
-        ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(domain.getDomainID());
+        ArrayList<de.proteinms.xtandemparser.interfaces.Modification> foundVariableModifications = modificationMap.getVariableModifications(domain.getDomainKey());
 
         for (Modification currentModification : foundVariableModifications) {
             int location = new Integer(currentModification.getLocation()) - domain.getDomainStart() + 1;

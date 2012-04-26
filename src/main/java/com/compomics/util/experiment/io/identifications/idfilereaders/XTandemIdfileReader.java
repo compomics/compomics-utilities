@@ -155,7 +155,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
         ArrayList<String> proteins = new ArrayList<String>();
         String sequence = domain.getDomainSequence();
-        String description = proteinMap.getProteinWithPeptideID(domain.getDomainID()).getLabel();
+        String description = proteinMap.getProtein(domain.getProteinKey()).getLabel();
         String accession;
 
         try {

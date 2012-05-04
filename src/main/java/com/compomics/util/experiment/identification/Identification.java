@@ -685,7 +685,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Saves the identification matches in the desired folder
+     * Saves the identification matches in the desired folder.
      *
      * @param newFolder the new folder
      * @param progressDialog a progress dialog to display the progress (can be

@@ -2,6 +2,7 @@ package com.compomics.util.math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Class used to perform basic mathematical functions
@@ -54,6 +55,26 @@ public class BasicMathFunctions {
             return ratios[(length - 1) / 2];
         } else {
             return (ratios[length / 2] + ratios[(length) / 2 - 1]) / 2;
+        }
+    }
+    
+    /**
+     * Method to estimate the median
+     *
+     * @param input    ArrayList of double
+     * @return median of the input
+     */
+    public static double median(ArrayList<Double> input) {
+        Collections.sort(input);
+        int length = input.size();
+        if (length == 1) {
+            return input.get(0);
+        }
+        int index = length/2;
+        if (length % 2 == 1) {
+            return input.get(index);
+        } else {
+            return (input.get(index) + input.get(index-1)) / 2;
         }
     }
 

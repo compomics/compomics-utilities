@@ -1,8 +1,8 @@
 package com.compomics.util.experiment.massspectrometry;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * This class models an MSn spectrum.
@@ -86,7 +86,7 @@ public class MSnSpectrum extends Spectrum {
     public Precursor getPrecursor() {
         return precursor;
     }
-
+    
     /**
      * Returns the peak list as mgf bloc.
      *
@@ -123,5 +123,35 @@ public class MSnSpectrum extends Spectrum {
         result += "\nEND IONS\n\n\n";
 
         return result;
+    }
+    
+    /**
+     * Writes the spectrum in the mgf format using the given writer
+     * 
+     * @param writer1 a buffered writer where the spectrum will be written
+     */
+    public void writeMgf(BufferedWriter writer1) throws IOException {
+        writer1.write("BEGIN IONS\n\n");
+        writer1.write("TITLE=" + spectrumTitle + "\n");
+        writer1.write("PEPMASS=" + precursor.getMz() + "\n");
+        writer1.write("RTINSECONDS=" + precursor.getRt() + "\n");
+        writer1.write("CHARGE=");
+        boolean first = true;
+        for (Charge charge : precursor.getPossibleCharges()) {
+            if (first) {
+                first = false;
+            } else {
+                writer1.write(" and ");
+            }
+            writer1.write(charge.toString());
+        }
+        writer1.write("\n\n");
+
+        ArrayList<Double> mzArray = new ArrayList<Double>(peakList.keySet());
+        Collections.sort(mzArray);
+        for (Double mz : mzArray) {
+            writer1.write(mz + " " + peakList.get(mz).intensity + "\n");
+        }
+        writer1.write("\nEND IONS\n\n\n");
     }
 }

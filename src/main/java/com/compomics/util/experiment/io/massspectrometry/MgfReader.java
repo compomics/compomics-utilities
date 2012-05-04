@@ -179,7 +179,7 @@ public class MgfReader {
     public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
 
         cancelProcess = false;
-        
+
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
@@ -565,31 +565,33 @@ public class MgfReader {
 
             line = line.trim();
 
-            if (line.equals("BEGIN IONS")
-                    || line.startsWith("TOLU")
-                    || line.startsWith("TOL")
-                    || line.startsWith("SEQ")
-                    || line.startsWith("COMP")
-                    || line.startsWith("ETAG")
-                    || line.startsWith("TAG")
-                    || line.startsWith("SCANS")
-                    || line.startsWith("INSTRUMENT")) {
-                // not supported yet
-            } else if (line.startsWith("TITLE")) {
-                title = line.substring(line.indexOf("=") + 1);
-            } else if (line.startsWith("CHARGE")) {
-                precursorCharges = parseCharges(line);
-            } else if (line.startsWith("PEPMASS")) {
-                String temp = line.substring(line.indexOf("=") + 1);
-                String[] values = temp.split("\\s");
-                precursorMass = Double.parseDouble(values[0]);
-                if (values.length > 1) {
-                    precursorIntensity = Double.parseDouble(values[1]);
-                } else {
-                    precursorIntensity = 0.0;
-                }
-            } else if (line.startsWith("RTINSECONDS")) {
-                rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest...
+            if (!line.equals("")) {
+
+                if (line.equals("BEGIN IONS")
+                        || line.startsWith("TOLU")
+                        || line.startsWith("TOL")
+                        || line.startsWith("SEQ")
+                        || line.startsWith("COMP")
+                        || line.startsWith("ETAG")
+                        || line.startsWith("TAG")
+                        || line.startsWith("SCANS")
+                        || line.startsWith("INSTRUMENT")) {
+                    // not supported yet
+                } else if (line.startsWith("TITLE")) {
+                    title = line.substring(line.indexOf("=") + 1);
+                } else if (line.startsWith("CHARGE")) {
+                    precursorCharges = parseCharges(line);
+                } else if (line.startsWith("PEPMASS")) {
+                    String temp = line.substring(line.indexOf("=") + 1);
+                    String[] values = temp.split("\\s");
+                    precursorMass = Double.parseDouble(values[0]);
+                    if (values.length > 1) {
+                        precursorIntensity = Double.parseDouble(values[1]);
+                    } else {
+                        precursorIntensity = 0.0;
+                    }
+                } else if (line.startsWith("RTINSECONDS")) {
+                    rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest...
 //                try {
 //                    String value = line.substring(line.indexOf('=') + 1);
 //                    String[] temp = doublePattern.split(value);
@@ -597,8 +599,9 @@ public class MgfReader {
 //                } catch (NumberFormatException e) {
 //                    throw new IllegalArgumentException("Cannot parse retention time.");
 //                }
-            } else {
-                return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                } else {
+                    return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                }
             }
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);

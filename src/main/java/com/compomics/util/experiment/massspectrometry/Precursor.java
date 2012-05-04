@@ -30,7 +30,7 @@ public class Precursor extends ExperimentObject {
     /**
      * The charge of the precursor.
      */
-    private ArrayList<Charge> possibleCharges;
+    private ArrayList<Charge> possibleCharges = new ArrayList<Charge>();
 
     /**
      * Constructor for the precursor.
@@ -42,7 +42,7 @@ public class Precursor extends ExperimentObject {
     public Precursor(double rt, double mz, ArrayList<Charge> possibleCharges) {
         this.rt = rt;
         this.mz = mz;
-        this.possibleCharges = possibleCharges;
+        this.possibleCharges.addAll(possibleCharges);
     }
     
     /**
@@ -57,7 +57,7 @@ public class Precursor extends ExperimentObject {
         this.rt = rt;
         this.mz = mz;
         this.intensity = intensity;
-        this.possibleCharges = possibleCharges;
+        this.possibleCharges.addAll(possibleCharges);
     }
 
     /**
@@ -112,5 +112,14 @@ public class Precursor extends ExperimentObject {
             result += charge.toString();
         }
         return result;
+    }
+    /**
+     * Returns a recalibrated precursor
+     * @param mzCorrection the m/z correction to apply
+     * @param rtCorrection the rt correction to apply
+     * @return a new recalibrated precursor
+     */
+    public Precursor getRecalibratedPrecursor(double mzCorrection, double rtCorrection) {
+        return new Precursor(rt - rtCorrection, mz - mzCorrection, intensity, possibleCharges);
     }
 }

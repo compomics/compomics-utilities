@@ -427,11 +427,9 @@
         </dependency>
         
         <dependency>
-            <groupId>com.ice</groupId>
-            <artifactId>tar</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
-            <type>jar</type>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
 

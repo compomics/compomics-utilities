@@ -160,14 +160,18 @@ public class Util {
 
             for (int j = 0; j < table.getColumnCount() && !cancelProgress; j++) {
 
-                String tempValue = table.getValueAt(i, j).toString();
+                if (table.getValueAt(i, j) != null) {
+                    String tempValue = table.getValueAt(i, j).toString();
 
-                // remove html tags
-                if (tempValue.indexOf("<html>") != -1 && removeHtml) {
-                    tempValue = tempValue.replaceAll("\\<[^>]*>", "");
+                    // remove html tags
+                    if (tempValue.indexOf("<html>") != -1 && removeHtml) {
+                        tempValue = tempValue.replaceAll("\\<[^>]*>", "");
+                    }
+
+                    tableAsString += tempValue + separator;
+                } else {
+                    tableAsString += separator;
                 }
-
-                tableAsString += tempValue + separator;
             }
 
             tableAsString += "\n";
@@ -222,14 +226,18 @@ public class Util {
 
             for (int j = 0; j < table.getColumnCount() && !cancelProgress; j++) {
 
-                String tempValue = table.getValueAt(i, j).toString();
+                if (table.getValueAt(i, j) != null) {
+                    String tempValue = table.getValueAt(i, j).toString();
 
-                // remove html tags
-                if (tempValue.indexOf("<html>") != -1 && removeHtml) {
-                    tempValue = tempValue.replaceAll("\\<[^>]*>", "");
+                    // remove html tags
+                    if (tempValue.indexOf("<html>") != -1 && removeHtml) {
+                        tempValue = tempValue.replaceAll("\\<[^>]*>", "");
+                    }
+
+                    writer.write(tempValue + separator);
+                } else {
+                    writer.write(separator);
                 }
-
-                writer.write(tempValue + separator);
             }
 
             writer.write("\n");

@@ -92,14 +92,15 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
         while (spectraIt.hasNext()) {
             Spectrum currentSpectrum = spectraIt.next();
-            int nSpectrum = currentSpectrum.getSpectrumNumber();
+            int nSpectrum = currentSpectrum.getSpectrumId();
             SupportData supportData = xTandemFile.getSupportData(nSpectrum);
 
-            if (supportData.getFragIonSpectrumDescription() == null) {
-                throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
+            String tempName = nSpectrum + "";
+            if (supportData.getFragIonSpectrumDescription() != null) {
+                tempName = supportData.getFragIonSpectrumDescription();
             }
 
-            String spectrumName = fixMgfTitle(supportData.getFragIonSpectrumDescription());
+            String spectrumName = fixMgfTitle(tempName);
             ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
 
             if (spectrumPeptides.size() > 0) {

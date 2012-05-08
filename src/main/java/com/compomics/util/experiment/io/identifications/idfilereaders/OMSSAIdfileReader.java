@@ -103,13 +103,18 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
             jProgressBar.setMaximum(searchResponseSize);
         }
 
+        String tempName;
+        MSHitSet msHitSet;
+        int tempIndex;
+
         for (int i = 0; i < searchResponseSize; i++) {
 
             Map<Integer, MSHitSet> msHitSetMap = msSearchResponse.get(i).MSResponse_hitsets.MSHitSet;
             String tempFile = msRequest.get(i).MSRequest_settings.MSSearchSettings.MSSearchSettings_infiles.MSInFile.MSInFile_infile;
 
-            for (MSHitSet msHitSet : msHitSetMap.values()) {
+            for (int spectrumIndex : msHitSetMap.keySet()) {
 
+                msHitSet = msHitSetMap.get(spectrumIndex);
                 List<MSHits> hitSet = msHitSet.MSHitSet_hits.MSHits;
 
                 if (hitSet.size() > 0) {
@@ -127,10 +132,13 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                     Collections.sort(eValues);
 
                     if (msHitSet.MSHitSet_ids.MSHitSet_ids_E.isEmpty()) {
-                        throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
+                        tempIndex = spectrumIndex +1;
+                        tempName = tempIndex + "";
+                    } else {
+                        tempName = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
                     }
 
-                    String name = fixMgfTitle(msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0));
+                    String name = fixMgfTitle(tempName);
                     SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name));
                     int rank = 1;
 

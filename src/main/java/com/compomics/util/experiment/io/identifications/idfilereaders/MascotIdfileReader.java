@@ -122,16 +122,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             jProgressBar.setMaximum(numberOfQueries);
         }
 
-        for (int i = 0; i < numberOfQueries; i++) {
+        for (int i = 1; i <= numberOfQueries; i++) {
 
             Vector<PeptideHit> mascotDecoyPeptideHits = null;
             try {
-                mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i + 1);
+                mascotDecoyPeptideHits = lDecoyQueryToPeptideMap.getAllPeptideHits(i);
             } catch (Exception e) {
                 // Looks like there is no decoy section
             }
 
-            Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i + 1);
+            Vector<PeptideHit> mascotPeptideHits = lQueryToPeptideMap.getAllPeptideHits(i);
 
             // Get spectrum information
             PeptideHit testPeptide = null;
@@ -143,13 +143,15 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             }
 
             if (testPeptide != null) {
-                Query tempQuery = iMascotDatfile.getQuery(i + 1);
+                Query tempQuery = iMascotDatfile.getQuery(i);
 
-                if (tempQuery.getTitle() == null) {
-                    throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
+                String tempName = i + "";
+                if (tempQuery.getTitle() != null
+                        && !tempQuery.getTitle().startsWith("No title (Query ")) {
+                    tempName = tempQuery.getTitle();
                 }
 
-                String spectrumId = fixMgfTitle(tempQuery.getTitle());
+                String spectrumId = fixMgfTitle(tempName);
                 String measuredCharge = tempQuery.getChargeString();
                 String sign = String.valueOf(measuredCharge.charAt(1));
                 Charge charge;
@@ -289,6 +291,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
     @Override
     public void close() throws IOException {
+        iMascotDatfile.finish();
         iMascotDatfile = null;
     }
 }

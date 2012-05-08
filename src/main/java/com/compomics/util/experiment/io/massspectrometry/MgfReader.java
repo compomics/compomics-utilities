@@ -238,9 +238,6 @@ public class MgfReader {
                 }
             } else if (line.equals("END IONS")) {
                 if (title == null) {
-                    needTitle = true;
-                }
-                if (needTitle) {
                     title = cpt + "";
                     indexes.put(title, beginIndex);
                     spectrumTitles.add(title);

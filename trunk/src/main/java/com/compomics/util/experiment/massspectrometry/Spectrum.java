@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -399,21 +398,23 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns a recalibrated peak list
+     * Returns a recalibrated peak list.
      *
-     * @param mzCorrection the m/z correction to apply
+     * @param mzCorrections the m/z corrections to apply
      * @return the recalibrated list of peaks indexed by m/z
+     * @throws IllegalArgumentException  
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) throws IllegalArgumentException {
+        
         HashMap<Double, Peak> result = new HashMap<Double, Peak>();
-        double fragmentMz, correction;
         ArrayList<Double> keys = new ArrayList<Double>(mzCorrections.keySet());
         Collections.sort(keys);
-        double y1, y2, key1, key2;
+        
         for (Peak peak : peakList.values()) {
-            fragmentMz = peak.mz;
-            key1 = keys.get(0);
-            correction = 0.0;
+            double fragmentMz = peak.mz;
+            double key1 = keys.get(0);
+            double correction = 0.0;
+            
             if (fragmentMz <= key1) {
                 correction = mzCorrections.get(key1);
             } else {
@@ -427,16 +428,17 @@ public abstract class Spectrum extends ExperimentObject {
                             correction = mzCorrections.get(key1);
                             break;
                         }
-                        key2 = keys.get(i + 1);
+                        double key2 = keys.get(i + 1);
                         if (key1 < fragmentMz && fragmentMz < key2) {
-                            y1 = mzCorrections.get(key1);
-                            y2 = mzCorrections.get(key2);
+                            double y1 = mzCorrections.get(key1);
+                            double y2 = mzCorrections.get(key2);
                             correction = y1 + ((fragmentMz - key1) * (y2 - y1) / (key2 - key1));
                             break;
                         }
                     }
                 }
             }
+            
             result.put(peak.mz - correction, new Peak(peak.mz - correction, peak.intensity));
         }
         return result;

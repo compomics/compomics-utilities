@@ -38,6 +38,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * All advocates used.
      */
     private ArrayList<Integer> advocates = new ArrayList<Integer>();
+    /**
+     * The spectrum number in the mgf file. Will be used in case the spectrum title does not match
+     */
+    private Integer spectrumNumber = null;
 
     /**
      * Constructor for the spectrum match.
@@ -183,5 +187,21 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setKey(String newKey) {
         this.spectrumKey = newKey;
+    }
+
+    /**
+     * Returns the spectrum number in the spectrum file. Returns null if not implemented (for versions older than 3.4.17 for instance)
+     * @return the spectrum number in the spectrum file
+     */
+    public Integer getSpectrumNumber() {
+        return spectrumNumber;
+    }
+
+    /**
+     * Sets the spectrum number in the spectrum file
+     * @param spectrumNumber the spectrum number in the spectrum file
+     */
+    public void setSpectrumNumber(Integer spectrumNumber) {
+        this.spectrumNumber = spectrumNumber;
     }
 }

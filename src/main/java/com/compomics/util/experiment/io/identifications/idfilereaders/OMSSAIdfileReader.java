@@ -131,8 +131,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                     ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
                     Collections.sort(eValues);
 
-                    if (msHitSet.MSHitSet_ids.MSHitSet_ids_E.isEmpty()) {
                         tempIndex = spectrumIndex +1;
+                    if (msHitSet.MSHitSet_ids.MSHitSet_ids_E.isEmpty()) {
                         tempName = tempIndex + "";
                     } else {
                         tempName = msHitSet.MSHitSet_ids.MSHitSet_ids_E.get(0);
@@ -140,6 +140,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
                     String name = fixMgfTitle(tempName);
                     SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(Util.getFileName(tempFile), name));
+                    currentMatch.setSpectrumNumber(tempIndex);
                     int rank = 1;
 
                     for (double eValue : eValues) {

@@ -70,7 +70,7 @@ public class MgfReader {
         cancelProcess = false;
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
-        double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
+        double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1.0, rt2 = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
@@ -98,11 +98,16 @@ public class MgfReader {
                 }
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
-                    String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = doublePattern.split(value);
-                    rt = new Double(temp[0]);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Cannot parse retention time.");
+                    String rtInput = line.substring(line.indexOf('=') + 1);
+                    String[] rtWindow = rtInput.split("-");
+                    if (rtWindow.length == 1) {
+                        rt = new Double(rtWindow[0]);
+                    } else if (rtWindow.length == 2) {
+                        rt1 = new Double(rtWindow[0]);
+                        rt2 = new Double(rtWindow[1]);
+                    }
+                } catch (Exception e) {
+                    // ignore exception, RT will not be parsed
                 }
             } else if (line.startsWith("TOLU")) {
                 // peptide tolerance unit not implemented
@@ -125,8 +130,13 @@ public class MgfReader {
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
             } else if (line.equals("END IONS")) {
-                MSnSpectrum msnSpectrum = new MSnSpectrum(2, new Precursor(
-                        rt, precursorMass, precursorIntensity, precursorCharges), spectrumTitle, spectrum, aFile.getName());
+                Precursor precursor;
+                if (rt1 != -1 && rt2 != -1) {
+                    precursor = new Precursor(precursorMass, precursorIntensity, precursorCharges, rt1, rt2);
+                } else {
+                    precursor = new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                }
+                MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, aFile.getName());
                 msnSpectrum.setScanNumber(scanNumber);
                 spectra.add(msnSpectrum);
             } else if (!line.equals("")) {
@@ -186,8 +196,7 @@ public class MgfReader {
         long beginIndex = 0, currentIndex = 0;
         String title = null;
         int cpt = 0;
-        boolean needTitle = false;
-        double rt, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+        double rt, rt1, rt2, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
@@ -223,19 +232,36 @@ public class MgfReader {
                     maxMz = precursorMass;
                 }
             } else if (line.startsWith("RTINSECONDS")) {
-                try {
-                    String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = doublePattern.split(value);
-                    rt = new Double(temp[0]);
-                    if (rt > maxRT) {
-                        maxRT = rt;
+                    try {
+                        String rtInput = line.substring(line.indexOf('=') + 1);
+                    String[] rtWindow = rtInput.split("-");
+                    if (rtWindow.length == 1) {
+                        rt = new Double(rtWindow[0]);
+                        if (rt > maxRT) {
+                            maxRT = rt;
+                        }
+                        if (rt < minRT) {
+                            minRT = rt;
+                        }
+                    } else if (rtWindow.length == 2) {
+                        rt1 = new Double(rtWindow[0]);
+                        if (rt1 > maxRT) {
+                            maxRT = rt1;
+                        }
+                        if (rt1 < minRT) {
+                            minRT = rt1;
+                        }
+                        rt2 = new Double(rtWindow[1]);
+                        if (rt2 > maxRT) {
+                            maxRT = rt2;
+                        }
+                        if (rt2 < minRT) {
+                            minRT = rt2;
+                        }
                     }
-                    if (rt < minRT) {
-                        minRT = rt;
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Cannot parse retention time.");
                     }
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Cannot parse retention time.");
-                }
             } else if (line.equals("END IONS")) {
                 if (title == null) {
                     title = cpt + "";
@@ -282,7 +308,6 @@ public class MgfReader {
             ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
             ArrayList<String> spectrumTitles = new ArrayList<String>();
             String title = null;
-            boolean needTitle = false;
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
 
             RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
@@ -299,7 +324,7 @@ public class MgfReader {
             int fileCounter = 1;
             int spectrumCounter = 0;
             long typicalSize = 0;
-            double rt, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+            double rt, rt1, rt2, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -359,23 +384,37 @@ public class MgfReader {
                     }
                 } else if (line.startsWith("RTINSECONDS")) {
                     try {
-                        String value = line.substring(line.indexOf('=') + 1);
-                        String[] temp = doublePattern.split(value);
-                        rt = new Double(temp[0]);
+                        String rtInput = line.substring(line.indexOf('=') + 1);
+                    String[] rtWindow = rtInput.split("-");
+                    if (rtWindow.length == 1) {
+                        rt = new Double(rtWindow[0]);
                         if (rt > maxRT) {
                             maxRT = rt;
                         }
                         if (rt < minRT) {
                             minRT = rt;
                         }
+                    } else if (rtWindow.length == 2) {
+                        rt1 = new Double(rtWindow[0]);
+                        if (rt1 > maxRT) {
+                            maxRT = rt1;
+                        }
+                        if (rt1 < minRT) {
+                            minRT = rt1;
+                        }
+                        rt2 = new Double(rtWindow[1]);
+                        if (rt2 > maxRT) {
+                            maxRT = rt2;
+                        }
+                        if (rt2 < minRT) {
+                            minRT = rt2;
+                        }
+                    }
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Cannot parse retention time.");
                     }
                 } else if (line.equals("END IONS")) {
                     if (title == null) {
-                        needTitle = true;
-                    }
-                    if (needTitle) {
                         title = spectrumCounter + "";
                         indexes.put(title, beginIndex);
                         spectrumTitles.add(title);
@@ -417,7 +456,7 @@ public class MgfReader {
 
         randomAccessFile.seek(index);
         String line;
-        double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
+        double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
@@ -443,11 +482,24 @@ public class MgfReader {
                 }
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
-                    String value = line.substring(line.indexOf('=') + 1);
-                    String[] temp = doublePattern.split(value);
-                    rt = new Double(temp[0]);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Cannot parse retention time.");
+                    // @TODO: ought to be replaced by code below, but this failes the SpectrumTest... (@Harald: the Pattern is wrong, it should include the '.')
+                    String rtInput = line.substring(line.indexOf('=') + 1);
+                    String[] rtWindow = rtInput.split("-");
+                    if (rtWindow.length == 1) {
+                        rt = new Double(rtWindow[0]);
+                    } else if (rtWindow.length == 2) {
+                        rt1 = new Double(rtWindow[0]);
+                        rt2 = new Double(rtWindow[1]);
+                    }
+//                try {
+//                    String value = line.substring(line.indexOf('=') + 1);
+//                    String[] temp = doublePattern.split(value);
+//                    rt = new Double(temp[0]);
+//                } catch (NumberFormatException e) {
+//                    throw new IllegalArgumentException("Cannot parse retention time.");
+//                }
+                } catch (Exception e) {
+                    // ignore exception, RT will not be parsed
                 }
             } else if (line.startsWith("TOLU")) {
                 // peptide tolerance unit not implemented
@@ -470,8 +522,13 @@ public class MgfReader {
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
             } else if (line.equals("END IONS")) {
-                MSnSpectrum msnSpectrum = new MSnSpectrum(2, new Precursor(
-                        rt, precursorMass, precursorIntensity, precursorCharges), spectrumTitle, spectrum, fileName);
+                Precursor precursor;
+                if (rt1 != -1 && rt2 != -1) {
+                    precursor = new Precursor(precursorMass, precursorIntensity, precursorCharges, rt1, rt2);
+                } else {
+                    precursor = new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                }
+                MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, fileName);
                 msnSpectrum.setScanNumber(scanNumber);
                 return msnSpectrum;
             } else if (!line.equals("")) {

@@ -588,7 +588,8 @@ public class MgfReader {
                         precursorIntensity = 0.0;
                     }
                 } else if (line.startsWith("RTINSECONDS")) {
-                    rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest...
+                    try {
+                    rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest... -> because the Pattern is wrong
 //                try {
 //                    String value = line.substring(line.indexOf('=') + 1);
 //                    String[] temp = doublePattern.split(value);
@@ -596,6 +597,9 @@ public class MgfReader {
 //                } catch (NumberFormatException e) {
 //                    throw new IllegalArgumentException("Cannot parse retention time.");
 //                }
+                    } catch (Exception e) {
+                        // ignore exception, RT will not be parsed
+                    }
                 } else {
                     return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
                 }

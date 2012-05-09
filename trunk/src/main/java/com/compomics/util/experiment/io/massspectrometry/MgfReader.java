@@ -555,7 +555,7 @@ public class MgfReader {
 
         randomAccessFile.seek(index);
         String line, title = null;
-        double precursorMass = 0, precursorIntensity = 0, rt = -1.0;
+        double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = randomAccessFile.readLine()) != null) {
@@ -589,7 +589,15 @@ public class MgfReader {
                     }
                 } else if (line.startsWith("RTINSECONDS")) {
                     try {
-                    rt = new Double(line.substring(line.indexOf('=') + 1)); // @TODO: ought to be replaced by code below, but this failes the SpectrumTest... -> because the Pattern is wrong
+                        // @TODO: ought to be replaced by code below, but this failes the SpectrumTest... (@Harald: the Pattern is wrong, it should include the '.')
+                        String rtInput = line.substring(line.indexOf('=') + 1);
+                        String[] rtWindow = rtInput.split("-");
+                        if (rtWindow.length == 1) {
+                            rt = new Double(rtWindow[0]);
+                        } else if (rtWindow.length == 2) {
+                            rt1 = new Double(rtWindow[0]);
+                            rt2 = new Double(rtWindow[1]);
+                        }
 //                try {
 //                    String value = line.substring(line.indexOf('=') + 1);
 //                    String[] temp = doublePattern.split(value);
@@ -601,6 +609,9 @@ public class MgfReader {
                         // ignore exception, RT will not be parsed
                     }
                 } else {
+                    if (rt1 != -1 && rt2 != -1) {
+                        return new Precursor(precursorMass, precursorIntensity, precursorCharges, rt1, rt2);
+                    }
                     return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
                 }
             }

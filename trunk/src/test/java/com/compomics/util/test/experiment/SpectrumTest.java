@@ -30,5 +30,13 @@ public class SpectrumTest extends TestCase {
         Assert.assertTrue(precursor.getPossibleCharges().get(2).sign == Charge.MINUS);
         Assert.assertTrue(precursor.getMz() == 1060.86962890625);
         Assert.assertTrue(precursor.getRt() == 218.6808);
+
+        precursor = spectrumFactory.getPrecursor("test.mgf", "controllerType=0 controllerNumber=1 scan=160");
+
+        double rtMin = precursor.getRtWindow()[0];
+        double rtMax = precursor.getRtWindow()[1];
+        Assert.assertTrue(rtMin == 218);
+        Assert.assertTrue(rtMax == 219.71);
+        Assert.assertTrue(Math.abs(precursor.getRt() - 218.855) < 0.0001);
     }
 }

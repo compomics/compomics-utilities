@@ -349,6 +349,36 @@ public class SpectrumFactory {
         }
         return getPrecursor(spectrumKey, save, 0);
     }
+    
+    /**
+     * Returns a boolean indicating whether the spectrum file has been loaded
+     * @param fileName the file name
+     * @return 
+     */
+    public boolean fileLoaded(String fileName) {
+            return mgfIndexesMap.containsKey(fileName);
+    }
+    
+    /**
+     * Returns a boolean indicating whether the spectrum is contained in the given spectrum file
+     * @param fileName the name of the spectrum file
+     * @param spectrumTitle the title of the spectrum
+     * @return a boolean indicating whether the spectrum is contained in the given spectrum file
+     */
+    public boolean spectrumLoaded(String fileName, String spectrumTitle) {
+        return mgfIndexesMap.containsKey(fileName) && mgfIndexesMap.get(fileName).containsSpectrum(spectrumTitle);
+    }
+    
+    /**
+     * a boolean indicating whether the spectrum is loaded in the factory
+     * @param spectrumKey the spectrum key
+     * @return a boolean indicating whether the spectrum is loaded in the factory
+     */
+    public boolean spectrumLoaded(String spectrumKey) {
+        String fileName = Spectrum.getSpectrumFile(spectrumKey);
+        String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
+        return spectrumLoaded(fileName, spectrumTitle);
+    }
 
     /**
      * Returns the precursor of the desired spectrum.

@@ -67,6 +67,15 @@ public class MgfIndex extends ExperimentObject {
     public Long getIndex(String spectrumTitle) {
         return indexMap.get(spectrumTitle);
     }
+    
+    /**
+     * Returns a boolean indicating whether the spectrum title is implemented in this index
+     * @param spectrumTitle the spectrum title
+     * @return a boolean indicating whether the spectrum title is implemented in this index
+     */
+    public boolean containsSpectrum(String spectrumTitle) {
+        return indexMap.containsKey(spectrumTitle);
+    }
 
     /**
      * Returns an ordered list of all spectrum titles

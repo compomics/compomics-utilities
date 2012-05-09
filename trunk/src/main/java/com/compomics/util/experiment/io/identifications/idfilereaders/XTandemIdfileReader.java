@@ -92,15 +92,24 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
         while (spectraIt.hasNext()) {
             Spectrum currentSpectrum = spectraIt.next();
-            int nSpectrum = currentSpectrum.getSpectrumId();
-            SupportData supportData = xTandemFile.getSupportData(nSpectrum);
+            // spectrumId is the spectrum id in the X!Tandem file and spectrumNumber the id in the parser. If anyone could write a simpler parser, would be just great.
+            int spectrumId = currentSpectrum.getSpectrumId();
+            int spectrumNumber = currentSpectrum.getSpectrumNumber();
+            SupportData supportData = xTandemFile.getSupportData(spectrumNumber);
 
-            String tempName = nSpectrum + "";
+            String tempName = spectrumId + "";
             if (supportData.getFragIonSpectrumDescription() != null) {
                 tempName = supportData.getFragIonSpectrumDescription();
             }
 
             String spectrumName = fixMgfTitle(tempName);
+
+            try {
+                Integer test = new Integer(spectrumName);
+                boolean success = true;
+            } catch (Exception e) {
+            }
+
             ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
 
             if (spectrumPeptides.size() > 0) {

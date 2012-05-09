@@ -163,6 +163,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 }
 
                 SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFileName, spectrumId));
+                currentMatch.setSpectrumNumber(i); //@TODO: set the spectrum index instead
                 HashMap<Double, ArrayList<PeptideHit>> hitMap = new HashMap<Double, ArrayList<PeptideHit>>();
 
                 // Get all hits

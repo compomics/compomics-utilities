@@ -86,7 +86,7 @@ public class MSnSpectrum extends Spectrum {
     public Precursor getPrecursor() {
         return precursor;
     }
-    
+
     /**
      * Returns the peak list as mgf bloc.
      *
@@ -124,17 +124,21 @@ public class MSnSpectrum extends Spectrum {
 
         return result;
     }
-    
+
     /**
      * Writes the spectrum in the mgf format using the given writer
-     * 
+     *
      * @param writer1 a buffered writer where the spectrum will be written
      */
     public void writeMgf(BufferedWriter writer1) throws IOException {
         writer1.write("BEGIN IONS\n\n");
         writer1.write("TITLE=" + spectrumTitle + "\n");
         writer1.write("PEPMASS=" + precursor.getMz() + "\n");
-        writer1.write("RTINSECONDS=" + precursor.getRt() + "\n");
+        if (precursor.hasRTWindow()) {
+            writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n");
+        } else {
+            writer1.write("RTINSECONDS=" + precursor.getRt() + "\n");
+        }
         writer1.write("CHARGE=");
         boolean first = true;
         for (Charge charge : precursor.getPossibleCharges()) {

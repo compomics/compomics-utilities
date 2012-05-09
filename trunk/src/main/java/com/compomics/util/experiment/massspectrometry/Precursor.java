@@ -118,6 +118,14 @@ public class Precursor extends ExperimentObject {
     }
     
     /**
+     * Returns a boolean indicating whether the rt window was implemented
+     * @return a boolean indicating whether the rt window was implemented
+     */
+    public boolean hasRTWindow() {
+        return rtMin != null && rtMax != null;
+    }
+    
+    /**
      * Returns an array containing the min and max of the RT window
      * @return an array containing the min and max of the RT window
      */

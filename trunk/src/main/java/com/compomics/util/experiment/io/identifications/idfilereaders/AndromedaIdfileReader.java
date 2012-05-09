@@ -83,10 +83,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
         for (String title : index.keySet()) {
 
-            // @TODO: need to implement a test like this to make sure that every spectrum has a title
-//            if (tempQuery.getTitle() == null) {
-//                throw new IllegalArgumentException("Spectrum does not have a title! Spectrum titles are mandatory in PeptideShaker.");
-//            }
+            // @TODO: need to implement the spectrum number as well
 
             SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
 

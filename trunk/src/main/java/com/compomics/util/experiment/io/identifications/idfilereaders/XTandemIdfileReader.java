@@ -104,12 +104,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
             String spectrumName = fixMgfTitle(tempName);
 
-            try {
-                Integer test = new Integer(spectrumName);
-                boolean success = true;
-            } catch (Exception e) {
-            }
-
             ArrayList<Peptide> spectrumPeptides = peptideMap.getAllPeptides(currentSpectrum.getSpectrumNumber());
 
             if (spectrumPeptides.size() > 0) {
@@ -119,7 +113,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 Charge charge = new Charge(Charge.PLUS, currentSpectrum.getPrecursorCharge());
                 String spectrumKey = com.compomics.util.experiment.massspectrometry.Spectrum.getSpectrumKey(filename, spectrumName);
                 SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
-
+                currentMatch.setSpectrumNumber(spectrumId); //@TODO: verify that this work when sorting spectra according to proteins
                 HashMap<Double, ArrayList<Domain>> hitMap = new HashMap<Double, ArrayList<Domain>>();
 
                 for (Peptide peptide : spectrumPeptides) {

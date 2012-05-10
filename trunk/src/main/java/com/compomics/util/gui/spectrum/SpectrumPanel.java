@@ -634,44 +634,44 @@ public class SpectrumPanel extends GraphicsPanel {
 
             String currentLabel = annotations.get(i).getLabel();
 
-            boolean useAnnotation = true;
+            boolean useAnnotation = false;
 
             // check ion type
             if (currentLabel.startsWith("a")) {
-                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.A_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        && iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.A_ION)) {
+                    useAnnotation = true;
                 }
             } else if (currentLabel.startsWith("b")) {
-                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.B_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        && iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.B_ION)) {
+                    useAnnotation = true;
                 }
             } else if (currentLabel.startsWith("c")) {
-                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.C_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        && iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.C_ION)) {
+                    useAnnotation = true;
                 }
             } else if (currentLabel.startsWith("x")) {
-                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.X_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        && iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.X_ION)) {
+                    useAnnotation = true;
                 }
             } else if (currentLabel.startsWith("y")) {
-                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.Y_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        && iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.Y_ION)) {
+                    useAnnotation = true;
                 }
             } else if (currentLabel.startsWith("z")) {
-                if (!iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        || iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.Z_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.PEPTIDE_FRAGMENT_ION)
+                        && iontypes.get(Ion.IonType.PEPTIDE_FRAGMENT_ION).contains(PeptideFragmentIon.Z_ION)) {
+                    useAnnotation = true;
                 }
             } else { // other
-                if (!iontypes.containsKey(Ion.IonType.IMMONIUM_ION)
-                        && !iontypes.containsKey(Ion.IonType.PRECURSOR_ION)
-                        && !iontypes.containsKey(Ion.IonType.IMMONIUM_ION)) {
-                    useAnnotation = false;
+                if (iontypes.containsKey(Ion.IonType.IMMONIUM_ION)
+                        || iontypes.containsKey(Ion.IonType.PRECURSOR_ION)
+                        || iontypes.containsKey(Ion.IonType.IMMONIUM_ION)) {
+                    useAnnotation = true;
                 }
             }
 
@@ -681,6 +681,7 @@ public class SpectrumPanel extends GraphicsPanel {
                 boolean nh3LossSelected = false;
                 boolean phosphoLossSelected = false;
                 boolean moxLossSelected = false;
+                
                 for (NeutralLoss neutralLoss : neutralLosses) {
                     if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                         h2oLossSelected = true;

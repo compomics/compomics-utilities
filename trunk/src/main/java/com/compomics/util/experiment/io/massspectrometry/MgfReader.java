@@ -232,8 +232,9 @@ public class MgfReader {
                     maxMz = precursorMass;
                 }
             } else if (line.startsWith("RTINSECONDS")) {
+                String rtInput = "";
                     try {
-                        String rtInput = line.substring(line.indexOf('=') + 1);
+                        rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
                         rt = new Double(rtWindow[0]);
@@ -243,7 +244,7 @@ public class MgfReader {
                         if (rt < minRT) {
                             minRT = rt;
                         }
-                    } else if (rtWindow.length == 2) {
+                    } else if (rtWindow.length == 2 && !rtWindow[0].equals("")) {
                         rt1 = new Double(rtWindow[0]);
                         if (rt1 > maxRT) {
                             maxRT = rt1;
@@ -260,7 +261,7 @@ public class MgfReader {
                         }
                     }
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Cannot parse retention time.");
+                        throw new IllegalArgumentException("Cannot parse retention time:" + rtInput);
                     }
             } else if (line.equals("END IONS")) {
                 if (title == null) {

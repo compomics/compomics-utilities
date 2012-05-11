@@ -96,7 +96,11 @@ public class MSnSpectrum extends Spectrum {
         String result = "BEGIN IONS\n\n";
         result += "TITLE=" + spectrumTitle + "\n";
         result += "PEPMASS=" + precursor.getMz() + "\n";
-        result += "RTINSECONDS=" + precursor.getRt() + "\n";
+        if (precursor.hasRTWindow()) {
+            result += "RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n";
+        } else if (precursor.getRt()!=-1) {
+            result += "RTINSECONDS=" + precursor.getRt() + "\n";
+        }
         result += "CHARGE=";
         boolean first = true;
         for (Charge charge : precursor.getPossibleCharges()) {
@@ -136,7 +140,7 @@ public class MSnSpectrum extends Spectrum {
         writer1.write("PEPMASS=" + precursor.getMz() + "\n");
         if (precursor.hasRTWindow()) {
             writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n");
-        } else {
+        } else if (precursor.getRt()!=-1) {
             writer1.write("RTINSECONDS=" + precursor.getRt() + "\n");
         }
         writer1.write("CHARGE=");

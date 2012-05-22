@@ -163,6 +163,13 @@ public class PrideObjectsFactory {
                 ptmMapFile.delete();
                 ptmToPrideMap = new PtmToPrideMap();
                 setPtmToPrideMap(ptmToPrideMap);
+            } catch (FileNotFoundException e) {
+                ptmToPrideMap = new PtmToPrideMap();
+                setPtmToPrideMap(ptmToPrideMap);
+            } catch (IOException e) {
+                ptmMapFile.delete();
+                ptmToPrideMap = new PtmToPrideMap();
+                setPtmToPrideMap(ptmToPrideMap);
             }
         }
     }

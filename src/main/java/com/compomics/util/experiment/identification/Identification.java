@@ -488,6 +488,7 @@ public abstract class Identification extends ExperimentObject {
                 break;
             }
         }
+        System.gc();
     }
 
     /**

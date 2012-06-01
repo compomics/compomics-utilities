@@ -233,8 +233,8 @@ public class MgfReader {
                 }
             } else if (line.startsWith("RTINSECONDS")) {
                 String rtInput = "";
-                    try {
-                        rtInput = line.substring(line.indexOf('=') + 1);
+                try {
+                    rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
                         rt = new Double(rtWindow[0]);
@@ -260,9 +260,9 @@ public class MgfReader {
                             minRT = rt2;
                         }
                     }
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Cannot parse retention time:" + rtInput);
-                    }
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Cannot parse retention time:" + rtInput);
+                }
             } else if (line.equals("END IONS")) {
                 if (title == null) {
                     title = cpt + "";
@@ -386,31 +386,31 @@ public class MgfReader {
                 } else if (line.startsWith("RTINSECONDS")) {
                     try {
                         String rtInput = line.substring(line.indexOf('=') + 1);
-                    String[] rtWindow = rtInput.split("-");
-                    if (rtWindow.length == 1) {
-                        rt = new Double(rtWindow[0]);
-                        if (rt > maxRT) {
-                            maxRT = rt;
+                        String[] rtWindow = rtInput.split("-");
+                        if (rtWindow.length == 1) {
+                            rt = new Double(rtWindow[0]);
+                            if (rt > maxRT) {
+                                maxRT = rt;
+                            }
+                            if (rt < minRT) {
+                                minRT = rt;
+                            }
+                        } else if (rtWindow.length == 2) {
+                            rt1 = new Double(rtWindow[0]);
+                            if (rt1 > maxRT) {
+                                maxRT = rt1;
+                            }
+                            if (rt1 < minRT) {
+                                minRT = rt1;
+                            }
+                            rt2 = new Double(rtWindow[1]);
+                            if (rt2 > maxRT) {
+                                maxRT = rt2;
+                            }
+                            if (rt2 < minRT) {
+                                minRT = rt2;
+                            }
                         }
-                        if (rt < minRT) {
-                            minRT = rt;
-                        }
-                    } else if (rtWindow.length == 2) {
-                        rt1 = new Double(rtWindow[0]);
-                        if (rt1 > maxRT) {
-                            maxRT = rt1;
-                        }
-                        if (rt1 < minRT) {
-                            minRT = rt1;
-                        }
-                        rt2 = new Double(rtWindow[1]);
-                        if (rt2 > maxRT) {
-                            maxRT = rt2;
-                        }
-                        if (rt2 < minRT) {
-                            minRT = rt2;
-                        }
-                    }
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Cannot parse retention time.");
                     }

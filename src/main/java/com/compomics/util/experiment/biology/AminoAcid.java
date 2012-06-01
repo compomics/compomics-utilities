@@ -1,35 +1,13 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.biology.aminoacids.Alanine;
-import com.compomics.util.experiment.biology.aminoacids.Arginine;
-import com.compomics.util.experiment.biology.aminoacids.Asparagine;
-import com.compomics.util.experiment.biology.aminoacids.AsparticAcid;
-import com.compomics.util.experiment.biology.aminoacids.B;
-import com.compomics.util.experiment.biology.aminoacids.Cysteine;
-import com.compomics.util.experiment.biology.aminoacids.GlutamicAcid;
-import com.compomics.util.experiment.biology.aminoacids.Glutamine;
-import com.compomics.util.experiment.biology.aminoacids.Glycine;
-import com.compomics.util.experiment.biology.aminoacids.Histidine;
-import com.compomics.util.experiment.biology.aminoacids.Isoleucine;
-import com.compomics.util.experiment.biology.aminoacids.Leucine;
-import com.compomics.util.experiment.biology.aminoacids.Lysine;
-import com.compomics.util.experiment.biology.aminoacids.Methionine;
-import com.compomics.util.experiment.biology.aminoacids.Phenylalanine;
-import com.compomics.util.experiment.biology.aminoacids.Proline;
-import com.compomics.util.experiment.biology.aminoacids.Selenocysteine;
-import com.compomics.util.experiment.biology.aminoacids.Serine;
-import com.compomics.util.experiment.biology.aminoacids.Threonine;
-import com.compomics.util.experiment.biology.aminoacids.Tryptophan;
-import com.compomics.util.experiment.biology.aminoacids.Tyrosine;
-import com.compomics.util.experiment.biology.aminoacids.Valine;
-import com.compomics.util.experiment.biology.aminoacids.X;
-import com.compomics.util.experiment.biology.aminoacids.Z;
+import com.compomics.util.experiment.biology.aminoacids.*;
 import java.util.ArrayList;
 
 /**
  * Class representing amino acids
  *
- * @author Marc
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class AminoAcid {
 
@@ -57,30 +35,33 @@ public abstract class AminoAcid {
     public static final AminoAcid Z = new Z();
     public static final AminoAcid X = new X();
     public static final AminoAcid U = new Selenocysteine();
+    public static final AminoAcid J = new J();
     /**
-     * Single letter code of the amino acid
+     * Single letter code of the amino acid.
      */
     public String singleLetterCode;
     /**
-     * Three letter code of the amino acid
+     * Three letter code of the amino acid.
      */
     public String threeLetterCode;
     /**
-     * Name of the amino acid
+     * Name of the amino acid.
      */
     public String name;
     /**
-     * average mass of the amino acid
+     * average mass of the amino acid.
      */
     public double averageMass;
     /**
-     * Monoisotopic mass of the amino acid
+     * Monoisotopic mass of the amino acid.
      */
     public double monoisotopicMass;
 
     /**
-     * Convenience method returning an arrayList of all implemented amino-acids
-     * @return an arrayList of all implemented amino-acids represented by their character
+     * Convenience method returning an arrayList of all implemented amino-acids.
+     *
+     * @return an arrayList of all implemented amino-acids represented by their
+     * character
      */
     public static ArrayList<String> getAminoAcids() {
         ArrayList<String> aas = new ArrayList<String>();
@@ -104,15 +85,20 @@ public abstract class AminoAcid {
         aas.add("V");
         aas.add("W");
         aas.add("Y");
+        aas.add("B");
+        aas.add("Z");
+        aas.add("X");
         aas.add("U");
+        aas.add("J");
         return aas;
     }
-    
+
     /**
-     * Returns the amino acid corresponding to the letter given, null if not implemented.
-     * 
-     * @param letter    the letter given
-     * @return          the corresponding amino acid.
+     * Returns the amino acid corresponding to the letter given, null if not
+     * implemented.
+     *
+     * @param letter the letter given
+     * @return the corresponding amino acid.
      */
     public static AminoAcid getAminoAcid(char letter) {
         switch (letter) {
@@ -164,6 +150,8 @@ public abstract class AminoAcid {
                 return AminoAcid.X;
             case 'U':
                 return AminoAcid.U;
+            case 'J':
+                return AminoAcid.J;
             default:
                 return null;
         }

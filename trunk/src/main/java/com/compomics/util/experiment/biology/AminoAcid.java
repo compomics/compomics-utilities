@@ -36,6 +36,7 @@ public abstract class AminoAcid {
     public static final AminoAcid X = new X();
     public static final AminoAcid U = new Selenocysteine();
     public static final AminoAcid J = new J();
+    public static final AminoAcid O = new Pyrrolysine();
     /**
      * Single letter code of the amino acid.
      */
@@ -90,6 +91,7 @@ public abstract class AminoAcid {
         aas.add("X");
         aas.add("U");
         aas.add("J");
+        aas.add("O");
         return aas;
     }
 
@@ -152,6 +154,8 @@ public abstract class AminoAcid {
                 return AminoAcid.U;
             case 'J':
                 return AminoAcid.J;
+            case 'O':
+                return AminoAcid.O;
             default:
                 return null;
         }

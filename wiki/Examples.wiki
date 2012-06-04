@@ -62,6 +62,7 @@ X-axis:
 
 {{{
 spectrumPanel.addReferenceAreaXAxis(new ReferenceArea(
+    "1",         // reference area unique identifier
     "A",         // reference area label
     200,         // start of area
     250,         // end of area
@@ -75,6 +76,7 @@ Y-axis:
 
 {{{
 spectrumPanel.addReferenceAreaYAxis(new ReferenceArea(
+    "2",
     "Low", 
     0, 
     500, 
@@ -87,7 +89,7 @@ spectrumPanel.addReferenceAreaYAxis(new ReferenceArea(
 To remove a reference area:
 
 {{{
-spectrumPanel.removeReferenceAreaXAxis("A");
+spectrumPanel.removeReferenceAreaXAxis("1");
 }}}
 
 [#Contents Top of page]

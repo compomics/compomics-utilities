@@ -740,7 +740,7 @@ public abstract class Identification extends ExperimentObject {
                 progressDialog.setValue(++cpt);
             }
         }
-        
+
         if (!cancelProgress) {
             serializationDirectory = newFolder.getPath();
             emptyCache(progressDialog, cancelProgress);

@@ -107,6 +107,11 @@ public abstract class GraphicsPanel extends JPanel {
      * descriptions.
      */
     protected static HashMap<Double, String> iKnownMassDeltas = null;
+    /**
+     * If true, pairs of delta mass annotations are used when doing de novo 
+     * sequencing. If false, only single delta masses are annotated.
+     */
+    private boolean useMassDeltaCombinations = true;
 
     // Static init block takes care of reading the 'SpectrumPanel.properties' file if
     // it hasn't already been done.
@@ -443,7 +448,27 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * An enumerator of the possible GraphicsPanel types
+     * If true, pairs of delta mass annotations are used when doing de novo 
+     * sequencing. If false, only single delta masses are annotated.
+     * 
+     * @return the useMassDeltaCombinations
+     */
+    public boolean useMassDeltaCombinations() {
+        return useMassDeltaCombinations;
+    }
+
+    /**
+     * If true, pairs of delta mass annotations are used when doing de novo 
+     * sequencing. If false, only single delta masses are annotated.
+     * 
+     * @param useMassDeltaCombinations the useMassDeltaCombinations to set
+     */
+    public void setUseMassDeltaCombinations(boolean useMassDeltaCombinations) {
+        this.useMassDeltaCombinations = useMassDeltaCombinations;
+    }
+
+    /**
+     * An enumerator of the possible GraphicsPanel types.
      */
     protected enum GraphicsPanelType {
 
@@ -452,7 +477,7 @@ public abstract class GraphicsPanel extends JPanel {
     }
     
     /**
-     * Sets the current GraphicsPanel type, default to centroid spectrum
+     * Sets the current GraphicsPanel type, default to centroid spectrum.
      */
     protected GraphicsPanelType currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
 
@@ -788,7 +813,7 @@ public abstract class GraphicsPanel extends JPanel {
                         secondDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i + 1)).intValue();
                     }
                     
-                    this.drawMeasurementLine(first, firstDataSetIndex, second, secondDataSetIndex, g, Color.black, 0);
+                    this.drawMeasurementLine(first, firstDataSetIndex, second, secondDataSetIndex, g, Color.LIGHT_GRAY, 0);
                 }
             }
 
@@ -839,6 +864,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         // used to find the location of the label
         FontMetrics fm = g.getFontMetrics();
+        Font oldFont = this.getFont();
 
         // switch to 2D graphics
         Graphics2D g2d = (Graphics2D) g;
@@ -846,6 +872,7 @@ public abstract class GraphicsPanel extends JPanel {
         // store the original color
         Color originalColor = g2d.getColor();
         Composite originalComposite = g2d.getComposite();
+        Stroke originalStroke = g2d.getStroke();
 
         Iterator<String> allReferenceAreas = referenceAreasXAxis.keySet().iterator();
 
@@ -876,33 +903,53 @@ public abstract class GraphicsPanel extends JPanel {
                 if ((tempDouble - end) >= 0.5) {
                     end++;
                 }
+                
+                // Vertical position of the bar with the position of the highest point + a margin.
+                int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2));
+                int areaHeight = this.getHeight() - currentPadding - y;
+                y += (int) (areaHeight - (areaHeight * currentReferenceArea.getPercentLength()));
 
                 xTemp[0] = start + iXPadding;
-                yTemp[0] = 0;
+                yTemp[0] = y;
 
                 xTemp[1] = end + iXPadding;
-                yTemp[1] = 0;
+                yTemp[1] = y;
 
                 xTemp[2] = end + iXPadding;
                 yTemp[2] = this.getHeight() - currentPadding;
 
                 xTemp[3] = start + iXPadding;
                 yTemp[3] = this.getHeight() - currentPadding;
-
-                if (start >= iXAxisMin && end <= iYAxisMax) {
-                    g2d.fillPolygon(xTemp, yTemp, xTemp.length);
-                }
+                
+                // draw the polygon
+                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
+                
+                // draw the thin line around the polygon
+                g2d.setComposite(originalComposite);
+                g2d.setColor(currentReferenceArea.getBorderColor());
+                g2d.setStroke(new BasicStroke(currentReferenceArea.getBorderWidth()));
+                g2d.drawRect(xTemp[0], yTemp[0], xTemp[1] - xTemp[0], yTemp[2] - yTemp[0]);
+                g2d.setStroke(originalStroke);
+                g2d.setColor(originalColor);
 
                 // draw the label
-                if (currentReferenceArea.drawLabel()) {
+                if (currentReferenceArea.drawLabel() && !miniature) {
 
                     // set the color and opacity level for the label
-                    g2d.setColor(Color.BLACK);
-                    g2d.setComposite(originalComposite);
+                    g2d.setColor(currentReferenceArea.getLabelColor());
 
+                    // set the font to use for the labels
+                    if (currentReferenceArea.useBoldFont()) {
+                        g.setFont(new Font(oldFont.getName(), oldFont.getStyle() | Font.BOLD, oldFont.getSize()));
+                    } else {
+                        g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize()));
+                    }
+                    
                     // insert the label
                     String label = currentReferenceArea.getLabel();
-                    g2d.drawString(label, start + iXPadding + 5, (int) fm.getStringBounds(label, g).getHeight());
+                    int width = g.getFontMetrics().stringWidth(label);
+                    int xPosText = xTemp[0] + (Math.abs(xTemp[1] - xTemp[0]) / 2) - (width / 2);
+                    g2d.drawString(label, xPosText, y + (int) fm.getStringBounds(label, g).getHeight() + 8);
                 }
             }
         }
@@ -910,6 +957,7 @@ public abstract class GraphicsPanel extends JPanel {
         // Change the color and alpha level back to its original setting.
         g2d.setColor(originalColor);
         g2d.setComposite(originalComposite);
+        g.setFont(oldFont);
     }
 
     /**
@@ -923,9 +971,11 @@ public abstract class GraphicsPanel extends JPanel {
 
         // used to find the location of the label
         FontMetrics fm = g.getFontMetrics();
+        Font oldFont = this.getFont();
 
         // switch to 2D graphics
         Graphics2D g2d = (Graphics2D) g;
+        Stroke originalStroke = g2d.getStroke();
 
         // store the original color
         Color originalColor = g2d.getColor();
@@ -960,6 +1010,9 @@ public abstract class GraphicsPanel extends JPanel {
                 if ((tempDouble - end) >= 0.5) {
                     end++;
                 }
+                
+                int areaLength = this.getWidth() - currentPadding;
+                int xMax = (int) (areaLength * currentReferenceArea.getPercentLength());
 
                 xTemp[0] = currentPadding;
                 yTemp[0] = this.getHeight() - start - currentPadding;
@@ -967,22 +1020,35 @@ public abstract class GraphicsPanel extends JPanel {
                 xTemp[1] = currentPadding;
                 yTemp[1] = this.getHeight() - end - currentPadding;
 
-                xTemp[2] = this.getWidth() - currentPadding;
+                xTemp[2] = xMax;
                 yTemp[2] = this.getHeight() - end - currentPadding;
 
-                xTemp[3] = this.getWidth() - currentPadding;
+                xTemp[3] = xMax;
                 yTemp[3] = this.getHeight() - start - currentPadding;
+                
+                g2d.fillPolygon(xTemp, yTemp, xTemp.length);
 
-                if (start >= iYAxisMin && end <= iYAxisMax) {
-                    g2d.fillPolygon(xTemp, yTemp, xTemp.length);
-                }
+
+                // draw the thin line around the polygon
+                g2d.setComposite(originalComposite);
+                g2d.setColor(currentReferenceArea.getBorderColor());
+                g2d.setStroke(new BasicStroke(currentReferenceArea.getBorderWidth()));
+                g2d.drawRect(xTemp[0], yTemp[2], xTemp[2] - xTemp[0], yTemp[0] - yTemp[2]);
+                g2d.setStroke(originalStroke);
+                g2d.setColor(originalColor);
 
                 // draw the label
-                if (currentReferenceArea.drawLabel()) {
+                if (currentReferenceArea.drawLabel() && !miniature) {
 
                     // set the color and opacity level for the label
-                    g2d.setColor(Color.BLACK);
-                    g2d.setComposite(originalComposite);
+                    g2d.setColor(currentReferenceArea.getLabelColor());
+
+                    // set the font to use for the labels
+                    if (currentReferenceArea.useBoldFont()) {
+                        g.setFont(new Font(oldFont.getName(), oldFont.getStyle() | Font.BOLD, oldFont.getSize()));
+                    } else {
+                        g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize()));
+                    }
 
                     // insert the label
                     String label = currentReferenceArea.getLabel();
@@ -1235,17 +1301,17 @@ public abstract class GraphicsPanel extends JPanel {
      * @param referenceArea the reference area to add
      */
     public void addReferenceAreaXAxis(ReferenceArea referenceArea) {
-        referenceAreasXAxis.put(referenceArea.getLabel(), referenceArea);
+        referenceAreasXAxis.put(referenceArea.getIdentifier(), referenceArea);
     }
 
     /**
-     * Removes the x-axis reference area with the given label. Does nothing if no
-     * reference with the given label is found.
+     * Removes the x-axis reference area with the given identifier. Does nothing if no
+     * reference with the given identifier is found.
      *
      * @param label the reference to remove
      */
-    public void removeReferenceAreaXAxis(String label) {
-        referenceAreasXAxis.remove(label);
+    public void removeReferenceAreaXAxis(String identifier) {
+        referenceAreasXAxis.remove(identifier);
     }
 
     /**
@@ -1271,17 +1337,17 @@ public abstract class GraphicsPanel extends JPanel {
      * @param referenceArea the reference area to add
      */
     public void addReferenceAreaYAxis(ReferenceArea referenceArea) {
-        referenceAreasYAxis.put(referenceArea.getLabel(), referenceArea);
+        referenceAreasYAxis.put(referenceArea.getIdentifier(), referenceArea);
     }
 
     /**
-     * Removes the y-axis reference area with the given label. Does nothing if no
-     * reference with the given label is found.
+     * Removes the y-axis reference area with the given identifier. Does nothing if no
+     * reference with the given identifier is found.
      *
      * @param label the reference to remove
      */
-    public void removeReferenceAreaYAxis(String label) {
-        referenceAreasYAxis.remove(label);
+    public void removeReferenceAreaYAxis(String identifier) {
+        referenceAreasYAxis.remove(identifier);
     }
 
     /**
@@ -2046,13 +2112,15 @@ public abstract class GraphicsPanel extends JPanel {
         // Now the real x-value difference as a String.
         double delta = Math.abs(iXAxisData.get(aFirstDatasetIndex)[aFirstIndex] - iXAxisData.get(aSecondDatasetIndex)[aSecondIndex]);
         String deltaMass = new BigDecimal(delta).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-        String matches = this.findDeltaMassMatches(delta, deltaMassWindow);
-        int width = g.getFontMetrics().stringWidth(deltaMass);
+        String deNovoTag = this.findDeltaMassMatches(delta, deltaMassWindow);
 
-        // Vertical position of the bar will the position of the highest point + a margin.
+        int deNovoTagWidth = g.getFontMetrics().stringWidth(deNovoTag);
+        int deltaMassWidth = g.getFontMetrics().stringWidth(deltaMass);
+        
+        // Vertical position of the bar with the position of the highest point + a margin.
         int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2)) + aExtraPadding;
 
-        // Draw the line, color is black.
+        // Draw the line.
         Color originalColor = g.getColor();
         g.setColor(aColor);
         g.drawLine(x1, y, x2, y);
@@ -2062,11 +2130,14 @@ public abstract class GraphicsPanel extends JPanel {
         // Drop a dotted line down to the peaks.
         dropDottedLine(aFirstIndex, aFirstDatasetIndex, y - 3, g);
         dropDottedLine(aSecondIndex, aSecondDatasetIndex, y - 3, g);
-        int xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (width / 2);
-        g.drawString(deltaMass, xPosText, y - 5);
-        if (!matches.trim().equals("")) {
-            g.drawString(" (" + matches + ")", xPosText + width, y - 5);
-        }
+        
+        // Draw the de novo tag.
+        int xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (deNovoTagWidth / 2);
+        g.drawString(deNovoTag, xPosText, y - 5);
+        
+        // Draw the mass.
+        xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (deltaMassWidth / 2);
+        g.drawString(deltaMass, xPosText, y + 15);
 
         // Return original color.
         g.setColor(originalColor);
@@ -2106,19 +2177,56 @@ public abstract class GraphicsPanel extends JPanel {
      *                  or empty String if none was found.
      */
     protected String findDeltaMassMatches(double aDelta, double aWindow) {
+        
         StringBuilder result = new StringBuilder("");
         boolean appended = false;
+        
         if (iKnownMassDeltas != null) {
             Iterator iter = iKnownMassDeltas.keySet().iterator();
             while (iter.hasNext()) {
                 Double mass = (Double) iter.next();
                 if (Math.abs(mass.doubleValue() - aDelta) < aWindow) {
                     if (appended) {
-                        result.append("/");
+                        result.append(" ");
                     } else {
                         appended = true;
                     }
                     result.append(iKnownMassDeltas.get(mass));
+                }
+            }
+            
+            // add combinations of two mass deltas
+            if (useMassDeltaCombinations) {
+                
+                // look for combinations of two mass deltas
+                Iterator iter1 = iKnownMassDeltas.keySet().iterator();
+                ArrayList<String> addedMassDeltas = new ArrayList<String>();
+
+                while (iter1.hasNext()) {
+                    Double mass1 = (Double) iter1.next();
+
+                    Iterator iter2 = iKnownMassDeltas.keySet().iterator();
+
+                    while (iter2.hasNext()) {
+
+                        Double mass2 = (Double) iter2.next();
+                        Double mass = mass1 + mass2;
+
+                        if (Math.abs(mass.doubleValue() - aDelta) < aWindow) {
+                            
+                            if (!addedMassDeltas.contains(iKnownMassDeltas.get(mass2) + "" + iKnownMassDeltas.get(mass1))) {
+                                
+                                if (appended) {
+                                    result.append(" ");
+                                } else {
+                                    appended = true;
+                                }
+                                
+                                result.append(iKnownMassDeltas.get(mass1) + "" + iKnownMassDeltas.get(mass2));
+                                addedMassDeltas.add(iKnownMassDeltas.get(mass1) + "" + iKnownMassDeltas.get(mass2));
+                            }  
+                        }
+                    }
                 }
             }
         }

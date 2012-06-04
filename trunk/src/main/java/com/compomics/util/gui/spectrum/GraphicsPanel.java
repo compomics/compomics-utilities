@@ -1308,7 +1308,7 @@ public abstract class GraphicsPanel extends JPanel {
      * Removes the x-axis reference area with the given identifier. Does nothing if no
      * reference with the given identifier is found.
      *
-     * @param label the reference to remove
+     * @param identifier the identifier of the reference to remove
      */
     public void removeReferenceAreaXAxis(String identifier) {
         referenceAreasXAxis.remove(identifier);
@@ -1344,7 +1344,7 @@ public abstract class GraphicsPanel extends JPanel {
      * Removes the y-axis reference area with the given identifier. Does nothing if no
      * reference with the given identifier is found.
      *
-     * @param label the reference to remove
+     * @param identifier the identifier of the reference to remove
      */
     public void removeReferenceAreaYAxis(String identifier) {
         referenceAreasYAxis.remove(identifier);

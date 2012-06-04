@@ -41,7 +41,7 @@ public class SpectrumFactory {
      */
     private int nSpectraCache = 1;
     /**
-     * Amount of precursors in cache
+     * Amount of precursors in cache.
      */
     private int nPrecursorsCache = 10000;
     /**
@@ -54,7 +54,7 @@ public class SpectrumFactory {
     private ArrayList<String> loadedPrecursors = new ArrayList<String>();
 
     /**
-     * Constructor
+     * Constructor.
      */
     private SpectrumFactory() {
     }
@@ -87,20 +87,20 @@ public class SpectrumFactory {
     }
     /**
      * Map of the random access files of the loaded mgf files (filename ->
-     * random access file)
+     * random access file).
      */
     private HashMap<String, RandomAccessFile> mgfFilesMap = new HashMap<String, RandomAccessFile>();
     /**
-     * Map of the mgf indexes (fileName -> mgf index)
+     * Map of the mgf indexes (fileName -> mgf index).
      */
     private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
     /**
-     * Map of the mzML unmarshallers (fileName -> unmarshaller)
+     * Map of the mzML unmarshallers (fileName -> unmarshaller).
      */
     private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
     /**
      * Map of the spectrum file mapped according to the name used by the search
-     * engine
+     * engine.
      */
     private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
 
@@ -349,30 +349,36 @@ public class SpectrumFactory {
         }
         return getPrecursor(spectrumKey, save, 0);
     }
-    
+
     /**
-     * Returns a boolean indicating whether the spectrum file has been loaded
+     * Returns a boolean indicating whether the spectrum file has been loaded.
+     *
      * @param fileName the file name
-     * @return 
+     * @return a boolean indicating whether the spectrum file has been loaded
      */
     public boolean fileLoaded(String fileName) {
-            return mgfIndexesMap.containsKey(fileName);
+        return mgfIndexesMap.containsKey(fileName);
     }
-    
+
     /**
-     * Returns a boolean indicating whether the spectrum is contained in the given spectrum file
+     * Returns a boolean indicating whether the spectrum is contained in the
+     * given spectrum file.
+     *
      * @param fileName the name of the spectrum file
      * @param spectrumTitle the title of the spectrum
-     * @return a boolean indicating whether the spectrum is contained in the given spectrum file
+     * @return a boolean indicating whether the spectrum is contained in the
+     * given spectrum file
      */
     public boolean spectrumLoaded(String fileName, String spectrumTitle) {
         return mgfIndexesMap.containsKey(fileName) && mgfIndexesMap.get(fileName).containsSpectrum(spectrumTitle);
     }
-    
+
     /**
-     * a boolean indicating whether the spectrum is loaded in the factory
+     * A boolean indicating whether the spectrum is loaded in the factory.
+     *
      * @param spectrumKey the spectrum key
-     * @return a boolean indicating whether the spectrum is loaded in the factory
+     * @return a boolean indicating whether the spectrum is loaded in the
+     * factory
      */
     public boolean spectrumLoaded(String spectrumKey) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
@@ -736,7 +742,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Adds an id to spectrum name in the mapping
+     * Adds an id to spectrum name in the mapping.
      *
      * @param idName name according to the id file
      * @param spectrumFile the spectrum file
@@ -773,8 +779,7 @@ public class SpectrumFactory {
 
         if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null || mgfIndex.getMaxMz() == null) {
 
-            double rt, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
-            Precursor precursor;
+            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
             int counter = 0;
             if (progressBar != null) {
@@ -791,8 +796,8 @@ public class SpectrumFactory {
                 }
                 String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
                 try {
-                    precursor = getPrecursor(spectrumKey, false);
-                    rt = precursor.getRt();
+                    Precursor precursor = getPrecursor(spectrumKey, false);
+                    double rt = precursor.getRt();
                     if (rt > maxRT) {
                         maxRT = rt;
                     }

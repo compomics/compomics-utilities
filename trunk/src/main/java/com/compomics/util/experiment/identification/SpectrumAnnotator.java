@@ -464,24 +464,28 @@ public class SpectrumAnnotator {
      */
     public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm) {
+        
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        
         if (spectrum != null) {
             setSpectrum(spectrum, intensityLimit);
         }
+        
         setPeptide(peptide, precursorCharge);
         setMassTolerance(mzTolerance, isPpm);
-        String key;
+
         if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION)) {
             charges.add(precursorCharge);
             charges.add(precursorCharge+1); // Just by curiosity
         }
+        
         for (Ion peptideIon : peptideIons) {
             if (iontypes.containsKey(peptideIon.getType())
                     && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
                     && lossesValidated(neutralLosses, peptideIon, peptide)) {
                 for (int charge : charges) {
                     if (chargeValidated(peptideIon, charge, precursorCharge)) {
-                        key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
+                        String key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
                         if (!spectrumAnnotation.containsKey(key)
                                 && !unmatchedIons.contains(key)) {
                             matchInSpectrum(peptideIon, charge);
@@ -493,6 +497,7 @@ public class SpectrumAnnotator {
                 }
             }
         }
+        
         return result;
     }
 

@@ -468,6 +468,42 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
+     * Returns true of the precuror details are to be shown.
+     * 
+     * @return true of the precuror details are to be show
+     */
+    public boolean showPrecursorDetails() {
+        return showPrecursorDetails;
+    }
+
+    /**
+     * Set wheter the precursor details are to be shown.
+     * 
+     * @param showPrecursorDetails the showPrecursorDetails to set
+     */
+    public void setShowPrecursorDetails(boolean showPrecursorDetails) {
+        this.showPrecursorDetails = showPrecursorDetails;
+    }
+
+    /**
+     * Returns true if the resolution is to be shown.
+     * 
+     * @return true of the resolution is to be shown
+     */
+    public boolean showResolution() {
+        return showResolution;
+    }
+
+    /**
+     * Set wheter the resolution is to be shown.
+     * 
+     * @param showResolution the showResolution to set
+     */
+    public void setShowResolution(boolean showResolution) {
+        this.showResolution = showResolution;
+    }
+
+    /**
      * An enumerator of the possible GraphicsPanel types.
      */
     protected enum GraphicsPanelType {

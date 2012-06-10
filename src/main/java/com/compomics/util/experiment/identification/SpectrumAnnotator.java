@@ -146,7 +146,7 @@ public class SpectrumAnnotator {
     }
 
     /**
-     * Matches a theoretic ion in the spectrum
+     * Matches a theoretic ion in the spectrum.
      *
      * @param theoreticIon the theoretic ion
      * @param inspectedCharge the expected charge
@@ -154,9 +154,11 @@ public class SpectrumAnnotator {
     private void matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
 
         Charge charge = new Charge(Charge.PLUS, inspectedCharge);
-        double fragmentMz, deltaMz, currentMz;
-        IonMatch tempMatch, bestMatch = null;
-        fragmentMz = (theoreticIon.getTheoreticMass() + inspectedCharge * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
+        IonMatch bestMatch = null;
+        double fragmentMz = (theoreticIon.getTheoreticMass() + inspectedCharge * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
+        
+        double deltaMz;
+        
         if (isPpm) {
             deltaMz = (mzTolerance / 1000000) * fragmentMz;
         } else {
@@ -168,29 +170,31 @@ public class SpectrumAnnotator {
 
             int indexMin = 0;
             int indexMax = mz.size() - 1;
-            int index;
-            Peak currentPeak;
 
-            tempMatch = new IonMatch(new Peak(mz.get(indexMax), 0), theoreticIon, charge);
+            IonMatch tempMatch = new IonMatch(new Peak(mz.get(indexMax), 0), theoreticIon, charge);
+            
             if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
-                currentPeak = peakMap.get(mz.get(indexMax));
+                Peak currentPeak = peakMap.get(mz.get(indexMax));
                 bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
             }
 
             tempMatch = new IonMatch(new Peak(mz.get(indexMin), 0), theoreticIon, charge);
+            
             if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
-                currentPeak = peakMap.get(mz.get(indexMin));
+                Peak currentPeak = peakMap.get(mz.get(indexMin));
                 if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                     bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
                 }
             }
 
             while (indexMax - indexMin > 1) {
-                index = (indexMax - indexMin) / 2 + indexMin;
-                currentMz = mz.get(index);
+                
+                int index = (indexMax - indexMin) / 2 + indexMin;
+                double currentMz = mz.get(index);
                 tempMatch = new IonMatch(new Peak(currentMz, 0), theoreticIon, charge);
+                
                 if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
-                    currentPeak = peakMap.get(mz.get(index));
+                    Peak currentPeak = peakMap.get(mz.get(index));
                     if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                         bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
                     }
@@ -203,6 +207,7 @@ public class SpectrumAnnotator {
                 }
             }
         }
+        
         if (bestMatch != null) {
             spectrumAnnotation.put(IonMatch.getPeakAnnotation(theoreticIon, charge), bestMatch);
         } else {
@@ -423,6 +428,7 @@ public class SpectrumAnnotator {
      *
      * @param theoreticIon the ion of interest
      * @param charge the candidate charge
+     * @param precursorCharge the precursor charge
      * @return a boolean indicating whether the given charge can be found on the
      * given fragment ion
      */

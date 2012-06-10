@@ -119,7 +119,9 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public static String getPeakAnnotation(boolean html, Ion ion, Charge charge) {
+        
         String result = "";
+        
         switch (ion.getType()) {
             case PEPTIDE_FRAGMENT_ION:
                 if (html) {

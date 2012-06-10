@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -18,7 +17,7 @@ import java.util.HashMap;
 public class IonFactory {
 
     /**
-     * The instance of the factory
+     * The instance of the factory.
      */
     private static IonFactory instance = null;
     /**
@@ -84,20 +83,17 @@ public class IonFactory {
     public ArrayList<Ion> getFragmentIons(Peptide peptide) {
 
         ArrayList<Ion> result = new ArrayList<Ion>();
-
         String sequence = peptide.getSequence().toUpperCase();
         HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<Integer, ArrayList<PTM>>();
-        int location;
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ArrayList<String> taken = new ArrayList<String>();
-        String ptmName;
         ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
         ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<NeutralLoss>();
         possibleNeutralLosses.addAll(defaultNeutralLosses);
-        boolean found;
+
         for (ModificationMatch ptmMatch : peptide.getModificationMatches()) {
-            location = ptmMatch.getModificationSite();
-            ptmName = ptmMatch.getTheoreticPtm();
+            int location = ptmMatch.getModificationSite();
+            String ptmName = ptmMatch.getTheoreticPtm();
             PTM ptm = ptmFactory.getPTM(ptmName);
             if (!modifications.containsKey(location)) {
                 modifications.put(location, new ArrayList<PTM>());
@@ -105,7 +101,7 @@ public class IonFactory {
             modifications.get(location).add(ptm);
             if (!taken.contains(ptmName)) {
                 for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
-                    found = false;
+                    boolean found = false;
                     for (ReporterIon reporterIon : reporterIons) {
                         if (ptmReporterIon.isSameAs(reporterIon)) {
                             found = true;
@@ -117,7 +113,7 @@ public class IonFactory {
                     }
                 }
                 for (NeutralLoss ptmNeutralLoss : ptm.getNeutralLosses()) {
-                    found = false;
+                    boolean found = false;
                     for (NeutralLoss neutralLoss : possibleNeutralLosses) {
                         if (ptmNeutralLoss.isSameAs(neutralLoss)) { //@TODO: we keep only different neutral losses. We might want to change that when people are working with modifications having reproducible motifs like ubiquitin or some glycons.
                             found = true;
@@ -131,28 +127,26 @@ public class IonFactory {
                 taken.add(ptmName);
             }
         }
+
         result.addAll(reporterIons);
 
         // We will account for up to two neutral losses per ion maximum
         ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);
 
-        AminoAcid currentAA;
         double forwardMass = 0;
         double rewindMass = Atom.O.mass;
-        int raa, faa;
         taken.clear();
-        char aaName;
 
-        for (int aa = 0; aa < sequence.length() - 1; aa++) {
+        for (int aa = 0; aa < sequence.length(); aa++) {
 
-            aaName = sequence.charAt(aa);
+            char aaName = sequence.charAt(aa);
             if (!taken.contains(aaName + "")) {
                 result.add(new ImmoniumIon(aaName));
                 taken.add(aaName + "");
             }
 
-            faa = aa + 1;
-            currentAA = AminoAcid.getAminoAcid(aaName);
+            int faa = aa + 1;
+            AminoAcid currentAA = AminoAcid.getAminoAcid(aaName);
             forwardMass += currentAA.monoisotopicMass;
 
             if (modifications.get(faa) != null) {
@@ -177,7 +171,7 @@ public class IonFactory {
             }
 
 
-            raa = sequence.length() - aa - 1;
+            int raa = sequence.length() - aa - 1;
             currentAA = AminoAcid.getAminoAcid(sequence.charAt(raa));
             rewindMass += currentAA.monoisotopicMass;
 
@@ -201,10 +195,9 @@ public class IonFactory {
             for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
                 result.add(new PeptideFragmentIon(PeptideFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass - getLossesMass(losses), losses));
             }
-
         }
 
-        currentAA = AminoAcid.getAminoAcid(sequence.charAt(sequence.length() - 1));
+        AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(sequence.length() - 1));
         forwardMass += currentAA.monoisotopicMass;
 
         if (modifications.get(sequence.length()) != null) {

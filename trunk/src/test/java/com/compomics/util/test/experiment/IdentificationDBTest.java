@@ -31,7 +31,7 @@ public class IdentificationDBTest {
     public void testDB() {
         try {
             
-            String path = this.getClass().getResource("IdentificationTest.class").getPath();
+            String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
             path = path.substring(1, path.indexOf("/target/"));
             path += "/src/test/resources/experiment/testDB";
             IdentificationDB idDB = new IdentificationDB(path);

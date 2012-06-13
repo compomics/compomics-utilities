@@ -55,20 +55,14 @@ public class Util {
      * @return rue if all deletions were successful
      */
     public static boolean deleteDir(File dir) {
-
         if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
+            for (File child : dir.listFiles()) {
+                boolean success = deleteDir(child);
                 if (!success) {
                     return false;
                 }
             }
-        } else {
-            // file is NOT a directory
-            return false;
         }
-
         return dir.delete();
     }
 

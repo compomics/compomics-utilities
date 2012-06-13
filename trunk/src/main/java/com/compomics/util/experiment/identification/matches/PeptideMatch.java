@@ -7,37 +7,34 @@ import java.util.ArrayList;
 
 /**
  * This class models a peptide match.
- * <p/>
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 8:58:46 AM
+ *
+ * @author Marc Vaudel
  */
 public class PeptideMatch extends IdentificationMatch {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 7195830246336841081L;
     /**
-     * the theoretic peptide mathing
+     * The theoretic peptide mathing.
      */
     private Peptide theoreticPeptide;
     /**
-     * The key of the main match, typically of the highest score
+     * The key of the main match, typically of the highest score.
      */
     private String mainMatchKey;
     /**
-     * All spectrum matches indexed by spectrum id: FILE_TITLE
+     * All spectrum matches indexed by spectrum id: FILE_TITLE.
      */
     private ArrayList<String> spectrumMatches = new ArrayList<String>();
     /**
-     * is the peptide match a decoy hit
+     * Is the peptide match a decoy hit?
      */
     private Boolean isDecoy = null;
 
     /**
-     * constructor for the peptide match
+     * Constructor for the peptide match.
      */
     public PeptideMatch() {
     }
@@ -48,7 +45,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * Constructor for the peptide match
+     * Constructor for the peptide match.
      *
      * @param peptide the matching peptide
      */
@@ -57,9 +54,9 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * Constructor for the peptide match
+     * Constructor for the peptide match.
      *
-     * @param peptide          The matching peptide
+     * @param peptide The matching peptide
      * @param spectrumMatchKey The key of the main spectrum match
      */
     public PeptideMatch(Peptide peptide, String spectrumMatchKey) {
@@ -69,7 +66,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * getter for the theoretic peptide
+     * Getter for the theoretic peptide.
      *
      * @return the theoretic peptide
      */
@@ -78,7 +75,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * setter for the theoretic peptide
+     * Setter for the theoretic peptide.
      *
      * @param theoreticPeptide a theoretic peptide
      */
@@ -87,7 +84,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * method returns the key of the main match
+     * Returns the key of the main match.
      *
      * @return the main match key
      */
@@ -96,7 +93,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * methods sets the main match
+     * Sets the main match.
      *
      * @param spectrumMatchKey the key of the main match
      */
@@ -105,7 +102,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * returns all spectra matched
+     * Returns all spectra matched.
      *
      * @return all spectrum matches
      */
@@ -114,18 +111,18 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * add a spectrum match
+     * Add a spectrum match.
      *
-     * @param spectrumMatchKey  a spectrum match
+     * @param spectrumMatchKey a spectrum match
      */
     public void addSpectrumMatch(String spectrumMatchKey) {
         if (!spectrumMatches.contains(spectrumMatchKey)) {
-        spectrumMatches.add(spectrumMatchKey);
+            spectrumMatches.add(spectrumMatchKey);
         }
     }
 
     /**
-     * returns the number of spectra matched
+     * Returns the number of spectra matched.
      *
      * @return spectrum count
      */
@@ -134,7 +131,7 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * inspects whether the peptide match is a decoy hit
+     * Inspects whether the peptide match is a decoy hit.
      *
      * @return true if the peptide match is a decoy hit
      */

@@ -47,7 +47,10 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param proteinAccession the matching protein
      */
-    public ProteinMatch(String proteinAccession) {
+    public ProteinMatch(String proteinAccession) throws IllegalArgumentException {
+        if (proteinAccession.contains(" ")) {
+            throw new IllegalArgumentException("Protein accession containing ' ' are not supported. Conflicting accession: " + mainMatch);
+        }
         theoreticProtein.add(proteinAccession);
         mainMatch = proteinAccession;
     }

@@ -9,7 +9,7 @@ import java.util.*;
 
 /**
  * This class models a peptide.
- * 
+ *
  * @author Marc Vaudel
  */
 public class Peptide extends ExperimentObject {
@@ -53,10 +53,16 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         for (ModificationMatch mod : modifications) {
+            if (mod.getTheoreticPtm().contains("_")) {
+                throw new IllegalArgumentException("PTM names containing '_' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+            }
             this.modifications.add(mod);
         }
         estimateTheoreticMass();
         for (String protein : parentProteins) {
+            if (protein.contains(" ")) {
+                throw new IllegalArgumentException("Protein accession containing ' ' are not supported. Conflicting accession: " + protein);
+            }
             this.parentProteins.add(protein);
         }
     }
@@ -236,7 +242,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns how many of the given modification was found in the given peptide.
+     * Returns how many of the given modification was found in the given
+     * peptide.
      *
      * @param peptideKey the peptide key
      * @param modification the name of the modification

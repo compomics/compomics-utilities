@@ -351,7 +351,6 @@ public class IdentificationDB {
                 return;
             case Protein:
                 updateProteinMatch((ProteinMatch) match);
-                return;
         }
     }
 
@@ -584,7 +583,6 @@ public class IdentificationDB {
                 return;
             case Protein:
                 addProteinMatch((ProteinMatch) match);
-                return;
         }
     }
 

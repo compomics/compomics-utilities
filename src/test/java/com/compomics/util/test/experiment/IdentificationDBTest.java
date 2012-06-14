@@ -74,6 +74,8 @@ public class IdentificationDBTest {
             
             idDB.close();
 
+            File dbFolder = new File(path);
+            Util.deleteDir(dbFolder);
 
         } catch (Exception e) {
             e.printStackTrace();

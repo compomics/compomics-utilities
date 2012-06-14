@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -90,6 +91,8 @@ public abstract class Identification extends ExperimentObject {
     protected HashMap<String, Boolean> modifiedMatches = new HashMap<String, Boolean>();
     /**
      * Map of the user's parameters.
+     *
+     * @deprecated use the database instead
      */
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
@@ -387,14 +390,14 @@ public abstract class Identification extends ExperimentObject {
     /**
      * sets the directory where matches will be stored in order to save memory.
      * Matches can be stored in a database (default) or serialized files. If the
-     * database option is chosen (see setIsDB(Boolean isDB)), the database will
-     * be created in the folder.
+     * database option is chosen (see setIsDB(Boolean isDB)) and no database
+     * created, the database will be created in the folder.
      *
      * @param serializationDirectory the path of the directory
      */
     public void setDirectory(String serializationDirectory) throws SQLException {
         this.serializationDirectory = serializationDirectory;
-        if (isDB) {
+        if (isDB && identificationDB == null) {
             identificationDB = new IdentificationDB(serializationDirectory);
         }
     }
@@ -1153,5 +1156,87 @@ public abstract class Identification extends ExperimentObject {
      */
     public void close() throws SQLException {
         identificationDB.close();
+    }
+
+    /**
+     * Returns the kind of match pointed by the given key in the identification
+     * mappings. Null if missing from the mapping.
+     *
+     * @param matchKey the match key
+     * @return the kind of match
+     */
+    public MatchType getMatchType(String matchKey) {
+        if (proteinIdentification.contains(matchKey)) {
+            return MatchType.Protein;
+        } else if (peptideIdentification.contains(matchKey)) {
+            return MatchType.Peptide;
+        } else if (spectrumIdentification.contains(matchKey)) {
+        return MatchType.Spectrum;
+        }
+        return null;
+    }
+
+    public void convert(ProgressDialogX progressDialog, boolean cancelProgress, String newDirectory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+        setIsDB(true);
+        if (identificationDB == null) {
+            identificationDB = new IdentificationDB(newDirectory);
+        }
+        File directory = new File(serializationDirectory);
+        File[] files = directory.listFiles();
+        int nParameters = 0;
+        for (HashMap<String, UrParameter> map : urParameters.values()) {
+            nParameters += map.size();
+        }
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMax(files.length + nParameters);
+        }
+        MatchType matchType;
+        for (String matchKey : urParameters.keySet()) {
+            matchType = getMatchType(matchKey);
+            for (UrParameter urParameter : urParameters.get(matchKey).values()) {
+                if (matchType == MatchType.Protein) {
+                    addProteinMatchParameter(matchKey, urParameter);
+                } else if (matchType == MatchType.Peptide) {
+                    addPeptideMatchParameter(matchKey, urParameter);
+                } else if (matchType == MatchType.Spectrum) {
+                    addSpectrumMatchParameter(matchKey, urParameter);
+                }
+            }
+            if (progressDialog != null) {
+                progressDialog.incrementValue();
+            }
+            if (cancelProgress) {
+                break;
+            }
+        }
+        for (File file : files) {
+            if (file.getName().endsWith(EXTENTION)) {
+                FileInputStream fis = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream in = new ObjectInputStream(bis);
+                IdentificationMatch match = (IdentificationMatch) in.readObject();
+                fis.close();
+                bis.close();
+                in.close();
+                file.delete();
+                String matchKey = match.getKey();
+                loadedMatchesMap.put(matchKey, match);
+                loadedMatches.add(matchKey);
+                modifiedMatches.put(matchKey, false);
+                updateCache();
+            }
+            if (progressDialog != null) {
+                progressDialog.incrementValue();
+            }
+            if (cancelProgress) {
+                break;
+            }
+        }
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(true);
+        }
+        Util.deleteDir(directory);
+        setDirectory(newDirectory);
     }
 }

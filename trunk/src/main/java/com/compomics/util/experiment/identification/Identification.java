@@ -78,7 +78,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Map of the loaded matches.
      */
-    protected HashMap<String, Object> loadedMatchesMap = new HashMap<String, Object>();
+    protected HashMap<String, IdentificationMatch> loadedMatchesMap = new HashMap<String, IdentificationMatch>();
     /**
      * List of the loaded matches with the most used matches in the end.
      */
@@ -94,8 +94,8 @@ public abstract class Identification extends ExperimentObject {
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
      * Map of long keys (>100 characters) which will be referenced by their
-     * index for file creation/database storage.
-     * @TODO implement this for db keys?
+     * index for file creation/database storage. @TODO implement this for db
+     * keys?
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
@@ -270,7 +270,7 @@ public abstract class Identification extends ExperimentObject {
             addMatchParameter(key, urParameter);
         }
     }
-    
+
     /**
      * Updates a protein match parameter in the database
      *
@@ -286,7 +286,7 @@ public abstract class Identification extends ExperimentObject {
             identificationDB.updateProteinParameter(key, urParameter);
         }
     }
-    
+
     /**
      * Updates a peptide match parameter in the database
      *
@@ -302,7 +302,7 @@ public abstract class Identification extends ExperimentObject {
             identificationDB.updatePeptideParameter(key, urParameter);
         }
     }
-    
+
     /**
      * Updates a spectrum match parameter in the database
      *
@@ -385,21 +385,29 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * sets the serialization directory.
+     * sets the directory where matches will be stored in order to save memory.
+     * Matches can be stored in a database (default) or serialized files. If the
+     * database option is chosen (see setIsDB(Boolean isDB)), the database will
+     * be created in the folder.
      *
-     * @param serializationDirectory the path of the serialization directory
+     * @param serializationDirectory the path of the directory
      */
-    public void setSerializationDirectory(String serializationDirectory) {
+    public void setDirectory(String serializationDirectory) throws SQLException {
         this.serializationDirectory = serializationDirectory;
+        if (isDB) {
+            identificationDB = new IdentificationDB(serializationDirectory);
+        }
     }
 
     /**
      * Removes a match from the model.
      *
      * @param matchKey the key of the match to remove
-     * @deprecated it is advised to use the specific psm/peptide/protein method instead
+     * @deprecated it is advised to use the specific psm/peptide/protein method
+     * instead
      * @throws IllegalArgumentException
-     * @throws SQLException exception thrown whenever an error occurred while deleting the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
      */
     public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException {
         if (proteinIdentification.contains(matchKey)) {
@@ -416,9 +424,9 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
-            proteinIdentification.remove(matchKey);
-            spectrumIdentification.remove(matchKey);
-            peptideIdentification.remove(matchKey);
+        proteinIdentification.remove(matchKey);
+        spectrumIdentification.remove(matchKey);
+        peptideIdentification.remove(matchKey);
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -438,10 +446,11 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param matchKey the key of the match to remove
      * @throws IllegalArgumentException
-     * @throws SQLException exception thrown whenever an error occurred while deleting the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
      */
     public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException {
-            spectrumIdentification.remove(matchKey);
+        spectrumIdentification.remove(matchKey);
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -461,10 +470,11 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param matchKey the key of the match to remove
      * @throws IllegalArgumentException
-     * @throws SQLException exception thrown whenever an error occurred while deleting the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
      */
     public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException {
-            peptideIdentification.remove(matchKey);
+        peptideIdentification.remove(matchKey);
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -484,7 +494,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param matchKey the key of the match to remove
      * @throws IllegalArgumentException
-     * @throws SQLException exception thrown whenever an error occurred while deleting the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
      */
     public void removeProteinMatch(String matchKey) throws IllegalArgumentException, SQLException {
         if (proteinIdentification.contains(matchKey)) {
@@ -501,7 +512,7 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
-            proteinIdentification.remove(matchKey);
+        proteinIdentification.remove(matchKey);
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -551,41 +562,32 @@ public abstract class Identification extends ExperimentObject {
      * occurred while retrieving the match
      * @deprecated use the database match specific methods instead
      */
-    private synchronized Object getMatch(String matchKey, int errorCounter) throws IllegalArgumentException {
-        int index = loadedMatches.indexOf(matchKey);
-        if (index == -1) {
-            try {
-                File newMatch = new File(serializationDirectory, getFileName(matchKey));
-                FileInputStream fis = new FileInputStream(newMatch);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                ObjectInputStream in = new ObjectInputStream(bis);
-                Object spectrumMatch = in.readObject();
-                fis.close();
-                bis.close();
-                in.close();
-                loadedMatchesMap.put(matchKey, spectrumMatch);
-                loadedMatches.add(matchKey);
-                modifiedMatches.put(matchKey, false);
-                updateCache();
-                return spectrumMatch;
-            } catch (Exception e) {
-                if (errorCounter <= 100) {
-                    try {
-                        wait(50);
-                    } catch (InterruptedException ie) {
-                    }
-                    return getMatch(matchKey, errorCounter + 1);
-                } else {
-                    e.printStackTrace();
-                    throw new IllegalArgumentException("Error while loading " + matchKey);
+    private synchronized IdentificationMatch getMatch(String matchKey, int errorCounter) throws IllegalArgumentException {
+        try {
+            File newMatch = new File(serializationDirectory, getFileName(matchKey));
+            FileInputStream fis = new FileInputStream(newMatch);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            ObjectInputStream in = new ObjectInputStream(bis);
+            IdentificationMatch match = (IdentificationMatch) in.readObject();
+            fis.close();
+            bis.close();
+            in.close();
+            loadedMatchesMap.put(matchKey, match);
+            loadedMatches.add(matchKey);
+            modifiedMatches.put(matchKey, false);
+            updateCache();
+            return match;
+        } catch (Exception e) {
+            if (errorCounter <= 100) {
+                try {
+                    wait(50);
+                } catch (InterruptedException ie) {
                 }
+                return getMatch(matchKey, errorCounter + 1);
+            } else {
+                e.printStackTrace();
+                throw new IllegalArgumentException("Error while loading " + matchKey);
             }
-        } else {
-            if (index < 0.25 * loadedMatches.size()) {
-                loadedMatches.remove(matchKey);
-                loadedMatches.add(matchKey);
-            }
-            return loadedMatchesMap.get(matchKey);
         }
     }
 
@@ -604,10 +606,19 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        if (isDB) {
-            return identificationDB.getSpectrumMatch(spectrumKey);
+        int index = loadedMatches.indexOf(spectrumKey);
+        if (index == -1) {
+            if (isDB) {
+                return identificationDB.getSpectrumMatch(spectrumKey);
+            } else {
+                return (SpectrumMatch) getMatch(spectrumKey);
+            }
         } else {
-            return (SpectrumMatch) getMatch(spectrumKey);
+            if (index < 0.25 * loadedMatches.size()) {
+                loadedMatches.remove(spectrumKey);
+                loadedMatches.add(spectrumKey);
+            }
+            return (SpectrumMatch) loadedMatchesMap.get(spectrumKey);
         }
     }
 
@@ -626,10 +637,19 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        if (isDB) {
-            return identificationDB.getPeptideMatch(peptideKey);
+        int index = loadedMatches.indexOf(peptideKey);
+        if (index == -1) {
+            if (isDB) {
+                return identificationDB.getPeptideMatch(peptideKey);
+            } else {
+                return (PeptideMatch) getMatch(peptideKey);
+            }
         } else {
-            return (PeptideMatch) getMatch(peptideKey);
+            if (index < 0.25 * loadedMatches.size()) {
+                loadedMatches.remove(peptideKey);
+                loadedMatches.add(peptideKey);
+            }
+            return (PeptideMatch) loadedMatchesMap.get(peptideKey);
         }
     }
 
@@ -648,10 +668,19 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        if (isDB) {
-            return identificationDB.getProteinMatch(proteinKey);
+        int index = loadedMatches.indexOf(proteinKey);
+        if (index == -1) {
+            if (isDB) {
+                return identificationDB.getProteinMatch(proteinKey);
+            } else {
+                return (ProteinMatch) getMatch(proteinKey);
+            }
         } else {
-            return (ProteinMatch) getMatch(proteinKey);
+            if (index < 0.25 * loadedMatches.size()) {
+                loadedMatches.remove(proteinKey);
+                loadedMatches.add(proteinKey);
+            }
+            return (ProteinMatch) loadedMatchesMap.get(proteinKey);
         }
     }
 
@@ -730,31 +759,31 @@ public abstract class Identification extends ExperimentObject {
                 if (modifiedMatches.get(key)) {
                     if (isDB) {
                         try {
-                        identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new IOException("Error while writing match " + key + "in the database.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        throw new SQLException("Error while writing match " + key + "in the database.");
-                    }
+                            identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            throw new IOException("Error while writing match " + key + "in the database.");
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            throw new SQLException("Error while writing match " + key + "in the database.");
+                        }
                     } else {
-                    try {
-                        File matchFile = new File(serializationDirectory, getFileName(key));
-                        FileOutputStream fos = new FileOutputStream(matchFile);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        oos.writeObject(loadedMatchesMap.get(key));
-                        oos.close();
-                        bos.close();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        throw new FileNotFoundException("Error while writing match " + key);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new IOException("Error while writing match " + key);
-                    }
+                        try {
+                            File matchFile = new File(serializationDirectory, getFileName(key));
+                            FileOutputStream fos = new FileOutputStream(matchFile);
+                            BufferedOutputStream bos = new BufferedOutputStream(fos);
+                            ObjectOutputStream oos = new ObjectOutputStream(bos);
+                            oos.writeObject(loadedMatchesMap.get(key));
+                            oos.close();
+                            bos.close();
+                            fos.close();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            throw new FileNotFoundException("Error while writing match " + key);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            throw new IOException("Error while writing match " + key);
+                        }
                     }
                 }
                 loadedMatches.remove(0);
@@ -1115,10 +1144,12 @@ public abstract class Identification extends ExperimentObject {
     public void setIsDB(Boolean isDB) {
         this.isDB = isDB;
     }
-    
+
     /**
      * Closes the database connection
-     * @throws SQLException exception thrown whenever an error occurred while closing the database connection
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * closing the database connection
      */
     public void close() throws SQLException {
         identificationDB.close();

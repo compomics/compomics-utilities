@@ -69,6 +69,10 @@ public class IdentificationDB {
      */
     private ArrayList<String> psmTables = new ArrayList<String>();
     /**
+     * List of keys too long to create a table
+     */
+    private ArrayList<String> longKeys = new ArrayList<String>();
+    /**
      * List of all psm parameters tables
      */
     private ArrayList<String> psmParametersTables = new ArrayList<String>();
@@ -126,7 +130,15 @@ public class IdentificationDB {
      * working with the database
      */
     private void addTable(String tableName) throws SQLException {
+        if (tableName.length() >= 128) {
+            int index = longKeys.size();
+            longKeys.add(tableName);
+            tableName = index + "";
+        }
         Statement stmt = dbConnection.createStatement();
+        if (tableName.contains("|")) {
+            int debug = 0;
+        }
         stmt.execute("CREATE table " + tableName + " ("
                 + "NAME    VARCHAR(500),"
                 + "MATCH_BLOB blob(16M)" // @TODO: not sure what the size should be here...
@@ -743,8 +755,12 @@ public class IdentificationDB {
      * @return the table name of the given spectrum
      */
     public String getSpectrumMatchTable(String spectrumKey) {
-        String name = Spectrum.getSpectrumFile(spectrumKey) + psmTableSuffix;
-        return name.replace(" ", "_").replace("|", "_");
+        String tableName = Spectrum.getSpectrumFile(spectrumKey) + psmTableSuffix;
+        tableName = removeForbiddenCharacters(tableName);
+        if (longKeys.contains(tableName)) {
+            tableName = longKeys.indexOf(tableName) + "";
+        }
+        return tableName;
     }
 
     /**
@@ -757,7 +773,11 @@ public class IdentificationDB {
     public String getSpectrumParameterTable(String spectrumKey, UrParameter urParameter) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String tableName = ExperimentObject.getParameterKey(urParameter) + "_" + fileName + psmParametersTableSuffix;
-        return tableName.replace(" ", "_").replace("|", "_");
+        tableName = removeForbiddenCharacters(tableName);
+        if (longKeys.contains(tableName)) {
+            tableName = longKeys.indexOf(tableName) + "";
+        }
+        return tableName;
     }
 
     /**
@@ -768,7 +788,11 @@ public class IdentificationDB {
      */
     public String getPeptideParameterTable(UrParameter urParameter) {
         String tableName = ExperimentObject.getParameterKey(urParameter) + peptideParametersTableSuffix;
-        return tableName.replace(" ", "_").replace("|", "_");
+        tableName = removeForbiddenCharacters(tableName);
+        if (longKeys.contains(tableName)) {
+            tableName = longKeys.indexOf(tableName) + "";
+        }
+        return tableName;
     }
 
     /**
@@ -779,7 +803,11 @@ public class IdentificationDB {
      */
     public String getProteinParameterTable(UrParameter urParameter) {
         String tableName = ExperimentObject.getParameterKey(urParameter) + proteinParametersTableSuffix;
-        return tableName.replace(" ", "_").replace("|", "_");
+        tableName = removeForbiddenCharacters(tableName);
+        if (longKeys.contains(tableName)) {
+            tableName = longKeys.indexOf(tableName) + "";
+        }
+        return tableName;
     }
 
     /**
@@ -791,7 +819,11 @@ public class IdentificationDB {
      */
     public String getParameterTable(UrParameter urParameter) {
         String tableName = ExperimentObject.getParameterKey(urParameter) + parametersSuffix;
-        return tableName.replace(" ", "_").replace("|", "_");
+        tableName = removeForbiddenCharacters(tableName);
+        if (longKeys.contains(tableName)) {
+            tableName = longKeys.indexOf(tableName) + "";
+        }
+        return tableName;
     }
 
     /**
@@ -802,5 +834,16 @@ public class IdentificationDB {
      */
     public void close() throws SQLException {
         dbConnection.close();
+    }
+    
+    /**
+     * Removes the characters forbidden in table names and puts a '_' instead
+     * @param tableName the table name
+     * @return the corrected table name
+     */
+    public String removeForbiddenCharacters(String tableName) {
+        tableName = tableName.replace(" ", "_");
+        tableName = tableName.replace("|", "_");
+        return tableName;
     }
 }

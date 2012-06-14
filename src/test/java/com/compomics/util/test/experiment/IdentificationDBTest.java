@@ -76,7 +76,7 @@ public class IdentificationDBTest {
 
             File dbFolder = new File(path);
             Util.deleteDir(dbFolder);
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

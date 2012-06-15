@@ -1155,7 +1155,9 @@ public abstract class Identification extends ExperimentObject {
      * closing the database connection
      */
     public void close() throws SQLException {
-        identificationDB.close();
+        if (isDB) {
+            identificationDB.close();
+        }
     }
 
     /**
@@ -1171,11 +1173,40 @@ public abstract class Identification extends ExperimentObject {
         } else if (peptideIdentification.contains(matchKey)) {
             return MatchType.Peptide;
         } else if (spectrumIdentification.contains(matchKey)) {
-        return MatchType.Spectrum;
+            return MatchType.Spectrum;
         }
         return null;
     }
 
+    /**
+     * Establishes a connection to the database
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * establishing the connection
+     */
+    public void establishConnection() throws SQLException {
+        if (identificationDB == null) {
+            identificationDB = new IdentificationDB(serializationDirectory);
+        }
+        identificationDB.establishConnection();
+    }
+
+    /**
+     * Converts a serlialization based structure into a database based one
+     *
+     * @param progressDialog a dialog to give progress feedback to the user
+     * @param cancelProgress boolean allowing canceling the process, this will
+     * corrupt the project.
+     * @param newDirectory the new directory where to store the data
+     * @throws FileNotFoundException exception thrown whenever a file is not
+     * found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading/writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the database
+     */
     public void convert(ProgressDialogX progressDialog, boolean cancelProgress, String newDirectory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
         if (identificationDB == null) {
@@ -1223,7 +1254,7 @@ public abstract class Identification extends ExperimentObject {
                 String matchKey = match.getKey();
                 loadedMatchesMap.put(matchKey, match);
                 loadedMatches.add(matchKey);
-                modifiedMatches.put(matchKey, false);
+                modifiedMatches.put(matchKey, true);
                 updateCache();
             }
             if (progressDialog != null) {

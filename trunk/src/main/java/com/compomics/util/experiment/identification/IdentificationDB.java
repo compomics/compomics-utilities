@@ -20,8 +20,12 @@ import java.util.ArrayList;
  *
  * @author marc
  */
-public class IdentificationDB {
+public class IdentificationDB implements Serializable {
 
+    /**
+     * Serialization number for backward compatibility
+     */
+        static final long serialVersionUID = -834139883397389992L;
     /**
      * The name which will be used for the database
      */
@@ -90,6 +94,14 @@ public class IdentificationDB {
      * @deprecated use match specific mapping instead
      */
     private ArrayList<String> matchParametersTables = new ArrayList<String>();
+    /**
+     * The maximal size for a BLOB match in the database
+     */
+    public static final String matchSize = "128k";
+    /**
+     * The maximal size for a BLOB parameter match in the database
+     */
+    public static final String parametersSize = "8k";
 
     /**
      * Constructor creating the database and the protein and protein parameters
@@ -105,19 +117,18 @@ public class IdentificationDB {
             Util.deleteDir(dbFolder);
         }
         dbLocation = dbFolder.getAbsolutePath();
-        String url = "jdbc:derby:" + dbLocation + ";create=true";
-        dbConnection = DriverManager.getConnection(url);
+        establishConnection();
 
         Statement statement = dbConnection.createStatement();
         statement.execute("CREATE table " + proteinTableName + " ("
                 + "NAME    VARCHAR(500),"
-                + "MATCH_BLOB blob(16M)" // @TODO: not sure what the size should be here...
+                + "MATCH_BLOB blob(" + matchSize +")"
                 + ")");
         statement.close();
         statement = dbConnection.createStatement();
         statement.execute("CREATE table " + peptideTableName + " ("
                 + "NAME    VARCHAR(500),"
-                + "MATCH_BLOB blob(16M)" // @TODO: not sure what the size should be here...
+                + "MATCH_BLOB blob(" + matchSize +")"
                 + ")");
         statement.close();
     }
@@ -126,22 +137,20 @@ public class IdentificationDB {
      * Adds the desired table in the database
      *
      * @param tableName the name of the table
+     * @param blobSize the size of the blob
      * @throws SQLException exception thrown whenever a problem occurred while
      * working with the database
      */
-    private void addTable(String tableName) throws SQLException {
+    private void addTable(String tableName, String blobSize) throws SQLException {
         if (tableName.length() >= 128) {
             int index = longKeys.size();
             longKeys.add(tableName);
             tableName = index + "";
         }
         Statement stmt = dbConnection.createStatement();
-        if (tableName.contains("|")) {
-            int debug = 0;
-        }
         stmt.execute("CREATE table " + tableName + " ("
                 + "NAME    VARCHAR(500),"
-                + "MATCH_BLOB blob(16M)" // @TODO: not sure what the size should be here...
+                + "MATCH_BLOB blob(" + blobSize +")"
                 + ")");
         stmt.close();
     }
@@ -500,7 +509,7 @@ public class IdentificationDB {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
         if (!psmTables.contains(tableName)) {
-            addTable(tableName);
+            addTable(tableName, matchSize);
             psmTables.add(tableName);
         }
         if (spectrumMatchInDB(key)) {
@@ -629,7 +638,7 @@ public class IdentificationDB {
     public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         if (!psmParametersTables.contains(tableName)) {
-            addTable(tableName);
+            addTable(tableName, parametersSize);
             psmParametersTables.add(tableName);
         }
         insertObject(tableName, key, urParameter);
@@ -666,7 +675,7 @@ public class IdentificationDB {
     public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getPeptideParameterTable(urParameter);
         if (!peptideParametersTables.contains(tableName)) {
-            addTable(tableName);
+            addTable(tableName, parametersSize);
             peptideParametersTables.add(tableName);
         }
         insertObject(tableName, key, urParameter);
@@ -703,7 +712,7 @@ public class IdentificationDB {
     public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getProteinParameterTable(urParameter);
         if (!proteinParametersTables.contains(tableName)) {
-            addTable(tableName);
+            addTable(tableName, parametersSize);
             proteinParametersTables.add(tableName);
         }
         insertObject(tableName, key, urParameter);
@@ -742,7 +751,7 @@ public class IdentificationDB {
     public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getParameterTable(urParameter);
         if (!matchParametersTables.contains(tableName)) {
-            addTable(tableName);
+            addTable(tableName, parametersSize);
             matchParametersTables.add(tableName);
         }
         insertObject(tableName, key, urParameter);
@@ -834,6 +843,16 @@ public class IdentificationDB {
      */
     public void close() throws SQLException {
         dbConnection.close();
+        dbConnection = null;
+    }
+    
+    /**
+     * Establishes connection to the database
+     * @throws SQLException exception thrown whenever an error occurred while establishing the connection
+     */
+    public void establishConnection() throws SQLException {
+        String url = "jdbc:derby:" + dbLocation + ";create=true";
+        dbConnection = DriverManager.getConnection(url);
     }
     
     /**

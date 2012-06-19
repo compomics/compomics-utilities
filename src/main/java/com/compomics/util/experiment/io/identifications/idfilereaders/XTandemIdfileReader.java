@@ -8,6 +8,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.*;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.*;
@@ -80,14 +81,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
 
         HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
 
         Iterator<Spectrum> spectraIt = xTandemFile.getSpectraIterator();
 
-        if (jProgressBar != null) {
-            jProgressBar.setMaximum(xTandemFile.getSpectraNumber());
+        if (waitingHandler != null) {
+            waitingHandler.setMaxSecondaryProgressValue(xTandemFile.getSpectraNumber());
         }
 
         while (spectraIt.hasNext()) {
@@ -139,8 +140,11 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 foundPeptides.add(currentMatch);
             }
 
-            if (jProgressBar != null) {
-                jProgressBar.setValue(jProgressBar.getValue() + 1);
+            if (waitingHandler != null) {
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
+                waitingHandler.increaseSecondaryProgressValue();
             }
         }
 

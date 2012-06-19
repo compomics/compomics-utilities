@@ -163,6 +163,14 @@ public class ReporterIon extends Ion {
     public boolean isSameAs(ReporterIon anotherReporterIon) {
         return theoreticMass == anotherReporterIon.getTheoreticMass();
     }
+    
+    /**
+     * Returns the index of a reporter ion. (i.e. its rounded m/z: 114 for iTRAQ 114).
+     * @return the index of a reporter ion.
+     */
+    public int getIndex() {
+        return (int) getTheoreticMass() + 1;
+    }
 
     @Override
     public int getSubType() {

@@ -1,6 +1,6 @@
 package com.compomics.util;
 
-import com.compomics.util.gui.dialogs.ProgressDialogX;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Color;
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -122,24 +122,10 @@ public class Util {
      * @return the table as a separated text file
      */
     public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
-        return tableToText(table, separator, progressDialog, false, removeHtml);
-    }
-
-    /**
-     * Returns the table as a separated text file.
-     *
-     * @param table the table to turn in to text
-     * @param separator the text separator
-     * @param progressDialog the progress dialog
-     * @param cancelProgress set to true to cancel the export
-     * @param removeHtml if true, html is converted to text
-     * @return the table as a separated text file
-     */
-    public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean cancelProgress, boolean removeHtml) {
 
         String tableAsString = "";
 
-        for (int i = 0; i < table.getColumnCount() && !cancelProgress; i++) {
+        for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
             tableAsString += ((DefaultTableModel) table.getModel()).getColumnName(i) + separator;
         }
 
@@ -148,11 +134,11 @@ public class Util {
 
         tableAsString += "\n";
 
-        for (int i = 0; i < table.getRowCount() && !cancelProgress; i++) {
+        for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
 
-            progressDialog.incrementValue();
+            progressDialog.increaseProgressValue();
 
-            for (int j = 0; j < table.getColumnCount() && !cancelProgress; j++) {
+            for (int j = 0; j < table.getColumnCount() && !progressDialog.isRunCanceled(); j++) {
 
                 if (table.getValueAt(i, j) != null) {
                     String tempValue = table.getValueAt(i, j).toString();
@@ -185,40 +171,25 @@ public class Util {
      * @throws IOException
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
-        tableToFile(table, separator, progressDialog, false, removeHtml, writer);
-    }
 
-    /**
-     * Writes the table to a file as separated text.
-     *
-     * @param table the table to write to file
-     * @param separator the text separator
-     * @param progressDialog the progress dialog
-     * @param cancelProgress set to true to cancel the export
-     * @param removeHtml if true, html is converted to text
-     * @param writer the writer where the file is to be written
-     * @throws IOException
-     */
-    public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean cancelProgress, boolean removeHtml, BufferedWriter writer) throws IOException {
-
-        for (int i = 0; i < table.getColumnCount() && !cancelProgress; i++) {
+        for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
             writer.write(((DefaultTableModel) table.getModel()).getColumnName(i) + separator);
         }
 
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
-            progressDialog.setMax(table.getRowCount());
+            progressDialog.setMaxProgressValue(table.getRowCount());
         }
 
         writer.write("\n");
 
-        for (int i = 0; i < table.getRowCount() && !cancelProgress; i++) {
+        for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
 
             if (progressDialog != null) {
-                progressDialog.incrementValue();
+                progressDialog.increaseProgressValue();
             }
 
-            for (int j = 0; j < table.getColumnCount() && !cancelProgress; j++) {
+            for (int j = 0; j < table.getColumnCount() && !progressDialog.isRunCanceled(); j++) {
 
                 if (table.getValueAt(i, j) != null) {
                     String tempValue = table.getValueAt(i, j).toString();

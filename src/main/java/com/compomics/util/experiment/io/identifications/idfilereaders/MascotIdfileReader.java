@@ -19,6 +19,7 @@ import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.mascotdatfile.util.mascot.Query;
+import com.compomics.util.gui.waiting.WaitingHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,7 +109,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
 
         String mgfFileName = getMgfFileName();
         HashSet<SpectrumMatch> assignedPeptideHits = new HashSet<SpectrumMatch>();
@@ -118,8 +119,8 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
         int numberOfQueries = iMascotDatfile.getNumberOfQueries();
 
-        if (jProgressBar != null) {
-            jProgressBar.setMaximum(numberOfQueries);
+        if (waitingHandler != null) {
+            waitingHandler.setMaxSecondaryProgressValue(numberOfQueries);
         }
 
         for (int i = 1; i <= numberOfQueries; i++) {
@@ -199,8 +200,11 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 assignedPeptideHits.add(currentMatch);
             }
 
-            if (jProgressBar != null) {
-                jProgressBar.setValue(i);
+            if (waitingHandler != null) {
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
+                waitingHandler.setSecondaryProgressValue(i);
             }
         }
 

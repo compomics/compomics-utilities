@@ -23,9 +23,9 @@ public class ProteomicAnalysis extends ExperimentObject {
      */
     private int index;
     /**
-     * Quantification results
+     * Quantification results indexed by the method used
      */
-    private HashMap<Integer, Quantification> quantification = new HashMap<Integer, Quantification>();
+    private HashMap<Quantification.QuantificationMethod, Quantification> quantification = new HashMap<Quantification.QuantificationMethod, Quantification>();
     /**
      * Identification results
      */
@@ -52,7 +52,7 @@ public class ProteomicAnalysis extends ExperimentObject {
      * @param quantificationMethod      the quantification method used
      * @param quantificationResutls     the quantification resutls
      */
-    public void addQuantificationResults(int quantificationMethod, Quantification quantificationResutls) {
+    public void addQuantificationResults(Quantification.QuantificationMethod quantificationMethod, Quantification quantificationResutls) {
         quantification.put(quantificationMethod, quantificationResutls);
     }
 
@@ -61,7 +61,7 @@ public class ProteomicAnalysis extends ExperimentObject {
      * @param quantificationMethod  the quantification method used
      * @return the quantification resutls
      */
-    public Quantification getQuantification(int quantificationMethod) {
+    public Quantification getQuantification(Quantification.QuantificationMethod quantificationMethod) {
         return quantification.get(quantificationMethod);
     }
 

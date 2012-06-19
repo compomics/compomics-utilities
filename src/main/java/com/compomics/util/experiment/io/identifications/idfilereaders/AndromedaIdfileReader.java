@@ -9,6 +9,7 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,13 +48,13 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public AndromedaIdfileReader(File resFile, JProgressBar jProgressBar) throws FileNotFoundException, IOException {
+    public AndromedaIdfileReader(File resFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
         randomAccessFile = new RandomAccessFile(resFile, "r");
 
         fileName = resFile.getName();
 
-        if (jProgressBar != null) {
-            jProgressBar.setMaximum(100);
+        if (waitingHandler != null) {
+            waitingHandler.setMaxSecondaryProgressValue(100);
         }
         long currentIndex = 0;
         long progressUnit = randomAccessFile.length() / 100;
@@ -71,14 +72,14 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 index.put(title, currentIndex);
                 newTitle = false;
             }
-            if (jProgressBar != null) {
-                jProgressBar.setValue((int) (currentIndex / progressUnit));
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressValue((int) (currentIndex / progressUnit));
             }
         }
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
         HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
 
         for (String title : index.keySet()) {

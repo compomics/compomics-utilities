@@ -34,6 +34,7 @@ public class ProgressDialog extends JDialog {
      * The methods 'setDeterminate()' and 'setIndeterminate()' allow the caller to
      * set the type of progressbar. A determinate progressbar can report meaningfully on the
      * progress.
+     * @deprecated use ProgressDialogX instead
      *
      * @param aParent   aParent to link this dialog to.
      * @param aTitle    String with the title for this dialog.

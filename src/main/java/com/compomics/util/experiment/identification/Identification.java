@@ -9,7 +9,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
-import com.compomics.util.gui.dialogs.ProgressDialogX;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.SQLException;
 
@@ -957,15 +957,15 @@ public abstract class Identification extends ExperimentObject {
      * @throws IOException exception thrown whenever an error occurred while
      * serializing a match
      */
-    public void emptyCache(ProgressDialogX progressDialog, boolean cancelProgress) throws FileNotFoundException, IOException, SQLException {
+    public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException, SQLException {
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
-            progressDialog.setMax(loadedMatchesMap.size());
+            progressDialog.setMaxProgressValue(loadedMatchesMap.size());
         }
         int cpt = 0;
         for (String key : loadedMatchesMap.keySet()) {
 
-            if (cancelProgress) {
+            if (progressDialog.isRunCanceled()) {
                 break;
             }
 
@@ -1004,7 +1004,7 @@ public abstract class Identification extends ExperimentObject {
             }
         }
 
-        if (!cancelProgress) {
+        if (!progressDialog.isRunCanceled()) {
             loadedMatches.clear();
             loadedMatchesMap.clear();
             modifiedMatches.clear();
@@ -1207,7 +1207,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
      */
-    public void convert(ProgressDialogX progressDialog, boolean cancelProgress, String newDirectory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void convert(ProgressDialogX progressDialog, String newDirectory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
         if (identificationDB == null) {
             identificationDB = new IdentificationDB(newDirectory);
@@ -1220,7 +1220,7 @@ public abstract class Identification extends ExperimentObject {
         }
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
-            progressDialog.setMax(files.length + nParameters);
+            progressDialog.setMaxProgressValue(files.length + nParameters);
         }
         MatchType matchType;
         for (String matchKey : urParameters.keySet()) {
@@ -1235,9 +1235,9 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
             if (progressDialog != null) {
-                progressDialog.incrementValue();
+                progressDialog.increaseProgressValue();
             }
-            if (cancelProgress) {
+            if (progressDialog.isRunCanceled()) {
                 break;
             }
         }
@@ -1258,9 +1258,9 @@ public abstract class Identification extends ExperimentObject {
                 updateCache();
             }
             if (progressDialog != null) {
-                progressDialog.incrementValue();
+                progressDialog.increaseProgressValue();
             }
-            if (cancelProgress) {
+            if (progressDialog.isRunCanceled()) {
                 break;
             }
         }

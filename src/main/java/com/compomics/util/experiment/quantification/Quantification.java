@@ -10,7 +10,7 @@ import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.experiment.quantification.reporterion.QuantificationMatch;
 import com.compomics.util.experiment.quantification.reporterion.quantification.PeptideQuantification;
 import com.compomics.util.experiment.quantification.reporterion.quantification.PsmQuantification;
-import com.compomics.util.gui.dialogs.ProgressDialogX;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -49,10 +49,6 @@ public abstract class Quantification extends ExperimentObject {
      * The quantification method used
      */
     protected QuantificationMethod methodUsed;
-    /**
-     * Extention for a serialized hit. cuh for Compomics Utilities Hit.
-     */
-    public static final String EXTENTION = ".cuq";
     /**
      * The cache size in number of matches. 20000 by default: should be enough to contain a velos file.
      */
@@ -586,14 +582,14 @@ public abstract class Quantification extends ExperimentObject {
             }
         }
         if (key.length() < 100) {
-            return key + EXTENTION;
+            return key;
         } else {
             int index = longKeys.indexOf(key);
             if (index == -1) {
                 index = longKeys.size();
                 longKeys.add(key);
             }
-            return index + EXTENTION;
+            return index + "";
         }
     }
 }

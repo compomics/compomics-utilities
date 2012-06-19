@@ -26,7 +26,7 @@ public class ExperimentIO {
      * @throws IOException Exception thrown whenever an error is encountered
      * while writing the file
      */
-    public void save(File file, MsExperiment experiment) throws IOException {
+    public static void save(File file, MsExperiment experiment) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         BufferedOutputStream bos = new BufferedOutputStream(fos);
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -46,7 +46,7 @@ public class ExperimentIO {
      * @throws ClassNotFoundException Exception thrown if a problem occured
      * while creating the experiment (typically a version issue)
      */
-    public MsExperiment loadExperiment(File utilitiesFile) throws IOException, ClassNotFoundException {
+    public static MsExperiment loadExperiment(File utilitiesFile) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(utilitiesFile);
         BufferedInputStream bis = new BufferedInputStream(fis);
         ObjectInputStream in = new ObjectInputStream(bis);

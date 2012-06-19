@@ -2,7 +2,6 @@ package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.quantification.reporterion.ReporterIonQuantification.ReporterIonMethod;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -37,7 +36,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * constructor for the factory
      *
      * @return
      */
@@ -49,7 +48,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * returns the methods implemented in the factory
      *
      * @return
      */
@@ -58,14 +57,14 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * returns the name of the methods present in the factory
      *
      * @return
      */
     public String[] getMethodsNames() {
         String[] names = new String[methods.size()];
         for (int i = 0; i < methods.size(); i++) {
-            //    names[i] = methods.get(i).getMethodName();
+            names[i] = methods.get(i).getName();
         }
         return names;
     }
@@ -80,11 +79,11 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * Imports the methods from an xml file
      *
-     * @param aFile
-     * @throws IOException
-     * @throws XmlPullParserException
+     * @param aFile the xml file
+     * @throws IOException exception thrown whenever an error occurred while reading the file
+     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
      */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
         methods = new ArrayList();
@@ -111,14 +110,13 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * parses a bloc describing a reporter method
      *
-     * @param parser
-     * @return
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @param parser the xml parser
+     * @throws IOException exception thrown whenever an error occurred while reading the file
+     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
      */
-    private void parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ReporterMethod parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         int type = parser.next();
 
@@ -150,25 +148,16 @@ public class ReporterMethodFactory extends ExperimentObject {
                 type = parser.next();
             }
         }
-        ReporterIonMethod index = ReporterIonMethod.ITRAQ_4PLEX;
-        if (name.equals("iTRAQ 4Plex")) {
-            index = ReporterIonMethod.ITRAQ_4PLEX;
-        } else if (name.equals("iTRAQ 8Plex")) {
-            index = ReporterIonMethod.ITRAQ_8PLEX;
-        } else if (name.equals("TMT6")) {
-            index = ReporterIonMethod.TMT6;
-        } else if (name.equals("TMT2")) {
-            index = ReporterIonMethod.TMT2;
-        }
+        return new ReporterMethod(name, reporterIons, correctionFactors);
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * Parses an xml bloc describing a reporter ion
      *
-     * @param parser
-     * @return
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @param parser the xml parser
+     * @return the reporter ion described by the pointed xml bloc
+     * @throws IOException exception thrown whenever an error occurred while reading the file
+     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
      */
     private ReporterIon parseIon(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();
@@ -177,11 +166,6 @@ public class ReporterMethodFactory extends ExperimentObject {
         }
         type = parser.next();
         String name = parser.getText().trim();
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("id")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Integer id = new Integer(parser.getText().trim());
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("mass")) {
             type = parser.next();
         }
@@ -194,12 +178,12 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * Parses an xml bloc representing a correction factor
      *
-     * @param parser
-     * @return
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @param parser the xml parser
+     * @return the correction factor described in the xml bloc pointed by the parser
+     * @throws IOException exception thrown whenever an error occurred while reading the file
+     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
      */
     private CorrectionFactor parseCorrectionFactor(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();

@@ -5,6 +5,7 @@ import com.compomics.util.experiment.io.identifications.idfilereaders.AndromedaI
 import com.compomics.util.experiment.io.identifications.idfilereaders.MascotIdfileReader;
 import com.compomics.util.experiment.io.identifications.idfilereaders.OMSSAIdfileReader;
 import com.compomics.util.experiment.io.identifications.idfilereaders.XTandemIdfileReader;
+import com.compomics.util.gui.waiting.WaitingHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,13 +47,14 @@ public class IdfileReaderFactory {
     /**
      * This method returns the proper identification file reader depending on the format of the provided file.
      * It is very important to close the file reader after creation.
+     * //@TODO: create parsers using waiting handlers and indexed files
      *
      * @param aFile the file to parse
      * @param jProgressBar a progress bar to display the results. Can be null
      * @return an adapted file reader
      * @throws SAXException  
      */
-    public IdfileReader getFileReader(File aFile, JProgressBar jProgressBar) throws SAXException, FileNotFoundException, IOException {
+    public IdfileReader getFileReader(File aFile, WaitingHandler waitingHandler) throws SAXException, FileNotFoundException, IOException {
         String name = aFile.getName().toLowerCase();
         if (name.endsWith("dat")) {
             return new MascotIdfileReader(aFile);
@@ -61,7 +63,7 @@ public class IdfileReaderFactory {
         } else if (name.endsWith("xml")) {
             return new XTandemIdfileReader(aFile);
         } else if (name.endsWith("res")) {
-            return new AndromedaIdfileReader(aFile, jProgressBar);
+            return new AndromedaIdfileReader(aFile, waitingHandler);
         }
         return null;
     }

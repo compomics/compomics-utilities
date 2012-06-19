@@ -1,5 +1,7 @@
-package com.compomics.util.gui.dialogs;
+package com.compomics.util.gui.waiting.waitinghandlers;
 
+import com.compomics.util.gui.waiting.WaitingHandler;
+import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
@@ -8,12 +10,8 @@ import javax.swing.JProgressBar;
  *
  * @author Harald Barsnes
  */
-public class ProgressDialogX extends javax.swing.JDialog {
+public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandler {
 
-    /**
-     * The progress dialog parent.
-     */
-    private ProgressDialogParent progressDialogFrame;
     /**
      * If set to true, trying to close the progess bar will be ignored. Use this
      * option if the process being monitored can not be stopped. <br> Note:
@@ -27,18 +25,21 @@ public class ProgressDialogX extends javax.swing.JDialog {
      * user has to confirm that he/she still wants to close the progress bar.
      */
     private boolean unstoppable = false;
+    /**
+     * boolean indicating whether the process has been canceled.
+     */
+    private boolean canceled = false;
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
      *
      * @param parent
-     * @param progressDialogFrame
+     * @param progressDialogFrame the parent frame
      * @param modal
      */
-    public ProgressDialogX(java.awt.Frame parent, ProgressDialogParent progressDialogFrame, boolean modal) {
+    public ProgressDialogX(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.progressDialogFrame = progressDialogFrame;
         setLocationRelativeTo(parent);
     }
 
@@ -49,23 +50,20 @@ public class ProgressDialogX extends javax.swing.JDialog {
      * @param progressDialogFrame
      * @param modal
      */
-    public ProgressDialogX(javax.swing.JDialog parent, ProgressDialogParent progressDialogFrame, boolean modal) {
+    public ProgressDialogX(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.progressDialogFrame = progressDialogFrame;
         setLocationRelativeTo(parent);
     }
 
     /**
-     * Opens a new ProgressDialog with a ProgressDialogParent as a parent.
+     * Opens a new ProgressDialog 
      *
-     * @param parent
      * @param modal
      */
-    public ProgressDialogX(ProgressDialogParent parent, boolean modal) {
+    public ProgressDialogX(boolean modal) {
         this.setModal(true);
         initComponents();
-        this.progressDialogFrame = parent;
         setLocationRelativeTo(null);
     }
 
@@ -80,6 +78,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
 
     /**
      * Increases the progress value by 1.
+     * @deprecated use waiting handler method instead
      */
     public void incrementValue() {
         progressBar.setValue(progressBar.getValue() + 1);
@@ -88,6 +87,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
     /**
      * Increases the progress value by n.
      *
+     * @deprecated use waiting handler method instead
      * @param increment the value to increment by
      */
     public void incrementValue(int increment) {
@@ -97,6 +97,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
     /**
      * Sets the maximum value of the progress bar.
      *
+     * @deprecated use waiting handler method instead
      * @param value the maximum value
      */
     public void setMax(final int value) {
@@ -209,24 +210,7 @@ public class ProgressDialogX extends javax.swing.JDialog {
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if (!doNothingOnClose && !unstoppable) {
-            progressDialogFrame.cancelProgress();
-            this.setVisible(true);
-            this.dispose();
-        }
-
-        if (unstoppable) {
-            int selection = JOptionPane.showConfirmDialog(this,
-                    "Cancelling this process is not directly supported.\n"
-                    + "Doing so may result in instability or errors.\n\n"
-                    + "Do you still want to cancel the process?", "Cancel Process?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
-            if (selection == JOptionPane.YES_OPTION) {
-                progressDialogFrame.cancelProgress();
-                this.setVisible(true);
-                this.dispose();
-            }
-        }
+        setRunCanceled();
     }//GEN-LAST:event_formWindowClosing
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar progressBar;
@@ -239,5 +223,136 @@ public class ProgressDialogX extends javax.swing.JDialog {
      */
     public JProgressBar getProgressBar() {
         return progressBar;
+    }
+
+    @Override
+    public void setMaxProgressValue(int maxProgressValue) {
+        progressBar.setMaximum(maxProgressValue);
+    }
+
+    @Override
+    public void increaseProgressValue() {
+        progressBar.setValue(progressBar.getValue() + 1);
+    }
+
+    @Override
+    public void increaseProgressValue(int increment) {
+        progressBar.setValue(progressBar.getValue() + increment);
+    }
+
+    /**
+     * Sets the maximal value of the progress bar
+     * @param maxProgressValue the maximal progress value
+     */
+    public void setMaxSecondaryProgressValue(int maxProgressValue) {
+        setMaxProgressValue(maxProgressValue);
+    }
+
+    /**
+     * resets the value of the progress bar
+     */
+    public void resetSecondaryProgressBar() {
+        progressBar.setIndeterminate(false);
+        progressBar.setStringPainted(true);
+        progressBar.setValue(0);
+    }
+
+    /**
+     * Increases the progress bar
+     */
+    public void increaseSecondaryProgressValue() {
+        increaseProgressValue();
+    }
+
+    /**
+     * Sets the value of the progress bar
+     * @param value the progress value
+     */
+    public void setSecondaryProgressValue(int value) {
+        setValue(value);
+    }
+
+    /**
+     * Increases the value of the progress bar
+     * @param number the increment number
+     */
+    public void increaseSecondaryProgressValue(int number) {
+        increaseProgressValue(number);
+    }
+
+    /**
+     * Makes the dialog indeterminate or not indeterminate. Also turns the paint
+     * progress string on or off.
+     *
+     * @param indeterminate
+     */
+    public void setSecondaryProgressDialogIntermediate(boolean indetermediate) {
+        setIndeterminate(indetermediate);
+    }
+
+    @Override
+    public void setRunFinished() {
+            this.setVisible(true); //@TODO: why is it set visible?
+            this.dispose();
+    }
+
+    @Override
+    public void setRunCanceled() {
+        canceled = true;
+        if (!doNothingOnClose && !unstoppable) {
+            this.setVisible(true); //@TODO: why is it set visible?
+            this.dispose();
+        }
+        if (unstoppable) {
+            int selection = JOptionPane.showConfirmDialog(this,
+                    "Cancelling this process is not directly supported.\n"
+                    + "Doing so may result in instability or errors.\n\n"
+                    + "Do you still want to cancel the process?", "Cancel Process?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (selection == JOptionPane.YES_OPTION) {
+                this.setVisible(true); //@TODO: why is it set visible?
+                this.dispose();
+            }
+        }
+    }
+
+    @Override
+    public void appendReport(String report) {
+        throw new UnsupportedOperationException("This waiting handler has no report.");
+    }
+
+    @Override
+    public void appendReportNewLineNoDate() {
+        throw new UnsupportedOperationException("This waiting handler has no report.");
+    }
+
+    @Override
+    public void appendReportEndLine() {
+        throw new UnsupportedOperationException("This waiting handler has no report.");
+    }
+
+    @Override
+    public boolean isRunCanceled() {
+        return canceled;
+    }
+
+    @Override
+    public JProgressBar getSecondaryProgressBar() {
+        throw new UnsupportedOperationException("This waiting handler has no secondary progress bar.");
+    }
+
+    @Override
+    public void displayMessage(String message, String title, int messageType) {
+        JOptionPane.showMessageDialog(this, message, title, messageType);
+    }
+
+    @Override
+    public void displayHtmlMessage(JEditorPane messagePane, String title, int messageType) {
+        JOptionPane.showMessageDialog(this, messagePane, title, messageType);
+    }
+
+    @Override
+    public void setWaitingText(String text) {
+        // ignore, not implemented for this waiting handler
     }
 }

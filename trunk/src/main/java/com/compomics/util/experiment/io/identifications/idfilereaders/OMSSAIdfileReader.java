@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
 import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.*;
@@ -89,7 +90,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(JProgressBar jProgressBar) throws IOException, IllegalArgumentException, Exception {
+    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
 
         HashSet<SpectrumMatch> assignedSpectra = new HashSet<SpectrumMatch>();
         HashMap<String, LinkedList<MSPepHit>> peptideToProteinMap = omxFile.getPeptideToProteinMap();
@@ -99,8 +100,8 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
         int searchResponseSize = msSearchResponse.size();
 
-        if (jProgressBar != null) {
-            jProgressBar.setMaximum(searchResponseSize);
+        if (waitingHandler != null) {
+            waitingHandler.setMaxSecondaryProgressValue(searchResponseSize);
         }
 
         String tempName;
@@ -154,8 +155,11 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                 }
             }
 
-            if (jProgressBar != null) {
-                jProgressBar.setValue(i);
+            if (waitingHandler != null) {
+                if (!waitingHandler.isRunCanceled()) {
+                    break;
+                }
+                waitingHandler.setSecondaryProgressValue(i);
             }
         }
 

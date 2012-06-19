@@ -19,6 +19,10 @@ public class ReporterMethod {
      * The correction factors corresponding to the ions.
      */
     private ArrayList<CorrectionFactor> correctionFactors;
+    /**
+     * The name of the method
+     */
+    private String name;
 
     /**
      * Constructor for a reporter method.
@@ -31,6 +35,7 @@ public class ReporterMethod {
     public ReporterMethod(String name, ArrayList<ReporterIon> reporterIons, ArrayList<CorrectionFactor> correctionFactors) {
         this.reporterIons = reporterIons;
         this.correctionFactors = correctionFactors;
+        this.name = name;
     }
 
     /**
@@ -49,5 +54,13 @@ public class ReporterMethod {
      */
     public ArrayList<CorrectionFactor> getCorrectionFactors() {
         return correctionFactors;
+    }
+    
+    /**
+     * Returns the name of the method
+     * @return the name of the method
+     */
+    public String getName() {
+        return name;
     }
 }

@@ -463,7 +463,7 @@ public class SequenceFragmentationPanel extends JPanel {
                 double lRatio = lMatch.peak.intensity / lMaxIntensity;
                 PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
                 if (lFragmentIon.getSubType() == rewindIon) {
-                    // If array unit is not '0', another ion for this fragmentation site is allready found.
+                    // If array unit is not '0', another ion for this fragmentation site is already found.
                     if (yIons[lFragmentIon.getNumber() - 1] != 0) {
                         // We want to save the most intense.
                         if (yIons[lFragmentIon.getNumber() - 1] > lRatio) {

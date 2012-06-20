@@ -59,7 +59,9 @@
                           <Component id="saveReportLabel" min="-2" pref="70" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                           <Component id="showTipOfTheDayCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="552" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="closeDialogWhenImportCompletesCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="okButton" min="-2" pref="84" max="-2" attributes="1"/>
                       </Group>
                   </Group>
@@ -77,6 +79,7 @@
                       <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="saveReportLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="showTipOfTheDayCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="closeDialogWhenImportCompletesCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -358,6 +361,16 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showTipOfTheDayCheckBoxActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="closeDialogWhenImportCompletesCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Close this dialog when import is completed."/>
+            <Property name="iconTextGap" type="int" value="10"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeDialogWhenImportCompletesCheckBoxActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

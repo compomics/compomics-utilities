@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * This class modilizes the precursor.
- * 
+ *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
@@ -20,11 +20,11 @@ public class Precursor extends ExperimentObject {
      */
     private double rt;
     /**
-     * In case an rt window is given, the minimum
+     * In case an rt window is given, the minimum.
      */
     private Double rtMin;
     /**
-     * In case an rt window is given, the maximum
+     * In case an rt window is given, the maximum.
      */
     private Double rtMax;
     /**
@@ -42,10 +42,10 @@ public class Precursor extends ExperimentObject {
 
     /**
      * Constructor for the precursor.
-     * 
-     * @param rt                the retention time
-     * @param mz                the m/z
-     * @param possibleCharges   the possible charges
+     *
+     * @param rt the retention time
+     * @param mz the m/z
+     * @param possibleCharges the possible charges
      */
     public Precursor(double rt, double mz, ArrayList<Charge> possibleCharges) {
         this.rt = rt;
@@ -54,15 +54,16 @@ public class Precursor extends ExperimentObject {
         this.mz = mz;
         this.possibleCharges.addAll(possibleCharges);
     }
-    
+
     /**
-     * Cronstructor with rt window
-     * @param rt                the retention time
-     * @param mz                the m/z
-     * @param intensity 
-     * @param possibleCharges   the possible charges
-     * @param rtMin             the minimum of the RT window
-     * @param rtMax             the maximum of the RT window
+     * Cronstructor with rt window.
+     *
+     * @param rt the retention time
+     * @param mz the m/z
+     * @param intensity
+     * @param possibleCharges the possible charges
+     * @param rtMin the minimum of the RT window
+     * @param rtMax the maximum of the RT window
      */
     public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges, double rtMin, double rtMax) {
         this.rt = rt;
@@ -72,15 +73,15 @@ public class Precursor extends ExperimentObject {
         this.intensity = intensity;
         this.possibleCharges.addAll(possibleCharges);
     }
-    
-    
+
     /**
-     * Cronstructor with rt window and no reference rt
-     * @param mz                the m/z
-     * @param intensity 
-     * @param possibleCharges   the possible charges
-     * @param rtMin             the minimum of the RT window
-     * @param rtMax             the maximum of the RT window
+     * Cronstructor with rt window and no reference rt.
+     *
+     * @param mz the m/z
+     * @param intensity
+     * @param possibleCharges the possible charges
+     * @param rtMin the minimum of the RT window
+     * @param rtMax the maximum of the RT window
      */
     public Precursor(double mz, double intensity, ArrayList<Charge> possibleCharges, double rtMin, double rtMax) {
         this.rt = (rtMin + rtMax) / 2;
@@ -90,13 +91,13 @@ public class Precursor extends ExperimentObject {
         this.intensity = intensity;
         this.possibleCharges.addAll(possibleCharges);
     }
-    
+
     /**
      * Constructor for the precursor.
-     * 
+     *
      * @param rt
      * @param mz
-     * @param intensity 
+     * @param intensity
      * @param possibleCharges
      */
     public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges) {
@@ -110,23 +111,25 @@ public class Precursor extends ExperimentObject {
 
     /**
      * Getter for the retention time.
-     * 
+     *
      * @return precursor retention time
      */
     public double getRt() {
         return rt;
     }
-    
+
     /**
-     * Returns a boolean indicating whether the rt window was implemented
+     * Returns a boolean indicating whether the rt window was implemented.
+     *
      * @return a boolean indicating whether the rt window was implemented
      */
     public boolean hasRTWindow() {
         return rtMin != null && rtMax != null && rtMin != -1 && rtMax != -1 && !rtMin.equals(rtMax);
     }
-    
+
     /**
-     * Returns an array containing the min and max of the RT window
+     * Returns an array containing the min and max of the RT window.
+     *
      * @return an array containing the min and max of the RT window
      */
     public double[] getRtWindow() {
@@ -136,21 +139,21 @@ public class Precursor extends ExperimentObject {
         if (rtMax == null) {
             rtMax = rt;
         }
-        return new double[] {rtMin, rtMax};
+        return new double[]{rtMin, rtMax};
     }
 
     /**
      * Getter for the m/z.
-     * 
+     *
      * @return precursor m/z
      */
     public double getMz() {
         return mz;
     }
-    
+
     /**
      * Getter for the intensity.
-     * 
+     *
      * @return precursor intensity
      */
     public double getIntensity() {
@@ -158,16 +161,17 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Getter for the possible charges
-     * 
+     * Getter for the possible charges.
+     *
      * @return the possible charges
      */
     public ArrayList<Charge> getPossibleCharges() {
         return possibleCharges;
     }
-    
+
     /**
-     * Returns the possible charges as a string
+     * Returns the possible charges as a string.
+     *
      * @return the possible charges as a string
      */
     public String getPossibleChargesAsString() {
@@ -183,8 +187,10 @@ public class Precursor extends ExperimentObject {
         }
         return result;
     }
+
     /**
-     * Returns a recalibrated precursor
+     * Returns a recalibrated precursor.
+     *
      * @param mzCorrection the m/z correction to apply
      * @param rtCorrection the rt correction to apply
      * @return a new recalibrated precursor

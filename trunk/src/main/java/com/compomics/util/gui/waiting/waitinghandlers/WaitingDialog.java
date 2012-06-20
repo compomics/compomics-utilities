@@ -3,29 +3,24 @@ package com.compomics.util.gui.waiting.waitinghandlers;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * A dialog displaying progress details when the identification files are being
- * analyzed.
+ * A dialog displaying progress details.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -45,15 +40,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private Timer shakeTimer;
     /**
-     * Boolean indicating whether the run is finished
+     * Boolean indicating whether the process is finished.
      */
     private boolean runFinished = false;
     /**
-     * Boolean indicating whether the run is canceled
+     * Boolean indicating whether the process is canceled.
      */
     private boolean runCanceled = false;
     /**
-     * Convenience date format
+     * Convenience date format.
      */
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
     /**
@@ -72,43 +67,52 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * The last selected folder
      */
     private String lastSelectedFolder;
+    /**
+     * The dialog/frame icon to use when waiting.
+     */
+    private Image waitingIcon;
+    /**
+     * The dialog/frame icon to use when done.
+     */
+    private Image normalIcon;
+    /**
+     * The waitingHandlerParent.
+     */
+    private Frame waitingHandlerParent;
+    /**
+     * If true, the dialog will shake when completed. Mainly a PeptideShaker feature.
+     */
+    private boolean shakeWhenFinished;
 
     /**
      * Creates a new WaitingDialog.
      *
-     * @param parent a reference to the handler parent
+     * @param waitingHandlerParent a reference to the handler parent
+     * @param waitingIcon the dialog/frame icon to use when waiting
+     * @param normalIcon the dialog/frame icon to use when done
      * @param modal
-     * @param titleReference the reference which will be used in the title
      */
-    public WaitingDialog(Frame waitingHandlerParent, boolean modal, String titleReference) {
-        super(waitingHandlerParent, modal);
-        initComponents();
-
-        setSecondaryProgressDialogIntermediate(true);
-
-        // update the layout in the layered pane
-        resizeLayeredPanes();
-
-        // set up the tip of the day
-        setTipOfTheDay(null);
-        tipOfTheDayEditorPane.setText(getTipOfTheDay());
-
-        this.setLocationRelativeTo(waitingHandlerParent);
-
-        // change the peptide shaker icon to a "waiting version"
-        //peptideShakerGUI.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")));
+    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, boolean modal) {
+        this(waitingHandlerParent, normalIcon, waitingIcon, shakeWhenFinished, new ArrayList<String>(), modal);
     }
 
     /**
      * Creates a new WaitingDialog.
      *
-     * @param parent a reference to the handler parent
+     * @param waitingHandlerParent a reference to the handler parent
+     * @param waitingIcon the dialog/frame icon to use when waiting
+     * @param normalIcon the dialog/frame icon to use when done
      * @param modal
-     * @param titleReference the reference which will be used in the title
+     * @param tips the list of Tip of the day
      */
-    public WaitingDialog(Frame waitingHandlerParent, boolean modal, String titleReference, ArrayList<String> tips) {
+    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, ArrayList<String> tips, boolean modal) {
         super(waitingHandlerParent, modal);
         initComponents();
+
+        this.waitingHandlerParent = waitingHandlerParent;
+        this.waitingIcon = waitingIcon;
+        this.normalIcon = normalIcon;
+        this.shakeWhenFinished = shakeWhenFinished;
 
         setSecondaryProgressDialogIntermediate(true);
 
@@ -121,8 +125,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         this.setLocationRelativeTo(waitingHandlerParent);
 
-        // change the peptide shaker icon to a "waiting version"
-        //peptideShakerGUI.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")));
+        // change the icon to a "waiting version"
+        if (waitingIcon != null) {
+            waitingHandlerParent.setIconImage(waitingIcon);
+        }
     }
 
     /**
@@ -130,16 +136,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private void setTipOfTheDay(ArrayList<String> tips) {
         this.tips = tips;
-//            InputStream stream = getClass().getResource("/tips.txt").openStream();
-//            InputStreamReader streamReader = new InputStreamReader(stream);
-//            BufferedReader b = new BufferedReader(streamReader);
-//            tips = new ArrayList<String>();
-//            String line;
-//
-//            while ((line = b.readLine()) != null) {
-//                tips.add(line);
-//            }
-//        tips = waitingHandlerParent.getTipOfTheDayList();
+
         if (tips == null || tips.isEmpty()) {
             showTipOfTheDayCheckBox.setSelected(false);
             showTipOfTheDayCheckBox.setEnabled(false);
@@ -233,17 +230,19 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             secondaryProgressBarSplitPane.setDividerLocation(0);
         }
     }
-    
+
     /**
      * Returns the last selected folder. Null if none set.
+     *
      * @return the last selected folder as string
      */
     public String getLastSelectedFolder() {
         return lastSelectedFolder;
     }
-    
+
     /**
-     * Sets the last selected folder
+     * Sets the last selected folder.
+     *
      * @param lastSelectedFolder the last selected folder as string
      */
     public void setLastSelectedFolder(String lastSelectedFolder) {
@@ -277,6 +276,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         okButton = new javax.swing.JButton();
         saveReportLabel = new javax.swing.JLabel();
         showTipOfTheDayCheckBox = new javax.swing.JCheckBox();
+        closeDialogWhenImportCompletesCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Importing Data - Please Wait...");
@@ -357,7 +357,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 closeJButtonActionPerformed(evt);
             }
         });
-        closeJButton.setBounds(170, 0, 40, 9);
+        closeJButton.setBounds(170, 0, 40, 33);
         tipOfTheDayLayeredPane.add(closeJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         nextJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/next_grey.png"))); // NOI18N
@@ -380,7 +380,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 nextJButtonActionPerformed(evt);
             }
         });
-        nextJButton.setBounds(170, 230, 40, 9);
+        nextJButton.setBounds(170, 230, 40, 33);
         tipOfTheDayLayeredPane.add(nextJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         javax.swing.GroupLayout tipOfTheDayJPanelLayout = new javax.swing.GroupLayout(tipOfTheDayJPanel);
@@ -467,6 +467,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
+        closeDialogWhenImportCompletesCheckBox.setText("Close this dialog when import is completed.");
+        closeDialogWhenImportCompletesCheckBox.setIconTextGap(10);
+        closeDialogWhenImportCompletesCheckBox.setOpaque(false);
+        closeDialogWhenImportCompletesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeDialogWhenImportCompletesCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -480,7 +489,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                         .addComponent(saveReportLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(showTipOfTheDayCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 552, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(closeDialogWhenImportCompletesCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -493,7 +504,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(saveReportLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showTipOfTheDayCheckBox))
+                    .addComponent(showTipOfTheDayCheckBox)
+                    .addComponent(closeDialogWhenImportCompletesCheckBox))
                 .addContainerGap())
         );
 
@@ -512,7 +524,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Cancels the analysis if ongoing or opens the results if finished.
+     * Cancels the process if ongoing or opens the results if finished.
      *
      * @param evt
      */
@@ -703,7 +715,20 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         }
     }//GEN-LAST:event_tipOfTheDayEditorPaneHyperlinkUpdate
+
+    /**
+     * Save the user preference for if the waiting dialog is to be closed or
+     * not.
+     *
+     * @param evt
+     */
+    private void closeDialogWhenImportCompletesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeDialogWhenImportCompletesCheckBoxActionPerformed
+        // @TODO: save the setting!!
+        //peptideShakerGUI.getUserPreferences().setCloseWaitingDialogWhenImportCompletes(closeDialogWhenImportCompletesCheckBox.isSelected());
+        //peptideShakerGUI.saveUserPreferences();
+    }//GEN-LAST:event_closeDialogWhenImportCompletesCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox closeDialogWhenImportCompletesCheckBox;
     private javax.swing.JButton closeJButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -725,7 +750,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Set the analysis as finished.
+     * Set the process as finished.
      */
     public void setRunFinished() {
         runFinished = true;
@@ -740,11 +765,25 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         secondaryJProgressBar.setValue(secondaryJProgressBar.getMaximum());
         secondaryJProgressBar.setString("Import Completed!");
 
+        // change the icon back to the default version
+        if (normalIcon != null) {
+            waitingHandlerParent.setIconImage(normalIcon);
+        }
+        
+        // make the dialog shake for a couple of seconds
+        if (shakeWhenFinished) {
+            startShake();
+        }
 
+        if (closeDialogWhenImportCompletesCheckBox.isSelected()) {
+            this.dispose();
+        } else {
+            closeDialogWhenImportCompletesCheckBox.setEnabled(false);
+        }
     }
 
     /**
-     * Set the analysis as canceled.
+     * Set the process as canceled.
      */
     public void setRunCanceled() {
         runCanceled = true;
@@ -762,6 +801,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         this.setTitle("Importing Data - Canceled");
 
+        // change the icon back to the default version
+        if (normalIcon != null) {
+            waitingHandlerParent.setIconImage(normalIcon);
+        }
     }
 
     /**
@@ -819,7 +862,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         // Write the file header.
         output.append("# ------------------------------------------------------------------"
-                + "\n# PeptideShaker Report File"
+                + "\n# Compomics Report File"
                 + "\n#"
                 + "\n# Originally saved by: " + System.getProperty("user.name") + host
                 + "\n#                  on: " + sdf.format(new Date())
@@ -858,7 +901,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     /**
-     * Make the dialog shake when the analysis has completed.
+     * Make the dialog shake when the process has completed.
      */
     public void startShake() {
         final long startTime;
@@ -891,6 +934,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 }
             }
         });
+        
         shakeTimer.start();
     }
 
@@ -903,7 +947,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         dialog.repaint();
 
         appendReport("Your peptides have been shaken!");
-
     }
 
     /**
@@ -924,8 +967,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         layeredPane.getComponent(1).setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
 
         // move the tip of the day panel
-        layeredPane.getComponent(0).setBounds(layeredPane.getWidth() - 255, layeredPane.getHeight() - 300,
-                230, 280);
+        layeredPane.getComponent(0).setBounds(layeredPane.getWidth() - 255, layeredPane.getHeight() - 300, 230, 280);
 
         layeredPane.revalidate();
         layeredPane.repaint();

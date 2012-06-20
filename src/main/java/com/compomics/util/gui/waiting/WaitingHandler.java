@@ -1,7 +1,5 @@
 package com.compomics.util.gui.waiting;
 
-import java.io.File;
-import java.util.HashMap;
 import javax.swing.JEditorPane;
 import javax.swing.JProgressBar;
 

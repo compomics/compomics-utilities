@@ -13,45 +13,45 @@ import java.util.HashMap;
  * This factory will load PTM from an XML file and provide them on demand as
  * standard class.
  *
- * Created by IntelliJ IDEA. User: Marc Date: Jun 22, 2010 Time: 8:26:09 PM
+ * @author Marc Vaudel
  */
 public class PTMFactory implements Serializable {
 
     /**
-     * Serial number for serialization compatibility
+     * Serial number for serialization compatibility.
      */
     static final long serialVersionUID = 7935264190312934466L;
     /**
-     * Instance of the factory
+     * Instance of the factory.
      */
     private static PTMFactory instance = null;
     /**
-     * user ptm file
+     * User ptm file.
      */
     private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory.cus";
     /**
-     * A map linking indexes with modifications
+     * A map linking indexes with modifications.
      */
     private HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
     /**
-     * List of the indexes of default modifications
+     * List of the indexes of default modifications.
      */
     private ArrayList<String> defaultMods = new ArrayList<String>();
     /**
-     * List of the indexes of user modifications
+     * List of the indexes of user modifications.
      */
     private ArrayList<String> userMods = new ArrayList<String>();
     /**
-     * Map of omssa indexes
+     * Map of omssa indexes.
      */
     private HashMap<String, ArrayList<Integer>> omssaIndexes = new HashMap<String, ArrayList<Integer>>();
     /**
-     * unknown modification to be returned when the modification is not found
+     * Unknown modification to be returned when the modification is not found.
      */
     public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new ArrayList<String>());
 
     /**
-     * Constructor for the factory
+     * Constructor for the factory.
      */
     private PTMFactory() {
         ptmMap.put(unknownPTM.getName(), unknownPTM);
@@ -59,7 +59,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Static method to get the instance of the factory
+     * Static method to get the instance of the factory.
      *
      * @return the instance of the factory
      */
@@ -90,21 +90,21 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Clears the factory getInstance() needs to be called afterwards
+     * Clears the factory getInstance() needs to be called afterwards.
      */
     public void clearFactory() {
         instance = new PTMFactory();
     }
 
     /**
-     * Reloads the factory getInstance() needs to be called afterwards
+     * Reloads the factory getInstance() needs to be called afterwards.
      */
     public void reloadFactory() {
         instance = null;
     }
 
     /**
-     * Saves the factory in the user folder
+     * Saves the factory in the user folder.
      *
      * @throws IOException exception thrown whenever an error occurred while
      * saving the ptmFactory
@@ -124,7 +124,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * get a PTM according to its omssa index
+     * Get a PTM according to its omssa index.
      *
      * @param index the PTM index
      * @return the selected PTM
@@ -144,7 +144,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * replaces an old ptm by a new
+     * Replaces an old ptm by a new.
      *
      * @param oldName the name of the old ptm
      * @param newPTM the new ptm
@@ -177,7 +177,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Adds a new user modification
+     * Adds a new user modification.
      *
      * @param ptm the new modification to add
      */
@@ -188,7 +188,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Sets the omssa indexes of all loaded user ptms
+     * Sets the omssa indexes of all loaded user ptms.
      */
     private void setUserOmssaIndexes() {
         String ptm;
@@ -206,7 +206,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Removes a user ptm
+     * Removes a user ptm.
      *
      * @param ptmName the name of the ptm to remove
      */
@@ -218,7 +218,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the PTM indexed by its name
+     * Returns the PTM indexed by its name.
      *
      * @param name the name of the desired PTM
      * @return The desired PTM
@@ -239,7 +239,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether the PTM is loaded in the factory
+     * Returns a boolean indicating whether the PTM is loaded in the factory.
      *
      * @param name the name of the PTM
      * @return a boolean indicating whether the PTM is loaded in the factory
@@ -249,7 +249,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the index of the desired modification
+     * Returns the index of the desired modification.
      *
      * @param modificationName the desired modification name to lower case
      * @return the corresponding index
@@ -259,7 +259,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * getter for a ptm according to its measured characteristics /!\ This
+     * Getter for a ptm according to its measured characteristics /!\ This
      * method can generate inconsistent results in case a measurement matches to
      * various PTMs.
      *
@@ -296,7 +296,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Import modifications from a modification file
+     * Import modifications from a modification file.
      *
      * @param modificationsFile A file containing modifications
      * @param userMod A boolean indicating whether the file comprises user
@@ -461,7 +461,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * get the index of a file
+     * Get the index of a file.
      *
      * @param modType modification type found
      * @return corresponding static index
@@ -521,7 +521,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Writes the omssa modification file corresponding to the PTMs loaded in
-     * the factory in the given file
+     * the factory in the given file.
      *
      * @param file the file
      * @throws IOException exception thrown whenever an error occurred while
@@ -534,12 +534,13 @@ public class PTMFactory implements Serializable {
                 + "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
                 + "xs:schemaLocation=\"http://www.ncbi.nlm.nih.gov OMSSA.xsd\"\n>\n\n";
         bw.write(toWrite);
-        String ptmName;
+
         for (int cpt = 1; cpt <= userMods.size(); cpt++) {
-            ptmName = userMods.get(cpt - 1);
+            String ptmName = userMods.get(cpt - 1);
             toWrite = getOmssaUserModBloc(ptmName, cpt);
             bw.write(toWrite);
         }
+        
         for (int cpt = userMods.size() + 1; cpt <= 30; cpt++) {
             int omssaIndex = cpt + 118;
             if (omssaIndex > 128) {
@@ -570,7 +571,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns an MSModSpec bloc as present in the OMSSA user modification files
-     * for a given PTM
+     * for a given PTM.
      *
      * @param ptmName the name of the PTM
      * @param cpt the index of this PTM
@@ -645,7 +646,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * returns the names of the default modifications
+     * Returns the names of the default modifications.
      *
      * @return the names of the default modifications
      */
@@ -654,7 +655,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the names of the user defined modifications
+     * Returns the names of the user defined modifications.
      *
      * @return the names of the user defined modifications
      */
@@ -663,7 +664,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the names of all imported PTMs
+     * Returns the names of all imported PTMs.
      *
      * @return the names of all imported PTMs
      */
@@ -673,14 +674,17 @@ public class PTMFactory implements Serializable {
 
     /**
      * Convenience method returning a boolean indicating whether a ptm is user
-     * defined or default
+     * defined or default.
+     *
+     * @param ptmName 
+     * @return boolean indicating whether a ptm is user
      */
     public boolean isUserDefined(String ptmName) {
         return !defaultMods.contains(ptmName);
     }
 
     /**
-     * Sets the default neutral losses of PTMs when not implemented
+     * Sets the default neutral losses of PTMs when not implemented.
      */
     public void setDefaultNeutralLosses() {
         PTM ptm;
@@ -727,18 +731,18 @@ public class PTMFactory implements Serializable {
                     ptm.addNeutralLoss(NeutralLoss.CH4OS);
                 }
             }
-        if (changed) {
-            try {
-                saveFactory();
-            } catch (IOException e) {
-                // cancel save
+            if (changed) {
+                try {
+                    saveFactory();
+                } catch (IOException e) {
+                    // cancel save
+                }
             }
         }
     }
-    }
 
     /**
-     * Sets the default reporter ions of PTMs when not implemented
+     * Sets the default reporter ions of PTMs when not implemented.
      */
     public void setDefaultReporterIons() {
         PTM ptm;

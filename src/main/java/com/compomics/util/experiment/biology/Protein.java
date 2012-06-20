@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.io.IOException;
@@ -24,7 +23,8 @@ public class Protein extends ExperimentObject {
      */
     private String accession;
     /**
-     * Boolean indicating if the protein is not existing (decoy protein for instance)
+     * Boolean indicating if the protein is not existing (decoy protein for
+     * instance)
      */
     private boolean decoy;
     /**
@@ -43,10 +43,11 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Simplistic constructor for a protein (typically used when loading identification files).
+     * Simplistic constructor for a protein (typically used when loading
+     * identification files).
      *
-     * @param accession     The protein accession
-     * @param isDecoy       boolean indicating whether the protein is a decoy
+     * @param accession The protein accession
+     * @param isDecoy boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, boolean isDecoy) {
         this.accession = accession;
@@ -56,9 +57,9 @@ public class Protein extends ExperimentObject {
     /**
      * Constructor for a protein.
      *
-     * @param accession     The protein accession
-     * @param sequence      The protein sequence
-     * @param isDecoy       boolean indicating whether the protein is a decoy
+     * @param accession The protein accession
+     * @param sequence The protein sequence
+     * @param isDecoy boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, String sequence, boolean isDecoy) {
         this.accession = accession;
@@ -69,10 +70,10 @@ public class Protein extends ExperimentObject {
     /**
      * Constructor for a protein.
      *
-     * @param accession     The protein accession
-     * @param databaseType  The protein database the protein comes from
-     * @param sequence      The protein sequence
-     * @param isDecoy       boolean indicating whether the protein is a decoy
+     * @param accession The protein accession
+     * @param databaseType The protein database the protein comes from
+     * @param sequence The protein sequence
+     * @param isDecoy boolean indicating whether the protein is a decoy
      */
     public Protein(String accession, DatabaseType databaseType, String sequence, boolean isDecoy) {
         this.accession = accession;
@@ -83,7 +84,7 @@ public class Protein extends ExperimentObject {
 
     /**
      * Indicates if the protein is factice (from a decoy database for instance).
-     * 
+     *
      * @return a boolean indicating if the protein is factice
      */
     public boolean isDecoy() {
@@ -119,8 +120,8 @@ public class Protein extends ExperimentObject {
 
     /**
      * A method to compare proteins. For now accession based.
-     * 
-     * @param anotherProtein    an other protein
+     *
+     * @param anotherProtein an other protein
      * @return a boolean indicating if the proteins are identical
      */
     public boolean isSameAs(Protein anotherProtein) {
@@ -129,8 +130,8 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the key for protein indexing. For now the protein accession.
-     * 
-     * @return  the key for protein indexing.
+     *
+     * @return the key for protein indexing.
      */
     public String getProteinKey() {
         return accession;
@@ -138,7 +139,7 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the number of amino acids in the sequence.
-     * 
+     *
      * @return the number of amino acids in the sequence
      */
     public int getLength() {
@@ -147,22 +148,21 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the number of observable amino acids of the sequence.
-     * 
-     * @param enzyme    the enzyme to use
-     * @param pepMaxLength  the max peptide length
+     *
+     * @param enzyme the enzyme to use
+     * @param pepMaxLength the max peptide length
      * @return the number of observable amino acids of the sequence
      */
     public int getObservableLength(Enzyme enzyme, int pepMaxLength) {
 
         int length = 0;
-        String tempPeptide, tempSequence = sequence;
-        int tempCleavage, cleavage;
+        String tempSequence = sequence;
 
         while (tempSequence.length() > 1) {
-            cleavage = 0;
+            int cleavage = 0;
 
             for (Character aa : enzyme.getAminoAcidAfter()) {
-                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
+                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
                 while (enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
                 }
@@ -172,7 +172,7 @@ public class Protein extends ExperimentObject {
             }
 
             for (Character aa : enzyme.getAminoAcidBefore()) {
-                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
+                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
                 while (enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
                 }
@@ -188,7 +188,7 @@ public class Protein extends ExperimentObject {
                 break;
             }
 
-            tempPeptide = tempSequence.substring(cleavage + 1);
+            String tempPeptide = tempSequence.substring(cleavage + 1);
 
             if (tempPeptide.length() <= pepMaxLength) {
                 length += tempPeptide.length();
@@ -201,10 +201,11 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Returns the number of possible peptides (not accounting PTMs nor missed cleavages) with the selected enzyme.
-     * 
-     * @param enzyme    The selected enzyme
-     * @return  the number of possible peptides
+     * Returns the number of possible peptides (not accounting PTMs nor missed
+     * cleavages) with the selected enzyme.
+     *
+     * @param enzyme The selected enzyme
+     * @return the number of possible peptides
      */
     public int getNPossiblePeptides(Enzyme enzyme) {
 
@@ -235,7 +236,7 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the proteins molecular weight.
-     * 
+     *
      * @return the proteins molecular weight
      */
     public double computeMolecularWeight() {
@@ -265,20 +266,23 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the list of indexes where a peptide can be found in the protein
-     * sequence
+     * sequence.
      *
      * @param peptide the sequence of the peptide of interest
      * @return the list of indexes where a peptide can be found in a protein
      * sequence
      */
     public ArrayList<Integer> getPeptideStart(String peptide) {
+
         ArrayList<Integer> result = new ArrayList<Integer>();
         String tempSequence = sequence;
+
         while (tempSequence.lastIndexOf(peptide) >= 0) {
             int startIndex = tempSequence.lastIndexOf(peptide);
             result.add(startIndex + 1);
             tempSequence = tempSequence.substring(0, startIndex);
         }
+
         return result;
     }
 
@@ -286,7 +290,7 @@ public class Protein extends ExperimentObject {
      * Returns the amino acids surrounding a peptide in the sequence of the
      * given protein in a map: peptide start index -> (amino acids before, amino
      * acids after) The number of amino acids is taken from the display
-     * preferences
+     * preferences.
      *
      * @param peptide the sequence of the peptide of interest
      * @param nAA the number of amino acids to include
@@ -295,26 +299,35 @@ public class Protein extends ExperimentObject {
      * parsing the protein sequence
      */
     public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA) throws IOException {
+
         ArrayList<Integer> startIndexes = getPeptideStart(peptide);
         HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();
-        String subsequence;
+
         for (int startIndex : startIndexes) {
+
+            startIndex--; // the provided indexes are not zero based
+            
             result.put(startIndex, new String[2]);
-            subsequence = "";
+            String subsequence = "";
+
             for (int aa = startIndex - nAA; aa < startIndex; aa++) {
                 if (aa >= 0 && aa < sequence.length()) {
                     subsequence += sequence.charAt(aa);
                 }
             }
+
             result.get(startIndex)[0] = subsequence;
             subsequence = "";
+
             for (int aa = startIndex + peptide.length(); aa < startIndex + peptide.length() + nAA; aa++) {
                 if (aa >= 0 && aa < sequence.length()) {
                     subsequence += sequence.charAt(aa);
                 }
             }
+
             result.get(startIndex)[1] = subsequence;
         }
+
         return result;
     }
 }

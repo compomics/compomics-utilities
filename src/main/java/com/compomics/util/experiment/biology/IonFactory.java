@@ -137,7 +137,7 @@ public class IonFactory {
         double rewindMass = Atom.O.mass;
         taken.clear();
 
-        for (int aa = 0; aa < sequence.length(); aa++) {
+        for (int aa = 0; aa < sequence.length() - 1; aa++) {
 
             char aaName = sequence.charAt(aa);
             if (!taken.contains(aaName + "")) {

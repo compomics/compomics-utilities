@@ -4,6 +4,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.gui.waiting.WaitingHandler;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,25 +33,11 @@ public class MgfReader {
      * The pattern used to pick up double values.
      */
     private static Pattern doublePattern = Pattern.compile("\\D");
-    /**
-     * Set this to true to cancel the current proces.
-     */
-    private static boolean cancelProcess = false;
 
     /**
      * General constructor for an mgf reader.
      */
     public MgfReader() {
-        cancelProcess = false;
-    }
-
-    /**
-     * If set to true the current process is canceled.
-     *
-     * @param aCancelProcess set to true to cancel the current process
-     */
-    public void cancelProcess(boolean aCancelProcess) {
-        cancelProcess = aCancelProcess;
     }
 
     /**
@@ -67,7 +54,6 @@ public class MgfReader {
      */
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
 
-        cancelProcess = false;
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1.0, rt2 = -1.0;
@@ -77,7 +63,7 @@ public class MgfReader {
         BufferedReader br = new BufferedReader(new FileReader(aFile));
         String line;
 
-        while ((line = br.readLine()) != null && !cancelProcess) {
+        while ((line = br.readLine()) != null) {
 
             line = line.trim();
 
@@ -179,16 +165,15 @@ public class MgfReader {
      * Returns the index of all spectra in the given MGF file.
      *
      * @param mgfFile the given MGF file
-     * @param progressBar a progress bar showing the progress
+     * @param waitingHandler a waitingHandler showing the progress
      * @return the index of all spectra
      * @throws FileNotFoundException Exception thrown whenever the file is not
      * found
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
-    public static MgfIndex getIndexMap(File mgfFile, JProgressBar progressBar) throws FileNotFoundException, IOException {
+    public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        cancelProcess = false;
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
@@ -198,18 +183,17 @@ public class MgfReader {
         int cpt = 0;
         double rt, rt1, rt2, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
-        if (progressBar != null) {
-            progressBar.setIndeterminate(false);
-            progressBar.setStringPainted(true);
-            progressBar.setMaximum(100);
-            progressBar.setValue(0);
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIntermediate(false);
+            waitingHandler.setMaxSecondaryProgressValue(100);
+            waitingHandler.setSecondaryProgressValue(0);
         }
 
         long progressUnit = randomAccessFile.length() / 100;
 
         String line;
 
-        while ((line = randomAccessFile.readLine()) != null && !cancelProcess) {
+        while ((line = randomAccessFile.readLine()) != null) {
 
             line = line.trim();
 
@@ -217,8 +201,11 @@ public class MgfReader {
                 currentIndex = randomAccessFile.getFilePointer();
                 beginIndex = currentIndex;
                 cpt++;
-                if (progressBar != null) {
-                    progressBar.setValue((int) (currentIndex / progressUnit));
+                if (waitingHandler != null) {
+                    if (waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                    waitingHandler.setSecondaryProgressValue((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf('=') + 1).trim();
@@ -272,9 +259,8 @@ public class MgfReader {
             }
         }
 
-        if (progressBar != null) {
-            progressBar.setIndeterminate(true);
-            progressBar.setStringPainted(false);
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIntermediate(true);
         }
 
         randomAccessFile.close();
@@ -292,16 +278,15 @@ public class MgfReader {
      *
      * @param mgfFile the mgf file to split
      * @param nSpectra the number of spectra allowed in the smaller files
-     * @param progressBar the progress bar showing the progress
+     * @param waitingHandler the waitingHandler showing the progress
      * @return a list of indexes of the generated files
      * @throws FileNotFoundException exception thrown whenever a file was not
      * found
      * @throws IOException exception thrown whenever a problem occurred while
      * reading/writing a file
      */
-    public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, JProgressBar progressBar) throws FileNotFoundException, IOException {
+    public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        cancelProcess = false;
         String fileName = mgfFile.getName();
 
         if (fileName.endsWith(".mgf")) {
@@ -315,11 +300,10 @@ public class MgfReader {
             String line;
             long readIndex, writeIndex = 0, beginIndex = 0;
 
-            if (progressBar != null) {
-                progressBar.setIndeterminate(false);
-                progressBar.setStringPainted(true);
-                progressBar.setMaximum(100);
-                progressBar.setValue(0);
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressDialogIntermediate(false);
+                waitingHandler.setMaxSecondaryProgressValue(100);
+                waitingHandler.setSecondaryProgressValue(0);
             }
 
             int fileCounter = 1;
@@ -335,7 +319,7 @@ public class MgfReader {
             long sizeOfReadAccessFile = readAccessFile.length();
             long progressUnit = sizeOfReadAccessFile / 100;
 
-            while ((line = readAccessFile.readLine()) != null && !cancelProcess) {
+            while ((line = readAccessFile.readLine()) != null) {
 
                 line = line.trim();
 
@@ -368,8 +352,11 @@ public class MgfReader {
                         }
                     }
 
-                    if (progressBar != null) {
-                        progressBar.setValue((int) (readIndex / progressUnit));
+                    if (waitingHandler != null) {
+                        if (waitingHandler.isRunCanceled()) {
+                            break;
+                        }
+                        waitingHandler.setSecondaryProgressValue((int) (readIndex / progressUnit));
                     }
 
                 } else if (line.startsWith("TITLE")) {
@@ -426,9 +413,8 @@ public class MgfReader {
 
             mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz));
 
-            if (progressBar != null) {
-                progressBar.setIndeterminate(true);
-                progressBar.setStringPainted(false);
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressDialogIntermediate(true);
             }
 
             readAccessFile.close();
@@ -714,15 +700,7 @@ public class MgfReader {
 
         for (double mz : masses) {
 
-            if (cancelProcess) {
-                break;
-            }
-
             for (String title : spectrumTitleMap.get(mz)) {
-
-                if (cancelProcess) {
-                    break;
-                }
 
                 MSnSpectrum spectrum = getSpectrum(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
                 aplWriter.write("peaklist start\n");

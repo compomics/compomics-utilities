@@ -44,7 +44,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * Constructor for an Andromeda result file reader.
      *
      * @param resFile
-     * @param jProgressBar
+     * @param waitingHandler
      * @throws FileNotFoundException
      * @throws IOException
      */

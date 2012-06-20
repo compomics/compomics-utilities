@@ -9,6 +9,7 @@ import javax.swing.JProgressBar;
  * A dialog for displaying information about progress.
  *
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandler {
 
@@ -26,7 +27,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      */
     private boolean unstoppable = false;
     /**
-     * boolean indicating whether the process has been canceled.
+     * Boolean indicating whether the process has been canceled.
      */
     private boolean canceled = false;
 
@@ -34,7 +35,6 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * Opens a new ProgressDialogX with a Frame as a parent.
      *
      * @param parent
-     * @param progressDialogFrame the parent frame
      * @param modal
      */
     public ProgressDialogX(java.awt.Frame parent, boolean modal) {
@@ -47,7 +47,6 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * Opens a new ProgressDialog with a JDialog as a parent.
      *
      * @param parent
-     * @param progressDialogFrame
      * @param modal
      */
     public ProgressDialogX(javax.swing.JDialog parent, boolean modal) {
@@ -57,7 +56,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
-     * Opens a new ProgressDialog 
+     * Opens a new ProgressDialog.
      *
      * @param modal
      */
@@ -78,6 +77,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     /**
      * Increases the progress value by 1.
+     *
      * @deprecated use waiting handler method instead
      */
     public void incrementValue() {
@@ -241,7 +241,8 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
-     * Sets the maximal value of the progress bar
+     * Sets the maximal value of the progress bar.
+     *
      * @param maxProgressValue the maximal progress value
      */
     public void setMaxSecondaryProgressValue(int maxProgressValue) {
@@ -249,7 +250,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
-     * resets the value of the progress bar
+     * resets the value of the progress bar.
      */
     public void resetSecondaryProgressBar() {
         progressBar.setIndeterminate(false);
@@ -258,14 +259,15 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
-     * Increases the progress bar
+     * Increases the progress bar.
      */
     public void increaseSecondaryProgressValue() {
         increaseProgressValue();
     }
 
     /**
-     * Sets the value of the progress bar
+     * Sets the value of the progress bar.
+     *
      * @param value the progress value
      */
     public void setSecondaryProgressValue(int value) {
@@ -273,7 +275,8 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
-     * Increases the value of the progress bar
+     * Increases the value of the progress bar.
+     *
      * @param number the increment number
      */
     public void increaseSecondaryProgressValue(int number) {
@@ -286,14 +289,14 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      *
      * @param indeterminate
      */
-    public void setSecondaryProgressDialogIntermediate(boolean indetermediate) {
-        setIndeterminate(indetermediate);
+    public void setSecondaryProgressDialogIntermediate(boolean indeterminate) {
+        setIndeterminate(indeterminate);
     }
 
     @Override
     public void setRunFinished() {
-            this.setVisible(true); //@TODO: why is it set visible?
-            this.dispose();
+        this.setVisible(true); //@TODO: why is it set visible?
+        this.dispose();
     }
 
     @Override

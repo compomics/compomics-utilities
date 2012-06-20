@@ -6,7 +6,6 @@ import com.compomics.util.experiment.identification.IdentificationMatch.MatchTyp
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
@@ -248,9 +247,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getProteinMatchPArameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getProteinMatchPArameter(key, urParameter);
+            return identificationDB.getProteinMatchParameter(key, urParameter);
         } else {
             return getMatchParameter(key, urParameter);
         }
@@ -951,10 +950,11 @@ public abstract class Identification extends ExperimentObject {
      * serialization folder or in the database.
      *
      * @param progressDialog
-     * @param cancelProgress set this to true to cancel the progress
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while serializing a match
      * @throws IOException exception thrown whenever an error occurred while
+     * serializing a match
+     * @throws SQLException exception thrown whenever an error occurred while
      * serializing a match
      */
     public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException, SQLException {
@@ -1195,8 +1195,6 @@ public abstract class Identification extends ExperimentObject {
      * Converts a serlialization based structure into a database based one
      *
      * @param progressDialog a dialog to give progress feedback to the user
-     * @param cancelProgress boolean allowing canceling the process, this will
-     * corrupt the project.
      * @param newDirectory the new directory where to store the data
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found

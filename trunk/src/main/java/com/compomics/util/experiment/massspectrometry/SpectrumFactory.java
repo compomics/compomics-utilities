@@ -2,6 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,7 +150,7 @@ public class SpectrumFactory {
      * @throws IllegalArgumentException Exception thrown if an unknown format
      * was detected.
      */
-    public void addSpectra(File spectrumFile, JProgressBar progressBar) throws FileNotFoundException, IOException, IllegalArgumentException {
+    public void addSpectra(File spectrumFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, IllegalArgumentException {
 
         String fileName = spectrumFile.getName();
 
@@ -162,17 +163,17 @@ public class SpectrumFactory {
                 try {
                     mgfIndex = getIndex(indexFile);
                 } catch (Exception e) {
-                    mgfIndex = MgfReader.getIndexMap(spectrumFile, progressBar);
+                    mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
                     writeIndex(mgfIndex, spectrumFile.getParentFile());
                 }
             } else {
-                mgfIndex = MgfReader.getIndexMap(spectrumFile, progressBar);
+                mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
                 writeIndex(mgfIndex, spectrumFile.getParentFile());
             }
 
             mgfFilesMap.put(fileName, new RandomAccessFile(spectrumFile, "r"));
             mgfIndexesMap.put(fileName, mgfIndex);
-            checkIndexVersion(spectrumFile.getParentFile(), fileName, progressBar);
+            checkIndexVersion(spectrumFile.getParentFile(), fileName, waitingHandler);
         } else if (fileName.endsWith(".mzml")) {
             MzMLUnmarshaller mzMLUnmarshaller = new MzMLUnmarshaller(spectrumFile);
             mzMLUnmarshallers.put(fileName, mzMLUnmarshaller);
@@ -773,7 +774,7 @@ public class SpectrumFactory {
      * reading the mgf file or writing the index. If a reading error happens at
      * this point we are in trouble...
      */
-    private void checkIndexVersion(File directory, String fileName, JProgressBar progressBar) throws IOException {
+    private void checkIndexVersion(File directory, String fileName, WaitingHandler waitingHandler) throws IOException {
 
         MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
 
@@ -781,18 +782,19 @@ public class SpectrumFactory {
 
             double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
-            int counter = 0;
-            if (progressBar != null) {
-                progressBar.setIndeterminate(false);
-                progressBar.setStringPainted(true);
-                progressBar.setMaximum(getSpectrumTitles(fileName).size());
-                progressBar.setValue(0);
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressDialogIntermediate(false);
+                waitingHandler.setMaxSecondaryProgressValue(getSpectrumTitles(fileName).size());
+                waitingHandler.setSecondaryProgressValue(0);
             }
 
             for (String spectrumTitle : getSpectrumTitles(fileName)) {
 
-                if (progressBar != null) {
-                    progressBar.setValue(counter++);
+                if (waitingHandler != null) {
+                    if (waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                    waitingHandler.increaseSecondaryProgressValue();
                 }
                 String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
                 try {
@@ -812,9 +814,8 @@ public class SpectrumFactory {
                 }
             }
 
-            if (progressBar != null) {
-                progressBar.setIndeterminate(true);
-                progressBar.setStringPainted(false);
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressDialogIntermediate(true);
             }
 
             mgfIndex.setMaxRT(maxRT);

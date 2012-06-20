@@ -50,9 +50,11 @@ public class IdfileReaderFactory {
      * //@TODO: create parsers using waiting handlers and indexed files
      *
      * @param aFile the file to parse
-     * @param jProgressBar a progress bar to display the results. Can be null
+     * @param waitingHandler a waiting handler to display the results. Can be null
      * @return an adapted file reader
      * @throws SAXException  
+     * @throws FileNotFoundException  
+     * @throws IOException  
      */
     public IdfileReader getFileReader(File aFile, WaitingHandler waitingHandler) throws SAXException, FileNotFoundException, IOException {
         String name = aFile.getName().toLowerCase();

@@ -102,7 +102,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             // If we find a 'reporterMethod' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
-                //         methods.add(parseMethod(parser));
+                 methods.add(parseMethod(parser));
             }
             type = parser.next();
         }

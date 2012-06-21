@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -19,21 +20,9 @@ import java.util.ArrayList;
 public class IdentificationDB implements Serializable {
 
     /**
-     * Serialization number for backward compatibility.
-     */
-   static final long serialVersionUID = -834139883397389992L;
-    /**
      * The name which will be used for the database.
      */
-    public static final String dbName = "cdb";
-    /**
-     * The location of the database.
-     */
-    private String dbLocation;
-    /**
-     * The connection.
-     */
-    private Connection dbConnection;
+    public static final String dbName = "utilitiesIdDB";
     /**
      * The name of the protein table.
      */
@@ -69,10 +58,6 @@ public class IdentificationDB implements Serializable {
      */
     private ArrayList<String> psmTables = new ArrayList<String>();
     /**
-     * List of keys too long to create a table.
-     */
-    private ArrayList<String> longKeys = new ArrayList<String>();
-    /**
      * List of all psm parameters tables.
      */
     private ArrayList<String> psmParametersTables = new ArrayList<String>();
@@ -98,6 +83,10 @@ public class IdentificationDB implements Serializable {
      * The maximal size for a BLOB parameter match in the database.
      */
     public static final String parametersSize = "8k";
+    /**
+     * The database which will contain the objects
+     */
+    private ObjectsDB objectsDB;
 
     /**
      * Constructor creating the database and the protein and protein parameters
@@ -108,125 +97,16 @@ public class IdentificationDB implements Serializable {
      * creating the database
      */
     public IdentificationDB(String folder) throws SQLException {
+
         File dbFolder = new File(folder, dbName);
         if (dbFolder.exists()) {
             Util.deleteDir(dbFolder);
         }
-        dbLocation = dbFolder.getAbsolutePath();
-        establishConnection();
-
-        Statement statement = dbConnection.createStatement();
-        statement.execute("CREATE table " + proteinTableName + " ("
-                + "NAME    VARCHAR(500),"
-                + "MATCH_BLOB blob(" + matchSize +")"
-                + ")");
-        statement.close();
-        statement = dbConnection.createStatement();
-        statement.execute("CREATE table " + peptideTableName + " ("
-                + "NAME    VARCHAR(500),"
-                + "MATCH_BLOB blob(" + matchSize +")"
-                + ")");
-        statement.close();
+        objectsDB = new ObjectsDB(dbFolder, dbName);
+        objectsDB.addTable(proteinTableName, matchSize);
+        objectsDB.addTable(peptideTableName, matchSize);
     }
 
-    /**
-     * Adds the desired table in the database.
-     *
-     * @param tableName the name of the table
-     * @param blobSize the size of the blob
-     * @throws SQLException exception thrown whenever a problem occurred while
-     * working with the database
-     */
-    private void addTable(String tableName, String blobSize) throws SQLException {
-        if (tableName.length() >= 128) {
-            int index = longKeys.size();
-            longKeys.add(tableName);
-            tableName = index + "";
-        }
-        Statement stmt = dbConnection.createStatement();
-        stmt.execute("CREATE table " + tableName + " ("
-                + "NAME    VARCHAR(500),"
-                + "MATCH_BLOB blob(" + blobSize +")"
-                + ")");
-        stmt.close();
-    }
-
-    /**
-     * Stores an object in the desired table.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @param object the object to store
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     */
-    public void insertObject(String tableName, String objectKey, Object object) throws SQLException, IOException {
-        PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-        ps.setString(1, objectKey);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(object);
-        oos.close();
-        ps.setBytes(2, bos.toByteArray());
-        ps.executeUpdate();
-        ps.close();
-    }
-
-    /**
-     * Retrieves an object from the desired table. The key should be unique
-     * otherwise the first object will be returned. Returns null if the key is
-     * not found.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the object key
-     * @return the object stored in the table.
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     */
-    public Object retrieveObject(String tableName, String objectKey) throws SQLException, IOException, ClassNotFoundException {
-        Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select MATCH_BLOB from "
-                + tableName + " where NAME='" + objectKey + "'");
-        if (results.next()) {
-            Blob tempBlob = results.getBlob(1);
-            BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-            ObjectInputStream in = new ObjectInputStream(bis);
-            Object object = in.readObject();
-            in.close();
-            results.close();
-            stmt.close();
-            return object;
-        }
-        results.close();
-        stmt.close();
-        return null;
-    }
-
-    /**
-     * Indicates whether an object is loaded in the given table.
-     *
-     * @param tableName the table name
-     * @param objectKey the object key
-     * @return a boolean indicating whether an object is loaded in the given
-     * table
-     * @throws SQLException exception thrown whenever an exception occurred
-     * while interrogating the database
-     */
-    public boolean inDB(String tableName, String objectKey) throws SQLException {
-        Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select * from "
-                + tableName + " where NAME='" + objectKey + "'");
-        boolean result = results.next();
-        results.close();
-        stmt.close();
-        return result;
-    }
 
     /**
      * Indicates whether a spectrum match is loaded.
@@ -239,7 +119,7 @@ public class IdentificationDB implements Serializable {
      */
     public boolean spectrumMatchInDB(String spectrumKey) throws SQLException {
         String tableName = getSpectrumMatchTable(spectrumKey);
-        return inDB(tableName, spectrumKey);
+        return objectsDB.inDB(tableName, spectrumKey);
     }
 
     /**
@@ -252,7 +132,7 @@ public class IdentificationDB implements Serializable {
      * while interrogating the database
      */
     public boolean peptideMatchInDB(String peptideKey) throws SQLException {
-        return inDB(peptideTableName, peptideKey);
+        return objectsDB.inDB(peptideTableName, peptideKey);
     }
 
     /**
@@ -265,44 +145,7 @@ public class IdentificationDB implements Serializable {
      * while interrogating the database
      */
     public boolean proteinMatchInDB(String proteinKey) throws SQLException {
-        return inDB(proteinTableName, proteinKey);
-    }
-
-    /**
-     * Deletes an object from the desired table.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the object key
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     */
-    public void deleteObject(String tableName, String objectKey) throws SQLException {
-        Statement stmt = dbConnection.createStatement();
-        stmt.executeUpdate("delete from "
-                + tableName + " where NAME='" + objectKey + "'");
-        stmt.close();
-    }
-
-    /**
-     * Stores an object in the desired table.
-     *
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @param object the object to store
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     */
-    public void updateObject(String tableName, String objectKey, Object object) throws SQLException, IOException {
-        PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'");
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(object);
-        oos.close();
-        ps.setBytes(1, bos.toByteArray());
-        ps.executeUpdate();
-        ps.close();
+        return objectsDB.inDB(proteinTableName, proteinKey);
     }
 
     /**
@@ -315,7 +158,7 @@ public class IdentificationDB implements Serializable {
      * writing in the database
      */
     public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
-        updateObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
+        objectsDB.updateObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
     }
 
     /**
@@ -328,7 +171,7 @@ public class IdentificationDB implements Serializable {
      * writing in the database
      */
     public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
-        updateObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
+        objectsDB.updateObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
     }
 
     /**
@@ -343,7 +186,7 @@ public class IdentificationDB implements Serializable {
     public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
-        updateObject(tableName, key, spectrumMatch);
+        objectsDB.updateObject(tableName, key, spectrumMatch);
     }
 
     /**
@@ -380,7 +223,7 @@ public class IdentificationDB implements Serializable {
      */
     public void updateProteinParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getProteinParameterTable(urParameter);
-        updateObject(tableName, key, urParameter);
+        objectsDB.updateObject(tableName, key, urParameter);
     }
 
     /**
@@ -395,7 +238,7 @@ public class IdentificationDB implements Serializable {
      */
     public void updatePeptideParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getPeptideParameterTable(urParameter);
-        updateObject(tableName, key, urParameter);
+        objectsDB.updateObject(tableName, key, urParameter);
     }
 
     /**
@@ -410,7 +253,7 @@ public class IdentificationDB implements Serializable {
      */
     public void updateSpectrumParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getSpectrumParameterTable(key, urParameter);
-        updateObject(tableName, key, urParameter);
+        objectsDB.updateObject(tableName, key, urParameter);
     }
 
     /**
@@ -421,9 +264,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      */
     public void removeProteinMatch(String key) throws SQLException {
-        deleteObject(proteinTableName, key);
+        objectsDB.deleteObject(proteinTableName, key);
         for (String proteinParameterTable : proteinParametersTables) {
-            deleteObject(proteinParameterTable, key);
+            objectsDB.deleteObject(proteinParameterTable, key);
         }
     }
 
@@ -435,9 +278,9 @@ public class IdentificationDB implements Serializable {
      * deleting the match
      */
     public void removePeptideMatch(String key) throws SQLException {
-        deleteObject(peptideTableName, key);
+        objectsDB.deleteObject(peptideTableName, key);
         for (String peptideParameterTable : peptideParametersTables) {
-            deleteObject(peptideParameterTable, key);
+            objectsDB.deleteObject(peptideParameterTable, key);
         }
     }
 
@@ -450,10 +293,10 @@ public class IdentificationDB implements Serializable {
      */
     public void removeSpectrumMatch(String key) throws SQLException {
         for (String psmTable : psmTables) {
-            deleteObject(psmTable, key);
+            objectsDB.deleteObject(psmTable, key);
         }
         for (String psmParameterTable : psmParametersTables) {
-            deleteObject(psmParameterTable, key);
+            objectsDB.deleteObject(psmParameterTable, key);
         }
     }
 
@@ -486,7 +329,7 @@ public class IdentificationDB implements Serializable {
      */
     public SpectrumMatch getSpectrumMatch(String key) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getSpectrumMatchTable(key);
-        return (SpectrumMatch) retrieveObject(tableName, key);
+        return (SpectrumMatch) objectsDB.retrieveObject(tableName, key);
     }
 
     /**
@@ -502,13 +345,13 @@ public class IdentificationDB implements Serializable {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
         if (!psmTables.contains(tableName)) {
-            addTable(tableName, matchSize);
+            objectsDB.addTable(tableName, matchSize);
             psmTables.add(tableName);
         }
         if (spectrumMatchInDB(key)) {
             updateMatch(spectrumMatch);
         } else {
-            insertObject(tableName, key, spectrumMatch);
+            objectsDB.insertObject(tableName, key, spectrumMatch);
         }
     }
 
@@ -525,7 +368,7 @@ public class IdentificationDB implements Serializable {
      * occurred while casting the database input in the desired match class
      */
     public PeptideMatch getPeptideMatch(String key) throws SQLException, IOException, ClassNotFoundException {
-        return (PeptideMatch) retrieveObject(peptideTableName, key);
+        return (PeptideMatch) objectsDB.retrieveObject(peptideTableName, key);
     }
 
     /**
@@ -541,7 +384,7 @@ public class IdentificationDB implements Serializable {
         if (peptideMatchInDB(peptideMatch.getKey())) {
             updatePeptideMatch(peptideMatch);
         } else {
-            insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
+            objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
         }
     }
 
@@ -558,7 +401,7 @@ public class IdentificationDB implements Serializable {
      * occurred while casting the database input in the desired match class
      */
     public ProteinMatch getProteinMatch(String key) throws SQLException, IOException, ClassNotFoundException {
-        return (ProteinMatch) retrieveObject(proteinTableName, key);
+        return (ProteinMatch) objectsDB.retrieveObject(proteinTableName, key);
     }
 
     /**
@@ -574,7 +417,7 @@ public class IdentificationDB implements Serializable {
         if (proteinMatchInDB(proteinMatch.getKey())) {
             updateProteinMatch(proteinMatch);
         } else {
-            insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
+            objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
         }
     }
 
@@ -615,7 +458,7 @@ public class IdentificationDB implements Serializable {
      */
     public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getSpectrumParameterTable(key, urParameter);
-        return (UrParameter) retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key);
     }
 
     /**
@@ -631,10 +474,10 @@ public class IdentificationDB implements Serializable {
     public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         if (!psmParametersTables.contains(tableName)) {
-            addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName, parametersSize);
             psmParametersTables.add(tableName);
         }
-        insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter);
     }
 
     /**
@@ -652,7 +495,7 @@ public class IdentificationDB implements Serializable {
      */
     public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getPeptideParameterTable(urParameter);
-        return (UrParameter) retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key);
     }
 
     /**
@@ -668,10 +511,10 @@ public class IdentificationDB implements Serializable {
     public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getPeptideParameterTable(urParameter);
         if (!peptideParametersTables.contains(tableName)) {
-            addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName, parametersSize);
             peptideParametersTables.add(tableName);
         }
-        insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter);
     }
 
     /**
@@ -689,7 +532,7 @@ public class IdentificationDB implements Serializable {
      */
     public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getProteinParameterTable(urParameter);
-        return (UrParameter) retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key);
     }
 
     /**
@@ -705,10 +548,10 @@ public class IdentificationDB implements Serializable {
     public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getProteinParameterTable(urParameter);
         if (!proteinParametersTables.contains(tableName)) {
-            addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName, parametersSize);
             proteinParametersTables.add(tableName);
         }
-        insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter);
     }
 
     /**
@@ -727,7 +570,7 @@ public class IdentificationDB implements Serializable {
      */
     public UrParameter getMatchPArameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getParameterTable(urParameter);
-        return (UrParameter) retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key);
     }
 
     /**
@@ -744,10 +587,10 @@ public class IdentificationDB implements Serializable {
     public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getParameterTable(urParameter);
         if (!matchParametersTables.contains(tableName)) {
-            addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName, parametersSize);
             matchParametersTables.add(tableName);
         }
-        insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter);
     }
 
     /**
@@ -758,10 +601,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getSpectrumMatchTable(String spectrumKey) {
         String tableName = Spectrum.getSpectrumFile(spectrumKey) + psmTableSuffix;
-        tableName = removeForbiddenCharacters(tableName);
-        if (longKeys.contains(tableName)) {
-            tableName = longKeys.indexOf(tableName) + "";
-        }
+        tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -775,10 +615,7 @@ public class IdentificationDB implements Serializable {
     public String getSpectrumParameterTable(String spectrumKey, UrParameter urParameter) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String tableName = ExperimentObject.getParameterKey(urParameter) + "_" + fileName + psmParametersTableSuffix;
-        tableName = removeForbiddenCharacters(tableName);
-        if (longKeys.contains(tableName)) {
-            tableName = longKeys.indexOf(tableName) + "";
-        }
+        tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -790,10 +627,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getPeptideParameterTable(UrParameter urParameter) {
         String tableName = ExperimentObject.getParameterKey(urParameter) + peptideParametersTableSuffix;
-        tableName = removeForbiddenCharacters(tableName);
-        if (longKeys.contains(tableName)) {
-            tableName = longKeys.indexOf(tableName) + "";
-        }
+        tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -805,10 +639,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getProteinParameterTable(UrParameter urParameter) {
         String tableName = ExperimentObject.getParameterKey(urParameter) + proteinParametersTableSuffix;
-        tableName = removeForbiddenCharacters(tableName);
-        if (longKeys.contains(tableName)) {
-            tableName = longKeys.indexOf(tableName) + "";
-        }
+        tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -821,10 +652,7 @@ public class IdentificationDB implements Serializable {
      */
     public String getParameterTable(UrParameter urParameter) {
         String tableName = ExperimentObject.getParameterKey(urParameter) + parametersSuffix;
-        tableName = removeForbiddenCharacters(tableName);
-        if (longKeys.contains(tableName)) {
-            tableName = longKeys.indexOf(tableName) + "";
-        }
+        tableName = objectsDB.correctTableName(tableName);
         return tableName;
     }
 
@@ -835,8 +663,7 @@ public class IdentificationDB implements Serializable {
      * closing the database connection
      */
     public void close() throws SQLException {
-        dbConnection.close();
-        dbConnection = null;
+        objectsDB.close();
     }
     
     /**
@@ -845,19 +672,6 @@ public class IdentificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while establishing the connection
      */
     public void establishConnection() throws SQLException {
-        String url = "jdbc:derby:" + dbLocation + ";create=true";
-        dbConnection = DriverManager.getConnection(url);
-    }
-    
-    /**
-     * Removes the characters forbidden in table names and puts a '_' instead.
-     * 
-     * @param tableName the table name
-     * @return the corrected table name
-     */
-    public String removeForbiddenCharacters(String tableName) {
-        tableName = tableName.replace(" ", "_");
-        tableName = tableName.replace("|", "_");
-        return tableName;
+        objectsDB.establishConnection();
     }
 }

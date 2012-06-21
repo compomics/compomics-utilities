@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
-import com.compomics.util.experiment.biology.Sample;
 import com.compomics.util.experiment.quantification.Quantification;
+import com.compomics.util.experiment.biology.Sample;
 
 import java.util.HashMap;
 

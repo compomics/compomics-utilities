@@ -21,8 +21,9 @@ import java.util.ArrayList;
  *
  * @author marc
  */
-public class QuantificationDB {
-
+public class QuantificationDB implements Serializable {
+    
+    static final long serialVersionUID = 4600091320219653637L;
     /**
      * The name which will be used for the database
      */

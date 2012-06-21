@@ -15,8 +15,10 @@ import java.util.ArrayList;
  *
  * @author marc
  */
-public class ObjectsDB {
+public class ObjectsDB implements Serializable {
 
+    
+        static final long serialVersionUID = -8595805180622832745L;
     /**
      * The name of the database
      */

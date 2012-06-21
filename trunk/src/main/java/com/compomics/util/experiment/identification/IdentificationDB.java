@@ -19,6 +19,7 @@ import java.util.ArrayList;
  */
 public class IdentificationDB implements Serializable {
 
+        static final long serialVersionUID = 691986038787590646L;
     /**
      * The name which will be used for the database.
      */

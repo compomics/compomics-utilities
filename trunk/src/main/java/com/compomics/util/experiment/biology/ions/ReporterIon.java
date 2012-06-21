@@ -169,7 +169,7 @@ public class ReporterIon extends Ion {
      * @return the index of a reporter ion.
      */
     public int getIndex() {
-        return (int) getTheoreticMass() + 1;
+        return (int) getTheoreticMass();
     }
 
     @Override

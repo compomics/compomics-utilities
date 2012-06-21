@@ -44,8 +44,7 @@ public class ObjectsDB implements Serializable {
      */
     public ObjectsDB(File folder, String dbName) throws SQLException {
         this.dbName = dbName;
-        File dbFolder = new File(folder, dbName);
-        dbLocation = dbFolder.getAbsolutePath();
+        dbLocation = folder.getAbsolutePath();
         establishConnection();
     }
 

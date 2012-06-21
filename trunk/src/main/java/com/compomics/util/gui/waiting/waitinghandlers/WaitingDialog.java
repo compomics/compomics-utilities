@@ -80,7 +80,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private Frame waitingHandlerParent;
     /**
-     * If true, the dialog will shake when completed. Mainly a PeptideShaker feature.
+     * If true, the dialog will shake when completed. Mainly a PeptideShaker
+     * feature.
      */
     private boolean shakeWhenFinished;
 
@@ -120,8 +121,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         resizeLayeredPanes();
 
         // set up the tip of the day
-        setTipOfTheDay(tips);
-        tipOfTheDayEditorPane.setText(getTipOfTheDay());
+        if (tips != null && !tips.isEmpty()) {
+            setTipOfTheDay(tips);
+            tipOfTheDayEditorPane.setText(getTipOfTheDay());
+        } else {
+            tipOfTheDayJPanel.setVisible(false);
+            showTipOfTheDayCheckBox.setSelected(false);
+            showTipOfTheDayCheckBox.setEnabled(false);
+        }
 
         this.setLocationRelativeTo(waitingHandlerParent);
 
@@ -769,7 +776,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         if (normalIcon != null) {
             waitingHandlerParent.setIconImage(normalIcon);
         }
-        
+
         // make the dialog shake for a couple of seconds
         if (shakeWhenFinished) {
             startShake();
@@ -934,7 +941,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 }
             }
         });
-        
+
         shakeTimer.start();
     }
 

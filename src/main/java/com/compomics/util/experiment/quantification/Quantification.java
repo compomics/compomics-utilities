@@ -237,7 +237,7 @@ public abstract class Quantification extends ExperimentObject {
      *
      * @param storageDirectory the path of the storage directory
      */
-    public void setSerializationDirectory(String storageDirectory) {
+    public void setDirectory(String storageDirectory) {
         this.storageDirectory = storageDirectory;
     }
     /**

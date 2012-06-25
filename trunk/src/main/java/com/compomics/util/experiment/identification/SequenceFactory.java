@@ -219,7 +219,7 @@ public class SequenceFactory {
             return tempFastaIndex;
         }
         tempFastaIndex = createFastaIndex(fastaFile);
-            writeIndex(tempFastaIndex, fastaFile.getParentFile());
+        writeIndex(tempFastaIndex, fastaFile.getParentFile());
         return tempFastaIndex;
     }
 
@@ -436,7 +436,7 @@ public class SequenceFactory {
      * Appends decoy sequences to the desired file while displaying progress.
      *
      * @param destinationFile the destination file
-     * @param progressBar the progress bar
+     * @param waitingHandler the waiting handler
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      * @throws IllegalArgumentException exdeption thrown whenever a protein is
@@ -495,7 +495,7 @@ public class SequenceFactory {
             waitingHandler.setSecondaryProgressDialogIntermediate(true);
             //waitingHandler.setStringPainted(false);
         }
-        
+
         newFile.close();
 
         if (!waitingHandler.isRunCanceled()) {
@@ -503,7 +503,7 @@ public class SequenceFactory {
             writeIndex(newIndex, destinationFile.getParentFile());
         } else {
             destinationFile.delete();
-        }   
+        }
     }
 
     /**

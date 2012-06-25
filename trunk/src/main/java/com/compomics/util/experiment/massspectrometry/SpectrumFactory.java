@@ -142,7 +142,7 @@ public class SpectrumFactory {
      * Add spectra to the factory.
      *
      * @param spectrumFile The spectrum file, can be mgf or mzML
-     * @param progressBar a progress bar showing the progress
+     * @param waitingHandler the waiting handler
      * @throws FileNotFoundException Exception thrown whenever the file was not
      * found
      * @throws IOException Exception thrown whenever an error occurred while
@@ -796,7 +796,9 @@ public class SpectrumFactory {
                     }
                     waitingHandler.increaseSecondaryProgressValue();
                 }
+                
                 String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+                
                 try {
                     Precursor precursor = getPrecursor(spectrumKey, false);
                     double rt = precursor.getRt();

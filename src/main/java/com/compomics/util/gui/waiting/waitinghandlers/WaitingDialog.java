@@ -91,6 +91,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param waitingHandlerParent a reference to the handler parent
      * @param waitingIcon the dialog/frame icon to use when waiting
      * @param normalIcon the dialog/frame icon to use when done
+     * @param shakeWhenFinished shake when completed, mainly a PeptideShaker
+     * feature
      * @param modal
      */
     public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, boolean modal) {
@@ -103,6 +105,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param waitingHandlerParent a reference to the handler parent
      * @param waitingIcon the dialog/frame icon to use when waiting
      * @param normalIcon the dialog/frame icon to use when done
+     * @param shakeWhenFinished shake when completed, mainly a PeptideShaker
+     * feature
      * @param modal
      * @param tips the list of Tip of the day
      */

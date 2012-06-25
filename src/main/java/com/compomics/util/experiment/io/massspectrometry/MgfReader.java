@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Pattern;
-import javax.swing.JProgressBar;
 
 /**
  * This class will read an MGF file.
@@ -297,8 +296,7 @@ public class MgfReader {
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
 
             RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
-            String line;
-            long readIndex, writeIndex = 0, beginIndex = 0;
+            long writeIndex = 0, beginIndex = 0;
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressDialogIntermediate(false);
@@ -306,10 +304,9 @@ public class MgfReader {
                 waitingHandler.setSecondaryProgressValue(0);
             }
 
-            int fileCounter = 1;
-            int spectrumCounter = 0;
+            int fileCounter = 1, spectrumCounter = 0;
             long typicalSize = 0;
-            double rt, rt1, rt2, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -318,6 +315,7 @@ public class MgfReader {
 
             long sizeOfReadAccessFile = readAccessFile.length();
             long progressUnit = sizeOfReadAccessFile / 100;
+            String line;
 
             while ((line = readAccessFile.readLine()) != null) {
 
@@ -329,7 +327,7 @@ public class MgfReader {
                     writeIndex = writeFile.getFilePointer();
                     beginIndex = writeIndex;
 
-                    readIndex = readAccessFile.getFilePointer();
+                    long readIndex = readAccessFile.getFilePointer();
 
                     if (spectrumCounter > nSpectra) {
 
@@ -366,7 +364,7 @@ public class MgfReader {
                 } else if (line.startsWith("PEPMASS")) {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
-                    precursorMass = Double.parseDouble(values[0]);
+                    double precursorMass = Double.parseDouble(values[0]);
                     if (precursorMass > maxMz) {
                         maxMz = precursorMass;
                     }
@@ -375,7 +373,7 @@ public class MgfReader {
                         String rtInput = line.substring(line.indexOf('=') + 1);
                         String[] rtWindow = rtInput.split("-");
                         if (rtWindow.length == 1) {
-                            rt = new Double(rtWindow[0]);
+                            double rt = new Double(rtWindow[0]);
                             if (rt > maxRT) {
                                 maxRT = rt;
                             }
@@ -383,14 +381,14 @@ public class MgfReader {
                                 minRT = rt;
                             }
                         } else if (rtWindow.length == 2) {
-                            rt1 = new Double(rtWindow[0]);
+                            double rt1 = new Double(rtWindow[0]);
                             if (rt1 > maxRT) {
                                 maxRT = rt1;
                             }
                             if (rt1 < minRT) {
                                 minRT = rt1;
                             }
-                            rt2 = new Double(rtWindow[1]);
+                            double rt2 = new Double(rtWindow[1]);
                             if (rt2 > maxRT) {
                                 maxRT = rt2;
                             }

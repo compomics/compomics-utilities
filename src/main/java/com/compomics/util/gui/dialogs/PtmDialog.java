@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.gui.renderers.ToolTipComboBoxRenderer;
+import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.pride.CvTerm;
 import com.compomics.util.pride.PrideObjectsFactory;
 import com.compomics.util.pride.PtmToPrideMap;
@@ -61,6 +62,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * The modification cv term
      */
     private CvTerm cvTerm = null;
+    /**
+     * Boolean indicating wheter the user can edit the ptm or not.
+     */
+    private boolean editable;
 
     /**
      * Creates a new PTM dialog.
@@ -69,13 +74,15 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param ptmDialogParent
      * @param ptmToPrideMap
      * @param currentPTM the ptm to edit (can be null)
+     * @param editable boolean indicating wheter the user can edit the ptm details
      */
-    public PtmDialog(JDialog parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM) {
+    public PtmDialog(JDialog parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
         super(parent, true);
 
         this.ptmDialogParent = ptmDialogParent;
         this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
+        this.editable = editable;
 
         initComponents();
         setUpGui();
@@ -90,13 +97,15 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param ptmDialogParent
      * @param ptmToPrideMap
      * @param currentPTM the ptm to edit (can be null)
+     * @param editable boolean indicating wheter the user can edit the ptm details
      */
-    public PtmDialog(JFrame parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM) {
+    public PtmDialog(JFrame parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
         super(parent, true);
 
         this.ptmDialogParent = ptmDialogParent;
         this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
+        this.editable = editable;
 
         initComponents();
         setUpGui();
@@ -108,6 +117,9 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * Set up the GUI.
      */
     private void setUpGui() {
+        
+        // centrally align the comboboxes
+        typeCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
         // set table properties
         neutralLossesTable.getTableHeader().setReorderingAllowed(false);
@@ -140,6 +152,15 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         comboboxTooltips.add("Modification at the C terminus of a peptide");
         comboboxTooltips.add("Modification at the C terminus of a peptide at particular amino acids");
         typeCmb.setRenderer(new ToolTipComboBoxRenderer(comboboxTooltips, SwingConstants.CENTER));
+        
+        typeCmb.setEnabled(editable);
+        nameTxt.setEditable(editable);
+        massTxt.setEditable(editable);
+        residuesTxt.setEditable(editable);
+        addNeutralLoss.setEnabled(editable);
+        removeNeutralLoss.setEnabled(editable);
+        addReporterIon.setEnabled(editable);
+        removerReporterIon.setEnabled(editable);
 
         if (currentPtm != null) {
             typeCmb.setSelectedIndex(currentPtm.getType());

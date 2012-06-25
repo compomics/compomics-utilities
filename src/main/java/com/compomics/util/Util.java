@@ -130,7 +130,7 @@ public class Util {
         }
 
         progressDialog.setIndeterminate(false);
-        progressDialog.setMax(table.getRowCount());
+        progressDialog.setMaxProgressValue(table.getRowCount());
 
         tableAsString += "\n";
 

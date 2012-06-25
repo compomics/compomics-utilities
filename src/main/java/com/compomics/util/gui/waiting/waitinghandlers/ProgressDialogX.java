@@ -1,6 +1,9 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
+import java.awt.Frame;
+import java.awt.Image;
+import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -30,29 +33,71 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * Boolean indicating whether the process has been canceled.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating wheter the process has been completed.
+     */
+    private boolean finished = false;
+    /**
+     * The dialog/frame icon to use when waiting.
+     */
+    private Image waitingIcon;
+    /**
+     * The dialog/frame icon to use when done.
+     */
+    private Image normalIcon;
+    /**
+     * The waitingHandlerParent frame.
+     */
+    private Frame waitingHandlerParentFrame;
+    /**
+     * The waitingHandlerParent dialog.
+     */
+    private JDialog waitingHandlerParentDialog;
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
      *
-     * @param parent
+     * @param waitingHandlerParent
+     * @param waitingIcon the dialog/frame icon to use when waiting
+     * @param normalIcon the dialog/frame icon to use when done
      * @param modal
      */
-    public ProgressDialogX(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public ProgressDialogX(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean modal) {
+        super(waitingHandlerParent, modal);
         initComponents();
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(waitingHandlerParent);
+
+        this.waitingHandlerParentFrame = waitingHandlerParent;
+        this.waitingIcon = waitingIcon;
+        this.normalIcon = normalIcon;
+
+        // change the icon to a "waiting version"
+        if (waitingIcon != null) {
+            waitingHandlerParent.setIconImage(waitingIcon);
+        }
     }
 
     /**
      * Opens a new ProgressDialog with a JDialog as a parent.
      *
-     * @param parent
+     * @param waitingHandlerParent
+     * @param waitingIcon the dialog/frame icon to use when waiting
+     * @param normalIcon the dialog/frame icon to use when done
      * @param modal
      */
-    public ProgressDialogX(javax.swing.JDialog parent, boolean modal) {
-        super(parent, modal);
+    public ProgressDialogX(JDialog waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean modal) {
+        super(waitingHandlerParent, modal);
         initComponents();
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(waitingHandlerParent);
+
+        this.waitingIcon = waitingIcon;
+        this.normalIcon = normalIcon;
+        this.waitingHandlerParentDialog = waitingHandlerParent;
+
+        // change the icon to a "waiting version"
+        if (waitingIcon != null) {
+            waitingHandlerParent.setIconImage(waitingIcon);
+        }
     }
 
     /**
@@ -295,26 +340,41 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     @Override
     public void setRunFinished() {
+
+        // change the icon back to the default version
+        if (normalIcon != null) {
+            if (waitingHandlerParentFrame != null) {
+                waitingHandlerParentFrame.setIconImage(normalIcon);
+            } else if (waitingHandlerParentDialog != null) {
+                waitingHandlerParentDialog.setIconImage(normalIcon);
+            }
+        }
+
+        finished = true;
         this.setVisible(true); //@TODO: why is it set visible?
         this.dispose();
     }
 
     @Override
     public void setRunCanceled() {
-        canceled = true;
-        if (!doNothingOnClose && !unstoppable) {
-            this.setVisible(true); //@TODO: why is it set visible?
-            this.dispose();
-        }
-        if (unstoppable) {
-            int selection = JOptionPane.showConfirmDialog(this,
-                    "Cancelling this process is not directly supported.\n"
-                    + "Doing so may result in instability or errors.\n\n"
-                    + "Do you still want to cancel the process?", "Cancel Process?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        if (!finished) {
 
-            if (selection == JOptionPane.YES_OPTION) {
-                this.setVisible(true); //@TODO: why is it set visible?
-                this.dispose();
+            if (!doNothingOnClose && !unstoppable) {
+                canceled = true;
+            }
+
+            if (!canceled && unstoppable) {
+
+                int selection = JOptionPane.showConfirmDialog(this,
+                        "Cancelling this process is not directly supported.\n"
+                        + "Doing so may result in instability or errors.\n\n"
+                        + "Do you still want to cancel the process?", 
+                        "Cancel Process?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if (selection == JOptionPane.YES_OPTION) {
+                    canceled = true;
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.experiment.quantification.QuantificationDB;
 import com.compomics.util.experiment.quantification.matches.PeptideQuantification;
 import com.compomics.util.experiment.quantification.matches.PsmQuantification;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.SQLException;
@@ -59,10 +60,6 @@ public abstract class Quantification extends ExperimentObject {
      * to contain a velos file.
      */
     protected int cacheSize = 20000;
-    /**
-     * the directory where matches will be stored
-     */
-    protected String storageDirectory;
     /**
      * boolean indicating whether the identification should be stored in memory
      * or not. True by default, the serialization directory should be set
@@ -222,24 +219,6 @@ public abstract class Quantification extends ExperimentObject {
     public void setInMemory(boolean inMemory) {
         this.inMemory = inMemory;
     }
-
-    /**
-     * Returns the storage directory
-     *
-     * @return the storage directory
-     */
-    public String getDirectory() {
-        return storageDirectory;
-    }
-
-    /**
-     * sets the storage directory
-     *
-     * @param storageDirectory the path of the storage directory
-     */
-    public void setDirectory(String storageDirectory) {
-        this.storageDirectory = storageDirectory;
-    }
     /**
      * the quantificationDB object interacting with the database
      */
@@ -271,7 +250,21 @@ public abstract class Quantification extends ExperimentObject {
      * retrieving the match
      */
     public PsmQuantification getSpectrumMatch(String spectrumKey) throws Exception {
-        return quantificationDB.getSpectrumMatch(spectrumKey);
+        int index = loadedMatches.indexOf(spectrumKey);
+        if (index == -1) {
+            PsmQuantification match = quantificationDB.getSpectrumMatch(spectrumKey);
+            loadedMatchesMap.put(spectrumKey, match);
+            loadedMatches.add(spectrumKey);
+            modifiedMatches.put(spectrumKey, false);
+            updateCache();
+            return match;
+        } else {
+            if (index < 0.25 * loadedMatches.size()) {
+                loadedMatches.remove(spectrumKey);
+                loadedMatches.add(spectrumKey);
+            }
+            return (PsmQuantification) loadedMatchesMap.get(spectrumKey);
+        }
     }
 
     /**
@@ -283,7 +276,21 @@ public abstract class Quantification extends ExperimentObject {
      * retrieving the match
      */
     public PeptideQuantification getPeptideMatch(String peptideKey) throws Exception {
-        return quantificationDB.getPeptideMatch(peptideKey);
+        int index = loadedMatches.indexOf(peptideKey);
+        if (index == -1) {
+            PeptideQuantification match = quantificationDB.getPeptideMatch(peptideKey);
+            loadedMatchesMap.put(peptideKey, match);
+            loadedMatches.add(peptideKey);
+            modifiedMatches.put(peptideKey, false);
+            updateCache();
+            return match;
+        } else {
+            if (index < 0.25 * loadedMatches.size()) {
+                loadedMatches.remove(peptideKey);
+                loadedMatches.add(peptideKey);
+            }
+            return (PeptideQuantification) loadedMatchesMap.get(peptideKey);
+        }
     }
 
     /**
@@ -295,7 +302,21 @@ public abstract class Quantification extends ExperimentObject {
      * retrieving the match
      */
     public ProteinQuantification getProteinMatch(String proteinKey) throws Exception {
-        return quantificationDB.getProteinMatch(proteinKey);
+        int index = loadedMatches.indexOf(proteinKey);
+        if (index == -1) {
+            ProteinQuantification match = quantificationDB.getProteinMatch(proteinKey);
+            loadedMatchesMap.put(proteinKey, match);
+            loadedMatches.add(proteinKey);
+            modifiedMatches.put(proteinKey, false);
+            updateCache();
+            return match;
+        } else {
+            if (index < 0.25 * loadedMatches.size()) {
+                loadedMatches.remove(proteinKey);
+                loadedMatches.add(proteinKey);
+            }
+            return (ProteinQuantification) loadedMatchesMap.get(proteinKey);
+        }
     }
 
     /**
@@ -409,7 +430,14 @@ public abstract class Quantification extends ExperimentObject {
      * @param identification
      * @throws Exception
      */
-    public void buildPeptidesAndProteinQuantifications(Identification identification) throws Exception {
+    public void buildPeptidesAndProteinQuantifications(Identification identification, WaitingHandler waitingHandler) throws Exception {
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIntermediate(false);
+            waitingHandler.setMaxSecondaryProgressValue(identification.getProteinIdentification().size()
+                    + identification.getPeptideIdentification().size()
+                    + identification.getSpectrumIdentification().size());
+        }
 
         ProteinQuantification tempProteinQuantification;
 
@@ -417,6 +445,12 @@ public abstract class Quantification extends ExperimentObject {
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
             tempProteinQuantification = new ProteinQuantification(proteinKey, proteinMatch.getPeptideMatches());
             addProteinQuantification(tempProteinQuantification);
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
+            }
         }
 
         PeptideQuantification tempPeptideQuantification;
@@ -425,11 +459,23 @@ public abstract class Quantification extends ExperimentObject {
             PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
             tempPeptideQuantification = new PeptideQuantification(peptideKey, peptideMatch.getSpectrumMatches());
             addPeptideQuantification(tempPeptideQuantification);
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
+            }
         }
 
         for (String psmKey : identification.getSpectrumIdentification()) {
             if (!psmIDentificationToQuantification.containsKey(psmKey)) {
                 psmIDentificationToQuantification.put(psmKey, new ArrayList<String>());
+            }
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
             }
         }
     }
@@ -503,5 +549,20 @@ public abstract class Quantification extends ExperimentObject {
                 throw new SQLException("Error while writing match " + key + "in the database.");
             }
         }
+    }
+
+    /**
+     * Establishes connection to the database.
+     *
+     * @param dbFolder the absolute path to the folder where the database is
+     * located
+     * @throws SQLException exception thrown whenever an error occurred while
+     * establishing the connection
+     */
+    public void establishConnection(String dbFolder) throws SQLException {
+        if (quantificationDB == null) {
+            quantificationDB = new QuantificationDB(dbFolder);
+        }
+        quantificationDB.establishConnection(dbFolder);
     }
 }

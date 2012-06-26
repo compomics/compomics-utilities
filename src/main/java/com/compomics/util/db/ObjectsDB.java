@@ -24,10 +24,6 @@ public class ObjectsDB implements Serializable {
      */
     private String dbName;
     /**
-     * The location of the database
-     */
-    private String dbLocation;
-    /**
      * The connection
      */
     private Connection dbConnection;
@@ -38,14 +34,13 @@ public class ObjectsDB implements Serializable {
     
     /**
      * Constructor.
-     * @param folder
-     * @param dbName
+     * @param folder absolute path of the folder where to establish the database  
+     * @param dbName name of the database
      * @throws SQLException 
      */
-    public ObjectsDB(File folder, String dbName) throws SQLException {
+    public ObjectsDB(String folder, String dbName) throws SQLException {
         this.dbName = dbName;
-        dbLocation = folder.getAbsolutePath();
-        establishConnection();
+        establishConnection(folder);
     }
 
     /**
@@ -196,10 +191,13 @@ public class ObjectsDB implements Serializable {
     
     /**
      * Establishes connection to the database
+     * @param dbFolder the folder where the database is located
      * @throws SQLException exception thrown whenever an error occurred while establishing the connection
      */
-    public void establishConnection() throws SQLException {
-        String url = "jdbc:derby:" + dbLocation + ";create=true";
+    public void establishConnection(String dbFolder) throws SQLException {
+        File testFolder = new File(dbFolder, dbName);
+        String path = testFolder.getAbsolutePath();
+        String url = "jdbc:derby:" + path + ";create=true";
         dbConnection = DriverManager.getConnection(url);
     }
     

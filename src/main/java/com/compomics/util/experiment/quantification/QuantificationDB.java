@@ -95,7 +95,7 @@ public class QuantificationDB implements Serializable {
         if (dbFolder.exists()) {
             Util.deleteDir(dbFolder);
         }
-        objectsDB = new ObjectsDB(dbFolder, dbName);
+        objectsDB = new ObjectsDB(folder, dbName);
         objectsDB.addTable(proteinTableName, matchSize);
         objectsDB.addTable(peptideTableName, matchSize);
     }
@@ -575,10 +575,11 @@ public class QuantificationDB implements Serializable {
     
     /**
      * Establishes connection to the database
+     * @param dbFolder the absolute path to the folder where the database is located
      * @throws SQLException exception thrown whenever an error occurred while establishing the connection
      */
-    public void establishConnection() throws SQLException {
-        objectsDB.establishConnection();
+    public void establishConnection(String dbFolder) throws SQLException {
+        objectsDB.establishConnection(dbFolder);
     }
 
     /**

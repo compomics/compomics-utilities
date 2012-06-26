@@ -393,6 +393,7 @@ public abstract class Identification extends ExperimentObject {
      * created, the database will be created in the folder.
      *
      * @param serializationDirectory the path of the directory
+     * @deprecated use establishConnection(String dbFolder) instead
      */
     public void setDirectory(String serializationDirectory) throws SQLException {
         this.serializationDirectory = serializationDirectory;
@@ -611,7 +612,12 @@ public abstract class Identification extends ExperimentObject {
         int index = loadedMatches.indexOf(spectrumKey);
         if (index == -1) {
             if (isDB) {
-                return identificationDB.getSpectrumMatch(spectrumKey);
+                SpectrumMatch match = identificationDB.getSpectrumMatch(spectrumKey);
+                loadedMatchesMap.put(spectrumKey, match);
+                loadedMatches.add(spectrumKey);
+                modifiedMatches.put(spectrumKey, false);
+                updateCache();
+                return match;
             } else {
                 return (SpectrumMatch) getMatch(spectrumKey);
             }
@@ -642,7 +648,12 @@ public abstract class Identification extends ExperimentObject {
         int index = loadedMatches.indexOf(peptideKey);
         if (index == -1) {
             if (isDB) {
-                return identificationDB.getPeptideMatch(peptideKey);
+                PeptideMatch match = identificationDB.getPeptideMatch(peptideKey);
+                loadedMatchesMap.put(peptideKey, match);
+                loadedMatches.add(peptideKey);
+                modifiedMatches.put(peptideKey, false);
+                updateCache();
+                return match;
             } else {
                 return (PeptideMatch) getMatch(peptideKey);
             }
@@ -673,7 +684,12 @@ public abstract class Identification extends ExperimentObject {
         int index = loadedMatches.indexOf(proteinKey);
         if (index == -1) {
             if (isDB) {
-                return identificationDB.getProteinMatch(proteinKey);
+                ProteinMatch match = identificationDB.getProteinMatch(proteinKey);
+                loadedMatchesMap.put(proteinKey, match);
+                loadedMatches.add(proteinKey);
+                modifiedMatches.put(proteinKey, false);
+                updateCache();
+                return match;
             } else {
                 return (ProteinMatch) getMatch(proteinKey);
             }
@@ -1181,14 +1197,16 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Establishes a connection to the database
      *
+     * @param dbFolder the absolute path to the folder where the database is
+     * located
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection() throws SQLException {
+    public void establishConnection(String dbFolder) throws SQLException {
         if (identificationDB == null) {
             identificationDB = new IdentificationDB(serializationDirectory);
         }
-        identificationDB.establishConnection();
+        identificationDB.establishConnection(dbFolder);
     }
 
     /**

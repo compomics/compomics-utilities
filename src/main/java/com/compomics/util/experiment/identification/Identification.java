@@ -393,6 +393,7 @@ public abstract class Identification extends ExperimentObject {
      * created, the database will be created in the folder.
      *
      * @param serializationDirectory the path of the directory
+     * @throws SQLException 
      * @deprecated use establishConnection(String dbFolder) instead
      */
     public void setDirectory(String serializationDirectory) throws SQLException {
@@ -768,6 +769,8 @@ public abstract class Identification extends ExperimentObject {
      * while serializing a match
      * @throws IOException exception thrown whenever an error occurred while
      * serializing a match
+     * @throws SQLException
+     * @throws ClassNotFoundException  
      */
     public void updateCache() throws FileNotFoundException, IOException, SQLException, ClassNotFoundException {
         if (!inMemory) {
@@ -893,6 +896,10 @@ public abstract class Identification extends ExperimentObject {
      * already full.
      *
      * @param progressBar the progress bar
+     * @throws IllegalArgumentException
+     * @throws SQLException 
+     * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public void buildPeptidesAndProteins(JProgressBar progressBar) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         if (progressBar != null) {
@@ -915,6 +922,10 @@ public abstract class Identification extends ExperimentObject {
      * cache is already full.
      *
      * @param spectrumMatchKey The key of the spectrum match to add
+     * @throws IllegalArgumentException
+     * @throws SQLException 
+     * @throws ClassNotFoundException
+     * @throws IOException  
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
 
@@ -1074,6 +1085,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param match
      * @throws IllegalArgumentException
+     * @throws IOException
+     * @throws SQLException  
      */
     public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException, IOException, SQLException {
 

@@ -334,7 +334,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      *
      * @param indeterminate
      */
-    public void setSecondaryProgressDialogIntermediate(boolean indeterminate) {
+    public void setSecondaryProgressDialogIndeterminate(boolean indeterminate) {
         setIndeterminate(indeterminate);
     }
 

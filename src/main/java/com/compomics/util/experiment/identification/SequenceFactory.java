@@ -334,7 +334,7 @@ public class SequenceFactory {
         RandomAccessFile randomAccessFile = new RandomAccessFile(fastaFile, "r");
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(false);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             //progressBar.setStringPainted(true);
             waitingHandler.setMaxSecondaryProgressValue(100);
             waitingHandler.setSecondaryProgressValue(0);
@@ -372,7 +372,7 @@ public class SequenceFactory {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(true);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
             //progressBar.setStringPainted(false);
         }
 
@@ -445,7 +445,7 @@ public class SequenceFactory {
     public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException {
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(false);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             //progressBar.setStringPainted(true); //@TODO: not true by default?
             waitingHandler.setMaxSecondaryProgressValue(fastaIndex.getNTarget());
             waitingHandler.setSecondaryProgressValue(0);
@@ -492,7 +492,7 @@ public class SequenceFactory {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(true);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
             //waitingHandler.setStringPainted(false);
         }
 

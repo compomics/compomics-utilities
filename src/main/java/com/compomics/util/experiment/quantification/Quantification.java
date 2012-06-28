@@ -433,7 +433,7 @@ public abstract class Quantification extends ExperimentObject {
     public void buildPeptidesAndProteinQuantifications(Identification identification, WaitingHandler waitingHandler) throws Exception {
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(false);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressValue(identification.getProteinIdentification().size()
                     + identification.getPeptideIdentification().size()
                     + identification.getSpectrumIdentification().size());

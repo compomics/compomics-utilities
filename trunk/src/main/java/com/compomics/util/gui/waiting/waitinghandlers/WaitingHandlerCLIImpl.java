@@ -118,7 +118,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * @param intermediate if true, set to intermediate
      */
     @Override
-    public void setSecondaryProgressDialogIntermediate(boolean intermediate) {
+    public void setSecondaryProgressDialogIndeterminate(boolean intermediate) {
         boolSecondaryIntermediate = intermediate;
     }
 

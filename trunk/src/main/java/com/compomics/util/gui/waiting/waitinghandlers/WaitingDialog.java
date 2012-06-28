@@ -119,7 +119,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         this.normalIcon = normalIcon;
         this.shakeWhenFinished = shakeWhenFinished;
 
-        setSecondaryProgressDialogIntermediate(true);
+
+        setSecondaryProgressDialogIndeterminate(true);
 
         // update the layout in the layered pane
         resizeLayeredPanes();
@@ -201,6 +202,18 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     /**
+     * Reset the primary progress bar value to 0.
+     */
+    public void resetProgressBar() {
+
+        // @TODO: perhaps this should be added to the waiting handler interface?
+
+        progressBar.setIndeterminate(false);
+        progressBar.setStringPainted(true);
+        progressBar.setValue(0);
+    }
+
+    /**
      * Increase the secondary progress bar value by one "counter".
      */
     public void increaseSecondaryProgressValue() {
@@ -226,16 +239,16 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     /**
-     * Sets the secondary progress bar to intermediate or not.
+     * Sets the secondary progress bar to indeterminate or not.
      *
-     * @param intermediate if true, set to intermediate
+     * @param indeterminate if true, set to indeterminate
      */
-    public void setSecondaryProgressDialogIntermediate(boolean intermediate) {
+    public void setSecondaryProgressDialogIndeterminate(boolean indeterminate) {
 
         // this split pane trick should not be needed, but if not used the look and feel of the
-        // intermediate progress bar changes when moving back and forth between the two...
+        // indeterminate progress bar changes when moving back and forth between the two...
 
-        if (intermediate) {
+        if (indeterminate) {
             secondaryProgressBarSplitPane.setDividerLocation(secondaryProgressBarSplitPane.getWidth());
         } else {
             secondaryProgressBarSplitPane.setDividerLocation(0);
@@ -1038,5 +1051,17 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     @Override
     public void setWaitingText(String text) {
         // ignore, not implemented for this waiting handler
+    }
+
+    /**
+     * Returns true if the run is finished.
+     *
+     * @return true if the run is finished
+     */
+    public boolean isRunFinished() {
+        
+        // @TODO: perhaps this should be added to the waiting handler interface?
+        
+        return runFinished;
     }
 }

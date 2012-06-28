@@ -183,7 +183,7 @@ public class MgfReader {
         double rt, rt1, rt2, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(false);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressValue(100);
             waitingHandler.setSecondaryProgressValue(0);
         }
@@ -259,7 +259,7 @@ public class MgfReader {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIntermediate(true);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
         }
 
         randomAccessFile.close();
@@ -299,7 +299,7 @@ public class MgfReader {
             long writeIndex = 0, beginIndex = 0;
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIntermediate(false);
+                waitingHandler.setSecondaryProgressDialogIndeterminate(false);
                 waitingHandler.setMaxSecondaryProgressValue(100);
                 waitingHandler.setSecondaryProgressValue(0);
             }
@@ -412,7 +412,7 @@ public class MgfReader {
             mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz));
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIntermediate(true);
+                waitingHandler.setSecondaryProgressDialogIndeterminate(true);
             }
 
             readAccessFile.close();

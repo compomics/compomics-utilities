@@ -783,7 +783,7 @@ public class SpectrumFactory {
             double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIntermediate(false);
+                waitingHandler.setSecondaryProgressDialogIndeterminate(false);
                 waitingHandler.setMaxSecondaryProgressValue(getSpectrumTitles(fileName).size());
                 waitingHandler.setSecondaryProgressValue(0);
             }
@@ -817,7 +817,7 @@ public class SpectrumFactory {
             }
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIntermediate(true);
+                waitingHandler.setSecondaryProgressDialogIndeterminate(true);
             }
 
             mgfIndex.setMaxRT(maxRT);

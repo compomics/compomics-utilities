@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.quantification;
 
 import com.compomics.util.Util;
@@ -17,73 +13,76 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * This class uses a database to manage quantification matches
+ * This class uses a database to manage quantification matches.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class QuantificationDB implements Serializable {
-    
+
+    /**
+     * The version UID for Serialization/Deserialization compatibility.
+     */
     static final long serialVersionUID = 4600091320219653637L;
     /**
-     * The name which will be used for the database
+     * The name which will be used for the database.
      */
     public static final String dbName = "utilitiesQuantDB";
     /**
-     * The name of the protein table
+     * The name of the protein table.
      */
     private String proteinTableName = "proteins";
     /**
-     * The suffix for protein parameters tables
+     * The suffix for protein parameters tables.
      */
     private String proteinParametersTableSuffix = "_protein_parameters";
     /**
-     * The suffix of a peptide table
+     * The suffix of a peptide table.
      */
     private String peptideTableName = "peptides";
     /**
-     * The suffix for a peptide parameters table
+     * The suffix for a peptide parameters table.
      */
     private String peptideParametersTableSuffix = "_peptide_parameters";
     /**
-     * The suffix for a PSM table
+     * The suffix for a PSM table.
      */
     private String psmTableSuffix = "_psms";
     /**
-     * The suffix for a PSM parameters table
+     * The suffix for a PSM parameters table.
      */
     private String psmParametersTableSuffix = "_psm_parameters";
     /**
-     * List of all psms tables
+     * List of all psms tables.
      */
     private ArrayList<String> psmTables = new ArrayList<String>();
     /**
-     * List of all psm parameters tables
+     * List of all psm parameters tables.
      */
     private ArrayList<String> psmParametersTables = new ArrayList<String>();
     /**
-     * List of all peptide parameters tables
+     * List of all peptide parameters tables.
      */
     private ArrayList<String> peptideParametersTables = new ArrayList<String>();
     /**
-     * List of all proteins parameters tables
+     * List of all proteins parameters tables.
      */
     private ArrayList<String> proteinParametersTables = new ArrayList<String>();
     /**
-     * The maximal size for a BLOB match in the database
+     * The maximal size for a BLOB match in the database.
      */
     public static final String matchSize = "128k";
     /**
-     * The maximal size for a BLOB parameter match in the database
+     * The maximal size for a BLOB parameter match in the database.
      */
     public static final String parametersSize = "8k";
     /**
-     * The database which will contain the objects
+     * The database which will contain the objects.
      */
     private ObjectsDB objectsDB;
 
     /**
      * Constructor creating the database and the protein and protein parameters
-     * tables
+     * tables.
      *
      * @param folder the folder where to put the database
      * @throws SQLException an exception thrown whenever an error occurred while
@@ -100,11 +99,9 @@ public class QuantificationDB implements Serializable {
         objectsDB.addTable(peptideTableName, matchSize);
     }
 
-
     /**
-     * Indicates whether a spectrum match is loaded
+     * Indicates whether a spectrum match is loaded.
      *
-     * @param tableName the table name
      * @param spectrumKey the spectrumMatch key
      * @return a boolean indicating whether a spectrum match is loaded in the
      * given table
@@ -117,9 +114,8 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Indicates whether a peptide match is loaded
+     * Indicates whether a peptide match is loaded.
      *
-     * @param tableName the table name
      * @param peptideKey the peptide key
      * @return a boolean indicating whether a peptide match is loaded in the
      * given table
@@ -131,9 +127,8 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Indicates whether a protein match is loaded
+     * Indicates whether a protein match is loaded.
      *
-     * @param tableName the table name
      * @param proteinKey the protein key
      * @return a boolean indicating whether a protein match is loaded in the
      * given table
@@ -145,7 +140,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * updates a protein match
+     * Updates a protein match.
      *
      * @param proteinMatch the protein match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -158,7 +153,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * updates a peptide match
+     * Updates a peptide match.
      *
      * @param peptideMatch the peptide match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -171,7 +166,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * updates a spectrum match
+     * Updates a spectrum match.
      *
      * @param spectrumMatch the spectrum match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -186,7 +181,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * updates a match
+     * Updates a match.
      *
      * @param match the match to update
      * @throws SQLException exception thrown whenever an error occurred while
@@ -196,7 +191,7 @@ public class QuantificationDB implements Serializable {
      */
     public void updateMatch(QuantificationMatch match) throws SQLException, IOException {
         switch (match.getType()) {
-            case Spectrum: 
+            case Spectrum:
                 updateSpectrumMatch((PsmQuantification) match);
                 return;
             case Peptide:
@@ -208,7 +203,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Updates a protein match parameter
+     * Updates a protein match parameter.
      *
      * @param key the key of the protein match
      * @param urParameter the parameter
@@ -223,7 +218,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Updates a peptide match parameter
+     * Updates a peptide match parameter.
      *
      * @param key the key of the peptide match
      * @param urParameter the parameter
@@ -238,7 +233,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Updates a spectrum match parameter
+     * Updates a spectrum match parameter.
      *
      * @param key the key of the spectrum match
      * @param urParameter the parameter
@@ -253,7 +248,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Deletes a protein match from the database
+     * Deletes a protein match from the database.
      *
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -267,7 +262,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Deletes a peptide match from the database
+     * Deletes a peptide match from the database.
      *
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -281,7 +276,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Deletes a spectrum match from the database
+     * Deletes a spectrum match from the database.
      *
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -297,7 +292,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the desired spectrum match
+     * Returns the desired spectrum match.
      *
      * @param key the psm key
      * @return the spectrum match
@@ -314,7 +309,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Adds a spectrum match to the database
+     * Adds a spectrum match to the database.
      *
      * @param spectrumMatch the spectrum match to be added
      * @throws SQLException exception thrown whenever an error occurred while
@@ -337,7 +332,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the desired peptide match
+     * Returns the desired peptide match.
      *
      * @param key the peptide key
      * @return the peptide match
@@ -353,7 +348,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Adds a peptide match to the database
+     * Adds a peptide match to the database.
      *
      * @param peptideMatch the peptide match to be added
      * @throws SQLException exception thrown whenever an error occurred while
@@ -370,7 +365,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the desired protein match
+     * Returns the desired protein match.
      *
      * @param key the protein key
      * @return the protein match
@@ -386,7 +381,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Adds a protein match to the database
+     * Adds a protein match to the database.
      *
      * @param proteinMatch the protein match to be added
      * @throws SQLException exception thrown whenever an error occurred while
@@ -421,7 +416,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Adds a spectrum match parameter to the database
+     * Adds a spectrum match parameter to the database.
      *
      * @param key the psm key
      * @param urParameter the match parameter
@@ -440,7 +435,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the desired peptide match parameter
+     * Returns the desired peptide match parameter.
      *
      * @param key the peptide key
      * @param urParameter the match parameter
@@ -458,7 +453,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Adds a peptide match parameter to the database
+     * Adds a peptide match parameter to the database.
      *
      * @param key the peptide key
      * @param urParameter the match parameter
@@ -477,7 +472,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the desired protein match parameter
+     * Returns the desired protein match parameter.
      *
      * @param key the protein key
      * @param urParameter the match parameter
@@ -495,7 +490,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Adds a protein match parameter to the database
+     * Adds a protein match parameter to the database.
      *
      * @param key the protein key
      * @param urParameter the match parameter
@@ -514,7 +509,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given spectrum key
+     * Returns the table name associated to the given spectrum key.
      *
      * @param spectrumKey the given spectrum key
      * @return the table name of the given spectrum
@@ -526,7 +521,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given spectrum parameter
+     * Returns the table name associated to the given spectrum parameter.
      *
      * @param spectrumKey the given spectrum key
      * @param urParameter the parameter
@@ -540,7 +535,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given peptide parameter
+     * Returns the table name associated to the given peptide parameter.
      *
      * @param urParameter the parameter
      * @return the table name of the given peptide parameter
@@ -552,7 +547,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given protein parameter
+     * Returns the table name associated to the given protein parameter.
      *
      * @param urParameter the parameter
      * @return the table name of the given protein parameter
@@ -564,7 +559,7 @@ public class QuantificationDB implements Serializable {
     }
 
     /**
-     * Closes the db connection
+     * Closes the db connection.
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
@@ -572,18 +567,21 @@ public class QuantificationDB implements Serializable {
     public void close() throws SQLException {
         objectsDB.close();
     }
-    
+
     /**
-     * Establishes connection to the database
-     * @param dbFolder the absolute path to the folder where the database is located
-     * @throws SQLException exception thrown whenever an error occurred while establishing the connection
+     * Establishes connection to the database.
+     *
+     * @param dbFolder the absolute path to the folder where the database is
+     * located
+     * @throws SQLException exception thrown whenever an error occurred while
+     * establishing the connection
      */
     public void establishConnection(String dbFolder) throws SQLException {
         objectsDB.establishConnection(dbFolder);
     }
 
     /**
-     * Adds an quantification match to the database
+     * Adds an quantification match to the database.
      *
      * @param match the match to be added
      * @throws SQLException exception thrown whenever an error occurred while
@@ -592,7 +590,7 @@ public class QuantificationDB implements Serializable {
      * writing the object
      */
     public void addMatch(QuantificationMatch match) throws SQLException, IOException {
-        switch(match.getType()) {
+        switch (match.getType()) {
             case Spectrum:
                 addSpectrumMatch((PsmQuantification) match);
                 return;

@@ -63,11 +63,11 @@ public interface WaitingHandler {
     public void increaseSecondaryProgressValue(int amount);
 
     /**
-     * Sets the secondary progress bar to intermediate or not.
+     * Sets the secondary progress bar to indeterminate or not.
      *
-     * @param intermediate if true, set to intermediate
+     * @param indeterminate if true, set to indeterminate
      */
-    public void setSecondaryProgressDialogIntermediate(boolean intermediate);
+    public void setSecondaryProgressDialogIndeterminate(boolean indeterminate);
 
     /**
      * Set the analysis as finished.

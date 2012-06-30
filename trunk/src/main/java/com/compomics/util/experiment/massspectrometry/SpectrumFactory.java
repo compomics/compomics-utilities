@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.JProgressBar;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
@@ -32,27 +31,45 @@ public class SpectrumFactory {
     /**
      * Map of already loaded spectra.
      */
-    private HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
+    private static HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
     /**
      * Map of already loaded precursors.
      */
-    private HashMap<String, Precursor> loadedPrecursorsMap = new HashMap<String, Precursor>();
+    private static HashMap<String, Precursor> loadedPrecursorsMap = new HashMap<String, Precursor>();
     /**
      * Amount of spectra in cache, one by default.
      */
-    private int nSpectraCache = 1;
+    private static int nSpectraCache = 1;
     /**
      * Amount of precursors in cache.
      */
-    private int nPrecursorsCache = 10000;
+    private static int nPrecursorsCache = 10000;
     /**
      * List of the loaded spectra.
      */
-    private ArrayList<String> loadedSpectra = new ArrayList<String>();
+    private static ArrayList<String> loadedSpectra = new ArrayList<String>();
     /**
      * List of the loaded precursors.
      */
-    private ArrayList<String> loadedPrecursors = new ArrayList<String>();
+    private static ArrayList<String> loadedPrecursors = new ArrayList<String>();
+    /**
+     * Map of the random access files of the loaded mgf files (filename ->
+     * random access file).
+     */
+    private static HashMap<String, RandomAccessFile> mgfFilesMap = new HashMap<String, RandomAccessFile>();
+    /**
+     * Map of the mgf indexes (fileName -> mgf index).
+     */
+    private static HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
+    /**
+     * Map of the mzML unmarshallers (fileName -> unmarshaller).
+     */
+    private static HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
+    /**
+     * Map of the spectrum file mapped according to the name used by the search
+     * engine.
+     */
+    private static HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
 
     /**
      * Constructor.
@@ -86,25 +103,14 @@ public class SpectrumFactory {
         instance.setCacheSize(nCache);
         return instance;
     }
-    /**
-     * Map of the random access files of the loaded mgf files (filename ->
-     * random access file).
-     */
-    private HashMap<String, RandomAccessFile> mgfFilesMap = new HashMap<String, RandomAccessFile>();
-    /**
-     * Map of the mgf indexes (fileName -> mgf index).
-     */
-    private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
-    /**
-     * Map of the mzML unmarshallers (fileName -> unmarshaller).
-     */
-    private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
-    /**
-     * Map of the spectrum file mapped according to the name used by the search
-     * engine.
-     */
-    private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
 
+    /**
+     * Clears the factory getInstance() needs to be called afterwards.
+     */
+    public void clearFactory() {
+        instance = new SpectrumFactory();
+    }
+    
     /**
      * Sets the spectrum cache size.
      *
@@ -162,7 +168,15 @@ public class SpectrumFactory {
             if (indexFile.exists()) {
                 try {
                     mgfIndex = getIndex(indexFile);
+
+                    // check if the index contains the precursor intensity, if not re-index
+                    if (mgfIndex.getMaxIntensity() == null) {
+                        mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
+                        writeIndex(mgfIndex, spectrumFile.getParentFile());
+                    }
+
                 } catch (Exception e) {
+                    e.printStackTrace();
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
                     writeIndex(mgfIndex, spectrumFile.getParentFile());
                 }
@@ -244,6 +258,39 @@ public class SpectrumFactory {
         }
 
         return maxMz;
+    }
+
+    /**
+     * Returns the maximum precursor intensity for the desired file.
+     *
+     * @param fileName the file of interest
+     * @return the max precursor intensity
+     */
+    public Double getMaxIntensity(String fileName) {
+        return mgfIndexesMap.get(fileName).getMaxIntensity();
+    }
+
+    /**
+     * Returns the maximum precursor intensity for the whole project.
+     *
+     * @return the max precursor intensity
+     */
+    public Double getMaxIntensity() {
+
+        double maxIntensity = 0;
+
+        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
+
+        while (keys.hasNext()) {
+
+            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
+
+            if (getMaxIntensity(tempFileName) > maxIntensity) {
+                maxIntensity = getMaxIntensity(tempFileName);
+            }
+        }
+
+        return maxIntensity;
     }
 
     /**
@@ -796,9 +843,9 @@ public class SpectrumFactory {
                     }
                     waitingHandler.increaseSecondaryProgressValue();
                 }
-                
+
                 String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
-                
+
                 try {
                     Precursor precursor = getPrecursor(spectrumKey, false);
                     double rt = precursor.getRt();

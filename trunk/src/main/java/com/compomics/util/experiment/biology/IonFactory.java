@@ -24,7 +24,7 @@ public class IonFactory {
      * Neutral losses which will be looked for for every peptide independently
      * from the modifications found.
      */
-    private ArrayList<NeutralLoss> defaultNeutralLosses = new ArrayList<NeutralLoss>();
+    private static ArrayList<NeutralLoss> defaultNeutralLosses = new ArrayList<NeutralLoss>();
 
     /**
      * Constructor.

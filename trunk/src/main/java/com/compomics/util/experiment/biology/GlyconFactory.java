@@ -14,28 +14,23 @@ import java.util.ArrayList;
 /**
  * This factory will provide theoretic glycons.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 29, 2010
- * Time: 6:55:51 PM
+ * @author Marc Vaudel
  */
 public class GlyconFactory {
 
     /**
-     * The instance of the factory
+     * The instance of the factory.
      */
     private static GlyconFactory instance = null;
-
     /**
-     * The glycons
+     * The glycons.
      */
-    private ArrayList<Glycon> glycons = new ArrayList<Glycon>();
+    private static ArrayList<Glycon> glycons = new ArrayList<Glycon>();
 
     /**
-     * Constructor for the glycon factory
+     * Constructor for the glycon factory.
      */
     private GlyconFactory() {
-
     }
 
     /**
@@ -51,7 +46,7 @@ public class GlyconFactory {
     }
 
     /**
-     * A getter to access the glycons
+     * A getter to access the glycons.
      *
      * @return all glycons imported
      */
@@ -60,11 +55,13 @@ public class GlyconFactory {
     }
 
     /**
-     * Import glycons from an xml file
+     * Import glycons from an xml file.
      *
-     * @param aFile                     xml file to parse
-     * @throws XmlPullParserException   exception thrown if a parsing issue is encountered
-     * @throws IOException              exception thrown if an issue with the file is encountered
+     * @param aFile xml file to parse
+     * @throws XmlPullParserException exception thrown if a parsing issue is
+     * encountered
+     * @throws IOException exception thrown if an issue with the file is
+     * encountered
      */
     public void importGlycons(File aFile) throws XmlPullParserException, IOException {
 
@@ -91,11 +88,13 @@ public class GlyconFactory {
     }
 
     /**
-     * Method which parses a glycon in the xml file
+     * Method which parses a glycon in the xml file.
      *
-     * @param parser                    The xml parser
-     * @throws XmlPullParserException   Exception thrown whenever a parsing issue is encountered
-     * @throws IOException              Exception thrown whenever an issue is encountered with the file
+     * @param parser The xml parser
+     * @throws XmlPullParserException Exception thrown whenever a parsing issue
+     * is encountered
+     * @throws IOException Exception thrown whenever an issue is encountered
+     * with the file
      */
     private void parseGlycon(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();

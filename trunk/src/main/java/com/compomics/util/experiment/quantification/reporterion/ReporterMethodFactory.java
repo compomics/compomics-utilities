@@ -23,7 +23,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     /**
      * The reporter methods.
      */
-    private ArrayList<ReporterMethod> methods;
+    private static ArrayList<ReporterMethod> methods;
     /**
      * The reporter factory.
      */
@@ -36,7 +36,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * constructor for the factory
+     * Constructor for the factory.
      *
      * @return
      */
@@ -48,9 +48,9 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * returns the methods implemented in the factory
+     * Returns the methods implemented in the factory.
      *
-     * @return
+     * @return the methods implemented in the factory
      */
     public ArrayList<ReporterMethod> getMethods() {
         return methods;
@@ -75,15 +75,17 @@ public class ReporterMethodFactory extends ExperimentObject {
      * @param aFile
      */
     public void saveFile(File aFile) {
-        // TODO save
+        // @TODO: save
     }
 
     /**
      * Imports the methods from an xml file
      *
      * @param aFile the xml file
-     * @throws IOException exception thrown whenever an error occurred while reading the file
-     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws XmlPullParserException exception thrown whenever an error
+     * occurred while parsing the xml file
      */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
         methods = new ArrayList();
@@ -102,7 +104,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             // If we find a 'reporterMethod' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
-                 methods.add(parseMethod(parser));
+                methods.add(parseMethod(parser));
             }
             type = parser.next();
         }
@@ -110,11 +112,13 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * parses a bloc describing a reporter method
+     * Parses a bloc describing a reporter method.
      *
      * @param parser the xml parser
-     * @throws IOException exception thrown whenever an error occurred while reading the file
-     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws XmlPullParserException exception thrown whenever an error
+     * occurred while parsing the xml file
      */
     private ReporterMethod parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
 
@@ -152,12 +156,14 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * Parses an xml bloc describing a reporter ion
+     * Parses an xml bloc describing a reporter ion.
      *
      * @param parser the xml parser
      * @return the reporter ion described by the pointed xml bloc
-     * @throws IOException exception thrown whenever an error occurred while reading the file
-     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws XmlPullParserException exception thrown whenever an error
+     * occurred while parsing the xml file
      */
     private ReporterIon parseIon(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();
@@ -178,12 +184,15 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * Parses an xml bloc representing a correction factor
+     * Parses an xml bloc representing a correction factor.
      *
      * @param parser the xml parser
-     * @return the correction factor described in the xml bloc pointed by the parser
-     * @throws IOException exception thrown whenever an error occurred while reading the file
-     * @throws XmlPullParserException exception thrown whenever an error occurred while parsing the xml file
+     * @return the correction factor described in the xml bloc pointed by the
+     * parser
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws XmlPullParserException exception thrown whenever an error
+     * occurred while parsing the xml file
      */
     private CorrectionFactor parseCorrectionFactor(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();

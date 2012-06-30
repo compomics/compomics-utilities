@@ -32,19 +32,19 @@ public class PTMFactory implements Serializable {
     /**
      * A map linking indexes with modifications.
      */
-    private HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
+    private static HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
     /**
      * List of the indexes of default modifications.
      */
-    private ArrayList<String> defaultMods = new ArrayList<String>();
+    private static ArrayList<String> defaultMods = new ArrayList<String>();
     /**
      * List of the indexes of user modifications.
      */
-    private ArrayList<String> userMods = new ArrayList<String>();
+    private static ArrayList<String> userMods = new ArrayList<String>();
     /**
      * Map of omssa indexes.
      */
-    private HashMap<String, ArrayList<Integer>> omssaIndexes = new HashMap<String, ArrayList<Integer>>();
+    private static HashMap<String, ArrayList<Integer>> omssaIndexes = new HashMap<String, ArrayList<Integer>>();
     /**
      * Unknown modification to be returned when the modification is not found.
      */

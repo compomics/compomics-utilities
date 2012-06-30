@@ -9,9 +9,9 @@ import java.io.*;
 import java.util.HashMap;
 
 /**
- * This factory manages the pride objects saved in the user folder
+ * This factory manages the pride objects saved in the user folder.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class PrideObjectsFactory {
 
@@ -49,27 +49,27 @@ public class PrideObjectsFactory {
     /**
      * List of all contacts.
      */
-    private HashMap<String, Contact> contacts = new HashMap<String, Contact>();
+    private static HashMap<String, Contact> contacts = new HashMap<String, Contact>();
     /**
      * List of all instruments.
      */
-    private HashMap<String, Instrument> instruments = new HashMap<String, Instrument>();
+    private static HashMap<String, Instrument> instruments = new HashMap<String, Instrument>();
     /**
      * List of all protocols.
      */
-    private HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
+    private static HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
     /**
      * List of all references.
      */
-    private HashMap<String, Reference> references = new HashMap<String, Reference>();
+    private static HashMap<String, Reference> references = new HashMap<String, Reference>();
     /**
      * List of all samples.
      */
-    private HashMap<String, Sample> samples = new HashMap<String, Sample>();
+    private static HashMap<String, Sample> samples = new HashMap<String, Sample>();
     /**
      * utilities to PSI ptm mapping for the default PTMs.
      */
-    private PtmToPrideMap ptmToPrideMap;
+    private static PtmToPrideMap ptmToPrideMap;
 
     /**
      * Constructor.

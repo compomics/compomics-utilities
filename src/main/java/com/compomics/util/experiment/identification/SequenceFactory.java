@@ -23,27 +23,27 @@ public class SequenceFactory {
     /**
      * Map of the currently loaded Headers.
      */
-    private HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
+    private static HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
     /**
      * Map of the currently loaded proteins.
      */
-    private HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
+    private static HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
     /**
      * Index of the FASTA file.
      */
-    private FastaIndex fastaIndex;
+    private static FastaIndex fastaIndex;
     /**
      * Random access file of the current FASTA file.
      */
-    private RandomAccessFile currentFastaFile;
+    private static RandomAccessFile currentFastaFile;
     /**
      * Number of proteins to keep in cache, 1 by default.
      */
-    private int nCache = 1;
+    private static int nCache = 1;
     /**
      * List of accessions of the loaded proteins.
      */
-    private ArrayList<String> loadedProteins = new ArrayList<String>();
+    private static ArrayList<String> loadedProteins = new ArrayList<String>();
     /**
      * Recognized flags for a decoy protein.
      */
@@ -79,6 +79,13 @@ public class SequenceFactory {
         }
         instance.setnCache(nCache);
         return instance;
+    }
+    
+    /**
+     * Clears the factory getInstance() needs to be called afterwards.
+     */
+    public void clearFactory() {
+        instance = new SequenceFactory();
     }
 
     /**

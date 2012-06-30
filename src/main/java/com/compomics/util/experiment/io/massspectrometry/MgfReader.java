@@ -173,14 +173,13 @@ public class MgfReader {
      */
     public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
         RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
         long beginIndex = 0, currentIndex = 0;
         String title = null;
         int cpt = 0;
-        double rt, rt1, rt2, precursorMass, maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+        double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -213,17 +212,29 @@ public class MgfReader {
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
-                precursorMass = Double.parseDouble(values[0]);
+                double precursorMass = Double.parseDouble(values[0]);
+
                 if (precursorMass > maxMz) {
                     maxMz = precursorMass;
                 }
+
+                if (values.length > 1) {
+                    double precursorIntensity = Double.parseDouble(values[1]);
+
+                    if (precursorIntensity > maxIntensity) {
+                        maxIntensity = precursorIntensity;
+                    }
+                }
+
             } else if (line.startsWith("RTINSECONDS")) {
+                
                 String rtInput = "";
+                
                 try {
                     rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
-                        rt = new Double(rtWindow[0]);
+                        double rt = new Double(rtWindow[0]);
                         if (rt > maxRT) {
                             maxRT = rt;
                         }
@@ -231,14 +242,14 @@ public class MgfReader {
                             minRT = rt;
                         }
                     } else if (rtWindow.length == 2 && !rtWindow[0].equals("")) {
-                        rt1 = new Double(rtWindow[0]);
+                        double rt1 = new Double(rtWindow[0]);
                         if (rt1 > maxRT) {
                             maxRT = rt1;
                         }
                         if (rt1 < minRT) {
                             minRT = rt1;
                         }
-                        rt2 = new Double(rtWindow[1]);
+                        double rt2 = new Double(rtWindow[1]);
                         if (rt2 > maxRT) {
                             maxRT = rt2;
                         }
@@ -268,7 +279,7 @@ public class MgfReader {
             minRT = 0;
         }
 
-        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz);
+        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity);
     }
 
     /**
@@ -306,7 +317,7 @@ public class MgfReader {
 
             int fileCounter = 1, spectrumCounter = 0;
             long typicalSize = 0;
-            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -336,7 +347,7 @@ public class MgfReader {
                         if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeFile.close();
-                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz));
+                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -365,9 +376,19 @@ public class MgfReader {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
                     double precursorMass = Double.parseDouble(values[0]);
+                    
                     if (precursorMass > maxMz) {
                         maxMz = precursorMass;
                     }
+
+                    if (values.length > 1) {
+                        double precursorIntensity = Double.parseDouble(values[1]);
+
+                        if (precursorIntensity > maxIntensity) {
+                            maxIntensity = precursorIntensity;
+                        }
+                    }
+
                 } else if (line.startsWith("RTINSECONDS")) {
                     try {
                         String rtInput = line.substring(line.indexOf('=') + 1);
@@ -409,7 +430,7 @@ public class MgfReader {
                 writeFile.writeBytes(line + "\n");
             }
 
-            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz));
+            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity));
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressDialogIndeterminate(true);
@@ -440,11 +461,11 @@ public class MgfReader {
     public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
         randomAccessFile.seek(index);
-        String line;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
+        String line;
 
         while ((line = randomAccessFile.readLine()) != null) {
 

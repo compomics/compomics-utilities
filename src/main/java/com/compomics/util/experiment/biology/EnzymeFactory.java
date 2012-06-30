@@ -14,32 +14,27 @@ import java.util.HashMap;
 /**
  * This factory will provide the implemented enzymes.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Aug 23, 2010
- * Time: 7:30:55 PM
+ * @author Marc Vaudel
  */
 public class EnzymeFactory {
 
     /**
-     * The imported enzymes
+     * The imported enzymes.
      */
-    private HashMap<String, Enzyme> enzymes = null;
-
+    private static HashMap<String, Enzyme> enzymes = null;
     /**
-     * The instance of the factory
+     * The instance of the factory.
      */
     private static EnzymeFactory instance = null;
 
     /**
-     * the factory constructor
+     * The factory constructor.
      */
     private EnzymeFactory() {
-
     }
 
     /**
-     * Static method to get an instance of the factory
+     * Static method to get an instance of the factory.
      *
      * @return the factory instance
      */
@@ -51,29 +46,30 @@ public class EnzymeFactory {
     }
 
     /**
-     * Get the imported enzymes
+     * Get the imported enzymes.
      *
-     * @return          The enzymes as ArrayList
+     * @return The enzymes as ArrayList
      */
     public ArrayList<Enzyme> getEnzymes() {
         return new ArrayList<Enzyme>(enzymes.values());
     }
 
     /**
-     * Returns the enzyme corresponding to the given name
+     * Returns the enzyme corresponding to the given name.
+     *
      * @param enzymeName the name of the desired enzyme
-     * @return  the corresponding enzyme
+     * @return the corresponding enzyme
      */
     public Enzyme getEnzyme(String enzymeName) {
         return enzymes.get(enzymeName);
     }
 
     /**
-     * Import enzymes
+     * Import enzymes.
      *
-     * @param   enzymeFile   xml file containing the enzymes
-     * @throws  XmlPullParserException  when the parser failed
-     * @throws  IOException when reading the corresponding file failed
+     * @param enzymeFile xml file containing the enzymes
+     * @throws XmlPullParserException when the parser failed
+     * @throws IOException when reading the corresponding file failed
      */
     public void importEnzymes(File enzymeFile) throws XmlPullParserException, IOException {
 
@@ -102,14 +98,14 @@ public class EnzymeFactory {
     }
 
     /**
-     * Parse one enzyme
+     * Parse one enzyme.
      *
-     * @param   aParser   xml parser
-     * @throws  XmlPullParserException  when the parser failed
-     * @throws  IOException when reading the corresponding file failed
+     * @param aParser xml parser
+     * @throws XmlPullParserException when the parser failed
+     * @throws IOException when reading the corresponding file failed
      */
     private void parseEnzyme(XmlPullParser aParser) throws XmlPullParserException, IOException {
-       int id;
+        int id;
         String name, aaBefore, restrictionBefore, aaAfter, restrictionAfter;
 
         // Start tag.

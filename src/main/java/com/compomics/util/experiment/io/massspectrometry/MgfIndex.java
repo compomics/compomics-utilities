@@ -38,6 +38,10 @@ public class MgfIndex extends ExperimentObject {
      * The maximal m/z in all precursors of the file.
      */
     private Double maxMz;
+    /**
+     * The maximal precursor intensity of the file.
+     */
+    private Double maxIntensity;
 
     /**
      * Constructor.
@@ -47,15 +51,17 @@ public class MgfIndex extends ExperimentObject {
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
-     * @param maxMz
+     * @param maxMz the maximum m/z value
+     * @param maxIntensity the maximum precursor intensity
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity) {
         this.spectrumTitles = spectrumTitles;
         this.indexMap = indexMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
         this.minRT = minRT;
         this.maxMz = maxMz;
+        this.maxIntensity = maxIntensity;
     }
 
     /**
@@ -132,6 +138,24 @@ public class MgfIndex extends ExperimentObject {
      */
     public void setMaxMz(Double maxMz) {
         this.maxMz = maxMz;
+    }
+    
+    /**
+     * Returns the maximum precursor intensity in this file.
+     *
+     * @return the maximum precursor intensity in this file
+     */
+    public Double getMaxIntensity() {
+        return maxIntensity;
+    }
+
+    /**
+     * Sets the maximum precursor intensity in this file.
+     *
+     * @param maxIntensity the maximum precursor intensity in this file
+     */
+    public void setMaxIntensity(Double maxIntensity) {
+        this.maxIntensity = maxIntensity;
     }
 
     /**

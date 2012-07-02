@@ -28,7 +28,7 @@ public class PTMFactory implements Serializable {
     /**
      * User ptm file.
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory.cus";
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.5.10.cus";
     /**
      * A map linking indexes with modifications.
      */

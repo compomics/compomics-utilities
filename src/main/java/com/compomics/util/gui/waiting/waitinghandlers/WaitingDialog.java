@@ -798,7 +798,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         if (shakeWhenFinished) {
             startShake();
         }
-
+        
         if (closeDialogWhenImportCompletesCheckBox.isSelected()) {
             this.dispose();
         } else {
@@ -873,29 +873,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param aFile file to save the report in
      */
     private void saveReport(File aFile) {
-        StringBuffer output = new StringBuffer();
-        String host = " @ ";
 
-        try {
-            host += InetAddress.getLocalHost().getHostName();
-
-
-        } catch (UnknownHostException uhe) {
-            // Disregard. It's not so bad if we can not report this.
-        }
-
-        // Write the file header.
-        output.append("# ------------------------------------------------------------------"
-                + "\n# Compomics Report File"
-                + "\n#"
-                + "\n# Originally saved by: " + System.getProperty("user.name") + host
-                + "\n#                  on: " + sdf.format(new Date())
-                + "\n#                  as: " + aFile.getName()
-                + "\n# ------------------------------------------------------------------\n");
-
-        String report = reportArea.getText();
-        report = report.replace(tab, "\t");
-        output.append(report + "\n");
+        String report = getReport(aFile);
 
         BufferedWriter bw = null;
 
@@ -907,7 +886,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
 
             bw = new BufferedWriter(new FileWriter(filePath));
-            bw.write(output.toString());
+            bw.write(report);
             bw.flush();
             JOptionPane.showMessageDialog(this, "Report written to file '" + filePath + "'.", "Report Saved", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ioe) {
@@ -1059,9 +1038,45 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @return true if the run is finished
      */
     public boolean isRunFinished() {
-        
-        // @TODO: perhaps this should be added to the waiting handler interface?
-        
+        // @TODO: perhaps this method should be added to the waiting handler interface?
         return runFinished;
+    }
+
+    /**
+     * Returns the report.
+     *
+     * @param aFile The file to send the report to. Note that only the name is
+     * used her and included in the report. Can be null.
+     * @return the report
+     */
+    public String getReport(File aFile) {
+
+        StringBuffer output = new StringBuffer();
+        String host = " @ ";
+
+        try {
+            host += InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException uhe) {
+            // Disregard. It's not so bad if we cannot report this.
+        }
+
+        // Write the file header.
+        output.append("# ------------------------------------------------------------------"
+                + "\n# Compomics Report File"
+                + "\n#"
+                + "\n# Originally saved by: " + System.getProperty("user.name") + host
+                + "\n#                  on: " + sdf.format(new Date()));
+
+        if (aFile != null) {
+            output.append("\n#                  as: " + aFile.getName());
+        }
+
+        output.append("\n# ------------------------------------------------------------------\n\n");
+
+        String report = reportArea.getText();
+        report = report.replace(tab, "\t");
+        output.append(report + "\n");
+
+        return output.toString();
     }
 }

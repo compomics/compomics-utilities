@@ -18,10 +18,6 @@ public class ReporterIonQuantification extends Quantification {
      */
     private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
     /**
-     * The reference label indexed by the reporter ion index
-     */
-    private int referenceLabel;
-    /**
      * The reporter method
      */
     private ReporterMethod reporterMethod;
@@ -80,21 +76,5 @@ public class ReporterIonQuantification extends Quantification {
      */
     public void setMethod(ReporterMethod reporterMethod) {
         this.reporterMethod = reporterMethod;
-    }
-
-    /**
-     * Returns the reference label indexed by the corresponding reporter ion
-     * @return the index of the reporter ion corresponding to the reference label
-     */
-    public int getReferenceLabel() {
-        return referenceLabel;
-    }
-
-    /**
-     * Sets the reference label indexed by the corresponding reporter ion index
-     * @param referenceLabel    the index of the reporter ion corresponding to the reference label
-     */
-    public void setReferenceLabel(int referenceLabel) {
-        this.referenceLabel = referenceLabel;
     }
 }

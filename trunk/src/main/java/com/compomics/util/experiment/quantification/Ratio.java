@@ -11,11 +11,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class Ratio extends ExperimentObject{
 
     /**
-     * the reference label indexed by its corresponding reporter ion index
-     */
-    private int referenceLabel;
-
-    /**
      * the measured label indexed by its corresponding reporter ion index
      */
     private int measureLabel;
@@ -28,22 +23,12 @@ public class Ratio extends ExperimentObject{
 
     /**
      * constructor for the Ratio
-     * @param referenceLabel     the reference label indexed by its corresponding reporter ion index
      * @param measureLabel     the measured label indexed by its corresponding reporter ion index
      * @param ratio             the estimated ratio
      */
-    public Ratio(int referenceLabel, int measureLabel, double ratio) {
-        this.referenceLabel = referenceLabel;
+    public Ratio(int measureLabel, double ratio) {
         this.measureLabel = measureLabel;
         this.ratio = ratio;
-    }
-
-    /**
-     * returns the reference label indexed by its corresponding reporter ion index
-     * @return the reference label indexed by its corresponding reporter ion index
-     */
-    public int getControlSample() {
-        return referenceLabel;
     }
 
     /**

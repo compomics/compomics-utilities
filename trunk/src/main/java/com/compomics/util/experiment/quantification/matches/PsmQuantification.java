@@ -29,6 +29,10 @@ public class PsmQuantification extends QuantificationMatch {
      * The deisotoped intensities
      */
     private HashMap<Integer, Double> deisotopedIntensities = new HashMap<Integer, Double>();
+    /**
+     * The reference intensity taken to estimate the ratios
+     */
+    private double referenceIntensity;
 
     /**
      * Constructor for a spectrumQuantification
@@ -84,6 +88,22 @@ public class PsmQuantification extends QuantificationMatch {
      */
     public void setDeisotopedIntensities(HashMap<Integer, Double> deisotopedIntensities) {
         this.deisotopedIntensities = deisotopedIntensities;
+    }
+
+    /**
+     * Returns the reference intensity used to estimate the ratios
+     * @return the reference intensity used to estimate the ratios
+     */
+    public double getReferenceIntensity() {
+        return referenceIntensity;
+    }
+
+    /**
+     * Sets the reference intensity used to estimate the ratios
+     * @param referenceIntensity the reference intensity used to estimate the ratios
+     */
+    public void setReferenceIntensity(double referenceIntensity) {
+        this.referenceIntensity = referenceIntensity;
     }
 
     @Override

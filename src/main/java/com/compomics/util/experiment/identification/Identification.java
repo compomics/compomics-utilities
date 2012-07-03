@@ -387,13 +387,13 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * sets the directory where matches will be stored in order to save memory.
+     * Sets the directory where matches will be stored in order to save memory.
      * Matches can be stored in a database (default) or serialized files. If the
      * database option is chosen (see setIsDB(Boolean isDB)) and no database
      * created, the database will be created in the folder.
      *
      * @param serializationDirectory the path of the directory
-     * @throws SQLException 
+     * @throws SQLException
      * @deprecated use establishConnection(String dbFolder) instead
      */
     public void setDirectory(String serializationDirectory) throws SQLException {
@@ -770,7 +770,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IOException exception thrown whenever an error occurred while
      * serializing a match
      * @throws SQLException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public void updateCache() throws FileNotFoundException, IOException, SQLException, ClassNotFoundException {
         if (!inMemory) {
@@ -783,10 +783,10 @@ public abstract class Identification extends ExperimentObject {
                             identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
                         } catch (IOException e) {
                             e.printStackTrace();
-                            throw new IOException("Error while writing match " + key + "in the database.");
+                            throw new IOException("Error while writing match " + key + " in the database.");
                         } catch (SQLException e) {
                             e.printStackTrace();
-                            throw new SQLException("Error while writing match " + key + "in the database.");
+                            throw new SQLException("Error while writing match " + key + " in the database.");
                         }
                     } else {
                         try {
@@ -852,10 +852,10 @@ public abstract class Identification extends ExperimentObject {
                         identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
                     } catch (IOException e) {
                         e.printStackTrace();
-                        throw new IOException("Error while writing match " + key + "in the database.");
+                        throw new IOException("Error while writing match " + key + " in the database.");
                     } catch (SQLException e) {
                         e.printStackTrace();
-                        throw new SQLException("Error while writing match " + key + "in the database.");
+                        throw new SQLException("Error while writing match " + key + " in the database.");
                     }
                 } else {
                     try {
@@ -897,9 +897,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param progressBar the progress bar
      * @throws IllegalArgumentException
-     * @throws SQLException 
+     * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public void buildPeptidesAndProteins(JProgressBar progressBar) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         if (progressBar != null) {
@@ -923,9 +923,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumMatchKey The key of the spectrum match to add
      * @throws IllegalArgumentException
-     * @throws SQLException 
+     * @throws SQLException
      * @throws ClassNotFoundException
-     * @throws IOException  
+     * @throws IOException
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
 
@@ -1002,10 +1002,10 @@ public abstract class Identification extends ExperimentObject {
                         identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
                     } catch (IOException e) {
                         e.printStackTrace();
-                        throw new IOException("Error while writing match " + key + "in the database.");
+                        throw new IOException("Error while writing match " + key + " in the database.");
                     } catch (SQLException e) {
                         e.printStackTrace();
-                        throw new SQLException("Error while writing match " + key + "in the database.");
+                        throw new SQLException("Error while writing match " + key + " in the database.");
                     }
                 } else {
                     try {
@@ -1086,7 +1086,7 @@ public abstract class Identification extends ExperimentObject {
      * @param match
      * @throws IllegalArgumentException
      * @throws IOException
-     * @throws SQLException  
+     * @throws SQLException
      */
     public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException, IOException, SQLException {
 
@@ -1100,10 +1100,10 @@ public abstract class Identification extends ExperimentObject {
                     identificationDB.updateMatch(match);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    throw new IOException("Error while writing match " + key + "in the database.");
+                    throw new IOException("Error while writing match " + key + " in the database.");
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    throw new SQLException("Error while writing match " + key + "in the database.");
+                    throw new SQLException("Error while writing match " + key + " in the database.");
                 }
             } else {
                 try {
@@ -1208,7 +1208,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Establishes a connection to the database
+     * Establishes a connection to the database.
      *
      * @param dbFolder the absolute path to the folder where the database is
      * located
@@ -1219,11 +1219,12 @@ public abstract class Identification extends ExperimentObject {
         if (identificationDB == null) {
             identificationDB = new IdentificationDB(serializationDirectory);
         }
+
         identificationDB.establishConnection(dbFolder);
     }
 
     /**
-     * Converts a serlialization based structure into a database based one
+     * Converts a serlialization based structure into a database based one.
      *
      * @param progressDialog a dialog to give progress feedback to the user
      * @param newDirectory the new directory where to store the data
@@ -1251,9 +1252,9 @@ public abstract class Identification extends ExperimentObject {
             progressDialog.setIndeterminate(false);
             progressDialog.setMaxProgressValue(files.length + nParameters);
         }
-        MatchType matchType;
+
         for (String matchKey : urParameters.keySet()) {
-            matchType = getMatchType(matchKey);
+            MatchType matchType = getMatchType(matchKey);
             for (UrParameter urParameter : urParameters.get(matchKey).values()) {
                 if (matchType == MatchType.Protein) {
                     addProteinMatchParameter(matchKey, urParameter);

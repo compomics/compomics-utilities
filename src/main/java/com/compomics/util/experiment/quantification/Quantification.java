@@ -1,14 +1,10 @@
 package com.compomics.util.experiment.quantification;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationDB;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.quantification.matches.ProteinQuantification;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.personalization.UrParameter;
-import com.compomics.util.experiment.quantification.QuantificationDB;
 import com.compomics.util.experiment.quantification.matches.PeptideQuantification;
 import com.compomics.util.experiment.quantification.matches.PsmQuantification;
 import com.compomics.util.gui.waiting.WaitingHandler;
@@ -395,10 +391,10 @@ public abstract class Quantification extends ExperimentObject {
                         quantificationDB.addMatch(loadedMatchesMap.get(key));
                     } catch (IOException e) {
                         e.printStackTrace();
-                        throw new IOException("Error while writing match " + key + "in the database.");
+                        throw new IOException("Error while writing match " + key + " in the database.");
                     } catch (SQLException e) {
                         e.printStackTrace();
-                        throw new SQLException("Error while writing match " + key + "in the database.");
+                        throw new SQLException("Error while writing match " + key + " in the database.");
                     }
                 }
                 loadedMatches.remove(0);
@@ -428,6 +424,7 @@ public abstract class Quantification extends ExperimentObject {
      * extremely slow if the cache is already full.
      *
      * @param identification
+     * @param waitingHandler 
      * @throws Exception
      */
     public void buildPeptidesAndProteinQuantifications(Identification identification, WaitingHandler waitingHandler) throws Exception {
@@ -484,11 +481,11 @@ public abstract class Quantification extends ExperimentObject {
      * Empties the cache and saves everything in the database.
      *
      * @param progressDialog
-     * @param cancelProgress set this to true to cancel the progress
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while serializing a match
      * @throws IOException exception thrown whenever an error occurred while
      * serializing a match
+     * @throws SQLException  
      */
     public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException, SQLException {
         if (progressDialog != null) {
@@ -507,10 +504,10 @@ public abstract class Quantification extends ExperimentObject {
                     quantificationDB.addMatch(loadedMatchesMap.get(key));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    throw new IOException("Error while writing match " + key + "in the database.");
+                    throw new IOException("Error while writing match " + key + " in the database.");
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    throw new SQLException("Error while writing match " + key + "in the database.");
+                    throw new SQLException("Error while writing match " + key + " in the database.");
                 }
             }
             if (progressDialog != null) {
@@ -531,6 +528,8 @@ public abstract class Quantification extends ExperimentObject {
      *
      * @param match
      * @throws IllegalArgumentException
+     * @throws IOException
+     * @throws SQLException  
      */
     public void setMatchChanged(QuantificationMatch match) throws IllegalArgumentException, IOException, SQLException {
 
@@ -543,10 +542,10 @@ public abstract class Quantification extends ExperimentObject {
                 quantificationDB.updateMatch(match);
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new IOException("Error while writing match " + key + "in the database.");
+                throw new IOException("Error while writing match " + key + " in the database.");
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new SQLException("Error while writing match " + key + "in the database.");
+                throw new SQLException("Error while writing match " + key + " in the database.");
             }
         }
     }

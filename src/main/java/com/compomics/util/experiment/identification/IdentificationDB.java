@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class IdentificationDB implements Serializable {
 
-        static final long serialVersionUID = 691986038787590646L;
+    static final long serialVersionUID = 691986038787590646L;
     /**
      * The name which will be used for the database.
      */
@@ -101,13 +101,17 @@ public class IdentificationDB implements Serializable {
 
         File dbFolder = new File(folder, dbName);
         if (dbFolder.exists()) {
-            Util.deleteDir(dbFolder);
+            boolean deleted = Util.deleteDir(dbFolder);
+            
+            if (!deleted) {
+                System.out.println("Failed to delete db folder: " + dbFolder.getPath());
+            }
         }
+        
         objectsDB = new ObjectsDB(folder, dbName);
         objectsDB.addTable(proteinTableName, matchSize);
         objectsDB.addTable(peptideTableName, matchSize);
     }
-
 
     /**
      * Indicates whether a spectrum match is loaded.

@@ -1,5 +1,6 @@
 package com.compomics.util.db;
 
+import com.compomics.util.Util;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,11 +39,12 @@ public class ObjectsDB implements Serializable {
      *
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException
      */
-    public ObjectsDB(String folder, String dbName) throws SQLException {
+    public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase) throws SQLException {
         this.dbName = dbName;
-        establishConnection(folder);
+        establishConnection(folder, deleteOldDatabase);
     }
 
     /**
@@ -60,11 +62,11 @@ public class ObjectsDB implements Serializable {
             tableName = index + "";
         }
         Statement stmt = dbConnection.createStatement();
-  
+
         stmt.execute("CREATE table " + tableName + " ("
-                    + "NAME    VARCHAR(500),"
-                    + "MATCH_BLOB blob(" + blobSize + ")"
-                    + ")");
+                + "NAME    VARCHAR(500),"
+                + "MATCH_BLOB blob(" + blobSize + ")"
+                + ")");
 
 //        if (tableName.equalsIgnoreCase("proteins")) {
 //            
@@ -302,7 +304,7 @@ public class ObjectsDB implements Serializable {
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(object);
         oos.close();
-        
+
         ps.setBytes(1, bos.toByteArray());
         //ps.setString(2, objectKey);
         ps.executeUpdate();
@@ -316,20 +318,48 @@ public class ObjectsDB implements Serializable {
      * closing the database connection
      */
     public void close() throws SQLException {
-        dbConnection.close();
+        
+        if (dbConnection != null) {
+            dbConnection.close();
+        }
+
+        try {
+            // we also need to shut down derby completely to release the file lock in the database folder
+            DriverManager.getConnection("jdbc:derby:;shutdown=true;deregister=false");
+        } catch (SQLException e) {
+            if (e.getMessage().indexOf("Derby system shutdown") == -1) {
+                e.printStackTrace();
+            } else {
+                // ignore, normal derby shut down always results in an exception thrown
+            }
+        }
+
         dbConnection = null;
     }
 
     /**
      * Establishes connection to the database.
      *
-     * @param dbFolder the folder where the database is located
+     * @param aDbFolder the folder where the database is located
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String dbFolder) throws SQLException {
-        File testFolder = new File(dbFolder, dbName);
-        String path = testFolder.getAbsolutePath();
+    public void establishConnection(String aDbFolder, boolean deleteOldDatabase) throws SQLException {
+        File dbFolder = new File(aDbFolder, dbName);
+        String path = dbFolder.getAbsolutePath();
+
+        // close the old connection and delete the db folder
+        if (dbFolder.exists() && deleteOldDatabase) {
+
+            close();
+
+            boolean deleted = Util.deleteDir(dbFolder);
+
+            if (!deleted) {
+                System.out.println("Failed to delete db folder: " + dbFolder.getPath());
+            }
+        }
 
         // derby
         String url = "jdbc:derby:" + path + ";create=true";

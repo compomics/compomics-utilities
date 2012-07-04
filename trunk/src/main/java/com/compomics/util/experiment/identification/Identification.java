@@ -178,7 +178,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds a spectrum match parameter to the database
+     * Adds a spectrum match parameter to the database.
      *
      * @param key the psm key
      * @param urParameter the match parameter
@@ -196,7 +196,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the desired peptide match parameter
+     * Returns the desired peptide match parameter.
      *
      * @param key the peptide key
      * @param urParameter the match parameter
@@ -217,7 +217,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds a peptide match parameter to the database
+     * Adds a peptide match parameter to the database.
      *
      * @param key the peptide key
      * @param urParameter the match parameter
@@ -235,7 +235,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the desired protein match parameter
+     * Returns the desired protein match parameter.
      *
      * @param key the protein key
      * @param urParameter the match parameter
@@ -256,7 +256,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds a protein match parameter to the database
+     * Adds a protein match parameter to the database.
      *
      * @param key the protein key
      * @param urParameter the match parameter
@@ -274,7 +274,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Updates a protein match parameter in the database
+     * Updates a protein match parameter in the database.
      *
      * @param key the protein key
      * @param urParameter the match parameter
@@ -290,7 +290,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Updates a peptide match parameter in the database
+     * Updates a peptide match parameter in the database.
      *
      * @param key the peptide key
      * @param urParameter the match parameter
@@ -306,7 +306,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Updates a spectrum match parameter in the database
+     * Updates a spectrum match parameter in the database.
      *
      * @param key the spectrum key
      * @param urParameter the match parameter
@@ -393,13 +393,15 @@ public abstract class Identification extends ExperimentObject {
      * created, the database will be created in the folder.
      *
      * @param serializationDirectory the path of the directory
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException
      * @deprecated use establishConnection(String dbFolder) instead
      */
-    public void setDirectory(String serializationDirectory) throws SQLException {
+    public void setDirectory(String serializationDirectory, boolean deleteOldDatabase) throws SQLException {
         this.serializationDirectory = serializationDirectory;
-        if (isDB && identificationDB == null) {
-            identificationDB = new IdentificationDB(serializationDirectory);
+
+        if (isDB) {
+            identificationDB = new IdentificationDB(serializationDirectory, deleteOldDatabase);
         }
     }
 
@@ -414,6 +416,7 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      */
     public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException {
+        
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
                 if (proteinMap.get(protein) == null) {
@@ -428,9 +431,11 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
+        
         proteinIdentification.remove(matchKey);
         spectrumIdentification.remove(matchKey);
         peptideIdentification.remove(matchKey);
+        
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -454,7 +459,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      */
     public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException {
+        
         spectrumIdentification.remove(matchKey);
+        
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -478,7 +485,9 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      */
     public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException {
+        
         peptideIdentification.remove(matchKey);
+        
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -516,7 +525,9 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
+        
         proteinIdentification.remove(matchKey);
+        
         if (loadedMatches.contains(matchKey)) {
             loadedMatches.remove(matchKey);
             loadedMatchesMap.remove(matchKey);
@@ -567,6 +578,7 @@ public abstract class Identification extends ExperimentObject {
      * @deprecated use the database match specific methods instead
      */
     private synchronized IdentificationMatch getMatch(String matchKey, int errorCounter) throws IllegalArgumentException {
+        
         try {
             File newMatch = new File(serializationDirectory, getFileName(matchKey));
             FileInputStream fis = new FileInputStream(newMatch);
@@ -1168,7 +1180,7 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Sets whether the identification matches should be stored in a database or
-     * serialized files
+     * serialized files.
      *
      * @param isDB a boolean indicating whether the identification matches
      * should be stored in a database or serialized files
@@ -1178,13 +1190,13 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Closes the database connection
+     * Closes the database connection.
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
      */
     public void close() throws SQLException {
-        if (isDB) {
+        if (isDB && identificationDB != null) {
             identificationDB.close();
         }
     }
@@ -1212,15 +1224,12 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param dbFolder the absolute path to the folder where the database is
      * located
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String dbFolder) throws SQLException {
-        if (identificationDB == null) {
-            identificationDB = new IdentificationDB(serializationDirectory);
-        }
-
-        identificationDB.establishConnection(dbFolder);
+    public void establishConnection(String dbFolder, boolean deleteOldDatabase) throws SQLException {
+        identificationDB = new IdentificationDB(dbFolder, deleteOldDatabase);
     }
 
     /**
@@ -1239,9 +1248,8 @@ public abstract class Identification extends ExperimentObject {
      */
     public void convert(ProgressDialogX progressDialog, String newDirectory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
-        if (identificationDB == null) {
-            identificationDB = new IdentificationDB(newDirectory);
-        }
+        identificationDB = new IdentificationDB(newDirectory, true);
+        
         File directory = new File(serializationDirectory);
         File[] files = directory.listFiles();
         int nParameters = 0;
@@ -1298,6 +1306,6 @@ public abstract class Identification extends ExperimentObject {
             progressDialog.setIndeterminate(true);
         }
         Util.deleteDir(directory);
-        setDirectory(newDirectory);
+        setDirectory(newDirectory, false);
     }
 }

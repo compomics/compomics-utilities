@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.Util;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -85,7 +84,7 @@ public class IdentificationDB implements Serializable {
      */
     public static final String parametersSize = "8k";
     /**
-     * The database which will contain the objects
+     * The database which will contain the objects.
      */
     private ObjectsDB objectsDB;
 
@@ -94,23 +93,17 @@ public class IdentificationDB implements Serializable {
      * tables.
      *
      * @param folder the folder where to put the database
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException an exception thrown whenever an error occurred while
      * creating the database
      */
-    public IdentificationDB(String folder) throws SQLException {
-
-        File dbFolder = new File(folder, dbName);
-        if (dbFolder.exists()) {
-            boolean deleted = Util.deleteDir(dbFolder);
-            
-            if (!deleted) {
-                System.out.println("Failed to delete db folder: " + dbFolder.getPath());
-            }
-        }
+    public IdentificationDB(String folder, boolean deleteOldDatabase) throws SQLException {
+        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase);
         
-        objectsDB = new ObjectsDB(folder, dbName);
-        objectsDB.addTable(proteinTableName, matchSize);
-        objectsDB.addTable(peptideTableName, matchSize);
+        if (deleteOldDatabase) {
+            objectsDB.addTable(proteinTableName, matchSize);
+            objectsDB.addTable(peptideTableName, matchSize);
+        }
     }
 
     /**
@@ -669,15 +662,5 @@ public class IdentificationDB implements Serializable {
      */
     public void close() throws SQLException {
         objectsDB.close();
-    }
-    
-    /**
-     * Establishes connection to the database.
-     * 
-     * @param dbFolder the absolute path to the folder where the database is located
-     * @throws SQLException exception thrown whenever an error occurred while establishing the connection
-     */
-    public void establishConnection(String dbFolder) throws SQLException {
-        objectsDB.establishConnection(dbFolder);
     }
 }

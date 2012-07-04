@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.quantification;
 
-import com.compomics.util.Util;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -85,18 +84,17 @@ public class QuantificationDB implements Serializable {
      * tables.
      *
      * @param folder the folder where to put the database
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException an exception thrown whenever an error occurred while
      * creating the database
      */
-    public QuantificationDB(String folder) throws SQLException {
-
-        File dbFolder = new File(folder, dbName);
-        if (dbFolder.exists()) {
-            Util.deleteDir(dbFolder);
+    public QuantificationDB(String folder, boolean deleteOldDatabase) throws SQLException {
+        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase);
+        
+        if (deleteOldDatabase) {
+            objectsDB.addTable(proteinTableName, matchSize);
+            objectsDB.addTable(peptideTableName, matchSize);
         }
-        objectsDB = new ObjectsDB(folder, dbName);
-        objectsDB.addTable(proteinTableName, matchSize);
-        objectsDB.addTable(peptideTableName, matchSize);
     }
 
     /**
@@ -573,11 +571,12 @@ public class QuantificationDB implements Serializable {
      *
      * @param dbFolder the absolute path to the folder where the database is
      * located
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String dbFolder) throws SQLException {
-        objectsDB.establishConnection(dbFolder);
+    public void establishConnection(String dbFolder, boolean deleteOldDatabase) throws SQLException {
+        objectsDB.establishConnection(dbFolder, deleteOldDatabase);
     }
 
     /**

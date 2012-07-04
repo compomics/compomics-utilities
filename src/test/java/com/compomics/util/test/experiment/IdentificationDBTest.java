@@ -27,7 +27,7 @@ public class IdentificationDBTest {
             String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
             path = path.substring(1, path.indexOf("/target/"));
             path += "/src/test/resources/experiment/testDB";
-            IdentificationDB idDB = new IdentificationDB(path);
+            IdentificationDB idDB = new IdentificationDB(path, true);
 
             String spectrumKey = "test spectrum match";
             String peptideKey = "PEPTIDE";

@@ -555,13 +555,11 @@ public abstract class Quantification extends ExperimentObject {
      *
      * @param dbFolder the absolute path to the folder where the database is
      * located
+     * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String dbFolder) throws SQLException {
-        if (quantificationDB == null) {
-            quantificationDB = new QuantificationDB(dbFolder);
-        }
-        quantificationDB.establishConnection(dbFolder);
+    public void establishConnection(String dbFolder, boolean deleteOldDatabase) throws SQLException {
+        quantificationDB = new QuantificationDB(dbFolder, deleteOldDatabase);
     }
 }

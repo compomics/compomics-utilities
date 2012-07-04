@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.preferences;
 
 import java.awt.Color;
@@ -12,7 +8,7 @@ import java.io.*;
  * useful information to all compomics software, well as soon as they use it of
  * course.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class UtilitiesUserPreferences implements Serializable {
 
@@ -341,8 +337,13 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Convenience method saving the user preferences.
+     * 
+     * @param userPreferences
+     * @throws FileNotFoundException 
+     * @throws IOException  
      */
     public static void saveUserPreferences(UtilitiesUserPreferences userPreferences) throws FileNotFoundException, IOException {
+
         File file = new File(USER_PREFERENCES_FILE);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdir();
@@ -360,10 +361,14 @@ public class UtilitiesUserPreferences implements Serializable {
      * Convenience method retrieving the user preferences.
      *
      * @return returns the utilities user preferences
+     * @throws FileNotFoundException 
+     * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public static UtilitiesUserPreferences loadUserPreferences() throws FileNotFoundException, IOException, ClassNotFoundException {
         UtilitiesUserPreferences userPreferences;
         File file = new File(UtilitiesUserPreferences.USER_PREFERENCES_FILE);
+        
         if (!file.exists()) {
             userPreferences = new UtilitiesUserPreferences();
             UtilitiesUserPreferences.saveUserPreferences(userPreferences);
@@ -377,6 +382,7 @@ public class UtilitiesUserPreferences implements Serializable {
             in.close();
             userPreferences = (UtilitiesUserPreferences) inObject;
         }
+        
         return userPreferences;
     }
 }

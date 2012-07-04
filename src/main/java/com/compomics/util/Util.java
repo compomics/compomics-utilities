@@ -15,12 +15,12 @@ import javax.swing.table.DefaultTableModel;
 public class Util {
 
     /**
-     * Forbidden characters in file names
+     * Forbidden characters in file names.
      */
     public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
-     * Indicates whether a string contains characters forbidden in file names
+     * Indicates whether a string contains characters forbidden in file names.
      *
      * @param string the string of interest
      * @return a boolean indicating whether a string contains characters

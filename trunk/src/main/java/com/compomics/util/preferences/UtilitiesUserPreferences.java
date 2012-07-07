@@ -15,7 +15,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Serial version UID for post-serialization compatibility.
      */
-    static final long serialVersionUID = -4343570286224891504L;
+    static final long serialVersionUID = -4343570286224891504L; // @TODO: does this have to be updated to keep the Relims links? 
     /**
      * Location of the user preferences file.
      */
@@ -76,6 +76,11 @@ public class UtilitiesUserPreferences implements Serializable {
      * provided.
      */
     private String reporterPath = null;
+     /**
+     * The path to the Relims installation (if any). Set to null if no
+     * path is provided.
+     */
+    private String relimsPath = null;
 
     /**
      * Constructor
@@ -297,6 +302,24 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setSearchGuiPath(String searchGuiPath) {
         this.searchGuiPath = searchGuiPath;
+    }
+    
+    /**
+     * Returns the path to the Relims installation.
+     *
+     * @return the path to the Relims installation
+     */
+    public String getRelimsPath() {
+        return relimsPath;
+    }
+
+    /**
+     * Set the path to the Relims installation.
+     *
+     * @param relimsPath the path to the * installation
+     */
+    public void setRelimsPath(String relimsPath) {
+        this.relimsPath = relimsPath;
     }
 
     /**

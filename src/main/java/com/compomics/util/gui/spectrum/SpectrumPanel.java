@@ -5,7 +5,9 @@ package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.matches.IonMatch;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
 import javax.swing.*;
@@ -681,7 +683,7 @@ public class SpectrumPanel extends GraphicsPanel {
                 boolean nh3LossSelected = false;
                 boolean phosphoLossSelected = false;
                 boolean moxLossSelected = false;
-                
+
                 for (NeutralLoss neutralLoss : neutralLosses) {
                     if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                         h2oLossSelected = true;
@@ -769,7 +771,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * the color map. If not implemented returns the default color.
      *
      * @param ion the ion
-     * @param isSpectrum if true, the special spectrum color is used for the y-ion
+     * @param isSpectrum if true, the special spectrum color is used for the
+     * y-ion
      * @return the peak color
      */
     public static Color determineFragmentIonColor(Ion ion, boolean isSpectrum) {
@@ -786,7 +789,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * used are based on the color coding used in MascotDatfile.
      *
      * @param ion the ion
-     * @param isSpectrum if true, the special spectrum color is used for the y-ion 
+     * @param isSpectrum if true, the special spectrum color is used for the
+     * y-ion
      * @return the peak color
      */
     public static Color determineDefaultFragmentIonColor(Ion ion, boolean isSpectrum) {
@@ -869,14 +873,14 @@ public class SpectrumPanel extends GraphicsPanel {
                     case PeptideFragmentIon.Y_ION:
                         if (ion.getNeutralLosses().size() == 1) {
                             NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {  
+                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
                                 if (isSpectrum) {
                                     // navy blue
                                     return new Color(0, 70, 135);
                                 } else {
                                     // orange
                                     return new Color(255, 150, 0);
-                                }   
+                                }
                             } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
                                 if (isSpectrum) {
                                     // another purple
@@ -884,7 +888,7 @@ public class SpectrumPanel extends GraphicsPanel {
                                 } else {
                                     // pink
                                     return new Color(255, 0, 150);
-                                }    
+                                }
                             } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                     || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
                                 return Color.BLACK; // @TODO: black can _not_ be used here!!
@@ -892,7 +896,7 @@ public class SpectrumPanel extends GraphicsPanel {
                         } else if (ion.getNeutralLosses().size() > 1) {
                             return Color.GRAY;
                         }
-                        
+
                         if (isSpectrum) {
                             // black
                             return Color.BLACK; // special case for spectra, as the default peak color is red...
@@ -1049,5 +1053,84 @@ public class SpectrumPanel extends GraphicsPanel {
         }
 
         return currentColor;
+    }
+
+    /**
+     * Add reference areas annotating the de novo tags.
+     *
+     * @param currentPeptide the current peptide sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aReverseIon the reverse de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * displayed
+     */
+    public void addAutomaticDeNovoSequencing(
+            Peptide currentPeptide, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aReverseIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showReverseTags) {
+
+        int forwardIon = aForwardIon;
+        int reverseIon = aReverseIon;
+        int deNovoCharge = aDeNovoCharge;
+
+        IonMatch[] forwardIons = new IonMatch[currentPeptide.getSequence().length()];
+        IonMatch[] reverseIons = new IonMatch[currentPeptide.getSequence().length()];
+
+        // iterate the annotations and find the de novo tags
+        for (int i = 0; i < annotations.size(); i++) {
+
+            IonMatch tempMatch = annotations.get(i);
+
+            if (tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
+                    && tempMatch.ion.getNeutralLosses().isEmpty()
+                    && tempMatch.charge.value == deNovoCharge) {
+
+                PeptideFragmentIon fragmentIon = (PeptideFragmentIon) tempMatch.ion;
+
+                if (fragmentIon.getSubType() == forwardIon) {
+                    forwardIons[fragmentIon.getNumber() - 1] = tempMatch;
+                } else if (fragmentIon.getSubType() == reverseIon) {
+                    reverseIons[fragmentIon.getNumber() - 1] = tempMatch;
+                }
+            }
+        }
+
+        // add reverse ion de novo tags (x, y or c)
+        if (showReverseTags) {
+
+            Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, reverseIon), false);
+
+            for (int i = 1; i < reverseIons.length; i++) {
+                if (reverseIons[i] != null && reverseIons[i - 1] != null) {
+                    addReferenceAreaXAxis(new ReferenceArea(
+                            "r" + i,
+                            currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i),
+                            reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, 0.2f, false, true, annotationColor, true, Color.lightGray, 0.2f, 1));
+                }
+            }
+        }
+
+        // add forward ion de novo tags (a, b or c)
+        if (showForwardTags) {
+
+            Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
+
+            for (int i = 1; i < forwardIons.length; i++) {
+                if (forwardIons[i] != null && forwardIons[i - 1] != null) {
+                    addReferenceAreaXAxis(new ReferenceArea(
+                            "f" + i,
+                            currentPeptide.getSequence().substring(i, i + 1),
+                            forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, 0.2f, false, true, annotationColor, true, Color.lightGray, 0.2f, 0.9));
+                }
+            }
+        }
     }
 }

@@ -8,53 +8,53 @@ import java.util.ArrayList;
 /**
  * This class models a peptide fragment ion.
  *
- * Created by IntelliJ IDEA. User: Marc Date: Jun 18, 2010 Time: 8:58:02 AM
+ * @author Marc Vaudel
  */
 public class PeptideFragmentIon extends Ion {
-    
+
     /**
      * Serial number for backward compatibility
      */
     static final long serialVersionUID = 8283809283803740651L;
     /**
-     * identifier for an a ion.
+     * Identifier for an a ion.
      */
     public static final int A_ION = 0;
     /**
-     * identifier for a b ion.
+     * Identifier for a b ion.
      */
     public static final int B_ION = 1;
     /**
-     * identifier for a c ion.
+     * Identifier for a c ion.
      */
     public static final int C_ION = 2;
     /**
-     * identifier for an x ion.
+     * Identifier for an x ion.
      */
     public static final int X_ION = 3;
     /**
-     * identifier for a y ion.
+     * Identifier for a y ion.
      */
     public static final int Y_ION = 4;
     /**
-     * identifier for a z ion.
+     * Identifier for a z ion.
      */
     public static final int Z_ION = 5;
     /**
-     * the neutral losses found on the ion
+     * The neutral losses found on the ion.
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
-     * position of the ion in the peptide for peptide ions
+     * Position of the ion in the peptide for peptide ions.
      */
     private int number = -1;
     /**
-     * The type of fragment
+     * The type of fragment.
      */
     private int subType;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param fragmentType the type of peptide fragment ion as indexed by the
      * static fields
@@ -74,7 +74,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
-     * Constructor for a generic ion
+     * Constructor for a generic ion.
      *
      * @param fragmentType the type of peptide fragment ion as indexed by the
      * static fields
@@ -90,7 +90,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
-     * Constructor for a generic ion without neutral losses
+     * Constructor for a generic ion without neutral losses.
      *
      * @param fragmentType the type of peptide fragment ion as indexed by the
      * static fields
@@ -101,7 +101,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
-     * Returns the number of the fragment in the sequence
+     * Returns the number of the fragment in the sequence.
      *
      * @return the number of the fragment in the sequence
      */
@@ -202,7 +202,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
-     * Returns the type of fragment ion as a letter
+     * Returns the type of fragment ion as a letter.
      *
      * @param subType the subtype
      * @return the type of fragment ion as a letter
@@ -227,7 +227,7 @@ public class PeptideFragmentIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes
+     * Returns an arraylist of possible subtypes.
      *
      * @return an arraylist of possible subtypes
      */

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.Ion;
@@ -16,7 +12,7 @@ import java.util.HashMap;
 /**
  * This class contains the spectrum annotation preferences.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AnnotationPreferences implements Serializable {
 
@@ -89,6 +85,10 @@ public class AnnotationPreferences implements Serializable {
      * If true, the automatic rewind ion de novo tags are shown.
      */
     private boolean showRewindIonDeNovoTags = false;
+    /**
+     * The charge for the fragment ions in the de novo sequencing.
+     */
+    private int deNovoCharge = 1;
 
     /**
      * Constructor.
@@ -444,5 +444,25 @@ public class AnnotationPreferences implements Serializable {
      */
     public void setShowRewindIonDeNovoTags(boolean showRewindIonDeNovoTags) {
         this.showRewindIonDeNovoTags = showRewindIonDeNovoTags;
+    }
+
+    /**
+     * Returns the charge to use for the fragment ions in the de novo
+     * sequencing.
+     *
+     * @return the charge to use for the fragment ions in the de novo sequencing
+     */
+    public int getDeNovoCharge() {
+        return deNovoCharge;
+    }
+
+    /**
+     * Set the charge to use for the fragment ions in the de novo sequencing
+     *
+     * @param deNovoCharge the charge to use for the fragment ions in the de
+     * novo sequencing
+     */
+    public void setDeNovoCharge(int deNovoCharge) {
+        this.deNovoCharge = deNovoCharge;
     }
 }

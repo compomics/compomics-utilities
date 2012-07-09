@@ -64,7 +64,7 @@ public class ObjectsDB implements Serializable {
         Statement stmt = dbConnection.createStatement();
 
         stmt.execute("CREATE table " + tableName + " ("
-                + "NAME    VARCHAR(500),"
+                + "NAME VARCHAR(1000)," // @TODO: had to increase this from 500 to 1000 as some keys can be longer. not sure how this affects the db size and speed though...
                 + "MATCH_BLOB blob(" + blobSize + ")"
                 + ")");
 
@@ -384,6 +384,11 @@ public class ObjectsDB implements Serializable {
     public String correctTableName(String tableName) {
         tableName = tableName.replace(" ", "_");
         tableName = tableName.replace("|", "_");
+        tableName = tableName.replace("-", "_");
+        tableName = tableName.replace("=", "_");
+        
+        // @TODO: seems like everything but numbers and letters ought to be replaced??? (couldn't find for derby but from another db: alphanumeric characters and the special characters $, _, and #)
+        
         if (longKeys.contains(tableName)) {
             tableName = longKeys.indexOf(tableName) + "";
         }

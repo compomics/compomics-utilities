@@ -5,10 +5,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 /**
  * This class models a charge.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 23, 2010
- * Time: 10:01:29 AM
+ * Created by IntelliJ IDEA. User: Marc Date: Jun 23, 2010 Time: 10:01:29 AM
  */
 public class Charge extends ExperimentObject {
 
@@ -40,7 +37,7 @@ public class Charge extends ExperimentObject {
     /**
      * constructor for a charge
      *
-     * @param sign  sign of the charge as specified in static fields
+     * @param sign sign of the charge as specified in static fields
      * @param value value of the charge
      */
     public Charge(int sign, int value) {
@@ -49,8 +46,8 @@ public class Charge extends ExperimentObject {
     }
 
     /**
-     * returns a string representing the charge
-     * 
+     * returns a string representing the charge. For example 2+.
+     *
      * @return charge as a string
      */
     public String toString() {
@@ -65,17 +62,21 @@ public class Charge extends ExperimentObject {
     }
 
     /**
-     * Returns the charge as a string of +. One for each charge.
-     * A charge of 1 however returns the empty string.
+     * Returns the charge as a string of + or -. One for each charge. A charge
+     * of 1 however returns the empty string.
      *
-     * @return  the charge as a string of +
+     * @return the charge as a string of +
      */
     public String getChargeAsFormattedString() {
 
         String temp = "";
 
         for (int i = 0; i < value; i++) {
-            temp += "+";
+            if (sign == PLUS) {
+                temp += "+";
+            } else if (sign == MINUS) {
+                temp += "-";
+            }
         }
 
         if (value == 1) {

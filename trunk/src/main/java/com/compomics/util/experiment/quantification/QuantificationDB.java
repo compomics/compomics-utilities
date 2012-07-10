@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.quantification;
 
+import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -25,7 +26,7 @@ public class QuantificationDB implements Serializable {
     /**
      * The name which will be used for the database.
      */
-    public static final String dbName = "utilitiesQuantDB";
+    public String dbName;
     /**
      * The name of the protein table.
      */
@@ -88,8 +89,9 @@ public class QuantificationDB implements Serializable {
      * @throws SQLException an exception thrown whenever an error occurred while
      * creating the database
      */
-    public QuantificationDB(String folder, boolean deleteOldDatabase) throws SQLException {
-        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase);
+    public QuantificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+        this.dbName = name;
+        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase, objectsCache);
         
         if (deleteOldDatabase) {
             objectsDB.addTable(proteinTableName, matchSize);
@@ -325,7 +327,7 @@ public class QuantificationDB implements Serializable {
         if (spectrumMatchInDB(key)) {
             updateMatch(spectrumMatch);
         } else {
-            objectsDB.insertObject(tableName, key, spectrumMatch);
+            objectsDB.insertObject(tableName, key, spectrumMatch, true);
         }
     }
 
@@ -358,7 +360,7 @@ public class QuantificationDB implements Serializable {
         if (peptideMatchInDB(peptideMatch.getKey())) {
             updatePeptideMatch(peptideMatch);
         } else {
-            objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
+            objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch, true);
         }
     }
 
@@ -391,7 +393,7 @@ public class QuantificationDB implements Serializable {
         if (proteinMatchInDB(proteinMatch.getKey())) {
             updateProteinMatch(proteinMatch);
         } else {
-            objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
+            objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch, true);
         }
     }
 
@@ -429,7 +431,7 @@ public class QuantificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             psmParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**
@@ -466,7 +468,7 @@ public class QuantificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             peptideParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**
@@ -503,7 +505,7 @@ public class QuantificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             proteinParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**

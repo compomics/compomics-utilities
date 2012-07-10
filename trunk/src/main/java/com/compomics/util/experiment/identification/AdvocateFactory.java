@@ -6,7 +6,7 @@ import com.compomics.util.experiment.identification.advocates.PostProcessor;
 import java.util.ArrayList;
 
 /**
- * This factory will provide adapted advocates when requested.
+ * This factory will provide adapted advocates when required. Could be simpler, sorry that's old stuff
  *
  * Created by IntelliJ IDEA.
  * User: Marc

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -22,7 +23,7 @@ public class IdentificationDB implements Serializable {
     /**
      * The name which will be used for the database.
      */
-    public static final String dbName = "utilitiesIdDB";
+    public String dbName;
     /**
      * The name of the protein table.
      */
@@ -82,12 +83,11 @@ public class IdentificationDB implements Serializable {
     /**
      * The maximal size for a BLOB parameter match in the database.
      */
-    public static final String parametersSize = "8k";
+    public static final String parametersSize = "128k";
     /**
      * The database which will contain the objects.
      */
     private ObjectsDB objectsDB;
-
     /**
      * Constructor creating the database and the protein and protein parameters
      * tables.
@@ -97,9 +97,9 @@ public class IdentificationDB implements Serializable {
      * @throws SQLException an exception thrown whenever an error occurred while
      * creating the database
      */
-    public IdentificationDB(String folder, boolean deleteOldDatabase) throws SQLException {
-        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase);
-        
+    public IdentificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectCache) throws SQLException {
+        this.dbName = name;
+        objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase, objectCache);
         if (deleteOldDatabase) {
             objectsDB.addTable(proteinTableName, matchSize);
             objectsDB.addTable(peptideTableName, matchSize);
@@ -346,11 +346,7 @@ public class IdentificationDB implements Serializable {
             objectsDB.addTable(tableName, matchSize);
             psmTables.add(tableName);
         }
-        if (spectrumMatchInDB(key)) {
-            updateMatch(spectrumMatch);
-        } else {
-            objectsDB.insertObject(tableName, key, spectrumMatch);
-        }
+        objectsDB.insertObject(tableName, key, spectrumMatch, true);
     }
 
     /**
@@ -379,11 +375,7 @@ public class IdentificationDB implements Serializable {
      * writing the object
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
-        if (peptideMatchInDB(peptideMatch.getKey())) {
-            updatePeptideMatch(peptideMatch);
-        } else {
-            objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch);
-        }
+            objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch, true);
     }
 
     /**
@@ -412,11 +404,7 @@ public class IdentificationDB implements Serializable {
      * writing the object
      */
     public void addProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
-        if (proteinMatchInDB(proteinMatch.getKey())) {
-            updateProteinMatch(proteinMatch);
-        } else {
-            objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch);
-        }
+            objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch, true);
     }
 
     /**
@@ -475,7 +463,7 @@ public class IdentificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             psmParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**
@@ -512,7 +500,7 @@ public class IdentificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             peptideParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**
@@ -549,7 +537,7 @@ public class IdentificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             proteinParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**
@@ -588,7 +576,7 @@ public class IdentificationDB implements Serializable {
             objectsDB.addTable(tableName, parametersSize);
             matchParametersTables.add(tableName);
         }
-        objectsDB.insertObject(tableName, key, urParameter);
+        objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
     /**

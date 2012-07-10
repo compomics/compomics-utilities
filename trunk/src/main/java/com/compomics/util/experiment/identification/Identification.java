@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
@@ -55,39 +56,9 @@ public abstract class Identification extends ExperimentObject {
      */
     protected int methodUsed;
     /**
-     * The cache size in number of matches. 20000 by default: should be enough
-     * to contain a velos file.
-     */
-    protected int cacheSize = 20000;
-    /**
      * the directory where matches will be serialized/the database stored
      */
     protected String serializationDirectory;
-    /**
-     * boolean indicating whether the identification should be stored in memory
-     * or not. True by default, the serialization directory should be set
-     * otherwise.
-     */
-    protected boolean inMemory = true;
-    /**
-     * boolean indicating whether the memory management should be done
-     * automatically. If true, the cache size will be extended to reach 99% of
-     * the available heap size when inMemory is wrong. True by default.
-     */
-    protected boolean automatedMemoryManagement = true;
-    /**
-     * Map of the loaded matches.
-     */
-    protected HashMap<String, IdentificationMatch> loadedMatchesMap = new HashMap<String, IdentificationMatch>();
-    /**
-     * List of the loaded matches with the most used matches in the end.
-     */
-    protected ArrayList<String> loadedMatches = new ArrayList<String>();
-    /**
-     * Map indicating whether a match is modified. Only modified matches will be
-     * serialized.
-     */
-    protected HashMap<String, Boolean> modifiedMatches = new HashMap<String, Boolean>();
     /**
      * Map of the user's parameters.
      *
@@ -96,8 +67,9 @@ public abstract class Identification extends ExperimentObject {
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
      * Map of long keys (>100 characters) which will be referenced by their
-     * index for file creation/database storage. @TODO implement this for db
-     * keys?
+     * index for file creation/database storage. 
+     * @deprecated use the database instead
+     * @TODO implement this for db keys
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
@@ -109,6 +81,14 @@ public abstract class Identification extends ExperimentObject {
      * the identificationDB object interacting with the database
      */
     private IdentificationDB identificationDB;
+    /**
+     * The object cache
+     */
+    protected ObjectsCache objectsCache;
+    /**
+     * The reference of the identification
+     */
+    protected String reference;
 
     /**
      * Adds a parameter with a corresponding match key which will be loaded in
@@ -322,62 +302,6 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns whether the memory management is automated.
-     *
-     * @return whether the memory management is automated.
-     */
-    public boolean isAutomatedMemoryManagement() {
-        return automatedMemoryManagement;
-    }
-
-    /**
-     * Sets whether the memory management should be automated.
-     *
-     * @param automatedMemoryManagement a boolean indicating whether the memory
-     * management should be automated
-     */
-    public void setAutomatedMemoryManagement(boolean automatedMemoryManagement) {
-        this.automatedMemoryManagement = automatedMemoryManagement;
-    }
-
-    /**
-     * Returns the cache size in number of matches.
-     *
-     * @return the cache size in number of matches
-     */
-    public int getCacheSize() {
-        return cacheSize;
-    }
-
-    /**
-     * Sets the cache size.
-     *
-     * @param cacheSize number of matches to allow in the cache size
-     */
-    public void setCacheSize(int cacheSize) {
-        this.cacheSize = cacheSize;
-    }
-
-    /**
-     * Indicates whether matches will be stored in memory.
-     *
-     * @return a boolean indicating whether matches will be stored in memory
-     */
-    public boolean isInMemory() {
-        return inMemory;
-    }
-
-    /**
-     * Sets whether matches shall be stored in memory.
-     *
-     * @param inMemory a boolean indicating whether matches shall be stored in
-     * memory
-     */
-    public void setInMemory(boolean inMemory) {
-        this.inMemory = inMemory;
-    }
-
-    /**
      * Returns the serialization directory.
      *
      * @return the serialization directory
@@ -401,7 +325,7 @@ public abstract class Identification extends ExperimentObject {
         this.serializationDirectory = serializationDirectory;
 
         if (isDB) {
-            identificationDB = new IdentificationDB(serializationDirectory, deleteOldDatabase);
+            identificationDB = new IdentificationDB(serializationDirectory, reference, deleteOldDatabase, objectsCache);
         }
     }
 
@@ -416,7 +340,7 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      */
     public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException {
-        
+
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
                 if (proteinMap.get(protein) == null) {
@@ -431,23 +355,17 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
-        
+
         proteinIdentification.remove(matchKey);
         spectrumIdentification.remove(matchKey);
         peptideIdentification.remove(matchKey);
-        
-        if (loadedMatches.contains(matchKey)) {
-            loadedMatches.remove(matchKey);
-            loadedMatchesMap.remove(matchKey);
-            modifiedMatches.remove(matchKey);
-        } else {
+
             if (isDB) {
                 identificationDB.removeMatch(matchKey);
             } else {
                 File matchFile = new File(serializationDirectory, getFileName(matchKey));
                 matchFile.delete();
             }
-        }
     }
 
     /**
@@ -459,21 +377,14 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      */
     public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException {
-        
+
         spectrumIdentification.remove(matchKey);
-        
-        if (loadedMatches.contains(matchKey)) {
-            loadedMatches.remove(matchKey);
-            loadedMatchesMap.remove(matchKey);
-            modifiedMatches.remove(matchKey);
-        } else {
             if (isDB) {
                 identificationDB.removeSpectrumMatch(matchKey);
             } else {
                 File matchFile = new File(serializationDirectory, getFileName(matchKey));
                 matchFile.delete();
             }
-        }
     }
 
     /**
@@ -485,21 +396,14 @@ public abstract class Identification extends ExperimentObject {
      * deleting the match
      */
     public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException {
-        
+
         peptideIdentification.remove(matchKey);
-        
-        if (loadedMatches.contains(matchKey)) {
-            loadedMatches.remove(matchKey);
-            loadedMatchesMap.remove(matchKey);
-            modifiedMatches.remove(matchKey);
-        } else {
             if (isDB) {
                 identificationDB.removePeptideMatch(matchKey);
             } else {
                 File matchFile = new File(serializationDirectory, getFileName(matchKey));
                 matchFile.delete();
             }
-        }
     }
 
     /**
@@ -525,21 +429,15 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
-        
+
         proteinIdentification.remove(matchKey);
-        
-        if (loadedMatches.contains(matchKey)) {
-            loadedMatches.remove(matchKey);
-            loadedMatchesMap.remove(matchKey);
-            modifiedMatches.remove(matchKey);
-        } else {
+
             if (isDB) {
                 identificationDB.removeProteinMatch(matchKey);
             } else {
                 File matchFile = new File(serializationDirectory, getFileName(matchKey));
                 matchFile.delete();
             }
-        }
     }
 
     /**
@@ -578,7 +476,7 @@ public abstract class Identification extends ExperimentObject {
      * @deprecated use the database match specific methods instead
      */
     private synchronized IdentificationMatch getMatch(String matchKey, int errorCounter) throws IllegalArgumentException {
-        
+
         try {
             File newMatch = new File(serializationDirectory, getFileName(matchKey));
             FileInputStream fis = new FileInputStream(newMatch);
@@ -588,10 +486,6 @@ public abstract class Identification extends ExperimentObject {
             fis.close();
             bis.close();
             in.close();
-            loadedMatchesMap.put(matchKey, match);
-            loadedMatches.add(matchKey);
-            modifiedMatches.put(matchKey, false);
-            updateCache();
             return match;
         } catch (Exception e) {
             if (errorCounter <= 100) {
@@ -622,24 +516,10 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        int index = loadedMatches.indexOf(spectrumKey);
-        if (index == -1) {
-            if (isDB) {
-                SpectrumMatch match = identificationDB.getSpectrumMatch(spectrumKey);
-                loadedMatchesMap.put(spectrumKey, match);
-                loadedMatches.add(spectrumKey);
-                modifiedMatches.put(spectrumKey, false);
-                updateCache();
-                return match;
-            } else {
-                return (SpectrumMatch) getMatch(spectrumKey);
-            }
+        if (isDB) {
+            return identificationDB.getSpectrumMatch(spectrumKey);
         } else {
-            if (index < 0.25 * loadedMatches.size()) {
-                loadedMatches.remove(spectrumKey);
-                loadedMatches.add(spectrumKey);
-            }
-            return (SpectrumMatch) loadedMatchesMap.get(spectrumKey);
+            return (SpectrumMatch) getMatch(spectrumKey);
         }
     }
 
@@ -658,24 +538,10 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        int index = loadedMatches.indexOf(peptideKey);
-        if (index == -1) {
-            if (isDB) {
-                PeptideMatch match = identificationDB.getPeptideMatch(peptideKey);
-                loadedMatchesMap.put(peptideKey, match);
-                loadedMatches.add(peptideKey);
-                modifiedMatches.put(peptideKey, false);
-                updateCache();
-                return match;
-            } else {
-                return (PeptideMatch) getMatch(peptideKey);
-            }
+        if (isDB) {
+            return identificationDB.getPeptideMatch(peptideKey);
         } else {
-            if (index < 0.25 * loadedMatches.size()) {
-                loadedMatches.remove(peptideKey);
-                loadedMatches.add(peptideKey);
-            }
-            return (PeptideMatch) loadedMatchesMap.get(peptideKey);
+            return (PeptideMatch) getMatch(peptideKey);
         }
     }
 
@@ -694,24 +560,10 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        int index = loadedMatches.indexOf(proteinKey);
-        if (index == -1) {
-            if (isDB) {
-                ProteinMatch match = identificationDB.getProteinMatch(proteinKey);
-                loadedMatchesMap.put(proteinKey, match);
-                loadedMatches.add(proteinKey);
-                modifiedMatches.put(proteinKey, false);
-                updateCache();
-                return match;
-            } else {
-                return (ProteinMatch) getMatch(proteinKey);
-            }
+        if (isDB) {
+            return identificationDB.getProteinMatch(proteinKey);
         } else {
-            if (index < 0.25 * loadedMatches.size()) {
-                loadedMatches.remove(proteinKey);
-                loadedMatches.add(proteinKey);
-            }
-            return (ProteinMatch) loadedMatchesMap.get(proteinKey);
+            return (ProteinMatch) getMatch(proteinKey);
         }
     }
 
@@ -764,141 +616,19 @@ public abstract class Identification extends ExperimentObject {
             for (int searchEngine : newMatch.getAdvocates()) {
                 oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine));
             }
-            setMatchChanged(oldMatch);
+            identificationDB.updateSpectrumMatch(oldMatch);
         } else {
             spectrumIdentification.add(spectrumKey);
-            loadedMatchesMap.put(spectrumKey, newMatch);
-            loadedMatches.add(spectrumKey);
-            modifiedMatches.put(spectrumKey, true);
-            updateCache();
-        }
-    }
-
-    /**
-     * Updates the cache according to the memory settings.
-     *
-     * @throws FileNotFoundException exception thrown whenever an error occurred
-     * while serializing a match
-     * @throws IOException exception thrown whenever an error occurred while
-     * serializing a match
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     */
-    public void updateCache() throws FileNotFoundException, IOException, SQLException, ClassNotFoundException {
-        if (!inMemory) {
-            while (!automatedMemoryManagement && loadedMatches.size() > cacheSize
-                    || !memoryCheck()) {
-                String key = loadedMatches.get(0);
-                if (modifiedMatches.get(key)) {
-                    if (isDB) {
-                        try {
-                            identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            throw new IOException("Error while writing match " + key + " in the database.");
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                            throw new SQLException("Error while writing match " + key + " in the database.");
-                        }
-                    } else {
-                        try {
-                            File matchFile = new File(serializationDirectory, getFileName(key));
-                            FileOutputStream fos = new FileOutputStream(matchFile);
-                            BufferedOutputStream bos = new BufferedOutputStream(fos);
-                            ObjectOutputStream oos = new ObjectOutputStream(bos);
-                            oos.writeObject(loadedMatchesMap.get(key));
-                            oos.close();
-                            bos.close();
-                            fos.close();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                            throw new FileNotFoundException("Error while writing match " + key);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            throw new IOException("Error while writing match " + key);
-                        }
-                    }
-                }
-                loadedMatches.remove(0);
-                loadedMatchesMap.remove(key);
-                modifiedMatches.remove(key);
-                if (loadedMatches.isEmpty()) {
-                    break;
-                }
+            try {
+                identificationDB.addSpectrumMatch(newMatch);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IOException("Error while writing spectrum match " + spectrumKey + " in the database.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new SQLException("Error while writing spectrum match " + spectrumKey + " in the database.");
             }
         }
-    }
-
-    /**
-     * Indicates whether the memory used by the application is lower than 99% of
-     * the heap size.
-     *
-     * @return a boolean indicating whether the memory used by the application
-     * is lower than 99% of the heap
-     */
-    public boolean memoryCheck() {
-        return Runtime.getRuntime().totalMemory() < (long) (0.99 * Runtime.getRuntime().maxMemory());
-    }
-
-    /**
-     * Reduces the amount of identification saved in memory by 20%.
-     *
-     * @param progressBar the progress bar
-     * @throws FileNotFoundException exception thrown whenever an error occurred
-     * while serializing a match
-     * @throws IOException exception thrown whenever an error occurred while
-     * serializing a match or reading the database
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     */
-    public void reduceMemoryConsumtion(JProgressBar progressBar) throws FileNotFoundException, IOException, SQLException {
-        if (progressBar != null) {
-            progressBar.setValue(0);
-            progressBar.setMaximum((int) (0.20 * loadedMatches.size()));
-        }
-        for (int cpt = 0; cpt < 0.20 * loadedMatches.size(); cpt++) {
-            String key = loadedMatches.get(0);
-            if (modifiedMatches.get(key)) {
-                if (isDB) {
-                    try {
-                        identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new IOException("Error while writing match " + key + " in the database.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        throw new SQLException("Error while writing match " + key + " in the database.");
-                    }
-                } else {
-                    try {
-                        File matchFile = new File(serializationDirectory, getFileName(key));
-                        FileOutputStream fos = new FileOutputStream(matchFile);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        oos.writeObject(loadedMatchesMap.get(key));
-                        oos.close();
-                        bos.close();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        throw new FileNotFoundException("Error while writing match " + key);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new IOException("Error while writing match " + key);
-                    }
-                }
-            }
-            loadedMatches.remove(0);
-            loadedMatchesMap.remove(key);
-            modifiedMatches.remove(key);
-            if (progressBar != null) {
-                progressBar.setValue(cpt);
-            }
-            if (loadedMatches.isEmpty()) {
-                break;
-            }
-        }
-        System.gc();
     }
 
     /**
@@ -949,13 +679,19 @@ public abstract class Identification extends ExperimentObject {
         if (peptideIdentification.contains(peptideKey)) {
             peptideMatch = getPeptideMatch(peptideKey);
             peptideMatch.addSpectrumMatch(spectrumMatchKey);
-            setMatchChanged(peptideMatch);
+            identificationDB.updatePeptideMatch(peptideMatch);
         } else {
             peptideMatch = new PeptideMatch(peptide, spectrumMatchKey);
             peptideIdentification.add(peptideKey);
-            loadedMatches.add(peptideKey);
-            loadedMatchesMap.put(peptideKey, peptideMatch);
-            modifiedMatches.put(peptideKey, true);
+            try {
+                identificationDB.addPeptideMatch(peptideMatch);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IOException("Error while writing peptide match " + peptideKey + " in the database.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new SQLException("Error while writing peptide match " + peptideKey + " in the database.");
+            }
         }
 
         String proteinKey = ProteinMatch.getProteinMatchKey(peptide);
@@ -964,89 +700,28 @@ public abstract class Identification extends ExperimentObject {
             ProteinMatch proteinMatch = getProteinMatch(proteinKey);
             if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
                 proteinMatch.addPeptideMatch(peptideKey);
-                setMatchChanged(proteinMatch);
+                identificationDB.updateProteinMatch(proteinMatch);
             }
         } else {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
             proteinIdentification.add(proteinKey);
-            loadedMatches.add(proteinKey);
-            loadedMatchesMap.put(proteinKey, proteinMatch);
-            modifiedMatches.put(proteinKey, true);
-
             for (String protein : peptide.getParentProteins()) {
                 if (!proteinMap.containsKey(protein)) {
-                    proteinMap.put(protein, new ArrayList<String>(5));
+                    proteinMap.put(protein, new ArrayList<String>());
                 }
                 if (!proteinMap.get(protein).contains(proteinKey)) {
                     proteinMap.get(protein).add(proteinKey);
                 }
             }
-        }
-    }
-
-    /**
-     * Empties the cache and serializes everything in the specified
-     * serialization folder or in the database.
-     *
-     * @param progressDialog
-     * @throws FileNotFoundException exception thrown whenever an error occurred
-     * while serializing a match
-     * @throws IOException exception thrown whenever an error occurred while
-     * serializing a match
-     * @throws SQLException exception thrown whenever an error occurred while
-     * serializing a match
-     */
-    public void emptyCache(ProgressDialogX progressDialog) throws FileNotFoundException, IOException, SQLException {
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setMaxProgressValue(loadedMatchesMap.size());
-        }
-        int cpt = 0;
-        for (String key : loadedMatchesMap.keySet()) {
-
-            if (progressDialog.isRunCanceled()) {
-                break;
+            try {
+                identificationDB.addProteinMatch(proteinMatch);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IOException("Error while writing protein match " + proteinKey + " in the database.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new SQLException("Error while writing protein match " + proteinKey + " in the database.");
             }
-
-            if (modifiedMatches.get(key)) {
-                if (isDB) {
-                    try {
-                        identificationDB.addMatch((IdentificationMatch) loadedMatchesMap.get(key));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new IOException("Error while writing match " + key + " in the database.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        throw new SQLException("Error while writing match " + key + " in the database.");
-                    }
-                } else {
-                    try {
-                        File matchFile = new File(serializationDirectory, getFileName(key));
-                        FileOutputStream fos = new FileOutputStream(matchFile);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        oos.writeObject(loadedMatchesMap.get(key));
-                        oos.close();
-                        bos.close();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        throw new FileNotFoundException("Error while writing match " + key);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new IOException("Error while writing match " + key);
-                    }
-                }
-            }
-            if (progressDialog != null) {
-                progressDialog.setValue(++cpt);
-            }
-        }
-
-        if (!progressDialog.isRunCanceled()) {
-            loadedMatches.clear();
-            loadedMatchesMap.clear();
-            modifiedMatches.clear();
         }
     }
 
@@ -1089,50 +764,6 @@ public abstract class Identification extends ExperimentObject {
      */
     public HashMap<String, ArrayList<String>> getProteinMap() {
         return proteinMap;
-    }
-
-    /**
-     * Indicates that a match was changed, it will thus be serialized again if
-     * needed.
-     *
-     * @param match
-     * @throws IllegalArgumentException
-     * @throws IOException
-     * @throws SQLException
-     */
-    public void setMatchChanged(IdentificationMatch match) throws IllegalArgumentException, IOException, SQLException {
-
-        String key = match.getKey();
-
-        if (loadedMatches.contains(key)) {
-            modifiedMatches.put(key, true);
-        } else {
-            if (isDB) {
-                try {
-                    identificationDB.updateMatch(match);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new IOException("Error while writing match " + key + " in the database.");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    throw new SQLException("Error while writing match " + key + " in the database.");
-                }
-            } else {
-                try {
-                    File matchFile = new File(serializationDirectory, getFileName(key));
-                    FileOutputStream fos = new FileOutputStream(matchFile);
-                    BufferedOutputStream bos = new BufferedOutputStream(fos);
-                    ObjectOutputStream oos = new ObjectOutputStream(bos);
-                    oos.writeObject(match);
-                    oos.close();
-                    bos.close();
-                    fos.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new IllegalArgumentException("Error while writing match " + key);
-                }
-            }
-        }
     }
 
     /**
@@ -1229,7 +860,7 @@ public abstract class Identification extends ExperimentObject {
      * establishing the connection
      */
     public void establishConnection(String dbFolder, boolean deleteOldDatabase) throws SQLException {
-        identificationDB = new IdentificationDB(dbFolder, deleteOldDatabase);
+        identificationDB = new IdentificationDB(dbFolder, reference, deleteOldDatabase, objectsCache);
     }
 
     /**
@@ -1246,10 +877,12 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
      */
-    public void convert(ProgressDialogX progressDialog, String newDirectory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void convert(ProgressDialogX progressDialog, String newDirectory, String newName) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
-        identificationDB = new IdentificationDB(newDirectory, true);
         
+        objectsCache = new ObjectsCache();
+        identificationDB = new IdentificationDB(newDirectory, newName, true, objectsCache);
+
         File directory = new File(serializationDirectory);
         File[] files = directory.listFiles();
         int nParameters = 0;
@@ -1289,17 +922,21 @@ public abstract class Identification extends ExperimentObject {
                 bis.close();
                 in.close();
                 file.delete();
-                String matchKey = match.getKey();
-                loadedMatchesMap.put(matchKey, match);
-                loadedMatches.add(matchKey);
-                modifiedMatches.put(matchKey, true);
-                updateCache();
+            try {
+                identificationDB.addMatch(match);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IOException("Error while writing match " + match.getKey() + " in the database.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new SQLException("Error while writing match " + match.getKey() + " in the database.");
+            }
             }
             if (progressDialog != null) {
                 progressDialog.increaseProgressValue();
-            }
             if (progressDialog.isRunCanceled()) {
                 break;
+            }
             }
         }
         if (progressDialog != null) {

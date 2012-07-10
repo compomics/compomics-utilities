@@ -1,6 +1,7 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationDB;
@@ -27,7 +28,10 @@ public class IdentificationDBTest {
             String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
             path = path.substring(1, path.indexOf("/target/"));
             path += "/src/test/resources/experiment/testDB";
-            IdentificationDB idDB = new IdentificationDB(path, true);
+            ObjectsCache cache = new ObjectsCache();
+            cache.setAutomatedMemoryManagement(false);
+            cache.setCacheSize(0);
+            IdentificationDB idDB = new IdentificationDB(path, "testId", true, cache);
 
             String spectrumKey = "test spectrum match";
             String peptideKey = "PEPTIDE";

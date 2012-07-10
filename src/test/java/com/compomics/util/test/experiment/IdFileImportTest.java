@@ -27,7 +27,6 @@ public class IdFileImportTest extends TestCase {
     private static final String XTANDEM_FILE = "testFiles/velos004096_HR_new.t.xml";
     private static final String MODIFICATION_FILE = "exampleFiles/experiment/mods.xml";
     private static final String USER_MODIFICATION_FILE = "exampleFiles/experiment/usermods.xml";
-    private Ms2Identification identification = new Ms2Identification();
     private IdfileReaderFactory idfileReaderFactory = IdfileReaderFactory.getInstance();
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 

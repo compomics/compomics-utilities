@@ -28,11 +28,15 @@ public class ObjectsDB implements Serializable {
      * List of keys too long to create a table.
      */
     private ArrayList<String> longKeys = new ArrayList<String>();
-//    PreparedStatement proteinInsert, peptidesInsert, spectrumInsert,
-//            proteinSelect, peptidesSelect, spectrumSelect,
-//            proteinDelete, peptidesDelete, spectrumDelete,
-//            proteinUpdate, peptidesUpdate, spectrumUpdate;
-//    boolean spectraTableCreated = false;
+    /**
+     * The cache to be used for the objects
+     */
+    private ObjectsCache objectsCache;
+    /**
+     * The writer used to send the output to file.
+     */
+    private BufferedWriter debugWriter;
+    private File debugFolder;
 
     /**
      * Constructor.
@@ -42,9 +46,35 @@ public class ObjectsDB implements Serializable {
      * @param deleteOldDatabase if true, tries to delete the old database
      * @throws SQLException
      */
-    public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase) throws SQLException {
+    public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         this.dbName = dbName;
+        this.objectsCache = objectsCache;
+        objectsCache.addDb(this);
         establishConnection(folder, deleteOldDatabase);
+    }
+    
+    /**
+     * Returns the database name
+     * @return the database name
+     */
+    public String getName() {
+        return dbName;
+    }
+    
+    /**
+     * Returns the cache used by this database
+     * @return the cache used by this database
+     */
+    public ObjectsCache getObjectsCache() {
+        return objectsCache;
+    }
+    
+    /**
+     * Sets the object cache to be used by this database
+     * @param objectCache the object cache to be used by this database
+     */
+    public void setObjectCache(ObjectsCache objectCache) {
+        this.objectsCache = objectCache;
     }
 
     /**
@@ -68,54 +98,6 @@ public class ObjectsDB implements Serializable {
                 + "MATCH_BLOB blob(" + blobSize + ")"
                 + ")");
 
-//        if (tableName.equalsIgnoreCase("proteins")) {
-//            
-//            stmt.execute("CREATE table " + tableName + " ("
-//                + "NAME    VARCHAR(500),"
-//                + "MATCH_BLOB blob(" + blobSize + ")"
-//                + ")");
-//            
-//            proteinInsert = dbConnection.prepareStatement("INSERT INTO " + "proteins" + " VALUES (?, ?)");
-//            proteinSelect = dbConnection.prepareStatement("select MATCH_BLOB from " + "proteins" + " where NAME=?");
-//            proteinDelete = dbConnection.prepareStatement("delete from " + "proteins" + " where NAME=?");
-//            proteinUpdate = dbConnection.prepareStatement("update " + "proteins" + " set MATCH_BLOB=? where NAME=?");
-//
-//        } else if (tableName.equalsIgnoreCase("peptides")) {
-//            
-//            stmt.execute("CREATE table " + tableName + " ("
-//                + "NAME    VARCHAR(500),"
-//                + "MATCH_BLOB blob(" + blobSize + ")"
-//                + ")");
-//            
-//            peptidesInsert = dbConnection.prepareStatement("INSERT INTO " + "peptides" + " VALUES (?, ?)");
-//            peptidesSelect = dbConnection.prepareStatement("select MATCH_BLOB from " + "peptides" + " where NAME=?");
-//            peptidesDelete = dbConnection.prepareStatement("delete from " + "peptides" + " where NAME=?");
-//            peptidesUpdate = dbConnection.prepareStatement("update " + "peptides" + " set MATCH_BLOB=? where NAME=?");
-// 
-//        } else {
-//            
-//            if (!spectraTableCreated) {
-//            
-//                spectraTableCreated = true;
-//                
-//                stmt.execute("CREATE table " + "spectra" + " ("
-//                    + "NAME    VARCHAR(500),"
-//                    + "MATCH_BLOB blob(" + blobSize + ")"
-//                    + ")");
-//
-//                spectrumInsert = dbConnection.prepareStatement("INSERT INTO " + "spectra" + " VALUES (?, ?)");
-//                spectrumSelect = dbConnection.prepareStatement("select MATCH_BLOB from " + "spectra" + " where NAME=?");
-//                spectrumDelete = dbConnection.prepareStatement("delete from " + "spectra" + " where NAME=?");
-//                spectrumUpdate = dbConnection.prepareStatement("update " + "spectra" + " set MATCH_BLOB=? where NAME=?");   
-//            }
-//        }
-
-        // sqlite
-//        stmt.execute("CREATE table \'" + tableName + "\' ("
-//                + "NAME    VARCHAR(500),"
-//                + "MATCH_BLOB blob"
-//                + ");");
-
         stmt.close();
     }
 
@@ -125,25 +107,17 @@ public class ObjectsDB implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store
+     * @param inCache boolean indicating whether the method shall try to put the object in cache or not
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
      */
-    public void insertObject(String tableName, String objectKey, Object object) throws SQLException, IOException {
+    public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException {
+        if (inCache) {
+            objectsCache.addObject(dbName, tableName, objectKey, object);
+        } else {
         PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)"); // derby
-        //PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + "\'" + tableName + "\' VALUES (?, ?)"); // sqlite
-
-//        PreparedStatement ps;
-//
-//        if (tableName.equalsIgnoreCase("proteins")) {
-//            ps = proteinInsert;
-//        } else if (tableName.equalsIgnoreCase("peptides")) {
-//            ps = peptidesInsert;
-//        } else {
-//            ps = spectrumInsert;
-//        }
-
         ps.setString(1, objectKey);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -151,7 +125,7 @@ public class ObjectsDB implements Serializable {
         oos.close();
         ps.setBytes(2, bos.toByteArray());
         ps.executeUpdate();
-        //ps.close();
+        }
     }
 
     /**
@@ -170,43 +144,63 @@ public class ObjectsDB implements Serializable {
      * object is not found when deserializing it.
      */
     public Object retrieveObject(String tableName, String objectKey) throws SQLException, IOException, ClassNotFoundException {
+
+        Object object = objectsCache.getObject(dbName, tableName, objectKey);
+        
+        if (object != null) {
+            return object;
+        }
+        
+        long start = System.currentTimeMillis();
+
         Statement stmt = dbConnection.createStatement();
         ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + objectKey + "'"); // derby
-        //ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + "\'" + tableName + "\' where NAME='" + objectKey + "'"); // sqlite
-
-//        PreparedStatement ps;
-//
-//        if (tableName.equalsIgnoreCase("proteins")) {
-//            ps = proteinSelect;
-//        } else if (tableName.equalsIgnoreCase("peptides")) {
-//            ps = peptidesSelect;
-//        } else {
-//            ps = spectrumSelect;
-//        }
-//
-//        ps.setString(1, objectKey);
-//        ResultSet results = ps.executeQuery();
 
         if (results.next()) {
 
-            // derby
             Blob tempBlob = results.getBlob(1);
             BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
-            // sqlite
-            //BufferedInputStream bis = new BufferedInputStream(results.getBinaryStream(1));
-
             ObjectInputStream in = new ObjectInputStream(bis);
-            Object object = in.readObject();
+            object = in.readObject();
             in.close();
             results.close();
             stmt.close();
-            //ps.close();
+
+            long loaded = System.currentTimeMillis();
+
+            File newMatch = new File(debugFolder, "debugMatch");
+            FileOutputStream fos = new FileOutputStream(newMatch);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(object);
+            oos.close();
+            bos.close();
+            fos.close();
+
+            long written = System.currentTimeMillis();
+
+            FileInputStream fis = new FileInputStream(newMatch);
+            bis = new BufferedInputStream(fis);
+            in = new ObjectInputStream(bis);
+            Object match = in.readObject();
+            fis.close();
+            bis.close();
+            in.close();
+            long read = System.currentTimeMillis();
+
+            long size = newMatch.length();
+
+            long queryTime = loaded-start;
+            long serializationTime = written - loaded;
+            long deserializationTime = read - written;
+            
+            debugWriter.write(tableName +"\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
+
             return object;
         }
 
         results.close();
-        //ps.close();
         stmt.close();
         return null;
     }
@@ -224,24 +218,9 @@ public class ObjectsDB implements Serializable {
     public boolean inDB(String tableName, String objectKey) throws SQLException {
         Statement stmt = dbConnection.createStatement();
         ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'"); // derby
-        //ResultSet results = stmt.executeQuery("select * from " + "\'" + tableName + "\'" + " where NAME='" + objectKey + "'"); // sqlite
-
-//        PreparedStatement ps;
-//
-//        if (tableName.equalsIgnoreCase("proteins")) {
-//            ps = proteinSelect;
-//        } else if (tableName.equalsIgnoreCase("peptides")) {
-//            ps = peptidesSelect;
-//        } else {
-//            ps = spectrumSelect;
-//        }
-//
-//        ps.setString(1, objectKey);
-//        ResultSet results = ps.executeQuery();
 
         boolean result = results.next();
         results.close();
-        //ps.close();
         stmt.close();
         return result;
     }
@@ -256,23 +235,9 @@ public class ObjectsDB implements Serializable {
      */
     public void deleteObject(String tableName, String objectKey) throws SQLException {
         Statement stmt = dbConnection.createStatement();
-        stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'"); // derby
-        //stmt.executeUpdate("delete from \'" + tableName + "\' where NAME='" + objectKey + "'"); // sqlite
+        stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
         stmt.close();
 
-//        PreparedStatement ps;
-//
-//        if (tableName.equalsIgnoreCase("proteins")) {
-//            ps = proteinDelete;
-//        } else if (tableName.equalsIgnoreCase("peptides")) {
-//            ps = peptidesDelete;
-//        } else {
-//            ps = spectrumDelete;
-//        }
-//
-//        ps.setString(1, objectKey);
-//        ps.executeQuery();
-//        ps.close();
     }
 
     /**
@@ -288,17 +253,6 @@ public class ObjectsDB implements Serializable {
      */
     public void updateObject(String tableName, String objectKey, Object object) throws SQLException, IOException {
         PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'"); // derby
-        // PreparedStatement ps = dbConnection.prepareStatement("update \'" + tableName + "\' set MATCH_BLOB=? where NAME='" + objectKey + "'"); // sqlite
-
-//        PreparedStatement ps;
-//
-//        if (tableName.equalsIgnoreCase("proteins")) {
-//            ps = proteinUpdate;
-//        } else if (tableName.equalsIgnoreCase("peptides")) {
-//            ps = peptidesUpdate;
-//        } else {
-//            ps = spectrumUpdate;
-//        }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -306,9 +260,7 @@ public class ObjectsDB implements Serializable {
         oos.close();
 
         ps.setBytes(1, bos.toByteArray());
-        //ps.setString(2, objectKey);
         ps.executeUpdate();
-        //ps.close();
     }
 
     /**
@@ -318,7 +270,7 @@ public class ObjectsDB implements Serializable {
      * closing the database connection
      */
     public void close() throws SQLException {
-        
+
         if (dbConnection != null) {
             dbConnection.close();
         }
@@ -332,6 +284,12 @@ public class ObjectsDB implements Serializable {
             } else {
                 // ignore, normal derby shut down always results in an exception thrown
             }
+        }
+        
+        try {
+        debugWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         dbConnection = null;
@@ -361,18 +319,18 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        // derby
         String url = "jdbc:derby:" + path + ";create=true";
         dbConnection = DriverManager.getConnection(url);
 
-        // sqlite
-//        try {
-//            Class.forName("org.sqlite.JDBC");
-//            String url = "jdbc:sqlite:" + path;
-//            dbConnection = DriverManager.getConnection(url);
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
+
+        // debug
+        try {
+            debugFolder = new File(aDbFolder);
+            debugWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
+            debugWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

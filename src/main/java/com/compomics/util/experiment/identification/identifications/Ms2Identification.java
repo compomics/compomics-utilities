@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.identifications;
 
+import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.experiment.identification.IdentificationMethod;
 import com.compomics.util.experiment.identification.Identification;
 
@@ -19,7 +20,9 @@ public class Ms2Identification extends Identification {
     /**
      * constructor for MS2 identification
      */
-    public Ms2Identification() {
+    public Ms2Identification(String reference, ObjectsCache objectsCache) {
+        this.reference = reference;
+        this.objectsCache = objectsCache;
         this.methodUsed = IdentificationMethod.MS2_IDENTIFICATION;
     }
 }

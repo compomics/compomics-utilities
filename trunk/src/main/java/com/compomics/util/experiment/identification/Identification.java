@@ -937,8 +937,8 @@ public abstract class Identification extends ExperimentObject {
      */
     public void convert(ProgressDialogX progressDialog, String newDirectory, String newName, ObjectsCache objectsCache) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
-
-        identificationDB = new IdentificationDB(newDirectory, newName, true, objectsCache);
+        reference = newName;
+        establishConnection(newDirectory, true, objectsCache);
 
         File directory = new File(serializationDirectory);
         File[] files = directory.listFiles();
@@ -951,24 +951,6 @@ public abstract class Identification extends ExperimentObject {
             progressDialog.setMaxProgressValue(files.length + nParameters);
         }
 
-        for (String matchKey : urParameters.keySet()) {
-            MatchType matchType = getMatchType(matchKey);
-            for (UrParameter urParameter : urParameters.get(matchKey).values()) {
-                if (matchType == MatchType.Protein) {
-                    addProteinMatchParameter(matchKey, urParameter);
-                } else if (matchType == MatchType.Peptide) {
-                    addPeptideMatchParameter(matchKey, urParameter);
-                } else if (matchType == MatchType.Spectrum) {
-                    addSpectrumMatchParameter(matchKey, urParameter);
-                }
-            }
-            if (progressDialog != null) {
-                progressDialog.increaseProgressValue();
-            }
-            if (progressDialog.isRunCanceled()) {
-                break;
-            }
-        }
         for (File file : files) {
             if (file.getName().endsWith(EXTENTION)) {
                 FileInputStream fis = new FileInputStream(file);
@@ -996,11 +978,28 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
+        for (String matchKey : urParameters.keySet()) {
+            MatchType matchType = getMatchType(matchKey);
+            for (UrParameter urParameter : urParameters.get(matchKey).values()) {
+                if (matchType == MatchType.Protein) {
+                    addProteinMatchParameter(matchKey, urParameter);
+                } else if (matchType == MatchType.Peptide) {
+                    addPeptideMatchParameter(matchKey, urParameter);
+                } else if (matchType == MatchType.Spectrum) {
+                    addSpectrumMatchParameter(matchKey, urParameter);
+                }
+            }
+            if (progressDialog != null) {
+                progressDialog.increaseProgressValue();
+            }
+            if (progressDialog.isRunCanceled()) {
+                break;
+            }
+        }
         if (progressDialog != null) {
             progressDialog.setIndeterminate(true);
         }
         Util.deleteDir(directory);
-        setDirectory(newDirectory, false);
     }
 
     /**

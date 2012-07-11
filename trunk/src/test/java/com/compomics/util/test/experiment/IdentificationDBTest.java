@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 import java.io.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import junit.framework.Assert;
 
@@ -22,8 +23,7 @@ import junit.framework.Assert;
  */
 public class IdentificationDBTest {
 
-    public void testDB() {
-        try {
+    public void testDB() throws SQLException, IOException, ClassNotFoundException {
 
             String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
             path = path.substring(1, path.indexOf("/target/"));
@@ -76,8 +76,5 @@ public class IdentificationDBTest {
             File dbFolder = new File(path);
             Util.deleteDir(dbFolder);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

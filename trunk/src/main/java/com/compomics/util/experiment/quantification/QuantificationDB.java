@@ -108,9 +108,9 @@ public class QuantificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean spectrumMatchInDB(String spectrumKey) throws SQLException {
+    public boolean spectrumMatchLoaded(String spectrumKey) throws SQLException {
         String tableName = getSpectrumMatchTable(spectrumKey);
-        return objectsDB.inDB(tableName, spectrumKey);
+        return objectsDB.inDB(tableName, spectrumKey, true);
     }
 
     /**
@@ -122,8 +122,8 @@ public class QuantificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean peptideMatchInDB(String peptideKey) throws SQLException {
-        return objectsDB.inDB(peptideTableName, peptideKey);
+    public boolean peptideMatchLoaded(String peptideKey) throws SQLException {
+        return objectsDB.inDB(peptideTableName, peptideKey, true);
     }
 
     /**
@@ -135,8 +135,8 @@ public class QuantificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean proteinMatchInDB(String proteinKey) throws SQLException {
-        return objectsDB.inDB(proteinTableName, proteinKey);
+    public boolean proteinMatchLoaded(String proteinKey) throws SQLException {
+        return objectsDB.inDB(proteinTableName, proteinKey, true);
     }
 
     /**
@@ -324,7 +324,7 @@ public class QuantificationDB implements Serializable {
             objectsDB.addTable(tableName, matchSize);
             psmTables.add(tableName);
         }
-        if (spectrumMatchInDB(key)) {
+        if (spectrumMatchLoaded(key)) {
             updateMatch(spectrumMatch);
         } else {
             objectsDB.insertObject(tableName, key, spectrumMatch, true);
@@ -357,7 +357,7 @@ public class QuantificationDB implements Serializable {
      * writing the object
      */
     public void addPeptideMatch(PeptideQuantification peptideMatch) throws SQLException, IOException {
-        if (peptideMatchInDB(peptideMatch.getKey())) {
+        if (peptideMatchLoaded(peptideMatch.getKey())) {
             updatePeptideMatch(peptideMatch);
         } else {
             objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch, true);
@@ -390,7 +390,7 @@ public class QuantificationDB implements Serializable {
      * writing the object
      */
     public void addProteinMatch(ProteinQuantification proteinMatch) throws SQLException, IOException {
-        if (proteinMatchInDB(proteinMatch.getKey())) {
+        if (proteinMatchLoaded(proteinMatch.getKey())) {
             updateProteinMatch(proteinMatch);
         } else {
             objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch, true);

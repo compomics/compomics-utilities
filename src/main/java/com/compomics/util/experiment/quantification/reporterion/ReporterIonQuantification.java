@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.quantification.Quantification;
 import com.compomics.util.experiment.biology.Sample;
 
@@ -76,5 +77,17 @@ public class ReporterIonQuantification extends Quantification {
      */
     public void setMethod(ReporterMethod reporterMethod) {
         this.reporterMethod = reporterMethod;
+    }
+
+    /**
+     * Returns the default reference for an identification
+     *
+     * @param experimentReference the experiment reference
+     * @param sampleReference the sample reference
+     * @param replicateNumber the replicate number
+     * @return the default reference
+     */
+    public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
+        return Util.removeForbiddenCharacters(experimentReference + "_" + sampleReference + "_" + replicateNumber + "_reporterQuant");
     }
 }

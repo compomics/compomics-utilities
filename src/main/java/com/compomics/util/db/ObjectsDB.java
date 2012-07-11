@@ -60,6 +60,10 @@ public class ObjectsDB implements Serializable {
      * @return the database name
      */
     public String getName() {
+        if (dbName == null) {
+            // backward compatibility check
+            dbName = "old_idDB";
+        }
         return dbName;
     }
 

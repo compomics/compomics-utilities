@@ -357,6 +357,7 @@ public class ObjectsCache implements Serializable {
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size());
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
         }
         ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
         for (String entryKey : toRemove) {

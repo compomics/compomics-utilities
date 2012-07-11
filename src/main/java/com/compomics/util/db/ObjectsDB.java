@@ -53,25 +53,28 @@ public class ObjectsDB implements Serializable {
         objectsCache.addDb(this);
         establishConnection(folder, deleteOldDatabase);
     }
-    
+
     /**
      * Returns the database name
+     *
      * @return the database name
      */
     public String getName() {
         return dbName;
     }
-    
+
     /**
      * Returns the cache used by this database
+     *
      * @return the cache used by this database
      */
     public ObjectsCache getObjectsCache() {
         return objectsCache;
     }
-    
+
     /**
      * Sets the object cache to be used by this database
+     *
      * @param objectCache the object cache to be used by this database
      */
     public void setObjectCache(ObjectsCache objectCache) {
@@ -109,7 +112,8 @@ public class ObjectsDB implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store
-     * @param inCache boolean indicating whether the method shall try to put the object in cache or not
+     * @param inCache boolean indicating whether the method shall try to put the
+     * object in cache or not
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
@@ -119,14 +123,14 @@ public class ObjectsDB implements Serializable {
         if (inCache) {
             objectsCache.addObject(dbName, tableName, objectKey, object);
         } else {
-        PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-        ps.setString(1, objectKey);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(object);
-        oos.close();
-        ps.setBytes(2, bos.toByteArray());
-        ps.executeUpdate();
+            PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
+            ps.setString(1, objectKey);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(object);
+            oos.close();
+            ps.setBytes(2, bos.toByteArray());
+            ps.executeUpdate();
         }
     }
 
@@ -148,11 +152,11 @@ public class ObjectsDB implements Serializable {
     public Object retrieveObject(String tableName, String objectKey) throws SQLException, IOException, ClassNotFoundException {
 
         Object object = objectsCache.getObject(dbName, tableName, objectKey);
-        
+
         if (object != null) {
             return object;
         }
-        
+
         long start = System.currentTimeMillis();
 
         Statement stmt = dbConnection.createStatement();
@@ -168,38 +172,38 @@ public class ObjectsDB implements Serializable {
             in.close();
             results.close();
             stmt.close();
-            
-if (debug) {
-            long loaded = System.currentTimeMillis();
 
-            File newMatch = new File(debugFolder, "debugMatch");
-            FileOutputStream fos = new FileOutputStream(newMatch);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(object);
-            oos.close();
-            bos.close();
-            fos.close();
+            if (debug) {
+                long loaded = System.currentTimeMillis();
 
-            long written = System.currentTimeMillis();
+                File newMatch = new File(debugFolder, "debugMatch");
+                FileOutputStream fos = new FileOutputStream(newMatch);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                oos.writeObject(object);
+                oos.close();
+                bos.close();
+                fos.close();
 
-            FileInputStream fis = new FileInputStream(newMatch);
-            bis = new BufferedInputStream(fis);
-            in = new ObjectInputStream(bis);
-            Object match = in.readObject();
-            fis.close();
-            bis.close();
-            in.close();
-            long read = System.currentTimeMillis();
+                long written = System.currentTimeMillis();
 
-            long size = newMatch.length();
+                FileInputStream fis = new FileInputStream(newMatch);
+                bis = new BufferedInputStream(fis);
+                in = new ObjectInputStream(bis);
+                Object match = in.readObject();
+                fis.close();
+                bis.close();
+                in.close();
+                long read = System.currentTimeMillis();
 
-            long queryTime = loaded-start;
-            long serializationTime = written - loaded;
-            long deserializationTime = read - written;
-            
-            debugWriter.write(tableName +"\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
-}
+                long size = newMatch.length();
+
+                long queryTime = loaded - start;
+                long serializationTime = written - loaded;
+                long deserializationTime = read - written;
+
+                debugWriter.write(tableName + "\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
+            }
 
             return object;
         }
@@ -214,18 +218,21 @@ if (debug) {
      *
      * @param tableName the table name
      * @param objectKey the object key
+     * @param cache a boolean indicating whether the cache should be searched as
+     * well
      * @return a boolean indicating whether an object is loaded in the given
      * table
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean inDB(String tableName, String objectKey) throws SQLException {
-        
-        Object object = objectsCache.getObject(dbName, tableName, objectKey);
-        if (object != null) {
-            return true;
+    public boolean inDB(String tableName, String objectKey, boolean cache) throws SQLException {
+
+        if (cache) {
+            Object object = objectsCache.getObject(dbName, tableName, objectKey);
+            if (object != null) {
+                return true;
+            }
         }
-        
         Statement stmt = dbConnection.createStatement();
         ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'"); // derby
 
@@ -267,31 +274,33 @@ if (debug) {
     }
 
     /**
-     * Updates an object in the cache or in the tables if not in cache or if cache is wrong.
+     * Updates an object in the cache or in the tables if not in cache or if
+     * cache is wrong.
      *
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store
-     * @param cache a boolean indicating whether the method should look in the cache
+     * @param cache a boolean indicating whether the method should look in the
+     * cache
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
      */
     public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException {
-        
+
         boolean cacheUpdated = false;
         if (cache) {
             cacheUpdated = objectsCache.updateObject(dbName, tableName, objectKey, object);
         }
         if (!cacheUpdated) {
-        PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'"); // derby
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(object);
-        oos.close();
-        ps.setBytes(1, bos.toByteArray());
-        ps.executeUpdate();
+            PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'"); // derby
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(object);
+            oos.close();
+            ps.setBytes(1, bos.toByteArray());
+            ps.executeUpdate();
         }
     }
 
@@ -317,13 +326,13 @@ if (debug) {
                 // ignore, normal derby shut down always results in an exception thrown
             }
         }
-        
+
         if (debug) {
-        try {
-        debugWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                debugWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         dbConnection = null;
@@ -359,13 +368,13 @@ if (debug) {
 
         // debug test speed
         if (debug) {
-        try {
-            debugFolder = new File(aDbFolder);
-            debugWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
-            debugWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                debugFolder = new File(aDbFolder);
+                debugWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
+                debugWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -380,9 +389,9 @@ if (debug) {
         tableName = tableName.replace("|", "_");
         tableName = tableName.replace("-", "_");
         tableName = tableName.replace("=", "_");
-        
+
         // @TODO: seems like everything but numbers and letters ought to be replaced??? (couldn't find for derby but from another db: alphanumeric characters and the special characters $, _, and #)
-        
+
         if (longKeys.contains(tableName)) {
             tableName = longKeys.indexOf(tableName) + "";
         }

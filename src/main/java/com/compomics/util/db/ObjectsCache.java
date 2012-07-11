@@ -273,7 +273,7 @@ public class ObjectsCache implements Serializable {
                 if (objectsDB == null) {
                     throw new IllegalStateException("Database " + dbName + " not loaded in cache");
                 }
-                if (objectsDB.inDB(tableName, objectKey)) {
+                if (objectsDB.inDB(tableName, objectKey, false)) {
                     objectsDB.updateObject(tableName, objectKey, entry.getObject(), false); //@TODO: this makes two queries, we should get rid of it
                 } else {
                     objectsDB.insertObject(tableName, objectKey, entry.getObject(), false);
@@ -358,7 +358,8 @@ public class ObjectsCache implements Serializable {
             waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size());
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
         }
-        for (String entryKey : loadedObjectsKeys) {
+        ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
+        for (String entryKey : toRemove) {
             saveObject(entryKey);
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressValue();

@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.SQLException;
@@ -67,9 +68,9 @@ public abstract class Identification extends ExperimentObject {
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
      * Map of long keys (>100 characters) which will be referenced by their
-     * index for file creation/database storage. 
-     * @deprecated use the database instead
-     * @TODO implement this for db keys
+     * index for file creation/database storage.
+     *
+     * @deprecated use the database instead @TODO implement this for db keys
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
@@ -401,12 +402,12 @@ public abstract class Identification extends ExperimentObject {
         spectrumIdentification.remove(matchKey);
         peptideIdentification.remove(matchKey);
 
-            if (isDB) {
-                identificationDB.removeMatch(matchKey);
-            } else {
-                File matchFile = new File(serializationDirectory, getFileName(matchKey));
-                matchFile.delete();
-            }
+        if (isDB) {
+            identificationDB.removeMatch(matchKey);
+        } else {
+            File matchFile = new File(serializationDirectory, getFileName(matchKey));
+            matchFile.delete();
+        }
     }
 
     /**
@@ -420,12 +421,12 @@ public abstract class Identification extends ExperimentObject {
     public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException {
 
         spectrumIdentification.remove(matchKey);
-            if (isDB) {
-                identificationDB.removeSpectrumMatch(matchKey);
-            } else {
-                File matchFile = new File(serializationDirectory, getFileName(matchKey));
-                matchFile.delete();
-            }
+        if (isDB) {
+            identificationDB.removeSpectrumMatch(matchKey);
+        } else {
+            File matchFile = new File(serializationDirectory, getFileName(matchKey));
+            matchFile.delete();
+        }
     }
 
     /**
@@ -439,12 +440,12 @@ public abstract class Identification extends ExperimentObject {
     public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException {
 
         peptideIdentification.remove(matchKey);
-            if (isDB) {
-                identificationDB.removePeptideMatch(matchKey);
-            } else {
-                File matchFile = new File(serializationDirectory, getFileName(matchKey));
-                matchFile.delete();
-            }
+        if (isDB) {
+            identificationDB.removePeptideMatch(matchKey);
+        } else {
+            File matchFile = new File(serializationDirectory, getFileName(matchKey));
+            matchFile.delete();
+        }
     }
 
     /**
@@ -473,12 +474,12 @@ public abstract class Identification extends ExperimentObject {
 
         proteinIdentification.remove(matchKey);
 
-            if (isDB) {
-                identificationDB.removeProteinMatch(matchKey);
-            } else {
-                File matchFile = new File(serializationDirectory, getFileName(matchKey));
-                matchFile.delete();
-            }
+        if (isDB) {
+            identificationDB.removeProteinMatch(matchKey);
+        } else {
+            File matchFile = new File(serializationDirectory, getFileName(matchKey));
+            matchFile.delete();
+        }
     }
 
     /**
@@ -654,6 +655,9 @@ public abstract class Identification extends ExperimentObject {
         String spectrumKey = newMatch.getKey();
         if (spectrumIdentification.contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey);
+            if (oldMatch == null) {
+                throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
+            }
             for (int searchEngine : newMatch.getAdvocates()) {
                 oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine));
             }
@@ -678,22 +682,26 @@ public abstract class Identification extends ExperimentObject {
      * match at this point. This operation will be very slow if the cache is
      * already full.
      *
-     * @param progressBar the progress bar
+     * @param waitingHandler the waiting handler displaying the progress. Can be
+     * null. The progress will be displayed as secondary.
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void buildPeptidesAndProteins(JProgressBar progressBar) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-        if (progressBar != null) {
-            progressBar.setValue(0);
-            progressBar.setMaximum(getSpectrumIdentification().size());
+    public void buildPeptidesAndProteins(WaitingHandler waitingHandler) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, Exception {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressValue(getSpectrumIdentification().size());
+            waitingHandler.setSecondaryProgressValue(0);
         }
-        int cpt = 0;
         for (String spectrumMatchKey : getSpectrumIdentification()) {
             buildPeptidesAndProteins(spectrumMatchKey);
-            if (progressBar != null) {
-                progressBar.setValue(++cpt);
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
             }
         }
     }
@@ -713,12 +721,18 @@ public abstract class Identification extends ExperimentObject {
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
 
         SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
+        if (spectrumMatch == null) {
+            throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
+        }
         Peptide peptide = spectrumMatch.getBestAssumption().getPeptide();
         String peptideKey = peptide.getKey();
         PeptideMatch peptideMatch;
 
         if (peptideIdentification.contains(peptideKey)) {
             peptideMatch = getPeptideMatch(peptideKey);
+            if (peptideMatch == null) {
+                throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
+            }
             peptideMatch.addSpectrumMatch(spectrumMatchKey);
             identificationDB.updatePeptideMatch(peptideMatch);
         } else {
@@ -739,6 +753,9 @@ public abstract class Identification extends ExperimentObject {
 
         if (proteinIdentification.contains(proteinKey)) {
             ProteinMatch proteinMatch = getProteinMatch(proteinKey);
+            if (proteinMatch == null) {
+                throw new IllegalArgumentException("Protein match " + proteinKey + " not found.");
+            }
             if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
                 proteinMatch.addPeptideMatch(peptideKey);
                 identificationDB.updateProteinMatch(proteinMatch);
@@ -920,7 +937,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void convert(ProgressDialogX progressDialog, String newDirectory, String newName, ObjectsCache objectsCache) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
-        
+
         identificationDB = new IdentificationDB(newDirectory, newName, true, objectsCache);
 
         File directory = new File(serializationDirectory);
@@ -962,21 +979,21 @@ public abstract class Identification extends ExperimentObject {
                 bis.close();
                 in.close();
                 file.delete();
-            try {
-                identificationDB.addMatch(match);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Error while writing match " + match.getKey() + " in the database.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Error while writing match " + match.getKey() + " in the database.");
-            }
+                try {
+                    identificationDB.addMatch(match);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IOException("Error while writing match " + match.getKey() + " in the database.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new SQLException("Error while writing match " + match.getKey() + " in the database.");
+                }
             }
             if (progressDialog != null) {
                 progressDialog.increaseProgressValue();
-            if (progressDialog.isRunCanceled()) {
-                break;
-            }
+                if (progressDialog.isRunCanceled()) {
+                    break;
+                }
             }
         }
         if (progressDialog != null) {
@@ -985,9 +1002,10 @@ public abstract class Identification extends ExperimentObject {
         Util.deleteDir(directory);
         setDirectory(newDirectory, false);
     }
-    
+
     /**
      * Returns the default reference for an identification
+     *
      * @param experimentReference the experiment reference
      * @param sampleReference the sample reference
      * @param replicateNumber the replicate number

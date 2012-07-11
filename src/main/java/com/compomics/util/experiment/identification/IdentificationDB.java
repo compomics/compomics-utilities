@@ -115,9 +115,9 @@ public class IdentificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean spectrumMatchInDB(String spectrumKey) throws SQLException {
+    public boolean spectrumMatchLoaded(String spectrumKey) throws SQLException {
         String tableName = getSpectrumMatchTable(spectrumKey);
-        return objectsDB.inDB(tableName, spectrumKey);
+        return objectsDB.inDB(tableName, spectrumKey, true);
     }
 
     /**
@@ -129,8 +129,8 @@ public class IdentificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean peptideMatchInDB(String peptideKey) throws SQLException {
-        return objectsDB.inDB(peptideTableName, peptideKey);
+    public boolean peptideMatchLoaded(String peptideKey) throws SQLException {
+        return objectsDB.inDB(peptideTableName, peptideKey, true);
     }
 
     /**
@@ -142,8 +142,8 @@ public class IdentificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
-    public boolean proteinMatchInDB(String proteinKey) throws SQLException {
-        return objectsDB.inDB(proteinTableName, proteinKey);
+    public boolean proteinMatchLoaded(String proteinKey) throws SQLException {
+        return objectsDB.inDB(proteinTableName, proteinKey, true);
     }
 
     /**

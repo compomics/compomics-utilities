@@ -20,6 +20,23 @@ public class Util {
     public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
+     * Removes the forbidden characters from a string
+     * @param string the string of interest
+     * @return a version without forbidden characters
+     */
+    public static String removeForbiddenCharacters(String string) {
+        String result = string;
+        for (String fc : forbiddenCharacters) {
+            String[] split = string.split(fc);
+            result = "";
+            for (String splitPart : split) {
+                result += splitPart;
+            }
+        }
+        return result;
+    }
+    
+    /**
      * Indicates whether a string contains characters forbidden in file names.
      *
      * @param string the string of interest

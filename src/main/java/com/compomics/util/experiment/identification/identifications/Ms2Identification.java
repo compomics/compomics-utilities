@@ -20,9 +20,8 @@ public class Ms2Identification extends Identification {
     /**
      * constructor for MS2 identification
      */
-    public Ms2Identification(String reference, ObjectsCache objectsCache) {
+    public Ms2Identification(String reference) {
         this.reference = reference;
-        this.objectsCache = objectsCache;
         this.methodUsed = IdentificationMethod.MS2_IDENTIFICATION;
     }
 }

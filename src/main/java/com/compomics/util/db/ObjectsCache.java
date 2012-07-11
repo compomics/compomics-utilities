@@ -6,6 +6,7 @@ package com.compomics.util.db;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,12 @@ import java.util.HashMap;
  *
  * @author Marc
  */
-public class ObjectsCache {
+public class ObjectsCache implements Serializable {
 
+    /**
+     * Serial number for backward compatibility
+     */
+        static final long serialVersionUID = 4677928212043321059L;
     /**
      * Map of the databases for which this cache should be used
      */
@@ -197,7 +202,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @return returns a boolean indicating that the entry was in cache and has been updated. False otherwise.
      */
-    public boolean setModified(String dbName, String tableName, String objectKey, Object object) {
+    public boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
         if (entry != null) {
             entry.setModified(true);
@@ -269,7 +274,7 @@ public class ObjectsCache {
                     throw new IllegalStateException("Database " + dbName + " not loaded in cache");
                 }
                 if (objectsDB.inDB(tableName, objectKey)) {
-                    objectsDB.updateObject(tableName, objectKey, entry.getObject());
+                    objectsDB.updateObject(tableName, objectKey, entry.getObject(), false); //@TODO: this makes two queries, we should get rid of it
                 } else {
                     objectsDB.insertObject(tableName, objectKey, entry.getObject(), false);
                 }

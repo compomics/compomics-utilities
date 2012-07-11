@@ -82,10 +82,6 @@ public abstract class Identification extends ExperimentObject {
      */
     private IdentificationDB identificationDB;
     /**
-     * The object cache
-     */
-    protected ObjectsCache objectsCache;
-    /**
      * The reference of the identification
      */
     protected String reference;
@@ -302,6 +298,51 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Updates a spectrum match in the database.
+     *
+     * @param spectrumMatch the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException {
+        if (isDB) {
+            identificationDB.updateSpectrumMatch(spectrumMatch);
+        }
+    }
+
+    /**
+     * Updates a peptide match in the database.
+     *
+     * @param peptideMatch the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
+        if (isDB) {
+            identificationDB.updatePeptideMatch(peptideMatch);
+        }
+    }
+
+    /**
+     * Updates a protein match in the database.
+     *
+     * @param proteinMatch the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
+        if (isDB) {
+            identificationDB.updateProteinMatch(proteinMatch);
+        }
+    }
+
+    /**
      * Returns the serialization directory.
      *
      * @return the serialization directory
@@ -325,7 +366,7 @@ public abstract class Identification extends ExperimentObject {
         this.serializationDirectory = serializationDirectory;
 
         if (isDB) {
-            identificationDB = new IdentificationDB(serializationDirectory, reference, deleteOldDatabase, objectsCache);
+            identificationDB = new IdentificationDB(serializationDirectory, reference, deleteOldDatabase, new ObjectsCache());
         }
     }
 
@@ -859,7 +900,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String dbFolder, boolean deleteOldDatabase) throws SQLException {
+    public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         identificationDB = new IdentificationDB(dbFolder, reference, deleteOldDatabase, objectsCache);
     }
 
@@ -877,10 +918,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
      */
-    public void convert(ProgressDialogX progressDialog, String newDirectory, String newName) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void convert(ProgressDialogX progressDialog, String newDirectory, String newName, ObjectsCache objectsCache) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
         
-        objectsCache = new ObjectsCache();
         identificationDB = new IdentificationDB(newDirectory, newName, true, objectsCache);
 
         File directory = new File(serializationDirectory);
@@ -944,5 +984,16 @@ public abstract class Identification extends ExperimentObject {
         }
         Util.deleteDir(directory);
         setDirectory(newDirectory, false);
+    }
+    
+    /**
+     * Returns the default reference for an identification
+     * @param experimentReference the experiment reference
+     * @param sampleReference the sample reference
+     * @param replicateNumber the replicate number
+     * @return the default reference
+     */
+    public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
+        return Util.removeForbiddenCharacters(experimentReference + "_" + sampleReference + "_" + replicateNumber + "_id");
     }
 }

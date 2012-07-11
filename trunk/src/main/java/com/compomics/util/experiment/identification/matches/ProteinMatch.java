@@ -12,10 +12,7 @@ import java.util.List;
 /**
  * This class models a protein match.
  * <p/>
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 8:59:02 AM
+ * Created by IntelliJ IDEA. User: Marc Date: Jun 18, 2010 Time: 8:59:02 AM
  */
 public class ProteinMatch extends IdentificationMatch {
 
@@ -64,7 +61,9 @@ public class ProteinMatch extends IdentificationMatch {
         ArrayList<String> parentProteins = peptide.getParentProteins();
         Collections.sort(parentProteins);
         for (String protein : parentProteins) {
-            theoreticProtein.add(protein);
+            if (!theoreticProtein.contains(protein)) {
+                theoreticProtein.add(protein);
+            }
         }
         mainMatch = parentProteins.get(0);
         peptideMatches.add(peptide.getKey());
@@ -72,7 +71,8 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Returns the accessions of the possible theoretic proteins
-     * @return  the accessions of the possible theoretic proteins
+     *
+     * @return the accessions of the possible theoretic proteins
      */
     public ArrayList<String> getTheoreticProteinsAccessions() {
         return theoreticProtein;
@@ -89,6 +89,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Returns the main match accession after protein inference
+     *
      * @return the main match accession after protein inference
      */
     public String getMainMatch() {
@@ -97,6 +98,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Sets the main protein accession after protein inference
+     *
      * @param mainMatch the main match
      */
     public void setMainMatch(String mainMatch) {
@@ -125,6 +127,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Returns the number of peptides found
+     *
      * @return the number of peptides found
      */
     public int getPeptideCount() {
@@ -146,9 +149,10 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Convenience method indicating whether a match is decoy based on the match key
-     * 
-     * @param key   the match key
+     * Convenience method indicating whether a match is decoy based on the match
+     * key
+     *
+     * @param key the match key
      * @return a boolean indicating whether a match is decoy
      */
     public static boolean isDecoy(String key) {
@@ -172,8 +176,9 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Convenience method which returns the protein key of a peptide
-     * @param peptide   the considered peptide
-     * @return          the protein match key
+     *
+     * @param peptide the considered peptide
+     * @return the protein match key
      */
     public static String getProteinMatchKey(Peptide peptide) {
         ArrayList<String> accessions = new ArrayList<String>();
@@ -191,8 +196,10 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the number of proteins for the match corresponding to the given key
-     * @param matchKey   the given key
+     * Returns the number of proteins for the match corresponding to the given
+     * key
+     *
+     * @param matchKey the given key
      * @return the number of proteins for this match
      */
     public static int getNProteins(String matchKey) {
@@ -209,11 +216,13 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns a boolean indicating whether a protein match contains another set of matches.
-     * 
+     * Returns a boolean indicating whether a protein match contains another set
+     * of matches.
+     *
      * @param sharedKey the key of the protein of interest
      * @param uniqueKey the key of the protein supposedly contained
-     * @return a boolean indicating whether a protein match contains another set of matches.
+     * @return a boolean indicating whether a protein match contains another set
+     * of matches.
      */
     public static boolean contains(String sharedKey, String uniqueKey) {
         if (sharedKey.equals(uniqueKey)) {
@@ -229,9 +238,12 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns a boolean indicating whether the protein match contains another set of theoretic proteins.
-     * @param proteinMatch  another protein match
-     * @return  a boolean indicating whether the protein match contains another set of theoretic proteins
+     * Returns a boolean indicating whether the protein match contains another
+     * set of theoretic proteins.
+     *
+     * @param proteinMatch another protein match
+     * @return a boolean indicating whether the protein match contains another
+     * set of theoretic proteins
      */
     public boolean contains(ProteinMatch proteinMatch) {
         if (getKey().equals(proteinMatch.getKey())) {
@@ -246,9 +258,12 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns a boolean indicating whether a protein was found in this protein match
-     * @param aProtein  the inspected protein
-     * @return a boolean indicating whether a protein was found in this protein match
+     * Returns a boolean indicating whether a protein was found in this protein
+     * match
+     *
+     * @param aProtein the inspected protein
+     * @return a boolean indicating whether a protein was found in this protein
+     * match
      */
     public boolean contains(String aProtein) {
         return theoreticProtein.contains(aProtein);
@@ -256,6 +271,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Returns a list of accessions from the given key
+     *
      * @param key the given key
      * @return the corresponding list of accessions
      */

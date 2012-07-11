@@ -37,6 +37,7 @@ public class ObjectsDB implements Serializable {
      */
     private BufferedWriter debugWriter;
     private File debugFolder;
+    private boolean debug = false;
 
     /**
      * Constructor.
@@ -75,6 +76,7 @@ public class ObjectsDB implements Serializable {
      */
     public void setObjectCache(ObjectsCache objectCache) {
         this.objectsCache = objectCache;
+        objectCache.addDb(this);
     }
 
     /**
@@ -117,7 +119,7 @@ public class ObjectsDB implements Serializable {
         if (inCache) {
             objectsCache.addObject(dbName, tableName, objectKey, object);
         } else {
-        PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)"); // derby
+        PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         ps.setString(1, objectKey);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -166,7 +168,8 @@ public class ObjectsDB implements Serializable {
             in.close();
             results.close();
             stmt.close();
-
+            
+if (debug) {
             long loaded = System.currentTimeMillis();
 
             File newMatch = new File(debugFolder, "debugMatch");
@@ -196,6 +199,7 @@ public class ObjectsDB implements Serializable {
             long deserializationTime = read - written;
             
             debugWriter.write(tableName +"\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
+}
 
             return object;
         }
@@ -216,6 +220,12 @@ public class ObjectsDB implements Serializable {
      * while interrogating the database
      */
     public boolean inDB(String tableName, String objectKey) throws SQLException {
+        
+        Object object = objectsCache.getObject(dbName, tableName, objectKey);
+        if (object != null) {
+            return true;
+        }
+        
         Statement stmt = dbConnection.createStatement();
         ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'"); // derby
 
@@ -234,6 +244,7 @@ public class ObjectsDB implements Serializable {
      * interrogating the database
      */
     public void deleteObject(String tableName, String objectKey) throws SQLException {
+        objectsCache.removeObject(dbName, tableName, objectKey);
         Statement stmt = dbConnection.createStatement();
         stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
         stmt.close();
@@ -241,7 +252,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Stores an object in the desired table.
+     * Updates an object in the cache or in the tables if not in cache.
      *
      * @param tableName the name of the table
      * @param objectKey the key of the object
@@ -252,15 +263,36 @@ public class ObjectsDB implements Serializable {
      * writing in the database
      */
     public void updateObject(String tableName, String objectKey, Object object) throws SQLException, IOException {
-        PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'"); // derby
+        updateObject(tableName, objectKey, object, true);
+    }
 
+    /**
+     * Updates an object in the cache or in the tables if not in cache or if cache is wrong.
+     *
+     * @param tableName the name of the table
+     * @param objectKey the key of the object
+     * @param object the object to store
+     * @param cache a boolean indicating whether the method should look in the cache
+     * @throws SQLException exception thrown whenever an error occurred while
+     * storing the object
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing in the database
+     */
+    public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException {
+        
+        boolean cacheUpdated = false;
+        if (cache) {
+            cacheUpdated = objectsCache.updateObject(dbName, tableName, objectKey, object);
+        }
+        if (!cacheUpdated) {
+        PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'"); // derby
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(object);
         oos.close();
-
         ps.setBytes(1, bos.toByteArray());
         ps.executeUpdate();
+        }
     }
 
     /**
@@ -286,10 +318,12 @@ public class ObjectsDB implements Serializable {
             }
         }
         
+        if (debug) {
         try {
         debugWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
         }
 
         dbConnection = null;
@@ -323,13 +357,15 @@ public class ObjectsDB implements Serializable {
         dbConnection = DriverManager.getConnection(url);
 
 
-        // debug
+        // debug test speed
+        if (debug) {
         try {
             debugFolder = new File(aDbFolder);
             debugWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
             debugWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
         } catch (Exception e) {
             e.printStackTrace();
+        }
         }
     }
 

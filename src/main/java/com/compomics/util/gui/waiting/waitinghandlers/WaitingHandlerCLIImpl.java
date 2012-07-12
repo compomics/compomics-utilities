@@ -3,9 +3,8 @@ package com.compomics.util.gui.waiting.waitinghandlers;
 import com.compomics.util.gui.waiting.WaitingHandler;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.util.Date;
 
 /**
  * This class is an implementation of the WaitingHandler interface to be used
@@ -144,9 +143,21 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * @param report the text to append
      */
     @Override
-    public void appendReport(String report) {
-        iReport = iReport + report;
-        out.append(report + "\n");
+    public void appendReport(String report, boolean includeDate, boolean addNewLine) {
+        
+        String tempReport = report;
+        
+        if (includeDate) {
+            Date date = new Date();
+            tempReport = date + " " + report;
+        }
+        
+        if (addNewLine) {
+            tempReport = tempReport + "\n";
+        }
+
+        iReport = iReport + tempReport;
+        out.append(tempReport);
     }
 
     /**

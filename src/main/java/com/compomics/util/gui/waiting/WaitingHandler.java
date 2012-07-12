@@ -78,13 +78,15 @@ public interface WaitingHandler {
      * Set the analysis as canceled.
      */
     public void setRunCanceled();
-
+    
     /**
      * Append text to the report.
      *
      * @param report the text to append
+     * @param includeDate if the date and time is to be added to the front of the text
+     * @param addNewLine add a new line after the text?
      */
-    public void appendReport(String report);
+    public void appendReport(String report, boolean includeDate, boolean addNewLine);
 
     /**
      * Append two tabs to the report. No new line.

@@ -364,10 +364,6 @@ public abstract class Identification extends ExperimentObject {
      */
     public void setDirectory(String serializationDirectory, boolean deleteOldDatabase) throws SQLException {
         this.serializationDirectory = serializationDirectory;
-
-        if (isDB) {
-            identificationDB = new IdentificationDB(serializationDirectory, reference, deleteOldDatabase, new ObjectsCache());
-        }
     }
 
     /**

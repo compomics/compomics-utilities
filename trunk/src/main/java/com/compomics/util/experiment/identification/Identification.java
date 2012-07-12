@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
-import javax.swing.JProgressBar;
 
 /**
  * This class contains identification results.
@@ -914,6 +913,7 @@ public abstract class Identification extends ExperimentObject {
      * @param dbFolder the absolute path to the folder where the database is
      * located
      * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectsCache 
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
@@ -926,6 +926,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param progressDialog a dialog to give progress feedback to the user
      * @param newDirectory the new directory where to store the data
+     * @param newName 
+     * @param objectsCache 
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      * @throws IOException exception thrown whenever an error occurred while

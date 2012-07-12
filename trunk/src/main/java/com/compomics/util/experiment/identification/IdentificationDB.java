@@ -88,12 +88,15 @@ public class IdentificationDB implements Serializable {
      * The database which will contain the objects.
      */
     private ObjectsDB objectsDB;
+
     /**
      * Constructor creating the database and the protein and protein parameters
      * tables.
      *
      * @param folder the folder where to put the database
+     * @param name
      * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectCache
      * @throws SQLException an exception thrown whenever an error occurred while
      * creating the database
      */
@@ -198,7 +201,7 @@ public class IdentificationDB implements Serializable {
      */
     public void updateMatch(IdentificationMatch match) throws SQLException, IOException {
         switch (match.getType()) {
-            case Spectrum: 
+            case Spectrum:
                 updateSpectrumMatch((SpectrumMatch) match);
                 return;
             case Peptide:
@@ -375,7 +378,7 @@ public class IdentificationDB implements Serializable {
      * writing the object
      */
     public void addPeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
-            objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch, true);
+        objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch, true);
     }
 
     /**
@@ -404,7 +407,7 @@ public class IdentificationDB implements Serializable {
      * writing the object
      */
     public void addProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
-            objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch, true);
+        objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch, true);
     }
 
     /**
@@ -417,7 +420,7 @@ public class IdentificationDB implements Serializable {
      * writing the object
      */
     public void addMatch(IdentificationMatch match) throws SQLException, IOException {
-        switch(match.getType()) {
+        switch (match.getType()) {
             case Spectrum:
                 addSpectrumMatch((SpectrumMatch) match);
                 return;

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.db;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
@@ -15,16 +11,16 @@ import java.util.HashMap;
  * An object cache can be combined to an ObjectDB to improve its performance. A
  * single cache can be used by different databases.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ObjectsCache implements Serializable {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
-        static final long serialVersionUID = 4677928212043321059L;
+    static final long serialVersionUID = 4677928212043321059L;
     /**
-     * Map of the databases for which this cache should be used
+     * Map of the databases for which this cache should be used.
      */
     private HashMap<String, ObjectsDB> databases = new HashMap<String, ObjectsDB>();
     /**
@@ -38,30 +34,30 @@ public class ObjectsCache implements Serializable {
      */
     private boolean automatedMemoryManagement = true;
     /**
-     * Share of the memory to be used
+     * Share of the memory to be used.
      */
     private double memoryShare = 0.99;
     /**
-     * Map of the loaded matches. db -> table -> object key -> object
+     * Map of the loaded matches. db -> table -> object key -> object.
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
     /**
-     * Map of the loaded objects with the most used matches in the end. object
+     * Map of the loaded objects with the most used matches in the end. object.
      */
     private ArrayList<String> loadedObjectsKeys = new ArrayList<String>();
     /**
-     * Separator used to concatenate strings
+     * Separator used to concatenate strings.
      */
     private static final String cacheSeparator = "_ccs_";
 
     /**
-     * Constructor
+     * Constructor.
      */
     public ObjectsCache() {
     }
 
     /**
-     * Returns whether the cache is in automated memory management mode
+     * Returns whether the cache is in automated memory management mode.
      *
      * @return a boolean indicating whether the cache is in automated memory
      * management mode
@@ -71,7 +67,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Sets whether the cache is in automated memory management mode
+     * Sets whether the cache is in automated memory management mode.
      *
      * @param automatedMemoryManagement a boolean indicating whether the cache
      * is in automated memory management mode
@@ -81,7 +77,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Returns the cache size in number of objects
+     * Returns the cache size in number of objects.
      *
      * @return the cache size in number of objects
      */
@@ -90,7 +86,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Sets the cache size in number of objects
+     * Sets the cache size in number of objects.
      *
      * @param cacheSize the cache size in number of objects
      */
@@ -111,7 +107,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Sets the share of heap size which can be used before emptying the cache
+     * Sets the share of heap size which can be used before emptying the cache.
      *
      * @param memoryShare the share of heap size which can be used before
      * emptying the cache
@@ -121,7 +117,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Adds a database in the list of the databases handled by the cache
+     * Adds a database in the list of the databases handled by the cache.
      *
      * @param objectsDB the objects database
      */
@@ -137,7 +133,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Removes an object from the cache mappings
+     * Removes an object from the cache mappings.
      *
      * @param dbName the name of the database
      * @param tableName the name of the table
@@ -180,7 +176,7 @@ public class ObjectsCache implements Serializable {
             if (!memoryCheck()) {
                 // if we are encountering memory issues, put the most used object at the back so that they stay in cache
                 String entryKey = getCacheKey(dbName, tableName, objectKey);
-                for (int i = 0; i <= Math.min(100000, loadedObjectsKeys.size()/2); i++) {
+                for (int i = 0; i <= Math.min(100000, loadedObjectsKeys.size() / 2); i++) {
                     if (entryKey.equals(loadedObjectsKeys.get(i))) {
                         loadedObjectsKeys.remove(i);
                         loadedObjectsKeys.add(entryKey);
@@ -200,7 +196,9 @@ public class ObjectsCache implements Serializable {
      * @param dbName the name of the database
      * @param tableName the name of the table
      * @param objectKey the key of the object
-     * @return returns a boolean indicating that the entry was in cache and has been updated. False otherwise.
+     * @param object
+     * @return returns a boolean indicating that the entry was in cache and has
+     * been updated. False otherwise.
      */
     public boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
@@ -221,6 +219,8 @@ public class ObjectsCache implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store in the cache
+     * @throws IOException
+     * @throws SQLException
      */
     public void addObject(String dbName, String tableName, String objectKey, Object object) throws IOException, SQLException {
         if (dbName.contains(cacheSeparator)) {
@@ -253,7 +253,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Saves an entry in the database if modified
+     * Saves an entry in the database if modified.
      *
      * @param entryKey the key of the entry
      * @throws SQLException exception thrown whenever an error occurred while
@@ -373,7 +373,7 @@ public class ObjectsCache implements Serializable {
 
     /**
      * Returns the cache key which will index an object based on its db name,
-     * table name and object key
+     * table name and object key.
      *
      * @param dbName the DB name
      * @param tableName the table name
@@ -386,8 +386,8 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * returns the key components in an array: 0 -> DB name 1 -> table name 2 ->
-     * object key
+     * Returns the key components in an array: 0 -> DB name 1 -> table name 2 ->
+     * object key.
      *
      * @param cacheKey the key used by the cache
      * @return the components of the key
@@ -397,12 +397,12 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Class representing a cache entry
+     * Class representing a cache entry.
      */
     private class CacheEntry {
 
         /**
-         * The object of this entry
+         * The object of this entry.
          */
         private Object object;
         /**
@@ -413,7 +413,7 @@ public class ObjectsCache implements Serializable {
         private boolean modified;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param object the object of the entry
          * @param modified boolean indicating whether the entry is modified
@@ -425,7 +425,7 @@ public class ObjectsCache implements Serializable {
 
         /**
          * Indicates whether the object is modified when compared to the version
-         * in the database
+         * in the database.
          *
          * @return a boolean indicating whether the object is modified when
          * compared to the version in the database
@@ -436,7 +436,7 @@ public class ObjectsCache implements Serializable {
 
         /**
          * Sets whether the object is modified when compared to the version in
-         * the database
+         * the database.
          *
          * @param modified a boolean indicating whether the object is modified
          * when compared to the version in the database
@@ -446,16 +446,17 @@ public class ObjectsCache implements Serializable {
         }
 
         /**
-         * Returns the object of this entry
+         * Returns the object of this entry.
          *
          * @return the object contained by this entry
          */
         public Object getObject() {
             return object;
         }
-        
+
         /**
-         * Sets the object of this cache entry
+         * Sets the object of this cache entry.
+         *
          * @param object the object for this entry
          */
         public void setObject(Object object) {

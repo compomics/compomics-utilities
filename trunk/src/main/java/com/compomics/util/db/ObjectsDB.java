@@ -176,6 +176,8 @@ public class ObjectsDB implements Serializable {
             in.close();
             results.close();
             stmt.close();
+            
+            objectsCache.addObject(dbName, tableName, objectKey, object);
 
             if (debug) {
                 long loaded = System.currentTimeMillis();

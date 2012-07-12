@@ -84,6 +84,11 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * feature.
      */
     private boolean shakeWhenFinished;
+    /**
+     * The name of the process we are waiting for, e.g., 'Import Data' or
+     * 'Search'.
+     */
+    private String processName;
 
     /**
      * Creates a new WaitingDialog.
@@ -93,10 +98,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param normalIcon the dialog/frame icon to use when done
      * @param shakeWhenFinished shake when completed, mainly a PeptideShaker
      * feature
+     * @param processName the name of the process we are waiting for, e.g.,
+     * 'Import Data' or 'Search'
      * @param modal
      */
-    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, boolean modal) {
-        this(waitingHandlerParent, normalIcon, waitingIcon, shakeWhenFinished, new ArrayList<String>(), modal);
+    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, String processName, boolean modal) {
+        this(waitingHandlerParent, normalIcon, waitingIcon, shakeWhenFinished, new ArrayList<String>(), processName, modal);
     }
 
     /**
@@ -107,10 +114,11 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param normalIcon the dialog/frame icon to use when done
      * @param shakeWhenFinished shake when completed, mainly a PeptideShaker
      * feature
+     * @param processName the name of the process we are waiting for
      * @param modal
      * @param tips the list of Tip of the day
      */
-    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, ArrayList<String> tips, boolean modal) {
+    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, ArrayList<String> tips, String processName, boolean modal) {
         super(waitingHandlerParent, modal);
         initComponents();
 
@@ -118,7 +126,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         this.waitingIcon = waitingIcon;
         this.normalIcon = normalIcon;
         this.shakeWhenFinished = shakeWhenFinished;
+        this.processName = processName;
 
+        setTitle(processName + " - Please Wait...");
 
         setSecondaryProgressDialogIndeterminate(true);
 
@@ -282,8 +292,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        backgroundPanel = new javax.swing.JPanel();
+        processProgressPanel = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         layeredPane = new javax.swing.JLayeredPane();
         reportAreaScrollPane = new javax.swing.JScrollPane();
@@ -316,10 +326,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
-        jPanel1.setBackground(new java.awt.Color(230, 230, 230));
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Import Progress"));
-        jPanel2.setOpaque(false);
+        processProgressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Progress"));
+        processProgressPanel.setOpaque(false);
 
         progressBar.setToolTipText("Total Progress");
         progressBar.setStringPainted(true);
@@ -434,24 +444,24 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         tempJProgressBar.setString("");
         secondaryProgressBarSplitPane.setLeftComponent(tempJProgressBar);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout processProgressPanelLayout = new javax.swing.GroupLayout(processProgressPanel);
+        processProgressPanel.setLayout(processProgressPanelLayout);
+        processProgressPanelLayout.setHorizontalGroup(
+            processProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processProgressPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(processProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(layeredPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 842, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(processProgressPanelLayout.createSequentialGroup()
                         .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(secondaryProgressBarSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+        processProgressPanelLayout.setVerticalGroup(
+            processProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(processProgressPanelLayout.createSequentialGroup()
+                .addGroup(processProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(secondaryProgressBarSplitPane)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -491,7 +501,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
-        closeDialogWhenImportCompletesCheckBox.setText("Close this dialog when import is completed.");
+        closeDialogWhenImportCompletesCheckBox.setText("Close this dialog when the process is completed.");
         closeDialogWhenImportCompletesCheckBox.setIconTextGap(10);
         closeDialogWhenImportCompletesCheckBox.setOpaque(false);
         closeDialogWhenImportCompletesCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -500,15 +510,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(processProgressPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(saveReportLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
@@ -519,13 +529,13 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(processProgressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(saveReportLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(showTipOfTheDayCheckBox)
@@ -537,11 +547,11 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -752,13 +762,13 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         //peptideShakerGUI.saveUserPreferences();
     }//GEN-LAST:event_closeDialogWhenImportCompletesCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JCheckBox closeDialogWhenImportCompletesCheckBox;
     private javax.swing.JButton closeJButton;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JButton nextJButton;
     private javax.swing.JButton okButton;
+    private javax.swing.JPanel processProgressPanel;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextArea reportArea;
     private javax.swing.JScrollPane reportAreaScrollPane;
@@ -782,12 +792,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         progressBar.setIndeterminate(false);
         progressBar.setValue(progressBar.getMaximum());
         progressBar.setStringPainted(true);
-        this.setTitle("Importing Data - Completed!");
+        this.setTitle(processName + " - Completed!");
 
         secondaryProgressBarSplitPane.setDividerLocation(0);
         secondaryJProgressBar.setIndeterminate(false);
         secondaryJProgressBar.setValue(secondaryJProgressBar.getMaximum());
-        secondaryJProgressBar.setString("Import Completed!");
+        secondaryJProgressBar.setString(processName + " Completed!");
 
         // change the icon back to the default version
         if (normalIcon != null) {
@@ -798,7 +808,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         if (shakeWhenFinished) {
             startShake();
         }
-        
+
         if (closeDialogWhenImportCompletesCheckBox.isSelected()) {
             this.dispose();
         } else {
@@ -812,7 +822,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     public void setRunCanceled() {
         runCanceled = true;
         appendReportEndLine();
-        appendReport("Import canceled.");
+        appendReport(processName + " Canceled!", true, true);
         okButton.setText("OK");
         progressBar.setIndeterminate(false);
         progressBar.setValue(0);
@@ -821,9 +831,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         secondaryProgressBarSplitPane.setDividerLocation(0);
         secondaryJProgressBar.setIndeterminate(false);
         secondaryJProgressBar.setValue(0);
-        secondaryJProgressBar.setString("Import Canceled!");
+        secondaryJProgressBar.setString(processName + " Canceled!");
 
-        this.setTitle("Importing Data - Canceled");
+        this.setTitle(processName + " - Canceled");
 
         // change the icon back to the default version
         if (normalIcon != null) {
@@ -831,14 +841,20 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
     }
 
-    /**
-     * Append text to the report.
-     *
-     * @param report the text to append
-     */
-    public void appendReport(String report) {
-        Date date = new Date();
-        reportArea.append(date + tab + report + "\n");
+    @Override
+    public void appendReport(String report, boolean includeDate, boolean addNewLine) {
+
+        if (includeDate) {
+            Date date = new Date();
+            reportArea.append(date + tab + report);
+        } else {
+            reportArea.append(report);
+        }
+
+        if (addNewLine) {
+            reportArea.append("\n");
+        }
+
         reportArea.setCaretPosition(reportArea.getText().length());
     }
 
@@ -949,7 +965,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         dialog.setLocation(naturalLocation);
         dialog.repaint();
 
-        appendReport("Your peptides have been shaken!");
+        appendReport("Your peptides have been shaken!", true, true);
     }
 
     /**
@@ -1029,7 +1045,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     @Override
     public void setWaitingText(String text) {
-        // ignore, not implemented for this waiting handler
+        setTitle(text);
     }
 
     /**
@@ -1046,7 +1062,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * Returns the report.
      *
      * @param aFile The file to send the report to. Note that only the name is
-     * used her and included in the report. Can be null.
+     * used her and included in the report, the report is <b>not</b> sent to the
+     * file. Can be null.
      * @return the report
      */
     public String getReport(File aFile) {

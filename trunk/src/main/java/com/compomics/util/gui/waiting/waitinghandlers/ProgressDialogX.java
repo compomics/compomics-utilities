@@ -378,9 +378,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
             }
         }
     }
-
+    
     @Override
-    public void appendReport(String report) {
+    public void appendReport(String report, boolean includeDate, boolean addNewLine) {
         throw new UnsupportedOperationException("This waiting handler has no report.");
     }
 

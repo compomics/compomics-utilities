@@ -45,6 +45,7 @@ public class ObjectsDB implements Serializable {
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
      * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectsCache 
      * @throws SQLException
      */
     public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {

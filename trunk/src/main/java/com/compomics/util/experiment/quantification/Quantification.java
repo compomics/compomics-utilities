@@ -247,6 +247,9 @@ public abstract class Quantification extends ExperimentObject {
 
         for (String proteinKey : identification.getProteinIdentification()) {
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
+            if (proteinMatch == null) {
+                throw new IllegalArgumentException("Protein match " + proteinKey + " not found.");
+            }
             tempProteinQuantification = new ProteinQuantification(proteinKey, proteinMatch.getPeptideMatches());
             addProteinQuantification(tempProteinQuantification);
             if (waitingHandler != null) {

@@ -5,20 +5,18 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
  * single cache can be used by different databases.
+ * This ough not to be serialized.
  *
  * @author Marc Vaudel
  */
-public class ObjectsCache implements Serializable {
+public class ObjectsCache {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = 4677928212043321059L;
     /**
      * Map of the databases for which this cache should be used.
      */
@@ -26,7 +24,7 @@ public class ObjectsCache implements Serializable {
     /**
      * The cache size in number of matches.
      */
-    private int cacheSize;
+    private int cacheSize = 0;
     /**
      * boolean indicating whether the memory management should be done
      * automatically. If true, the cache size will be extended to reach 99% of
@@ -117,21 +115,18 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Adds a database in the list of the databases handled by the cache.
+     * Adds a database in the list of the databases handled by the cache. If a database with the same name is already present it will be silently replaced.
      *
      * @param objectsDB the objects database
      */
     public void addDb(ObjectsDB objectsDB) {
         String dbName = objectsDB.getName();
-        if (databases.containsKey(dbName)) {
-            throw new IllegalArgumentException("The cache already contains a Database named " + dbName);
-        }
         if (dbName.contains(cacheSeparator)) {
             throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
         }
         databases.put(dbName, objectsDB);
     }
-
+    
     /**
      * Removes an object from the cache mappings.
      *
@@ -253,7 +248,7 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Saves an entry in the database if modified.
+     * Saves an entry in the database if modified and clears it from the cache.
      *
      * @param entryKey the key of the entry
      * @throws SQLException exception thrown whenever an error occurred while
@@ -262,6 +257,21 @@ public class ObjectsCache implements Serializable {
      * writing the object
      */
     public void saveObject(String entryKey) throws IOException, SQLException {
+        saveObject(entryKey, true);
+    }
+
+    /**
+     * Saves an entry in the database if modified.
+     *
+     * @param entryKey the key of the entry
+     * @param clearEntry a boolean indicating whether the entry shall be cleared
+     * from the cache
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException {
         String[] splittedKey = getKeyComponents(entryKey);
         String dbName = splittedKey[0];
         String tableName = splittedKey[1];
@@ -286,13 +296,15 @@ public class ObjectsCache implements Serializable {
                 throw new SQLException("Error while writing match " + objectKey + " in table " + tableName + " in database" + dbName + ".");
             }
         }
-        loadedObjectsKeys.remove(0);
-        loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
-        if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
-            loadedObjectsMap.get(dbName).remove(tableName);
-        }
-        if (loadedObjectsMap.get(dbName).isEmpty()) {
-            loadedObjectsMap.remove(dbName);
+        if (clearEntry) {
+            loadedObjectsKeys.remove(entryKey);
+            loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
+            if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
+                loadedObjectsMap.get(dbName).remove(tableName);
+            }
+            if (loadedObjectsMap.get(dbName).isEmpty()) {
+                loadedObjectsMap.remove(dbName);
+            }
         }
     }
 
@@ -333,7 +345,7 @@ public class ObjectsCache implements Serializable {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
         }
         for (int i = 0; i < toRemove; i++) {
-            saveObject(loadedObjectsKeys.get(i));
+            saveObject(loadedObjectsKeys.get(0));
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressValue();
                 if (waitingHandler.isRunCanceled()) {
@@ -344,24 +356,26 @@ public class ObjectsCache implements Serializable {
     }
 
     /**
-     * Empties the cache by saving all hits.
+     * Saves the cache content in the database.
      *
      * @param waitingHandler a waiting handler on which the progress will be
-     * displayed as secondary progress. can be null
+     * @param emptyCache boolean indicating whether the cache content shall be
+     * cleared while saving displayed as secondary progress. can be null
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void emptyCache(WaitingHandler waitingHandler) throws IOException, SQLException {
+    public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size());
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
         }
+        // individual option
         ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
         for (String entryKey : toRemove) {
-            saveObject(entryKey);
+            saveObject(entryKey, emptyCache);
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressValue();
                 if (waitingHandler.isRunCanceled()) {
@@ -369,6 +383,18 @@ public class ObjectsCache implements Serializable {
                 }
             }
         }
+        // grouped option
+//        ObjectsDB objectsDB;
+//        for (String dbName : loadedObjectsMap.keySet()) {
+//                objectsDB = databases.get(dbName);
+//                for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
+//                    @TODO: put the content of the map in the tableName of objectsDB at once.
+//                }
+//        }
+//        if (emptyCache) {
+//            loadedObjectsMap.clear();
+//            loadedObjectsKeys.clear();
+//        }
     }
 
     /**

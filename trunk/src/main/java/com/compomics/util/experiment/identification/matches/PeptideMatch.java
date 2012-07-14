@@ -118,6 +118,8 @@ public class PeptideMatch extends IdentificationMatch {
     public void addSpectrumMatch(String spectrumMatchKey) {
         if (!spectrumMatches.contains(spectrumMatchKey)) {
             spectrumMatches.add(spectrumMatchKey);
+        } else {
+            throw new IllegalArgumentException("Trying to add two times the same spectrum match (" + spectrumMatchKey + ") to the same peptide match (" + getKey() + ").");
         }
     }
 

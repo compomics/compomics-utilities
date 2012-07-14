@@ -577,8 +577,8 @@ public class QuantificationDB implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String dbFolder, boolean deleteOldDatabase) throws SQLException {
-        objectsDB.establishConnection(dbFolder, deleteOldDatabase);
+    public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+        objectsDB.establishConnection(dbFolder, deleteOldDatabase, objectsCache);
     }
 
     /**

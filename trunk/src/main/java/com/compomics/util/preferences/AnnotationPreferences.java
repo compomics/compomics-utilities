@@ -177,7 +177,9 @@ public class AnnotationPreferences implements Serializable {
      * spectrum
      */
     public void addSelectedCharge(int selectedCharge) {
-        selectedCharges.add(selectedCharge);
+        if (!selectedCharges.contains(selectedCharge)) {
+            selectedCharges.add(selectedCharge);
+        }
     }
 
     /**

@@ -480,9 +480,8 @@ public class SpectrumAnnotator {
         setPeptide(peptide, precursorCharge);
         setMassTolerance(mzTolerance, isPpm);
 
-        if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION)) {
+        if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION) && !charges.contains(precursorCharge)) {
             charges.add(precursorCharge);
-            charges.add(precursorCharge+1); // Just by curiosity
         }
         
         for (Ion peptideIon : peptideIons) {

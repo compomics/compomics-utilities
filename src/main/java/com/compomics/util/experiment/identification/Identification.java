@@ -715,11 +715,11 @@ public abstract class Identification extends ExperimentObject {
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
 
-        SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
+        SpectrumMatch othermatch, spectrumMatch = getSpectrumMatch(spectrumMatchKey);
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
-        Peptide peptide = spectrumMatch.getBestAssumption().getPeptide();
+        Peptide otherPeptide, peptide = spectrumMatch.getBestAssumption().getPeptide();
         String peptideKey = peptide.getKey();
         PeptideMatch peptideMatch;
 
@@ -727,6 +727,24 @@ public abstract class Identification extends ExperimentObject {
             peptideMatch = getPeptideMatch(peptideKey);
             if (peptideMatch == null) {
                 throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
+            }
+            // Correct protein inference discrepancies between spectrum matches
+            for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
+                othermatch = identificationDB.getSpectrumMatch(otherMatchKey);
+                if (othermatch == null) {
+                throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
+                }
+                otherPeptide = othermatch.getBestAssumption().getPeptide();
+                for (String protein : otherPeptide.getParentProteins()) {
+                    if (!peptide.getParentProteins().contains(protein)) {
+                        peptide.getParentProteins().add(protein);
+                    }
+                }
+                for (String protein : peptide.getParentProteins()) {
+                    if (!otherPeptide.getParentProteins().contains(protein)) {
+                        otherPeptide.getParentProteins().add(protein);
+                    }
+                }
             }
             peptideMatch.addSpectrumMatch(spectrumMatchKey);
             identificationDB.updatePeptideMatch(peptideMatch);
@@ -757,6 +775,9 @@ public abstract class Identification extends ExperimentObject {
             }
         } else {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
+            if (!proteinMatch.getKey().equals(proteinKey)) {
+                throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + ".");
+            }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteins()) {
                 if (!proteinMap.containsKey(protein)) {
@@ -767,6 +788,9 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
             try {
+                if (proteinMatch.getKey().equals("P08514 Q8N6R0")) {
+            int debug = 1;
+        }
                 identificationDB.addProteinMatch(proteinMatch);
             } catch (IOException e) {
                 e.printStackTrace();

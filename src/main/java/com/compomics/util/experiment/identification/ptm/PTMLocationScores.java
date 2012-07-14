@@ -83,16 +83,19 @@ public class PTMLocationScores {
 
                 p = ((double) i + 1) / 100;
 
-                for (int pos = 0; pos < possibleSites.size(); pos++) {
+                for (int pos : possibleSites) {
                     tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-                    tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, possibleSites.get(pos) + 1));
+                    tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos + 1));
                     matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance, false);
                     n = matches.size();
                     P = 0;
                     for (int k = n; k <= N; k++) {
                         P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
                     }
-                    score = 10 * Math.log10(P);
+                    if (P<= Double.MIN_NORMAL) {
+                        P = Double.MIN_NORMAL;
+                    }
+                    score = -10 * Math.log10(P);
                     if (!positionToScoreMap.containsKey(pos)) {
                         positionToScoreMap.put(pos, new HashMap<Integer, Double>());
                     }
@@ -144,9 +147,9 @@ public class PTMLocationScores {
                     }
                     bestScore = peptideScore;
                     bestPosition = pos;
-                } else if (peptideScore >= secondScore) {
-                    secondScore = bestScore;
-                    secondPosition = bestPosition;
+                } else if (secondScore == null || peptideScore >= secondScore) {
+                    secondScore = peptideScore;
+                    secondPosition = pos;
                 }
             }
 

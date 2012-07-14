@@ -50,9 +50,8 @@ public class ObjectsDB implements Serializable {
      */
     public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         this.dbName = dbName;
-        this.objectsCache = objectsCache;
         objectsCache.addDb(this);
-        establishConnection(folder, deleteOldDatabase);
+        establishConnection(folder, deleteOldDatabase, objectsCache);
     }
 
     /**
@@ -319,6 +318,8 @@ public class ObjectsDB implements Serializable {
      */
     public void close() throws SQLException {
 
+        objectsCache = null;
+        
         if (dbConnection != null) {
             dbConnection.close();
         }
@@ -353,7 +354,8 @@ public class ObjectsDB implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
-    public void establishConnection(String aDbFolder, boolean deleteOldDatabase) throws SQLException {
+    public void establishConnection(String aDbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+                
         File dbFolder = new File(aDbFolder, dbName);
         String path = dbFolder.getAbsolutePath();
 
@@ -372,6 +374,7 @@ public class ObjectsDB implements Serializable {
         String url = "jdbc:derby:" + path + ";create=true";
         dbConnection = DriverManager.getConnection(url);
 
+        this.objectsCache = objectsCache;
 
         // debug test speed
         if (debug) {

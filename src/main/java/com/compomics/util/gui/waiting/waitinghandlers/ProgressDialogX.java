@@ -49,17 +49,14 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * The waitingHandlerParent frame.
      */
     private Frame waitingHandlerParentFrame;
-    /**
-     * The waitingHandlerParent dialog.
-     */
-    private JDialog waitingHandlerParentDialog;
+
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
      *
      * @param waitingHandlerParent
-     * @param waitingIcon the dialog/frame icon to use when waiting
-     * @param normalIcon the dialog/frame icon to use when done
+     * @param waitingIcon the frame icon to use when waiting
+     * @param normalIcon the frame icon to use when done
      * @param modal
      */
     public ProgressDialogX(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean modal) {
@@ -73,7 +70,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
         // change the icon to a "waiting version"
         if (waitingIcon != null) {
-            waitingHandlerParent.setIconImage(waitingIcon);
+            waitingHandlerParentFrame.setIconImage(waitingIcon);
         }
     }
 
@@ -81,11 +78,13 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * Opens a new ProgressDialog with a JDialog as a parent.
      *
      * @param waitingHandlerParent
-     * @param waitingIcon the dialog/frame icon to use when waiting
-     * @param normalIcon the dialog/frame icon to use when done
+     * @param waitingHandlerParentFrame the dialog's parent frame (needed to set
+     * the frame icons)
+     * @param waitingIcon the frame icon to use when waiting
+     * @param normalIcon the frame icon to use when done
      * @param modal
      */
-    public ProgressDialogX(JDialog waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean modal) {
+    public ProgressDialogX(JDialog waitingHandlerParent, Frame waitingHandlerParentFrame, Image normalIcon, Image waitingIcon, boolean modal) {
         super(waitingHandlerParent, modal);
         initComponents();
         setLocationRelativeTo(waitingHandlerParent);
@@ -93,10 +92,11 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
         this.waitingIcon = waitingIcon;
         this.normalIcon = normalIcon;
         this.waitingHandlerParentDialog = waitingHandlerParent;
+        this.waitingHandlerParentFrame = waitingHandlerParentFrame;
 
         // change the icon to a "waiting version"
         if (waitingIcon != null) {
-            waitingHandlerParent.setIconImage(waitingIcon);
+            waitingHandlerParentFrame.setIconImage(waitingIcon);
         }
     }
 
@@ -343,11 +343,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
         // change the icon back to the default version
         if (normalIcon != null) {
-            if (waitingHandlerParentFrame != null) {
-                waitingHandlerParentFrame.setIconImage(normalIcon);
-            } else if (waitingHandlerParentDialog != null) {
-                waitingHandlerParentDialog.setIconImage(normalIcon);
-            }
+            waitingHandlerParentFrame.setIconImage(normalIcon);
         }
 
         finished = true;
@@ -357,7 +353,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     @Override
     public void setRunCanceled() {
-        
+
         if (!finished) {
 
             if (!doNothingOnClose && !unstoppable) {
@@ -369,7 +365,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
                 int selection = JOptionPane.showConfirmDialog(this,
                         "Cancelling this process is not directly supported.\n"
                         + "Doing so may result in instability or errors.\n\n"
-                        + "Do you still want to cancel the process?", 
+                        + "Do you still want to cancel the process?",
                         "Cancel Process?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (selection == JOptionPane.YES_OPTION) {
@@ -378,7 +374,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
             }
         }
     }
-    
+
     @Override
     public void appendReport(String report, boolean includeDate, boolean addNewLine) {
         throw new UnsupportedOperationException("This waiting handler has no report.");

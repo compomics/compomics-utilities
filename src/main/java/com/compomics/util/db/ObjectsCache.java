@@ -1,17 +1,18 @@
 package com.compomics.util.db;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
+import java.io.ObjectOutputStream;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
- * single cache can be used by different databases.
- * This ough not to be serialized.
+ * single cache can be used by different databases. This ough not to be
+ * serialized.
  *
  * @author Marc Vaudel
  */
@@ -39,6 +40,10 @@ public class ObjectsCache {
      * Map of the loaded matches. db -> table -> object key -> object.
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
+    /**
+     * Map of the matches currently in the database. db -> table -> object keys.
+     */
+    private HashMap<String, HashMap<String, ArrayList<String>>> databaseObjectsMap = new HashMap<String, HashMap<String, ArrayList<String>>>();
     /**
      * Map of the loaded objects with the most used matches in the end. object.
      */
@@ -115,7 +120,9 @@ public class ObjectsCache {
     }
 
     /**
-     * Adds a database in the list of the databases handled by the cache. If a database with the same name is already present it will be silently replaced.
+     * Adds a database in the list of the databases handled by the cache. If a
+     * database with the same name is already present it will be silently
+     * replaced.
      *
      * @param objectsDB the objects database
      */
@@ -126,7 +133,7 @@ public class ObjectsCache {
         }
         databases.put(dbName, objectsDB);
     }
-    
+
     /**
      * Removes an object from the cache mappings.
      *
@@ -284,7 +291,7 @@ public class ObjectsCache {
                     throw new IllegalStateException("Database " + dbName + " not loaded in cache");
                 }
                 if (objectsDB.inDB(tableName, objectKey, false)) {
-                    objectsDB.updateObject(tableName, objectKey, entry.getObject(), false); //@TODO: this makes two queries, we should get rid of it
+                    objectsDB.updateObject(tableName, objectKey, entry.getObject(), false);
                 } else {
                     objectsDB.insertObject(tableName, objectKey, entry.getObject(), false);
                 }
@@ -318,11 +325,11 @@ public class ObjectsCache {
      */
     public void updateCache() throws IOException, SQLException {
         while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize || !memoryCheck()) {
-            
+
             // @TODO: wouldn't the code below be clearer..?
 //            while ((automatedMemoryManagement && !memoryCheck()) 
 //                || (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)) {
-            
+
             saveObject(loadedObjectsKeys.get(0));
             if (loadedObjectsKeys.isEmpty()) {
                 break;
@@ -372,33 +379,97 @@ public class ObjectsCache {
      */
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size());
+            waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size() + 1);
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
         }
-        // individual option
-        ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
-        for (String entryKey : toRemove) {
-            saveObject(entryKey, emptyCache);
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
-                if (waitingHandler.isRunCanceled()) {
-                    return;
-                }
-            }
-        }
-        // grouped option
-//        ObjectsDB objectsDB;
-//        for (String dbName : loadedObjectsMap.keySet()) {
-//                objectsDB = databases.get(dbName);
-//                for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
-//                    @TODO: put the content of the map in the tableName of objectsDB at once.
+
+
+
+//        // individual option
+//        ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
+//        for (String entryKey : toRemove) {
+//            saveObject(entryKey, emptyCache);
+//            if (waitingHandler != null) {
+//                waitingHandler.increaseSecondaryProgressValue();
+//                if (waitingHandler.isRunCanceled()) {
+//                    return;
 //                }
+//            }
 //        }
-//        if (emptyCache) {
-//            loadedObjectsMap.clear();
-//            loadedObjectsKeys.clear();
-//        }
+
+
+
+        // grouped option
+        for (String dbName : loadedObjectsMap.keySet()) {
+
+            ObjectsDB objectsDB = databases.get(dbName);
+
+            if (objectsDB == null) {
+                throw new IllegalStateException("Database " + dbName + " not loaded in cache");
+            }
+
+            for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
+
+                // @TODO: perhaps the queries should be moved to objectsDB?
+                PreparedStatement insertStatement = objectsDB.getDbConnection().prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)"); 
+                PreparedStatement updateStatement = objectsDB.getDbConnection().prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME=?");
+                
+                HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
+                objectsDB.getDbConnection().setAutoCommit(false);
+
+                int rowCounter = 0;
+
+                for (String objectKey : data.keySet()) {
+
+                    CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+
+                    if (entry.isModified()) {
+
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        ObjectOutputStream oos = new ObjectOutputStream(bos);
+                        oos.writeObject(entry.getObject());
+                        oos.close();
+
+                        if (objectsDB.inDB(tableName, objectKey, false)) {
+                            updateStatement.setString(2, objectKey);
+                            updateStatement.setBytes(1, bos.toByteArray());
+                            updateStatement.addBatch(); // @TODO: figure out why the update statements seem to be slower than the inserts...
+                        } else {
+                            insertStatement.setString(1, objectKey);
+                            insertStatement.setBytes(2, bos.toByteArray());
+                            insertStatement.addBatch();
+                            insertObjectInDatabaseMap(dbName, tableName, objectKey);
+                        }
+
+                        if ((rowCounter + 1) % 2000 == 0) { // @TODO: find the optimal batch size...
+                            updateStatement.executeBatch();
+                            insertStatement.executeBatch();
+                            objectsDB.getDbConnection().commit();
+                        }
+                    }
+
+                    waitingHandler.increaseSecondaryProgressValue();
+                }
+
+                // insert the remaining data
+                updateStatement.executeBatch();
+                insertStatement.executeBatch();
+                objectsDB.getDbConnection().commit();
+
+                // close the statements
+                updateStatement.close();
+                insertStatement.close();
+            }
+
+            waitingHandler.increaseSecondaryProgressValue();
+            objectsDB.getDbConnection().setAutoCommit(true);
+        }
+
+        if (emptyCache) {
+            loadedObjectsMap.clear();
+            loadedObjectsKeys.clear();
+        }
     }
 
     /**
@@ -424,6 +495,69 @@ public class ObjectsCache {
      */
     private String[] getKeyComponents(String cacheKey) {
         return cacheKey.split(cacheSeparator);
+    }
+
+    /**
+     * Inserts the object into the database map. This method is needed when
+     * using batch inserts which do not call the insert method directly.
+     *
+     * @param dbName the DB name
+     * @param tableName the name of the table
+     * @param objectKey the key of the object
+     * @throws SQLException exception thrown whenever an error occurred while
+     * storing the object
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing in the database
+     */
+    public void insertObjectInDatabaseMap(String dbName, String tableName, String objectKey) throws SQLException, IOException {
+
+        if (!databaseObjectsMap.containsKey(dbName)) {
+            databaseObjectsMap.put(dbName, new HashMap<String, ArrayList<String>>());
+        }
+        if (!databaseObjectsMap.get(dbName).containsKey(tableName)) {
+            databaseObjectsMap.get(dbName).put(tableName, new ArrayList<String>());
+        }
+
+        databaseObjectsMap.get(dbName).get(tableName).add(objectKey);
+    }
+
+    /**
+     * Removes the object in the database map.
+     *
+     * @param dbName the DB name
+     * @param tableName the name of the table
+     * @param objectKey the key of the object
+     * @throws SQLException exception thrown whenever an error occurred while
+     * storing the object
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing in the database
+     */
+    public void removeObjectInDatabaseMap(String dbName, String tableName, String objectKey) throws SQLException, IOException {
+        databaseObjectsMap.get(dbName).get(tableName).remove(objectKey);
+        if (databaseObjectsMap.get(dbName).get(tableName).isEmpty()) {
+            databaseObjectsMap.get(dbName).remove(tableName);
+        }
+        if (databaseObjectsMap.get(dbName).isEmpty()) {
+            databaseObjectsMap.remove(dbName);
+        }
+    }
+
+    /**
+     * Returns true of the given object key is in the database.
+     *
+     * @param dbName the DB name
+     * @param tableName the name of the table
+     * @param objectKey the key of the object
+     * @return
+     */
+    public boolean databaseContainsKey(String dbName, String tableName, String objectKey) {
+        if (databaseObjectsMap.containsKey(dbName)
+                && databaseObjectsMap.get(dbName).containsKey(tableName)
+                && databaseObjectsMap.get(dbName).get(tableName).contains(objectKey)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

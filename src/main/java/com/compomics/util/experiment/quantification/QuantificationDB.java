@@ -253,8 +253,9 @@ public class QuantificationDB implements Serializable {
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removeProteinMatch(String key) throws SQLException {
+    public void removeProteinMatch(String key) throws SQLException, IOException {
         objectsDB.deleteObject(proteinTableName, key);
         for (String proteinParameterTable : proteinParametersTables) {
             objectsDB.deleteObject(proteinParameterTable, key);
@@ -267,8 +268,9 @@ public class QuantificationDB implements Serializable {
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removePeptideMatch(String key) throws SQLException {
+    public void removePeptideMatch(String key) throws SQLException, IOException {
         objectsDB.deleteObject(peptideTableName, key);
         for (String peptideParameterTable : peptideParametersTables) {
             objectsDB.deleteObject(peptideParameterTable, key);
@@ -281,8 +283,9 @@ public class QuantificationDB implements Serializable {
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removeSpectrumMatch(String key) throws SQLException {
+    public void removeSpectrumMatch(String key) throws SQLException, IOException {
         for (String psmTable : psmTables) {
             objectsDB.deleteObject(psmTable, key);
         }

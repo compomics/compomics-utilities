@@ -375,8 +375,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException {
+    public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
@@ -412,8 +413,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException {
+    public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
         spectrumIdentification.remove(matchKey);
         if (isDB) {
@@ -431,8 +433,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException {
+    public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
         peptideIdentification.remove(matchKey);
         if (isDB) {
@@ -450,8 +453,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
+     * @throws IOException  
      */
-    public void removeProteinMatch(String matchKey) throws IllegalArgumentException, SQLException {
+    public void removeProteinMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
                 if (proteinMap.get(protein) == null) {

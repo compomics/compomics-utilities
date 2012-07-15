@@ -36,7 +36,13 @@ public class ObjectsDB implements Serializable {
      * The writer used to send the output to file.
      */
     private BufferedWriter debugWriter;
+    /**
+     * The debug folder.
+     */
     private File debugFolder;
+    /**
+     * Debug, true/false.
+     */
     private boolean debug = false;
 
     /**
@@ -45,13 +51,22 @@ public class ObjectsDB implements Serializable {
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache 
+     * @param objectsCache
      * @throws SQLException
      */
     public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         this.dbName = dbName;
         objectsCache.addDb(this);
         establishConnection(folder, deleteOldDatabase, objectsCache);
+    }
+
+    /**
+     * Returns the database connection.
+     *
+     * @return the database connection
+     */
+    public Connection getDbConnection() {
+        return dbConnection;
     }
 
     /**
@@ -135,6 +150,9 @@ public class ObjectsDB implements Serializable {
             oos.close();
             ps.setBytes(2, bos.toByteArray());
             ps.executeUpdate();
+
+            // update the database map
+            objectsCache.insertObjectInDatabaseMap(dbName, tableName, objectKey);
         }
     }
 
@@ -176,7 +194,7 @@ public class ObjectsDB implements Serializable {
             in.close();
             results.close();
             stmt.close();
-            
+
             objectsCache.addObject(dbName, tableName, objectKey, object);
 
             if (debug) {
@@ -239,13 +257,9 @@ public class ObjectsDB implements Serializable {
                 return true;
             }
         }
-        Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'"); // derby
 
-        boolean result = results.next();
-        results.close();
-        stmt.close();
-        return result;
+        // check the database map
+        return objectsCache.databaseContainsKey(dbName, tableName, objectKey);
     }
 
     /**
@@ -255,13 +269,25 @@ public class ObjectsDB implements Serializable {
      * @param objectKey the object key
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * interrogating the database
      */
-    public void deleteObject(String tableName, String objectKey) throws SQLException {
-        objectsCache.removeObject(dbName, tableName, objectKey);
-        Statement stmt = dbConnection.createStatement();
-        stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
-        stmt.close();
+    public void deleteObject(String tableName, String objectKey) throws SQLException, IOException {
 
+        // remove from the cache
+        objectsCache.removeObject(dbName, tableName, objectKey);
+
+        // delete from the database and the database map as well
+        if (objectsCache.databaseContainsKey(dbName, tableName, objectKey)) {
+
+            // delete from database
+            Statement stmt = dbConnection.createStatement();
+            stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
+            stmt.close();
+
+            // delete from database map
+            objectsCache.removeObjectInDatabaseMap(dbName, tableName, objectKey);
+        }
     }
 
     /**
@@ -296,11 +322,13 @@ public class ObjectsDB implements Serializable {
     public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException {
 
         boolean cacheUpdated = false;
+        
         if (cache) {
             cacheUpdated = objectsCache.updateObject(dbName, tableName, objectKey, object);
         }
+        
         if (!cacheUpdated) {
-            PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'"); // derby
+            PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
@@ -319,7 +347,7 @@ public class ObjectsDB implements Serializable {
     public void close() throws SQLException {
 
         objectsCache = null;
-        
+
         if (dbConnection != null) {
             dbConnection.close();
         }
@@ -351,11 +379,12 @@ public class ObjectsDB implements Serializable {
      *
      * @param aDbFolder the folder where the database is located
      * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectsCache
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
     public void establishConnection(String aDbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
-                
+
         File dbFolder = new File(aDbFolder, dbName);
         String path = dbFolder.getAbsolutePath();
 

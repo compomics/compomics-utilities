@@ -317,8 +317,12 @@ public class ObjectsCache {
      * writing the object
      */
     public void updateCache() throws IOException, SQLException {
-        while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize
-                || !memoryCheck()) {
+        while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize || !memoryCheck()) {
+            
+            // @TODO: wouldn't the code below be clearer..?
+//            while ((automatedMemoryManagement && !memoryCheck()) 
+//                || (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)) {
+            
             saveObject(loadedObjectsKeys.get(0));
             if (loadedObjectsKeys.isEmpty()) {
                 break;

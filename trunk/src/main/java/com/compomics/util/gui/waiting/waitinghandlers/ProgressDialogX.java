@@ -49,7 +49,10 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * The waitingHandlerParent frame.
      */
     private Frame waitingHandlerParentFrame;
-
+    /**
+     * The waitingHandlerParent dialog.
+     */
+    private JDialog waitingHandlerParentDialog;
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.

@@ -93,12 +93,12 @@ public class MSnSpectrum extends Spectrum {
      * @return the peak list as mgf bloc
      */
     public String asMgf() {
-        String result = "BEGIN IONS\n\n";
+        String result = "BEGIN IONS\n";
         result += "TITLE=" + spectrumTitle + "\n";
         result += "PEPMASS=" + precursor.getMz() + "\n";
         if (precursor.hasRTWindow()) {
             result += "RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n";
-        } else if (precursor.getRt()!=-1) {
+        } else if (precursor.getRt() != -1) {
             result += "RTINSECONDS=" + precursor.getRt() + "\n";
         }
         result += "CHARGE=";
@@ -111,7 +111,7 @@ public class MSnSpectrum extends Spectrum {
             }
             result += charge.toString();
         }
-        result += "\n\n";
+        result += "\n";
 
         // add the values to a tree map to get them sorted in mz    
         TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();
@@ -124,7 +124,7 @@ public class MSnSpectrum extends Spectrum {
             result += entry.getKey() + " " + entry.getValue() + "\n";
         }
 
-        result += "\nEND IONS\n\n\n";
+        result += "END IONS\n\n";
 
         return result;
     }
@@ -133,14 +133,15 @@ public class MSnSpectrum extends Spectrum {
      * Writes the spectrum in the mgf format using the given writer
      *
      * @param writer1 a buffered writer where the spectrum will be written
+     * @throws IOException
      */
     public void writeMgf(BufferedWriter writer1) throws IOException {
-        writer1.write("BEGIN IONS\n\n");
+        writer1.write("BEGIN IONS\n");
         writer1.write("TITLE=" + spectrumTitle + "\n");
         writer1.write("PEPMASS=" + precursor.getMz() + "\n");
         if (precursor.hasRTWindow()) {
             writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n");
-        } else if (precursor.getRt()!=-1) {
+        } else if (precursor.getRt() != -1) {
             writer1.write("RTINSECONDS=" + precursor.getRt() + "\n");
         }
         writer1.write("CHARGE=");
@@ -153,13 +154,13 @@ public class MSnSpectrum extends Spectrum {
             }
             writer1.write(charge.toString());
         }
-        writer1.write("\n\n");
+        writer1.write("\n");
 
         ArrayList<Double> mzArray = new ArrayList<Double>(peakList.keySet());
         Collections.sort(mzArray);
         for (Double mz : mzArray) {
             writer1.write(mz + " " + peakList.get(mz).intensity + "\n");
         }
-        writer1.write("\nEND IONS\n\n\n");
+        writer1.write("END IONS\n\n");
     }
 }

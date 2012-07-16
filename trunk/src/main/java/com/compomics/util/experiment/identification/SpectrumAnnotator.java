@@ -435,6 +435,7 @@ public class SpectrumAnnotator {
     public boolean chargeValidated(Ion theoreticIon, int charge, int precursorCharge) {
         switch (theoreticIon.getType()) {
             case IMMONIUM_ION:
+                return charge == 1;
             case REPORTER_ION: // Note, it is possible to implement higher charges for the reporter ion but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
                 return charge == 1;
             case PEPTIDE_FRAGMENT_ION:
@@ -480,15 +481,29 @@ public class SpectrumAnnotator {
         setPeptide(peptide, precursorCharge);
         setMassTolerance(mzTolerance, isPpm);
 
-        if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION) && !charges.contains(precursorCharge)) {
-            charges.add(precursorCharge);
-        }
+        ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
         
+        // we have to keep the precursor charges separate from the fragment ion charges
+        for (int i=1; i<=precursorCharge; i++) {
+            precursorCharges.add(i);
+        }
+  
         for (Ion peptideIon : peptideIons) {
+            
             if (iontypes.containsKey(peptideIon.getType())
                     && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
                     && lossesValidated(neutralLosses, peptideIon, peptide)) {
-                for (int charge : charges) {
+                
+                ArrayList<Integer> tempCharges;
+                
+                // have to treat precursor charges separetly, as to not increase the max charge for the other ions
+                if (peptideIon.getType() == Ion.IonType.PRECURSOR_ION) {
+                    tempCharges = precursorCharges;
+                } else {
+                    tempCharges = charges;
+                }
+                
+                for (int charge : tempCharges) {
                     if (chargeValidated(peptideIon, charge, precursorCharge)) {
                         String key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
                         if (!spectrumAnnotation.containsKey(key)

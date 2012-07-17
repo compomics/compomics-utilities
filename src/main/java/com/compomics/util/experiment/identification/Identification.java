@@ -375,7 +375,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
@@ -413,7 +413,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
@@ -433,7 +433,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
@@ -453,7 +453,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IllegalArgumentException
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removeProteinMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
         if (proteinIdentification.contains(matchKey)) {
@@ -736,7 +736,7 @@ public abstract class Identification extends ExperimentObject {
             for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
                 othermatch = identificationDB.getSpectrumMatch(otherMatchKey);
                 if (othermatch == null) {
-                throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
+                    throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
                 }
                 otherPeptide = othermatch.getBestAssumption().getPeptide();
                 for (String protein : otherPeptide.getParentProteins()) {
@@ -793,8 +793,8 @@ public abstract class Identification extends ExperimentObject {
             }
             try {
                 if (proteinMatch.getKey().equals("P08514 Q8N6R0")) {
-            int debug = 1;
-        }
+                    int debug = 1;
+                }
                 identificationDB.addProteinMatch(proteinMatch);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -937,7 +937,7 @@ public abstract class Identification extends ExperimentObject {
      * @param dbFolder the absolute path to the folder where the database is
      * located
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache 
+     * @param objectsCache
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */
@@ -950,8 +950,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param progressDialog a dialog to give progress feedback to the user
      * @param newDirectory the new directory where to store the data
-     * @param newName 
-     * @param objectsCache 
+     * @param newName
+     * @param objectsCache
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      * @throws IOException exception thrown whenever an error occurred while

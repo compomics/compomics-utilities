@@ -263,7 +263,7 @@ public class IdentificationDB implements Serializable {
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removeProteinMatch(String key) throws SQLException, IOException {
         objectsDB.deleteObject(proteinTableName, key);
@@ -278,7 +278,7 @@ public class IdentificationDB implements Serializable {
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removePeptideMatch(String key) throws SQLException, IOException {
         objectsDB.deleteObject(peptideTableName, key);
@@ -293,7 +293,7 @@ public class IdentificationDB implements Serializable {
      * @param key the key of the match
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removeSpectrumMatch(String key) throws SQLException, IOException {
         for (String psmTable : psmTables) {
@@ -312,7 +312,7 @@ public class IdentificationDB implements Serializable {
      * instead
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException  
+     * @throws IOException
      */
     public void removeMatch(String key) throws SQLException, IOException {
         removeProteinMatch(key);
@@ -587,7 +587,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given spectrum key.
+     * Returns the table name associated with the given spectrum key.
      *
      * @param spectrumKey the given spectrum key
      * @return the table name of the given spectrum
@@ -599,7 +599,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given spectrum parameter.
+     * Returns the table name associated with the given spectrum parameter.
      *
      * @param spectrumKey the given spectrum key
      * @param urParameter the parameter
@@ -613,7 +613,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given peptide parameter.
+     * Returns the table name associated with the given peptide parameter.
      *
      * @param urParameter the parameter
      * @return the table name of the given peptide parameter
@@ -625,7 +625,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given protein parameter.
+     * Returns the table name associated with the given protein parameter.
      *
      * @param urParameter the parameter
      * @return the table name of the given protein parameter
@@ -637,7 +637,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated to the given parameter.
+     * Returns the table name associated with the given parameter.
      *
      * @param urParameter the parameter
      * @return the table name of the given protein parameter

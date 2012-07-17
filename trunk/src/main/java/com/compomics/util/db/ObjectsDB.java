@@ -322,11 +322,11 @@ public class ObjectsDB implements Serializable {
     public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException {
 
         boolean cacheUpdated = false;
-        
+
         if (cache) {
             cacheUpdated = objectsCache.updateObject(dbName, tableName, objectKey, object);
         }
-        
+
         if (!cacheUpdated) {
             PreparedStatement ps = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME='" + objectKey + "'");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

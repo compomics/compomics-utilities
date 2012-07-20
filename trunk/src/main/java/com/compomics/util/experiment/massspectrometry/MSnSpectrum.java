@@ -93,13 +93,13 @@ public class MSnSpectrum extends Spectrum {
      * @return the peak list as mgf bloc
      */
     public String asMgf() {
-        String result = "BEGIN IONS\n";
-        result += "TITLE=" + spectrumTitle + "\n";
-        result += "PEPMASS=" + precursor.getMz() + "\n";
+        String result = "BEGIN IONS" + System.getProperty("line.separator");
+        result += "TITLE=" + spectrumTitle + System.getProperty("line.separator");
+        result += "PEPMASS=" + precursor.getMz() + System.getProperty("line.separator");
         if (precursor.hasRTWindow()) {
-            result += "RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n";
+            result += "RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + System.getProperty("line.separator");
         } else if (precursor.getRt() != -1) {
-            result += "RTINSECONDS=" + precursor.getRt() + "\n";
+            result += "RTINSECONDS=" + precursor.getRt() + System.getProperty("line.separator");
         }
         result += "CHARGE=";
         boolean first = true;
@@ -111,7 +111,7 @@ public class MSnSpectrum extends Spectrum {
             }
             result += charge.toString();
         }
-        result += "\n";
+        result += System.getProperty("line.separator");
 
         // add the values to a tree map to get them sorted in mz    
         TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();
@@ -121,10 +121,10 @@ public class MSnSpectrum extends Spectrum {
         }
 
         for (Map.Entry<Double, Double> entry : sortedPeakList.entrySet()) {
-            result += entry.getKey() + " " + entry.getValue() + "\n";
+            result += entry.getKey() + " " + entry.getValue() + System.getProperty("line.separator");
         }
 
-        result += "END IONS\n\n";
+        result += "END IONS" + System.getProperty("line.separator") + System.getProperty("line.separator");
 
         return result;
     }
@@ -136,13 +136,13 @@ public class MSnSpectrum extends Spectrum {
      * @throws IOException
      */
     public void writeMgf(BufferedWriter writer1) throws IOException {
-        writer1.write("BEGIN IONS\n");
-        writer1.write("TITLE=" + spectrumTitle + "\n");
-        writer1.write("PEPMASS=" + precursor.getMz() + "\n");
+        writer1.write("BEGIN IONS" + System.getProperty("line.separator"));
+        writer1.write("TITLE=" + spectrumTitle + System.getProperty("line.separator"));
+        writer1.write("PEPMASS=" + precursor.getMz() + System.getProperty("line.separator"));
         if (precursor.hasRTWindow()) {
-            writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + "\n");
+            writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + System.getProperty("line.separator"));
         } else if (precursor.getRt() != -1) {
-            writer1.write("RTINSECONDS=" + precursor.getRt() + "\n");
+            writer1.write("RTINSECONDS=" + precursor.getRt() + System.getProperty("line.separator"));
         }
         writer1.write("CHARGE=");
         boolean first = true;
@@ -154,13 +154,13 @@ public class MSnSpectrum extends Spectrum {
             }
             writer1.write(charge.toString());
         }
-        writer1.write("\n");
+        writer1.write(System.getProperty("line.separator"));
 
         ArrayList<Double> mzArray = new ArrayList<Double>(peakList.keySet());
         Collections.sort(mzArray);
         for (Double mz : mzArray) {
-            writer1.write(mz + " " + peakList.get(mz).intensity + "\n");
+            writer1.write(mz + " " + peakList.get(mz).intensity + System.getProperty("line.separator"));
         }
-        writer1.write("END IONS\n\n");
+        writer1.write("END IONS" + System.getProperty("line.separator") + System.getProperty("line.separator"));
     }
 }

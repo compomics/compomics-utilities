@@ -484,8 +484,8 @@ public class SequenceFactory {
             String decoySequence = reverseSequence(currentProtein.getSequence());
 
             indexes.put(currentProtein.getAccession(), newFile.getFilePointer());
-            newFile.writeBytes(currentHeader.toString() + "\n");
-            newFile.writeBytes(currentProtein.getSequence() + "\n");
+            newFile.writeBytes(currentHeader.toString() + System.getProperty("line.separator"));
+            newFile.writeBytes(currentProtein.getSequence() + System.getProperty("line.separator"));
 
             indexes.put(decoyAccession, newFile.getFilePointer());
 
@@ -494,8 +494,8 @@ public class SequenceFactory {
                 decoyHeader.setRest(decoyAccession);
             }
 
-            newFile.writeBytes(decoyHeader.toString() + "\n");
-            newFile.writeBytes(decoySequence + "\n");
+            newFile.writeBytes(decoyHeader.toString() + System.getProperty("line.separator"));
+            newFile.writeBytes(decoySequence + System.getProperty("line.separator"));
         }
 
         if (waitingHandler != null) {

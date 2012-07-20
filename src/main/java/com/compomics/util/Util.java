@@ -149,7 +149,7 @@ public class Util {
         progressDialog.setIndeterminate(false);
         progressDialog.setMaxProgressValue(table.getRowCount());
 
-        tableAsString += "\n";
+        tableAsString += System.getProperty("line.separator");
 
         for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
 
@@ -171,7 +171,7 @@ public class Util {
                 }
             }
 
-            tableAsString += "\n";
+            tableAsString += System.getProperty("line.separator");
         }
 
         return tableAsString;
@@ -198,7 +198,7 @@ public class Util {
             progressDialog.setMaxProgressValue(table.getRowCount());
         }
 
-        writer.write("\n");
+        writer.write(System.getProperty("line.separator"));
 
         for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
 
@@ -222,7 +222,7 @@ public class Util {
                 }
             }
 
-            writer.write("\n");
+            writer.write(System.getProperty("line.separator"));
         }
     }
 

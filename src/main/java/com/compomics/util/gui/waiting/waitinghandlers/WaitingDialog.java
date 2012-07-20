@@ -1079,20 +1079,21 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         // Write the file header.
         output.append("# ------------------------------------------------------------------"
-                + "\n# Compomics Report File"
-                + "\n#"
-                + "\n# Originally saved by: " + System.getProperty("user.name") + host
-                + "\n#                  on: " + sdf.format(new Date()));
+                + System.getProperty("line.separator") + "# Compomics Report File"
+                + System.getProperty("line.separator") + "#"
+                + System.getProperty("line.separator") + "# Originally saved by: " + System.getProperty("user.name") + host
+                + System.getProperty("line.separator") + "#                  on: " + sdf.format(new Date()));
 
         if (aFile != null) {
-            output.append("\n#                  as: " + aFile.getName());
+            output.append(System.getProperty("line.separator") + "#                  as: " + aFile.getName());
         }
 
-        output.append("\n# ------------------------------------------------------------------\n\n");
+        output.append(System.getProperty("line.separator") + "# ------------------------------------------------------------------" 
+                + System.getProperty("line.separator") + System.getProperty("line.separator"));
 
         String report = reportArea.getText();
         report = report.replace(tab, "\t");
-        output.append(report + "\n");
+        output.append(report + System.getProperty("line.separator"));
 
         return output.toString();
     }

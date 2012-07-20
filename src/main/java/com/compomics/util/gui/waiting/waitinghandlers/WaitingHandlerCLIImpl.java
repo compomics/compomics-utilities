@@ -153,7 +153,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
         }
         
         if (addNewLine) {
-            tempReport = tempReport + "\n";
+            tempReport = tempReport + System.getProperty("line.separator");
         }
 
         iReport = iReport + tempReport;
@@ -165,8 +165,8 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      */
     @Override
     public void appendReportNewLineNoDate() {
-        iReport = iReport + "\n";
-        out.append("\n");
+        iReport = iReport + System.getProperty("line.separator");
+        out.append(System.getProperty("line.separator"));
     }
 
     /**
@@ -174,8 +174,8 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      */
     @Override
     public void appendReportEndLine() {
-        iReport = iReport + "\n";
-        out.append("\n");
+        iReport = iReport + System.getProperty("line.separator");
+        out.append(System.getProperty("line.separator"));
     }
 
     /**
@@ -211,9 +211,9 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     @Override
     public void displayMessage(String message, String title, int messageType) {
         out.print(title);
-        out.print("\n");
+        out.print(System.getProperty("line.separator"));
         out.print(message);
-        out.print("\n");
+        out.print(System.getProperty("line.separator"));
     }
 
     /**

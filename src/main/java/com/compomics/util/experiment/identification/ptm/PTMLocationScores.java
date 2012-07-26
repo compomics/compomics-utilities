@@ -26,7 +26,7 @@ public class PTMLocationScores {
 
     /**
      * Returns the A-score for the best PTM location. In case the two best
-     * locations score the same they are both given with the score of 50.
+     * locations score the same they are both given with the score of 0.
      *
      * @param peptide The peptide of interest
      * @param ptm The PTM to score
@@ -215,17 +215,17 @@ public class PTMLocationScores {
 
             if (p1 == p2) {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-                modificationProfile.add(posMin);
-                modificationProfile.add(posMax);
-                result.put(modificationProfile, 50.0);
+                modificationProfile.add(posMin+1);
+                modificationProfile.add(posMax+1);
+                result.put(modificationProfile, 0.0);
             } else if (p1 < p2) {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-                modificationProfile.add(posMin);
+                modificationProfile.add(posMin+1);
                 score = -10 * Math.log10(p2 - p1);
                 result.put(modificationProfile, score);
             } else {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-                modificationProfile.add(posMax);
+                modificationProfile.add(posMax+1);
                 score = -10 * Math.log10(p1 - p2);
                 result.put(modificationProfile, score);
             }

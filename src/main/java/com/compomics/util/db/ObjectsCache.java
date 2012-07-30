@@ -7,12 +7,14 @@ import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
  * single cache can be used by different databases. This ough not to be
- * serialized.
+ * serialized. The length of lists/maps in the cache shall stay independent from
+ * the number of objects in cache.
  *
  * @author Marc Vaudel
  */
@@ -41,17 +43,17 @@ public class ObjectsCache {
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
     /**
-     * Map of the matches currently in the database. db -> table -> object keys.
-     */
-    private HashMap<String, HashMap<String, ArrayList<String>>> databaseObjectsMap = new HashMap<String, HashMap<String, ArrayList<String>>>();
-    /**
-     * Map of the loaded objects with the most used matches in the end. object.
+     * Map of the loaded objects with the most used matches in the end.
      */
     private ArrayList<String> loadedObjectsKeys = new ArrayList<String>();
     /**
      * Separator used to concatenate strings.
      */
     private static final String cacheSeparator = "_ccs_";
+    /**
+     * The standard batch size for saving objects in databases
+     */
+    private int batchSize = 2000;
 
     /**
      * Constructor.
@@ -95,6 +97,24 @@ public class ObjectsCache {
      */
     public void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
+    }
+
+    /**
+     * Returns the batch size in number of objects.
+     *
+     * @return the batch size in number of objects
+     */
+    public int getBatchSize() {
+        return batchSize;
+    }
+
+    /**
+     * Sets the batch size in number of objects.
+     *
+     * @param batchSize the batch size in number of objects
+     */
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
     }
 
     /**
@@ -263,12 +283,111 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
+    public void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException {
+        saveObjects(entryKeys, null, true);
+    }
+
+    /**
+     * Saves an entry in the database if modified and clears it from the cache.
+     *
+     * @param entryKey the key of the entry
+     * @param waitingHandler a waiting handler displaying progress to the user.
+     * Can be null. Progress will be displayed as secondary.
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException {
+        saveObjects(entryKeys, waitingHandler, true);
+    }
+
+    /**
+     * Saves an entry in the database if modified.
+     *
+     * @param entryKey the key of the entry
+     * @param waitingHandler a waiting handler displaying progress to the user.
+     * Can be null. Progress will be displayed as secondary.
+     * @param clearEntries a boolean indicating whether the entry shall be
+     * cleared from the cache
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
+        if (waitingHandler != null) {
+            waitingHandler.setMaxSecondaryProgressValue(2 * entryKeys.size());
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+        }
+        // temporary map for batch saving
+        HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
+        for (String entryKey : entryKeys) {
+            String[] splittedKey = getKeyComponents(entryKey);
+            String dbName = splittedKey[0];
+            String tableName = splittedKey[1];
+            String objectKey = splittedKey[2];
+            CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+            if (entry.isModified()) {
+                if (!toSave.containsKey(dbName)) {
+                    toSave.put(dbName, new HashMap<String, HashMap<String, Object>>());
+                }
+                if (!toSave.get(dbName).containsKey(tableName)) {
+                    toSave.get(dbName).put(tableName, new HashMap<String, Object>());
+                }
+                toSave.get(dbName).get(tableName).put(objectKey, entry.getObject());
+            } else if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
+            }
+        }
+        for (String dbName : toSave.keySet()) {
+            ObjectsDB objectsDB = databases.get(dbName);
+            for (String tableName : toSave.get(dbName).keySet()) {
+                objectsDB.insertObjects(tableName, toSave.get(dbName).get(tableName), waitingHandler);
+            }
+        }
+        if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
+            if (clearEntries) {
+                for (String entryKey : entryKeys) {
+                    String[] splittedKey = getKeyComponents(entryKey);
+                    String dbName = splittedKey[0];
+                    String tableName = splittedKey[1];
+                    String objectKey = splittedKey[2];
+                    loadedObjectsKeys.remove(entryKey);
+                    loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
+                    if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
+                        loadedObjectsMap.get(dbName).remove(tableName);
+                    }
+                    if (loadedObjectsMap.get(dbName).isEmpty()) {
+                        loadedObjectsMap.remove(dbName);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Saves an entry in the database if modified and clears it from the cache.
+     * Batch saving should be used instead when possible in order to limit the
+     * interactions with the database. See method saveObjects
+     *
+     * @param entryKey the key of the entry
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
     public void saveObject(String entryKey) throws IOException, SQLException {
         saveObject(entryKey, true);
     }
 
     /**
-     * Saves an entry in the database if modified.
+     * Saves an entry in the database if modified. Batch saving should be used
+     * instead in order to limit the interactions with the database. See method
+     * saveObjects
      *
      * @param entryKey the key of the entry
      * @param clearEntry a boolean indicating whether the entry shall be cleared
@@ -324,13 +443,15 @@ public class ObjectsCache {
      * writing the object
      */
     public void updateCache() throws IOException, SQLException {
-        while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize || !memoryCheck()) {
-
-            // @TODO: wouldn't the code below be clearer..?
-//            while ((automatedMemoryManagement && !memoryCheck()) 
-//                || (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)) {
-
-            saveObject(loadedObjectsKeys.get(0));
+        while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize
+                || automatedMemoryManagement && !memoryCheck()) {
+            int toRemove = Math.min(batchSize, loadedObjectsKeys.size() / 2);
+            if (toRemove <= 1) {
+                saveObject(loadedObjectsKeys.get(0));
+            } else {
+                ArrayList<String> keysToRemove = new ArrayList<String>(loadedObjectsKeys.subList(0, toRemove));
+                saveObjects(keysToRemove);
+            }
             if (loadedObjectsKeys.isEmpty()) {
                 break;
             }
@@ -351,19 +472,20 @@ public class ObjectsCache {
      */
     public void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException {
         int toRemove = (int) (share * loadedObjectsKeys.size());
-        if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue(toRemove);
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-        }
-        for (int i = 0; i < toRemove; i++) {
-            saveObject(loadedObjectsKeys.get(0));
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
-                if (waitingHandler.isRunCanceled()) {
-                    return;
-                }
-            }
-        }
+        ArrayList<String> keysToRemove = new ArrayList<String>(loadedObjectsKeys.subList(0, toRemove));
+        saveObjects(keysToRemove, waitingHandler);
+    }
+
+    /**
+     * Indicates whether an object is loaded in the cache
+     *
+     * @param dbName the database name
+     * @param tableName the table name
+     * @param objectKey the object key
+     * @return a boolean indicating whether an object is loaded in the cache
+     */
+    public boolean inCache(String dbName, String tableName, String objectKey) {
+        return loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName) && loadedObjectsMap.get(dbName).get(tableName).containsKey(objectKey);
     }
 
     /**
@@ -384,8 +506,6 @@ public class ObjectsCache {
             waitingHandler.setSecondaryProgressValue(0);
         }
 
-
-
 //        // individual option
 //        ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
 //        for (String entryKey : toRemove) {
@@ -398,72 +518,31 @@ public class ObjectsCache {
 //            }
 //        }
 
-
-
         // grouped option
+        HashMap<String, Object> objectsToStore;
+        HashMap<String, CacheEntry> data;
+        CacheEntry entry;
         for (String dbName : loadedObjectsMap.keySet()) {
-
             ObjectsDB objectsDB = databases.get(dbName);
-
             if (objectsDB == null) {
                 throw new IllegalStateException("Database " + dbName + " not loaded in cache");
             }
-
             for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
-
-                // @TODO: perhaps the queries should be moved to objectsDB?
-                PreparedStatement insertStatement = objectsDB.getDbConnection().prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)"); 
-                PreparedStatement updateStatement = objectsDB.getDbConnection().prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME=?");
-                
-                HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
-                objectsDB.getDbConnection().setAutoCommit(false);
-
-                int rowCounter = 0;
-
+                objectsToStore = new HashMap<String, Object>();
+                data = loadedObjectsMap.get(dbName).get(tableName);
                 for (String objectKey : data.keySet()) {
-
-                    CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
-
+                    entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
                     if (entry.isModified()) {
-
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        oos.writeObject(entry.getObject());
-                        oos.close();
-
-                        if (objectsDB.inDB(tableName, objectKey, false)) {
-                            updateStatement.setString(2, objectKey);
-                            updateStatement.setBytes(1, bos.toByteArray());
-                            updateStatement.addBatch(); // @TODO: figure out why the update statements seem to be slower than the inserts...
-                        } else {
-                            insertStatement.setString(1, objectKey);
-                            insertStatement.setBytes(2, bos.toByteArray());
-                            insertStatement.addBatch();
-                            insertObjectInDatabaseMap(dbName, tableName, objectKey);
-                        }
-
-                        if ((rowCounter + 1) % 2000 == 0) { // @TODO: find the optimal batch size...
-                            updateStatement.executeBatch();
-                            insertStatement.executeBatch();
-                            objectsDB.getDbConnection().commit();
+                        objectsToStore.put(objectKey, entry.getObject());
+                    } else if (waitingHandler != null) {
+                        waitingHandler.increaseSecondaryProgressValue();
+                        if (waitingHandler.isRunCanceled()) {
+                            return;
                         }
                     }
-
-                    waitingHandler.increaseSecondaryProgressValue();
                 }
-
-                // insert the remaining data
-                updateStatement.executeBatch();
-                insertStatement.executeBatch();
-                objectsDB.getDbConnection().commit();
-
-                // close the statements
-                updateStatement.close();
-                insertStatement.close();
+                objectsDB.insertObjects(tableName, objectsToStore, waitingHandler);
             }
-
-            waitingHandler.increaseSecondaryProgressValue();
-            objectsDB.getDbConnection().setAutoCommit(true);
         }
 
         if (emptyCache) {
@@ -495,69 +574,6 @@ public class ObjectsCache {
      */
     private String[] getKeyComponents(String cacheKey) {
         return cacheKey.split(cacheSeparator);
-    }
-
-    /**
-     * Inserts the object into the database map. This method is needed when
-     * using batch inserts which do not call the insert method directly.
-     *
-     * @param dbName the DB name
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     */
-    public void insertObjectInDatabaseMap(String dbName, String tableName, String objectKey) throws SQLException, IOException {
-
-        if (!databaseObjectsMap.containsKey(dbName)) {
-            databaseObjectsMap.put(dbName, new HashMap<String, ArrayList<String>>());
-        }
-        if (!databaseObjectsMap.get(dbName).containsKey(tableName)) {
-            databaseObjectsMap.get(dbName).put(tableName, new ArrayList<String>());
-        }
-
-        databaseObjectsMap.get(dbName).get(tableName).add(objectKey);
-    }
-
-    /**
-     * Removes the object in the database map.
-     *
-     * @param dbName the DB name
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @throws SQLException exception thrown whenever an error occurred while
-     * storing the object
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing in the database
-     */
-    public void removeObjectInDatabaseMap(String dbName, String tableName, String objectKey) throws SQLException, IOException {
-        databaseObjectsMap.get(dbName).get(tableName).remove(objectKey);
-        if (databaseObjectsMap.get(dbName).get(tableName).isEmpty()) {
-            databaseObjectsMap.get(dbName).remove(tableName);
-        }
-        if (databaseObjectsMap.get(dbName).isEmpty()) {
-            databaseObjectsMap.remove(dbName);
-        }
-    }
-
-    /**
-     * Returns true of the given object key is in the database.
-     *
-     * @param dbName the DB name
-     * @param tableName the name of the table
-     * @param objectKey the key of the object
-     * @return
-     */
-    public boolean databaseContainsKey(String dbName, String tableName, String objectKey) {
-        if (databaseObjectsMap.containsKey(dbName)
-                && databaseObjectsMap.get(dbName).containsKey(tableName)
-                && databaseObjectsMap.get(dbName).get(tableName).contains(objectKey)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**

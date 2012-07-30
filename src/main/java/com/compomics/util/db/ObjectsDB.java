@@ -1,9 +1,11 @@
 package com.compomics.util.db;
 
 import com.compomics.util.Util;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A database which can easily be used to store objects.
@@ -21,7 +23,8 @@ public class ObjectsDB implements Serializable {
      */
     private String dbName;
     /**
-     * The connection.
+     * The connection, shall not be accessed outside this class. Don't be lazy,
+     * implement the dedicated methods here.
      */
     private Connection dbConnection;
     /**
@@ -35,15 +38,25 @@ public class ObjectsDB implements Serializable {
     /**
      * The writer used to send the output to file.
      */
-    private BufferedWriter debugWriter;
+    private BufferedWriter debugSpeedWriter;
+    /**
+     * The writer used to send the output to file.
+     */
+    private BufferedWriter debugContentWriter;
     /**
      * The debug folder.
      */
     private File debugFolder;
     /**
-     * Debug, true/false.
+     * Debug, if true will output a table containing statistics on the speed of
+     * the objects I/O.
      */
-    private boolean debug = false;
+    private boolean debugSpeed = false;
+    /**
+     * Debug, if true will output a table containing details on the objects
+     * stored.
+     */
+    private boolean debugContent = true;
 
     /**
      * Constructor.
@@ -58,15 +71,6 @@ public class ObjectsDB implements Serializable {
         this.dbName = dbName;
         objectsCache.addDb(this);
         establishConnection(folder, deleteOldDatabase, objectsCache);
-    }
-
-    /**
-     * Returns the database connection.
-     *
-     * @return the database connection
-     */
-    public Connection getDbConnection() {
-        return dbConnection;
     }
 
     /**
@@ -126,7 +130,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Stores an object in the desired table.
+     * Stores an object in the desired table. When multiple objects are to be inserted, use insertObjects instead.
      *
      * @param tableName the name of the table
      * @param objectKey the key of the object
@@ -150,10 +154,79 @@ public class ObjectsDB implements Serializable {
             oos.close();
             ps.setBytes(2, bos.toByteArray());
             ps.executeUpdate();
-
-            // update the database map
-            objectsCache.insertObjectInDatabaseMap(dbName, tableName, objectKey);
         }
+    }
+
+    /**
+     * Inserts a set of objects in the given table
+     *
+     * @param tableName the name of the table
+     * @param objects map of the objects (object key -> object)
+     * @param waitingHandler a waiting handler displaying the progress (can be
+     * null). The progress will be displayed on the secondary progress bar.
+     */
+    public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException {
+        PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
+        PreparedStatement updateStatement = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME=?");
+        dbConnection.setAutoCommit(false);
+        int rowCounter = 0;
+        for (String objectKey : objects.keySet()) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(objects.get(objectKey));
+            oos.close();
+
+            if (inDB(tableName, objectKey, false)) {
+                updateStatement.setString(2, objectKey);
+                updateStatement.setBytes(1, bos.toByteArray());
+                updateStatement.addBatch();
+            } else {
+                insertStatement.setString(1, objectKey);
+                insertStatement.setBytes(2, bos.toByteArray());
+                insertStatement.addBatch();
+            }
+
+            if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
+                updateStatement.executeBatch();
+                insertStatement.executeBatch();
+                dbConnection.commit();
+                rowCounter = 0;
+            }
+
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
+            }
+            
+            if (debugContent) {
+                
+                File debugObjectFile = new File(debugFolder, "debugMatch");
+                FileOutputStream fos = new FileOutputStream(debugObjectFile);
+                BufferedOutputStream debugBos = new BufferedOutputStream(fos);
+                ObjectOutputStream debugOos = new ObjectOutputStream(debugBos);
+                debugOos.writeObject(objects.get(objectKey));
+                debugOos.close();
+                bos.close();
+                fos.close();
+                long size = debugObjectFile.length();
+                
+                debugContentWriter.write(tableName + "\t" + objectKey + "\t" + size + "\n");
+            }
+        }
+
+        if (waitingHandler== null || !waitingHandler.isRunCanceled()) {
+            // insert the remaining data
+            updateStatement.executeBatch();
+            insertStatement.executeBatch();
+            dbConnection.commit();
+        }
+        dbConnection.setAutoCommit(true);
+
+        // close the statements
+        updateStatement.close();
+        insertStatement.close();
     }
 
     /**
@@ -197,11 +270,11 @@ public class ObjectsDB implements Serializable {
 
             objectsCache.addObject(dbName, tableName, objectKey, object);
 
-            if (debug) {
+            if (debugSpeed) {
                 long loaded = System.currentTimeMillis();
 
-                File newMatch = new File(debugFolder, "debugMatch");
-                FileOutputStream fos = new FileOutputStream(newMatch);
+                File debugObjectFile = new File(debugFolder, "debugMatch");
+                FileOutputStream fos = new FileOutputStream(debugObjectFile);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 ObjectOutputStream oos = new ObjectOutputStream(bos);
                 oos.writeObject(object);
@@ -211,7 +284,7 @@ public class ObjectsDB implements Serializable {
 
                 long written = System.currentTimeMillis();
 
-                FileInputStream fis = new FileInputStream(newMatch);
+                FileInputStream fis = new FileInputStream(debugObjectFile);
                 bis = new BufferedInputStream(fis);
                 in = new ObjectInputStream(bis);
                 Object match = in.readObject();
@@ -220,13 +293,13 @@ public class ObjectsDB implements Serializable {
                 in.close();
                 long read = System.currentTimeMillis();
 
-                long size = newMatch.length();
+                long size = debugObjectFile.length();
 
                 long queryTime = loaded - start;
                 long serializationTime = written - loaded;
                 long deserializationTime = read - written;
 
-                debugWriter.write(tableName + "\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
+                debugSpeedWriter.write(tableName + "\t" + objectKey + "\t" + queryTime + "\t" + serializationTime + "\t" + deserializationTime + "\t" + size + "\n");
             }
 
             return object;
@@ -252,14 +325,17 @@ public class ObjectsDB implements Serializable {
     public boolean inDB(String tableName, String objectKey, boolean cache) throws SQLException {
 
         if (cache) {
-            Object object = objectsCache.getObject(dbName, tableName, objectKey);
-            if (object != null) {
+            if (objectsCache.inCache(dbName, tableName, objectKey)) {
                 return true;
             }
         }
+        Statement stmt = dbConnection.createStatement();
+        ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'"); // derby
 
-        // check the database map
-        return objectsCache.databaseContainsKey(dbName, tableName, objectKey);
+        boolean result = results.next();
+        results.close();
+        stmt.close();
+        return result;
     }
 
     /**
@@ -277,17 +353,10 @@ public class ObjectsDB implements Serializable {
         // remove from the cache
         objectsCache.removeObject(dbName, tableName, objectKey);
 
-        // delete from the database and the database map as well
-        if (objectsCache.databaseContainsKey(dbName, tableName, objectKey)) {
-
-            // delete from database
-            Statement stmt = dbConnection.createStatement();
-            stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
-            stmt.close();
-
-            // delete from database map
-            objectsCache.removeObjectInDatabaseMap(dbName, tableName, objectKey);
-        }
+        // delete from database
+        Statement stmt = dbConnection.createStatement();
+        stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
+        stmt.close();
     }
 
     /**
@@ -363,9 +432,19 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        if (debug) {
+        if (debugSpeed && debugSpeedWriter != null) {
             try {
-                debugWriter.close();
+                debugSpeedWriter.close();
+                debugSpeedWriter = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (debugContent && debugContentWriter != null) {
+            try {
+                debugContentWriter.close();
+                debugContentWriter = null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -406,15 +485,26 @@ public class ObjectsDB implements Serializable {
         this.objectsCache = objectsCache;
 
         // debug test speed
-        if (debug) {
+        if (debugSpeed) {
             try {
                 debugFolder = new File(aDbFolder);
-                debugWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
-                debugWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
+                debugSpeedWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
+                debugSpeedWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        // debug test content
+        if (debugContent) {
+            try {
+                debugFolder = new File(aDbFolder);
+                debugContentWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbContent.txt")));
+                debugContentWriter.write("Table\tkey\tsize\n");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**

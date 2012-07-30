@@ -225,16 +225,40 @@ public class IonFactory {
         ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<ArrayList<NeutralLoss>>();
         ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>();
         neutralLossesCombinations.add(tempList);
+        boolean found;
         for (NeutralLoss neutralLoss1 : possibleNeutralLosses) {
-            tempList = new ArrayList<NeutralLoss>();
-            tempList.add(neutralLoss1);
-            neutralLossesCombinations.add(tempList);
+            found = false;
+            for (ArrayList<NeutralLoss> accountedCombination : neutralLossesCombinations) {
+                if (accountedCombination.size() == 1 && accountedCombination.get(0).isSameAs(neutralLoss1)) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                tempList = new ArrayList<NeutralLoss>();
+                tempList.add(neutralLoss1);
+                neutralLossesCombinations.add(tempList);
+            }
             for (NeutralLoss neutralLoss2 : possibleNeutralLosses) {
                 if (!neutralLoss1.isSameAs(neutralLoss2)) {
-                    tempList = new ArrayList<NeutralLoss>();
-                    tempList.add(neutralLoss1);
-                    tempList.add(neutralLoss2);
-                    neutralLossesCombinations.add(tempList);
+                    found = false;
+                    for (ArrayList<NeutralLoss> accountedCombination : neutralLossesCombinations) {
+                        if (accountedCombination.size() == 2) {
+                            if (accountedCombination.get(0).isSameAs(neutralLoss1) && accountedCombination.get(1).isSameAs(neutralLoss2)) {
+                                found = true;
+                                break;
+                            }
+                            if (accountedCombination.get(0).isSameAs(neutralLoss2) && accountedCombination.get(1).isSameAs(neutralLoss1)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        tempList = new ArrayList<NeutralLoss>();
+                        tempList.add(neutralLoss1);
+                        tempList.add(neutralLoss2);
+                        neutralLossesCombinations.add(tempList);
+                    }
                 }
             }
         }

@@ -464,6 +464,10 @@ public class ObjectsDB implements Serializable {
      */
     public void establishConnection(String aDbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
 
+        File parentFolder = new File(aDbFolder);
+        if (!parentFolder.exists()) {
+            parentFolder.mkdirs();
+        }
         File dbFolder = new File(aDbFolder, dbName);
         String path = dbFolder.getAbsolutePath();
 
@@ -488,7 +492,7 @@ public class ObjectsDB implements Serializable {
         if (debugSpeed) {
             try {
                 debugFolder = new File(aDbFolder);
-                debugSpeedWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbSpeed.txt")));
+                debugSpeedWriter = new BufferedWriter(new FileWriter(new File(parentFolder, "dbSpeed.txt")));
                 debugSpeedWriter.write("Table\tkey\tQuery time\tSerialization time\tDeserialization time\tsize\n");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -498,7 +502,7 @@ public class ObjectsDB implements Serializable {
         if (debugContent) {
             try {
                 debugFolder = new File(aDbFolder);
-                debugContentWriter = new BufferedWriter(new FileWriter(new File(aDbFolder, "dbContent.txt")));
+                debugContentWriter = new BufferedWriter(new FileWriter(new File(parentFolder, "dbContent.txt")));
                 debugContentWriter.write("Table\tkey\tsize\n");
             } catch (Exception e) {
                 e.printStackTrace();

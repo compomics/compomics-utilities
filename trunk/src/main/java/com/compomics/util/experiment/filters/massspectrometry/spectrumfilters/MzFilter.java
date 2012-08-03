@@ -7,6 +7,7 @@ package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,8 +18,12 @@ import java.util.HashMap;
  *
  * @author Marc
  */
-public class MzFilter implements SpectrumFilter {
+public class MzFilter implements SpectrumFilter, Serializable {
 
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 7463874851796836587L;
     /**
      * The m/z to look for
      */

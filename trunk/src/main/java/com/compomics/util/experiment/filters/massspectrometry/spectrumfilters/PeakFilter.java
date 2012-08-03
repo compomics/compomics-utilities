@@ -7,6 +7,7 @@ package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,8 +16,12 @@ import java.util.HashMap;
  *
  * @author vaudel
  */
-public class PeakFilter  implements SpectrumFilter {
+public class PeakFilter implements SpectrumFilter, Serializable {
 
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 1751883115257153259L;
     /**
      * The m/z to look for
      */
@@ -66,10 +71,10 @@ public class PeakFilter  implements SpectrumFilter {
     public boolean validateSpectrum(MSnSpectrum spectrum) {
 
         ArrayList<Double> intensitiesShortList = new ArrayList<Double>();
-                ArrayList<Double> mzArray = new ArrayList<Double>(spectrum.getPeakMap().keySet());
+        ArrayList<Double> mzArray = new ArrayList<Double>(spectrum.getPeakMap().keySet());
 
         Collections.sort(mzArray);
-        
+
         double deltaMz;
 
         if (isPpm) {
@@ -95,7 +100,7 @@ public class PeakFilter  implements SpectrumFilter {
                 double currentMz = mzArray.get(index);
 
                 if (Math.abs(getError(currentMz)) <= mzTolerance) {
-                intensitiesShortList.add(spectrum.getPeakMap().get(currentMz).intensity);
+                    intensitiesShortList.add(spectrum.getPeakMap().get(currentMz).intensity);
                 }
 
                 if (currentMz < mz) {
@@ -106,13 +111,12 @@ public class PeakFilter  implements SpectrumFilter {
             }
         }
         for (double tempIntensity : intensitiesShortList) {
-            if (Math.abs(tempIntensity - intensity)/intensity <= intensityTolerance) {
+            if (Math.abs(tempIntensity - intensity) / intensity <= intensityTolerance) {
                 return true;
             }
         }
         return false;
     }
-
 
     /**
      * Get the absolute matching error in Da.
@@ -127,5 +131,4 @@ public class PeakFilter  implements SpectrumFilter {
             return otherMz - mz;
         }
     }
-    
 }

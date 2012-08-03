@@ -80,7 +80,7 @@ public class SequenceFactory {
         instance.setnCache(nCache);
         return instance;
     }
-    
+
     /**
      * Clears the factory getInstance() needs to be called afterwards.
      */
@@ -98,7 +98,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException thrown whenever an error is encountered
      * while reading the FASTA file
      */
-    public Protein getProtein(String accession) throws IOException, IllegalArgumentException {
+    public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
         Protein currentProtein = currentProteinMap.get(accession);
 
@@ -110,24 +110,7 @@ public class SequenceFactory {
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
 
-            currentFastaFile.seek(index);
-            String line, sequence = "";
-            Header currentHeader = null;
-
-            while ((line = currentFastaFile.readLine()) != null) {
-                line = line.trim();
-
-                if (line.startsWith(">")) {
-                    if (!sequence.equals("")) {
-                        break;
-                    }
-                    currentHeader = Header.parseFromFASTA(line);
-                } else {
-                    sequence += line;
-                }
-            }
-
-            currentProtein = new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoy(accession));
+            currentProtein = getProtein(accession, index, 0);
 
             if (loadedProteins.size() == nCache) {
                 currentProteinMap.remove(loadedProteins.get(0));
@@ -137,12 +120,55 @@ public class SequenceFactory {
 
             loadedProteins.add(accession);
             currentProteinMap.put(accession, currentProtein);
-            currentHeaderMap.put(accession, currentHeader);
         }
         if (currentProtein == null) {
             throw new IllegalArgumentException("Protein not found: " + accession + ".");
         }
         return currentProtein;
+    }
+
+    /**
+     * Returns the protein indexed by the given index. It can be that the IO is
+     * busy (especially when working on distant servers) thus returning an
+     * error. The method will then try 100 times at 0.01 second intervals.
+     *
+     * @param index the index where to look at
+     * @param nTries the number of tries already made
+     * @return the header indexed by the given index
+     */
+    private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException {
+
+        try {
+            currentFastaFile.seek(index);
+            String line, sequence = "";
+            Header currentHeader = currentHeaderMap.get(accession);;
+
+            while ((line = currentFastaFile.readLine()) != null) {
+                line = line.trim();
+
+                if (line.startsWith(">")) {
+                    if (!sequence.equals("")) {
+                        break;
+                    }
+                    if (currentHeader == null) {
+                        currentHeader = Header.parseFromFASTA(line);
+                        currentHeaderMap.put(accession, currentHeader);
+                    }
+                } else {
+                    sequence += line;
+                }
+            }
+
+            return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoy(accession));
+
+        } catch (IOException e) {
+            if (nTries <= 100) {
+                wait(10);
+                return getProtein(accession, index, nTries + 1);
+            } else {
+                throw e;
+            }
+        }
     }
 
     /**
@@ -155,7 +181,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
      */
-    public Header getHeader(String accession) throws IOException, IllegalArgumentException {
+    public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
         Header result = currentHeaderMap.get(accession);
 
@@ -166,12 +192,34 @@ public class SequenceFactory {
             if (index == null) {
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
-
-            currentFastaFile.seek(index);
-            result = Header.parseFromFASTA(currentFastaFile.readLine());
+            return getHeader(index, 0);
         }
 
         return result;
+    }
+
+    /**
+     * Returns the header indexed by the given index. It can be that the IO is
+     * busy (especially when working on distant servers) thus returning an
+     * error. The method will then try 100 times at 0.01 second intervals.
+     *
+     * @param index the index where to look at
+     * @param nTries the number of tries already made
+     * @return the header indexed by the given index
+     */
+    private synchronized Header getHeader(long index, int nTries) throws InterruptedException, IOException {
+
+        try {
+            currentFastaFile.seek(index);
+            return Header.parseFromFASTA(currentFastaFile.readLine());
+        } catch (IOException e) {
+            if (nTries <= 100) {
+                wait(10);
+                return getHeader(index, nTries + 1);
+            } else {
+                throw e;
+            }
+        }
     }
 
     /**
@@ -435,7 +483,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      */
-    public void appendDecoySequences(File destinationFile) throws IOException {
+    public void appendDecoySequences(File destinationFile) throws IOException, IllegalArgumentException, InterruptedException {
         appendDecoySequences(destinationFile, null);
     }
 
@@ -449,7 +497,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException exdeption thrown whenever a protein is
      * not found
      */
-    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException {
+    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException {
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -558,7 +606,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the database
      */
-    public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException {
+    public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException {
 
         HashMap<String, Integer> aaMap = new HashMap<String, Integer>();
         ArrayList<String> accessions = getAccessions();

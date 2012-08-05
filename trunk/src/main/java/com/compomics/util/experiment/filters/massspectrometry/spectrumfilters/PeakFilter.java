@@ -16,7 +16,7 @@ import java.util.HashMap;
  *
  * @author vaudel
  */
-public class PeakFilter implements SpectrumFilter, Serializable {
+public class PeakFilter extends SpectrumFilter {
 
     /**
      * Serial number for backward compatibility
@@ -130,5 +130,10 @@ public class PeakFilter implements SpectrumFilter, Serializable {
         } else {
             return otherMz - mz;
         }
+    }
+
+    @Override
+    public String getDescription() {
+        return "containing a peak at m/z " + mz + " and intensity " + intensity;
     }
 }

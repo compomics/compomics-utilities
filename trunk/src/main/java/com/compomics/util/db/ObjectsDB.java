@@ -61,7 +61,7 @@ public class ObjectsDB implements Serializable {
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
-    private boolean debugInteractions = true;
+    private boolean debugInteractions = false;
 
     /**
      * Constructor.
@@ -184,6 +184,7 @@ public class ObjectsDB implements Serializable {
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         PreparedStatement updateStatement = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME=?");
         dbConnection.setAutoCommit(false);
+        ArrayList<String> tableContent = tableContent(tableName);
         int rowCounter = 0;
         for (String objectKey : objects.keySet()) {
 
@@ -210,7 +211,7 @@ public class ObjectsDB implements Serializable {
             oos.writeObject(objects.get(objectKey));
             oos.close();
 
-            if (inDB(tableName, objectKey, false)) {
+            if (tableContent.contains(objectKey)) {
                 updateStatement.setString(2, objectKey);
                 updateStatement.setBytes(1, bos.toByteArray());
                 updateStatement.addBatch();
@@ -362,6 +363,23 @@ public class ObjectsDB implements Serializable {
         stmt.close();
         return result;
     }
+    
+    public ArrayList<String> tableContent(String tableName) throws SQLException {
+        
+        if (debugInteractions) {
+            System.out.println("checking db content, table:" + tableName);
+        }
+        Statement stmt = dbConnection.createStatement();
+        ResultSet results = stmt.executeQuery("select * from " + tableName);
+        ArrayList<String> tableContent = new ArrayList<String>();
+        
+        while (results.next()) {
+            tableContent.add(results.getString(1));
+        }
+        results.close();
+        stmt.close();
+        return tableContent;
+    } 
 
     /**
      * Deletes an object from the desired table.

@@ -41,9 +41,9 @@ public class ExperimentIO {
      *
      * @param utilitiesFile File to import
      * @return the loaded experiment
-     * @throws IOException Exception thrown if a problem occured while reading
+     * @throws IOException Exception thrown if a problem occurred while reading
      * the file
-     * @throws ClassNotFoundException Exception thrown if a problem occured
+     * @throws ClassNotFoundException Exception thrown if a problem occurred
      * while creating the experiment (typically a version issue)
      */
     public static MsExperiment loadExperiment(File utilitiesFile) throws IOException, ClassNotFoundException {

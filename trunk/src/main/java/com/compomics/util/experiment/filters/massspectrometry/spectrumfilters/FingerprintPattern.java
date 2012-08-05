@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author Marc
  */
-public class FingerprintPattern implements SpectrumFilter, Serializable {
+public class FingerprintPattern extends SpectrumFilter {
 
     /**
      * Serial number for backward compatibility
@@ -29,15 +29,16 @@ public class FingerprintPattern implements SpectrumFilter, Serializable {
     /**
      * Constructor
      *
-     * @param peaks the list of peaks constituting the pattern to look for
+     * @param mzArray list of m/z to look for
+     * @param intensityArray list of intensities corresponding to the m/z array
      * @param mzTolerance the m/z tolerance
      * @param isPpm a boolean indicating whether the m/z tolerance is in ppm
      * @param intensityTolerance the intensity relative tolerance (0.1 for 10%)
      */
-    public FingerprintPattern(ArrayList<Peak> peaks, double mzTolerance, boolean isPpm, double intensityTolerance) {
+    public FingerprintPattern(ArrayList<Double> mzArray, ArrayList<Double> intensityArray, double mzTolerance, boolean isPpm, double intensityTolerance) {
         filter = new And();
-        for (Peak peak : peaks) {
-            filter.addFilter(new PeakFilter(peak.mz, peak.rt, isPpm, mzTolerance, intensityTolerance));
+        for (int i = 0 ; i < mzArray.size() ; i++) {
+            filter.addFilter(new PeakFilter(mzArray.get(i), intensityArray.get(i), isPpm, mzTolerance, intensityTolerance));
         }
     }
 
@@ -51,5 +52,10 @@ public class FingerprintPattern implements SpectrumFilter, Serializable {
      */
     public boolean validateSpectrum(MSnSpectrum spectrum) {
         return filter.validateSpectrum(spectrum);
+    }
+
+    @Override
+    public String getDescription() {
+        return filter.getDescription();
     }
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author Marc
  */
-public class CombFilter implements SpectrumFilter, Serializable {
+public class CombFilter extends SpectrumFilter {
 
     /**
      * Serial number for backward compatibility
@@ -56,5 +56,10 @@ public class CombFilter implements SpectrumFilter, Serializable {
      */
     public boolean validateSpectrum(MSnSpectrum spectrum) {
         return filter.validateSpectrum(spectrum);
+    }
+
+    @Override
+    public String getDescription() {
+        return filter.getDescription();
     }
 }

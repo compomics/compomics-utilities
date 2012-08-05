@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author Marc
  */
-public class Or implements SpectrumFilter, Serializable {
+public class Or extends SpectrumFilter {
 
     /**
      * Serial number for backward compatibility
@@ -57,5 +57,20 @@ public class Or implements SpectrumFilter, Serializable {
             }
         }
         return false;
+    }
+
+    @Override
+    public String getDescription() {
+        String result = "";
+        boolean first = true;
+        for (SpectrumFilter filter : filters) {
+            if (first) {
+                first = false;
+            } else {
+                result += " and ";
+            }
+            result += filter.getDescription();
+        }
+        return result;
     }
 }

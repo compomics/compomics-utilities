@@ -4,6 +4,7 @@
  */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
@@ -18,7 +19,7 @@ import java.util.HashMap;
  *
  * @author Marc
  */
-public class MzFilter implements SpectrumFilter, Serializable {
+public class MzFilter extends SpectrumFilter {
 
     /**
      * Serial number for backward compatibility
@@ -228,6 +229,15 @@ public class MzFilter implements SpectrumFilter, Serializable {
                     / mz) * 1000000;
         } else {
             return otherMz - mz;
+        }
+    }
+
+    @Override
+    public String getDescription() {
+        if (intensityQuantile > 0) {
+        return "containing a peak at m/z " + mz + " among the " + ((int) (intensityQuantile*100)) + " most intense peaks";
+        } else {
+        return "containing a peak at m/z " + mz;
         }
     }
 }

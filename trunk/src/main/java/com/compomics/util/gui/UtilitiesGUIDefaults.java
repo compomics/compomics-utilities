@@ -25,18 +25,19 @@ public class UtilitiesGUIDefaults {
     public static boolean setLookAndFeel() {
 
         boolean nimbusLookAndFeelFound = false;
-
-        try {
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    nimbusLookAndFeelFound = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            // ignore error, use look and feel below
-        }
+        
+//Disabled, it makes the JVM crash
+//        try {
+//            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    UIManager.setLookAndFeel(info.getClassName());
+//                    nimbusLookAndFeelFound = true;
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+//            // ignore error, use look and feel below
+//        }
 
         if (!nimbusLookAndFeelFound) {
             try {

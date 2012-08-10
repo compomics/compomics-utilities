@@ -69,7 +69,14 @@ public class And extends SpectrumFilter {
             } else {
                 result += " and ";
             }
-            result += filter.getDescription();
+            String subDescription = filter.getDescription();
+            if (subDescription.contains(" or ")) {
+                result += "(";
+            }
+            result += subDescription;
+            if (subDescription.contains(" or ")) {
+                result += ")";
+            }
         }
         return result;
     }

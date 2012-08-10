@@ -43,6 +43,7 @@ public class PeakDialog extends javax.swing.JDialog {
                 ppmCmb.setSelectedIndex(1);
             }
         }
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
     
@@ -235,6 +236,9 @@ public class PeakDialog extends javax.swing.JDialog {
             Double intensity = new Double(intTxt.getText());
             Double intensityTol = new Double(intTolTxt.getText());
             spectrumFilter = new PeakFilter(mz, mzTol, ppmCmb.getSelectedIndex()==1, intensity, intensityTol);
+            String name = "m/z (" + mz + " - " + intensity + ")";
+            spectrumFilter.setName(name);
+            dispose();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

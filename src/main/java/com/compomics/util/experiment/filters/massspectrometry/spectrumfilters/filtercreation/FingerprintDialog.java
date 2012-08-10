@@ -56,6 +56,7 @@ public class FingerprintDialog extends javax.swing.JDialog {
                 ppmCmb.setSelectedIndex(1);
             }
         }
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
     
@@ -345,6 +346,19 @@ public class FingerprintDialog extends javax.swing.JDialog {
             Double mzTol = new Double(mzTolTxt.getText());
             Double intensityTolerance = new Double(intTxt.getText());
             spectrumFilter = new FingerprintPattern(mzArray, intArray, mzTol, ppmCmb.getSelectedIndex()==1, intensityTolerance);
+            String name = "Fingerprint (";
+            boolean first = true;
+            for (int i = 0 ; i < mzArray.size() ; i++) {
+                if (first) {
+                    first = false;
+                } else {
+                    name += ", ";
+                }
+                name += "[" + mzArray.get(i) + "-" + intArray.get(i) + "]";
+            }
+            name += ")";
+            spectrumFilter.setName(name);
+            dispose();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

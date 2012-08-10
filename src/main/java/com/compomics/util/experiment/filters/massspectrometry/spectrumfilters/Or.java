@@ -67,9 +67,16 @@ public class Or extends SpectrumFilter {
             if (first) {
                 first = false;
             } else {
-                result += " and ";
+                result += " or ";
             }
-            result += filter.getDescription();
+            String subDescription = filter.getDescription();
+            if (subDescription.contains(" and ")) {
+                result += "(";
+            }
+            result += subDescription;
+            if (subDescription.contains(" and ")) {
+                result += ")";
+            }
         }
         return result;
     }

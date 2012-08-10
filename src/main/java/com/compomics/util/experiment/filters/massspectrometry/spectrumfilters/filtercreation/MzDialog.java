@@ -44,6 +44,7 @@ public class MzDialog extends javax.swing.JDialog {
                 ppmCmb.setSelectedIndex(1);
             }
         }
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
 
@@ -209,6 +210,9 @@ public class MzDialog extends javax.swing.JDialog {
             Double mzTol = new Double(mzTolTxt.getText());
             Double intQuantile = new Double(intTxt.getText());
             spectrumFilter = new MzFilter(mz, mzTol, ppmCmb.getSelectedIndex() == 1, intQuantile);
+            String name = "m/z (" + mz + ")";
+            spectrumFilter.setName(name);
+            dispose();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

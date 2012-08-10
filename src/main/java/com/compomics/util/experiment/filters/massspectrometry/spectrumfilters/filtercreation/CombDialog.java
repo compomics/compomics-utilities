@@ -8,6 +8,7 @@ import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.CombFilter;
 import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.MzFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -53,6 +54,7 @@ public class CombDialog extends javax.swing.JDialog {
                 ppmCmb.setSelectedIndex(1);
             }
         }
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
 
@@ -328,7 +330,21 @@ public class CombDialog extends javax.swing.JDialog {
         if (validateInput()) {
             Double mzTol = new Double(mzTolTxt.getText());
             Double intQuantile = new Double(intTxt.getText());
+            Collections.sort(mzArray);
             spectrumFilter = new CombFilter(mzArray, mzTol, ppmCmb.getSelectedIndex() == 1, intQuantile);
+            String name = "Comb (";
+            boolean first = true;
+            for (double mz : mzArray) {
+                if (first) {
+                    first = false;
+                } else {
+                    name += ", ";
+                }
+                name += mz;
+            }
+            name += ")";
+            spectrumFilter.setName(name);
+            dispose();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

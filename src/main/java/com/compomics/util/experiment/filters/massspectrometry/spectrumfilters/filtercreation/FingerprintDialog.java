@@ -1,44 +1,40 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.filtercreation;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
-import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.CombFilter;
 import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.FingerprintPattern;
-import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.MzFilter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * This dialog allows the creation of an MzFilter
+ * This dialog allows the creation of an MzFilter.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class FingerprintDialog extends javax.swing.JDialog {
 
     /**
-     * The created filter
+     * The created filter.
      */
     private SpectrumFilter spectrumFilter = null;
     /**
-     * List of the desired m/z to filter
+     * List of the desired m/z to filter.
      */
     private ArrayList<Double> mzArray = new ArrayList<Double>();
     /**
-     * List of the desired intensities to filter
+     * List of the desired intensities to filter.
      */
     private ArrayList<Double> intArray = new ArrayList<Double>();
+
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param parent the parent frame
      * @param mzTolerance the default mzTolerance. Can be null.
      * @param intensityQuantile the default intensity quantile. Can be null.
+     * @param isPpm  
      */
     public FingerprintDialog(JFrame parent, Double mzTolerance, Double intensityQuantile, Boolean isPpm) {
         super(parent, true);
@@ -59,9 +55,10 @@ public class FingerprintDialog extends javax.swing.JDialog {
         setLocationRelativeTo(parent);
         setVisible(true);
     }
-    
+
     /**
-     * Validates the user input
+     * Validates the user input.
+     *
      * @return a boolean indicating whether the user input can be used
      */
     public boolean validateInput() {
@@ -71,14 +68,14 @@ public class FingerprintDialog extends javax.swing.JDialog {
             return false;
         }
         try {
-            Double test = new Double(mzTolTxt.getText());
+            new Double(mzTolTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the m/z tolerance.",
                     "Wrong m/z tolerance", JOptionPane.WARNING_MESSAGE);
             return false;
         }
         try {
-            Double test = new Double(intTxt.getText());
+            new Double(intTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the intensity tolerance.",
                     "Wrong intensity tolerance", JOptionPane.WARNING_MESSAGE);
@@ -86,9 +83,10 @@ public class FingerprintDialog extends javax.swing.JDialog {
         }
         return true;
     }
-    
+
     /**
      * Returns the filter created. Null if none.
+     *
      * @return the filter created. Null if none.
      */
     public SpectrumFilter getFilter() {
@@ -141,25 +139,23 @@ public class FingerprintDialog extends javax.swing.JDialog {
         @Override
         public void setValueAt(Object aValue, int row, int column) {
             if (column == 1) {
-            String value = aValue.toString().trim();
-            if (!value.equals("")) {
-                try {
-                    Double newValue = new Double(value);
-                    mzArray.set(row, newValue);
-                } catch (Exception e) {
-                    
+                String value = aValue.toString().trim();
+                if (!value.equals("")) {
+                    try {
+                        Double newValue = new Double(value);
+                        mzArray.set(row, newValue);
+                    } catch (Exception e) {
+                    }
                 }
-            }
             } else if (column == 2) {
                 String value = aValue.toString().trim();
-            if (!value.equals("")) {
-                try {
-                    Double newValue = new Double(value);
-                    intArray.set(row, newValue);
-                } catch (Exception e) {
-                    
+                if (!value.equals("")) {
+                    try {
+                        Double newValue = new Double(value);
+                        intArray.set(row, newValue);
+                    } catch (Exception e) {
+                    }
                 }
-            }
             }
         }
 
@@ -178,7 +174,7 @@ public class FingerprintDialog extends javax.swing.JDialog {
             return column == 1;
         }
     }
-    
+
     /**
      * Repaints the table.
      */
@@ -209,38 +205,38 @@ public class FingerprintDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
         intTxt = new javax.swing.JTextField();
         mzTolTxt = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         mzTable = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("peaks:");
+        jLabel1.setText("Peaks:");
 
-        jLabel2.setText("m/z tolerance:");
+        jLabel2.setText("m/z Accuracy:");
 
         ppmCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Da", "ppm" }));
 
-        jLabel3.setText("Intensity tolerance:");
+        jLabel3.setText("Intensity Accuracy:");
 
         jLabel4.setText("%");
 
-        jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                okButtonActionPerformed(evt);
             }
         });
 
@@ -253,17 +249,17 @@ public class FingerprintDialog extends javax.swing.JDialog {
         mzTable.setModel(new MzTable());
         jScrollPane1.setViewportView(mzTable);
 
-        jButton3.setText("+");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        addButton.setText("+");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                addButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("-");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        removeButton.setText("-");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                removeButtonActionPerformed(evt);
             }
         });
 
@@ -281,26 +277,26 @@ public class FingerprintDialog extends javax.swing.JDialog {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(intTxt)
+                            .addComponent(mzTolTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ppmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(mzTolTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ppmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(intTxt)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(10, 10, 10)
                                 .addComponent(jLabel4))))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                            .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -310,11 +306,11 @@ public class FingerprintDialog extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(addButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)))
+                        .addComponent(removeButton)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -329,26 +325,36 @@ public class FingerprintDialog extends javax.swing.JDialog {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Closes the dialog without saving.
+     * 
+     * @param evt 
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    /**
+     * Saves the details and then closes the dialog.
+     * 
+     * @param evt 
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
             Double mzTol = new Double(mzTolTxt.getText());
             Double intensityTolerance = new Double(intTxt.getText());
-            spectrumFilter = new FingerprintPattern(mzArray, intArray, mzTol, ppmCmb.getSelectedIndex()==1, intensityTolerance);
+            spectrumFilter = new FingerprintPattern(mzArray, intArray, mzTol, ppmCmb.getSelectedIndex() == 1, intensityTolerance);
             String name = "Fingerprint (";
             boolean first = true;
-            for (int i = 0 ; i < mzArray.size() ; i++) {
+            for (int i = 0; i < mzArray.size(); i++) {
                 if (first) {
                     first = false;
                 } else {
@@ -360,9 +366,14 @@ public class FingerprintDialog extends javax.swing.JDialog {
             spectrumFilter.setName(name);
             dispose();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_okButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    /**
+     * Add a filter.
+     * 
+     * @param evt 
+     */
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         String outcome = JOptionPane.showInputDialog(this, "Please select an m/z to add to the filter");
         try {
             Double mz = new Double(outcome);
@@ -375,23 +386,25 @@ public class FingerprintDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Input could not be parsed.",
                     "Wrong input", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_addButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    /**
+     * Remove a filter.
+     * 
+     * @param evt 
+     */
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         int row = mzTable.convertRowIndexToModel(mzTable.getSelectedRow());
         if (row >= 0) {
-        mzArray.remove(row);
-        intArray.remove(row);
+            mzArray.remove(row);
+            intArray.remove(row);
             repaintTable();
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
-
+    }//GEN-LAST:event_removeButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JTextField intTxt;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -400,6 +413,8 @@ public class FingerprintDialog extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable mzTable;
     private javax.swing.JTextField mzTolTxt;
+    private javax.swing.JButton okButton;
     private javax.swing.JComboBox ppmCmb;
+    private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.general;
 
 import java.util.ArrayList;
@@ -9,29 +5,29 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * Handles exception for a given application
+ * Handles exception for a given application.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ExceptionHandler {
-    
-    
+
     /**
      * List of caught exceptions.
      */
     private ArrayList<String> exceptionCaught = new ArrayList<String>();
     /**
-     * The parent frame used to display feedback
+     * The parent frame used to display feedback.
      */
     private JFrame parent;
+
     /**
-     * constructor
+     * Constructor.
+     *
      * @param parent the parent frame used to display feedback
      */
     public ExceptionHandler(JFrame parent) {
         this.parent = parent;
     }
-    
 
     /**
      * Method called whenever an exception is caught.
@@ -44,12 +40,14 @@ public class ExceptionHandler {
             exceptionCaught.add(getExceptionType(e));
             if (getExceptionType(e).equals("Protein not found")) {
                 JOptionPane.showMessageDialog(parent,
-                        e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
+                        e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
+                        + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             } else if (getExceptionType(e).equals("Serialization")) {
                 JOptionPane.showMessageDialog(parent,
-                        e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
+                        e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
+                        + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             } else {

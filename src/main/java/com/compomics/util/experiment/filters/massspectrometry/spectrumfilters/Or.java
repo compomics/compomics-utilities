@@ -1,40 +1,35 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * filter consisting of several filters. The validation will be an 'or' of all
+ * Filter consisting of several filters. The validation will be an 'or' of all
  * individual validations.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Or extends SpectrumFilter {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 7845873802508736561L;
     /**
-     * List of filters on which we will do an 'or'
+     * List of filters on which we will do an 'or'.
      */
     private ArrayList<SpectrumFilter> filters = new ArrayList<SpectrumFilter>();
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Or() {
     }
 
     /**
      * Adds a filter to the or Filters will be tested iteratively so put the
-     * fast/discriminative first
+     * fast/discriminative first.
      *
      * @param spectrumFilter
      */
@@ -44,7 +39,7 @@ public class Or extends SpectrumFilter {
 
     /**
      * Returns a boolean indicating whether one of the implemented filters
-     * validated the spectrum
+     * validated the spectrum.
      *
      * @param spectrum the spectrum
      * @return a boolean indicating whether one of the implemented filters

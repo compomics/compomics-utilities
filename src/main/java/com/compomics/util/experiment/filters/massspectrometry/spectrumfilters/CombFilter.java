@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
@@ -10,23 +6,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * This filter looks for a specific m/z comb in the spectrum
+ * This filter looks for a specific m/z comb in the spectrum.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class CombFilter extends SpectrumFilter {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2943615250048987546L;
     /**
-     * The actual filter, an and of m/z filters
+     * The actual filter, an and of m/z filters.
      */
     private And filter;
 
     /**
-     * constructor
+     * Constructor.
      *
      * @param mzComb the m/z comb to look for
      * @param mzTolerance the m/z tolerance
@@ -48,7 +44,7 @@ public class CombFilter extends SpectrumFilter {
 
     /**
      * Returns a boolean indicating whether the filter m/z comb was found in the
-     * spectrum
+     * spectrum.
      *
      * @param spectrum the spectrum to inspect
      * @return a boolean indicating whether the filter m/z comb was found in the

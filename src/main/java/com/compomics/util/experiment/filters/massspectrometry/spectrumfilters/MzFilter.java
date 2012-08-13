@@ -1,61 +1,55 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 /**
  * This class checks whether a peak is present in a spectrum among the most
- * intense peaks
+ * intense peaks.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class MzFilter extends SpectrumFilter {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 7463874851796836587L;
     /**
-     * The m/z to look for
+     * The m/z to look for.
      */
     private double mz;
     /**
-     * The m/z to tolerance to use
+     * The m/z to tolerance to use.
      */
     private double mzTolerance;
     /**
-     * A boolean indicating whether the m/z tolerance is in ppm
+     * A boolean indicating whether the m/z tolerance is in ppm.
      */
     private boolean isPpm;
     /**
-     * The intensity quantile to look into
+     * The intensity quantile to look into.
      */
     private double intensityQuantile;
     /**
-     * Filter with similar properties
+     * Filter with similar properties.
      */
     private MzFilter brotherFilter = null;
     /**
-     * array of m/z to be inspected
+     * array of m/z to be inspected.
      */
     private ArrayList<Double> mzArray;
     /**
-     * The key of the inspected spectrum
+     * The key of the inspected spectrum.
      */
     private String spectrumKey = "";
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param mz the m/z to look for
      * @param mzTolerance the m/z tolerance
@@ -70,7 +64,7 @@ public class MzFilter extends SpectrumFilter {
     }
 
     /**
-     * Creates a filter from a similar filter
+     * Creates a filter from a similar filter.
      *
      * @param brotherFilter another filter
      * @param mz the other m/z to look for
@@ -84,7 +78,7 @@ public class MzFilter extends SpectrumFilter {
     }
 
     /**
-     * Returns the m/z tolerance to search with
+     * Returns the m/z tolerance to search with.
      *
      * @return the m/z tolerance
      */
@@ -93,7 +87,7 @@ public class MzFilter extends SpectrumFilter {
     }
 
     /**
-     * Returns a boolean indicating whether the m/z tolerance is in ppm
+     * Returns a boolean indicating whether the m/z tolerance is in ppm.
      *
      * @return a boolean indicating whether the m/z tolerance is in ppm
      */
@@ -102,7 +96,7 @@ public class MzFilter extends SpectrumFilter {
     }
 
     /**
-     * Returns the intensity quantile to look into
+     * Returns the intensity quantile to look into.
      *
      * @return the intensity quantile
      */
@@ -111,7 +105,7 @@ public class MzFilter extends SpectrumFilter {
     }
 
     /**
-     * Returns the key of the spectrum loaded
+     * Returns the key of the spectrum loaded.
      *
      * @return the key of the spectrum loaded
      */
@@ -120,7 +114,7 @@ public class MzFilter extends SpectrumFilter {
     }
 
     /**
-     * Returns the mzArray
+     * Returns the mzArray.
      *
      * @return the mzArray
      */
@@ -130,7 +124,7 @@ public class MzFilter extends SpectrumFilter {
 
     /**
      * Indicates whether a peak was found in the spectrum at the desired m/z in
-     * the given intensity quartile
+     * the given intensity quartile.
      *
      * @param spectrum the spectrum to inspect
      * @return a boolean indicating whether a peak was found in the spectrum at
@@ -221,6 +215,7 @@ public class MzFilter extends SpectrumFilter {
     /**
      * Get the absolute matching error in Da.
      *
+     * @param otherMz 
      * @return the absolute matching error
      */
     public double getError(double otherMz) {
@@ -235,9 +230,9 @@ public class MzFilter extends SpectrumFilter {
     @Override
     public String getDescription() {
         if (intensityQuantile > 0) {
-        return "containing a peak at m/z " + mz + " among the " + ((int) (intensityQuantile*100)) + " most intense peaks";
+            return "containing a peak at m/z " + mz + " among the " + ((int) (intensityQuantile * 100)) + " most intense peaks";
         } else {
-        return "containing a peak at m/z " + mz;
+            return "containing a peak at m/z " + mz;
         }
     }
 }

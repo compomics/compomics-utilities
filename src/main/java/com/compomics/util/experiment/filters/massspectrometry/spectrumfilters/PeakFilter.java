@@ -1,50 +1,44 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 /**
- *
- * @author vaudel
+ * A peak filter.
+ * 
+ * @author Marc Vaudel
  */
 public class PeakFilter extends SpectrumFilter {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 1751883115257153259L;
     /**
-     * The m/z to look for
+     * The m/z to look for.
      */
     private double mz;
     /**
-     * The m/z to tolerance to use
+     * The m/z to tolerance to use.
      */
     private double mzTolerance;
     /**
-     * A boolean indicating whether the m/z tolerance is in ppm
+     * A boolean indicating whether the m/z tolerance is in ppm.
      */
     private boolean isPpm;
     /**
-     * The intensity to look for
+     * The intensity to look for.
      */
     private double intensity;
     /**
-     * The intensity tolerance to look for
+     * The intensity tolerance to look for.
      */
     private double intensityTolerance;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param mz the m/z to look for
      * @param mzTolerance the m/z tolerance
@@ -62,7 +56,7 @@ public class PeakFilter extends SpectrumFilter {
 
     /**
      * Indicates whether a peak was found in the spectrum at the desired m/z in
-     * the given intensity quartile
+     * the given intensity quartile.
      *
      * @param spectrum the spectrum to inspect
      * @return a boolean indicating whether a peak was found in the spectrum at
@@ -121,6 +115,7 @@ public class PeakFilter extends SpectrumFilter {
     /**
      * Get the absolute matching error in Da.
      *
+     * @param otherMz 
      * @return the absolute matching error
      */
     public double getError(double otherMz) {

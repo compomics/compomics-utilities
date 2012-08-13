@@ -1,42 +1,37 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.filtercreation;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.CombFilter;
-import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.MzFilter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * This dialog allows the creation of an MzFilter
+ * This dialog allows the creation of an MzFilter.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class CombDialog extends javax.swing.JDialog {
 
     /**
-     * The created filter
+     * The created filter.
      */
     private SpectrumFilter spectrumFilter = null;
     /**
-     * List of the desired m/z to filter
+     * List of the desired m/z to filter.
      */
     private ArrayList<Double> mzArray = new ArrayList<Double>();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param parent the parent frame
      * @param mzTolerance the default mzTolerance. Can be null.
      * @param intensityQuantile the default intensity quantile. Can be null.
+     * @param isPpm  
      */
     public CombDialog(JFrame parent, Double mzTolerance, Double intensityQuantile, Boolean isPpm) {
         super(parent, true);
@@ -59,7 +54,7 @@ public class CombDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Validates the user input
+     * Validates the user input.
      *
      * @return a boolean indicating whether the user input can be used
      */
@@ -70,14 +65,14 @@ public class CombDialog extends javax.swing.JDialog {
             return false;
         }
         try {
-            Double test = new Double(mzTolTxt.getText());
+            new Double(mzTolTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the m/z tolerance.",
                     "Wrong m/z tolerance", JOptionPane.WARNING_MESSAGE);
             return false;
         }
         try {
-            Double test = new Double(intTxt.getText());
+            new Double(intTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the intensity quantile.",
                     "Wrong intensity quantile", JOptionPane.WARNING_MESSAGE);
@@ -194,38 +189,38 @@ public class CombDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        okButtonButton = new javax.swing.JButton();
         intTxt = new javax.swing.JTextField();
         mzTolTxt = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         mzTable = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("m/z:");
 
-        jLabel2.setText("m/z tolerance:");
+        jLabel2.setText("m/z Accuracy:");
 
         ppmCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Da", "ppm" }));
 
-        jLabel3.setText("Intensity quantile:");
+        jLabel3.setText("Intensity Quantile:");
 
         jLabel4.setText("%");
 
-        jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        okButtonButton.setText("OK");
+        okButtonButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                okButtonButtonActionPerformed(evt);
             }
         });
 
@@ -238,17 +233,17 @@ public class CombDialog extends javax.swing.JDialog {
         mzTable.setModel(new MzTable());
         jScrollPane1.setViewportView(mzTable);
 
-        jButton3.setText("+");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        addButton.setText("+");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                addButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("-");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        removeButton.setText("-");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                removeButtonActionPerformed(evt);
             }
         });
 
@@ -266,26 +261,26 @@ public class CombDialog extends javax.swing.JDialog {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(intTxt)
+                            .addComponent(mzTolTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ppmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(mzTolTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ppmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(intTxt)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(10, 10, 10)
                                 .addComponent(jLabel4))))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButtonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                            .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -295,11 +290,11 @@ public class CombDialog extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(addButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)))
+                        .addComponent(removeButton)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -314,19 +309,29 @@ public class CombDialog extends javax.swing.JDialog {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cancelButton)
+                    .addComponent(okButtonButton))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Close the dialog without saving.
+     * 
+     * @param evt 
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    /**
+     * Saves the information and then closes the dialog.
+     * 
+     * @param evt 
+     */
+    private void okButtonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonButtonActionPerformed
         if (validateInput()) {
             Double mzTol = new Double(mzTolTxt.getText());
             Double intQuantile = new Double(intTxt.getText());
@@ -346,9 +351,14 @@ public class CombDialog extends javax.swing.JDialog {
             spectrumFilter.setName(name);
             dispose();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_okButtonButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    /**
+     * Add a filter.
+     * 
+     * @param evt 
+     */
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         Object outcome = JOptionPane.showInputDialog(this, "Please select an m/z to add to the filter");
         try {
             Double mz = new Double(outcome + "");
@@ -358,21 +368,24 @@ public class CombDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "m/z: " + outcome + " could not be added.",
                     "Wrong m/z", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_addButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    /**
+     * Remove a filter.
+     * 
+     * @param evt 
+     */
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         int row = mzTable.convertRowIndexToModel(mzTable.getSelectedRow());
         if (row >= 0) {
             mzArray.remove(row);
             repaintTable();
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_removeButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JTextField intTxt;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -381,6 +394,8 @@ public class CombDialog extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable mzTable;
     private javax.swing.JTextField mzTolTxt;
+    private javax.swing.JButton okButtonButton;
     private javax.swing.JComboBox ppmCmb;
+    private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
 }

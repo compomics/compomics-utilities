@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry;
 
-import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.PeakFilter;
 import com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.filtercreation.*;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.io.Serializable;
@@ -14,17 +9,17 @@ import javax.swing.JFrame;
  * This class represent all spectrum filters which will be used to filter
  * spectra.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public abstract class SpectrumFilter implements Serializable {
 
     /**
-     * The name of the filter
+     * The name of the filter.
      */
     protected String name;
 
     /**
-     * Returns the name of the filter
+     * Returns the name of the filter.
      *
      * @return the name of the filter
      */
@@ -33,7 +28,7 @@ public abstract class SpectrumFilter implements Serializable {
     }
 
     /**
-     * Sets the name of the filter
+     * Sets the name of the filter.
      *
      * @param name the name of the filter
      */
@@ -42,7 +37,7 @@ public abstract class SpectrumFilter implements Serializable {
     }
 
     /**
-     * Indicates whether a spectrum passed the filter
+     * Indicates whether a spectrum passed the filter.
      *
      * @param spectrum the spectrum to inspect
      * @return a boolean indicating whether a spectrum passed the filter
@@ -51,14 +46,14 @@ public abstract class SpectrumFilter implements Serializable {
 
     /**
      * Returns a description of the validated spectra, typically "containing a
-     * peak at m/z 114"
+     * peak at m/z 114".
      *
      * @return a description of the validated spectra
      */
     public abstract String getDescription();
 
     /**
-     * Convenience method returning the types of implemented elementary filters
+     * Convenience method returning the types of implemented elementary filters.
      *
      * @return the types of implemented elementary filters
      */
@@ -72,12 +67,14 @@ public abstract class SpectrumFilter implements Serializable {
     }
 
     /**
-     * Allows the user to design basic filters via a GUI
+     * Allows the user to design basic filters via a GUI.
+     *
      * @param parentFrame the parent frame
      * @param mzTolerance the mz tolerance, can be null
      * @param intensityQuantile the intensity quantile, can be null
      * @param intensityTolerance the intensity tolerance, can be null
-     * @param isPpm a boolean indicating whether the tolerance is in ppm, can be null
+     * @param isPpm a boolean indicating whether the tolerance is in ppm, can be
+     * null
      * @return the filter as designed by the user. Null if none.
      */
     public static SpectrumFilter getFilter(JFrame parentFrame, Double mzTolerance, Double intensityQuantile, Double intensityTolerance, Boolean isPpm) {

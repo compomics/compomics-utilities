@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.filtercreation;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
@@ -10,23 +6,24 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * This dialog allows the creation of an MzFilter
+ * This dialog allows the creation of an MzFilter.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class MzDialog extends javax.swing.JDialog {
 
     /**
-     * The created filter
+     * The created filter.
      */
     private SpectrumFilter spectrumFilter = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param parent the parent frame
      * @param mzTolerance the default mzTolerance. Can be null.
      * @param intensityQuantile the default intensity quantile. Can be null.
+     * @param isPpm  
      */
     public MzDialog(JFrame parent, Double mzTolerance, Double intensityQuantile, Boolean isPpm) {
         super(parent, true);
@@ -49,27 +46,27 @@ public class MzDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Validates the user input
+     * Validates the user input.
      *
      * @return a boolean indicating whether the user input can be used
      */
     public boolean validateInput() {
         try {
-            Double test = new Double(mzTxt.getText());
+            new Double(mzTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the m/z.",
                     "Wrong m/z", JOptionPane.WARNING_MESSAGE);
             return false;
         }
         try {
-            Double test = new Double(mzTolTxt.getText());
+            new Double(mzTolTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the m/z tolerance.",
                     "Wrong m/z tolerance", JOptionPane.WARNING_MESSAGE);
             return false;
         }
         try {
-            Double test = new Double(intTxt.getText());
+            new Double(intTxt.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the intensity quantile.",
                     "Wrong intensity quantile", JOptionPane.WARNING_MESSAGE);
@@ -102,35 +99,36 @@ public class MzDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
         intTxt = new javax.swing.JTextField();
         mzTolTxt = new javax.swing.JTextField();
         mzTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("m/z:");
 
-        jLabel2.setText("m/z tolerance:");
+        jLabel2.setText("m/z Accuracy:");
 
         ppmCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Da", "ppm" }));
 
-        jLabel3.setText("Intensity quantile:");
+        jLabel3.setText("Intensity Quantile:");
 
         jLabel4.setText("%");
 
-        jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                okButtonActionPerformed(evt);
             }
         });
 
@@ -150,25 +148,25 @@ public class MzDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(intTxt)
+                            .addComponent(mzTolTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                            .addComponent(mzTxt))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ppmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(mzTolTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ppmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(intTxt)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4))
-                            .addComponent(mzTxt))))
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel4)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -192,19 +190,29 @@ public class MzDialog extends javax.swing.JDialog {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Closes the dialog without saving.
+     * 
+     * @param evt 
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    /**
+     * Saves and then closes the dialog.
+     * 
+     * @param evt 
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
             Double mz = new Double(mzTxt.getText());
             Double mzTol = new Double(mzTolTxt.getText());
@@ -214,11 +222,10 @@ public class MzDialog extends javax.swing.JDialog {
             spectrumFilter.setName(name);
             dispose();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelButton;
     private javax.swing.JTextField intTxt;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -226,6 +233,7 @@ public class MzDialog extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField mzTolTxt;
     private javax.swing.JTextField mzTxt;
+    private javax.swing.JButton okButton;
     private javax.swing.JComboBox ppmCmb;
     // End of variables declaration//GEN-END:variables
 }

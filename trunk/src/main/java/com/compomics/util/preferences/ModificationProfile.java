@@ -6,53 +6,60 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * This class stores the information about the modification preferences (colors, Names) used for the selected project.
+ * This class stores the information about the modification preferences (colors,
+ * Names) used for the selected project.
  *
  * @author Marc Vaudel
  */
 public class ModificationProfile implements Serializable {
 
     /**
-     * Serial version number for serialization compatibility
+     * Serial version number for serialization compatibility.
      */
     static final long serialVersionUID = 342611308111304721L;
     /**
-     * Mapping of the utilities modification names to the PeptideShaker names
+     * Mapping of the utilities modification names to the PeptideShaker names.
      */
     private HashMap<String, String> modificationNames = new HashMap<String, String>();
     /**
-     * Mapping of the PeptideShaker names to the short names
+     * Mapping of the PeptideShaker names to the short names.
      */
     private HashMap<String, String> shortNames = new HashMap<String, String>();
     /**
-     * Mapping of the PeptideShaker names to the color used
+     * Mapping of the PeptideShaker names to the color used.
      */
     private HashMap<String, Color> colors = new HashMap<String, Color>();
 
     /**
-     * Constructor
+     * Constructor.
      */
     public ModificationProfile() {
     }
 
     /**
-     * Returns the set of the utilities modification names included in this profile
-     * @return the set of the utilities modification names included in this profile
+     * Returns the set of the utilities modification names included in this
+     * profile.
+     *
+     * @return the set of the utilities modification names included in this
+     * profile
      */
     public Set<String> getUtilitiesNames() {
         return modificationNames.keySet();
     }
 
     /**
-     * Returns the modification family names included in this profile
-     * @return the modification family  names included in this profile 
+     * Returns the modification family names included in this profile.
+     *
+     * @return the modification family names included in this profile
      */
     public Set<String> getFamilyNames() {
         return shortNames.keySet();
     }
 
     /**
-     * Returns the modification family name corresponding to the given utilities name
+     * Returns the modification family name corresponding to the given utilities
+     * name.
+     *
      * @param utilitiesName the given utilities name
      * @return the corresponding modification family name
      */
@@ -61,7 +68,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the short name of the given modification
+     * Returns the short name of the given modification.
+     *
      * @param familyName the PeptideShaker name of the modification
      * @return the corresponding short name
      */
@@ -70,7 +78,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the color used to code the given modification
+     * Returns the color used to code the given modification.
+     *
      * @param familyName the PeptideShaker name of the given modification
      * @return the corresponding color
      */
@@ -79,8 +88,9 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Sets a new family name for the given modification
-     * @param utilitiesName     the utilities name of the modification
+     * Sets a new family name for the given modification.
+     *
+     * @param utilitiesName the utilities name of the modification
      * @param familyName the new family name
      */
     public void setPeptideShakerName(String utilitiesName, String familyName) {
@@ -100,7 +110,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * sets a new short name for the given modification
+     * Sets a new short name for the given modification.
+     *
      * @param familyName the PeptideShaker name of the modification
      * @param shortName the new short name
      */
@@ -109,7 +120,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Sets a new color for the modification
+     * Sets a new color for the modification.
+     *
      * @param familyName the family name of the modification
      * @param color the new color
      */
@@ -119,7 +131,7 @@ public class ModificationProfile implements Serializable {
 
     /**
      * Removes a modification from the profile.
-     * 
+     *
      * @param utilitiesName the utilities name of the modification
      */
     public void remove(String utilitiesName) {
@@ -133,8 +145,8 @@ public class ModificationProfile implements Serializable {
 
     /**
      * Returns a mapping of the PeptideShaker names to the colors used.
-     * 
-     * @return  a mapping of the PeptideShaker names to the colors used
+     *
+     * @return a mapping of the PeptideShaker names to the colors used
      */
     public HashMap<String, Color> getPtmColors() {
         return colors;

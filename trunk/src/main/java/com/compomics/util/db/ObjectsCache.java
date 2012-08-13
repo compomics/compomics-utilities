@@ -1,13 +1,9 @@
 package com.compomics.util.db;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -277,7 +273,7 @@ public class ObjectsCache {
     /**
      * Saves an entry in the database if modified and clears it from the cache.
      *
-     * @param entryKey the key of the entry
+     * @param entryKeys the keys of the entries
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -290,7 +286,7 @@ public class ObjectsCache {
     /**
      * Saves an entry in the database if modified and clears it from the cache.
      *
-     * @param entryKey the key of the entry
+     * @param entryKeys the keys of the entries
      * @param waitingHandler a waiting handler displaying progress to the user.
      * Can be null. Progress will be displayed as secondary.
      * @throws SQLException exception thrown whenever an error occurred while
@@ -305,7 +301,7 @@ public class ObjectsCache {
     /**
      * Saves an entry in the database if modified.
      *
-     * @param entryKey the key of the entry
+     * @param entryKeys the keys of the entries
      * @param waitingHandler a waiting handler displaying progress to the user.
      * Can be null. Progress will be displayed as secondary.
      * @param clearEntries a boolean indicating whether the entry shall be
@@ -519,19 +515,16 @@ public class ObjectsCache {
 //        }
 
         // grouped option
-        HashMap<String, Object> objectsToStore;
-        HashMap<String, CacheEntry> data;
-        CacheEntry entry;
         for (String dbName : loadedObjectsMap.keySet()) {
             ObjectsDB objectsDB = databases.get(dbName);
             if (objectsDB == null) {
                 throw new IllegalStateException("Database " + dbName + " not loaded in cache");
             }
             for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
-                objectsToStore = new HashMap<String, Object>();
-                data = loadedObjectsMap.get(dbName).get(tableName);
+                HashMap<String, Object> objectsToStore = new HashMap<String, Object>();
+                HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
                 for (String objectKey : data.keySet()) {
-                    entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+                    CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
                     if (entry.isModified()) {
                         objectsToStore.put(objectKey, entry.getObject());
                     } else if (waitingHandler != null) {

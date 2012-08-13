@@ -1,22 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.filters.massspectrometry.spectrumfilters.filtercreation;
 
 import com.compomics.util.experiment.filters.massspectrometry.SpectrumFilter;
 import javax.swing.DefaultComboBoxModel;
 
 /**
- *
- * @author vaudel
+ * A filter type selector dialog.
+ * 
+ * @author Marc Vaudel
  */
 public class TypeSelection extends javax.swing.JDialog {
 
-    
-    private int selection = -1;
     /**
-     * Creates new form TypeSelection
+     * The selected type.
+     */
+    private int selection = -1;
+
+    /**
+     * Creates a new TypeSelection.
+     * 
+     * @param parent 
      */
     public TypeSelection(java.awt.Frame parent) {
         super(parent, true);
@@ -24,9 +26,10 @@ public class TypeSelection extends javax.swing.JDialog {
         setLocationRelativeTo(parent);
         setVisible(true);
     }
-    
+
     /**
-     * Returns the selected type
+     * Returns the selected type.
+     *
      * @return the selected type
      */
     public int getSelectedType() {
@@ -44,18 +47,19 @@ public class TypeSelection extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         typeCmb = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Type:");
 
         typeCmb.setModel(new DefaultComboBoxModel(SpectrumFilter.getElementaryFilters()));
 
-        jButton1.setText("OK");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                okButtonActionPerformed(evt);
             }
         });
 
@@ -69,7 +73,7 @@ public class TypeSelection extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(typeCmb, 0, 289, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(okButton)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -79,21 +83,25 @@ public class TypeSelection extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(okButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Sets the selection and then closes the dialog.
+     * 
+     * @param evt 
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         selection = typeCmb.getSelectedIndex();
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
+    }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton okButton;
     private javax.swing.JComboBox typeCmb;
     // End of variables declaration//GEN-END:variables
 }

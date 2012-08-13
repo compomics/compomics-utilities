@@ -178,9 +178,9 @@ public class ObjectsDB implements Serializable {
      * null). The progress will be displayed on the secondary progress bar.
      */
     public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException {
-                if (debugInteractions) {
-                    System.out.println("Preparing table insertion:" + tableName);
-                }
+        if (debugInteractions) {
+            System.out.println("Preparing table insertion:" + tableName);
+        }
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         PreparedStatement updateStatement = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME=?");
         dbConnection.setAutoCommit(false);
@@ -363,23 +363,32 @@ public class ObjectsDB implements Serializable {
         stmt.close();
         return result;
     }
-    
+
+    /**
+     * Returns an arraylist with the content in the given table.
+     *
+     * @param tableName the table to get the content for
+     * @return an arraylist with the content in the given tabl
+     * @throws SQLException
+     */
     public ArrayList<String> tableContent(String tableName) throws SQLException {
-        
+
         if (debugInteractions) {
             System.out.println("checking db content, table:" + tableName);
         }
+
         Statement stmt = dbConnection.createStatement();
         ResultSet results = stmt.executeQuery("select * from " + tableName);
         ArrayList<String> tableContent = new ArrayList<String>();
-        
+
         while (results.next()) {
             tableContent.add(results.getString(1));
         }
+
         results.close();
         stmt.close();
         return tableContent;
-    } 
+    }
 
     /**
      * Deletes an object from the desired table.

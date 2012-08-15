@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JProgressBar;
 
 /**
  * This reader will import identifications from an OMSSA omx file.
@@ -276,12 +275,18 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
      */
     private String fixMgfTitle(String spectrumTitle) {
 
-        // a special fix for mgf files with titles containing %3b instead if ;
-        spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+        // a special fix for mgf files with titles containing url encoding, e.g.: %3b instead of ;
+//        try {
+//            spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");// @TODO: only needed for mascot???
+//        } catch (UnsupportedEncodingException e) {
+//            System.out.println("An exception was thrown when trying to decode an mgf tile!");
+//            e.printStackTrace();
+//        }
 
-        // a special fix for mgf files with titles containing \\ instead \
-        spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
+        // a special fix for mgf files with titles containing \\ instead of \
+        spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");  // @TODO: only needed for OMSSA???
+        
         return spectrumTitle;
     }
 

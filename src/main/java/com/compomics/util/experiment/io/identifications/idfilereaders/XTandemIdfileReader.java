@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 
 /**
  * This reader will import identifications from an X!Tandem xml result file.
@@ -260,12 +259,18 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      */
     private String fixMgfTitle(String spectrumTitle) {
 
-        // a special fix for mgf files with titles containing %3b instead of ;
-        spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+        // a special fix for mgf files with titles containing url encoding, e.g.: %3b instead of ;
+//        try {
+//            spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // @TODO: only needed for mascot???
+//        } catch (UnsupportedEncodingException e) {
+//            System.out.println("An exception was thrown when trying to decode an mgf tile!");
+//            e.printStackTrace();
+//        }
 
-        // a special fix for mgf files with titles containing \\ instead \
-        spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
 
+        // a special fix for mgf files with titles containing \\ instead of \
+        //spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");  // @TODO: only needed for omssa???
+        
         return spectrumTitle;
     }
 

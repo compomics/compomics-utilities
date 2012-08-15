@@ -732,7 +732,7 @@ public abstract class Identification extends ExperimentObject {
             if (peptideMatch == null) {
                 throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
             }
-            // Correct protein inference discrepancies between spectrum matches
+            // correct protein inference discrepancies between spectrum matches
             for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
                 othermatch = identificationDB.getSpectrumMatch(otherMatchKey);
                 if (othermatch == null) {

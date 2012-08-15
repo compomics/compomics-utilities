@@ -97,6 +97,7 @@ public class SequenceFactory {
      * the FASTA file
      * @throws IllegalArgumentException thrown whenever an error is encountered
      * while reading the FASTA file
+     * @throws InterruptedException  
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -141,7 +142,7 @@ public class SequenceFactory {
         try {
             currentFastaFile.seek(index);
             String line, sequence = "";
-            Header currentHeader = currentHeaderMap.get(accession);;
+            Header currentHeader = currentHeaderMap.get(accession);
 
             while ((line = currentFastaFile.readLine()) != null) {
                 line = line.trim();
@@ -180,6 +181,7 @@ public class SequenceFactory {
      * reading the FASTA file
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
+     * @throws InterruptedException  
      */
     public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -482,6 +484,8 @@ public class SequenceFactory {
      * @param destinationFile the destination file
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
+     * @throws IllegalArgumentException
+     * @throws InterruptedException  
      */
     public void appendDecoySequences(File destinationFile) throws IOException, IllegalArgumentException, InterruptedException {
         appendDecoySequences(destinationFile, null);
@@ -496,6 +500,7 @@ public class SequenceFactory {
      * reading or writing a file
      * @throws IllegalArgumentException exdeption thrown whenever a protein is
      * not found
+     * @throws InterruptedException  
      */
     public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -595,7 +600,7 @@ public class SequenceFactory {
      * @param nCache the new size of the cache
      */
     public void setnCache(int nCache) {
-        this.nCache = nCache;
+        SequenceFactory.nCache = nCache;
     }
 
     /**
@@ -605,6 +610,8 @@ public class SequenceFactory {
      * @return a map containing all amino acid occurrence in the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the database
+     * @throws IllegalArgumentException
+     * @throws InterruptedException  
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException {
 

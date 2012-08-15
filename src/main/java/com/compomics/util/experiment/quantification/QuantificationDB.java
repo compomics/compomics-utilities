@@ -577,6 +577,7 @@ public class QuantificationDB implements Serializable {
      * @param dbFolder the absolute path to the folder where the database is
      * located
      * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectsCache 
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */

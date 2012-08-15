@@ -5,7 +5,6 @@ import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.IOException;
 
 import java.util.HashSet;
-import javax.swing.JProgressBar;
 
 /**
  * This interface will retrieve spectrum matches from any identification file.

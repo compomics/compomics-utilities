@@ -4,6 +4,7 @@ import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -110,14 +111,14 @@ public class SpectrumFactory {
     public void clearFactory() {
         instance = new SpectrumFactory();
     }
-    
+
     /**
      * Sets the spectrum cache size.
      *
      * @param nCache the new cache size
      */
     public void setCacheSize(int nCache) {
-        this.nSpectraCache = nCache;
+        SpectrumFactory.nSpectraCache = nCache;
     }
 
     /**
@@ -775,20 +776,30 @@ public class SpectrumFactory {
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {
+        
+        // @TODO: not sure if this is needed here as the titles are fixed during import??
 
-        // a special fix for mgf files with titles containing %3b instead if ;
+        // a special fix for mgf files with titles containing url encoding, e.g.: %3b instead of ;
         if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
-            spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
+
+            try {
+                spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // @TODO: only required for mascot??
+            } catch (UnsupportedEncodingException e) {
+                System.out.println("An exception was thrown when trying to decode an mgf tile!");
+                e.printStackTrace();
+            }
+
+            //spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
         }
 
         // a special fix for mgf files with titles containing \\ instead \
         if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
-            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");
+            spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\"); // @TODO: only required for omssa???
         }
 
         return spectrumTitle;
     }
-
+    
     /**
      * Adds an id to spectrum name in the mapping.
      *

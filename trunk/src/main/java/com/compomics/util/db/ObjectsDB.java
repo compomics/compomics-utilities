@@ -79,7 +79,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Returns the database name
+     * Returns the database name.
      *
      * @return the database name
      */
@@ -92,7 +92,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Returns the cache used by this database
+     * Returns the cache used by this database.
      *
      * @return the cache used by this database
      */
@@ -101,7 +101,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Sets the object cache to be used by this database
+     * Sets the object cache to be used by this database.
      *
      * @param objectCache the object cache to be used by this database
      */
@@ -170,12 +170,14 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Inserts a set of objects in the given table
+     * Inserts a set of objects in the given table.
      *
      * @param tableName the name of the table
      * @param objects map of the objects (object key -> object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
+     * @throws SQLException
+     * @throws IOException
      */
     public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException {
         if (debugInteractions) {
@@ -186,6 +188,7 @@ public class ObjectsDB implements Serializable {
         dbConnection.setAutoCommit(false);
         ArrayList<String> tableContent = tableContent(tableName);
         int rowCounter = 0;
+
         for (String objectKey : objects.keySet()) {
 
             if (debugContent) {

@@ -562,8 +562,18 @@ public class ObjectsDB implements Serializable {
         // debug test content
         if (debugContent) {
             try {
-                debugFolder = new File(aDbFolder);
-                debugContentWriter = new BufferedWriter(new FileWriter(new File(parentFolder, "dbContent.txt")));
+                debugFolder = new File(aDbFolder); 
+                
+                String tempFileName = "dbContent.txt";
+                
+                int counter = 1;
+                
+                // make sure that we don't overwrite the old files
+                while (new File(parentFolder, tempFileName).exists()) {
+                    tempFileName = "dbContent" + counter++ + ".txt";
+                }
+                
+                debugContentWriter = new BufferedWriter(new FileWriter(new File(parentFolder, tempFileName)));
                 debugContentWriter.write("Table\tkey\tsize\n");
                 debugContentWriter.flush();
             } catch (Exception e) {

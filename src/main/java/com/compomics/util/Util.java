@@ -21,6 +21,7 @@ public class Util {
 
     /**
      * Removes the forbidden characters from a string
+     *
      * @param string the string of interest
      * @return a version without forbidden characters
      */
@@ -35,7 +36,7 @@ public class Util {
         }
         return result;
     }
-    
+
     /**
      * Indicates whether a string contains characters forbidden in file names.
      *
@@ -249,6 +250,32 @@ public class Util {
             if (outChannel != null) {
                 outChannel.close();
             }
+        }
+    }
+
+    /**
+     * Returns the number of lines in the given file.
+     *
+     * @param file the file to find the number of lines in
+     * @return the number of lines in the given file
+     * @throws IOException
+     */
+    public static int getNumberOfLines(File file) throws IOException {
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+        try {
+            byte[] c = new byte[1024];
+            int lineCount = 0;
+            int readChars;
+            while ((readChars = inputStream.read(c)) != -1) {
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++lineCount;
+                    }
+                }
+            }
+            return lineCount;
+        } finally {
+            inputStream.close();
         }
     }
 }

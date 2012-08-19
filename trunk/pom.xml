@@ -11,7 +11,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>3.7.4</version.number>
+        <version.number>3.7.5</version.number>
         <logging.file.path.name>compomics-utilities-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
@@ -440,6 +440,12 @@
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>10.8.2.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>braf</artifactId>
+            <version>1.0.1</version>
         </dependency>
         
         

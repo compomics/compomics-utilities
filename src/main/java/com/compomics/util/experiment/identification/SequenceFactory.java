@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
+import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * Factory retrieving the information of the loaded FASTA file.
@@ -35,7 +36,7 @@ public class SequenceFactory {
     /**
      * Random access file of the current FASTA file.
      */
-    private static RandomAccessFile currentFastaFile;
+    private static BufferedRandomAccessFile currentFastaFile;
     /**
      * Number of proteins to keep in cache, 1 by default.
      */
@@ -236,7 +237,7 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      */
     public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        currentFastaFile = new RandomAccessFile(fastaFile, "r");
+        currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(fastaFile);
     }
 
@@ -253,7 +254,7 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      */
     public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException {
-        currentFastaFile = new RandomAccessFile(fastaFile, "r");
+        currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(fastaFile, waitingHandler);
     }
 
@@ -388,7 +389,7 @@ public class SequenceFactory {
     private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
-        RandomAccessFile randomAccessFile = new RandomAccessFile(fastaFile, "r");
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -397,14 +398,14 @@ public class SequenceFactory {
             waitingHandler.setSecondaryProgressValue(0);
         }
 
-        long progressUnit = randomAccessFile.length() / 100;
+        long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String line;
         boolean decoy = false;
         int nTarget = 0;
-        long index = randomAccessFile.getFilePointer();
+        long index = bufferedRandomAccessFile.getFilePointer();
 
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (line.startsWith(">")) {
                 Header fastaHeader = Header.parseFromFASTA(line);
                 String accession = fastaHeader.getAccession();
@@ -424,7 +425,7 @@ public class SequenceFactory {
                     }
                 }
             } else {
-                index = randomAccessFile.getFilePointer();
+                index = bufferedRandomAccessFile.getFilePointer();
             }
         }
 
@@ -433,7 +434,7 @@ public class SequenceFactory {
             //progressBar.setStringPainted(false);
         }
 
-        randomAccessFile.close();
+        bufferedRandomAccessFile.close();
 
         return new FastaIndex(indexes, fastaFile.getName(), decoy, nTarget);
     }
@@ -511,7 +512,7 @@ public class SequenceFactory {
             waitingHandler.setSecondaryProgressValue(0);
         }
 
-        RandomAccessFile newFile = new RandomAccessFile(destinationFile, "rw");
+        BufferedRandomAccessFile newFile = new BufferedRandomAccessFile(destinationFile, "rw", 1024 * 100);
         HashMap<String, Long> indexes = new HashMap<String, Long>();
 
         int counter = 1;
@@ -522,9 +523,7 @@ public class SequenceFactory {
                 break;
             }
 
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
-            }
+            waitingHandler.increaseSecondaryProgressValue();
 
             Protein currentProtein = getProtein(accession);
             Header currentHeader = getHeader(accession);

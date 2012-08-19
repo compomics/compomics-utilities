@@ -16,6 +16,7 @@ import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.SelectedIonList;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
+import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This factory will provide the spectra when needed.
@@ -57,7 +58,7 @@ public class SpectrumFactory {
      * Map of the random access files of the loaded mgf files (filename ->
      * random access file).
      */
-    private static HashMap<String, RandomAccessFile> mgfFilesMap = new HashMap<String, RandomAccessFile>();
+    private static HashMap<String, BufferedRandomAccessFile> mgfFilesMap = new HashMap<String, BufferedRandomAccessFile>();
     /**
      * Map of the mgf indexes (fileName -> mgf index).
      */
@@ -186,7 +187,7 @@ public class SpectrumFactory {
                 writeIndex(mgfIndex, spectrumFile.getParentFile());
             }
 
-            mgfFilesMap.put(fileName, new RandomAccessFile(spectrumFile, "r"));
+            mgfFilesMap.put(fileName, new BufferedRandomAccessFile(spectrumFile, "r", 1024 * 100));
             mgfIndexesMap.put(fileName, mgfIndex);
             checkIndexVersion(spectrumFile.getParentFile(), fileName, waitingHandler);
         } else if (fileName.endsWith(".mzml")) {
@@ -372,6 +373,22 @@ public class SpectrumFactory {
      */
     public int getNSpectra(String fileName) {
         return mgfIndexesMap.get(fileName).getNSpectra();
+    }
+    
+    /**
+     * Returns the total number of spectra in all files.
+     *
+     * @return the total number of spectra in all files
+     */
+    public int getNSpectra() {
+        
+        int totalSpectrumCount = 0;
+        
+        for (String fileName : mgfIndexesMap.keySet()) {
+            totalSpectrumCount += getNSpectra(fileName);
+        }
+        
+        return totalSpectrumCount;
     }
 
     /**
@@ -735,7 +752,7 @@ public class SpectrumFactory {
      * closing the files
      */
     public void closeFiles() throws IOException {
-        for (RandomAccessFile randomAccessFile : mgfFilesMap.values()) {
+        for (BufferedRandomAccessFile randomAccessFile : mgfFilesMap.values()) {
             randomAccessFile.close();
         }
     }

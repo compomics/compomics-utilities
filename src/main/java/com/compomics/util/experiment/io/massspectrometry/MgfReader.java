@@ -6,19 +6,12 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.gui.waiting.WaitingHandler;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Pattern;
+import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This class will read an MGF file.
@@ -52,7 +45,6 @@ public class MgfReader {
      * cannot be parsed correctly
      */
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
-
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1.0, rt2 = -1.0;
@@ -175,7 +167,7 @@ public class MgfReader {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
-        RandomAccessFile randomAccessFile = new RandomAccessFile(mgfFile, "r");
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         long beginIndex = 0, currentIndex = 0;
         String title = null;
         int cpt = 0;
@@ -187,16 +179,16 @@ public class MgfReader {
             waitingHandler.setSecondaryProgressValue(0);
         }
 
-        long progressUnit = randomAccessFile.length() / 100;
+        long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String line;
 
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
-                currentIndex = randomAccessFile.getFilePointer();
+                currentIndex = bufferedRandomAccessFile.getFilePointer();
                 beginIndex = currentIndex;
                 cpt++;
                 if (waitingHandler != null) {
@@ -227,12 +219,13 @@ public class MgfReader {
                 }
 
             } else if (line.startsWith("RTINSECONDS")) {
-                
+
                 String rtInput = "";
-                
+
                 try {
                     rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
+
                     if (rtWindow.length == 1) {
                         double rt = new Double(rtWindow[0]);
                         if (rt > maxRT) {
@@ -273,7 +266,7 @@ public class MgfReader {
             waitingHandler.setSecondaryProgressDialogIndeterminate(true);
         }
 
-        randomAccessFile.close();
+        bufferedRandomAccessFile.close();
 
         if (minRT == Double.MAX_VALUE) {
             minRT = 0;
@@ -297,6 +290,9 @@ public class MgfReader {
      */
     public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
+        // @TODO: possible yo make this method even faster?? 
+        // replacing RandomAccessFile with BufferedRandomAccessFile helped a lot, but might still be room for more
+
         String fileName = mgfFile.getName();
 
         if (fileName.endsWith(".mgf")) {
@@ -306,7 +302,7 @@ public class MgfReader {
             String title = null;
             String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
 
-            RandomAccessFile readAccessFile = new RandomAccessFile(mgfFile, "r");
+            BufferedRandomAccessFile readBufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
             long writeIndex = 0, beginIndex = 0;
 
             if (waitingHandler != null) {
@@ -322,23 +318,23 @@ public class MgfReader {
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
             File testFile = new File(mgfFile.getParent(), currentName);
-            RandomAccessFile writeFile = new RandomAccessFile(testFile, "rw");
+            BufferedRandomAccessFile writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
 
-            long sizeOfReadAccessFile = readAccessFile.length();
+            long sizeOfReadAccessFile = readBufferedRandomAccessFile.length();
             long progressUnit = sizeOfReadAccessFile / 100;
             String line;
 
-            while ((line = readAccessFile.readLine()) != null) {
+            while ((line = readBufferedRandomAccessFile.getNextLine()) != null) {
 
                 line = line.trim();
 
                 if (line.equals("BEGIN IONS")) {
 
                     spectrumCounter++;
-                    writeIndex = writeFile.getFilePointer();
+                    writeIndex = writeBufferedRandomAccessFile.getFilePointer();
                     beginIndex = writeIndex;
 
-                    long readIndex = readAccessFile.getFilePointer();
+                    long readIndex = readBufferedRandomAccessFile.getFilePointer();
 
                     if (spectrumCounter > nSpectra) {
 
@@ -346,12 +342,12 @@ public class MgfReader {
 
                         if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
-                            writeFile.close();
+                            writeBufferedRandomAccessFile.close();
                             mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
-                            writeFile = new RandomAccessFile(testFile, "rw");
+                            writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
                             writeIndex = 0;
                             spectrumCounter = 0;
                             maxRT = -1;
@@ -376,7 +372,7 @@ public class MgfReader {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
                     double precursorMass = Double.parseDouble(values[0]);
-                    
+
                     if (precursorMass > maxMz) {
                         maxMz = precursorMass;
                     }
@@ -427,7 +423,7 @@ public class MgfReader {
                         spectrumTitles.add(title);
                     }
                 }
-                writeFile.writeBytes(line + "\n");
+                writeBufferedRandomAccessFile.writeBytes(line + "\n");
             }
 
             mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity));
@@ -436,8 +432,8 @@ public class MgfReader {
                 waitingHandler.setSecondaryProgressDialogIndeterminate(true);
             }
 
-            readAccessFile.close();
-            writeFile.close();
+            readBufferedRandomAccessFile.close();
+            writeBufferedRandomAccessFile.close();
             return mgfIndexes;
 
         } else {
@@ -448,7 +444,8 @@ public class MgfReader {
     /**
      * Returns the next spectrum starting from the given index.
      *
-     * @param randomAccessFile The random access file of the inspected mgf file
+     * @param bufferedRandomAccessFile The random access file of the inspected
+     * mgf file
      * @param index The index where to start looking for the spectrum
      * @param fileName The name of the MGF file (@TODO get this from the random
      * access file?)
@@ -458,16 +455,16 @@ public class MgfReader {
      * @throws IllegalArgumentException Exception thrown whenever the file is
      * not of a compatible format
      */
-    public static MSnSpectrum getSpectrum(RandomAccessFile randomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+    public static MSnSpectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
-        randomAccessFile.seek(index);
+        bufferedRandomAccessFile.seek(index);
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
         String line;
 
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             line = line.trim();
 
@@ -604,7 +601,8 @@ public class MgfReader {
     /**
      * Returns the next precursor starting from the given index.
      *
-     * @param randomAccessFile The random access file of the inspected mgf file
+     * @param bufferedRandomAccessFile The random access file of the inspected
+     * mgf file
      * @param index The index where to start looking for the spectrum
      * @param fileName The name of the mgf file (@TODO get this from the random
      * access file?)
@@ -614,14 +612,14 @@ public class MgfReader {
      * @throws IllegalArgumentException Exception thrown whenever the file is
      * not of a compatible format
      */
-    public static Precursor getPrecursor(RandomAccessFile randomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
+    public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 
-        randomAccessFile.seek(index);
+        bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             line = line.trim();
 
@@ -704,7 +702,7 @@ public class MgfReader {
         Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
         MgfIndex mgfIndex = getIndexMap(mgfFile);
         HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<Double, ArrayList<String>>();
-        RandomAccessFile mgfRFile = new RandomAccessFile(mgfFile, "r");
+        BufferedRandomAccessFile mgfRFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
 
         for (String title : mgfIndex.getSpectrumTitles()) {
             Precursor precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());

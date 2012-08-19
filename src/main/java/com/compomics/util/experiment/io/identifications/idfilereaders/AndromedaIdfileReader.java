@@ -13,11 +13,11 @@ import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JProgressBar;
+import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This IdfileReader reads identifications from an Andromeda result file.
@@ -34,7 +34,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * Andromeda result file in random access.
      */
-    private RandomAccessFile randomAccessFile;
+    private BufferedRandomAccessFile bufferedRandomAccessFile;
     /**
      * The name of the Andromeda result file.
      */
@@ -49,7 +49,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @throws IOException
      */
     public AndromedaIdfileReader(File resFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
-        randomAccessFile = new RandomAccessFile(resFile, "r");
+        bufferedRandomAccessFile = new BufferedRandomAccessFile(resFile, "r", 1024 * 100);
 
         fileName = resFile.getName();
 
@@ -57,18 +57,18 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
             waitingHandler.setMaxSecondaryProgressValue(100);
         }
         long currentIndex = 0;
-        long progressUnit = randomAccessFile.length() / 100;
+        long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         index = new HashMap<String, Long>();
 
         String line, title = null;
         boolean newTitle = false;
-        while ((line = randomAccessFile.readLine()) != null) {
+        while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (line.startsWith(">")) {
                 title = line.substring(1);
                 newTitle = true;
             } else if (newTitle) {
-                currentIndex = randomAccessFile.getFilePointer();
+                currentIndex = bufferedRandomAccessFile.getFilePointer();
                 index.put(title, currentIndex);
                 newTitle = false;
             }
@@ -91,7 +91,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
             int cpt = 1;
             String line;
 
-            while ((line = randomAccessFile.readLine()) != null
+            while ((line = bufferedRandomAccessFile.getNextLine()) != null
                     && !line.startsWith(">")) {
                 currentMatch.addHit(Advocate.ANDROMEDA, getAssumptionFromLine(line, cpt));
                 cpt++;
@@ -138,6 +138,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public void close() throws IOException {
-        randomAccessFile.close();
+        bufferedRandomAccessFile.close();
     }
 }

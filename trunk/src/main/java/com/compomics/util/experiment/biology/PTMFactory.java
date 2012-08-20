@@ -55,7 +55,7 @@ public class PTMFactory implements Serializable {
      */
     private PTMFactory() {
         ptmMap.put(unknownPTM.getName(), unknownPTM);
-        defaultMods.add("unknown");
+        defaultMods.add("unknown"); // @TODO: the ptm tables should be in alphabetical order!
     }
 
     /**
@@ -160,7 +160,7 @@ public class PTMFactory implements Serializable {
         if (defaultMods.contains(oldName)) {
             defaultMods.remove(oldName);
             if (!defaultMods.contains(newName)) {
-                defaultMods.add(newName);
+                defaultMods.add(newName); // @TODO: the ptm tables should be in alphabetical order!
             }
         }
         if (!oldName.equals(newName)) {
@@ -452,7 +452,7 @@ public class PTMFactory implements Serializable {
                 }
             } else {
                 if (!defaultMods.contains(currentPTM.getName())) {
-                    defaultMods.add(currentPTM.getName());
+                    defaultMods.add(currentPTM.getName()); // @TODO: the ptm tables should be in alphabetical order!
                 }
                 omssaIndexes.put(currentPTM.getName(), new ArrayList<Integer>());
                 omssaIndexes.get(currentPTM.getName()).add(number);

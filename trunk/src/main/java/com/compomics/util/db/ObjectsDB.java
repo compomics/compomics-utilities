@@ -594,7 +594,7 @@ public class ObjectsDB implements Serializable {
         tableName = tableName.replace("|", "_");
         tableName = tableName.replace("-", "_");
         tableName = tableName.replace("=", "_");
-        //tableName = tableName.replace(".", "_");
+        tableName = tableName.replace(".", "_");
 
         // @TODO: seems like everything but numbers and letters ought to be replaced??? (couldn't find for derby but from another db: alphanumeric characters and the special characters $, _, and #)
 

@@ -435,6 +435,87 @@ public class IdentificationDB implements Serializable {
                 addProteinMatch((ProteinMatch) match);
         }
     }
+    
+    /**
+     * Loads all spectrum match parameters of the given type in the cache of the database
+     * @param fileName the file name
+     * @param urParameter the parameter type
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+        String testKey = Spectrum.getSpectrumKey(fileName, "test");
+        String tableName = getSpectrumParameterTable(testKey, urParameter);
+        objectsDB.loadObjects(tableName);
+    }
+    
+    /**
+     * Loads all spectrum match parameters of the given type in the cache of the database
+     * @param fileName the file name
+     * @param urParameter the parameter type
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatchParameters(UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+        String tableName = getPeptideParameterTable(urParameter);
+        objectsDB.loadObjects(tableName);
+    }
+    
+    /**
+     * Loads all spectrum match parameters of the given type in the cache of the database
+     * @param fileName the file name
+     * @param urParameter the parameter type
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatchParameters(UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+        String tableName = getProteinParameterTable(urParameter);
+        objectsDB.loadObjects(tableName);
+    }
+    
+    /**
+     * Loads all spectrum match parameters of the given type in the cache of the database
+     * @param fileName the file name
+     * @param urParameter the parameter type
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatches() throws SQLException, IOException, ClassNotFoundException {
+        objectsDB.loadObjects(proteinTableName);
+    }
+    
+    /**
+     * Loads all spectrum matches of the given file in the cache of the database
+     * @param fileName the file name
+     * @param urParameter the parameter type
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadSpectrumMatches(String fileName) throws SQLException, IOException, ClassNotFoundException {
+        String testKey = Spectrum.getSpectrumKey(fileName, "test");
+        String tableName = getSpectrumMatchTable(testKey);
+        objectsDB.loadObjects(tableName);
+    }
 
     /**
      * Returns the desired spectrum match parameter.

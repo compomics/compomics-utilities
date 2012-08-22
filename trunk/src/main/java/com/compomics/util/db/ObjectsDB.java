@@ -251,6 +251,41 @@ public class ObjectsDB implements Serializable {
         updateStatement.close();
         insertStatement.close();
     }
+    
+    /**
+     * Loads all objects from a table in the cache. @TODO this deserves a progress bar
+     * @param tableName the table name
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadObjects(String tableName) throws SQLException, IOException, ClassNotFoundException {
+        
+        if (debugInteractions) {
+            System.out.println("getting table objects, table:" + tableName);
+        }
+
+        Statement stmt = dbConnection.createStatement();
+        ResultSet results = stmt.executeQuery("select * from " + tableName);
+
+        while (results.next()) {
+            String key = results.getString(1);
+            Blob tempBlob = results.getBlob(2);
+            BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+
+            ObjectInputStream in = new ObjectInputStream(bis);
+            Object object = in.readObject();
+            in.close();
+
+            objectsCache.addObject(dbName, tableName, key, object);
+        }
+
+        results.close();
+        stmt.close();
+    }
 
     /**
      * Retrieves an object from the desired table. The key should be unique

@@ -131,7 +131,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
                     ArrayList<Double> eValues = new ArrayList<Double>(hitMap.keySet());
                     Collections.sort(eValues);
 
-                        tempIndex = spectrumIndex +1;
+                    tempIndex = spectrumIndex + 1;
                     if (msHitSet.MSHitSet_ids.MSHitSet_ids_E.isEmpty()) {
                         tempName = tempIndex + "";
                     } else {
@@ -220,6 +220,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
         for (int msMod : fixedMods) {
 
             PTM currentPTM = ptmFactory.getPTM(msMod);
+
             ArrayList<String> residuesArray = currentPTM.getResidues();
             String currentPtmName = currentPTM.getName();
 
@@ -286,7 +287,7 @@ public class OMSSAIdfileReader extends ExperimentObject implements IdfileReader 
 
         // a special fix for mgf files with titles containing \\ instead of \
         spectrumTitle = spectrumTitle.replaceAll("\\\\\\\\", "\\\\");  // @TODO: only needed for OMSSA???
-        
+
         return spectrumTitle;
     }
 

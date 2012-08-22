@@ -540,7 +540,7 @@ public class PTMFactory implements Serializable {
             toWrite = getOmssaUserModBloc(ptmName, cpt);
             bw.write(toWrite);
         }
-        
+
         for (int cpt = userMods.size() + 1; cpt <= 30; cpt++) {
             int omssaIndex = cpt + 118;
             if (omssaIndex > 128) {
@@ -676,7 +676,7 @@ public class PTMFactory implements Serializable {
      * Convenience method returning a boolean indicating whether a ptm is user
      * defined or default.
      *
-     * @param ptmName 
+     * @param ptmName
      * @return boolean indicating whether a ptm is user
      */
     public boolean isUserDefined(String ptmName) {
@@ -687,12 +687,15 @@ public class PTMFactory implements Serializable {
      * Sets the default neutral losses of PTMs when not implemented.
      */
     public void setDefaultNeutralLosses() {
-        PTM ptm;
+
         boolean changed = false;
+
         for (String ptmName : defaultMods) {
-            // I hate hard coding this, any more elegant approach welcome...
+
+            // @TODO: I hate hard coding this, any more elegant approach welcome...
+
             if (ptmName.contains("phospho")) {
-                ptm = ptmMap.get(ptmName);
+                PTM ptm = ptmMap.get(ptmName);
                 if (ptmName.contains(" s")
                         || ptmName.contains(" t")) {
                     boolean found = false;
@@ -719,7 +722,7 @@ public class PTMFactory implements Serializable {
                     }
                 }
             } else if (ptmName.contains("oxidation") && ptmName.contains("M")) {
-                ptm = ptmMap.get(ptmName);
+                PTM ptm = ptmMap.get(ptmName);
                 boolean found = false;
                 for (NeutralLoss implemented : ptm.getNeutralLosses()) {
                     if (implemented.isSameAs(NeutralLoss.CH4OS)) {
@@ -745,29 +748,42 @@ public class PTMFactory implements Serializable {
      * Sets the default reporter ions of PTMs when not implemented.
      */
     public void setDefaultReporterIons() {
-        PTM ptm;
+
         boolean changed = false;
         for (String ptmName : defaultMods) {
-            // I hate hard coding this, any more elegant approach welcome...
+
+            // @TODO: I hate hard coding this, any more elegant approach welcome...
+
             if (ptmName.contains("itraq")) {
-                ptm = ptmMap.get(ptmName);
+                PTM ptm = ptmMap.get(ptmName);
                 if (ptm.getReporterIons().isEmpty()) {
                     changed = true;
+
+                    if (ptmName.contains("8")) {
+                        ptm.addReporterIon(ReporterIon.iTRAQ113);
+                    }
+
                     ptm.addReporterIon(ReporterIon.iTRAQ114);
                     ptm.addReporterIon(ReporterIon.iTRAQ115);
                     ptm.addReporterIon(ReporterIon.iTRAQ116);
                     ptm.addReporterIon(ReporterIon.iTRAQ117);
-                    ptm.addReporterIon(ReporterIon.iTRAQ113);
-                    ptm.addReporterIon(ReporterIon.iTRAQ118);
-                    ptm.addReporterIon(ReporterIon.iTRAQ119);
-                    ptm.addReporterIon(ReporterIon.iTRAQ121);
+
+                    if (ptmName.contains("8")) {
+                        ptm.addReporterIon(ReporterIon.iTRAQ118);
+                        ptm.addReporterIon(ReporterIon.iTRAQ119);
+                        ptm.addReporterIon(ReporterIon.iTRAQ121);
+                    }
                 }
             } else if (ptmName.contains("tmt")) {
+
                 changed = true;
-                ptm = ptmMap.get(ptmName);
+                PTM ptm = ptmMap.get(ptmName);
+
                 if (ptm.getReporterIons().isEmpty()) {
+
                     ptm.addReporterIon(ReporterIon.TMT0);
                     ptm.addReporterIon(ReporterIon.TMT1);
+
                     if (ptmName.contains("6")) {
                         ptm.addReporterIon(ReporterIon.TMT2);
                         ptm.addReporterIon(ReporterIon.TMT3);
@@ -777,6 +793,7 @@ public class PTMFactory implements Serializable {
                 }
             }
         }
+
         if (changed) {
             try {
                 saveFactory();

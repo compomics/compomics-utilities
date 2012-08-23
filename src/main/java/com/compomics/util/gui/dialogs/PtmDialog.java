@@ -47,19 +47,19 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private PTM currentPtm = null;
     /**
-     * The neutral losses
+     * The neutral losses.
      */
     ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
-     * The reporter ions
+     * The reporter ions.
      */
     ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
     /**
-     * The ptm to pride map
+     * The ptm to pride map.
      */
     private PtmToPrideMap ptmToPrideMap;
     /**
-     * The modification cv term
+     * The modification cv term.
      */
     private CvTerm cvTerm = null;
     /**
@@ -69,12 +69,13 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Creates a new PTM dialog.
-     * 
-     * @param parent
-     * @param ptmDialogParent
-     * @param ptmToPrideMap
+     *
+     * @param parent the JDialog parent
+     * @param ptmDialogParent the PtmDialogParent parent
+     * @param ptmToPrideMap the PTM to PRIDE map
      * @param currentPTM the ptm to edit (can be null)
-     * @param editable boolean indicating wheter the user can edit the ptm details
+     * @param editable boolean indicating wheter the user can edit the ptm
+     * details
      */
     public PtmDialog(JDialog parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
         super(parent, true);
@@ -89,15 +90,16 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         setLocationRelativeTo(parent);
         setVisible(true);
     }
-    
+
     /**
      * Creates a new PTM dialog.
-     * 
-     * @param parent
-     * @param ptmDialogParent
-     * @param ptmToPrideMap
+     *
+     * @param parent the JFrame parent
+     * @param ptmDialogParent the PtmDialogParent parent
+     * @param ptmToPrideMap the PTM to PRIDE map
      * @param currentPTM the ptm to edit (can be null)
-     * @param editable boolean indicating wheter the user can edit the ptm details
+     * @param editable boolean indicating wheter the user can edit the ptm
+     * details
      */
     public PtmDialog(JFrame parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
         super(parent, true);
@@ -117,7 +119,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * Set up the GUI.
      */
     private void setUpGui() {
-        
+
         // centrally align the comboboxes
         typeCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
@@ -134,7 +136,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         neutralLossesTable.getColumn(" ").setMinWidth(50);
         reporterIonsTable.getColumn(" ").setMaxWidth(50);
         reporterIonsTable.getColumn(" ").setMinWidth(50);
-        
+
         // set the fixed clumn cell renderer
         neutralLossesTable.getColumn("Fixed").setCellRenderer(new TrueFalseIconRenderer(
                 new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
@@ -152,7 +154,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         comboboxTooltips.add("Modification at the C terminus of a peptide");
         comboboxTooltips.add("Modification at the C terminus of a peptide at particular amino acids");
         typeCmb.setRenderer(new ToolTipComboBoxRenderer(comboboxTooltips, SwingConstants.CENTER));
-        
+
         typeCmb.setEnabled(editable);
         nameTxt.setEditable(editable);
         massTxt.setEditable(editable);
@@ -306,11 +308,9 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         neutralLossesTable = new javax.swing.JTable();
         addNeutralLoss = new javax.swing.JButton();
         removeNeutralLoss = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         helpJButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         psiModMappingPanel = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
         psiModMappingJTextField = new javax.swing.JTextField();
         olsJButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -318,7 +318,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         reporterIonsTable = new javax.swing.JTable();
         removerReporterIon = new javax.swing.JButton();
         addReporterIon = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Modification");
@@ -346,24 +345,24 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         });
 
-        jLabel1.setText("Type:");
+        jLabel1.setText("Type");
         jLabel1.setToolTipText("The modification type. See help for details.");
 
-        jLabel2.setText("Name:");
+        jLabel2.setText("Name");
         jLabel2.setToolTipText("The modification name");
 
         nameTxt.setEditable(false);
         nameTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         nameTxt.setToolTipText("The modification name");
 
-        jLabel3.setText("Mass (Da):");
+        jLabel3.setText("Mass (Da)");
         jLabel3.setToolTipText("Monoisotopic mass in Dalton");
 
         massTxt.setEditable(false);
         massTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         massTxt.setToolTipText("Monoisotopic mass in Dalton");
 
-        jLabel5.setText("Residue(s):");
+        jLabel5.setText("Residue(s)");
         jLabel5.setToolTipText("Residues modified");
 
         residuesTxt.setEditable(false);
@@ -449,16 +448,12 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         });
 
-        jLabel4.setText("Losses:");
-
         javax.swing.GroupLayout neutralLossesAndReporterIonsPanelLayout = new javax.swing.GroupLayout(neutralLossesAndReporterIonsPanel);
         neutralLossesAndReporterIonsPanel.setLayout(neutralLossesAndReporterIonsPanelLayout);
         neutralLossesAndReporterIonsPanelLayout.setHorizontalGroup(
             neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -471,16 +466,13 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
                         .addComponent(addNeutralLoss)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeNeutralLoss)))
+                        .addComponent(removeNeutralLoss)
+                        .addGap(0, 33, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addComponent(jLabel4)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
@@ -512,8 +504,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         psiModMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PSI-MOD Mapping"));
         psiModMappingPanel.setOpaque(false);
 
-        jLabel6.setText("PSI-MOD:");
-
         psiModMappingJTextField.setEditable(false);
         psiModMappingJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
@@ -532,8 +522,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             psiModMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, psiModMappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(psiModMappingJTextField)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(olsJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -545,7 +533,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addContainerGap()
                 .addGroup(psiModMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(psiModMappingJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
                     .addComponent(olsJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -579,16 +566,12 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         });
 
-        jLabel7.setText("Reporters:");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -602,16 +585,14 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(addReporterIon)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removerReporterIon))
-                            .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(jLabel7)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(addReporterIon)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removerReporterIon)
+                        .addGap(0, 33, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
@@ -646,13 +627,14 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(psiModMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton)
-                    .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(cancelButton)
-                        .addComponent(okButton)))
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jPanel1, neutralLossesAndReporterIonsPanel});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -668,19 +650,26 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Close the dialog without saving.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
-     * Add the ptm to the SearchPanel.
+     * Add the ptm to the PtmDialogParent.
      *
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
+
             PTM otherPTM, newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), parseResidues());
             ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+
             for (int row = 0; row < neutralLossesTable.getRowCount(); row++) {
                 tempNeutralLosses.add(new NeutralLoss((String) neutralLossesTable.getValueAt(row, 1),
                         (Double) neutralLossesTable.getValueAt(row, 2),
@@ -718,11 +707,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
 
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
-            
             ptmDialogParent.updateModifications();
-            
             saveChanges();
-
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
@@ -802,7 +788,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/PtmDialog.html"), 
+        new HelpDialog(this, getClass().getResource("/helpFiles/PtmDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 null, "Modification Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -810,7 +796,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Add a new ptm dependent neutral losses.
-     * 
+     *
      * @param evt
      */
     private void addNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNeutralLossActionPerformed
@@ -820,7 +806,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Add a new ptm dependent reporter ion.
-     * 
+     *
      * @param evt
      */
     private void addReporterIonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReporterIonActionPerformed
@@ -830,7 +816,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Remove a neutral loss.
-     * 
+     *
      * @param evt
      */
     private void removeNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeNeutralLossActionPerformed
@@ -846,7 +832,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Remove a reporter ion.
-     * 
+     *
      * @param evt
      */
     private void removerReporterIonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerReporterIonActionPerformed
@@ -862,17 +848,17 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Enable/disable the remove neutral loss button.
-     * 
+     *
      * @param evt
      */
     private void neutralLossesTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_neutralLossesTableMouseReleased
         int row = neutralLossesTable.getSelectedRow();
         removeNeutralLoss.setEnabled(row != -1);
     }//GEN-LAST:event_neutralLossesTableMouseReleased
- 
+
     /**
      * Enable/disable the remove reporter ion button.
-     * 
+     *
      * @param evt
      */
     private void reporterIonsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reporterIonsTableMouseReleased
@@ -889,10 +875,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField massTxt;
     private javax.swing.JTextField nameTxt;
@@ -938,7 +921,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         ((DefaultTableModel) neutralLossesTable.getModel()).fireTableDataChanged();
         ((DefaultTableModel) reporterIonsTable.getModel()).fireTableDataChanged();
     }
-    
+
     /**
      * Saves the changes of the PTM factory
      */

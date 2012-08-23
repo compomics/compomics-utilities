@@ -455,7 +455,6 @@ public class IdentificationDB implements Serializable {
     
     /**
      * Loads all spectrum match parameters of the given type in the cache of the database
-     * @param fileName the file name
      * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -471,7 +470,6 @@ public class IdentificationDB implements Serializable {
     
     /**
      * Loads all spectrum match parameters of the given type in the cache of the database
-     * @param fileName the file name
      * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -487,8 +485,6 @@ public class IdentificationDB implements Serializable {
     
     /**
      * Loads all spectrum match parameters of the given type in the cache of the database
-     * @param fileName the file name
-     * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -503,7 +499,6 @@ public class IdentificationDB implements Serializable {
     /**
      * Loads all spectrum matches of the given file in the cache of the database
      * @param fileName the file name
-     * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while

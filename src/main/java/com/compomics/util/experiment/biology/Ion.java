@@ -51,7 +51,7 @@ public abstract class Ion extends ExperimentObject {
      * Type of ion.
      */
     protected IonType type = IonType.UNKNOWN;
-    /**
+    /*
      * Ion attribute - the theoretic mass
      */
     protected double theoreticMass;
@@ -59,6 +59,8 @@ public abstract class Ion extends ExperimentObject {
     /**
      * Returns the name of the ion. The name should be short enough to be
      * displayed on a spectrum.
+     * 
+     * @return the name of the ion
      */
     public abstract String getName();
 
@@ -88,6 +90,7 @@ public abstract class Ion extends ExperimentObject {
     /**
      * Returns an arraylist of possible subtypes.
      *
+     * @param ionType an arraylist of possible subtypes
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes(IonType ionType) {
@@ -137,6 +140,7 @@ public abstract class Ion extends ExperimentObject {
     /**
      * Returns the neutral loss (if any), the empty string if no loss.
      *
+     * @param neutralLosses the neutral loss (if any)
      * @return the neutral loss
      */
     public static String getNeutralLossesAsString(ArrayList<NeutralLoss> neutralLosses) {
@@ -207,6 +211,7 @@ public abstract class Ion extends ExperimentObject {
     /**
      * Returns the type of ion as string.
      * 
+     * @param type the type of ion as string
      * @return the type of ion as string
      */
     public static String getTypeAsString(IonType type) {

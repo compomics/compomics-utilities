@@ -171,8 +171,11 @@ public class PTMFactory implements Serializable {
             if (!omssaIndexes.containsKey(newName)) {
                 omssaIndexes.put(newName, new ArrayList<Integer>());
             }
-            omssaIndexes.get(newName).addAll(omssaIndexes.get(oldName));
-            omssaIndexes.remove(oldName);
+
+            if (omssaIndexes.get(oldName) != null) { // @TODO: verify that  is correct. if not included one can only open one project in reporter before having to restart reporter...
+                omssaIndexes.get(newName).addAll(omssaIndexes.get(oldName));
+                omssaIndexes.remove(oldName);
+            }
         }
     }
 

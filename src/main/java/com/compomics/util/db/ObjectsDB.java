@@ -514,7 +514,7 @@ public class ObjectsDB implements Serializable {
         objectsCache = null;
 
         if (dbConnection != null) {
-            dbConnection.close();
+            dbConnection.close(); // possible sql exception that should be handled better: Cannot close a connection while a transaction is still active...
         }
 
         try {
@@ -580,7 +580,7 @@ public class ObjectsDB implements Serializable {
         }
 
         String url = "jdbc:derby:" + path + ";create=true";
-        dbConnection = DriverManager.getConnection(url);
+        dbConnection = DriverManager.getConnection(url); // @TODO: Another instance of Derby may have already booted the database. We need to check this first?
 
         this.objectsCache = objectsCache;
 

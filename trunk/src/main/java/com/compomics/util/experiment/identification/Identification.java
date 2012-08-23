@@ -131,10 +131,11 @@ public abstract class Identification extends ExperimentObject {
             return identificationDB.getMatchPArameter(matchKey, urParameter);
         }
     }
-    
-    
+
     /**
-     * Loads all spectrum match parameters of the given type in the cache of the database
+     * Loads all spectrum match parameters of the given type in the cache of the
+     * database
+     *
      * @param fileName the file name
      * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
@@ -147,10 +148,11 @@ public abstract class Identification extends ExperimentObject {
     public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadSpectrumMatchParameters(fileName, urParameter);
     }
-    
+
     /**
-     * Loads all peptide match parameters of the given type in the cache of the database
-     * @param fileName the file name
+     * Loads all peptide match parameters of the given type in the cache of the
+     * database.
+     *
      * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -162,10 +164,11 @@ public abstract class Identification extends ExperimentObject {
     public void loadPeptideMatchParameters(UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadPeptideMatchParameters(urParameter);
     }
-    
+
     /**
-     * Loads all protein match parameters of the given type in the cache of the database
-     * @param fileName the file name
+     * Loads all protein match parameters of the given type in the cache of the
+     * database.
+     *
      * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -177,11 +180,10 @@ public abstract class Identification extends ExperimentObject {
     public void loadProteinMatchParameters(UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadProteinMatchParameters(urParameter);
     }
-    
+
     /**
-     * Loads all protein matches of the given type in the cache of the database
-     * @param fileName the file name
-     * @param urParameter the parameter type
+     * Loads all protein matches of the given type in the cache of the database.
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -192,12 +194,11 @@ public abstract class Identification extends ExperimentObject {
     public void loadProteinMatches() throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadProteinMatches();
     }
-    
-    
+
     /**
      * Loads all spectrum matches of the file in the cache of the database
+     *
      * @param fileName the file name
-     * @param urParameter the parameter type
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -208,7 +209,7 @@ public abstract class Identification extends ExperimentObject {
     public void loadSpectrumMatches(String fileName) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadSpectrumMatches(fileName);
     }
-    
+
     /**
      * Returns the desired spectrum match parameter.
      *

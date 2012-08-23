@@ -20,7 +20,7 @@ public class ReporterMethod {
      */
     private ArrayList<CorrectionFactor> correctionFactors;
     /**
-     * The name of the method
+     * The name of the method.
      */
     private String name;
 
@@ -55,9 +55,10 @@ public class ReporterMethod {
     public ArrayList<CorrectionFactor> getCorrectionFactors() {
         return correctionFactors;
     }
-    
+
     /**
-     * Returns the name of the method
+     * Returns the name of the method.
+     *
      * @return the name of the method
      */
     public String getName() {

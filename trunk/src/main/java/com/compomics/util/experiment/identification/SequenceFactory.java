@@ -98,7 +98,7 @@ public class SequenceFactory {
      * the FASTA file
      * @throws IllegalArgumentException thrown whenever an error is encountered
      * while reading the FASTA file
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -182,7 +182,7 @@ public class SequenceFactory {
      * reading the FASTA file
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -486,9 +486,11 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      * @throws IllegalArgumentException
-     * @throws InterruptedException  
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
-    public void appendDecoySequences(File destinationFile) throws IOException, IllegalArgumentException, InterruptedException {
+    public void appendDecoySequences(File destinationFile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         appendDecoySequences(destinationFile, null);
     }
 
@@ -501,21 +503,20 @@ public class SequenceFactory {
      * reading or writing a file
      * @throws IllegalArgumentException exdeption thrown whenever a protein is
      * not found
-     * @throws InterruptedException  
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
-    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException {
+    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            //progressBar.setStringPainted(true); //@TODO: not true by default?
             waitingHandler.setMaxSecondaryProgressValue(fastaIndex.getNTarget());
             waitingHandler.setSecondaryProgressValue(0);
         }
 
-        BufferedRandomAccessFile newFile = new BufferedRandomAccessFile(destinationFile, "rw", 1024 * 100);
-        HashMap<String, Long> indexes = new HashMap<String, Long>();
-
-        int counter = 1;
+        // first create the new target-decoy file
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile));
 
         for (String accession : fastaIndex.getIndexes().keySet()) {
 
@@ -535,33 +536,30 @@ public class SequenceFactory {
 
             String decoySequence = reverseSequence(currentProtein.getSequence());
 
-            indexes.put(currentProtein.getAccession(), newFile.getFilePointer());
-            newFile.writeBytes(currentHeader.toString() + System.getProperty("line.separator"));
-            newFile.writeBytes(currentProtein.getSequence() + System.getProperty("line.separator"));
-
-            indexes.put(decoyAccession, newFile.getFilePointer());
+            bufferedWriter.write(currentHeader.toString() + System.getProperty("line.separator"));
+            bufferedWriter.write(currentProtein.getSequence() + System.getProperty("line.separator"));
 
             // @TODO: this might not be the best way of doing this, but was easier than trying to change the parsing in the Header class...
             if (decoyHeader.toString().equalsIgnoreCase(currentHeader.toString())) {
                 decoyHeader.setRest(decoyAccession);
             }
 
-            newFile.writeBytes(decoyHeader.toString() + System.getProperty("line.separator"));
-            newFile.writeBytes(decoySequence + System.getProperty("line.separator"));
+            bufferedWriter.write(decoyHeader.toString() + System.getProperty("line.separator"));
+            bufferedWriter.write(decoySequence + System.getProperty("line.separator"));
         }
+
+        bufferedWriter.close();
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(true);
-            //waitingHandler.setStringPainted(false);
         }
 
-        newFile.close();
 
-        if (!waitingHandler.isRunCanceled()) {
-            FastaIndex newIndex = new FastaIndex(indexes, destinationFile.getName(), true, counter - 1);
-            writeIndex(newIndex, destinationFile.getParentFile());
-        } else {
+        if (waitingHandler.isRunCanceled()) {
             destinationFile.delete();
+        } else {
+            // now (re-)index the new target-decoy file
+            loadFastaFile(destinationFile);
         }
     }
 
@@ -610,7 +608,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the database
      * @throws IllegalArgumentException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException {
 

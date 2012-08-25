@@ -2,8 +2,11 @@ package com.compomics.util;
 
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.*;
 import java.nio.channels.FileChannel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -128,6 +131,80 @@ public class Util {
         }
 
         return tempFileName;
+    }
+
+    /**
+     * Returns the file selected by the user, or null if no file was selected.
+     *
+     * @param aFileEnding the file type, e.g., .txt
+     * @param aFileFormatDescription the file format description, e.g., (Mascot
+     * Generic Format) *.mgf
+     * @param aDialogTitle the title for the dialog
+     * @param openDialog if true an open dialog is shown, false results in a
+     * save dialog
+     * @return the file selected by the user, or null if no file was selected
+     */
+    public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, boolean openDialog) {
+
+        final String fileEnding = aFileEnding;
+        final String fileFormatDescription = aFileFormatDescription;
+        final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
+
+        fileChooser.setDialogTitle(aDialogTitle);
+        fileChooser.setMultiSelectionEnabled(false);
+
+        javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
+
+            @Override
+            public boolean accept(File myFile) {
+                return myFile.getName().toLowerCase().endsWith(fileEnding) || myFile.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return fileFormatDescription;
+            }
+        };
+
+        fileChooser.setFileFilter(filter);
+
+        int returnVal;
+
+        if (openDialog) {
+            returnVal = fileChooser.showOpenDialog(parent);
+        } else {
+            returnVal = fileChooser.showSaveDialog(parent);
+        }
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            String selectedFile = fileChooser.getSelectedFile().getPath();
+
+            if (!selectedFile.endsWith(fileEnding)) {
+                selectedFile += fileEnding;
+            }
+
+            File newFile = new File(selectedFile);
+            int outcome = JOptionPane.YES_OPTION;
+
+            if (!openDialog && newFile.exists()) {
+                outcome = JOptionPane.showConfirmDialog(parent,
+                        "Should " + selectedFile + " be overwritten?", "Selected File Already Exists",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            } else if (openDialog && !newFile.exists()) {
+                JOptionPane.showMessageDialog(parent, "The file\'" + newFile.getAbsolutePath() + "\' " + "does not exist!",
+                        "File Not Found.", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
+            if (outcome != JOptionPane.YES_OPTION) {
+                return null;
+            } else {
+                return newFile;
+            }
+        }
+
+        return null;
     }
 
     /**

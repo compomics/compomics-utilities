@@ -3409,7 +3409,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
+                try {
                 UtilitiesGUIDefaults.setLookAndFeel();
+                } catch (Exception e) {
+                    // do nothing
+                }
                 new UtilitiesDemo();
             }
         });

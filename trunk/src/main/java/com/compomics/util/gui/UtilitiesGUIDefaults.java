@@ -3,6 +3,7 @@ package com.compomics.util.gui;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyKrupp;
+import java.io.IOException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -20,9 +21,10 @@ public class UtilitiesGUIDefaults {
      * tries to use Nimbus, if Nimbus is not supported then PlasticXPLookAndFeel
      * is used.
      * 
+     * @exception IOException exception somehow thrown when starting from a zip file
      * @return true if the Nimbus look and feel is used, false otherwise
      */
-    public static boolean setLookAndFeel() {
+    public static boolean setLookAndFeel() throws IOException {
 
         boolean nimbusLookAndFeelFound = false;
 

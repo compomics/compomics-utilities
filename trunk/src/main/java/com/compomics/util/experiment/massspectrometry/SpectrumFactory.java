@@ -167,29 +167,23 @@ public class SpectrumFactory {
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
             MgfIndex mgfIndex;
 
-            if (indexFile.exists()) {
+            if (!indexFile.exists()) {
+                mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
+                writeIndex(mgfIndex, spectrumFile.getParentFile());
+            } else {
                 try {
                     mgfIndex = getIndex(indexFile);
-
-                    // check if the index contains the precursor intensity, if not re-index
-                    if (mgfIndex.getMaxIntensity() == null) {
-                        mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                        writeIndex(mgfIndex, spectrumFile.getParentFile());
-                    }
-
+                    checkIndexVersion(spectrumFile.getParentFile(), fileName, waitingHandler);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
                     writeIndex(mgfIndex, spectrumFile.getParentFile());
                 }
-            } else {
-                mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                writeIndex(mgfIndex, spectrumFile.getParentFile());
             }
 
             mgfFilesMap.put(fileName, new BufferedRandomAccessFile(spectrumFile, "r", 1024 * 100));
             mgfIndexesMap.put(fileName, mgfIndex);
-            checkIndexVersion(spectrumFile.getParentFile(), fileName, waitingHandler);
+
         } else if (fileName.endsWith(".mzml")) {
             MzMLUnmarshaller mzMLUnmarshaller = new MzMLUnmarshaller(spectrumFile);
             mzMLUnmarshallers.put(fileName, mzMLUnmarshaller);
@@ -374,20 +368,20 @@ public class SpectrumFactory {
     public int getNSpectra(String fileName) {
         return mgfIndexesMap.get(fileName).getNSpectra();
     }
-    
+
     /**
      * Returns the total number of spectra in all files.
      *
      * @return the total number of spectra in all files
      */
     public int getNSpectra() {
-        
+
         int totalSpectrumCount = 0;
-        
+
         for (String fileName : mgfIndexesMap.keySet()) {
             totalSpectrumCount += getNSpectra(fileName);
         }
-        
+
         return totalSpectrumCount;
     }
 
@@ -793,7 +787,7 @@ public class SpectrumFactory {
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {
-        
+
         // @TODO: not sure if this is needed here as the titles are fixed during import??
 
         // a special fix for mgf files with titles containing url encoding, e.g.: %3b instead of ;
@@ -816,7 +810,7 @@ public class SpectrumFactory {
 
         return spectrumTitle;
     }
-    
+
     /**
      * Adds an id to spectrum name in the mapping.
      *
@@ -853,9 +847,10 @@ public class SpectrumFactory {
 
         MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
 
-        if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null || mgfIndex.getMaxMz() == null) {
+        if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null
+                || mgfIndex.getMaxMz() == null || mgfIndex.getMaxIntensity() == null) {
 
-            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1;
+            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = -1;
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -876,15 +871,26 @@ public class SpectrumFactory {
 
                 try {
                     Precursor precursor = getPrecursor(spectrumKey, false);
+
                     double rt = precursor.getRt();
+
                     if (rt > maxRT) {
                         maxRT = rt;
                     }
+
                     if (rt < minRT) {
                         minRT = rt;
                     }
+
                     if (precursor.getMz() > maxMz) {
                         maxMz = precursor.getMz();
+                    }
+
+                    Spectrum spectrum = getSpectrum(spectrumKey);
+                    double tempMaxIntensity = spectrum.getMaxIntensity();
+
+                    if (tempMaxIntensity > maxIntensity) {
+                        maxIntensity = tempMaxIntensity;
                     }
                 } catch (MzMLUnmarshallerException e) {
                     // Should not happen when working with mgf files

@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class models a spectrum
+ * This class models a spectrum.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes

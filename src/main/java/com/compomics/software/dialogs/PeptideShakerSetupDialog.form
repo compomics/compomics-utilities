@@ -10,7 +10,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
-    <Property name="title" type="java.lang.String" value="SearchGUI Settings"/>
+    <Property name="title" type="java.lang.String" value="PeptideShaker Settings"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -36,10 +36,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
+          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -57,14 +54,14 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="searchGuiDownloadPanel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="peptideShakerDownloadPanel" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="okButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="searchGuiInstallationPanel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="peptideShakerInstallationPanel" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -73,26 +70,26 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="searchGuiInstallationPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="searchGuiDownloadPanel" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="peptideShakerInstallationPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="peptideShakerDownloadPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="searchGuiInstallationPanel">
+        <Container class="javax.swing.JPanel" name="peptideShakerInstallationPanel">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="SearchGUI Installation"/>
+                <TitledBorder title="PeptideShaker Installation"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -106,9 +103,9 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="searchGuiJarFileHelpLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="peptideShakerJarFileHelpLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="searchGuiInstallationJTextField" max="32767" attributes="0"/>
+                          <Component id="peptideShakernstallationJTextField" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="browseButton" min="-2" max="-2" attributes="0"/>
@@ -121,49 +118,49 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="searchGuiInstallationJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideShakernstallationJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="browseButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="searchGuiJarFileHelpLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="peptideShakerJarFileHelpLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JTextField" name="searchGuiInstallationJTextField">
+            <Component class="javax.swing.JTextField" name="peptideShakernstallationJTextField">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="toolTipText" type="java.lang.String" value="The folder containing the SearchGUI jar file."/>
+                <Property name="toolTipText" type="java.lang.String" value="The folder containing the PeptideShaker jar file."/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="browseButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Browse"/>
-                <Property name="toolTipText" type="java.lang.String" value="The folder containing the SearchGUI jar file."/>
+                <Property name="toolTipText" type="java.lang.String" value="The folder containing the PeptideShaker jar file."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="searchGuiJarFileHelpLabel">
+            <Component class="javax.swing.JLabel" name="peptideShakerJarFileHelpLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
-                    <Font component="searchGuiJarFileHelpLabel" italic="true" property="font" relativeSize="true" size="0"/>
+                    <Font component="peptideShakerJarFileHelpLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Please locate the folder containing the SearchGUI jar file."/>
+                <Property name="text" type="java.lang.String" value="Please locate the folder containing the PeptideShaker jar file."/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="searchGuiDownloadPanel">
+        <Container class="javax.swing.JPanel" name="peptideShakerDownloadPanel">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Download SearchGUI"/>
+                <TitledBorder title="Download PeptideShaker"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -176,16 +173,16 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="searchGuiInfoLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="32" max="32767" attributes="0"/>
+                              <Component id="peptideShakerInfoLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="searchGuiDownloadLinkLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="peptideShakerDownloadLinkLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="searchGuiButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="peptideShakerButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -194,50 +191,50 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                      <Component id="searchGuiInfoLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="peptideShakerInfoLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="searchGuiDownloadLinkLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="peptideShakerDownloadLinkLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="searchGuiButton" alignment="0" min="-2" pref="66" max="-2" attributes="0"/>
+                  <Component id="peptideShakerButton" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="searchGuiInfoLabel">
+            <Component class="javax.swing.JLabel" name="peptideShakerInfoLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
-                    <Font bold="true" component="searchGuiInfoLabel" property="font" relativeSize="true" size="0"/>
+                    <Font bold="true" component="peptideShakerInfoLabel" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="SearchGUI -  a graphical user interface for proteomics identification search engines"/>
+                <Property name="text" type="java.lang.String" value="PeptideShaker - interpretation of proteomics identifications from multiple search engines"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="searchGuiDownloadLinkLabel">
+            <Component class="javax.swing.JLabel" name="peptideShakerDownloadLinkLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt; http://searchgui.googlecode.com&lt;/a&gt;&lt;/html&gt;"/>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://searchgui.googlecode.com"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt; http://peptide-shaker.googlecode.com&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to http://peptide-shaker.googlecode.com"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchGuiDownloadLinkLabelMouseClicked"/>
-                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchGuiDownloadLinkLabelMouseEntered"/>
-                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchGuiDownloadLinkLabelMouseExited"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideShakerDownloadLinkLabelMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideShakerDownloadLinkLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideShakerDownloadLinkLabelMouseExited"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="searchGuiButton">
+            <Component class="javax.swing.JButton" name="peptideShakerButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/icons/searchgui-medium-shadow.png"/>
+                  <Image iconType="3" name="/icons/peptide-shaker-medium-blue-shadow.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://searchgui.googlecode.com"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to http://peptide-shaker.googlecode.com"/>
                 <Property name="borderPainted" type="boolean" value="false"/>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="focusPainted" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchGuiButtonMouseClicked"/>
-                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchGuiButtonMouseEntered"/>
-                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="searchGuiButtonMouseExited"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideShakerButtonMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideShakerButtonMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peptideShakerButtonMouseExited"/>
               </Events>
             </Component>
           </SubComponents>

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.software;
 
 import com.compomics.software.dialogs.RelimsSetupDialog;
@@ -13,21 +9,22 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * This class can be used to start compomics tools
+ * This class can be used to start compomics tools.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ToolFactory {
-    
+
     /**
-     * Starts PeptideShaker from the location of utilities preferences
-     * @param parent a frame to display the path setting dialog.
+     * Starts PeptideShaker from the location of utilities preferences.
+     *
+     * @param parent a frame to display the path setting dialog
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static void startPeptideShaker(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (utilitiesUserPreferences.getPeptideShakerPath() == null) {
             // @TODO: PeptideShaker path chooser
@@ -35,20 +32,21 @@ public class ToolFactory {
         }
         if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
             launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
-                } else {
+        } else {
             throw new IllegalArgumentException("PeptideShaker not found in " + utilitiesUserPreferences.getPeptideShakerPath());
         }
     }
-    
+
     /**
-     * Starts Reporter from the location of utilities preferences
+     * Starts Reporter from the location of utilities preferences.
+     *
      * @param parent a frame to display the path setting dialog.
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (utilitiesUserPreferences.getReporterPath() == null) {
             new ReporterSetupDialog(parent, true);
@@ -56,20 +54,21 @@ public class ToolFactory {
         }
         if (utilitiesUserPreferences.getReporterPath() != null) {
             launch(utilitiesUserPreferences.getReporterPath(), "Reporter");
-                } else {
+        } else {
             throw new IllegalArgumentException("Reporter not found in " + utilitiesUserPreferences.getPeptideShakerPath());
         }
     }
-    
+
     /**
-     * Starts Relims from the location of utilities preferences
+     * Starts Relims from the location of utilities preferences.
+     *
      * @param parent a frame to display the path setting dialog.
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static void startRelims(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (utilitiesUserPreferences.getReporterPath() == null) {
             new RelimsSetupDialog(parent, true);
@@ -77,20 +76,21 @@ public class ToolFactory {
         }
         if (utilitiesUserPreferences.getRelimsPath() != null) {
             launch(utilitiesUserPreferences.getRelimsPath(), "Relims");
-                } else {
+        } else {
             throw new IllegalArgumentException("Relims not found in " + utilitiesUserPreferences.getPeptideShakerPath());
         }
     }
-    
+
     /**
-     * Starts SearchGUI from the location of utilities preferences
+     * Starts SearchGUI from the location of utilities preferences.
+     *
      * @param parent a frame to display the path setting dialog.
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (utilitiesUserPreferences.getSearchGuiPath() == null) {
             new SearchGuiSetupDialog(parent, true);
@@ -98,21 +98,21 @@ public class ToolFactory {
         }
         if (utilitiesUserPreferences.getSearchGuiPath() != null) {
             launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
-                } else {
+        } else {
             throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getPeptideShakerPath());
         }
     }
-    
-    
+
     /**
-     * Generic method to start a tool
+     * Generic method to start a tool.
+     *
      * @param toolPath the path to the tool
      * @param toolName the name of the tool (used for bug report)
      */
     private static void launch(String toolPath, String toolName) {
-        
+
         boolean debug = true;
-            
+
         String quote = "";
 
         if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
@@ -183,5 +183,4 @@ public class ToolFactory {
             System.exit(0);
         }
     }
-    
 }

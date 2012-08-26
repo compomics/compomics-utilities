@@ -17,24 +17,29 @@ import javax.swing.JOptionPane;
 public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
     /**
-     * The utilities preferences
+     * The utilities preferences.
      */
-private UtilitiesUserPreferences utilitiesUserPreferences;
-/**
- * The selected folder
- */
-private String lastSelectedFolder = "";
+    private UtilitiesUserPreferences utilitiesUserPreferences;
     /**
-     * Creates a new SearchGuiSetupDialog
-     *
+     * The selected folder.
+     */
+    private String lastSelectedFolder = "";
+
+    /**
+     * Creates a new SearchGuiSetupDialog.
+     * 
+     * @param parent
      * @param modal
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException 
      */
     public SearchGuiSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
 
         initComponents();
-        
-utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+
+        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         // display the current searchgui path
         if (utilitiesUserPreferences != null) {
             searchGuiInstallationJTextField.setText(utilitiesUserPreferences.getSearchGuiPath());
@@ -90,7 +95,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         });
 
         searchGuiJarFileHelpLabel.setFont(searchGuiJarFileHelpLabel.getFont().deriveFont((searchGuiJarFileHelpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        searchGuiJarFileHelpLabel.setText("Please locate the folder containing the SearchGUI jar file. (SearchGUI v1.8.3 or newer!)");
+        searchGuiJarFileHelpLabel.setText("Please locate the folder containing the SearchGUI jar file.");
 
         javax.swing.GroupLayout searchGuiInstallationPanelLayout = new javax.swing.GroupLayout(searchGuiInstallationPanel);
         searchGuiInstallationPanel.setLayout(searchGuiInstallationPanelLayout);
@@ -165,7 +170,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
                 .addGroup(searchGuiDownloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchGuiDownloadPanelLayout.createSequentialGroup()
                         .addComponent(searchGuiInfoLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 32, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchGuiDownloadPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(searchGuiDownloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,7 +185,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
                 .addComponent(searchGuiInfoLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(searchGuiDownloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(searchGuiButton)
+            .addComponent(searchGuiButton, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         okButton.setText("OK");
@@ -223,12 +228,12 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
                 .addContainerGap()
                 .addComponent(searchGuiInstallationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchGuiDownloadPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchGuiDownloadPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -239,7 +244,9 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -260,8 +267,8 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
      * @param evt
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        
-        
+
+
         File selectedFile = Util.getUserSelectedFile(this, ".jar", "SearchGUI jar file (.jar)", "Select SearchGUI Jar File", lastSelectedFolder, true);
 
         if (selectedFile != null) {
@@ -291,7 +298,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         } catch (Exception e) {
             e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
         }
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
@@ -349,7 +356,6 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
     private void searchGuiButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchGuiButtonMouseClicked
         openSearchGuiWebPage();
     }//GEN-LAST:event_searchGuiButtonMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseButton;

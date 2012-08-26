@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.software;
 
 import com.compomics.util.gui.UtilitiesGUIDefaults;
@@ -14,7 +10,7 @@ import javax.swing.JOptionPane;
  * resources/conf folder. In it a JavaOptions.txt and splash screen. Eventually
  * JavaHome.txt and proxy/uniprotjapi.properties.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class CompomicsWrapper {
 
@@ -41,12 +37,11 @@ public class CompomicsWrapper {
      * The user preferences.
      */
     private UtilitiesUserPreferences userPreferences;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public CompomicsWrapper() {
-        
     }
 
     /**
@@ -441,7 +436,6 @@ public class CompomicsWrapper {
      * Creates a new javaOptions text file with the new settings.
      */
     private void saveJavaOptions(File jarFile) throws FileNotFoundException {
-
 
         String currentLine, lines = "";
 

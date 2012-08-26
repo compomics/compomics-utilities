@@ -10,37 +10,41 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * A dialog used to set up the connection between PeptideShaker and Reporter.
+ * A dialog used to set up the connection to Reporter.
  *
  * @author Harald Barsnes
  */
 public class ReporterSetupDialog extends javax.swing.JDialog {
 
+    /**
+     * The utilities preferences.
+     */
+    private UtilitiesUserPreferences utilitiesUserPreferences;
+    /**
+     * The selected folder.
+     */
+    private String lastSelectedFolder = "";
 
     /**
-     * The utilities preferences
-     */
-private UtilitiesUserPreferences utilitiesUserPreferences;
-/**
- * The selected folder
- */
-private String lastSelectedFolder = "";
-    /**
-     * Creates a new ReporterSetupDialog
-     *
-     * @param peptideShakerGUI a reference to PeptideShakerGUI
+     * Creates a new ReporterSetupDialog.
+     * 
+     * @param parent
      * @param modal
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException 
      */
     public ReporterSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
 
         initComponents();
+
+        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         
-utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        // display the current searchgui path
+        // display the current reporter path
         if (utilitiesUserPreferences != null) {
             reporterInstallationJTextField.setText(utilitiesUserPreferences.getReporterPath());
-            lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
+            lastSelectedFolder = utilitiesUserPreferences.getReporterPath();
         }
 
         setLocationRelativeTo(parent);
@@ -167,7 +171,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
                 .addGroup(reporterDownloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(reporterInfoLabel)
                     .addComponent(reporterDownloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 52, Short.MAX_VALUE)
+                .addGap(0, 84, Short.MAX_VALUE)
                 .addComponent(reporterButton)
                 .addContainerGap())
         );
@@ -221,12 +225,12 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
                 .addContainerGap()
                 .addComponent(reporterInstallationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(reporterDownloadPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(reporterDownloadPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -237,7 +241,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -258,7 +262,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
      * @param evt
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        
+
         File selectedFile = Util.getUserSelectedFile(this, ".jar", "Reporter jar file (.jar)", "Select Reporter Jar File", lastSelectedFolder, true);
 
         if (selectedFile != null) {
@@ -288,7 +292,7 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         } catch (Exception e) {
             e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
         }
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
@@ -346,7 +350,6 @@ utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
     private void reporterButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reporterButtonMouseClicked
         openReporterWebPage();
     }//GEN-LAST:event_reporterButtonMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseButton;

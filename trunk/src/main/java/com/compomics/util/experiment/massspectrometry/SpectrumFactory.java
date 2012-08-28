@@ -173,7 +173,7 @@ public class SpectrumFactory {
             } else {
                 try {
                     mgfIndex = getIndex(indexFile);
-                    checkIndexVersion(spectrumFile.getParentFile(), fileName, waitingHandler);
+                    checkIndexVersion(mgfIndex, spectrumFile.getParentFile(), waitingHandler);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
@@ -836,16 +836,15 @@ public class SpectrumFactory {
     /**
      * Checks and updates the MgfIndex if this one is from an older version.
      *
+     * @param mgfIndex the MgfIndex to check
      * @param directory the directory where to write the new index in case it
      * has been changed
-     * @param mgfIndex the MgfIndex to check
+     * 
      * @throws IOException Exception thrown whenever an error occurred while
      * reading the mgf file or writing the index. If a reading error happens at
      * this point we are in trouble...
      */
-    private void checkIndexVersion(File directory, String fileName, WaitingHandler waitingHandler) throws IOException {
-
-        MgfIndex mgfIndex = mgfIndexesMap.get(fileName);
+    private void checkIndexVersion(MgfIndex mgfIndex, File directory, WaitingHandler waitingHandler) throws IOException {
 
         if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null
                 || mgfIndex.getMaxMz() == null || mgfIndex.getMaxIntensity() == null) {
@@ -854,11 +853,11 @@ public class SpectrumFactory {
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressValue(getSpectrumTitles(fileName).size());
+                waitingHandler.setMaxSecondaryProgressValue(getSpectrumTitles(mgfIndex.getFileName()).size());
                 waitingHandler.setSecondaryProgressValue(0);
             }
 
-            for (String spectrumTitle : getSpectrumTitles(fileName)) {
+            for (String spectrumTitle : getSpectrumTitles(mgfIndex.getFileName())) {
 
                 if (waitingHandler != null) {
                     if (waitingHandler.isRunCanceled()) {
@@ -867,7 +866,7 @@ public class SpectrumFactory {
                     waitingHandler.increaseSecondaryProgressValue();
                 }
 
-                String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
+                String spectrumKey = Spectrum.getSpectrumKey(mgfIndex.getFileName(), spectrumTitle);
 
                 try {
                     Precursor precursor = getPrecursor(spectrumKey, false);

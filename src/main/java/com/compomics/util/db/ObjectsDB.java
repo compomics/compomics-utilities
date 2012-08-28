@@ -251,9 +251,10 @@ public class ObjectsDB implements Serializable {
         updateStatement.close();
         insertStatement.close();
     }
-    
+
     /**
-     * Loads all objects from a table in the cache. @TODO this deserves a progress bar
+     * Loads all objects from a table in the cache.
+     *
      * @param tableName the table name
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -263,6 +264,8 @@ public class ObjectsDB implements Serializable {
      * object is not found when deserializing it.
      */
     public void loadObjects(String tableName) throws SQLException, IOException, ClassNotFoundException {
+
+        // @TODO this deserves a progress bar.
         
         if (debugInteractions) {
             System.out.println("getting table objects, table:" + tableName);
@@ -597,17 +600,17 @@ public class ObjectsDB implements Serializable {
         // debug test content
         if (debugContent) {
             try {
-                debugFolder = new File(aDbFolder); 
-                
+                debugFolder = new File(aDbFolder);
+
                 String tempFileName = "dbContent.txt";
-                
+
                 int counter = 1;
-                
+
                 // make sure that we don't overwrite the old files
                 while (new File(parentFolder, tempFileName).exists()) {
                     tempFileName = "dbContent" + counter++ + ".txt";
                 }
-                
+
                 debugContentWriter = new BufferedWriter(new FileWriter(new File(parentFolder, tempFileName)));
                 debugContentWriter.write("Table\tkey\tsize\n");
                 debugContentWriter.flush();
@@ -619,19 +622,15 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Removes the characters forbidden in table names and puts a '_' instead.
+     * Surrounds the table name with quotation marks such that spaces etc 
+     * are allowed.
      *
      * @param tableName the table name
      * @return the corrected table name
      */
     public String correctTableName(String tableName) {
-        tableName = tableName.replace(" ", "_");
-        tableName = tableName.replace("|", "_");
-        tableName = tableName.replace("-", "_");
-        tableName = tableName.replace("=", "_");
-        tableName = tableName.replace(".", "_");
 
-        // @TODO: seems like everything but numbers and letters ought to be replaced??? (couldn't find for derby but from another db: alphanumeric characters and the special characters $, _, and #)
+        tableName = "\"" + tableName + "\"";
 
         if (longKeys.contains(tableName)) {
             tableName = longKeys.indexOf(tableName) + "";

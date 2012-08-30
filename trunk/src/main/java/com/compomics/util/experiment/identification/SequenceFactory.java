@@ -49,6 +49,10 @@ public class SequenceFactory {
      * Recognized flags for a decoy protein.
      */
     public static final String[] decoyFlags = {"REVERSED", "RND", "SHUFFLED"};
+    /**
+     * Hashmap of the currently calculated protein molecular weights.
+     */
+    private static HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
 
     /**
      * Constructor.
@@ -643,5 +647,28 @@ public class SequenceFactory {
         }
 
         return aaMap;
+    }
+    
+    /**
+     * Returns the protein's molecular weight.
+     *
+     * @param accession the protein's accession number
+     * @return the protein's molecular weight
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException  
+     */
+    public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException {
+
+        // see if we've already calculated the weight of this protein
+        if (molecularWeights.containsKey(accession)) {
+            return molecularWeights.get(accession);
+        }
+        
+        // weight unknown, we need to calculate the weight
+        Protein protein = getProtein(accession);
+        double weight = protein.computeMolecularWeight() / 1000;
+        molecularWeights.put(accession, weight);
+        return weight;   
     }
 }

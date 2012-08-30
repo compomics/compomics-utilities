@@ -2,6 +2,7 @@ package com.compomics.util.db;
 
 import com.compomics.util.Util;
 import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class ObjectsDB implements Serializable {
         Statement stmt = dbConnection.createStatement();
 
         stmt.execute("CREATE table " + tableName + " ("
-                + "NAME VARCHAR(3500)," // @TODO: had to increase this from as some keys can be longer. not sure how this affects the db size and speed though...
+                + "NAME VARCHAR(32672)," // note: 32672 is the max length for a varchar, not that we should need it...
                 + "MATCH_BLOB blob(" + blobSize + ")"
                 + ")");
 
@@ -212,7 +213,6 @@ public class ObjectsDB implements Serializable {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(objects.get(objectKey));
-            oos.close();
 
             if (tableContent.contains(objectKey)) {
                 updateStatement.setString(2, objectKey);
@@ -227,9 +227,14 @@ public class ObjectsDB implements Serializable {
             if ((++rowCounter) % objectsCache.getBatchSize() == 0) {
                 updateStatement.executeBatch();
                 insertStatement.executeBatch();
+                updateStatement.clearParameters();
+                insertStatement.clearParameters();
                 dbConnection.commit();
                 rowCounter = 0;
             }
+
+            oos.close();
+            bos.close();
 
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressValue();
@@ -243,8 +248,11 @@ public class ObjectsDB implements Serializable {
             // insert the remaining data
             updateStatement.executeBatch();
             insertStatement.executeBatch();
+            updateStatement.clearParameters();
+            insertStatement.clearParameters();
             dbConnection.commit();
         }
+
         dbConnection.setAutoCommit(true);
 
         // close the statements
@@ -256,6 +264,7 @@ public class ObjectsDB implements Serializable {
      * Loads all objects from a table in the cache.
      *
      * @param tableName the table name
+     * @param progressDialog the progress dialog
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -263,18 +272,29 @@ public class ObjectsDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadObjects(String tableName) throws SQLException, IOException, ClassNotFoundException {
+    public void loadObjects(String tableName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
 
-        // @TODO this deserves a progress bar.
-        
         if (debugInteractions) {
             System.out.println("getting table objects, table:" + tableName);
         }
+        
+        progressDialog.setIndeterminate(true);
+        
+        // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
+        Statement rowCountStatement = dbConnection.createStatement();
+        ResultSet results = rowCountStatement.executeQuery("select count(*) from " + tableName);
+        results.next();
+        Integer numberOfRows = results.getInt(1);
 
+        progressDialog.setIndeterminate(false);
+        progressDialog.setValue(0);
+        progressDialog.setMaxProgressValue(numberOfRows);
+ 
         Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select * from " + tableName);
+        results = stmt.executeQuery("select * from " + tableName);
 
         while (results.next()) {
+            progressDialog.increaseProgressValue();
             String key = results.getString(1);
             Blob tempBlob = results.getBlob(2);
             BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());

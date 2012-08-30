@@ -496,25 +496,14 @@ public class ObjectsCache {
      * writing the object
      */
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
+
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size() + 1);
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
         }
 
-//        // individual option
-//        ArrayList<String> toRemove = new ArrayList<String>(loadedObjectsKeys);
-//        for (String entryKey : toRemove) {
-//            saveObject(entryKey, emptyCache);
-//            if (waitingHandler != null) {
-//                waitingHandler.increaseSecondaryProgressValue();
-//                if (waitingHandler.isRunCanceled()) {
-//                    return;
-//                }
-//            }
-//        }
-
-        // grouped option
+        // add the objects to the database
         for (String dbName : loadedObjectsMap.keySet()) {
             ObjectsDB objectsDB = databases.get(dbName);
             if (objectsDB == null) {
@@ -534,7 +523,7 @@ public class ObjectsCache {
                         }
                     }
                 }
-                objectsDB.insertObjects(tableName, objectsToStore, waitingHandler);
+                objectsDB.insertObjects(tableName, objectsToStore, waitingHandler); // @TODO: can the objectsToStore map become too big? should we set a max size before inserting?
             }
         }
 

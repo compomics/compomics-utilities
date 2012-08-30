@@ -235,9 +235,12 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Returns the proteins molecular weight.
+     * Returns the protein's molecular weight. (Note that when using a
+     * SequenceFactory it is recommended to use the SequenceFactory's
+     * computeMolecularWeight method instead, as that method stored the computed
+     * molecular weights instead of recalculating them every time.)
      *
-     * @return the proteins molecular weight
+     * @return the protein's molecular weight
      */
     public double computeMolecularWeight() {
 
@@ -306,7 +309,7 @@ public class Protein extends ExperimentObject {
         for (int startIndex : startIndexes) {
 
             startIndex--; // the provided indexes are not zero based
-            
+
             result.put(startIndex, new String[2]);
             String subsequence = "";
 

@@ -32,6 +32,10 @@ public class ProteinMatch extends IdentificationMatch {
      * The corresponding peptide match keys
      */
     private ArrayList<String> peptideMatches = new ArrayList<String>();
+    /**
+     * The splitter in the key between spectrumFile and spectrumTitle.
+     */
+    public static final String PROTEIN_KEY_SPLITTER = "_cus_";
 
     /**
      * Constructor for the protein match
@@ -45,8 +49,8 @@ public class ProteinMatch extends IdentificationMatch {
      * @param proteinAccession the matching protein
      */
     public ProteinMatch(String proteinAccession) throws IllegalArgumentException {
-        if (proteinAccession.contains(" ")) {
-            throw new IllegalArgumentException("Protein accession containing ' ' are not supported. Conflicting accession: " + mainMatch);
+        if (proteinAccession.contains(PROTEIN_KEY_SPLITTER)) {
+            throw new IllegalArgumentException("Protein accession containing '"+ PROTEIN_KEY_SPLITTER +"' are not supported. Conflicting accession: " + mainMatch);
         }
         theoreticProtein.add(proteinAccession);
         mainMatch = proteinAccession;
@@ -169,9 +173,12 @@ public class ProteinMatch extends IdentificationMatch {
         Collections.sort(theoreticProtein);
         String result = "";
         for (String accession : theoreticProtein) {
-            result += accession + " ";
+            if (!result.equals("")) {
+                result += PROTEIN_KEY_SPLITTER;
+            }
+            result += accession;
         }
-        return result.trim();
+        return result;
     }
 
     /**
@@ -190,7 +197,10 @@ public class ProteinMatch extends IdentificationMatch {
         Collections.sort(accessions);
         String result = "";
         for (String accession : accessions) {
-            result += accession + " ";
+            if (!result.equals("")) {
+                result += PROTEIN_KEY_SPLITTER;
+            }
+            result += accession;
         }
         return result.trim();
     }
@@ -276,7 +286,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the corresponding list of accessions
      */
     public static String[] getAccessions(String key) {
-        return key.split(" "); // @TODO: change the separator the next time we release a version without backward compatibility
+        return key.split(PROTEIN_KEY_SPLITTER); 
     }
 
     @Override

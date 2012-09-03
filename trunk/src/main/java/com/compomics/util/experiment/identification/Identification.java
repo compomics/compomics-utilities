@@ -1029,7 +1029,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Converts a serlialization based structure into a database based one.
+     * Converts a serlialization based structure into a database based one. Replaces the space separation by the standard separator.
      *
      * @param progressDialog a dialog to give progress feedback to the user
      * @param newDirectory the new directory where to store the data
@@ -1091,6 +1091,7 @@ public abstract class Identification extends ExperimentObject {
             MatchType matchType = getMatchType(matchKey);
             for (UrParameter urParameter : urParameters.get(matchKey).values()) {
                 if (matchType == MatchType.Protein) {
+                    matchKey = matchKey.replaceAll(" ", ProteinMatch.PROTEIN_KEY_SPLITTER);
                     addProteinMatchParameter(matchKey, urParameter);
                 } else if (matchType == MatchType.Peptide) {
                     addPeptideMatchParameter(matchKey, urParameter);
@@ -1105,10 +1106,16 @@ public abstract class Identification extends ExperimentObject {
                 break;
             }
         }
+        urParameters.clear();
         if (progressDialog != null) {
             progressDialog.setIndeterminate(true);
         }
         Util.deleteDir(directory);
+        ArrayList<String> oldProteinKeys = new ArrayList<String>(proteinIdentification);
+        proteinIdentification.clear();
+        for (String proteinKey : oldProteinKeys) {
+            proteinIdentification.add(proteinKey.replaceAll(" ", ProteinMatch.PROTEIN_KEY_SPLITTER));
+        }
     }
 
     /**

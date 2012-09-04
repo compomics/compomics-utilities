@@ -1,5 +1,6 @@
 package com.compomics.software;
 
+import com.compomics.software.dialogs.PeptideShakerSetupDialog;
 import com.compomics.software.dialogs.RelimsSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
@@ -22,12 +23,13 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws InterruptedException  
      */
-    public static void startPeptideShaker(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void startPeptideShaker(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        if (utilitiesUserPreferences.getPeptideShakerPath() == null) {
-            // @TODO: PeptideShaker path chooser
+        if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
+            new PeptideShakerSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         }
         if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
@@ -44,18 +46,19 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws InterruptedException  
      */
-    public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        if (utilitiesUserPreferences.getReporterPath() == null) {
+        if (utilitiesUserPreferences.getReporterPath() == null || !(new File(utilitiesUserPreferences.getReporterPath()).exists())) {
             new ReporterSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         }
         if (utilitiesUserPreferences.getReporterPath() != null) {
             launch(utilitiesUserPreferences.getReporterPath(), "Reporter");
         } else {
-            throw new IllegalArgumentException("Reporter not found in " + utilitiesUserPreferences.getPeptideShakerPath());
+            throw new IllegalArgumentException("Reporter not found in " + utilitiesUserPreferences.getReporterPath());
         }
     }
 
@@ -66,18 +69,21 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws InterruptedException  
      */
-    public static void startRelims(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void startRelims(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        if (utilitiesUserPreferences.getReporterPath() == null) {
+        
+        if (utilitiesUserPreferences.getRelimsPath() == null 
+                || (utilitiesUserPreferences.getRelimsPath() != null && !(new File(utilitiesUserPreferences.getRelimsPath()).exists()))) {
             new RelimsSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         }
         if (utilitiesUserPreferences.getRelimsPath() != null) {
             launch(utilitiesUserPreferences.getRelimsPath(), "Relims");
         } else {
-            throw new IllegalArgumentException("Relims not found in " + utilitiesUserPreferences.getPeptideShakerPath());
+            throw new IllegalArgumentException("Relims not found in " + utilitiesUserPreferences.getRelimsPath());
         }
     }
 
@@ -88,18 +94,19 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws InterruptedException  
      */
-    public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        if (utilitiesUserPreferences.getSearchGuiPath() == null) {
+        if (utilitiesUserPreferences.getSearchGuiPath() == null || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
             new SearchGuiSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         }
         if (utilitiesUserPreferences.getSearchGuiPath() != null) {
             launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
         } else {
-            throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getPeptideShakerPath());
+            throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getSearchGuiPath());
         }
     }
 
@@ -109,9 +116,9 @@ public class ToolFactory {
      * @param toolPath the path to the tool
      * @param toolName the name of the tool (used for bug report)
      */
-    private static void launch(String toolPath, String toolName) {
+    private static void launch(String toolPath, String toolName) throws IOException, InterruptedException {
 
-        boolean debug = true;
+        boolean debug = false;
 
         String quote = "";
 
@@ -125,62 +132,57 @@ public class ToolFactory {
             System.out.println(cmdLine);
         }
 
-        try {
-            Process p = Runtime.getRuntime().exec(cmdLine);
+        Process p = Runtime.getRuntime().exec(cmdLine);
 
-            InputStream stderr = p.getErrorStream();
-            InputStreamReader isr = new InputStreamReader(stderr);
-            BufferedReader br = new BufferedReader(isr);
+        InputStream stderr = p.getErrorStream();
+        InputStreamReader isr = new InputStreamReader(stderr);
+        BufferedReader br = new BufferedReader(isr);
 
-            String temp = "<ERROR>" + System.getProperty("line.separator") + System.getProperty("line.separator");
+        String temp = "<ERROR>" + System.getProperty("line.separator") + System.getProperty("line.separator");
 
-            if (debug) {
-                System.out.println("<ERROR>");
-            }
+        if (debug) {
+            System.out.println("<ERROR>");
+        }
 
-            String line = br.readLine();
+        String line = br.readLine();
 
-            boolean error = false;
+        boolean error = false;
 
-            while (line != null) {
-
-                if (debug) {
-                    System.out.println(line);
-                }
-
-                temp += line + System.getProperty("line.separator");
-                line = br.readLine();
-                error = true;
-            }
+        while (line != null) {
 
             if (debug) {
-                System.out.println("</ERROR>");
+                System.out.println(line);
             }
 
-            temp += System.getProperty("line.separator") + "The command line executed:" + System.getProperty("line.separator");
-            temp += cmdLine + System.getProperty("line.separator");
-            temp += System.getProperty("line.separator") + "</ERROR>" + System.getProperty("line.separator");
-            int exitVal = p.waitFor();
+            temp += line + System.getProperty("line.separator");
+            line = br.readLine();
+            error = true;
+        }
 
-            if (debug) {
-                System.out.println("Process exitValue: " + exitVal);
-            }
+        if (debug) {
+            System.out.println("</ERROR>");
+        }
 
-            if (error) {
-                File logFile = new File(toolPath + "/resources/conf", toolName + ".log");
-                FileWriter f = new FileWriter(logFile, true);
-                f.write(System.getProperty("line.separator") + System.getProperty("line.separator") + temp + System.getProperty("line.separator") + System.getProperty("line.separator"));
-                f.close();
+        temp += System.getProperty("line.separator") + "The command line executed:" + System.getProperty("line.separator");
+        temp += cmdLine + System.getProperty("line.separator");
+        temp += System.getProperty("line.separator") + "</ERROR>" + System.getProperty("line.separator");
+        int exitVal = p.waitFor();
 
-                javax.swing.JOptionPane.showMessageDialog(null,
-                        "Failed to start " + toolName + ".\n\n"
-                        + "Inspect the log file for details: resources/conf/" + toolName + ".log.\n\n"
-                        + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com.",
-                        toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-            System.exit(0);
+        if (debug) {
+            System.out.println("Process exitValue: " + exitVal);
+        }
+
+        if (error) {
+            File logFile = new File(toolPath + "/resources/conf", toolName + ".log");
+            FileWriter f = new FileWriter(logFile, true);
+            f.write(System.getProperty("line.separator") + System.getProperty("line.separator") + temp + System.getProperty("line.separator") + System.getProperty("line.separator"));
+            f.close();
+
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Failed to start " + toolName + ".\n\n"
+                    + "Inspect the log file for details: resources/conf/" + toolName + ".log.\n\n"
+                    + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com.",
+                    toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

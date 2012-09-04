@@ -48,6 +48,7 @@ public class CompomicsWrapper {
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.
      *
+     * @param toolName 
      * @param jarFile the jar file to execute
      * @param splashName the splash name, for example peptide-shaker-splash.png
      * @param mainClass the main class to execute, for example
@@ -289,7 +290,7 @@ public class CompomicsWrapper {
         }
 
         // get the splash 
-        String splashPath = confFolder.getAbsolutePath() + splashName;
+        String splashPath = confFolder.getAbsolutePath() + File.separator + splashName;
 
         // set the correct slashes for the splash path
         if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {

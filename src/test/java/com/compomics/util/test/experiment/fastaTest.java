@@ -1,15 +1,11 @@
 package com.compomics.util.test.experiment;
 
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.io.File;
 
 /**
  * This test will try to load proteins from a fasta file

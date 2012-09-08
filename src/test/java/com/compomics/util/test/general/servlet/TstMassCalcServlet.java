@@ -5,15 +5,17 @@
  */
 
 package com.compomics.util.test.general.servlet;
+
+import com.compomics.util.junit.TestCaseLM;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
-
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Properties;
-
-import junit.framework.*;
-import junit.TestCaseLM;
 
 /*
  * CVS information:
@@ -28,7 +30,7 @@ import junit.TestCaseLM;
  * @see com.compomics.util.general.servlet.MassCalcServlet
  * @author	Lennart Martens
  */
-public class TstMassCalcServlet extends TestCaseLM {
+public class TstMassCalcServlet extends TestCase {
 
     // Class specific log4j logger for TstMassCalcServlet instances.
     Logger logger = Logger.getLogger(TstMassCalcServlet.class);
@@ -47,7 +49,7 @@ public class TstMassCalcServlet extends TestCaseLM {
      */
     public void testMassCalcServlet() {
         try {
-            Properties p = super.getPropertiesFile("testMCServlet.properties");
+            Properties p = TestCaseLM.getPropertiesFile("testMCServlet.properties");
 
             int doTest = Integer.parseInt(p.getProperty("doTest"));
             if (doTest == 0) {
@@ -110,7 +112,7 @@ public class TstMassCalcServlet extends TestCaseLM {
      */
     public void testAddSelfList() {
         try {
-            Properties p = super.getPropertiesFile("testMCServlet.properties");
+            Properties p = TestCaseLM.getPropertiesFile("testMCServlet.properties");
 
             int doTest = Integer.parseInt(p.getProperty("doTest"));
             if (doTest == 0) {

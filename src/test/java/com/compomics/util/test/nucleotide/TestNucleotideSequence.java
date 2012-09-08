@@ -11,17 +11,17 @@
  * Time: 15:28:41
  */
 package com.compomics.util.test.nucleotide;
-import org.apache.log4j.Logger;
 
-import junit.framework.*;
+import com.compomics.util.junit.TestCaseLM;
+import com.compomics.util.nucleotide.NucleotideSequence;
+import com.compomics.util.nucleotide.NucleotideSequenceImpl;
 import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Protein;
-import com.compomics.util.nucleotide.NucleotideSequenceImpl;
-import com.compomics.util.nucleotide.NucleotideSequence;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 import java.io.*;
-
-import junit.TestCaseLM;
 
 /*
  * CVS information:
@@ -36,7 +36,7 @@ import junit.TestCaseLM;
  * @author Lennart Martens
  * @see com.compomics.util.nucleotide.NucleotideSequence
  */
-public class TestNucleotideSequence extends TestCaseLM {
+public class TestNucleotideSequence extends TestCase {
 
     // Class specific log4j logger for TestNucleotideSequence instances.
     Logger logger = Logger.getLogger(TestNucleotideSequence.class);
@@ -107,7 +107,7 @@ public class TestNucleotideSequence extends TestCaseLM {
      */
     public void testPrintToFASTAFile() {
         final String inputFile = "fastaNucleotideFile.fas";
-        final String input = super.getFullFilePath(inputFile).replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath(inputFile).replace("%20", " ");
         try {
             NucleotideSequence p1 = new NucleotideSequence(">sw|O95229|ZWIN_HUMAN ZW10 interactor (ZW10 interacting NucleotideSequence-1) (Zwint-1).\nAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAG");
             NucleotideSequence p2 = new NucleotideSequence(">sw|O95230|ZWIN_HUMAN ZW10 interactor (ZW10 interacting NucleotideSequence-2) (Zwint-2).\nAGCTAGCTAGCTAGCTAGAGCTAGCTAGCTAGCTAG");

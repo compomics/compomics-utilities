@@ -11,19 +11,19 @@
  * Time: 18:55:02
  */
 package com.compomics.util.test.io;
-import org.apache.log4j.Logger;
-
-import junit.TestCaseLM;
-
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.util.Vector;
 
 import com.compomics.util.io.MascotEnzymeReader;
-import com.compomics.util.protein.Enzyme;
+import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.DualEnzyme;
+import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.RegExEnzyme;
-import junit.framework.*;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Vector;
 
 /*
  * CVS information:
@@ -39,7 +39,7 @@ import junit.framework.*;
  * @author Lennart
  * @see com.compomics.util.io.MascotEnzymeReader
  */
-public class TestMascotEnzymeReader extends TestCaseLM {
+public class TestMascotEnzymeReader extends TestCase {
 
     // Class specific log4j logger for TestMascotEnzymeReader instances.
     Logger logger = Logger.getLogger(TestMascotEnzymeReader.class);
@@ -56,7 +56,7 @@ public class TestMascotEnzymeReader extends TestCaseLM {
      * This method test the creation and reading behaviour of a MascotEnzymeReader instance.
      */
     public void testCreationAndReading() {
-        final String inputFile = super.getFullFilePath("enzymes_test.txt").replace("%20", " ");
+        final String inputFile = TestCaseLM.getFullFilePath("enzymes_test.txt").replace("%20", " ");
         final Vector control = new Vector(5);
         control.add("Trypsin");
         control.add("Trypsin/P");
@@ -290,7 +290,7 @@ public class TestMascotEnzymeReader extends TestCaseLM {
      * enzyme instance.
      */
     public void testCopyOfEnzyme() {
-        final String inputFile = super.getFullFilePath("enzymes_test.txt").replace("%20", " ");
+        final String inputFile = TestCaseLM.getFullFilePath("enzymes_test.txt").replace("%20", " ");
         // Try it for a regular Enzyme.
         try {
             MascotEnzymeReader mer = new MascotEnzymeReader(inputFile);

@@ -1,12 +1,11 @@
 package com.compomics.util.test.experiment;
 
-import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.EnzymeFactory;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import junit.framework.TestCase;
 
 /**
  * Created by IntelliJ IDEA.

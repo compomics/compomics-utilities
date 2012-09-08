@@ -11,18 +11,18 @@
  * Time: 10:56:32
  */
 package com.compomics.util.test.nucleotide;
-import org.apache.log4j.Logger;
 
-import junit.TestCaseLM;
 import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.nucleotide.NucleotideSequenceImpl;
 import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Protein;
 import com.compomics.util.protein.Header;
-import junit.framework.*;
+import com.compomics.util.protein.Protein;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
-import java.util.Vector;
 import java.util.HashMap;
+import java.util.Vector;
 
 /*
  * CVS information:
@@ -37,7 +37,7 @@ import java.util.HashMap;
  * @author Lennart Martens
  * @see com.compomics.util.nucleotide.NucleotideSequenceImpl
  */
-public class TestNucleotideSequenceImpl extends TestCaseLM {
+public class TestNucleotideSequenceImpl extends TestCase {
 
     // Class specific log4j logger for TestNucleotideSequenceImpl instances.
     Logger logger = Logger.getLogger(TestNucleotideSequenceImpl.class);

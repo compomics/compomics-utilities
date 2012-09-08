@@ -5,18 +5,18 @@
  */
 
 package com.compomics.util.test;
-import com.compomics.util.test.general.TestIsotopicDistributionCalculator;
-import org.apache.log4j.Logger;
 
-
-import junit.framework.*;
-
-import com.compomics.util.test.general.TestMassCalc;
 import com.compomics.util.test.general.TestCommandLineParser;
-import com.compomics.util.test.protein.*;
+import com.compomics.util.test.general.TestIsotopicDistributionCalculator;
+import com.compomics.util.test.general.TestMassCalc;
 import com.compomics.util.test.io.*;
-import com.compomics.util.test.nucleotide.TestNucleotideSequenceImpl;
 import com.compomics.util.test.nucleotide.TestNucleotideSequence;
+import com.compomics.util.test.nucleotide.TestNucleotideSequenceImpl;
+import com.compomics.util.test.protein.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:

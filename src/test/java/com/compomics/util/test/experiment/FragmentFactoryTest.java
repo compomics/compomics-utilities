@@ -1,18 +1,17 @@
 package com.compomics.util.test.experiment;
 
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import java.util.ArrayList;
-import java.util.HashMap;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class compares the results of peptide fragment mass prediction with

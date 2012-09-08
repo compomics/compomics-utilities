@@ -11,18 +11,18 @@
  * Time: 16:14:00
  */
 package com.compomics.util.test.protein;
-import org.apache.log4j.Logger;
 
-import junit.TestCaseLM;
+import com.compomics.util.interfaces.Modification;
+import com.compomics.util.junit.TestCaseLM;
+import com.compomics.util.protein.ModificationFactory;
 import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-
-import com.compomics.util.protein.ModificationFactory;
-import com.compomics.util.interfaces.Modification;
 
 /*
  * CVS information:
@@ -37,7 +37,7 @@ import com.compomics.util.interfaces.Modification;
  * @see com.compomics.util.protein.ModificationFactory
  * @author Lennart Martens
  */
-public class TestModificationFactory extends TestCaseLM {
+public class TestModificationFactory extends TestCase {
 
     // Class specific log4j logger for TestModificationFactory instances.
     Logger logger = Logger.getLogger(TestModificationFactory.class);
@@ -59,7 +59,7 @@ public class TestModificationFactory extends TestCaseLM {
 
             StringReader sr = new StringReader(result);
             BufferedReader test = new BufferedReader(sr);
-            BufferedReader control = new BufferedReader(new FileReader(super.getFullFilePath("testModificationParser_control.txt").replace("%20", " ")));
+            BufferedReader control = new BufferedReader(new FileReader(TestCaseLM.getFullFilePath("testModificationParser_control.txt").replace("%20", " ")));
             String line = null;
             while((line = test.readLine()) != null) {
                 Assert.assertEquals(control.readLine(), line);
@@ -84,7 +84,7 @@ public class TestModificationFactory extends TestCaseLM {
 
             StringReader sr = new StringReader(result);
             BufferedReader test = new BufferedReader(sr);
-            BufferedReader control = new BufferedReader(new FileReader(super.getFullFilePath("testModificationConversionParser_control.txt").replace("%20", " ")));
+            BufferedReader control = new BufferedReader(new FileReader(TestCaseLM.getFullFilePath("testModificationConversionParser_control.txt").replace("%20", " ")));
             String line = null;
             while((line = test.readLine()) != null) {
                 Assert.assertEquals(control.readLine(), line);

@@ -11,16 +11,16 @@
  * Time: 15:28:41
  */
 package com.compomics.util.test.protein;
+
+import com.compomics.util.junit.TestCaseLM;
+import com.compomics.util.protein.AASequenceImpl;
+import com.compomics.util.protein.Header;
+import com.compomics.util.protein.Protein;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
-import junit.framework.*;
-import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Protein;
-import com.compomics.util.protein.Header;
-
 import java.io.*;
-
-import junit.TestCaseLM;
 
 /*
  * CVS information:
@@ -35,7 +35,7 @@ import junit.TestCaseLM;
  * @author Lennart Martens
  * @see com.compomics.util.protein.Protein
  */
-public class TestProtein extends TestCaseLM {
+public class TestProtein extends TestCase {
 
     // Class specific log4j logger for TestProtein instances.
     Logger logger = Logger.getLogger(TestProtein.class);
@@ -235,7 +235,7 @@ public class TestProtein extends TestCaseLM {
      */
     public void testPrintToFASTAFile() {
         final String inputFile = "fastaFile.fas";
-        final String input = super.getFullFilePath(inputFile).replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath(inputFile).replace("%20", " ");
         try {
             Protein p1 = new Protein(">sw|O95229|ZWIN_HUMAN ZW10 interactor (ZW10 interacting protein-1) (Zwint-1).\nMAAPRPPPAISVSVSAPAFYAPQKKFAPVVAPKPKVNPFRPGDSEPPVAAGAQRAQMGRVGEIPPPPPEDFPLPPPPLIGEGDDSEGALGGAFPPPPPPMIEEPFPPAPLEEDIFPSPPPPLEEEGGPEAPTQLPPQPREKVCSIDLEIDSLSSLLDDMTKNDPFKARVSSGYVPPPVATPFVPKPSTKPAPGGTAPLPPWKTPSSSQPPPQPQRKPQVQLHVQPQAKPHVQPQPVSSANTQPRGPLSQAPTPAPKFAPVAPKFTPVVSKFSPGAPSGPGPQPIKKWCLRMPPSSVSTGSPQPPSFTYAQQKEKPLVQEKQHPQPPPAQNQNQVRSPGGPGPLTLKEVEELEQLTQQLMQDMEHPQRQSVAVNESCGKCNQPLARAQPAVRALGQLFHITCFTCHQCQQQLQGQQFYSLEGAPYCEGCYTDTLEKCNTCGQPITDRMLRATGKAYHPQCFTCVVCACPLEGTSFIVDQANQPHSVPDYHKQYAPRCSVCSEPIMPEPGRDETVRVVALDKNFHMKCYKCEDCGKPLSIEADDNGCFPLDGHVLCRKCHSARAQT");
             Protein p2 = new Protein(">sw|O95230|ZWIN_HUMAN ZW10 interactor (ZW10 interacting protein-2) (Zwint-2).\nMAAPRPPPAISVSVGAPAFYAPQKKFAPVVAPKPKVNPFR");

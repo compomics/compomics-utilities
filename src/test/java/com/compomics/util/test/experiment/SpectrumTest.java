@@ -3,9 +3,10 @@ package com.compomics.util.test.experiment;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
-import java.io.File;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.io.File;
 
 /**
  * This test case will test the mgf import and spectrum annotation

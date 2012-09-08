@@ -1,12 +1,11 @@
 package com.compomics.util.test.experiment;
 
+import com.compomics.util.experiment.biology.GlyconFactory;
+import com.compomics.util.experiment.biology.ions.Glycon;
 import junit.framework.TestCase;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import com.compomics.util.experiment.biology.GlyconFactory;
-import com.compomics.util.experiment.biology.ions.Glycon;
 
 /**
  * Created by IntelliJ IDEA.

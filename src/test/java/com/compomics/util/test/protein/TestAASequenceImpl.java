@@ -5,20 +5,19 @@
  */
 
 package com.compomics.util.test.protein;
+
 import com.compomics.util.enumeration.MolecularElement;
-import org.apache.log4j.Logger;
-
-
-import java.util.Vector;
-import java.util.HashMap;
-
-import junit.framework.*;
-
+import com.compomics.util.interfaces.Modification;
 import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.ModificationImplementation;
 import com.compomics.util.protein.ModificationFactory;
-import com.compomics.util.interfaces.Modification;
+import com.compomics.util.protein.ModificationImplementation;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Vector;
 
 
 /*

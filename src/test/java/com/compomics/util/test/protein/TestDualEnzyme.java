@@ -11,13 +11,13 @@
  * Time: 11:30:42
  */
 package com.compomics.util.test.protein;
-import org.apache.log4j.Logger;
 
-import junit.TestCaseLM;
-import junit.framework.Assert;
 import com.compomics.util.protein.DualEnzyme;
-import com.compomics.util.protein.Protein;
 import com.compomics.util.protein.Enzyme;
+import com.compomics.util.protein.Protein;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -31,7 +31,7 @@ import com.compomics.util.protein.Enzyme;
  *
  * @author Lennart Martens
  */
-public class TestDualEnzyme extends TestCaseLM {
+public class TestDualEnzyme extends TestCase {
 
     // Class specific log4j logger for TestDualEnzyme instances.
     Logger logger = Logger.getLogger(TestDualEnzyme.class);

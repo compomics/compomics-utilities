@@ -11,15 +11,15 @@
  * Time: 11:21:52
  */
 package com.compomics.util.test.io;
+
 import com.compomics.util.io.FTPClient;
+import com.compomics.util.junit.TestCaseLM;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
-import junit.TestCaseLM;
-
-import java.util.Properties;
 import java.io.*;
-
-import junit.framework.*;
+import java.util.Properties;
 
 /*
  * CVS information:
@@ -34,7 +34,7 @@ import junit.framework.*;
  * @author Lennart Martens
  * @see com.compomics.util.io.FTPClient
  */
-public class TestFTPClient extends TestCaseLM {
+public class TestFTPClient extends TestCase {
 
     // Class specific log4j logger for TestFTPClient instances.
     Logger logger = Logger.getLogger(TestFTPClient.class);
@@ -54,7 +54,7 @@ public class TestFTPClient extends TestCaseLM {
     public TestFTPClient(String aName) {
         super(aName);
 
-        Properties p = super.getPropertiesFile("FTPClient.properties");
+        Properties p = TestCaseLM.getPropertiesFile("FTPClient.properties");
         int liDoTest = Integer.parseInt(p.getProperty("performTest").trim());
         this.iDoTest = (liDoTest>0?true:false);
 
@@ -76,7 +76,7 @@ public class TestFTPClient extends TestCaseLM {
         if(iDoTest) {
             try {
                 // First get a textfile to send.
-                String file = super.getFullFilePath("FTPClient.properties");
+                String file = TestCaseLM.getFullFilePath("FTPClient.properties");
 
                 FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
                 lFtpClient.sendTextFile(file);
@@ -117,7 +117,7 @@ public class TestFTPClient extends TestCaseLM {
         if(iDoTest) {
             try {
                 // First get a binary file to send.
-                String file = super.getFullFilePath("testFile.jpg");
+                String file = TestCaseLM.getFullFilePath("testFile.jpg");
 
                 FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
                 lFtpClient.sendBinaryFile(file);
@@ -159,8 +159,8 @@ public class TestFTPClient extends TestCaseLM {
             try {
                 // Get two files to send.
                 String[] files = new String[2];
-                files[0] = super.getFullFilePath("FTPClient.properties");
-                files[1] = super.getFullFilePath("enzymes.txt");
+                files[0] = TestCaseLM.getFullFilePath("FTPClient.properties");
+                files[1] = TestCaseLM.getFullFilePath("enzymes.txt");
 
                 FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
                 lFtpClient.sendFiles(files, false);
@@ -204,8 +204,8 @@ public class TestFTPClient extends TestCaseLM {
             try {
                 // Get two files to send.
                 String[] files = new String[2];
-                files[0] = super.getFullFilePath("testFile.jpg");
-                files[1] = super.getFullFilePath("TestMonitor.zip");
+                files[0] = TestCaseLM.getFullFilePath("testFile.jpg");
+                files[1] = TestCaseLM.getFullFilePath("TestMonitor.zip");
 
                 FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
                 lFtpClient.sendFiles(files, true);
@@ -249,8 +249,8 @@ public class TestFTPClient extends TestCaseLM {
             try {
                 // We get a textfile and a binary file.
                 String[] files = new String[2];
-                files[0] = super.getFullFilePath("testFile.jpg");
-                files[1] = super.getFullFilePath("FTPClient.properties");
+                files[0] = TestCaseLM.getFullFilePath("testFile.jpg");
+                files[1] = TestCaseLM.getFullFilePath("FTPClient.properties");
 
                 FTPClient lFtpClient = new FTPClient(this.iServer, this.iUser, this.iPassword);
                 lFtpClient.sendFiles(files, new boolean[]{true, false});

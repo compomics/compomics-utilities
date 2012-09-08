@@ -1,8 +1,8 @@
 package com.compomics.util.test.experiment;
 
-import junit.framework.TestCase;
-import com.compomics.util.experiment.quantification.reporterion.ReporterMethodFactory;
 import com.compomics.util.experiment.quantification.reporterion.ReporterMethod;
+import com.compomics.util.experiment.quantification.reporterion.ReporterMethodFactory;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.util.ArrayList;

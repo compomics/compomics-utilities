@@ -11,11 +11,11 @@
  * Time: 16:46:16
  */
 package com.compomics.util.test.protein;
-import org.apache.log4j.Logger;
 
-import junit.TestCaseLM;
 import com.compomics.util.protein.Header;
-import junit.framework.*;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -30,7 +30,7 @@ import junit.framework.*;
  * @author Lennart Martens
  * @see com.compomics.util.protein.Header
  */
-public class TestHeader extends TestCaseLM {
+public class TestHeader extends TestCase {
 
     // Class specific log4j logger for TestHeader instances.
     Logger logger = Logger.getLogger(TestHeader.class);

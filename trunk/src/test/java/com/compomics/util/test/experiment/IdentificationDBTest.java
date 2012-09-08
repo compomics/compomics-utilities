@@ -12,10 +12,12 @@ import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
-import java.io.*;
+import junit.framework.Assert;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import junit.framework.Assert;
 
 /**
  *

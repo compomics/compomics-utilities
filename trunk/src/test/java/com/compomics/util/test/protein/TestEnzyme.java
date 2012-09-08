@@ -11,15 +11,17 @@
  * Time: 9:17:13
  */
 package com.compomics.util.test.protein;
-import org.apache.log4j.Logger;
 
-import junit.framework.*;
+import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Protein;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
-import java.io.*;
-
-import junit.TestCaseLM;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /*
  * CVS information:
@@ -34,7 +36,7 @@ import junit.TestCaseLM;
  * @author Lennart Martens
  * @see com.compomics.util.protein.Enzyme
  */
-public class TestEnzyme extends TestCaseLM {
+public class TestEnzyme extends TestCase {
 
     // Class specific log4j logger for TestEnzyme instances.
     Logger logger = Logger.getLogger(TestEnzyme.class);
@@ -119,7 +121,7 @@ public class TestEnzyme extends TestCaseLM {
      */
     public void testCleave() {
         final String inputFile = "testCleave.fas";
-        final String input = super.getFullFilePath(inputFile).replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath(inputFile).replace("%20", " ");
 
         try {
             // We need to obtain a pointer the control file before anything else.

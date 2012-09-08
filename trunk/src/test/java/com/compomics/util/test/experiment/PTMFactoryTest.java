@@ -2,11 +2,10 @@ package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.Iterator;
-import junit.framework.Assert;
 
 /**
  * Created by IntelliJ IDEA.

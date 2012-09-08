@@ -11,17 +11,19 @@
  * Time: 13:45:05
  */
 package com.compomics.util.test.io;
-import org.apache.log4j.Logger;
-
-import junit.TestCaseLM;
-
-import java.io.*;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.GZIPInputStream;
 
 import com.compomics.util.io.MonitorableInputStream;
-import junit.framework.*;
+import com.compomics.util.junit.TestCaseLM;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /*
  * CVS information:
@@ -37,7 +39,7 @@ import junit.framework.*;
  * @author Lennart Martens
  * @see com.compomics.util.io.MonitorableInputStream
  */
-public class TestMonitorableInputStream extends TestCaseLM {
+public class TestMonitorableInputStream extends TestCase {
 
     // Class specific log4j logger for TestMonitorableInputStream instances.
     Logger logger = Logger.getLogger(TestMonitorableInputStream.class);
@@ -55,7 +57,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoring() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("fastaFile.fas").replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath("fastaFile.fas").replace("%20", " ");
         try {
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input));
             int full = mis.getMaximum();
@@ -77,7 +79,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoringWithMaxSet() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("fastaFile.fas").replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath("fastaFile.fas").replace("%20", " ");
         try {
             File inputFile = new File(input);
             int max = (int)inputFile.length();
@@ -102,7 +104,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoringZipfile() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("testMonitor.zip").replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath("testMonitor.zip").replace("%20", " ");
         try {
             File inputFile = new File(input);
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input), true);
@@ -127,7 +129,7 @@ public class TestMonitorableInputStream extends TestCaseLM {
      */
     public void testMonitoringGZIPfile() {
         // First just the InputStream.
-        final String input = super.getFullFilePath("test.spr.gz").replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath("test.spr.gz").replace("%20", " ");
         try {
             File inputFile = new File(input);
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input), true);

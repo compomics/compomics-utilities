@@ -11,14 +11,14 @@
  * Time: 16:17:26
  */
 package com.compomics.util.test.io;
-import org.apache.log4j.Logger;
-
-import junit.TestCaseLM;
-
-import java.io.File;
 
 import com.compomics.util.io.FilenameExtensionFilter;
-import junit.framework.*;
+import com.compomics.util.junit.TestCaseLM;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.io.File;
 
 /*
  * CVS information:
@@ -33,7 +33,7 @@ import junit.framework.*;
  * @author Lennart Martens
  * @see com.compomics.util.io.FilenameExtensionFilter
  */
-public class TestFilenameExtensionFilter extends TestCaseLM {
+public class TestFilenameExtensionFilter extends TestCase {
 
     // Class specific log4j logger for TestFilenameExtensionFilter instances.
     Logger logger = Logger.getLogger(TestFilenameExtensionFilter.class);
@@ -54,7 +54,7 @@ public class TestFilenameExtensionFilter extends TestCaseLM {
         int counter = 0;
 
         // First get the data we need to verify the results afterwards.
-        File f = new File(super.getFullFilePath("FTPClient.properties").replace("%20", " ")).getParentFile();
+        File f = new File(TestCaseLM.getFullFilePath("FTPClient.properties").replace("%20", " ")).getParentFile();
         String[] names = f.list();
         for(int i = 0; i < names.length; i++) {
             String lName = names[i];

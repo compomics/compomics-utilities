@@ -1,11 +1,12 @@
 package com.compomics.util.test.protein;
-import org.apache.log4j.Logger;
 
+import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Protein;
 import com.compomics.util.protein.RegExEnzyme;
-import junit.TestCaseLM;
 import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 
@@ -13,7 +14,7 @@ import java.io.*;
  * @author Florian Reisinger
  * @since 2.9
  */
-public class TestRegExEnzyme  extends TestCaseLM {
+public class TestRegExEnzyme  extends TestCase {
 
     // Class specific log4j logger for TestRegExEnzyme instances.
     Logger logger = Logger.getLogger(TestRegExEnzyme.class);
@@ -103,7 +104,7 @@ public class TestRegExEnzyme  extends TestCaseLM {
      */
     public void testCleave() {
         final String inputFile = "testCleave.fas";
-        final String input = super.getFullFilePath(inputFile).replace("%20", " ");
+        final String input = TestCaseLM.getFullFilePath(inputFile).replace("%20", " ");
 
         try {
             // We need to obtain a pointer the control file before anything else.

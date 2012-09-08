@@ -5,15 +5,17 @@
  */
 
 package com.compomics.util.test.general;
-import org.apache.log4j.Logger;
-
-
-import java.util.*;
-import junit.framework.*;
 
 import com.compomics.util.general.MassCalc;
 import com.compomics.util.general.UnknownElementMassException;
-import junit.TestCaseLM;
+import com.compomics.util.junit.TestCaseLM;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Properties;
 
 /*
  * CVS information:
@@ -28,7 +30,7 @@ import junit.TestCaseLM;
  * @see com.compomics.util.general.MassCalc
  * @author	Lennart Martens
  */
-public class TestMassCalc extends TestCaseLM {
+public class TestMassCalc extends TestCase {
 
     // Class specific log4j logger for TestMassCalc instances.
     Logger logger = Logger.getLogger(TestMassCalc.class);
@@ -47,7 +49,7 @@ public class TestMassCalc extends TestCaseLM {
     public void testCalculateMass() {
         MassCalc mc = new MassCalc();
         try {
-            Properties p = super.getPropertiesFile("testMassCalc.properties");
+            Properties p = TestCaseLM.getPropertiesFile("testMassCalc.properties");
             Iterator iter = p.keySet().iterator();
             while (iter.hasNext()) {
                 String formula = (String) iter.next();
@@ -138,8 +140,8 @@ public class TestMassCalc extends TestCaseLM {
     public void testAddSelfDefined() {
         try {
 
-            Properties elProps = super.getPropertiesFile("testAddSelfDefinedList_BiochemElements.properties");
-            Properties aaProps = super.getPropertiesFile("testAddSelfDefinedList_AA.properties");
+            Properties elProps = TestCaseLM.getPropertiesFile("testAddSelfDefinedList_BiochemElements.properties");
+            Properties aaProps = TestCaseLM.getPropertiesFile("testAddSelfDefinedList_AA.properties");
 
             // First for the biochemical elements list.
             HashMap hm = new HashMap();

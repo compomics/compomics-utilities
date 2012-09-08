@@ -2,16 +2,9 @@ package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
-import com.compomics.util.experiment.io.identifications.IdfileReader;
-import com.compomics.util.experiment.identification.identifications.Ms2Identification;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.Identification;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.HashSet;
 
 /**
  * Created by IntelliJ IDEA.

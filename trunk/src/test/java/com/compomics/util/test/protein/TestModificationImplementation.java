@@ -11,14 +11,13 @@
  * Time: 16:18:51
  */
 package com.compomics.util.test.protein;
-import org.apache.log4j.Logger;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
-import java.util.HashMap;
 
 import com.compomics.util.protein.ModificationImplementation;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+
+import java.util.HashMap;
 
 /*
  * CVS information:

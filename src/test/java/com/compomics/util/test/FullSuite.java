@@ -6,6 +6,7 @@
 
 package com.compomics.util.test;
 
+import com.compomics.util.test.experiment.io.identifications.TestIdfileReaderFactory;
 import com.compomics.util.test.general.TestCommandLineParser;
 import com.compomics.util.test.general.TestIsotopicDistributionCalculator;
 import com.compomics.util.test.general.TestMassCalc;
@@ -64,6 +65,7 @@ public class FullSuite extends TestCase {
         ts.addTest(new TestSuite(TestNucleotideSequenceImpl.class));
         ts.addTest(new TestSuite(TestNucleotideSequence.class));
         ts.addTest(new TestSuite(TestIsotopicDistributionCalculator.class));
+        ts.addTest(new TestSuite(TestIdfileReaderFactory.class));
 
         return ts;
     }

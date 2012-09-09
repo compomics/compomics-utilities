@@ -30,6 +30,13 @@ public interface IdfileReader {
     public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception;
 
     /**
+     * This method should return the extension of the file for which this IdfileReader can be used.
+     *
+     * @return  String with the extension (taken to make up the end of the filename) of the file that this IdfileReader can read.
+     */
+    public String getExtension();
+
+    /**
      * Closes the file reader.
      *
      * @throws IOException

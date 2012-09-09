@@ -42,16 +42,16 @@ public class IdfileReaderFactory {
     static {
         ServiceLoader<IdfileReader> ifdrServiceLoader = ServiceLoader.load(IdfileReader.class);
         Iterator<IdfileReader> idfrIterator = ifdrServiceLoader.iterator();
+        
         while (idfrIterator.hasNext()) {
             IdfileReader idfileReader = idfrIterator.next();
             logger.info("Found IdfileReader '" + idfileReader.getClass().getCanonicalName() + "' in Java service loader.");
             IdfileReaderFactory.registerIdFileReader(idfileReader.getClass(), idfileReader.getExtension());
         }
-
     }
 
     /**
-     * the factory constructor
+     * The factory constructor.
      */
     private IdfileReaderFactory() {
     }

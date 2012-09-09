@@ -101,7 +101,7 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-ssh</artifactId>
+                <artifactId>wagon-ssh</artifactId>
                 <version>1.0-beta-2</version>
             </extension>
         </extensions>
@@ -114,6 +114,7 @@
             <!-- Compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -126,6 +127,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -159,11 +161,14 @@
                 </executions>
             </plugin>
 
-            <!-- Resources plugin - classes -->
+            <!-- Resources plugin -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.3</version>
+                <!-- Copy resources into appropriate folder upon packaging -->
                 <executions>
+                    
+                    <!-- Copy the classes -->
                     <execution>
                         <id>copy-resources2</id>
                         <phase>compile</phase>
@@ -181,15 +186,7 @@
                             </resources>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-
-            <!-- Resources plugin -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.3</version>
-                <!-- Copy resources into appropriate folder upon packaging -->
-                <executions>
+                    
                     <!-- Copy main resources into test classpath when running the tests -->
                     <execution>
                         <id>copy-test-resources</id>
@@ -207,6 +204,7 @@
                             </resources>
                         </configuration>
                     </execution>
+                    
                     <!-- Copy the resources -->
                     <execution>
                         <id>copy-resources</id>
@@ -370,11 +368,13 @@
             <groupId>batik</groupId>
             <artifactId>batik-all</artifactId>
             <version>1.6</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>batik</groupId>
             <artifactId>pdf-transcoder</artifactId>
             <version>1.0</version>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -425,13 +425,6 @@
             <artifactId>braf</artifactId>
             <version>1.0.1</version>
         </dependency>
-        
-        
-        <!--<dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.7.2</version>
-        </dependency>-->
         
     </dependencies>
 

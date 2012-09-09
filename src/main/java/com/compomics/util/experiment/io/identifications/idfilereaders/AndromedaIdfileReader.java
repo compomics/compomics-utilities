@@ -6,7 +6,6 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
-import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import javax.swing.JProgressBar;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -43,6 +41,17 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     public AndromedaIdfileReader() {
         // Default constructor for the purpose of instantiation.
+    }
+    
+    /**
+     * Constructor for an Andromeda result file reader.
+     *
+     * @param resFile
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public AndromedaIdfileReader(File resFile) throws FileNotFoundException, IOException {
+        this(resFile, null);
     }
 
     /**

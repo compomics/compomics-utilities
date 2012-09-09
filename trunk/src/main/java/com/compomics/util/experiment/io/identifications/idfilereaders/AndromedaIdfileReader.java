@@ -6,6 +6,7 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
+import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -39,6 +40,10 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * The name of the Andromeda result file.
      */
     private String fileName;
+
+    public AndromedaIdfileReader() {
+        // Default constructor for the purpose of instantiation.
+    }
 
     /**
      * Constructor for an Andromeda result file reader.
@@ -76,6 +81,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 waitingHandler.setSecondaryProgressValue((int) (currentIndex / progressUnit));
             }
         }
+    }
+
+    @Override
+    public String getExtension() {
+        return ".res";
     }
 
     @Override

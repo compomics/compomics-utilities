@@ -115,11 +115,10 @@ public class ObjectsDB implements Serializable {
      * Adds the desired table in the database.
      *
      * @param tableName the name of the table
-     * @param blobSize the size of the blob
      * @throws SQLException exception thrown whenever a problem occurred while
      * working with the database
      */
-    public void addTable(String tableName, String blobSize) throws SQLException {
+    public void addTable(String tableName) throws SQLException {
         if (tableName.length() >= 128) {
             int index = longKeys.size();
             longKeys.add(tableName);
@@ -132,7 +131,7 @@ public class ObjectsDB implements Serializable {
 
         stmt.execute("CREATE table " + tableName + " ("
                 + "NAME VARCHAR(32672)," // note: 32672 is the max length for a varchar, not that we should need it...
-                + "MATCH_BLOB blob(" + blobSize + ")"
+                + "MATCH_BLOB blob"
                 + ")");
 
         stmt.close();

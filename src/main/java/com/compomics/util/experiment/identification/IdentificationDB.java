@@ -78,14 +78,6 @@ public class IdentificationDB implements Serializable {
      */
     private ArrayList<String> matchParametersTables = new ArrayList<String>();
     /**
-     * The maximal size for a BLOB match in the database.
-     */
-    public static final String matchSize = "128k";
-    /**
-     * The maximal size for a BLOB parameter match in the database.
-     */
-    public static final String parametersSize = "128k";
-    /**
      * The database which will contain the objects.
      */
     private ObjectsDB objectsDB;
@@ -105,8 +97,8 @@ public class IdentificationDB implements Serializable {
         this.dbName = name;
         objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase, objectCache);
         if (deleteOldDatabase) {
-            objectsDB.addTable(proteinTableName, matchSize);
-            objectsDB.addTable(peptideTableName, matchSize);
+            objectsDB.addTable(proteinTableName);
+            objectsDB.addTable(peptideTableName);
         }
     }
 
@@ -351,7 +343,7 @@ public class IdentificationDB implements Serializable {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
         if (!psmTables.contains(tableName)) {
-            objectsDB.addTable(tableName, matchSize);
+            objectsDB.addTable(tableName);
             psmTables.add(tableName);
         }
         objectsDB.insertObject(tableName, key, spectrumMatch, true);
@@ -558,7 +550,7 @@ public class IdentificationDB implements Serializable {
     public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         if (!psmParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName);
             psmParametersTables.add(tableName);
         }
         objectsDB.insertObject(tableName, key, urParameter, true);
@@ -595,7 +587,7 @@ public class IdentificationDB implements Serializable {
     public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getPeptideParameterTable(urParameter);
         if (!peptideParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName);
             peptideParametersTables.add(tableName);
         }
         objectsDB.insertObject(tableName, key, urParameter, true);
@@ -632,7 +624,7 @@ public class IdentificationDB implements Serializable {
     public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getProteinParameterTable(urParameter);
         if (!proteinParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName);
             proteinParametersTables.add(tableName);
         }
         objectsDB.insertObject(tableName, key, urParameter, true);
@@ -671,7 +663,7 @@ public class IdentificationDB implements Serializable {
     public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
         String tableName = getParameterTable(urParameter);
         if (!matchParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName, parametersSize);
+            objectsDB.addTable(tableName);
             matchParametersTables.add(tableName);
         }
         objectsDB.insertObject(tableName, key, urParameter, true);

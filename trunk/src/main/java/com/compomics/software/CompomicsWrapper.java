@@ -306,7 +306,7 @@ public class CompomicsWrapper {
 
         // add the classpath for the uniprot proxy file
         if (proxySettingsFound) {
-            uniprotProxyClassPath = confFolder.getAbsolutePath() + "proxy";
+            uniprotProxyClassPath = confFolder.getAbsolutePath() + File.separator + "proxy";
 
             // set the correct slashes for the proxy path
             if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {

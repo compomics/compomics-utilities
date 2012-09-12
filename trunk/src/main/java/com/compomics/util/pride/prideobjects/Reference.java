@@ -2,7 +2,6 @@ package com.compomics.util.pride.prideobjects;
 
 import com.compomics.util.pride.PrideObject;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * A simple publication reference object.
@@ -14,7 +13,7 @@ public class Reference implements PrideObject, Serializable {
     /**
      * Serialization number for backward compatibility.
      */
-    static final long serialVersionUID = -5449836209751629549L;
+    static final long serialVersionUID = -5449836209751629549L; // @TODO: has to be updated?
     /**
      * The reference text.
      */
@@ -93,17 +92,6 @@ public class Reference implements PrideObject, Serializable {
      */
     public void setDoi(String doi) {
         this.doi = doi;
-    }
-
-    /**
-     * Returns the default references.
-     *
-     * @return the default references
-     */
-    public static ArrayList<Reference> getDefaultReferences() {
-        ArrayList<Reference> result = new ArrayList<Reference>();
-        //result.add(new Reference("PeptideShaker", "not available", "not available"));
-        return result;
     }
 
     public String getFileName() {

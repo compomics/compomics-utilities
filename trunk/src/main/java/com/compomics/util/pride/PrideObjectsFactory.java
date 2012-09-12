@@ -1,12 +1,9 @@
 package com.compomics.util.pride;
 
-import com.compomics.util.pride.prideobjects.Protocol;
-import com.compomics.util.pride.prideobjects.Sample;
-import com.compomics.util.pride.prideobjects.Instrument;
-import com.compomics.util.pride.prideobjects.Reference;
-import com.compomics.util.pride.prideobjects.Contact;
+import com.compomics.util.pride.prideobjects.*;
 import java.io.*;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 
 /**
  * This factory manages the pride objects saved in the user folder.
@@ -38,7 +35,7 @@ public class PrideObjectsFactory {
         return instance;
     }
     /**
-     * The folder where pride related infos are stored.
+     * The folder where PRIDE related info is stored.
      */
     public static final String prideFolder = System.getProperty("user.home") + "/.compomics/pride/";
     /**
@@ -49,7 +46,7 @@ public class PrideObjectsFactory {
     /**
      * List of all contacts.
      */
-    private static HashMap<String, Contact> contacts = new HashMap<String, Contact>();
+    private static HashMap<String, ContactGroup> contactGroups = new HashMap<String, ContactGroup>();
     /**
      * List of all instruments.
      */
@@ -61,7 +58,7 @@ public class PrideObjectsFactory {
     /**
      * List of all references.
      */
-    private static HashMap<String, Reference> references = new HashMap<String, Reference>();
+    private static HashMap<String, ReferenceGroup> references = new HashMap<String, ReferenceGroup>();
     /**
      * List of all samples.
      */
@@ -105,8 +102,8 @@ public class PrideObjectsFactory {
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
-                        Contact contact = (Contact) loadObject(file);
-                        contacts.put(contact.getFileName(), contact);
+                        ContactGroup contactGroup = (ContactGroup) loadObject(file);
+                        contactGroups.put(contactGroup.getFileName(), contactGroup);
                     } catch (InvalidClassException e) {
                         file.delete();
                     }
@@ -138,8 +135,8 @@ public class PrideObjectsFactory {
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
-                        Reference reference = (Reference) loadObject(file);
-                        references.put(reference.getFileName(), reference);
+                        ReferenceGroup referenceGroup = (ReferenceGroup) loadObject(file);
+                        references.put(referenceGroup.getFileName(), referenceGroup);
                     } catch (InvalidClassException e) {
                         file.delete();
                     }
@@ -201,8 +198,8 @@ public class PrideObjectsFactory {
         }
         subFolder = new File(prideFolder, "references");
         subFolder.mkdir();
-        for (Reference reference : Reference.getDefaultReferences()) {
-            addReference(reference);
+        for (ReferenceGroup reference : ReferenceGroup.getDefaultReferences()) {
+            addReferenceGroup(reference);
         }
         subFolder = new File(prideFolder, "samples");
         subFolder.mkdir();
@@ -213,20 +210,31 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Adds a contact in the pride objects.
+     * Adds a contact group in the PRIDE objects.
      *
-     * @param contact the contact to add
+     * @param contactGroup the conact group to add
      * @throws IOException exception thrown whenever an error occurred while
      * saving
      */
-    public void addContact(Contact contact) throws IOException {
-        contacts.put(contact.getFileName(), contact);
+    public void addContactGroup(ContactGroup contactGroup) throws IOException {
+        contactGroups.put(contactGroup.getFileName(), contactGroup);
         File subFolder = new File(prideFolder, "contacts");
-        saveObject(subFolder, contact);
+        saveObject(subFolder, contactGroup);
+    }
+    
+    /**
+     * Delete the given contact group.
+     * 
+     * @param contactGroup the group to delete
+     */
+    public void deleteContactGroup(ContactGroup contactGroup) {
+        File subFolder = new File(prideFolder, "contacts");
+        deleteObject(subFolder, contactGroup.getFileName());
+        contactGroups.remove(contactGroup.getFileName());
     }
 
     /**
-     * Adds a protocol in the pride objects.
+     * Adds a protocol in the PRIDE objects.
      *
      * @param protocol the protocol to add
      * @throws IOException exception thrown whenever an error occurred while
@@ -237,9 +245,20 @@ public class PrideObjectsFactory {
         File subFolder = new File(prideFolder, "protocols");
         saveObject(subFolder, protocol);
     }
+    
+    /**
+     * Delete the given protocol.
+     * 
+     * @param protocol the protocol to delete
+     */
+    public void deleteProtocol(Protocol protocol) {
+        File subFolder = new File(prideFolder, "protocols");
+        deleteObject(subFolder, protocol.getFileName());
+        protocols.remove(protocol.getFileName());
+    }
 
     /**
-     * Adds a instrument in the pride objects.
+     * Adds a instrument in the PRIDE objects.
      *
      * @param instrument the instrument to add
      * @throws IOException exception thrown whenever an error occurred while
@@ -250,22 +269,44 @@ public class PrideObjectsFactory {
         File subFolder = new File(prideFolder, "instruments");
         saveObject(subFolder, instrument);
     }
-
+    
     /**
-     * Adds a reference in the pride objects.
-     *
-     * @param reference the reference to add
-     * @throws IOException exception thrown whenever an error occurred while
-     * saving
+     * Delete the given instrument.
+     * 
+     * @param instrument the instrument to delete
      */
-    public void addReference(Reference reference) throws IOException {
-        references.put(reference.getFileName(), reference);
-        File subFolder = new File(prideFolder, "references");
-        saveObject(subFolder, reference);
+    public void deleteInstrument(Instrument instrument) {
+        File subFolder = new File(prideFolder, "instruments");
+        deleteObject(subFolder, instrument.getFileName());
+        instruments.remove(instrument.getFileName());
     }
 
     /**
-     * Adds a sample in the pride objects.
+     * Adds a reference group in the PRIDE objects.
+     *
+     * @param referenceGroup the reference group to add
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving
+     */
+    public void addReferenceGroup(ReferenceGroup referenceGroup) throws IOException {
+        references.put(referenceGroup.getFileName(), referenceGroup);
+        File subFolder = new File(prideFolder, "references");
+        saveObject(subFolder, referenceGroup);
+    }
+    
+    /**
+     * Delete the given reference group.
+     * 
+     * @param referenceGroup the reference group to delete
+     */
+    public void deleteReferenceGroup(ReferenceGroup referenceGroup) {
+        File subFolder = new File(prideFolder, "references");
+        deleteObject(subFolder, referenceGroup.getFileName());
+        references.remove(referenceGroup.getFileName());
+    }
+
+    /**
+     * Adds a sample in the PRIDE objects.
      *
      * @param sample the sample to add
      * @throws IOException exception thrown whenever an error occurred while
@@ -276,16 +317,27 @@ public class PrideObjectsFactory {
         File subFolder = new File(prideFolder, "samples");
         saveObject(subFolder, sample);
     }
+    
+    /**
+     * Delete the given sample.
+     * 
+     * @param sample the sample to delete
+     */
+    public void deleteSample(Sample sample) {
+        File subFolder = new File(prideFolder, "samples");
+        deleteObject(subFolder, sample.getFileName());
+        samples.remove(sample.getFileName());
+    }
 
     /**
-     * Sets a new ptm to pride map.
+     * Sets a new ptm to PRIDE map.
      *
      * @param ptmToPrideMap a new ptm to pride map
      * @throws FileNotFoundException
      * @throws IOException
      */
     public void setPtmToPrideMap(PtmToPrideMap ptmToPrideMap) throws FileNotFoundException, IOException {
-        this.ptmToPrideMap = ptmToPrideMap;
+        PrideObjectsFactory.ptmToPrideMap = ptmToPrideMap;
         File aFile = new File(prideFolder, PtmToPrideMap.fileName);
         FileOutputStream fos = new FileOutputStream(aFile);
         BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -341,14 +393,33 @@ public class PrideObjectsFactory {
         bos.close();
         fos.close();
     }
+    
+    /**
+     * Deletes the given file.
+     * 
+     * @param folder the folder where the file is located
+     * @param fileName the name of the file to delete
+     */
+    private void deleteObject(File folder, String aFileName) {
+        
+        String fileName = aFileName + extension;
+        
+        if (new File(folder, fileName).exists()) {
+            boolean deleted = new File(folder, fileName).delete();
+            if (!deleted) {
+                JOptionPane.showMessageDialog(null, "Failed to delete the file \'" + new File(folder, fileName).getAbsolutePath() + "\'.\n"
+                        + "Please delete the file manually.", "File Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
     /**
-     * Returns the contacts.
+     * Returns the contact groups.
      *
-     * @return the contacts
+     * @return the contact groups
      */
-    public HashMap<String, Contact> getContacts() {
-        return contacts;
+    public HashMap<String, ContactGroup> getContactGroups() {
+        return contactGroups;
     }
 
     /**
@@ -379,11 +450,11 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the references.
+     * Returns the reference groups.
      *
-     * @return the references
+     * @return the reference groups
      */
-    public HashMap<String, Reference> getReferences() {
+    public HashMap<String, ReferenceGroup> getReferenceGroups() {
         return references;
     }
 

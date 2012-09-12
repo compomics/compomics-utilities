@@ -136,10 +136,12 @@ public class Util {
     /**
      * Returns the file selected by the user, or null if no file was selected.
      *
+     * @param parent the parent dialog or frame
      * @param aFileEnding the file type, e.g., .txt
      * @param aFileFormatDescription the file format description, e.g., (Mascot
      * Generic Format) *.mgf
      * @param aDialogTitle the title for the dialog
+     * @param lastSelectedFolder the last selected folder
      * @param openDialog if true an open dialog is shown, false results in a
      * save dialog
      * @return the file selected by the user, or null if no file was selected

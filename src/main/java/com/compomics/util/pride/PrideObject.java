@@ -1,18 +1,16 @@
 package com.compomics.util.pride;
 
-import java.io.Serializable;
-
 /**
- * Interface for a pride object
+ * Interface for a PRIDE object.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public interface PrideObject {
-    
+
     /**
-     * Returns the name to use when serializing the object
+     * Returns the name to use when serializing the object.
+     * 
      * @return the name to use when serializing the object
      */
     public String getFileName();
-    
 }

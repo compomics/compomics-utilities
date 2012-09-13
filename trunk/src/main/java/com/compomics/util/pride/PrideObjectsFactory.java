@@ -98,7 +98,13 @@ public class PrideObjectsFactory {
         if (!prideFolderFile.exists()) {
             createDefaultObjects();
         } else {
-            File subFolder = new File(prideFolder, "contacts");
+            File subFolder = new File(prideFolder, "contactGroups");
+
+            // the contact folder has been renamed so we need to create it even though the original folder exists
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
+
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
@@ -109,7 +115,9 @@ public class PrideObjectsFactory {
                     }
                 }
             }
+
             subFolder = new File(prideFolder, "protocols");
+
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
@@ -120,7 +128,9 @@ public class PrideObjectsFactory {
                     }
                 }
             }
+
             subFolder = new File(prideFolder, "instruments");
+
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
@@ -131,7 +141,14 @@ public class PrideObjectsFactory {
                     }
                 }
             }
-            subFolder = new File(prideFolder, "references");
+
+            subFolder = new File(prideFolder, "referenceGroups");
+
+            // the references folder has been renamed so we need to create it even though the original folder exists
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
+
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
@@ -142,7 +159,9 @@ public class PrideObjectsFactory {
                     }
                 }
             }
+
             subFolder = new File(prideFolder, "samples");
+
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
                     try {
@@ -153,7 +172,9 @@ public class PrideObjectsFactory {
                     }
                 }
             }
+
             File ptmMapFile = new File(prideFolder, PtmToPrideMap.fileName);
+
             try {
                 ptmToPrideMap = (PtmToPrideMap) loadObject(ptmMapFile);
             } catch (InvalidClassException e) {
@@ -186,6 +207,8 @@ public class PrideObjectsFactory {
         prideFolderFile.mkdirs();
         File subFolder = new File(prideFolder, "contacts");
         subFolder.mkdir();
+        subFolder = new File(prideFolder, "contactGroups");
+        subFolder.mkdir();
         subFolder = new File(prideFolder, "protocols");
         subFolder.mkdir();
         for (Protocol protocol : Protocol.getDefaultProtocols()) {
@@ -197,6 +220,8 @@ public class PrideObjectsFactory {
             addInstrument(defaultInstrument);
         }
         subFolder = new File(prideFolder, "references");
+        subFolder.mkdir();
+        subFolder = new File(prideFolder, "referenceGroups");
         subFolder.mkdir();
         for (ReferenceGroup reference : ReferenceGroup.getDefaultReferences()) {
             addReferenceGroup(reference);
@@ -218,17 +243,17 @@ public class PrideObjectsFactory {
      */
     public void addContactGroup(ContactGroup contactGroup) throws IOException {
         contactGroups.put(contactGroup.getFileName(), contactGroup);
-        File subFolder = new File(prideFolder, "contacts");
+        File subFolder = new File(prideFolder, "contactGroups");
         saveObject(subFolder, contactGroup);
     }
-    
+
     /**
      * Delete the given contact group.
-     * 
+     *
      * @param contactGroup the group to delete
      */
     public void deleteContactGroup(ContactGroup contactGroup) {
-        File subFolder = new File(prideFolder, "contacts");
+        File subFolder = new File(prideFolder, "contactGroups");
         deleteObject(subFolder, contactGroup.getFileName());
         contactGroups.remove(contactGroup.getFileName());
     }
@@ -245,10 +270,10 @@ public class PrideObjectsFactory {
         File subFolder = new File(prideFolder, "protocols");
         saveObject(subFolder, protocol);
     }
-    
+
     /**
      * Delete the given protocol.
-     * 
+     *
      * @param protocol the protocol to delete
      */
     public void deleteProtocol(Protocol protocol) {
@@ -269,10 +294,10 @@ public class PrideObjectsFactory {
         File subFolder = new File(prideFolder, "instruments");
         saveObject(subFolder, instrument);
     }
-    
+
     /**
      * Delete the given instrument.
-     * 
+     *
      * @param instrument the instrument to delete
      */
     public void deleteInstrument(Instrument instrument) {
@@ -290,17 +315,17 @@ public class PrideObjectsFactory {
      */
     public void addReferenceGroup(ReferenceGroup referenceGroup) throws IOException {
         references.put(referenceGroup.getFileName(), referenceGroup);
-        File subFolder = new File(prideFolder, "references");
+        File subFolder = new File(prideFolder, "referenceGroups");
         saveObject(subFolder, referenceGroup);
     }
-    
+
     /**
      * Delete the given reference group.
-     * 
+     *
      * @param referenceGroup the reference group to delete
      */
     public void deleteReferenceGroup(ReferenceGroup referenceGroup) {
-        File subFolder = new File(prideFolder, "references");
+        File subFolder = new File(prideFolder, "referenceGroups");
         deleteObject(subFolder, referenceGroup.getFileName());
         references.remove(referenceGroup.getFileName());
     }
@@ -317,10 +342,10 @@ public class PrideObjectsFactory {
         File subFolder = new File(prideFolder, "samples");
         saveObject(subFolder, sample);
     }
-    
+
     /**
      * Delete the given sample.
-     * 
+     *
      * @param sample the sample to delete
      */
     public void deleteSample(Sample sample) {
@@ -393,17 +418,17 @@ public class PrideObjectsFactory {
         bos.close();
         fos.close();
     }
-    
+
     /**
      * Deletes the given file.
-     * 
+     *
      * @param folder the folder where the file is located
      * @param fileName the name of the file to delete
      */
     private void deleteObject(File folder, String aFileName) {
-        
+
         String fileName = aFileName + extension;
-        
+
         if (new File(folder, fileName).exists()) {
             boolean deleted = new File(folder, fileName).delete();
             if (!deleted) {

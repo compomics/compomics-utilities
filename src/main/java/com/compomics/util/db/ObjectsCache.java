@@ -49,7 +49,7 @@ public class ObjectsCache {
     /**
      * The standard batch size for saving objects in databases
      */
-    private int batchSize = 10000;
+    private int batchSize = 10000; // @TODO: find the optimal batch size
 
     /**
      * Constructor.

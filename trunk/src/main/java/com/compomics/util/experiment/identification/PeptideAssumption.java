@@ -42,7 +42,7 @@ public class PeptideAssumption extends ExperimentObject {
      */
     private double eValue;
     /**
-     * the correspondig file.
+     * the corresponding file.
      */
     private String file;
     /**

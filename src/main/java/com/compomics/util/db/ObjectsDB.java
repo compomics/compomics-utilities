@@ -276,9 +276,9 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("getting table objects, table:" + tableName);
         }
-        
+
         progressDialog.setIndeterminate(true);
-        
+
         // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
         Statement rowCountStatement = dbConnection.createStatement();
         ResultSet results = rowCountStatement.executeQuery("select count(*) from " + tableName);
@@ -288,21 +288,23 @@ public class ObjectsDB implements Serializable {
         progressDialog.setIndeterminate(false);
         progressDialog.setValue(0);
         progressDialog.setMaxProgressValue(numberOfRows);
- 
+
         Statement stmt = dbConnection.createStatement();
         results = stmt.executeQuery("select * from " + tableName);
 
         while (results.next()) {
             progressDialog.increaseProgressValue();
             String key = results.getString(1);
-            Blob tempBlob = results.getBlob(2);
-            BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+            if (!objectsCache.inCache(dbName, tableName, key)) {
+                Blob tempBlob = results.getBlob(2);
+                BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
-            ObjectInputStream in = new ObjectInputStream(bis);
-            Object object = in.readObject();
-            in.close();
+                ObjectInputStream in = new ObjectInputStream(bis);
+                Object object = in.readObject();
+                in.close();
 
-            objectsCache.addObject(dbName, tableName, key, object);
+                objectsCache.addObject(dbName, tableName, key, object);
+            }
         }
 
         results.close();
@@ -641,8 +643,8 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Surrounds the table name with quotation marks such that spaces etc 
-     * are allowed.
+     * Surrounds the table name with quotation marks such that spaces etc are
+     * allowed.
      *
      * @param tableName the table name
      * @return the corrected table name

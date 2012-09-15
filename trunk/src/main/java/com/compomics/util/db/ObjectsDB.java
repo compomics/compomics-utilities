@@ -295,6 +295,7 @@ public class ObjectsDB implements Serializable {
         while (results.next()) {
             progressDialog.increaseProgressValue();
             String key = results.getString(1);
+
             if (!objectsCache.inCache(dbName, tableName, key)) {
                 Blob tempBlob = results.getBlob(2);
                 BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
@@ -340,7 +341,7 @@ public class ObjectsDB implements Serializable {
         long start = System.currentTimeMillis();
 
         Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + objectKey + "'"); // derby
+        ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + objectKey + "'");
 
         if (results.next()) {
 

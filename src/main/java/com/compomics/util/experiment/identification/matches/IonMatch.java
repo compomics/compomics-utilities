@@ -71,8 +71,7 @@ public class IonMatch extends ExperimentObject {
      */
     public double getRelativeError() {
         double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
-        return ((peak.mz - theoreticMz)
-                / theoreticMz) * 1000000;
+        return ((peak.mz - theoreticMz) / theoreticMz) * 1000000;
     }
 
     /**

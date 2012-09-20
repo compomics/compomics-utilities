@@ -95,7 +95,7 @@ public class MSnSpectrum extends Spectrum {
     public String asMgf() {
         String result = "BEGIN IONS" + System.getProperty("line.separator");
         result += "TITLE=" + spectrumTitle + System.getProperty("line.separator");
-        result += "PEPMASS=" + precursor.getMz() + System.getProperty("line.separator");
+        result += "PEPMASS=" + precursor.getMz() + "\t" + precursor.getIntensity() + System.getProperty("line.separator");
         if (precursor.hasRTWindow()) {
             result += "RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + System.getProperty("line.separator");
         } else if (precursor.getRt() != -1) {
@@ -138,7 +138,7 @@ public class MSnSpectrum extends Spectrum {
     public void writeMgf(BufferedWriter writer1) throws IOException {
         writer1.write("BEGIN IONS" + System.getProperty("line.separator"));
         writer1.write("TITLE=" + spectrumTitle + System.getProperty("line.separator"));
-        writer1.write("PEPMASS=" + precursor.getMz() + System.getProperty("line.separator"));
+        writer1.write("PEPMASS=" + precursor.getMz() + "\t" + precursor.getIntensity() + System.getProperty("line.separator"));
         if (precursor.hasRTWindow()) {
             writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + System.getProperty("line.separator"));
         } else if (precursor.getRt() != -1) {

@@ -27,13 +27,13 @@ public class ModificationMatch extends ExperimentObject {
      */
     private int modifiedSite;
     /**
-     * A boolean indicating whether the modification is confidently localized onto the sequence.
-     * Not applicable to fixed or terminal modifications.
+     * A boolean indicating whether the modification is confidently localized
+     * onto the sequence. Not applicable to fixed or terminal modifications.
      */
     private boolean confident = false;
     /**
-     * A boolean indicating whether the modification is inferred from another peptide.
-     * Not applicable to fixed or terminal modifications.
+     * A boolean indicating whether the modification is inferred from another
+     * peptide. Not applicable to fixed or terminal modifications.
      */
     private boolean inferred = false;
 
@@ -42,7 +42,8 @@ public class ModificationMatch extends ExperimentObject {
      *
      * @param theoreticPtm the theoretic PTM
      * @param variable true for variable modifications, false otherwise
-     * @param modifiedSite the position of the modification in the sequence, 1 is the first residue
+     * @param modifiedSite the position of the modification in the sequence, 1
+     * is the first residue
      */
     public ModificationMatch(String theoreticPtm, boolean variable, int modifiedSite) {
         this.theoreticPtm = theoreticPtm;
@@ -96,35 +97,44 @@ public class ModificationMatch extends ExperimentObject {
     }
 
     /**
-     * returns a boolean indicating whether the modification is confidently localized on the sequence
-     * @return a boolean indicating whether the modification is confidently localized on the sequence
+     * Returns a boolean indicating whether the modification is confidently
+     * localized on the sequence.
+     *
+     * @return a boolean indicating whether the modification is confidently
+     * localized on the sequence
      */
     public boolean isConfident() {
         return confident;
     }
 
     /**
-     * sets whether the modification is confidently localized on the sequence
-     * @param confident a boolean indicating whether the modification is confidently localized on the sequence
+     * Sets whether the modification is confidently localized on the sequence.
+     *
+     * @param confident a boolean indicating whether the modification is
+     * confidently localized on the sequence
      */
     public void setConfident(boolean confident) {
         this.confident = confident;
     }
 
     /**
-     * returns a boolean indicating whether the modification is inferred from another peptide
-     * @return a boolean indicating whether the modification is inferred from another peptide
+     * Returns a boolean indicating whether the modification is inferred from
+     * another peptide.
+     *
+     * @return a boolean indicating whether the modification is inferred from
+     * another peptide
      */
     public boolean isInferred() {
         return inferred;
     }
 
     /**
-     * sets whether the modification is inferred from another peptide
-     * @param confident a boolean indicating whether the modification is inferred from another peptide
+     * Sets whether the modification is inferred from another peptide.
+     *
+     * @param inferred a boolean indicating whether the modification is
+     * inferred from another peptide
      */
     public void setInferred(boolean inferred) {
         this.inferred = inferred;
     }
-    
 }

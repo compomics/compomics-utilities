@@ -763,6 +763,31 @@ default: return false;
     }
 
     /**
+     * Returns the indexes of the residues in the peptide that contain at least
+     * one modification.
+     *
+     * @return the indexes of the modified residues
+     */
+    public ArrayList<Integer> getModifiedIndexes() {
+
+        ArrayList<Integer> modifiedResidues = new ArrayList<Integer>();
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+
+        for (int i = 0; i < sequence.length(); i++) {
+            for (int j = 0; j < modifications.size(); j++) {
+                PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
+                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                    if (modifications.get(j).getModificationSite() == (i + 1)) {
+                        modifiedResidues.add(i + 1);
+                    }
+                }
+            }
+        }
+
+        return modifiedResidues;
+    }
+
+    /**
      * Estimates the theoretic mass of the peptide.
      *
      * @throws IllegalArgumentException if the peptide sequence contains unknown

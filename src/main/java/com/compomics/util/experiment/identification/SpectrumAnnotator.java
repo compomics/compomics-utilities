@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -274,7 +275,9 @@ public class SpectrumAnnotator {
             peptideIons = fragmentFactory.getFragmentIons(peptide);
             if (massShift != 0) {
                 for (Ion ion : peptideIons) {
-                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
+                    if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION ) {
+                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
+                    }
                 }
             }
             spectrumAnnotation.clear();
@@ -609,8 +612,10 @@ public class SpectrumAnnotator {
     public void setMassShift(double massShift) {
         spectrumAnnotation.clear();
         unmatchedIons.clear();
-        for (Ion ion : peptideIons) {
-            ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
+        for (Ion ion : peptideIons) { 
+            if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION ) {
+                ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
+            } 
         }
         this.massShift = massShift;
     }

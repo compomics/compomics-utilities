@@ -1102,6 +1102,8 @@ public class SpectrumPanel extends GraphicsPanel {
                 }
             }
         }
+        
+        ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes();
 
         // add reverse ion de novo tags (x, y or c)
         if (showReverseTags) {
@@ -1110,9 +1112,16 @@ public class SpectrumPanel extends GraphicsPanel {
 
             for (int i = 1; i < reverseIons.length; i++) {
                 if (reverseIons[i] != null && reverseIons[i - 1] != null) {
+                    
+                    String mod = "";
+                    
+                    if (modifiedIndexes.contains(currentPeptide.getSequence().length() - i)) {
+                        mod = "*";
+                    }
+                    
                     addReferenceAreaXAxis(new ReferenceArea(
                             "r" + i,
-                            currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i),
+                            currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
                             reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, 0.2f, false, true, annotationColor, true, Color.lightGray, 0.2f, 1));
                 }
             }
@@ -1125,9 +1134,16 @@ public class SpectrumPanel extends GraphicsPanel {
 
             for (int i = 1; i < forwardIons.length; i++) {
                 if (forwardIons[i] != null && forwardIons[i - 1] != null) {
+                    
+                    String mod = "";
+                    
+                    if (modifiedIndexes.contains(i+1)) {
+                        mod = "*";
+                    }
+                    
                     addReferenceAreaXAxis(new ReferenceArea(
                             "f" + i,
-                            currentPeptide.getSequence().substring(i, i + 1),
+                            currentPeptide.getSequence().substring(i, i + 1) + mod,
                             forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, 0.2f, false, true, annotationColor, true, Color.lightGray, 0.2f, 0.9));
                 }
             }

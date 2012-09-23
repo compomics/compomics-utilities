@@ -1,10 +1,12 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -34,6 +36,15 @@ public class Peptide extends ExperimentObject {
      * The modifications carried by the peptide.
      */
     private ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+    /**
+     * Separator preceding confident localization of the confident localization
+     * of a modification
+     */
+    public static String MODIFICATION_LOCALIZATION_SEPARATOR = "-ATAA-";
+    /**
+     * Separator used to separate modifications in peptide keys
+     */
+    public static String MODIFICATION_SEPARATOR = "_";
 
     /**
      * Constructor for the peptide.
@@ -53,8 +64,11 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         for (ModificationMatch mod : modifications) {
-            if (mod.getTheoreticPtm().contains("_")) {
-                throw new IllegalArgumentException("PTM names containing '_' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+            if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
+                throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+            }
+            if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
+                throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
             }
             this.modifications.add(mod);
         }
@@ -130,7 +144,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the amount of missed cleavages using the specified enzyme.
+     * Returns the number of missed cleavages using the specified enzyme.
      *
      * @param enzyme the enzyme used
      * @return the amount of missed cleavages
@@ -151,7 +165,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the amount of missed cleavages using the specified enzyme for the
+     * Returns the number of missed cleavages using the specified enzyme for the
      * given sequence.
      *
      * @param sequence the peptide sequence
@@ -202,7 +216,11 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch mod : getModificationMatches()) {
             if (mod.isVariable()) {
                 if (mod.getTheoreticPtm() != null) {
-                    tempModifications.add(mod.getTheoreticPtm());
+                    if (mod.isConfident() || mod.isInferred()) {
+                        tempModifications.add(mod.getTheoreticPtm() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
+                    } else {
+                        tempModifications.add(mod.getTheoreticPtm());
+                    }
                 } else {
                     tempModifications.add("unknown-modification");
                 }
@@ -211,7 +229,7 @@ public class Peptide extends ExperimentObject {
         Collections.sort(tempModifications);
         String result = sequence;
         for (String mod : tempModifications) {
-            result += "_" + mod;
+            result += MODIFICATION_SEPARATOR + mod;
         }
         return result;
     }
@@ -225,7 +243,7 @@ public class Peptide extends ExperimentObject {
      * modifications
      */
     public static boolean isModified(String peptideKey) {
-        return peptideKey.contains("_");
+        return peptideKey.contains(MODIFICATION_SEPARATOR);
     }
 
     /**
@@ -247,11 +265,42 @@ public class Peptide extends ExperimentObject {
      *
      * @param peptideKey the peptide key
      * @param modification the name of the modification
-     * @return the amount of modifications
+     * @return the number of modifications
      */
     public static int getModificationCount(String peptideKey, String modification) {
-        String test = "_" + peptideKey + "_";
-        return test.split(modification).length;
+        String test = peptideKey + MODIFICATION_SEPARATOR;
+        return test.split(modification).length-1;
+    }
+
+    /**
+     * Returns the list of modifications confidently localized or inferred for
+     * the peptide indexed by the given key.
+     *
+     * @param peptideKey the peptide key
+     * @param modification the name of the modification
+     * @return the number of modifications confidently localized
+     */
+    public static ArrayList<Integer> getNModificationLocalized(String peptideKey, String modification) {
+        String test = peptideKey;
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        boolean first = true;
+        for (String modificationSplit : test.split(MODIFICATION_SEPARATOR)) {
+            if (!first) {
+                String[] localizationSplit = modificationSplit.split(MODIFICATION_LOCALIZATION_SEPARATOR);
+                if (localizationSplit.length == 2) {
+                    if (localizationSplit[0].equals(modification)) {
+                        try {
+                            result.add(new Integer(localizationSplit[1]));
+                        } catch (Exception e) {
+                            throw new IllegalArgumentException("Cannot parse modification localization " + localizationSplit + " for modification " + modification + " in peptide key " + peptideKey);
+                        }
+                    }
+                }
+            } else {
+                first = false;
+            }
+        }
+        return result;
     }
 
     /**
@@ -261,9 +310,9 @@ public class Peptide extends ExperimentObject {
      * @return the corresponding sequence
      */
     public static String getSequence(String peptideKey) {
-        int index = peptideKey.indexOf("_");
+        int index = peptideKey.indexOf(MODIFICATION_SEPARATOR);
         if (index > 0) {
-            return peptideKey.substring(0, peptideKey.indexOf("_"));
+            return peptideKey.substring(0, peptideKey.indexOf(MODIFICATION_SEPARATOR));
         } else {
             return peptideKey;
         }
@@ -278,16 +327,71 @@ public class Peptide extends ExperimentObject {
      */
     public static ArrayList<String> getModificationFamily(String peptideKey) {
         ArrayList<String> result = new ArrayList<String>();
-        String[] parsedKey = peptideKey.split("_");
+        String[] parsedKey = peptideKey.split(MODIFICATION_SEPARATOR);
         for (int i = 1; i < parsedKey.length; i++) {
-            result.add(parsedKey[i]);
+            String[] parsedMod = parsedKey[i].split(MODIFICATION_LOCALIZATION_SEPARATOR);
+            result.add(parsedMod[0]);
         }
         return result;
+    }
+    
+    /**
+     * Indicates whether the given modification can be found on the peptide. For instance, 'oxidation of M' cannot be found on sequence "PEPTIDE".
+     * For the inspection of protein termini the proteins sequences must be accessible from the sequence factory.
+     * 
+     * @param ptm the PTM of interest
+     * @return a boolean indicating whether the given modification can be found on the peptide
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     */
+    public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException {
+        switch (ptm.getType()) {
+            case PTM.MODAA:
+                for (String aa : ptm.getResidues()) {
+                    if (sequence.contains(aa)) {
+                        return true;
+                    }
+                }
+                return false;
+            case PTM.MODC:
+                return true;
+            case PTM.MODN:
+                return true;
+            case PTM.MODCP:
+                return !isCterm().isEmpty();
+            case PTM.MODNP:
+                return !isNterm().isEmpty();
+            case PTM.MODCPAA:
+                if (isCterm().isEmpty()) {
+                    return false;
+                }
+            case PTM.MODCAA:
+                for (String aa : ptm.getResidues()) {
+                    if (sequence.endsWith(aa)) {
+                        return true;
+                    }
+                }
+                return false;
+            case PTM.MODNPAA:
+                if (isNterm().isEmpty()) {
+                    return false;
+                }
+            case PTM.MODNAA:
+                for (String aa : ptm.getResidues()) {
+                    if (sequence.startsWith(aa)) {
+                        return true;
+                    }
+                }
+                return false;
+default: return false;
+        }
     }
 
     /**
      * Returns the potential modification sites as an ordered list of string. 0
-     * is the first aa.
+     * is the first aa. an empty list is returned if no possibility was found.
+     * This method does not account for protein terminal modifications.
      *
      * @param sequence the sequence of the peptide of interest
      * @param ptm the PTM considered
@@ -295,23 +399,57 @@ public class Peptide extends ExperimentObject {
      */
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
-        String tempSequence;
-        int tempIndex, ref;
-        for (String aa : ptm.getResidues()) {
-            ref = 0;
-            tempSequence = sequence;
-            while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
-                possibleSites.add(ref + tempIndex);
-                tempSequence = tempSequence.substring(tempIndex + 1);
-                ref += tempIndex + 1;
-            }
+        switch (ptm.getType()) {
+            case PTM.MODAA:
+                String tempSequence;
+                int tempIndex,
+                 ref;
+                for (String aa : ptm.getResidues()) {
+                    ref = 0;
+                    tempSequence = sequence;
+                    while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
+                        possibleSites.add(ref + tempIndex);
+                        tempSequence = tempSequence.substring(tempIndex + 1);
+                        ref += tempIndex + 1;
+                    }
+                }
+                return possibleSites;
+            case PTM.MODC:
+            case PTM.MODCP:
+                possibleSites.add(sequence.length() - 1);
+                return possibleSites;
+            case PTM.MODN:
+            case PTM.MODNP:
+                possibleSites.add(0);
+                return possibleSites;
+            case PTM.MODCAA:
+            case PTM.MODCPAA:
+                for (String aa : ptm.getResidues()) {
+                    if (sequence.endsWith(aa)) {
+                        possibleSites.add(sequence.length() - 1);
+                        break;
+                    }
+                }
+                return possibleSites;
+            case PTM.MODNAA:
+            case PTM.MODNPAA:
+                for (String aa : ptm.getResidues()) {
+                    if (sequence.startsWith(aa)) {
+                        possibleSites.add(0);
+                        break;
+                    }
+                }
+                return possibleSites;
+
         }
         return possibleSites;
     }
 
     /**
      * A method which compares to peptides. Two same peptides present the same
-     * sequence and same modifications at the same place.
+     * sequence and same modifications. The localization of the modification is
+     * accounted only if the PTM is modification matches are confidently
+     * localized.
      *
      * @param anotherPeptide another peptide
      * @return a boolean indicating if the other peptide is the same.
@@ -323,7 +461,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether another peptide has the same modifications at the same
      * localization as this peptide. This method comes as a complement of
-     * isSameAs which does not account for PTM location.
+     * isSameAs, here the localization of all PTMs is taken into account.
      *
      * @param anotherPeptide another peptide
      * @return true if the other peptide has the same positions at the same
@@ -651,5 +789,47 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch ptmMatch : modifications) {
             mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
         }
+    }
+    
+    /**
+     * Returns a list of proteins where this peptide can be found in the N-terminus. The proteins must be accessible via the sequence factory. If none found, an empty list is returned.
+     * 
+     * @return a list of proteins where this peptide can be found in the N-terminus
+     * @throws IOException exception thrown whenever an error occurred while reading the protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading the protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading the protein sequence
+     */
+    public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        Protein protein;
+        ArrayList<String> result = new ArrayList<String>();
+        for (String accession : parentProteins) {
+            protein = sequenceFactory.getProtein(accession);
+            if (protein.isNTerm(sequence)) {
+                result.add(accession);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Returns a list of proteins where this peptide can be found in the C-terminus. The proteins must be accessible via the sequence factory. If none found, an empty list is returned.
+     * 
+     * @return a list of proteins where this peptide can be found in the C-terminus
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     */
+    public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        Protein protein;
+        ArrayList<String> result = new ArrayList<String>();
+        for (String accession : parentProteins) {
+            protein = sequenceFactory.getProtein(accession);
+            if (protein.isCTerm(sequence)) {
+                result.add(accession);
+            }
+        }
+        return result;
     }
 }

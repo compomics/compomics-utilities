@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.IdentificationMatch.MatchTyp
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.waiting.WaitingHandler;
@@ -44,7 +45,13 @@ public abstract class Identification extends ExperimentObject {
      */
     protected ArrayList<String> peptideIdentification = new ArrayList<String>();
     /**
+     * List of all imported psms indexed by mgf file name
+     */
+    protected HashMap<String, ArrayList<String>> spectrumIdentificationMap = new HashMap<String, ArrayList<String>>();
+    /**
      * List of the keys of all imported psms.
+     *
+     * @deprecated use file specific mapping instead
      */
     protected ArrayList<String> spectrumIdentification = new ArrayList<String>();
     /**
@@ -85,6 +92,28 @@ public abstract class Identification extends ExperimentObject {
      * The reference of the identification
      */
     protected String reference;
+
+    /**
+     * Returns the mgf files used in the spectrum identification map as a list
+     *
+     * @return the mgf files used in the spectrum identification map
+     */
+    public ArrayList<String> getSpectrumFiles() {
+        return new ArrayList<String>(spectrumIdentificationMap.keySet());
+    }
+
+    /**
+     * Returns the number of spectrum identifications
+     *
+     * @return the number of spectrum identifications
+     */
+    public int getSpectrumIdentificationSize() {
+        int result = 0;
+        for (String spectrumFile : spectrumIdentificationMap.keySet()) {
+            result += spectrumIdentificationMap.get(spectrumFile).size();
+        }
+        return result;
+    }
 
     /**
      * Adds a parameter with a corresponding match key which will be loaded in
@@ -151,6 +180,24 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Loads all desired spectrum match parameters in the cache of the database.
+     *
+     * @param spectrumKeys the key of the spectrum match of the parameters to be
+     * loaded
+     * @param urParameter the parameter type
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, progressDialog);
+    }
+
+    /**
      * Loads all peptide match parameters of the given type in the cache of the
      * database.
      *
@@ -165,6 +212,41 @@ public abstract class Identification extends ExperimentObject {
      */
     public void loadPeptideMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadPeptideMatchParameters(urParameter, progressDialog);
+    }
+
+    /**
+     * Loads the desired peptide match parameters of the given type in the cache
+     * of the database.
+     *
+     * @param peptideKeys the list of peptide keys of the parameters to load
+     * @param urParameter the parameter type
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, progressDialog);
+    }
+
+    /**
+     * Loads the desired peptide matches of the given type in the cache of the
+     * database.
+     *
+     * @param peptideKeys the list of peptide keys to load
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatches(peptideKeys, progressDialog);
     }
 
     /**
@@ -185,7 +267,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads all protein matches of the given type in the cache of the database.
+     * Loads all protein matches in the cache of the database.
      *
      * @param progressDialog the progress dialog
      * @throws SQLException exception thrown whenever an error occurred while
@@ -199,6 +281,22 @@ public abstract class Identification extends ExperimentObject {
         identificationDB.loadProteinMatches(progressDialog);
     }
 
+
+    /**
+     * Loads all peptide matches in the cache of the database.
+     *
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatches(progressDialog);
+    }
+    
     /**
      * Loads all spectrum matches of the file in the cache of the database
      *
@@ -213,6 +311,22 @@ public abstract class Identification extends ExperimentObject {
      */
     public void loadSpectrumMatches(String fileName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadSpectrumMatches(fileName, progressDialog);
+    }
+
+    /**
+     * Loads the given spectrum matches in the cache of the database
+     *
+     * @param fileName the file name
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadSpectrumMatches(spectrumKeys, progressDialog);
     }
 
     /**
@@ -478,8 +592,13 @@ public abstract class Identification extends ExperimentObject {
         }
 
         proteinIdentification.remove(matchKey);
-        spectrumIdentification.remove(matchKey);
         peptideIdentification.remove(matchKey);
+        spectrumIdentification.remove(matchKey);
+        String fileName = Spectrum.getSpectrumFile(matchKey);
+        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
+        if (spectrumKeys != null) {
+            spectrumKeys.remove(matchKey);
+        }
 
         if (isDB) {
             identificationDB.removeMatch(matchKey);
@@ -501,6 +620,11 @@ public abstract class Identification extends ExperimentObject {
     public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
 
         spectrumIdentification.remove(matchKey);
+        String fileName = Spectrum.getSpectrumFile(matchKey);
+        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
+        if (spectrumKeys != null) {
+            spectrumKeys.remove(matchKey);
+        }
         if (isDB) {
             identificationDB.removeSpectrumMatch(matchKey);
         } else {
@@ -572,6 +696,11 @@ public abstract class Identification extends ExperimentObject {
      * exists
      */
     public boolean matchExists(String matchKey) {
+        String fileName = Spectrum.getSpectrumFile(matchKey);
+        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
+        if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
+            return true;
+        }
         return proteinIdentification.contains(matchKey) || peptideIdentification.contains(matchKey) || spectrumIdentification.contains(matchKey);
     }
 
@@ -712,10 +841,37 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Returns a list of the keys of all encountered psms.
      *
+     * @deprecated use file specific names instead
      * @return the corresponding identification results
      */
     public ArrayList<String> getSpectrumIdentification() {
-        return spectrumIdentification;
+        if (!spectrumIdentification.isEmpty()) {
+            return spectrumIdentification;
+        } else {
+            ArrayList<String> result = new ArrayList<String>();
+            for (String spectrumFile : spectrumIdentificationMap.keySet()) {
+                result.addAll(spectrumIdentificationMap.get(spectrumFile));
+            }
+            return result;
+        }
+    }
+
+    /**
+     * Returns the spectrum identifications for a given spectrum file name
+     *
+     * @param spectrumFile the name of the spectrum file
+     * @return the corresponding list of identifications
+     */
+    public ArrayList<String> getSpectrumIdentification(String spectrumFile) {
+        return spectrumIdentificationMap.get(spectrumFile);
+    }
+    
+    /**
+     * Returns the keys of all identified spectra indexed by the spectrum file
+     * @return the keys of all identified spectra indexed by the spectrum file
+     */
+    public HashMap<String, ArrayList<String>> getSpectrumIdentificationMap() {
+        return spectrumIdentificationMap;
     }
 
     /**
@@ -735,7 +891,8 @@ public abstract class Identification extends ExperimentObject {
      */
     public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException {
         String spectrumKey = newMatch.getKey();
-        if (spectrumIdentification.contains(spectrumKey)) {
+        String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
+        if (spectrumIdentificationMap.containsKey(spectrumFile) && spectrumIdentificationMap.get(spectrumFile).contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey);
             if (oldMatch == null) {
                 throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
@@ -745,7 +902,10 @@ public abstract class Identification extends ExperimentObject {
             }
             identificationDB.updateSpectrumMatch(oldMatch);
         } else {
-            spectrumIdentification.add(spectrumKey);
+            if (!spectrumIdentificationMap.containsKey(spectrumFile)) {
+                spectrumIdentificationMap.put(spectrumFile, new ArrayList<String>());
+            }
+            spectrumIdentificationMap.get(spectrumFile).add(spectrumKey);
             try {
                 identificationDB.addSpectrumMatch(newMatch);
             } catch (IOException e) {
@@ -774,15 +934,17 @@ public abstract class Identification extends ExperimentObject {
     public void buildPeptidesAndProteins(WaitingHandler waitingHandler) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(getSpectrumIdentification().size());
+            waitingHandler.setMaxSecondaryProgressValue(getSpectrumIdentificationSize());
             waitingHandler.setSecondaryProgressValue(0);
         }
-        for (String spectrumMatchKey : getSpectrumIdentification()) {
-            buildPeptidesAndProteins(spectrumMatchKey);
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
-                if (waitingHandler.isRunCanceled()) {
-                    return;
+        for (String spectrumFile : spectrumIdentificationMap.keySet()) {
+            for (String spectrumMatchKey : spectrumIdentificationMap.get(spectrumFile)) {
+                buildPeptidesAndProteins(spectrumMatchKey);
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressValue();
+                    if (waitingHandler.isRunCanceled()) {
+                        return;
+                    }
                 }
             }
         }
@@ -875,9 +1037,6 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
             try {
-                if (proteinMatch.getKey().equals("P08514 Q8N6R0")) {
-                    int debug = 1;
-                }
                 identificationDB.addProteinMatch(proteinMatch);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1010,6 +1169,12 @@ public abstract class Identification extends ExperimentObject {
             return MatchType.Peptide;
         } else if (spectrumIdentification.contains(matchKey)) {
             return MatchType.Spectrum;
+        } else {
+            String fileName = Spectrum.getSpectrumFile(matchKey);
+            ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
+            if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
+                return MatchType.Spectrum;
+            }
         }
         return null;
     }
@@ -1029,7 +1194,8 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Converts a serlialization based structure into a database based one. Replaces the space separation by the standard separator.
+     * Converts a serlialization based structure into a database based one.
+     * Replaces the space separation by the standard separator.
      *
      * @param progressDialog a dialog to give progress feedback to the user
      * @param newDirectory the new directory where to store the data
@@ -1116,6 +1282,24 @@ public abstract class Identification extends ExperimentObject {
         for (String proteinKey : oldProteinKeys) {
             proteinIdentification.add(proteinKey.replaceAll(" ", ProteinMatch.PROTEIN_KEY_SPLITTER));
         }
+        updateSpectrumMapping();
+    }
+    
+    /**
+     * Converts the old spectrum keys structure into the mapped version.
+     */
+    public void updateSpectrumMapping() {
+        if (spectrumIdentificationMap == null) {
+            spectrumIdentificationMap = new HashMap<String, ArrayList<String>>();
+        }
+        for (String psmKey : spectrumIdentification) {
+            String spectrumFile = Spectrum.getSpectrumFile(psmKey);
+            if (!spectrumIdentificationMap.containsKey(spectrumFile)) {
+                spectrumIdentificationMap.put(spectrumFile, new ArrayList<String>());
+            }
+            spectrumIdentificationMap.get(spectrumFile).add(psmKey);
+        }
+        spectrumIdentification.clear();
     }
 
     /**

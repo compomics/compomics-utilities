@@ -276,24 +276,31 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("getting table objects, table:" + tableName);
         }
+        ResultSet results;
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(true);
 
-        progressDialog.setIndeterminate(true);
+            // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
+            Statement rowCountStatement = dbConnection.createStatement();
+            results = rowCountStatement.executeQuery("select count(*) from " + tableName);
+            results.next();
+            Integer numberOfRows = results.getInt(1);
 
-        // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
-        Statement rowCountStatement = dbConnection.createStatement();
-        ResultSet results = rowCountStatement.executeQuery("select count(*) from " + tableName);
-        results.next();
-        Integer numberOfRows = results.getInt(1);
-
-        progressDialog.setIndeterminate(false);
-        progressDialog.setValue(0);
-        progressDialog.setMaxProgressValue(numberOfRows);
-
+            progressDialog.setIndeterminate(false);
+            progressDialog.setValue(0);
+            progressDialog.setMaxProgressValue(numberOfRows);
+        }
         Statement stmt = dbConnection.createStatement();
         results = stmt.executeQuery("select * from " + tableName);
 
         while (results.next()) {
-            progressDialog.increaseProgressValue();
+
+            if (progressDialog != null) {
+                progressDialog.increaseProgressValue();
+                if (progressDialog.isRunCanceled()) {
+                    break;
+                }
+            }
             String key = results.getString(1);
 
             if (!objectsCache.inCache(dbName, tableName, key)) {
@@ -310,6 +317,64 @@ public class ObjectsDB implements Serializable {
 
         results.close();
         stmt.close();
+    }
+
+    /**
+     * Loads some objects from a table in the cache.
+     *
+     * @param tableName the table name
+     * @param keys the keys of the objects to load
+     * @param progressDialog the progress dialog, will only be increased
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadObjects(String tableName, ArrayList<String> keys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+
+        if (debugInteractions) {
+            System.out.println("getting " + keys.size() + " objects, table:" + tableName);
+        }
+
+        ArrayList<String> toLoad = new ArrayList<String>();
+        for (String key : keys) {
+            if (!objectsCache.inCache(dbName, tableName, key)) {
+                toLoad.add(key);
+            }
+        }
+        if (!toLoad.isEmpty()) {
+
+            Statement stmt = dbConnection.createStatement();
+            ResultSet results = stmt.executeQuery("select * from " + tableName); //@TODO: is it faster to query only the toLoad objects?
+
+            int found = 0;
+
+            while (results.next() && found < toLoad.size()) {
+                String key = results.getString(1);
+                if (toLoad.contains(key)) {
+                    found++;
+                    Blob tempBlob = results.getBlob(2);
+                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+
+                    ObjectInputStream in = new ObjectInputStream(bis);
+                    Object object = in.readObject();
+                    in.close();
+
+                    objectsCache.addObject(dbName, tableName, key, object);
+                    if (progressDialog != null) {
+                        progressDialog.increaseProgressValue();
+                    }
+                }
+                if (progressDialog != null && progressDialog.isRunCanceled()) {
+                    break;
+                }
+            }
+
+            results.close();
+            stmt.close();
+        }
     }
 
     /**

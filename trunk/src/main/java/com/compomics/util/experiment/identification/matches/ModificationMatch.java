@@ -26,6 +26,16 @@ public class ModificationMatch extends ExperimentObject {
      * The location in the peptide sequence, 1 is the first residue.
      */
     private int modifiedSite;
+    /**
+     * A boolean indicating whether the modification is confidently localized onto the sequence.
+     * Not applicable to fixed or terminal modifications.
+     */
+    private boolean confident = false;
+    /**
+     * A boolean indicating whether the modification is inferred from another peptide.
+     * Not applicable to fixed or terminal modifications.
+     */
+    private boolean inferred = false;
 
     /**
      * Constructor for a modification match.
@@ -75,4 +85,46 @@ public class ModificationMatch extends ExperimentObject {
     public int getModificationSite() {
         return modifiedSite;
     }
+
+    /**
+     * Setter for the modification site, 1 is the first amino acid.
+     *
+     * @param site the index of the modification in the sequence
+     */
+    public void setModificationSite(int site) {
+        this.modifiedSite = site;
+    }
+
+    /**
+     * returns a boolean indicating whether the modification is confidently localized on the sequence
+     * @return a boolean indicating whether the modification is confidently localized on the sequence
+     */
+    public boolean isConfident() {
+        return confident;
+    }
+
+    /**
+     * sets whether the modification is confidently localized on the sequence
+     * @param confident a boolean indicating whether the modification is confidently localized on the sequence
+     */
+    public void setConfident(boolean confident) {
+        this.confident = confident;
+    }
+
+    /**
+     * returns a boolean indicating whether the modification is inferred from another peptide
+     * @return a boolean indicating whether the modification is inferred from another peptide
+     */
+    public boolean isInferred() {
+        return inferred;
+    }
+
+    /**
+     * sets whether the modification is inferred from another peptide
+     * @param confident a boolean indicating whether the modification is inferred from another peptide
+     */
+    public void setInferred(boolean inferred) {
+        this.inferred = inferred;
+    }
+    
 }

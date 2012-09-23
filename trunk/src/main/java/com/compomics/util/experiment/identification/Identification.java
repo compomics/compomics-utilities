@@ -314,9 +314,9 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads the given spectrum matches in the cache of the database
+     * Loads the given spectrum matches in the cache of the database.
      *
-     * @param fileName the file name
+     * @param spectrumKeys the spectrum keys
      * @param progressDialog the progress dialog
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database

@@ -38,7 +38,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     /**
      * Constructor for the factory.
      *
-     * @return
+     * @return the reporter method factory
      */
     public static ReporterMethodFactory getInstance() {
         if (instance == null) {
@@ -57,9 +57,9 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * returns the name of the methods present in the factory
+     * Returns the name of the methods present in the factory.
      *
-     * @return
+     * @return the name of the methods present in the factory
      */
     public String[] getMethodsNames() {
         String[] names = new String[methods.size()];

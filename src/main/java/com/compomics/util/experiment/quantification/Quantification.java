@@ -240,11 +240,11 @@ public abstract class Quantification extends ExperimentObject {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressValue(identification.getProteinIdentification().size()
                     + identification.getPeptideIdentification().size()
-                    + identification.getSpectrumIdentification().size());
+                    + identification.getSpectrumIdentificationSize());
         }
 
         ProteinQuantification tempProteinQuantification;
-
+identification.loadProteinMatches(null);
         for (String proteinKey : identification.getProteinIdentification()) {
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
             if (proteinMatch == null) {
@@ -261,7 +261,7 @@ public abstract class Quantification extends ExperimentObject {
         }
 
         PeptideQuantification tempPeptideQuantification;
-
+        identification.loadPeptideMatches(null);
         for (String peptideKey : identification.getPeptideIdentification()) {
             PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
             tempPeptideQuantification = new PeptideQuantification(peptideKey, peptideMatch.getSpectrumMatches());
@@ -273,8 +273,8 @@ public abstract class Quantification extends ExperimentObject {
                 }
             }
         }
-
-        for (String psmKey : identification.getSpectrumIdentification()) {
+        for (String fileName : identification.getSpectrumFiles()) {
+        for (String psmKey : identification.getSpectrumIdentification(fileName)) {
             if (!psmIDentificationToQuantification.containsKey(psmKey)) {
                 psmIDentificationToQuantification.put(psmKey, new ArrayList<String>());
             }
@@ -284,6 +284,7 @@ public abstract class Quantification extends ExperimentObject {
                     return;
                 }
             }
+        }
         }
     }
 

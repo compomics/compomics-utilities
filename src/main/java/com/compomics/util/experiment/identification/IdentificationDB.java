@@ -12,6 +12,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class uses a database to manage identification matches.
@@ -430,6 +431,178 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
+     * Loads all peptide match parameters of the given type in the cache of the
+     * database.
+     *
+     * @param urParameter the parameter type
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        String tableName = getPeptideParameterTable(urParameter);
+        objectsDB.loadObjects(tableName, progressDialog);
+    }
+
+    /**
+     * Loads the desired peptide match parameters of the given type in the cache
+     * of the database.
+     *
+     * @param peptideKeys the list of peptide keys of the parameters to load
+     * @param urParameter the parameter type
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setValue(0);
+            progressDialog.setMaxProgressValue(peptideKeys.size());
+        }
+        String tableName = getPeptideParameterTable(urParameter);
+        objectsDB.loadObjects(tableName, peptideKeys, progressDialog);
+    }
+
+    /**
+     * Loads the desired peptide matches of the given type in the cache of the
+     * database.
+     *
+     * @param peptideKeys the list of peptide keys to load
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setValue(0);
+            progressDialog.setMaxProgressValue(peptideKeys.size());
+        }
+        objectsDB.loadObjects(peptideTableName, peptideKeys, progressDialog);
+    }
+
+    /**
+     * Loads all protein match parameters of the given type in the cache of the
+     * database.
+     *
+     * @param urParameter the parameter type
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        String tableName = getProteinParameterTable(urParameter);
+        objectsDB.loadObjects(tableName, progressDialog);
+    }
+
+    /**
+     * Loads all protein matches in the cache of the
+     * database.
+     *
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        objectsDB.loadObjects(proteinTableName, progressDialog);
+    }
+    
+
+    /**
+     * Loads all peptide matches in the cache of the
+     * database.
+     *
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadPeptideMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        objectsDB.loadObjects(peptideTableName, progressDialog);
+    }
+    
+
+    /**
+     * Loads all spectrum matches of the given file in the cache of the
+     * database.
+     *
+     * @param fileName the file name
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadSpectrumMatches(String fileName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        String testKey = Spectrum.getSpectrumKey(fileName, "test");
+        String tableName = getSpectrumMatchTable(testKey);
+        objectsDB.loadObjects(tableName, progressDialog);
+    }
+
+    /**
+     * Loads all given spectrum matches in the cache of the database.
+     *
+     * @param spectrumKeys the key of the spectrum matches to be loaded
+     * @param progressDialog the progress dialog
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setValue(0);
+            progressDialog.setMaxProgressValue(2 * spectrumKeys.size());
+        }
+        HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
+        for (String spectrumKey : spectrumKeys) {
+            String tableName = getSpectrumMatchTable(spectrumKey);
+            if (!sortedKeys.containsKey(tableName)) {
+                sortedKeys.put(tableName, new ArrayList<String>());
+            }
+            sortedKeys.get(tableName).add(spectrumKey);
+            if (progressDialog != null) {
+            progressDialog.increaseProgressValue();
+            if (progressDialog.isRunCanceled()) {
+                break;
+            }
+            }
+        }
+        for (String tableName : sortedKeys.keySet()) {
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), progressDialog);
+        }
+    }
+
+    /**
      * Loads all spectrum match parameters of the given type in the cache of the
      * database.
      *
@@ -450,9 +623,10 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Loads all spectrum match parameters of the given type in the cache of the
-     * database.
+     * Loads all desired spectrum match parameters in the cache of the database.
      *
+     * @param spectrumKeys the key of the spectrum match of the parameters to be
+     * loaded
      * @param urParameter the parameter type
      * @param progressDialog the progress dialog
      * @throws SQLException exception thrown whenever an error occurred while
@@ -462,61 +636,29 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        String tableName = getPeptideParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, progressDialog);
-    }
-
-    /**
-     * Loads all spectrum match parameters of the given type in the cache of the
-     * database.
-     *
-     * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     */
-    public void loadProteinMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        String tableName = getProteinParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, progressDialog);
-    }
-
-    /**
-     * Loads all spectrum match parameters of the given type in the cache of the
-     * database.
-     *
-     * @param progressDialog the progress dialog
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     */
-    public void loadProteinMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        objectsDB.loadObjects(proteinTableName, progressDialog);
-    }
-
-    /**
-     * Loads all spectrum matches of the given file in the cache of the database.
-     *
-     * @param fileName the file name
-     * @param progressDialog the progress dialog
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     */
-    public void loadSpectrumMatches(String fileName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        String testKey = Spectrum.getSpectrumKey(fileName, "test");
-        String tableName = getSpectrumMatchTable(testKey);
-        objectsDB.loadObjects(tableName, progressDialog);
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+        if (progressDialog != null) {
+            progressDialog.setIndeterminate(false);
+            progressDialog.setValue(0);
+            progressDialog.setMaxProgressValue(2 * spectrumKeys.size());
+        }
+        HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
+        for (String spectrumKey : spectrumKeys) {
+            String tableName = getSpectrumParameterTable(spectrumKey, urParameter);
+            if (!sortedKeys.containsKey(tableName)) {
+                sortedKeys.put(tableName, new ArrayList<String>());
+            }
+            sortedKeys.get(tableName).add(spectrumKey);
+            if (progressDialog != null) {
+            progressDialog.increaseProgressValue();
+            if (progressDialog.isRunCanceled()) {
+                break;
+            }
+            }
+        }
+        for (String tableName : sortedKeys.keySet()) {
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), progressDialog);
+        }
     }
 
     /**

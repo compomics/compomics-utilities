@@ -262,10 +262,11 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Getter for a ptm according to its measured characteristics /!\ This
+     * Getter for a ptm according to its measured characteristics.
+     *
+     * @deprecated This
      * method can generate inconsistent results in case a measurement matches to
      * various PTMs.
-     *
      * @param mass the measured mass induced by the modification
      * @param location the modification location
      * @param sequence the peptide sequence

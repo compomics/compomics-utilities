@@ -288,6 +288,24 @@ public class Protein extends ExperimentObject {
 
         return result;
     }
+    
+    /**
+     * Returns a boolean indicating whether the protein starts with the given peptide
+     * @param peptideSequence the peptide sequence
+     * @return a boolean indicating whether the protein starts with the given peptide
+     */
+    public boolean isNTerm(String peptideSequence) {
+        return sequence.startsWith(peptideSequence);
+    }
+    
+    /**
+     * Returns a boolean indicating whether the protein ends with the given peptide
+     * @param peptideSequence the peptide sequence
+     * @return a boolean indicating whether the protein ends with the given peptide
+     */
+    public boolean isCTerm(String peptideSequence) {
+        return sequence.endsWith(peptideSequence);
+    }
 
     /**
      * Returns the amino acids surrounding a peptide in the sequence of the

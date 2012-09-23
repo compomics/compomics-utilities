@@ -1,8 +1,6 @@
 package com.compomics.util.gui.dialogs;
 
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.*;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.gui.renderers.ToolTipComboBoxRenderer;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
@@ -35,13 +33,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * The supported amino-acids.
-     */
-    private final List<String> aminoAcids = Arrays.asList(
-            "A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M",
-            "N", "P", "Q", "R", "S", "T", "V", "W", "Y", "U",
-            "[", "]");
     /**
      * The edited ptm.
      */
@@ -239,11 +230,22 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private boolean validateInput() {
         String name = nameTxt.getText().trim();
-        if (name.contains("_")) {
-            String newName = name.replace("_", " ");
-            int outcome = JOptionPane.showConfirmDialog(this, "For processing with PeptideShaker '_' "
-                    + "should be avoided in modification names. Shall " + name + " be replaced by "
-                    + newName + "?", "'_' in name", JOptionPane.YES_NO_OPTION);
+        if (name.contains(Peptide.MODIFICATION_SEPARATOR)) {
+            String newName = name.replace(Peptide.MODIFICATION_SEPARATOR, " ");
+            int outcome = JOptionPane.showConfirmDialog(this, Peptide.MODIFICATION_SEPARATOR
+                    + " should be avoided in modification names. Shall " + name + " be replaced by "
+                    + newName + "?", "'" + Peptide.MODIFICATION_SEPARATOR + "' in name", JOptionPane.YES_NO_OPTION);
+            if (outcome == JOptionPane.YES_OPTION) {
+                nameTxt.setText(newName);
+            } else {
+                return false;
+            }
+        }
+        if (name.contains(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR)) {
+            String newName = name.replace(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR, "AT-AA");
+            int outcome = JOptionPane.showConfirmDialog(this,Peptide.MODIFICATION_LOCALIZATION_SEPARATOR
+                    + " should be avoided in modification names. Shall " + name + " be replaced by "
+                    + newName + "?", "'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "' in name", JOptionPane.YES_NO_OPTION);
             if (outcome == JOptionPane.YES_OPTION) {
                 nameTxt.setText(newName);
             } else {
@@ -274,7 +276,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             return false;
         }
         for (String aa : parseResidues()) {
-            if (!aminoAcids.contains(aa.toUpperCase())) {
+            if (!AminoAcid.getAminoAcids().contains(aa.toUpperCase()) && !aa.equals("[") && !aa.equals("]")) {
                 JOptionPane.showMessageDialog(this, "The following entry could not be parsed into an amino-acid: "
                         + aa, "Wrong amino-acid", JOptionPane.WARNING_MESSAGE);
                 return false;

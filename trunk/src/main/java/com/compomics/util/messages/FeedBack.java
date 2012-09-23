@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.messages;
 
 import java.util.ArrayList;
@@ -9,15 +5,16 @@ import java.util.ArrayList;
 /**
  * This class is used to report a message to the user.
  *
- * 
- * @author Marc
+ *
+ * @author Marc Vaudel
  */
 public class FeedBack {
-    
+
     /**
-     * The different types of report possible
+     * The supported report types.
      */
     public enum FeedBackType {
+
         /**
          * A warning
          */
@@ -27,28 +24,31 @@ public class FeedBack {
          */
         TIP,
         /**
-         * Feed from a stream like tweeter
+         * Feed from a stream like twitter
          */
         FEED
     }
     /**
-     * The type of report
+     * The type of report.
      */
     private FeedBackType type;
     /**
-     * The title of the report
+     * The title of the report.
      */
     private String title;
     /**
-     * The keywords related to this report. Keywords are used to contextualize the feedback. Can be "iTRAQ", "label free"...
+     * The keywords related to this report. Keywords are used to contextualize
+     * the feedback. Can be "iTRAQ", "label free".
      */
     private ArrayList<String> keywords;
     /**
-     * The actual message
+     * The actual message.
      */
     private String message;
+
     /**
-     * Creates a new report for the user
+     * Creates a new report for the user.
+     *
      * @param type the type of report
      * @param title the title of the report
      * @param keyWords the key words for this report
@@ -60,9 +60,10 @@ public class FeedBack {
         this.keywords = keyWords;
         this.message = message;
     }
-    
+
     /**
-     * Creates a warning object
+     * Creates a warning object.
+     *
      * @param title the title of the warning
      * @param message the message of the warning
      * @return the corresponding warning
@@ -70,9 +71,10 @@ public class FeedBack {
     public static FeedBack getWarning(String title, String message) {
         return new FeedBack(FeedBackType.WARNING, title, new ArrayList<String>(), message);
     }
-    
+
     /**
-     * Creates a tip object
+     * Creates a tip object.
+     *
      * @param title the title of the tip
      * @param message the message of the tip
      * @param keywords the keywords
@@ -81,9 +83,10 @@ public class FeedBack {
     public static FeedBack getTip(String title, String message, ArrayList<String> keywords) {
         return new FeedBack(FeedBackType.TIP, title, keywords, message);
     }
-    
+
     /**
-     * Creates a general tip with no key word
+     * Creates a general tip with no key word.
+     *
      * @param title the title of the tip
      * @param message the message
      * @return the corresponding tip
@@ -91,9 +94,10 @@ public class FeedBack {
     public static FeedBack getTip(String title, String message) {
         return getTip(title, message, new ArrayList<String>());
     }
-    
+
     /**
-     * Creates a feed object
+     * Creates a feed object.
+     *
      * @param title the title of the feed
      * @param message the message of the feed
      * @param keywords the keywords
@@ -102,9 +106,10 @@ public class FeedBack {
     public static FeedBack getFeed(String title, String message, ArrayList<String> keywords) {
         return new FeedBack(FeedBackType.FEED, title, keywords, message);
     }
-    
+
     /**
-     * Creates a general feed with no key word
+     * Creates a general feed with no key word.
+     * 
      * @param title the title of the feed
      * @param message the message
      * @return the corresponding feed
@@ -114,7 +119,8 @@ public class FeedBack {
     }
 
     /**
-     * Returns the key words for this report
+     * Returns the key words for this report.
+     *
      * @return the key words for this report
      */
     public ArrayList<String> getKeyWords() {
@@ -122,7 +128,8 @@ public class FeedBack {
     }
 
     /**
-     * Sets the the key words for this report
+     * Sets the the key words for this report.
+     *
      * @param keyWords the key words for this report
      */
     public void setKeyWords(ArrayList<String> keyWords) {
@@ -130,7 +137,8 @@ public class FeedBack {
     }
 
     /**
-     * Returns the message
+     * Returns the message.
+     *
      * @return the message
      */
     public String getMessage() {
@@ -138,7 +146,8 @@ public class FeedBack {
     }
 
     /**
-     * Sets the message
+     * Sets the message.
+     *
      * @param message the message
      */
     public void setMessage(String message) {
@@ -146,7 +155,8 @@ public class FeedBack {
     }
 
     /**
-     * Returns the title
+     * Returns the title.
+     *
      * @return the title
      */
     public String getTitle() {
@@ -154,7 +164,8 @@ public class FeedBack {
     }
 
     /**
-     * Sets the title
+     * Sets the title.
+     *
      * @param title the title
      */
     public void setTitle(String title) {
@@ -162,7 +173,8 @@ public class FeedBack {
     }
 
     /**
-     * Returns the feedback type
+     * Returns the feedback type.
+     *
      * @return the feedback type
      */
     public FeedBackType getType() {
@@ -170,14 +182,11 @@ public class FeedBack {
     }
 
     /**
-     * Sets the feedback type
+     * Sets the feedback type.
+     *
      * @param type the feedback type
      */
     public void setType(FeedBackType type) {
         this.type = type;
     }
-    
-    
-    
-    
 }

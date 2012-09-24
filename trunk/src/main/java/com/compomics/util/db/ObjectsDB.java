@@ -153,7 +153,7 @@ public class ObjectsDB implements Serializable {
      */
     public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException {
         if (inCache) {
-            objectsCache.addObject(dbName, tableName, objectKey, object);
+            objectsCache.addObject(dbName, tableName, objectKey, object, true);
         } else {
             if (debugInteractions) {
                 System.out.println("Inserting single object, table:" + tableName + ", key: " + objectKey);
@@ -311,7 +311,7 @@ public class ObjectsDB implements Serializable {
                 Object object = in.readObject();
                 in.close();
 
-                objectsCache.addObject(dbName, tableName, key, object);
+                objectsCache.addObject(dbName, tableName, key, object, false);
             }
         }
 
@@ -362,7 +362,7 @@ public class ObjectsDB implements Serializable {
                     Object object = in.readObject();
                     in.close();
 
-                    objectsCache.addObject(dbName, tableName, key, object);
+                    objectsCache.addObject(dbName, tableName, key, object, false);
                     if (progressDialog != null) {
                         progressDialog.increaseProgressValue();
                     }
@@ -394,7 +394,11 @@ public class ObjectsDB implements Serializable {
      */
     public Object retrieveObject(String tableName, String objectKey) throws SQLException, IOException, ClassNotFoundException {
 
-        Object object = objectsCache.getObject(dbName, tableName, objectKey);
+        Object object = null; 
+
+        if (objectsCache != null) {
+            object = objectsCache.getObject(dbName, tableName, objectKey);
+        }
 
         if (object != null) {
             return object;
@@ -419,7 +423,7 @@ public class ObjectsDB implements Serializable {
             results.close();
             stmt.close();
 
-            objectsCache.addObject(dbName, tableName, objectKey, object);
+            objectsCache.addObject(dbName, tableName, objectKey, object, false);
 
             if (debugSpeed) {
                 long loaded = System.currentTimeMillis();

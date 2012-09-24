@@ -47,7 +47,7 @@ public class ObjectsCache {
      */
     private static final String cacheSeparator = "_ccs_";
     /**
-     * The standard batch size for saving objects in databases
+     * The standard batch size for saving objects in databases.
      */
     private int batchSize = 10000; // @TODO: find the optimal batch size
 
@@ -237,10 +237,11 @@ public class ObjectsCache {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store in the cache
+     * @param modifiedEntry true if the object is modified or new
      * @throws IOException
      * @throws SQLException
      */
-    public void addObject(String dbName, String tableName, String objectKey, Object object) throws IOException, SQLException {
+    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException {
         if (dbName.contains(cacheSeparator)) {
             throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
         } else if (tableName.contains(cacheSeparator)) {
@@ -255,7 +256,7 @@ public class ObjectsCache {
         if (!loadedObjectsMap.get(dbName).containsKey(tableName)) {
             loadedObjectsMap.get(dbName).put(tableName, new HashMap<String, CacheEntry>());
         }
-        loadedObjectsMap.get(dbName).get(tableName).put(objectKey, new CacheEntry(object, true));
+        loadedObjectsMap.get(dbName).get(tableName).put(objectKey, new CacheEntry(object, modifiedOrNew));
         updateCache();
     }
 

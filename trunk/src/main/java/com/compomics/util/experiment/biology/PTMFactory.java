@@ -7,6 +7,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -48,7 +49,7 @@ public class PTMFactory implements Serializable {
     /**
      * Unknown modification to be returned when the modification is not found.
      */
-    public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new ArrayList<String>());
+    public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new AminoAcidPattern());
 
     /**
      * Constructor for the factory.
@@ -232,8 +233,13 @@ public class PTMFactory implements Serializable {
         }
         if (name.indexOf("@") > 1) {
             try {
-                double mass = new Double(name.substring(0, name.indexOf("@")));
-                return new PTM(-1, name, mass, new ArrayList<String>());
+                double mass = 0.0;
+                try {
+                mass = new Double(name.substring(0, name.indexOf("@")));
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Trying to parse modification " + name + " like an X!Tandem modification.");
+                }
+                return new PTM(-1, name, mass, new AminoAcidPattern());
             } catch (Exception e) {
                 return unknownPTM;
             }
@@ -280,10 +286,14 @@ public class PTMFactory implements Serializable {
                     || currentPTM.getType() == PTM.MODNAA
                     || currentPTM.getType() == PTM.MODNPAA) {
                 if (Math.abs(currentPTM.getMass() - mass) < 0.01) {
-                    for (String residue : currentPTM.getResidues()) {
-                        if (location.equals(residue)) {
+                    try {
+                    for (int index : Peptide.getPotentialModificationSites(sequence, currentPTM)) {
+                        if (location.equals(sequence.charAt(index) + "")) {
                             return currentPTM;
                         }
+                    }
+                    } catch (Exception e) {
+                        // most likely not the PTM you are looking for. In case of doubt don't use this method
                     }
                 }
             } else if (currentPTM.getType() == PTM.MODC || currentPTM.getType() == PTM.MODCP) {
@@ -415,10 +425,15 @@ public class PTMFactory implements Serializable {
                 parser.next();
                 type = parser.next();
             }
-            residues.addAll(aminoAcids);
-        }
+            for (String aa : aminoAcids) {
+                if (!residues.contains(aa)) {
+                    residues.add(aa);
+                }
+            }
+            }
         // Create and implement modification.
-        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), residues);
+        AminoAcidPattern pattern = new AminoAcidPattern(residues);
+        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), pattern);
 
         while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_neutralloss"))
                 && !(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
@@ -576,6 +591,7 @@ public class PTMFactory implements Serializable {
     /**
      * Returns an MSModSpec bloc as present in the OMSSA user modification files
      * for a given PTM.
+     * Only the amino acids targeted by the pattern of the PTM will be considered
      *
      * @param ptmName the name of the PTM
      * @param cpt the index of this PTM
@@ -623,8 +639,8 @@ public class PTMFactory implements Serializable {
                 || ptm.getType() == PTM.MODCAA
                 || ptm.getType() == PTM.MODCPAA) {
             result += "\t\t<MSModSpec_residues>\n";
-            for (String aa : ptm.getResidues()) {
-                result += "\t\t\t<MSModSpec_residues_E>" + aa + "</MSModSpec_residues_E>\n";
+            for (AminoAcid aa : ptm.getPattern().getAminoAcidsAtTarget()) {
+                result += "\t\t\t<MSModSpec_residues_E>" + aa.singleLetterCode + "</MSModSpec_residues_E>\n";
             }
             result += "\t\t</MSModSpec_residues>\n";
         }

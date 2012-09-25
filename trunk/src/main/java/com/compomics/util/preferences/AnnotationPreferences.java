@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,8 +104,11 @@ public class AnnotationPreferences implements Serializable {
      * @param currentPeptide
      * @param currentPrecursorCharge
      * @param newSpectrum
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
      */
-    public void setCurrentSettings(Peptide currentPeptide, int currentPrecursorCharge, boolean newSpectrum) {
+    public void setCurrentSettings(Peptide currentPeptide, int currentPrecursorCharge, boolean newSpectrum) throws IOException, IllegalArgumentException, InterruptedException {
 
         this.currentPeptide = currentPeptide;
         this.currentPrecursorCharge = currentPrecursorCharge;
@@ -120,8 +124,11 @@ public class AnnotationPreferences implements Serializable {
 
     /**
      * Updates the neutral losses and charge annotation settings.
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
      */
-    public void resetAutomaticAnnotation() {
+    public void resetAutomaticAnnotation() throws IOException, IllegalArgumentException, InterruptedException {
 
         selectedCharges.clear();
         for (int charge = 1; charge < currentPrecursorCharge; charge++) {

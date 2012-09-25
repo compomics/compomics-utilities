@@ -224,7 +224,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Residue(s)"/>
+                <Property name="text" type="java.lang.String" value="Pattern"/>
                 <Property name="toolTipText" type="java.lang.String" value="Residues modified"/>
               </Properties>
             </Component>
@@ -234,6 +234,9 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Residues modified"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="residuesTxtMouseReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -16,6 +16,7 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -293,7 +294,7 @@ public class SpectrumAnnotator {
      * @param peptide the peptide of interest
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide) {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
@@ -343,22 +344,16 @@ public class SpectrumAnnotator {
             }
         }
 
-        int modMin;
-        int modMax;
+        int modMin = peptide.getSequence().length();
+        int modMax = 0;
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                modMin = peptide.getSequence().length();
-                modMax = 0;
-                for (String aa : ptm.getResidues()) {
-                    if (aa.equals("[")) {
-                        modMin = 0;
-                    } else if (aa.equals("]")) {
-                        modMax = peptide.getSequence().length();
-                    } else {
-                        modMin = Math.min(modMin, peptide.getSequence().indexOf(aa));
-                        modMax = Math.max(modMax, peptide.getSequence().lastIndexOf(aa));
-                    }
+                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm);
+                if (!indexes.isEmpty()) {
+                Collections.sort(indexes);
+                    modMin = indexes.get(0);
+                    modMax = indexes.get(indexes.size()-1);
                 }
                 neutralLossesMap.addNeutralLoss(neutralLoss, aaMin + 1, peptide.getSequence().length() - aaMax);
             }

@@ -33,9 +33,7 @@ public class PTMFactoryTest extends TestCase {
             Assert.assertEquals(testPTM.getName(), name.toLowerCase());
             Assert.assertEquals(testPTM.getMass(), 123.456789);
             Assert.assertEquals(testPTM.getType(), PTM.MODAA);
-            Assert.assertEquals(testPTM.getResidues().size(), 2);
-            Assert.assertEquals(testPTM.getResidues().get(0), "B");
-            Assert.assertEquals(testPTM.getResidues().get(1), "O");
+            Assert.assertTrue(testPTM.getPattern().toString().equals("[BO]"));
             Assert.assertEquals(testPTM.getNeutralLosses().size(), 2);
             Assert.assertEquals(testPTM.getNeutralLosses().get(0).mass, 456.789123);
             Assert.assertEquals(testPTM.getNeutralLosses().get(1).mass, 789.123456);

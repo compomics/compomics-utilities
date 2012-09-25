@@ -9,6 +9,7 @@ import com.compomics.util.pride.PrideObjectsFactory;
 import com.compomics.util.pride.PtmToPrideMap;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
@@ -40,11 +41,11 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     /**
      * The neutral losses.
      */
-    ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
      * The reporter ions.
      */
-    ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
+    private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
     /**
      * The ptm to pride map.
      */
@@ -57,6 +58,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * Boolean indicating wheter the user can edit the ptm or not.
      */
     private boolean editable;
+    /**
+     * The amino acid pattern of the modification
+     */
+    private AminoAcidPattern pattern;
 
     /**
      * Creates a new PTM dialog.
@@ -74,6 +79,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         this.ptmDialogParent = ptmDialogParent;
         this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
+        this.pattern = currentPtm.getPattern();
         this.editable = editable;
 
         initComponents();
@@ -149,7 +155,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         typeCmb.setEnabled(editable);
         nameTxt.setEditable(editable);
         massTxt.setEditable(editable);
-        residuesTxt.setEditable(editable);
         addNeutralLoss.setEnabled(editable);
         removeNeutralLoss.setEnabled(editable);
         addReporterIon.setEnabled(editable);
@@ -159,21 +164,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             typeCmb.setSelectedIndex(currentPtm.getType());
             nameTxt.setText(currentPtm.getName());
             massTxt.setText(currentPtm.getMass() + "");
-            String residues = "";
-            boolean first = true;
+            residuesTxt.setText(pattern.toString());
 
-            for (String aa : currentPtm.getResidues()) {
-                if (!aa.equals("[") && !aa.equals("]")) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        residues += ", ";
-                    }
-                    residues += aa;
-                }
-            }
-
-            residuesTxt.setText(residues);
             this.neutralLosses.addAll(currentPtm.getNeutralLosses());
             this.reporterIons.addAll(currentPtm.getReporterIons());
             updateTables();
@@ -189,36 +181,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
             setTitle("Edit Modification");
         }
-    }
-
-    /**
-     * Parses residues from the residues text field.
-     *
-     * @return a list of residues
-     */
-    private ArrayList<String> parseResidues() {
-        ArrayList<String> result = new ArrayList<String>();
-        int modType = typeCmb.getSelectedIndex();
-        if (modType == PTM.MODAA
-                || modType == PTM.MODNAA
-                || modType == PTM.MODNPAA
-                || modType == PTM.MODCAA
-                || modType == PTM.MODCPAA) {
-            String text = residuesTxt.getText();
-            String[] split = text.split(","); // @TODO: allow other separators
-            for (String part : split) {
-                if (!part.trim().equals("")) {
-                    result.add(part.trim().toUpperCase());
-                }
-            }
-        }
-        if (modType == PTM.MODC || modType == PTM.MODCP || modType == PTM.MODCAA || modType == PTM.MODCPAA) {
-            result.add("]");
-        }
-        if (modType == PTM.MODN || modType == PTM.MODNP || modType == PTM.MODNAA || modType == PTM.MODNPAA) {
-            result.add("[");
-        }
-        return result;
     }
 
     /**
@@ -274,13 +236,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             JOptionPane.showMessageDialog(this, "Please verify the input for the modification mass.",
                     "Wrong mass", JOptionPane.WARNING_MESSAGE);
             return false;
-        }
-        for (String aa : parseResidues()) {
-            if (!AminoAcid.getAminoAcids().contains(aa.toUpperCase()) && !aa.equals("[") && !aa.equals("]")) {
-                JOptionPane.showMessageDialog(this, "The following entry could not be parsed into an amino-acid: "
-                        + aa, "Wrong amino-acid", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
         }
         return true;
     }
@@ -364,12 +319,17 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         massTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         massTxt.setToolTipText("Monoisotopic mass in Dalton");
 
-        jLabel5.setText("Residue(s)");
+        jLabel5.setText("Pattern");
         jLabel5.setToolTipText("Residues modified");
 
         residuesTxt.setEditable(false);
         residuesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         residuesTxt.setToolTipText("Residues modified");
+        residuesTxt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                residuesTxtMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
         detailsPanel.setLayout(detailsPanelLayout);
@@ -584,16 +544,14 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(addReporterIon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removerReporterIon)
                         .addGap(0, 33, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -669,7 +627,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
 
-            PTM otherPTM, newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), parseResidues());
+            PTM otherPTM, newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), pattern);
             ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
 
             for (int row = 0; row < neutralLossesTable.getRowCount(); row++) {
@@ -867,6 +825,13 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         int row = reporterIonsTable.getSelectedRow();
         removerReporterIon.setEnabled(row != -1);
     }//GEN-LAST:event_reporterIonsTableMouseReleased
+
+    private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
+        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+            new AminoAcidPatternDialog(null, pattern, editable);
+        }
+    }//GEN-LAST:event_residuesTxtMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
@@ -917,7 +882,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }
 
     /**
-     * Update the neutral losses and reportet ions tables.
+     * Update the neutral losses and reporter ions tables.
      */
     private void updateTables() {
         ((DefaultTableModel) neutralLossesTable.getModel()).fireTableDataChanged();

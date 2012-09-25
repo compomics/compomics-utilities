@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,10 +41,13 @@ public class PTMLocationScores {
      * @param mzTolerance The m/z tolerance to use
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException {
         return getAScore(peptide, ptm, nPTM, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
     }
 
@@ -64,10 +68,13 @@ public class PTMLocationScores {
      * @param mzTolerance The m/z tolerance to use
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException {
         return getAScore(peptide, ptm, nPTM, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
     }
 
@@ -89,10 +96,13 @@ public class PTMLocationScores {
      * calculation shall account for neutral losses.
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
+     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) {
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) throws IOException, IllegalArgumentException, InterruptedException {
 
         NeutralLossesMap scoringLossesMap = new NeutralLossesMap();
 
@@ -106,7 +116,7 @@ public class PTMLocationScores {
         }
 
         HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
-        ArrayList<Integer> possibleSites = Peptide.getPotentialModificationSites(peptide.getSequence(), ptm);
+        ArrayList<Integer> possibleSites = peptide.getPotentialModificationSites(ptm);
 
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);

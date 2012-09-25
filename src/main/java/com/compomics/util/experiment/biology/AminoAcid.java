@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.aminoacids.*;
 import java.util.ArrayList;
 
 /**
- * Class representing amino acids
+ * Class representing amino acids.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -50,7 +50,7 @@ public abstract class AminoAcid {
      */
     public String name;
     /**
-     * average mass of the amino acid.
+     * Average mass of the amino acid.
      */
     public double averageMass;
     /**
@@ -94,20 +94,18 @@ public abstract class AminoAcid {
         aas.add("O");
         return aas;
     }
-    
-    
+
     /**
      * Returns the amino acid corresponding to the letter given, null if not
-     * implemented.
-     * if more than one letter is given only the first one will be accounted for.
+     * implemented. If more than one letter is given only the first one will be
+     * accounted for.
      *
-     * @param letter the amino acid single letter code as a String
+     * @param aa the amino acid single letter code as a String
      * @return the corresponding amino acid.
      */
     public static AminoAcid getAminoAcid(String aa) {
         return getAminoAcid(aa.charAt(0));
     }
-    
 
     /**
      * Returns the amino acid corresponding to the letter given, null if not

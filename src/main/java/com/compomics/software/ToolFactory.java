@@ -69,7 +69,8 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException  
+     * @throws InterruptedException
+     * @deprecated use PeptideShaker's own Reshake option instead.
      */
     public static void startRelims(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 

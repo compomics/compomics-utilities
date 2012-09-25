@@ -1,28 +1,40 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.dialogs;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * This dialog allows the design and test of amino-acid patterns (see class
+ * This dialog allows the design and test of amino-acid patterns. (see class
  * com.compomics.util.experiment.biology.AminoAcidPattern)
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
     /**
-     * Creates new form AminoAcidPatternDialog
+     * The pattern displayed
+     */
+    private AminoAcidPattern pattern;
+    /**
+     * A boolean indicating whether the pattern can be edited
+     */
+    private boolean editable;
+    /**
+     * A boolean indicating whether the used clicked the cancel button
+     */
+    private boolean cancel = false;
+
+    /**
+     * Creates a new AminoAcidPatternDialog.
+     *
+     * @param parent
+     * @param pattern
+     * @param editable
      */
     public AminoAcidPatternDialog(java.awt.Frame parent, AminoAcidPattern pattern, boolean editable) {
         super(parent, true);
@@ -37,20 +49,9 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         }
         testPattern();
         repaintTable();
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
-    /**
-     * The pattern displayed
-     */
-    private AminoAcidPattern pattern;
-    /**
-     * A boolean indicating whether the pattern can be edited
-     */
-    private boolean editable;
-    /**
-     * A boolean indicating whether the used clicked the cancel button
-     */
-    private boolean cancel = false;
 
     /**
      * @param args the command line arguments
@@ -110,42 +111,42 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        patternTable = new javax.swing.JTable();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        backgroundPanel = new javax.swing.JPanel();
+        patternDesignPanel = new javax.swing.JPanel();
+        patternDesignScrollPane = new javax.swing.JScrollPane();
+        patternDesignTable = new javax.swing.JTable();
+        testPanel = new javax.swing.JPanel();
+        testScrollPane = new javax.swing.JScrollPane();
         testTxt = new javax.swing.JTextArea();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        exampleButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Pattern Design"));
+        patternDesignPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pattern Design"));
 
-        patternTable.setModel(new PatternTable());
-        jScrollPane1.setViewportView(patternTable);
+        patternDesignTable.setModel(new PatternTable());
+        patternDesignScrollPane.setViewportView(patternDesignTable);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout patternDesignPanelLayout = new javax.swing.GroupLayout(patternDesignPanel);
+        patternDesignPanel.setLayout(patternDesignPanelLayout);
+        patternDesignPanelLayout.setHorizontalGroup(
+            patternDesignPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(patternDesignPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
+                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        patternDesignPanelLayout.setVerticalGroup(
+            patternDesignPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(patternDesignPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Test"));
+        testPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Test"));
 
         testTxt.setColumns(20);
         testTxt.setLineWrap(true);
@@ -156,22 +157,22 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 testTxtKeyReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(testTxt);
+        testScrollPane.setViewportView(testTxt);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout testPanelLayout = new javax.swing.GroupLayout(testPanel);
+        testPanel.setLayout(testPanelLayout);
+        testPanelLayout.setHorizontalGroup(
+            testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2)
+                .addComponent(testScrollPane)
                 .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        testPanelLayout.setVerticalGroup(
+            testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(testScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -190,80 +191,102 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jButton1.setText("Example");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        exampleButton.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        exampleButton.setText("Example");
+        exampleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                exampleButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(testPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(patternDesignPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                        .addComponent(exampleButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(patternDesignPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(testPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(exampleButton))
+                .addContainerGap())
         );
+
+        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cancelButton, exampleButton, okButton});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Validate the input and close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 //@TODO validate input and make sure that the targeted index has no rejected amino acid
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Close the dialog without saving.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         cancel = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Open an example pattern.
+     *
+     * @param evt
+     */
+    private void exampleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exampleButtonActionPerformed
         new AminoAcidPatternDialog(null, AminoAcidPattern.getTrypsinExample(), false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_exampleButtonActionPerformed
 
+    /**
+     * Test the current pattern.
+     *
+     * @param evt
+     */
     private void testTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_testTxtKeyReleased
         testPattern();
     }//GEN-LAST:event_testTxtKeyReleased
 
     /**
-     * Returns the pattern as edited by the user
+     * Returns the pattern as edited by the user.
      *
      * @return the pattern as edited by the user
      */
@@ -272,7 +295,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the given list of amino acids as a comma separated String
+     * Returns the given list of amino acids as a comma separated String.
      *
      * @param aminoAcids the given list of amino acids
      * @return the given list of amino acids as a comma separated String
@@ -293,7 +316,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns a list of amino acids from a comma separated String
+     * Returns a list of amino acids from a comma separated String.
      *
      * @param aminoAcids the comma separated String
      * @return the corresponding list of amino acids
@@ -315,10 +338,13 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Tests the pattern on the test text and puts a '*' every time the pattern is found
-     * @TODO: replace the stars with color
+     * Tests the pattern on the test text and puts a '*' every time the pattern
+     * is found.
      */
     private void testPattern() {
+
+        // @TODO: replace the stars with color
+
         String txt = testTxt.getText();
         ArrayList<Integer> indexes = pattern.getIndexes(txt);
         if (indexes.isEmpty()) {
@@ -327,14 +353,14 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         indexes.add(0);
         Collections.sort(indexes);
         String result = "";
-        for (int i = 0 ; i < indexes.size()-1 ; i++) {
-            String temp = txt.substring(indexes.get(i), indexes.get(i+1));
+        for (int i = 0; i < indexes.size() - 1; i++) {
+            String temp = txt.substring(indexes.get(i), indexes.get(i + 1));
             if (!temp.endsWith("*")) {
                 temp += "*";
             }
             result += temp;
         }
-        result += txt.substring(indexes.get(indexes.size()-1));
+        result += txt.substring(indexes.get(indexes.size() - 1));
         testTxt.setText(result);
     }
 
@@ -386,8 +412,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         @Override
         public void setValueAt(Object aValue, int row, int column) {
             try {
-                ArrayList<AminoAcid> aa = getAAfromString(getValueAt(row, column).toString());
-
+                ArrayList<AminoAcid> aa = getAAfromString(getValueAt(row, column).toString()); // @TODO: this doesn' actually do anything?
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                         "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -425,21 +450,21 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
             @Override
             public void run() {
-                patternTable.revalidate();
-                patternTable.repaint();
+                patternDesignTable.revalidate();
+                patternDesignTable.repaint();
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton exampleButton;
     private javax.swing.JButton okButton;
-    private javax.swing.JTable patternTable;
+    private javax.swing.JPanel patternDesignPanel;
+    private javax.swing.JScrollPane patternDesignScrollPane;
+    private javax.swing.JTable patternDesignTable;
+    private javax.swing.JPanel testPanel;
+    private javax.swing.JScrollPane testScrollPane;
     private javax.swing.JTextArea testTxt;
     // End of variables declaration//GEN-END:variables
 }

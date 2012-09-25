@@ -47,6 +47,7 @@ public class ProteinMatch extends IdentificationMatch {
      * Constructor for the protein match
      *
      * @param proteinAccession the matching protein
+     * @throws IllegalArgumentException  
      */
     public ProteinMatch(String proteinAccession) throws IllegalArgumentException {
         if (proteinAccession.contains(PROTEIN_KEY_SPLITTER)) {

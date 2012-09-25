@@ -13,7 +13,7 @@ import java.util.Collections;
 public class PTM extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -545472596243822505L;
     /**
@@ -63,6 +63,7 @@ public class PTM extends ExperimentObject {
     /**
      * The residues affected by this modification. '[' denotes N-term and ']'
      * C-term.
+     *
      * @deprecated use amino-acid pattern instead
      */
     private ArrayList<String> residuesArray = new ArrayList<String>();
@@ -87,7 +88,8 @@ public class PTM extends ExperimentObject {
      */
     private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
     /**
-     * The amino acid pattern targeted by this modification (can be set using the AminoAcidPatternDialog)
+     * The amino acid pattern targeted by this modification (can be set using
+     * the AminoAcidPatternDialog).
      */
     private AminoAcidPattern pattern = new AminoAcidPattern();
 
@@ -210,7 +212,6 @@ public class PTM extends ExperimentObject {
 
     /**
      * Getter for the mass difference induced by this modification.
-     * 
      *
      * @return the mass difference induced by the modification
      */
@@ -300,7 +301,8 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Returns the amino acid pattern targeted by this modification
+     * Returns the amino acid pattern targeted by this modification.
+     *
      * @return the amino acid pattern targeted by this modification
      */
     public AminoAcidPattern getPattern() {
@@ -312,7 +314,8 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Sets the amino acid pattern targeted by this modification
+     * Sets the amino acid pattern targeted by this modification.
+     *
      * @param pattern the amino acid pattern targeted by this modification
      */
     public void setPattern(AminoAcidPattern pattern) {

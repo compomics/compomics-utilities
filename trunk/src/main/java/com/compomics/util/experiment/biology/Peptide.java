@@ -73,12 +73,6 @@ public class Peptide extends ExperimentObject {
             this.modifications.add(mod);
         }
         estimateTheoreticMass();
-        for (String protein : parentProteins) {
-            if (protein.contains(" ")) {
-                throw new IllegalArgumentException("Protein accession containing ' ' are not supported. Conflicting accession: " + protein);
-            }
-            this.parentProteins.add(protein);
-        }
     }
 
     /**
@@ -975,7 +969,12 @@ public class Peptide extends ExperimentObject {
         for (int aa = 0; aa < sequence.length(); aa++) {
             try {
                 currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
-                mass += currentAA.monoisotopicMass;
+                
+                if (currentAA != null) {
+                    mass += currentAA.monoisotopicMass;
+                } else {
+                    System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
+                }   
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
             }

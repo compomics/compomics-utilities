@@ -7,7 +7,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -235,9 +234,9 @@ public class PTMFactory implements Serializable {
             try {
                 double mass = 0.0;
                 try {
-                mass = new Double(name.substring(0, name.indexOf("@")));
+                    mass = new Double(name.substring(0, name.indexOf("@")));
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Trying to parse modification " + name + " like an X!Tandem modification.");
+                    throw new IllegalArgumentException("Trying to parse modification " + name + " like an X!Tandem modification!");
                 }
                 return new PTM(-1, name, mass, new AminoAcidPattern());
             } catch (Exception e) {
@@ -270,9 +269,8 @@ public class PTMFactory implements Serializable {
     /**
      * Getter for a ptm according to its measured characteristics.
      *
-     * @deprecated This
-     * method can generate inconsistent results in case a measurement matches to
-     * various PTMs.
+     * @deprecated This method can generate inconsistent results in case a
+     * measurement matches to various PTMs.
      * @param mass the measured mass induced by the modification
      * @param location the modification location
      * @param sequence the peptide sequence
@@ -287,12 +285,13 @@ public class PTMFactory implements Serializable {
                     || currentPTM.getType() == PTM.MODNPAA) {
                 if (Math.abs(currentPTM.getMass() - mass) < 0.01) {
                     try {
-                    for (int index : Peptide.getPotentialModificationSites(sequence, currentPTM)) {
-                        if (location.equals(sequence.charAt(index) + "")) {
-                            return currentPTM;
+                        for (int index : Peptide.getPotentialModificationSites(sequence, currentPTM)) {
+                            if (location.equals(sequence.charAt(index) + "")) {
+                                return currentPTM;
+                            }
                         }
-                    }
                     } catch (Exception e) {
+                        e.printStackTrace();
                         // most likely not the PTM you are looking for. In case of doubt don't use this method
                     }
                 }
@@ -430,7 +429,7 @@ public class PTMFactory implements Serializable {
                     residues.add(aa);
                 }
             }
-            }
+        }
         // Create and implement modification.
         AminoAcidPattern pattern = new AminoAcidPattern(residues);
         PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), pattern);
@@ -590,8 +589,8 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns an MSModSpec bloc as present in the OMSSA user modification files
-     * for a given PTM.
-     * Only the amino acids targeted by the pattern of the PTM will be considered
+     * for a given PTM. Only the amino acids targeted by the pattern of the PTM
+     * will be considered.
      *
      * @param ptmName the name of the PTM
      * @param cpt the index of this PTM

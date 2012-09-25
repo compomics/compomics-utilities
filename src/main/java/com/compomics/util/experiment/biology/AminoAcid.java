@@ -94,6 +94,20 @@ public abstract class AminoAcid {
         aas.add("O");
         return aas;
     }
+    
+    
+    /**
+     * Returns the amino acid corresponding to the letter given, null if not
+     * implemented.
+     * if more than one letter is given only the first one will be accounted for.
+     *
+     * @param letter the amino acid single letter code as a String
+     * @return the corresponding amino acid.
+     */
+    public static AminoAcid getAminoAcid(String aa) {
+        return getAminoAcid(aa.charAt(0));
+    }
+    
 
     /**
      * Returns the amino acid corresponding to the letter given, null if not

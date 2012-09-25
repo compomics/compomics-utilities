@@ -269,7 +269,7 @@ public class Peptide extends ExperimentObject {
      */
     public static int getModificationCount(String peptideKey, String modification) {
         String test = peptideKey + MODIFICATION_SEPARATOR;
-        return test.split(modification).length-1;
+        return test.split(modification).length - 1;
     }
 
     /**
@@ -334,26 +334,49 @@ public class Peptide extends ExperimentObject {
         }
         return result;
     }
-    
+
     /**
-     * Indicates whether the given modification can be found on the peptide. For instance, 'oxidation of M' cannot be found on sequence "PEPTIDE".
-     * For the inspection of protein termini the proteins sequences must be accessible from the sequence factory.
-     * 
+     * Indicates whether the given modification can be found on the peptide. For
+     * instance, 'oxidation of M' cannot be found on sequence "PEPTIDE". For the
+     * inspection of protein termini and peptide C-terminus the proteins
+     * sequences must be accessible from the sequence factory.
+     *
      * @param ptm the PTM of interest
-     * @return a boolean indicating whether the given modification can be found on the peptide
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     * @return a boolean indicating whether the given modification can be found
+     * on the peptide
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
     public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException {
         switch (ptm.getType()) {
             case PTM.MODAA:
-                for (String aa : ptm.getResidues()) {
-                    if (sequence.contains(aa)) {
-                        return true;
+                AminoAcidPattern pattern = ptm.getPattern();
+                int nAA = pattern.length();
+                int target = pattern.getTarget();
+                if (target > 0 && nAA - target < 1) {
+                    return pattern.matches(sequence);
+                } else {
+                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                    Protein protein;
+                    for (String accession : parentProteins) {
+                        protein = sequenceFactory.getProtein(accession);
+                        for (int index : protein.getPeptideStart(sequence)) {
+                            int beginIndex = index - target;
+                            int endIndex = index + sequence.length() - 1 + nAA - target;
+                            if (endIndex < protein.getLength()) {
+                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
+                                if (pattern.matches(tempSequence)) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
+                    return false;
                 }
-                return false;
             case PTM.MODC:
                 return true;
             case PTM.MODN:
@@ -367,24 +390,59 @@ public class Peptide extends ExperimentObject {
                     return false;
                 }
             case PTM.MODCAA:
-                for (String aa : ptm.getResidues()) {
-                    if (sequence.endsWith(aa)) {
-                        return true;
+                pattern = ptm.getPattern();
+                target = pattern.getTarget();
+                nAA = pattern.length();
+                if (nAA - target <= 1 && sequence.length() - 1 > target) {
+                    return pattern.isEnding(sequence);
+                } else {
+                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                    Protein protein;
+                    for (String accession : parentProteins) {
+                        protein = sequenceFactory.getProtein(accession);
+                        for (int index : protein.getPeptideStart(sequence)) {
+                            int beginIndex = index + sequence.length() - target - 1;
+                            int endIndex = beginIndex + nAA;
+                            if (endIndex < protein.getLength()) {
+                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
+                                if (pattern.isEnding(tempSequence)) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
+                    return false;
                 }
-                return false;
             case PTM.MODNPAA:
                 if (isNterm().isEmpty()) {
                     return false;
                 }
             case PTM.MODNAA:
-                for (String aa : ptm.getResidues()) {
-                    if (sequence.startsWith(aa)) {
-                        return true;
+                pattern = ptm.getPattern();
+                target = pattern.getTarget();
+                nAA = pattern.length();
+                if (target > 0 && sequence.length() - 1 > nAA) {
+                    return pattern.isStarting(sequence);
+                } else {
+                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                    Protein protein;
+                    for (String accession : parentProteins) {
+                        protein = sequenceFactory.getProtein(accession);
+                        for (int index : protein.getPeptideStart(sequence)) {
+                            int beginIndex = index - target;
+                            int endIndex = beginIndex + nAA;
+                            if (endIndex < protein.getLength()) {
+                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
+                                if (pattern.isStarting(tempSequence)) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
+                    return false;
                 }
+            default:
                 return false;
-default: return false;
         }
     }
 
@@ -393,27 +451,41 @@ default: return false;
      * is the first aa. an empty list is returned if no possibility was found.
      * This method does not account for protein terminal modifications.
      *
-     * @param sequence the sequence of the peptide of interest
      * @param ptm the PTM considered
      * @return a list of potential modification sites
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
-    public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         switch (ptm.getType()) {
             case PTM.MODAA:
-                String tempSequence;
-                int tempIndex,
-                 ref;
-                for (String aa : ptm.getResidues()) {
-                    ref = 0;
-                    tempSequence = sequence;
-                    while ((tempIndex = tempSequence.indexOf(aa)) >= 0) {
-                        possibleSites.add(ref + tempIndex);
-                        tempSequence = tempSequence.substring(tempIndex + 1);
-                        ref += tempIndex + 1;
+                AminoAcidPattern pattern = ptm.getPattern();
+                int nAA = pattern.length();
+                int target = pattern.getTarget();
+                if (target > 0 && nAA - target < 1) {
+                    return pattern.getIndexes(sequence);
+                } else {
+                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                    Protein protein;
+                    for (String accession : parentProteins) {
+                        protein = sequenceFactory.getProtein(accession);
+                        for (int index : protein.getPeptideStart(sequence)) {
+                            int beginIndex = index - target;
+                            int endIndex = index + sequence.length() - 1 + nAA - target;
+                            if (endIndex < protein.getLength()) {
+                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
+                                if (pattern.matches(tempSequence)) {
+                                    return pattern.getIndexes(tempSequence);
+                                }
+                            }
+                        }
                     }
                 }
-                return possibleSites;
             case PTM.MODC:
             case PTM.MODCP:
                 possibleSites.add(sequence.length() - 1);
@@ -424,23 +496,125 @@ default: return false;
                 return possibleSites;
             case PTM.MODCAA:
             case PTM.MODCPAA:
-                for (String aa : ptm.getResidues()) {
-                    if (sequence.endsWith(aa)) {
+                pattern = ptm.getPattern();
+                target = pattern.getTarget();
+                nAA = pattern.length();
+                if (nAA - target <= 1 && sequence.length() - 1 > target) {
+                    if (pattern.isEnding(sequence)) {
                         possibleSites.add(sequence.length() - 1);
-                        break;
                     }
+                    return possibleSites;
+                } else {
+                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                    Protein protein;
+                    for (String accession : parentProteins) {
+                        protein = sequenceFactory.getProtein(accession);
+                        for (int index : protein.getPeptideStart(sequence)) {
+                            int beginIndex = index + sequence.length() - target - 1;
+                            int endIndex = beginIndex + nAA;
+                            if (endIndex < protein.getLength()) {
+                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
+                                if (pattern.isEnding(tempSequence)) {
+                                    possibleSites.add(sequence.length() - 1);
+                                    return possibleSites;
+                                }
+                            }
+                        }
+                    }
+                    return possibleSites;
                 }
-                return possibleSites;
             case PTM.MODNAA:
             case PTM.MODNPAA:
-                for (String aa : ptm.getResidues()) {
-                    if (sequence.startsWith(aa)) {
+                pattern = ptm.getPattern();
+                target = pattern.getTarget();
+                nAA = pattern.length();
+                if (target > 0 && sequence.length() - 1 > nAA) {
+                    if (pattern.isStarting(sequence)) {
                         possibleSites.add(0);
-                        break;
                     }
+                    return possibleSites;
+                } else {
+                    SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                    Protein protein;
+                    for (String accession : parentProteins) {
+                        protein = sequenceFactory.getProtein(accession);
+                        for (int index : protein.getPeptideStart(sequence)) {
+                            int beginIndex = index - target;
+                            int endIndex = beginIndex + nAA;
+                            if (endIndex < protein.getLength()) {
+                                String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
+                                if (pattern.isStarting(tempSequence)) {
+                                    possibleSites.add(0);
+                                    return possibleSites;
+                                }
+                            }
+                        }
+                    }
+                    return possibleSites;
                 }
-                return possibleSites;
+        }
+        return possibleSites;
+    }
 
+    /**
+     * Returns the potential modification sites as an ordered list of string. 0
+     * is the first aa. an empty list is returned if no possibility was found.
+     * This method does not account for protein terminal modifications. Only
+     * works if the modification pattern can be fully found in the sequence
+     * (single amino acid or terminal patterns smaller than the sequence).
+     * Otherwise an IllegalArgumentException will be thrown. Use the non static
+     * method then.
+     *
+     * @param sequence the sequence of the peptide of interest
+     * @param ptm the PTM considered
+     * @return a list of potential modification sites
+     */
+    public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) throws IllegalArgumentException {
+        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+        switch (ptm.getType()) {
+            case PTM.MODAA:
+                AminoAcidPattern pattern = ptm.getPattern();
+                int nAA = pattern.length();
+                int target = pattern.getTarget();
+                if (target > 0 && nAA - target < 1) {
+                    return pattern.getIndexes(sequence);
+                } else {
+                    throw new IllegalArgumentException("Pattern " + pattern + " cannot be fully comprised in " + sequence);
+                }
+            case PTM.MODC:
+            case PTM.MODCP:
+                possibleSites.add(sequence.length() - 1);
+                return possibleSites;
+            case PTM.MODN:
+            case PTM.MODNP:
+                possibleSites.add(0);
+                return possibleSites;
+            case PTM.MODCAA:
+            case PTM.MODCPAA:
+                pattern = ptm.getPattern();
+                target = pattern.getTarget();
+                nAA = pattern.length();
+                if (nAA - target <= 1 && sequence.length() - 1 > target) {
+                    if (pattern.isStarting(sequence)) {
+                        possibleSites.add(sequence.length() - 1);
+                    }
+                    return possibleSites;
+                } else {
+                    throw new IllegalArgumentException("Pattern " + pattern + " cannot be fully comprised in " + sequence);
+                }
+            case PTM.MODNAA:
+            case PTM.MODNPAA:
+                pattern = ptm.getPattern();
+                target = pattern.getTarget();
+                nAA = pattern.length();
+                if (target > 0 && sequence.length() - 1 > nAA) {
+                    if (pattern.isStarting(sequence)) {
+                        possibleSites.add(0);
+                    }
+                    return possibleSites;
+                } else {
+                    throw new IllegalArgumentException("Pattern " + pattern + " cannot be fully comprised in " + sequence);
+                }
         }
         return possibleSites;
     }
@@ -815,14 +989,20 @@ default: return false;
             mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
         }
     }
-    
+
     /**
-     * Returns a list of proteins where this peptide can be found in the N-terminus. The proteins must be accessible via the sequence factory. If none found, an empty list is returned.
-     * 
-     * @return a list of proteins where this peptide can be found in the N-terminus
-     * @throws IOException exception thrown whenever an error occurred while reading the protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading the protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading the protein sequence
+     * Returns a list of proteins where this peptide can be found in the
+     * N-terminus. The proteins must be accessible via the sequence factory. If
+     * none found, an empty list is returned.
+     *
+     * @return a list of proteins where this peptide can be found in the
+     * N-terminus
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading the protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading the protein sequence
      */
     public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -836,14 +1016,20 @@ default: return false;
         }
         return result;
     }
-    
+
     /**
-     * Returns a list of proteins where this peptide can be found in the C-terminus. The proteins must be accessible via the sequence factory. If none found, an empty list is returned.
-     * 
-     * @return a list of proteins where this peptide can be found in the C-terminus
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     * Returns a list of proteins where this peptide can be found in the
+     * C-terminus. The proteins must be accessible via the sequence factory. If
+     * none found, an empty list is returned.
+     *
+     * @return a list of proteins where this peptide can be found in the
+     * C-terminus
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
     public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();

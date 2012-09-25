@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class models a post-translational modification.
@@ -62,6 +63,7 @@ public class PTM extends ExperimentObject {
     /**
      * The residues affected by this modification. '[' denotes N-term and ']'
      * C-term.
+     * @deprecated use amino-acid pattern instead
      */
     private ArrayList<String> residuesArray = new ArrayList<String>();
     /**
@@ -84,6 +86,10 @@ public class PTM extends ExperimentObject {
      * List of known reporter ions for this modification.
      */
     private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
+    /**
+     * The amino acid pattern targeted by this modification (can be set using the AminoAcidPatternDialog)
+     */
+    private AminoAcidPattern pattern = new AminoAcidPattern();
 
     /**
      * Constructor for the modification.
@@ -94,6 +100,7 @@ public class PTM extends ExperimentObject {
     /**
      * Constructor for a reference modification.
      *
+     * @deprecated use amino acid pattern instead
      * @param type Type of modification according to static attributes
      * @param name Name of the modification
      * @param mass Mass difference produced by the modification
@@ -109,6 +116,39 @@ public class PTM extends ExperimentObject {
     /**
      * Constructor for a reference modification.
      *
+     * @param type Type of modification according to static attributes
+     * @param name Name of the modification
+     * @param mass Mass difference produced by the modification
+     * @param aminoAcidPattern Residue pattern affected by this modification
+     */
+    public PTM(int type, String name, double mass, AminoAcidPattern aminoAcidPattern) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.pattern = aminoAcidPattern;
+    }
+
+    /**
+     * Constructor for a reference modification.
+     *
+     * @param type Type of modification according to static attributes
+     * @param name Name of the modification
+     * @param shortName Short name of the modification
+     * @param mass Mass difference produced by the modification
+     * @param aminoAcidPattern Residue pattern affected by this modification
+     */
+    public PTM(int type, String name, String shortName, double mass, AminoAcidPattern aminoAcidPattern) {
+        this.type = type;
+        this.name = name;
+        this.shortName = shortName;
+        this.mass = mass;
+        this.pattern = aminoAcidPattern;
+    }
+
+    /**
+     * Constructor for a reference modification.
+     *
+     * @deprecated use amino acid pattern instead
      * @param type Type of modification according to static attributes
      * @param name Name of the modification
      * @param shortName Short name of the modification
@@ -181,6 +221,7 @@ public class PTM extends ExperimentObject {
     /**
      * Getter for the residues affected by this modification.
      *
+     * @deprecated use amino acid pattern instead
      * @return an array containing potentially modified residues
      */
     public ArrayList<String> getResidues() {
@@ -196,13 +237,8 @@ public class PTM extends ExperimentObject {
     public boolean isSameAs(PTM anotherPTM) {
         if (type != anotherPTM.getType()
                 || mass != anotherPTM.getMass()
-                || residuesArray.size() != anotherPTM.getResidues().size()) {
+                || !anotherPTM.getPattern().isSameAs(pattern)) {
             return false;
-        }
-        for (String aa : anotherPTM.getResidues()) {
-            if (!residuesArray.contains(aa)) {
-                return false;
-            }
         }
         return true;
     }
@@ -261,5 +297,25 @@ public class PTM extends ExperimentObject {
      */
     public void addReporterIon(ReporterIon reporterIon) {
         reporterIons.add(reporterIon);
+    }
+
+    /**
+     * Returns the amino acid pattern targeted by this modification
+     * @return the amino acid pattern targeted by this modification
+     */
+    public AminoAcidPattern getPattern() {
+        if (pattern == null) {
+            // Backward compatibility code
+            pattern = new AminoAcidPattern(residuesArray);
+        }
+        return pattern;
+    }
+
+    /**
+     * Sets the amino acid pattern targeted by this modification
+     * @param pattern the amino acid pattern targeted by this modification
+     */
+    public void setPattern(AminoAcidPattern pattern) {
+        this.pattern = pattern;
     }
 }

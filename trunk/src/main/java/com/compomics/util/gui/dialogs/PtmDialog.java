@@ -105,6 +105,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
         this.editable = editable;
+        this.pattern = currentPtm.getPattern();
 
         initComponents();
         setUpGui();

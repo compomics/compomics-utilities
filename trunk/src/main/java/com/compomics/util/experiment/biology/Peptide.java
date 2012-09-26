@@ -371,19 +371,19 @@ public class Peptide extends ExperimentObject {
                     }
                     return false;
                 }
-            case PTM.MODC:
-                return true;
-            case PTM.MODN:
-                return true;
             case PTM.MODCP:
-                return !isCterm().isEmpty();
+                return true;
             case PTM.MODNP:
+                return true;
+            case PTM.MODC:
+                return !isCterm().isEmpty();
+            case PTM.MODN:
                 return !isNterm().isEmpty();
-            case PTM.MODCPAA:
+            case PTM.MODCAA:
                 if (isCterm().isEmpty()) {
                     return false;
                 }
-            case PTM.MODCAA:
+            case PTM.MODCPAA:
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
@@ -407,11 +407,11 @@ public class Peptide extends ExperimentObject {
                     }
                     return false;
                 }
-            case PTM.MODNPAA:
+            case PTM.MODNAA:
                 if (isNterm().isEmpty()) {
                     return false;
                 }
-            case PTM.MODNAA:
+            case PTM.MODNPAA:
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();

@@ -113,6 +113,26 @@ public class PTM extends ExperimentObject {
         this.name = name;
         this.mass = mass;
         this.residuesArray.addAll(residuesArray);
+        pattern = new AminoAcidPattern(residuesArray);
+    }
+
+    /**
+     * Constructor for a reference modification.
+     *
+     * @deprecated use amino acid pattern instead
+     * @param type Type of modification according to static attributes
+     * @param name Name of the modification
+     * @param shortName Short name of the modification
+     * @param mass Mass difference produced by the modification
+     * @param residuesArray Residue array affected by this modification
+     */
+    public PTM(int type, String name, String shortName, double mass, ArrayList<String> residuesArray) {
+        this.type = type;
+        this.name = name;
+        this.shortName = shortName;
+        this.mass = mass;
+        this.residuesArray.addAll(residuesArray);
+        pattern = new AminoAcidPattern(residuesArray);
     }
 
     /**
@@ -145,24 +165,6 @@ public class PTM extends ExperimentObject {
         this.shortName = shortName;
         this.mass = mass;
         this.pattern = aminoAcidPattern;
-    }
-
-    /**
-     * Constructor for a reference modification.
-     *
-     * @deprecated use amino acid pattern instead
-     * @param type Type of modification according to static attributes
-     * @param name Name of the modification
-     * @param shortName Short name of the modification
-     * @param mass Mass difference produced by the modification
-     * @param residuesArray Residue array affected by this modification
-     */
-    public PTM(int type, String name, String shortName, double mass, ArrayList<String> residuesArray) {
-        this.type = type;
-        this.name = name;
-        this.shortName = shortName;
-        this.mass = mass;
-        this.residuesArray.addAll(residuesArray);
     }
 
     /**

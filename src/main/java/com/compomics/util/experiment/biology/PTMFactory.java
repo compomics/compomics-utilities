@@ -406,12 +406,6 @@ public class PTMFactory implements Serializable {
         // Residue
         type = parser.next();
         ArrayList<String> residues = new ArrayList();
-        if (modType.compareTo("modc") == 0 || modType.compareTo("modcp") == 0 || modType.compareTo("modcaa") == 0 || modType.compareTo("modcpaa") == 0) {
-            residues.add("]");
-        }
-        if (modType.compareTo("modn") == 0 || modType.compareTo("modnp") == 0 || modType.compareTo("modnaa") == 0 || modType.compareTo("modnpaa") == 0) {
-            residues.add("[");
-        }
         if (modType.compareTo("modcaa") == 0 || modType.compareTo("modcpaa") == 0 || modType.compareTo("modnaa") == 0 || modType.compareTo("modnpaa") == 0 || modType.compareTo("modaa") == 0) {
             while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_residues_E"))) {
                 type = parser.next();

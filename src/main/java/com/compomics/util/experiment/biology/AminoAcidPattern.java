@@ -57,13 +57,19 @@ public class AminoAcidPattern {
      * instance (S, T, Y)
      *
      * @param targetTesidues a list of targeted residues
+     * @throws IllegalArgumentException exception thrown whenever a letter is not recognized as amino acid
      */
-    public AminoAcidPattern(ArrayList<String> targetTesidues) {
+    public AminoAcidPattern(ArrayList<String> targetTesidues) throws IllegalArgumentException {
         target = 0;
         Collections.sort(targetTesidues);
         ArrayList<AminoAcid> aminoAcids = new ArrayList<AminoAcid>();
-        for (String aa : targetTesidues) {
-            aminoAcids.add(AminoAcid.getAminoAcid(aa));
+        for (String letter : targetTesidues) {
+            AminoAcid aa = AminoAcid.getAminoAcid(letter);
+            if (aa != null) {
+                aminoAcids.add(aa);
+            } else {
+                throw new IllegalArgumentException("Amino acid not recognized " + letter + ".");
+            }
         }
         aaTargeted.put(0, aminoAcids);
     }
@@ -237,6 +243,7 @@ public class AminoAcidPattern {
     /**
      * Indicates whether the pattern is found in the given amino-acid sequence.
      *
+     *
      * @param aminoAcidSequence the amino-acid sequence
      * @return a boolean indicating whether the pattern is found in the given
      * amino-acid sequence
@@ -251,6 +258,7 @@ public class AminoAcidPattern {
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
+     *
      * @param aminoAcidSequence the amino acid sequence
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
@@ -261,6 +269,7 @@ public class AminoAcidPattern {
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
+     *
      *
      * @param aminoAcidSequence the amino acid sequence
      * @return a boolean indicating whether the given amino acid sequence ends

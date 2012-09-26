@@ -351,7 +351,7 @@ public class Peptide extends ExperimentObject {
                 AminoAcidPattern pattern = ptm.getPattern();
                 int nAA = pattern.length();
                 int target = pattern.getTarget();
-                if (target > 0 && nAA - target < 1) {
+                if (target >= 0 && nAA - target <= 1) {
                     return pattern.matches(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -461,7 +461,7 @@ public class Peptide extends ExperimentObject {
                 AminoAcidPattern pattern = ptm.getPattern();
                 int nAA = pattern.length();
                 int target = pattern.getTarget();
-                if (target > 0 && nAA - target < 1) {
+                if (target >= 0 && nAA - target <= 1) {
                     return pattern.getIndexes(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -474,7 +474,12 @@ public class Peptide extends ExperimentObject {
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.matches(tempSequence)) {
-                                    return pattern.getIndexes(tempSequence);
+                                    for (int tempIndex : pattern.getIndexes(tempSequence)) {
+                                        int sequenceIndex = tempIndex-target;
+                                        if (!possibleSites.contains(sequenceIndex)) {
+                                            possibleSites.add(tempIndex);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -570,7 +575,7 @@ public class Peptide extends ExperimentObject {
                 AminoAcidPattern pattern = ptm.getPattern();
                 int nAA = pattern.length();
                 int target = pattern.getTarget();
-                if (target > 0 && nAA - target < 1) {
+                if (target >= 0 && nAA - target <= 1) {
                     return pattern.getIndexes(sequence);
                 } else {
                     throw new IllegalArgumentException("Pattern " + pattern + " cannot be fully comprised in " + sequence);

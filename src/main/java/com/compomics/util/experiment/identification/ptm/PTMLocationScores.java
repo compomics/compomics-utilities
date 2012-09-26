@@ -21,7 +21,7 @@ import java.util.HashSet;
 /**
  * This class scores PTM locations using various scores.
  *
- * @author Marc Vaudel
+ * @author Marc
  */
 public class PTMLocationScores {
 
@@ -224,7 +224,11 @@ public class PTMLocationScores {
             int bestI = 0;
 
             for (int i = 1; i <= 10; i++) {
+                try {
                 diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+                } catch (Exception e) {
+                diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+                }
                 if (diff >= maxDiff) {
                     bestI = i - 1;
                     maxDiff = diff;

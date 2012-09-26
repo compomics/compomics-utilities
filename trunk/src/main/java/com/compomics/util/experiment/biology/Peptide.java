@@ -63,6 +63,7 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
+        sequence.replaceAll("[#*§$%&]", "");
         for (ModificationMatch mod : modifications) {
             if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
                 throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
@@ -72,12 +73,14 @@ public class Peptide extends ExperimentObject {
             }
             this.modifications.add(mod);
         }
+        setParentProteins(parentProteins);
         estimateTheoreticMass();
     }
 
     /**
      * Constructor for the peptide.
      *
+     * @deprecated use the constructor without mass. The mass will be recalculated
      * @param aSequence The peptide sequence
      * @param mass The peptide mass
      * @param parentProteins The parent proteins
@@ -85,13 +88,12 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
+        sequence.replaceAll("[#*§$%&]", "");
         this.mass = mass;
         for (ModificationMatch mod : modifications) {
             this.modifications.add(mod);
         }
-        for (String protein : parentProteins) {
-            this.parentProteins.add(protein);
-        }
+        setParentProteins(parentProteins);
     }
 
     /**
@@ -196,6 +198,9 @@ public class Peptide extends ExperimentObject {
      * @param parentProteins the parent proteins as list
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
+        if (parentProteins == null || parentProteins.isEmpty()) {
+            throw new IllegalArgumentException("Trying to set an empty protein list to peptide " + sequence + ".");
+        }
         this.parentProteins = parentProteins;
     }
 

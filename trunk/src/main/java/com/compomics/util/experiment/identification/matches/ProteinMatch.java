@@ -64,6 +64,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch(Peptide peptide) {
         ArrayList<String> parentProteins = peptide.getParentProteins();
+        if (parentProteins == null || parentProteins.isEmpty()) {
+            throw new IllegalArgumentException("Peptide " + peptide.getSequence() + " presents no parent protein.");
+        }
         Collections.sort(parentProteins);
         for (String protein : parentProteins) {
             if (!theoreticProtein.contains(protein)) {

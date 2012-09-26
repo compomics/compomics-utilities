@@ -39,12 +39,15 @@ public class IdentificationDBTest {
             String peptideKey = "PEPTIDE";
             String proteinKey = "test_protein";
             SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+        ArrayList<String> testProteins = new ArrayList<String>();
+        testProteins.add("test protein1");
+        testProteins.add("test protein2");
             testSpectrumMatch.addHit(Advocate.PEPTIDE_SHAKER, new PeptideAssumption(
-                    new Peptide(peptideKey, new ArrayList<String>(), new ArrayList<ModificationMatch>()), 
+                    new Peptide(peptideKey, testProteins, new ArrayList<ModificationMatch>()), 
                     1, Advocate.PEPTIDE_SHAKER, new Charge(Charge.PLUS, 2), 0.1, "no file"));
             idDB.addSpectrumMatch(testSpectrumMatch);
 
-            PeptideMatch testPeptideMatch = new PeptideMatch(new Peptide(peptideKey, new ArrayList<String>(), new ArrayList<ModificationMatch>()));
+            PeptideMatch testPeptideMatch = new PeptideMatch(new Peptide(peptideKey, testProteins, new ArrayList<ModificationMatch>()));
             idDB.addPeptideMatch(testPeptideMatch);
 
             ProteinMatch testProteinMatch = new ProteinMatch(proteinKey);

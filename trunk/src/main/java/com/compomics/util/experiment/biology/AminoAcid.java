@@ -104,7 +104,7 @@ public abstract class AminoAcid {
      * @return the corresponding amino acid.
      */
     public static AminoAcid getAminoAcid(String aa) {
-        return getAminoAcid(aa.charAt(0));
+        return getAminoAcid(aa.toUpperCase().charAt(0));
     }
 
     /**

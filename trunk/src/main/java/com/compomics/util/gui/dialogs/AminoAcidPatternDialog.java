@@ -295,6 +295,15 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }
 
     /**
+     * indicates whether the changes have been canceled
+     *
+     * @return a boolean indicating whether the changes have been canceled
+     */
+    public boolean isCanceled() {
+        return cancel;
+    }
+
+    /**
      * Returns the given list of amino acids as a comma separated String.
      *
      * @param aminoAcids the given list of amino acids
@@ -325,12 +334,15 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         ArrayList<AminoAcid> result = new ArrayList<AminoAcid>();
         for (String aa : aminoAcids.split(", ")) {
             String input = aa.trim();
+            input = input.toUpperCase();
             if (!input.equals("")) {
-                AminoAcid aminoAcid = AminoAcid.getAminoAcid(input);
-                if (aminoAcid == null) {
-                    throw new IllegalArgumentException("Cannot parse " + input + " into an amino-acid");
-                } else {
-                    result.add(aminoAcid);
+                for (int i = 0; i < input.length(); i++) {
+                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(input.charAt(i));
+                    if (aminoAcid == null) {
+                        throw new IllegalArgumentException("Cannot parse " + input.charAt(i) + " into an amino-acid");
+                    } else {
+                        result.add(aminoAcid);
+                    }
                 }
             }
         }
@@ -412,7 +424,15 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         @Override
         public void setValueAt(Object aValue, int row, int column) {
             try {
-                ArrayList<AminoAcid> aa = getAAfromString(getValueAt(row, column).toString()); // @TODO: this doesn' actually do anything?
+                if (column == 1) {
+                    pattern.setTarget(row);
+                } else if (column == 2) {
+                    ArrayList<AminoAcid> aa = getAAfromString(aValue.toString());
+                    pattern.setTargeted(row, aa);
+                } else if (column == 3) {
+                    ArrayList<AminoAcid> aa = getAAfromString(aValue.toString());
+                    pattern.setExcluded(row, aa);
+                }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                         "Input Error", JOptionPane.ERROR_MESSAGE);

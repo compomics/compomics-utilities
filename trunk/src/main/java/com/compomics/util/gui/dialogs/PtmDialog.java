@@ -79,7 +79,11 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         this.ptmDialogParent = ptmDialogParent;
         this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
-        this.pattern = currentPtm.getPattern();
+        if (currentPTM != null) {
+            this.pattern = currentPtm.getPattern();
+        } else {
+            pattern = new AminoAcidPattern();
+        }
         this.editable = editable;
 
         initComponents();
@@ -105,7 +109,11 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
         this.editable = editable;
-        this.pattern = currentPtm.getPattern();
+        if (currentPTM != null) {
+            this.pattern = currentPtm.getPattern();
+        } else {
+            pattern = new AminoAcidPattern();
+        }
 
         initComponents();
         setUpGui();
@@ -206,7 +214,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         }
         if (name.contains(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR)) {
             String newName = name.replace(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR, "AT-AA");
-            int outcome = JOptionPane.showConfirmDialog(this,Peptide.MODIFICATION_LOCALIZATION_SEPARATOR
+            int outcome = JOptionPane.showConfirmDialog(this, Peptide.MODIFICATION_LOCALIZATION_SEPARATOR
                     + " should be avoided in modification names. Shall " + name + " be replaced by "
                     + newName + "?", "'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "' in name", JOptionPane.YES_NO_OPTION);
             if (outcome == JOptionPane.YES_OPTION) {
@@ -829,10 +837,13 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-            new AminoAcidPatternDialog(null, pattern, editable);
+            AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(null, pattern, editable);
+            if (!dialog.isCanceled()) {
+                pattern = dialog.getPattern();
+                residuesTxt.setText(pattern.toString());
+            }
         }
     }//GEN-LAST:event_residuesTxtMouseReleased
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;

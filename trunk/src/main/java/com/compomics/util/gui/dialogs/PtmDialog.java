@@ -836,7 +836,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }//GEN-LAST:event_reporterIonsTableMouseReleased
 
     private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
-        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+        if (evt.getButton() == MouseEvent.BUTTON1) {
             AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(null, pattern, editable);
             if (!dialog.isCanceled()) {
                 pattern = dialog.getPattern();
@@ -844,6 +844,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         }
     }//GEN-LAST:event_residuesTxtMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;

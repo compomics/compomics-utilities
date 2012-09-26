@@ -1,12 +1,16 @@
 package com.compomics.util.gui.dialogs;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import java.awt.Color;
+import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import java.awt.Toolkit;
 
 /**
  * This dialog allows the design and test of amino-acid patterns. (see class
@@ -28,6 +32,16 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * A boolean indicating whether the used clicked the cancel button
      */
     private boolean cancel = false;
+    /**
+     * The pattern design table column header tooltips.
+     */
+    private ArrayList<String> patternDesignTableToolTips;
+    /**
+     * The example sequence.
+     */
+    private String exampleSequence = "MKFILLWALLNLTVALAFNPDYTVSSTPPYLVYLKSDYLPCAGVLIHPLWVITAAHCNLPKLRVILGVTIPADSNEKHLQVIGYE"
+            + "KMIHHPHFSVTSIDHDIMLIKLKTEAELNDYVKLANLPYQTISENTMCSVSTWSYNVCDIYKEPDSLQTVNISVISKPQCRDAYKTYNITENMLCVGIVPGRRQPC"
+            + "KEVSAAPAICNGMLQGILSFADGCVLRADVGIYAKIFYYIPWIENVIQNN"; // @TODO: perhaps this should be saved somewhere and reused if the user changes the sequence?
 
     /**
      * Creates a new AminoAcidPatternDialog.
@@ -38,68 +52,49 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      */
     public AminoAcidPatternDialog(java.awt.Frame parent, AminoAcidPattern pattern, boolean editable) {
         super(parent, true);
-
         this.pattern = new AminoAcidPattern(pattern);
         this.editable = editable;
-
         initComponents();
-
-        if (!editable) {
-            cancelButton.setEnabled(false);
-        }
-        testPattern();
-        repaintTable();
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/compomics-utilities.png")));
+        setUpGui();
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * @param args the command line arguments
+     * Set up the GUI.
      */
-    public static void main(String args[]) {
-        /*
-         * Set the Nimbus look and feel
-         */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the
-         * default look and feel. For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AminoAcidPatternDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AminoAcidPatternDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AminoAcidPatternDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AminoAcidPatternDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void setUpGui() {
+
+        patternDesignScrollPane.getViewport().setOpaque(false);
+        patternDesignTable.getTableHeader().setReorderingAllowed(false);
+
+        // correct the color for the upper right corner
+        JPanel proteinCorner = new JPanel();
+        proteinCorner.setBackground(patternDesignTable.getTableHeader().getBackground());
+        patternDesignScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, proteinCorner);
+
+        if (!editable) {
+            cancelButton.setEnabled(false);
         }
-        //</editor-fold>
 
-        /*
-         * Create and display the dialog
-         */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        patternDesignTableToolTips = new ArrayList<String>();
+        patternDesignTableToolTips.add(null);
+        patternDesignTableToolTips.add("Reference Index");
+        patternDesignTableToolTips.add("The targeted amino acids");
+        patternDesignTableToolTips.add("The excluded amino acids");
 
-            public void run() {
-                AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(new javax.swing.JFrame(), new AminoAcidPattern(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+        // the index column
+        patternDesignTable.getColumn(" ").setMaxWidth(50);
+        patternDesignTable.getColumn(" ").setMinWidth(50);
+        patternDesignTable.getColumn("Ref").setMaxWidth(30);
+        patternDesignTable.getColumn("Ref").setMinWidth(30);
 
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-            }
-        });
+        patternDesignTable.getColumn("Ref").setCellRenderer(new NimbusCheckBoxRenderer());
+
+        patternTestEditorPane.setText(exampleSequence);
+        testPattern();
+        repaintTable();
     }
 
     /**
@@ -111,22 +106,100 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        popupJMenu = new javax.swing.JPopupMenu();
+        addJMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JSeparator();
+        moveUpJMenuItem = new javax.swing.JMenuItem();
+        moveDownJMenuItem = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JSeparator();
+        deleteSelectedRowJMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
         patternDesignPanel = new javax.swing.JPanel();
         patternDesignScrollPane = new javax.swing.JScrollPane();
-        patternDesignTable = new javax.swing.JTable();
+        patternDesignTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        return (String) patternDesignTableToolTips.get(realIndex);
+                    }
+                };
+            }
+        };
         testPanel = new javax.swing.JPanel();
-        testScrollPane = new javax.swing.JScrollPane();
-        testTxt = new javax.swing.JTextArea();
+        patternTestJScrollPane = new javax.swing.JScrollPane();
+        patternTestEditorPane = new javax.swing.JEditorPane();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        exampleButton = new javax.swing.JButton();
+        exampleLabel = new javax.swing.JLabel();
+
+        addJMenuItem.setMnemonic('A');
+        addJMenuItem.setText("Add");
+        addJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addJMenuItemActionPerformed(evt);
+            }
+        });
+        popupJMenu.add(addJMenuItem);
+        popupJMenu.add(jSeparator3);
+
+        moveUpJMenuItem.setMnemonic('U');
+        moveUpJMenuItem.setText("Move Up");
+        moveUpJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveUpJMenuItemActionPerformed(evt);
+            }
+        });
+        popupJMenu.add(moveUpJMenuItem);
+
+        moveDownJMenuItem.setMnemonic('D');
+        moveDownJMenuItem.setText("Move Down");
+        moveDownJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveDownJMenuItemActionPerformed(evt);
+            }
+        });
+        popupJMenu.add(moveDownJMenuItem);
+        popupJMenu.add(jSeparator4);
+
+        deleteSelectedRowJMenuItem.setText("Delete");
+        deleteSelectedRowJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSelectedRowJMenuItemActionPerformed(evt);
+            }
+        });
+        popupJMenu.add(deleteSelectedRowJMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Modification Pattern");
+
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         patternDesignPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pattern Design"));
+        patternDesignPanel.setOpaque(false);
+
+        patternDesignScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                patternDesignScrollPaneMouseClicked(evt);
+            }
+        });
 
         patternDesignTable.setModel(new PatternTable());
+        patternDesignTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                patternDesignTableMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                patternDesignTableMouseReleased(evt);
+            }
+        });
+        patternDesignTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                patternDesignTableKeyReleased(evt);
+            }
+        });
         patternDesignScrollPane.setViewportView(patternDesignTable);
 
         javax.swing.GroupLayout patternDesignPanelLayout = new javax.swing.GroupLayout(patternDesignPanel);
@@ -135,7 +208,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             patternDesignPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(patternDesignPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
+                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                 .addContainerGap())
         );
         patternDesignPanelLayout.setVerticalGroup(
@@ -146,33 +219,31 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        testPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Test"));
+        testPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pattern Test"));
+        testPanel.setOpaque(false);
 
-        testTxt.setColumns(20);
-        testTxt.setLineWrap(true);
-        testTxt.setRows(5);
-        testTxt.setText("MKFILLWALLNLTVALAFNPDYTVSSTPPYLVYLKSDYLPCAGVLIHPLWVITAAHCNLPKLRVILGVTIPADSNEKHLQVIGYEKMIHHPHFSVTSIDHDIMLIKLKTEAELNDYVKLANLPYQTISENTMCSVSTWSYNVCDIYKEPDSLQTVNISVISKPQCRDAYKTYNITENMLCVGIVPGRRQPCKEVSAAPAICNGMLQGILSFADGCVLRADVGIYAKIFYYIPWIENVIQNN");
-        testTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        patternTestEditorPane.setContentType("text/html");
+        patternTestEditorPane.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                testTxtKeyReleased(evt);
+                patternTestEditorPaneKeyReleased(evt);
             }
         });
-        testScrollPane.setViewportView(testTxt);
+        patternTestJScrollPane.setViewportView(patternTestEditorPane);
 
         javax.swing.GroupLayout testPanelLayout = new javax.swing.GroupLayout(testPanel);
         testPanel.setLayout(testPanelLayout);
         testPanelLayout.setHorizontalGroup(
             testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testScrollPane)
+                .addComponent(patternTestJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         testPanelLayout.setVerticalGroup(
             testPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(testPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(patternTestJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -191,11 +262,16 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             }
         });
 
-        exampleButton.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        exampleButton.setText("Example");
-        exampleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exampleButtonActionPerformed(evt);
+        exampleLabel.setText("<html>\n<a href>Show Example</a>\n</html>");
+        exampleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                exampleLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                exampleLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                exampleLabelMouseExited(evt);
             }
         });
 
@@ -209,7 +285,8 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                     .addComponent(testPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(patternDesignPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(exampleButton)
+                        .addGap(10, 10, 10)
+                        .addComponent(exampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -223,15 +300,16 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 .addComponent(patternDesignPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(testPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exampleButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(exampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
-        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cancelButton, exampleButton, okButton});
+        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cancelButton, okButton});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,8 +331,12 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-//@TODO validate input and make sure that the targeted index has no rejected amino acid
-        dispose();
+
+        boolean valid = validateInput();
+
+        if (valid) {
+            dispose();
+        }
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -268,22 +350,181 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void exampleLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exampleLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_exampleLabelMouseEntered
+
+    /**
+     * Change the cursor bck to the default cursor.
+     *
+     * @param evt
+     */
+    private void exampleLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exampleLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_exampleLabelMouseExited
+
+    /**
      * Open an example pattern.
      *
      * @param evt
      */
-    private void exampleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exampleButtonActionPerformed
+    private void exampleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exampleLabelMouseClicked
         new AminoAcidPatternDialog(null, AminoAcidPattern.getTrypsinExample(), false);
-    }//GEN-LAST:event_exampleButtonActionPerformed
+    }//GEN-LAST:event_exampleLabelMouseClicked
 
     /**
-     * Test the current pattern.
+     * Move the selected row one row up.
      *
      * @param evt
      */
-    private void testTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_testTxtKeyReleased
+    private void moveUpJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpJMenuItemActionPerformed
+        
+        // @TODO: don't know how to implement this...
+        
+//        int selectedRow = patternDesignTable.getSelectedRow();
+//        int selectedColumn = patternDesignTable.getSelectedColumn();
+//
+//        Object[] tempRow = new Object[]{
+//            patternDesignTable.getValueAt(selectedRow - 1, 0),
+//            patternDesignTable.getValueAt(selectedRow - 1, 1),
+//            patternDesignTable.getValueAt(selectedRow - 1, 2),
+//            patternDesignTable.getValueAt(selectedRow - 1, 3)
+//        };
+//
+//        ((DefaultTableModel) patternDesignTable.getModel()).removeRow(selectedRow - 1);
+//        ((DefaultTableModel) patternDesignTable.getModel()).insertRow(selectedRow, tempRow);
+//
+//        patternDesignTable.changeSelection(selectedRow - 1, selectedColumn, false, false);
+    }//GEN-LAST:event_moveUpJMenuItemActionPerformed
+
+    /**
+     * Move the selected row one row down.
+     *
+     * @param evt
+     */
+    private void moveDownJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownJMenuItemActionPerformed
+        
+        // @TODO: don't know how to implement this...
+        
+//        int selectedRow = patternDesignTable.getSelectedRow();
+//        int selectedColumn = patternDesignTable.getSelectedColumn();
+//
+//        Object[] tempRow = new Object[]{
+//            patternDesignTable.getValueAt(selectedRow + 1, 0),
+//            patternDesignTable.getValueAt(selectedRow + 1, 1),
+//            patternDesignTable.getValueAt(selectedRow + 1, 2),
+//            patternDesignTable.getValueAt(selectedRow + 1, 3)
+//        };
+//
+//        ((DefaultTableModel) patternDesignTable.getModel()).removeRow(selectedRow + 1);
+//        ((DefaultTableModel) patternDesignTable.getModel()).insertRow(selectedRow, tempRow);
+//
+//        patternDesignTable.changeSelection(selectedRow + 1, selectedColumn, false, false);
+    }//GEN-LAST:event_moveDownJMenuItemActionPerformed
+
+    /**
+     * Delets the selected row.
+     * 
+     * @param evt 
+     */
+    private void deleteSelectedRowJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedRowJMenuItemActionPerformed
+
+        int selectedRow = patternDesignTable.getSelectedRow();
+
+        if (selectedRow != -1) {
+            pattern.removeAA(selectedRow);
+            repaintTable();
+            testPattern();
+            validateInput();
+        }
+    }//GEN-LAST:event_deleteSelectedRowJMenuItemActionPerformed
+
+    /**
+     * Adds a new row to the list.
+     * 
+     * @param evt 
+     */
+    private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
+        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<AminoAcid>());
+        repaintTable();
+    }//GEN-LAST:event_addJMenuItemActionPerformed
+
+    /**
+     * Test the pattern.
+     * 
+     * @param evt 
+     */
+    private void patternDesignTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_patternDesignTableKeyReleased
         testPattern();
-    }//GEN-LAST:event_testTxtKeyReleased
+    }//GEN-LAST:event_patternDesignTableKeyReleased
+
+    /**
+     * Test the pattern.
+     * 
+     * @param evt 
+     */
+    private void patternDesignTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignTableMouseReleased
+        testPattern();
+    }//GEN-LAST:event_patternDesignTableMouseReleased
+
+    /**
+     * Show the popup menu.
+     * 
+     * @param evt
+     */
+    private void patternDesignTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignTableMouseClicked
+         if (evt.getButton() == 3) {
+
+            int selectedRow = patternDesignTable.rowAtPoint(evt.getPoint());
+            int column = patternDesignTable.columnAtPoint(evt.getPoint());
+
+            patternDesignTable.changeSelection(selectedRow, column, false, false);
+
+            moveUpJMenuItem.setEnabled(false);
+            moveDownJMenuItem.setEnabled(false);
+            deleteSelectedRowJMenuItem.setEnabled(true);
+            
+            if (selectedRow > 1) {
+                moveUpJMenuItem.setEnabled(true);
+            }
+            
+            if (selectedRow < patternDesignTable.getRowCount()) {
+                this.moveDownJMenuItem.setEnabled(true);
+            }
+
+            popupJMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_patternDesignTableMouseClicked
+
+    /**
+     * Show the popup menu.
+     * 
+     * @param evt
+     */
+    private void patternDesignScrollPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignScrollPaneMouseClicked
+        if (evt.getButton() == 3) {
+            if (patternDesignTable.getSelectedRow() == -1) {
+                moveUpJMenuItem.setEnabled(false);
+                moveDownJMenuItem.setEnabled(false);
+                deleteSelectedRowJMenuItem.setEnabled(false);
+            }
+            
+            popupJMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_patternDesignScrollPaneMouseClicked
+
+    /**
+     * Test the pattern.
+     * 
+     * @param evt 
+     */
+    private void patternTestEditorPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_patternTestEditorPaneKeyReleased
+        testPattern();
+    }//GEN-LAST:event_patternTestEditorPaneKeyReleased
 
     /**
      * Returns the pattern as edited by the user.
@@ -350,30 +591,35 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Tests the pattern on the test text and puts a '*' every time the pattern
-     * is found.
+     * Tests the pattern on the test text and puts highlights the text every
+     * time the pattern is found.
      */
     private void testPattern() {
 
-        // @TODO: replace the stars with color
+        String tempSequence = patternTestEditorPane.getText();
+        int caretPosition = patternTestEditorPane.getCaretPosition();
 
-        String txt = testTxt.getText();
-        ArrayList<Integer> indexes = pattern.getIndexes(txt);
-        if (indexes.isEmpty()) {
-            return;
+        // remove html tags
+        if (tempSequence.indexOf("<html>") != -1) {
+            tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
-        indexes.add(0);
-        Collections.sort(indexes);
+
+        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence);
+
         String result = "";
-        for (int i = 0; i < indexes.size() - 1; i++) {
-            String temp = txt.substring(indexes.get(i), indexes.get(i + 1));
-            if (!temp.endsWith("*")) {
-                temp += "*";
+
+        for (int i = 0; i < tempSequence.length(); i++) {
+            if (indexes.contains(i)) {
+                result += "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(Color.BLUE) + "\">";
+            } else {
+                result += "<span style=\"color:#" + Util.color2Hex(Color.BLACK) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">";
             }
-            result += temp;
+            result += tempSequence.charAt(i);
+            result += "</span>";
         }
-        result += txt.substring(indexes.get(indexes.size() - 1));
-        testTxt.setText(result);
+
+        patternTestEditorPane.setText(result);
+        patternTestEditorPane.setCaretPosition(caretPosition);
     }
 
     /**
@@ -394,6 +640,8 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         @Override
         public String getColumnName(int column) {
             switch (column) {
+                case 0:
+                    return " ";
                 case 1:
                     return "Ref";
                 case 2:
@@ -475,16 +723,35 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             }
         });
     }
+
+    /**
+     * Validates the input.
+     *
+     * @return true if the input is valid.
+     */
+    private boolean validateInput() {
+
+        // @TODO: validate input and make sure that the targeted index has no rejected amino acid
+
+        return true;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addJMenuItem;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton exampleButton;
+    private javax.swing.JMenuItem deleteSelectedRowJMenuItem;
+    private javax.swing.JLabel exampleLabel;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JMenuItem moveDownJMenuItem;
+    private javax.swing.JMenuItem moveUpJMenuItem;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel patternDesignPanel;
     private javax.swing.JScrollPane patternDesignScrollPane;
     private javax.swing.JTable patternDesignTable;
+    private javax.swing.JEditorPane patternTestEditorPane;
+    private javax.swing.JScrollPane patternTestJScrollPane;
+    private javax.swing.JPopupMenu popupJMenu;
     private javax.swing.JPanel testPanel;
-    private javax.swing.JScrollPane testScrollPane;
-    private javax.swing.JTextArea testTxt;
     // End of variables declaration//GEN-END:variables
 }

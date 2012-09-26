@@ -6,7 +6,6 @@ import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.ImmoniumIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.UtilitiesGUIDefaults;

@@ -248,7 +248,7 @@ public class Util {
                     if (tempValue.indexOf("<html>") != -1 && removeHtml) {
                         tempValue = tempValue.replaceAll("\\<[^>]*>", "");
                     }
-                    
+
                     tableAsString += tempValue + separator;
                 } else {
                     tableAsString += separator;

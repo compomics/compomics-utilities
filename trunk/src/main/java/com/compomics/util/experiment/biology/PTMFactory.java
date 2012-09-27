@@ -172,7 +172,7 @@ public class PTMFactory implements Serializable {
                 omssaIndexes.put(newName, new ArrayList<Integer>());
             }
 
-            if (omssaIndexes.get(oldName) != null) { // @TODO: verify that  is correct. if not included one can only open one project in reporter before having to restart reporter...
+            if (omssaIndexes.get(oldName) != null) { // @TODO: verify that is correct. if not included one can only open one project in reporter before having to restart reporter...
                 omssaIndexes.get(newName).addAll(omssaIndexes.get(oldName));
                 omssaIndexes.remove(oldName);
             }
@@ -425,7 +425,7 @@ public class PTMFactory implements Serializable {
             }
         }
         // Create and implement modification.
-        AminoAcidPattern pattern = new AminoAcidPattern(residues);
+        AminoAcidPattern pattern = new AminoAcidPattern(residues); // @TODO: this completly ignores user defined patterens!!
         PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), pattern);
 
         while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_neutralloss"))

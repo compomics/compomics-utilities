@@ -30,7 +30,7 @@ import org.jfree.chart.plot.PlotOrientation;
  * 
  * @author Harald Barsnes
  */
-public class ModificationsDialog extends javax.swing.JDialog {
+public class ModificationsDialog extends javax.swing.JDialog implements PtmDialogParent {
 
     /**
      * The post translational modifications factory.
@@ -39,7 +39,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     /**
      * The dialog parent.
      */
-    private PtmDialogParent dialogParent;
+    private PtmDialogParent ptmDialogParent;
     /**
      * The PSI-MOD mappings.
      */
@@ -88,7 +88,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     public ModificationsDialog(Frame parentFrame, PtmDialogParent parent, boolean modal) {
         super(parentFrame, modal);
-        dialogParent = parent;
+        ptmDialogParent = parent;
         initComponents();
         
         // set up tables
@@ -101,8 +101,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        
+
         searchInputTxt.setText(searchWelcomeText);
         searchIndexLabel.setText("");
         searchPreviousButton.setEnabled(false);
@@ -291,8 +290,13 @@ public class ModificationsDialog extends javax.swing.JDialog {
         });
         userPtmPopupMenu.add(editUserPtmJMenuItem);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Modification Details");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         modificationsEditorPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -530,7 +534,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(modificationsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 757, Short.MAX_VALUE)
+                .addComponent(modificationsSplitPane)
                 .addContainerGap())
         );
         modificationsEditorPanelLayout.setVerticalGroup(
@@ -571,7 +575,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
-            new PtmDialog(this, dialogParent, ptmToPrideMap, ptm, false);
+            new PtmDialog(this, this, ptmToPrideMap, ptm, false);
         }
     }//GEN-LAST:event_defaultModificationsTableMouseClicked
 
@@ -774,11 +778,13 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void userModificationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON3) {
             userModificationsTable.setRowSelectionInterval(userModificationsTable.rowAtPoint(evt.getPoint()), userModificationsTable.rowAtPoint(evt.getPoint()));
+            editUserPTM.setEnabled(true);
+            deleteUserPTM.setEnabled(true);
             userPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
-            new PtmDialog(this, dialogParent, ptmToPrideMap, ptm, true);
+            new PtmDialog(this, this, ptmToPrideMap, ptm, true);
         }
     }//GEN-LAST:event_userModificationsTableMouseClicked
 
@@ -874,7 +880,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int row = userModificationsTable.getSelectedRow();
         String ptmName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        new PtmDialog(this, dialogParent, ptmToPrideMap, ptm, true);
+        new PtmDialog(this, this, ptmToPrideMap, ptm, true);
     }//GEN-LAST:event_editUserPTMActionPerformed
 
     /**
@@ -884,7 +890,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
         if (ptmFactory.getUserModifications().size() < 30) {
-            new PtmDialog(this, dialogParent, ptmToPrideMap, null, true);
+            new PtmDialog(this, this, ptmToPrideMap, null, true);
         } else {
             JOptionPane.showMessageDialog(this, "In order to ensure compatibility with OMSSA, only 30 user modifications can be implemented. Please delete unused modifications.",
                     "Too many modifications", JOptionPane.WARNING_MESSAGE);
@@ -931,7 +937,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void editDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDefaultPtmJMenuItemActionPerformed
         String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        new PtmDialog(this, dialogParent, ptmToPrideMap, ptm, false);
+        new PtmDialog(this, this, ptmToPrideMap, ptm, false);
     }//GEN-LAST:event_editDefaultPtmJMenuItemActionPerformed
 
     /**
@@ -942,8 +948,19 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
         String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        new PtmDialog(this, dialogParent, ptmToPrideMap, ptm, true);
+        new PtmDialog(this, this, ptmToPrideMap, ptm, true);
     }//GEN-LAST:event_editUserPtmJMenuItemActionPerformed
+
+    /**
+     * Save the ptm details.
+     * 
+     * @param evt 
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        ptmDialogParent.updateModifications();
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addUserPTM;
     private javax.swing.JTable defaultModificationsTable;
@@ -1166,7 +1183,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the modification lists and tables
+     * Updates the modification lists and tables.
      */
     public void updateModifications() {
         DefaultTableModel dm = (DefaultTableModel) defaultModificationsTable.getModel();
@@ -1179,7 +1196,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }
     
     /**
-     * Updates the PTM selection in the default table
+     * Updates the PTM selection in the default table.
      */
     public void updatePtmSelection() {
         int row = defaultModificationsTable.convertRowIndexToView(searchPossibilities.get(searchCurrentSelection));

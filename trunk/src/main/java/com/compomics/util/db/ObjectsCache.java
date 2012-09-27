@@ -237,7 +237,7 @@ public class ObjectsCache {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store in the cache
-     * @param modifiedEntry true if the object is modified or new
+     * @param modifiedOrNew true if the object is modified or new
      * @throws IOException
      * @throws SQLException
      */

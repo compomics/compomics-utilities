@@ -835,6 +835,11 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         removerReporterIon.setEnabled(row != -1);
     }//GEN-LAST:event_reporterIonsTableMouseReleased
 
+    /**
+     * Open the amino acid pattern dialog.
+     * 
+     * @param evt 
+     */
     private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1) {
             AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(null, pattern, editable);

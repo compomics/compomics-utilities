@@ -225,9 +225,9 @@ public class PTMLocationScores {
 
             for (int i = 1; i <= 10; i++) {
                 try {
-                diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+                    diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
                 } catch (Exception e) {
-                diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+                    diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
                 }
                 if (diff >= maxDiff) {
                     bestI = i - 1;

@@ -45,7 +45,7 @@ public abstract class Identification extends ExperimentObject {
      */
     protected ArrayList<String> peptideIdentification = new ArrayList<String>();
     /**
-     * List of all imported psms indexed by mgf file name
+     * List of all imported psms indexed by mgf file name.
      */
     protected HashMap<String, ArrayList<String>> spectrumIdentificationMap = new HashMap<String, ArrayList<String>>();
     /**
@@ -55,7 +55,7 @@ public abstract class Identification extends ExperimentObject {
      */
     protected ArrayList<String> spectrumIdentification = new ArrayList<String>();
     /**
-     * a map linking protein accessions to all their protein matches keys.
+     * A map linking protein accessions to all their protein matches keys.
      */
     protected HashMap<String, ArrayList<String>> proteinMap = new HashMap<String, ArrayList<String>>();
     /**
@@ -63,7 +63,7 @@ public abstract class Identification extends ExperimentObject {
      */
     protected int methodUsed;
     /**
-     * the directory where matches will be serialized/the database stored
+     * The directory where matches will be serialized/the database stored.
      */
     protected String serializationDirectory;
     /**
@@ -85,16 +85,16 @@ public abstract class Identification extends ExperimentObject {
      */
     private Boolean isDB = true;
     /**
-     * the identificationDB object interacting with the database
+     * The identificationDB object interacting with the database.
      */
     private IdentificationDB identificationDB;
     /**
-     * The reference of the identification
+     * The reference of the identification.
      */
     protected String reference;
 
     /**
-     * Returns the mgf files used in the spectrum identification map as a list
+     * Returns the mgf files used in the spectrum identification map as a list.
      *
      * @return the mgf files used in the spectrum identification map
      */
@@ -103,7 +103,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the number of spectrum identifications
+     * Returns the number of spectrum identifications.
      *
      * @return the number of spectrum identifications
      */
@@ -857,7 +857,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the spectrum identifications for a given spectrum file name
+     * Returns the spectrum identifications for a given spectrum file name.
      *
      * @param spectrumFile the name of the spectrum file
      * @return the corresponding list of identifications
@@ -867,7 +867,8 @@ public abstract class Identification extends ExperimentObject {
     }
     
     /**
-     * Returns the keys of all identified spectra indexed by the spectrum file
+     * Returns the keys of all identified spectra indexed by the spectrum file.
+     * 
      * @return the keys of all identified spectra indexed by the spectrum file
      */
     public HashMap<String, ArrayList<String>> getSpectrumIdentificationMap() {
@@ -875,7 +876,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds a spectrum match to the identification
+     * Adds a spectrum match to the identification.
      *
      * @param newMatch the new match
      * @throws FileNotFoundException exception thrown whenever an error occurred

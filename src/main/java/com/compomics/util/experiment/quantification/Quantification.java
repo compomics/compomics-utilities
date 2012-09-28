@@ -244,7 +244,7 @@ public abstract class Quantification extends ExperimentObject {
         }
 
         ProteinQuantification tempProteinQuantification;
-identification.loadProteinMatches(null);
+        identification.loadProteinMatches(null);
         for (String proteinKey : identification.getProteinIdentification()) {
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
             if (proteinMatch == null) {

@@ -482,4 +482,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     public void setWaitingText(String text) {
         // ignore, not implemented for this waiting handler
     }
+
+    @Override
+    public JProgressBar getPrimaryProgressBar() {
+        return progressBar;
+    }
 }

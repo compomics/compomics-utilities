@@ -113,6 +113,13 @@ public interface WaitingHandler {
     public JProgressBar getSecondaryProgressBar();
 
     /**
+     * Returns the primary progress bar for updates from external processes.
+     *
+     * @return the primary progress bar, can be null
+     */
+    public JProgressBar getPrimaryProgressBar();
+
+    /**
      * Display a given message to the user separatly from the main output. For
      * example a warning or error message. Usually in a separate dialog if a
      * grahical waiting handler is used.

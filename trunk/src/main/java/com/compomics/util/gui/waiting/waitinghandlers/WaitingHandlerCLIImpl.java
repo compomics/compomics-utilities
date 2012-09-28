@@ -241,4 +241,9 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
         displayMessage("WaitingMessage", text, 1);
 
     }
+
+    @Override
+    public JProgressBar getPrimaryProgressBar() {
+        throw new UnsupportedOperationException("This waiting handler has no progress bar.");
+    }
 }

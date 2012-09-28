@@ -1097,4 +1097,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         return output.toString();
     }
+
+    @Override
+    public JProgressBar getPrimaryProgressBar() {
+        return progressBar;
+    }
 }

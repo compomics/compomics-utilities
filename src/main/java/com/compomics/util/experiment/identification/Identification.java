@@ -11,7 +11,6 @@ import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.waiting.WaitingHandler;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.SQLException;
 
@@ -167,7 +166,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param fileName the file name
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -175,8 +174,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadSpectrumMatchParameters(fileName, urParameter, progressDialog);
+    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadSpectrumMatchParameters(fileName, urParameter, waitingHandler);
     }
 
     /**
@@ -185,7 +184,7 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumKeys the key of the spectrum match of the parameters to be
      * loaded
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -193,8 +192,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, progressDialog);
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, waitingHandler);
     }
 
     /**
@@ -202,7 +201,7 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -210,8 +209,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadPeptideMatchParameters(urParameter, progressDialog);
+    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatchParameters(urParameter, waitingHandler);
     }
 
     /**
@@ -220,7 +219,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -228,8 +227,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, progressDialog);
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler);
     }
 
     /**
@@ -237,7 +236,7 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param peptideKeys the list of peptide keys to load
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -245,8 +244,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatches(ArrayList<String> peptideKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadPeptideMatches(peptideKeys, progressDialog);
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatches(peptideKeys, waitingHandler);
     }
 
     /**
@@ -254,7 +253,7 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -262,14 +261,14 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadProteinMatchParameters(urParameter, progressDialog);
+    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadProteinMatchParameters(urParameter, waitingHandler);
     }
 
     /**
      * Loads all protein matches in the cache of the database.
      *
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -277,15 +276,15 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadProteinMatches(progressDialog);
+    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadProteinMatches(waitingHandler);
     }
 
 
     /**
      * Loads all peptide matches in the cache of the database.
      *
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -293,15 +292,15 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadPeptideMatches(progressDialog);
+    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadPeptideMatches(waitingHandler);
     }
     
     /**
      * Loads all spectrum matches of the file in the cache of the database
      *
      * @param fileName the file name
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -309,15 +308,15 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatches(String fileName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadSpectrumMatches(fileName, progressDialog);
+    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadSpectrumMatches(fileName, waitingHandler);
     }
 
     /**
      * Loads the given spectrum matches in the cache of the database.
      *
      * @param spectrumKeys the spectrum keys
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -325,8 +324,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        identificationDB.loadSpectrumMatches(spectrumKeys, progressDialog);
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler);
     }
 
     /**
@@ -1199,7 +1198,7 @@ public abstract class Identification extends ExperimentObject {
      * Converts a serlialization based structure into a database based one.
      * Replaces the space separation by the standard separator.
      *
-     * @param progressDialog a dialog to give progress feedback to the user
+     * @param waitingHandler the waiting handler
      * @param newDirectory the new directory where to store the data
      * @param newName
      * @param objectsCache
@@ -1212,7 +1211,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
      */
-    public void convert(ProgressDialogX progressDialog, String newDirectory, String newName, ObjectsCache objectsCache) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
         reference = newName;
         establishConnection(newDirectory, true, objectsCache);
@@ -1223,9 +1222,9 @@ public abstract class Identification extends ExperimentObject {
         for (HashMap<String, UrParameter> map : urParameters.values()) {
             nParameters += map.size();
         }
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setMaxProgressValue(files.length + nParameters);
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressValue(files.length + nParameters);
         }
 
         for (File file : files) {
@@ -1248,9 +1247,9 @@ public abstract class Identification extends ExperimentObject {
                     throw new SQLException("Error while writing match " + match.getKey() + " in the database.");
                 }
             }
-            if (progressDialog != null) {
-                progressDialog.increaseProgressValue();
-                if (progressDialog.isRunCanceled()) {
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
                     break;
                 }
             }
@@ -1267,16 +1266,16 @@ public abstract class Identification extends ExperimentObject {
                     addSpectrumMatchParameter(matchKey, urParameter);
                 }
             }
-            if (progressDialog != null) {
-                progressDialog.increaseProgressValue();
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
             }
-            if (progressDialog.isRunCanceled()) {
+            if (waitingHandler.isRunCanceled()) {
                 break;
             }
         }
         urParameters.clear();
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(true);
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
         }
         Util.deleteDir(directory);
         ArrayList<String> oldProteinKeys = new ArrayList<String>(proteinIdentification);

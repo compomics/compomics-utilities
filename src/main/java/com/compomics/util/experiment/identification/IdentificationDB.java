@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -435,7 +435,7 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -443,9 +443,9 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getPeptideParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, progressDialog);
+        objectsDB.loadObjects(tableName, waitingHandler);
     }
 
     /**
@@ -454,7 +454,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -462,14 +462,14 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setValue(0);
-            progressDialog.setMaxProgressValue(peptideKeys.size());
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(peptideKeys.size());
         }
         String tableName = getPeptideParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, peptideKeys, progressDialog);
+        objectsDB.loadObjects(tableName, peptideKeys, waitingHandler);
     }
 
     /**
@@ -477,7 +477,7 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param peptideKeys the list of peptide keys to load
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -485,13 +485,13 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatches(ArrayList<String> peptideKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setValue(0);
-            progressDialog.setMaxProgressValue(peptideKeys.size());
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(peptideKeys.size());
         }
-        objectsDB.loadObjects(peptideTableName, peptideKeys, progressDialog);
+        objectsDB.loadObjects(peptideTableName, peptideKeys, waitingHandler);
     }
 
     /**
@@ -499,7 +499,7 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -507,16 +507,15 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatchParameters(UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getProteinParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, progressDialog);
+        objectsDB.loadObjects(tableName, waitingHandler);
     }
 
     /**
-     * Loads all protein matches in the cache of the
-     * database.
+     * Loads all protein matches in the cache of the database.
      *
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -524,16 +523,14 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        objectsDB.loadObjects(proteinTableName, progressDialog);
+    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        objectsDB.loadObjects(proteinTableName, waitingHandler);
     }
-    
 
     /**
-     * Loads all peptide matches in the cache of the
-     * database.
+     * Loads all peptide matches in the cache of the database.
      *
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -541,17 +538,16 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatches(ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        objectsDB.loadObjects(peptideTableName, progressDialog);
+    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        objectsDB.loadObjects(peptideTableName, waitingHandler);
     }
-    
 
     /**
      * Loads all spectrum matches of the given file in the cache of the
      * database.
      *
      * @param fileName the file name
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -559,17 +555,17 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatches(String fileName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getSpectrumMatchTable(testKey);
-        objectsDB.loadObjects(tableName, progressDialog);
+        objectsDB.loadObjects(tableName, waitingHandler);
     }
 
     /**
      * Loads all given spectrum matches in the cache of the database.
      *
      * @param spectrumKeys the key of the spectrum matches to be loaded
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -577,11 +573,11 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setValue(0);
-            progressDialog.setMaxProgressValue(2 * spectrumKeys.size());
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(2 * spectrumKeys.size());
         }
         HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
         for (String spectrumKey : spectrumKeys) {
@@ -590,15 +586,15 @@ public class IdentificationDB implements Serializable {
                 sortedKeys.put(tableName, new ArrayList<String>());
             }
             sortedKeys.get(tableName).add(spectrumKey);
-            if (progressDialog != null) {
-            progressDialog.increaseProgressValue();
-            if (progressDialog.isRunCanceled()) {
-                break;
-            }
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), progressDialog);
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
         }
     }
 
@@ -608,7 +604,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param fileName the file name
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -616,10 +612,10 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getSpectrumParameterTable(testKey, urParameter);
-        objectsDB.loadObjects(tableName, progressDialog);
+        objectsDB.loadObjects(tableName, waitingHandler);
     }
 
     /**
@@ -628,7 +624,7 @@ public class IdentificationDB implements Serializable {
      * @param spectrumKeys the key of the spectrum match of the parameters to be
      * loaded
      * @param urParameter the parameter type
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -636,11 +632,11 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(false);
-            progressDialog.setValue(0);
-            progressDialog.setMaxProgressValue(2 * spectrumKeys.size());
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(2 * spectrumKeys.size());
         }
         HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
         for (String spectrumKey : spectrumKeys) {
@@ -649,15 +645,15 @@ public class IdentificationDB implements Serializable {
                 sortedKeys.put(tableName, new ArrayList<String>());
             }
             sortedKeys.get(tableName).add(spectrumKey);
-            if (progressDialog != null) {
-            progressDialog.increaseProgressValue();
-            if (progressDialog.isRunCanceled()) {
-                break;
-            }
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), progressDialog);
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
         }
     }
 

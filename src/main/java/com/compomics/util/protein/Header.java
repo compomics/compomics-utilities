@@ -23,6 +23,7 @@ import java.util.StringTokenizer;
  * Note that the Header class is it's own factory, and should be used as such.
  *
  * @author Lennart Martens
+ * @author Harald Barsnes
  */
 public class Header implements Cloneable, Serializable {
 
@@ -92,6 +93,21 @@ public class Header implements Cloneable, Serializable {
      * The description is the third element (and final) in the abbreviated header String.
      */
     private String iDescription = null;
+    /**
+     * The name of the gene the protein comes from. Note that this is only available for 
+     * UniProt-based databases.
+     */
+    private String iGeneName = null;
+    /**
+     * The protein evidence for the protein. Note that this is only available for 
+     * UniProt-based databases.
+     */
+    private String iProteinEvidence = null;
+    /**
+     * The name of the taxonomy the protein comes from. Note that this is only available for 
+     * UniProt-based databases.
+     */
+    private String iTaxonomy = null;
     /**
      * The foreign Description is a description for an entry in another DB.
      * Most notably, the SwissProt short description for an entry that is found within
@@ -179,6 +195,10 @@ public class Header implements Cloneable, Serializable {
                             result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         result.iDescription = lSt.nextToken();
+                        
+                        // try to get the gene name and taxonomy from the description
+                        parseUniProtDescription(result);
+
                         // If there are any more elements, add them to the 'rest' section.
                         if (lSt.hasMoreTokens()) {
                             StringBuffer lBuffer = new StringBuffer();
@@ -493,6 +513,10 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end + 2);
+
+                    // try to get the gene name and taxonomy
+                    //parseUniProtDescription(result);  // @TOOD: not sure if the header has the right format...
+
                 } else if (aFASTAHeader.matches("^sp\\|[^|\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -510,6 +534,10 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
+                    
+                    // try to get the gene name and taxonomy
+                    parseUniProtDescription(result);
+                    
                 } else if (aFASTAHeader.matches("^tr\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -532,6 +560,10 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "tr";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
+                    
+                    // try to get the gene name and taxonomy
+                    parseUniProtDescription(result);
+                    
                 } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -548,6 +580,9 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
+                    
+                    // try to get the gene name and taxonomy
+                    parseUniProtDescription(result);
                 } else if (aFASTAHeader.matches("^FB.+\\stype=.*")) {
                     // Flybase FASTA format.
                     // Accession number
@@ -842,6 +877,30 @@ public class Header implements Cloneable, Serializable {
 
     public void setDescription(String aDescription) {
         iDescription = aDescription;
+    }
+    
+    public String getGeneName() {
+        return iGeneName;
+    }
+
+    public void setGeneName(String aGeneName) {
+        iGeneName = aGeneName;
+    }
+    
+    public String getProteinEvidence() {
+        return iProteinEvidence;
+    }
+
+    public void setProteinEvidence(String aProteinEvidence) {
+        iProteinEvidence = aProteinEvidence;
+    }
+    
+    public String getTaxonomy() {
+        return iTaxonomy;
+    }
+
+    public void setTaxonomy(String aTaxonomy) {
+        iTaxonomy = aTaxonomy;
     }
 
     public String getForeignDescription() {
@@ -1168,5 +1227,54 @@ public class Header implements Cloneable, Serializable {
             logger.error(cnse.getMessage(), cnse);
         }
         return result;
+    }
+    
+    /**
+     * Tries to extract the gene name, taxonomy and the protein evidence level from a UniProt description.
+     * 
+     * @param header the header to parse.
+     */
+    private static void parseUniProtDescription (Header header) {
+        // try to get the gene name from the description
+        if (header.iDescription.indexOf(" GN=") != -1) {
+            int geneStartIndex = header.iDescription.indexOf(" GN=") + 4;
+            int geneEndIndex = header.iDescription.indexOf(" ", geneStartIndex);
+            
+            if (geneEndIndex != -1) {
+                header.iGeneName = header.iDescription.substring(geneStartIndex, geneEndIndex);
+            } else {
+                header.iGeneName = header.iDescription.substring(geneStartIndex);
+            }
+        }
+        
+        // try to get the protein evidence level from the description
+        if (header.iDescription.indexOf(" PE=") != -1) {
+            int evidenceStartIndex = header.iDescription.indexOf(" PE=") + 4;
+            int evidenceEndIndex = header.iDescription.indexOf(" ", evidenceStartIndex);
+            
+            if (evidenceEndIndex != -1) {
+                header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex, evidenceEndIndex);
+            } else {
+                header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex);
+            }
+            
+            // http://www.uniprot.org/manual/protein_existence
+        }
+
+        // try to get the taxonomy name from the description
+        if (header.iDescription.indexOf(" OS=") != -1) {
+            int taxonomyStartIndex = header.iDescription.indexOf(" OS=") + 4;
+            int taxonomyEndIndex = header.iDescription.indexOf(" GN=");
+            
+            // have to check if gene name is in the header
+            if (taxonomyEndIndex == -1) {
+                taxonomyEndIndex = header.iDescription.indexOf(" PE=");
+            }
+
+            header.iTaxonomy = header.iDescription.substring(taxonomyStartIndex, taxonomyEndIndex);
+
+            // now we could also shorten the protein description
+            // header.iDescription = header.iDescription.substring(0, taxonomyStartIndex - 1); // @TODO: if implemented we also have to update the tests
+        }
     }
 }

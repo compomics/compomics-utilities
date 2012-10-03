@@ -78,7 +78,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the accessions of the possible theoretic proteins
+     * Returns the accessions of the possible theoretic proteins.
      *
      * @return the accessions of the possible theoretic proteins
      */
@@ -87,7 +87,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * setter for the matching protein
+     * Setter for the matching protein.
      *
      * @param proteinAccession the matching protein
      */
@@ -96,7 +96,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the main match accession after protein inference
+     * Returns the main match accession after protein inference.
      *
      * @return the main match accession after protein inference
      */
@@ -105,7 +105,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Sets the main protein accession after protein inference
+     * Sets the main protein accession after protein inference.
      *
      * @param mainMatch the main match
      */

@@ -2,7 +2,6 @@ package com.compomics.util.db;
 
 import com.compomics.util.Util;
 import com.compomics.util.gui.waiting.WaitingHandler;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -263,7 +262,7 @@ public class ObjectsDB implements Serializable {
      * Loads all objects from a table in the cache.
      *
      * @param tableName the table name
-     * @param progressDialog the progress dialog
+     * @param waitingHandler the waiting handler
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -271,14 +270,14 @@ public class ObjectsDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadObjects(String tableName, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+    public void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
 
         if (debugInteractions) {
             System.out.println("getting table objects, table:" + tableName);
         }
         ResultSet results;
-        if (progressDialog != null) {
-            progressDialog.setIndeterminate(true);
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
 
             // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
             Statement rowCountStatement = dbConnection.createStatement();
@@ -286,18 +285,18 @@ public class ObjectsDB implements Serializable {
             results.next();
             Integer numberOfRows = results.getInt(1);
 
-            progressDialog.setIndeterminate(false);
-            progressDialog.setValue(0);
-            progressDialog.setMaxProgressValue(numberOfRows);
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(numberOfRows);
         }
         Statement stmt = dbConnection.createStatement();
         results = stmt.executeQuery("select * from " + tableName);
 
         while (results.next()) {
 
-            if (progressDialog != null) {
-                progressDialog.increaseProgressValue();
-                if (progressDialog.isRunCanceled()) {
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
                     break;
                 }
             }
@@ -324,7 +323,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table name
      * @param keys the keys of the objects to load
-     * @param progressDialog the progress dialog, will only be increased
+     * @param waitingHandler the waiting handler, will only be increased
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -332,7 +331,7 @@ public class ObjectsDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadObjects(String tableName, ArrayList<String> keys, ProgressDialogX progressDialog) throws SQLException, IOException, ClassNotFoundException {
+    public void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
 
         if (debugInteractions) {
             System.out.println("getting " + keys.size() + " objects, table:" + tableName);
@@ -347,7 +346,7 @@ public class ObjectsDB implements Serializable {
         if (!toLoad.isEmpty()) {
 
             Statement stmt = dbConnection.createStatement();
-            ResultSet results = stmt.executeQuery("select * from " + tableName); //@TODO: is it faster to query only the toLoad objects?
+            ResultSet results = stmt.executeQuery("select * from " + tableName); // @TODO: is it faster to query only the toLoad objects?
 
             int found = 0;
 
@@ -363,11 +362,11 @@ public class ObjectsDB implements Serializable {
                     in.close();
 
                     objectsCache.addObject(dbName, tableName, key, object, false);
-                    if (progressDialog != null) {
-                        progressDialog.increaseProgressValue();
+                    if (waitingHandler != null) {
+                        waitingHandler.increaseSecondaryProgressValue();
                     }
                 }
-                if (progressDialog != null && progressDialog.isRunCanceled()) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     break;
                 }
             }

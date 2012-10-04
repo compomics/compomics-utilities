@@ -1,8 +1,13 @@
 package com.compomics.software;
 
+import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.*;
+import java.net.URLDecoder;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
 /**
@@ -48,7 +53,7 @@ public class CompomicsWrapper {
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.
      *
-     * @param toolName 
+     * @param toolName
      * @param jarFile the jar file to execute
      * @param splashName the splash name, for example peptide-shaker-splash.png
      * @param mainClass the main class to execute, for example
@@ -66,7 +71,11 @@ public class CompomicsWrapper {
             if (useStartUpLog) {
                 File folder = new File(jarFile.getParentFile(), "resources/conf");
                 if (!folder.exists()) {
-                    throw new FileNotFoundException("'resources/conf' folder not found.");
+                    String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
+                    folder = new File(path, "resources/conf");
+                }
+                if (!folder.exists()) {
+                    throw new FileNotFoundException(folder.getAbsolutePath() + " not found!");
                 }
                 File debugOutput = new File(folder, "startup.log");
                 bw = new BufferedWriter(new FileWriter(debugOutput));
@@ -108,14 +117,18 @@ public class CompomicsWrapper {
      * @param mainClass the main class to execute, for example
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      */
-    private void launch(File jarFile, String splashName, String mainClass) throws Exception {
+    private void launch(File jarFile, String splashName, String mainClass) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
         String temp = "", cmdLine;
         String options = "", currentOption;
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
         if (!confFolder.exists()) {
-            throw new FileNotFoundException("'resources/conf' folder not found.");
+            String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
+            confFolder = new File(path, "resources/conf");
+        }
+        if (!confFolder.exists()) {
+            throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
         }
         File javaOptions = new File(confFolder, "JavaOptions.txt");
         File nonStandardJavaHome = new File(confFolder, "JavaHome.txt");
@@ -321,9 +334,14 @@ public class CompomicsWrapper {
             uniprotProxyClassPath = ";" + quote + uniprotProxyClassPath + quote;
         }
 
+        String jarFilePath = jarFile.getAbsolutePath();
+        if (!new File(jarFilePath).exists()) {
+            jarFilePath = URLDecoder.decode(jarFile.getAbsolutePath(), "UTF-8");
+        }
+
         // create the complete command line
         cmdLine = javaHome + "java -splash:" + quote + splashPath + quote + " " + options + " -cp "
-                + quote + jarFile.getAbsolutePath() + quote + uniprotProxyClassPath
+                + quote + jarFilePath + quote + uniprotProxyClassPath
                 + " " + mainClass;
 
         if (useStartUpLog) {
@@ -424,7 +442,7 @@ public class CompomicsWrapper {
     /**
      * Saves the new memory settings.
      */
-    private void saveNewSettings(File jarFile) throws FileNotFoundException {
+    private void saveNewSettings(File jarFile) throws FileNotFoundException, UnsupportedEncodingException {
         try {
             UtilitiesUserPreferences.saveUserPreferences(userPreferences);
         } catch (Exception e) {
@@ -436,13 +454,17 @@ public class CompomicsWrapper {
     /**
      * Creates a new javaOptions text file with the new settings.
      */
-    private void saveJavaOptions(File jarFile) throws FileNotFoundException {
+    private void saveJavaOptions(File jarFile) throws FileNotFoundException, UnsupportedEncodingException {
 
         String currentLine, lines = "";
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
         if (!confFolder.exists()) {
-            throw new FileNotFoundException("'resources/conf' folder not found.");
+            String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
+            confFolder = new File(path, "resources/conf");
+        }
+        if (!confFolder.exists()) {
+            throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
         }
         File javaOptions = new File(confFolder, "JavaOptions.txt");
 
@@ -474,6 +496,119 @@ public class CompomicsWrapper {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Returns the path to the jar file. Verifies that the path exists and tries
+     * to decode from Unicode if not.
+     *
+     * @param classPath the class path to extract the jar file path from
+     * @param toolName the name of the tool, e.g., "PeptideShaker" or
+     * "SearchGUI".
+     * @return the path to the jar file
+     */
+    public static String getJarFilePath(String classPath, String toolName) {
+
+        String path = classPath;
+        toolName = toolName + "-";
+
+        if (path.lastIndexOf("/" + toolName) != -1) {
+            path = path.substring(5, path.lastIndexOf("/" + toolName));
+            path = path.replace("%20", " ");
+            path = path.replace("%5b", "[");
+            path = path.replace("%5d", "]");
+
+            if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
+                path = path.replace("/", "\\");
+            }
+        } else {
+            path = ".";
+        }
+
+        // try to decode the path to fix any special characters
+        try {
+            if (!new File(path).exists()) {
+                path = URLDecoder.decode(path, "UTF-8");
+            }
+            if (!new File(path).exists()) {
+                JOptionPane.showMessageDialog(null, path + " not found!", "File Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (UnsupportedEncodingException ex) {
+            JOptionPane.showMessageDialog(null, "Error reading file " + path + ".", "File Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+
+        return path;
+    }
+
+    /**
+     * Check if a newer version of the tool is available on Google Code.
+     *
+     * @param currentVersion the version number of the tool currently running
+     * @param toolName the name of the tool, e.g., "PeptideShaker"
+     * @param googleCodeToolName the google code name of the tool, e.g.,
+     * "peptide-shaker"
+     */
+    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
+
+        try {
+            boolean deprecatedOrDeleted = false;
+            URL downloadPage = new URL(
+                    "http://code.google.com/p/" + googleCodeToolName + "/downloads/detail?name=" + toolName + "-"
+                    + currentVersion + ".zip");
+
+            if ((java.net.HttpURLConnection) downloadPage.openConnection() != null) {
+
+                int respons = ((java.net.HttpURLConnection) downloadPage.openConnection()).getResponseCode();
+
+                // 404 means that the file no longer exists, which means that
+                // the running version is no longer available for download,
+                // which again means that a never version is available.
+                if (respons == 404) {
+                    deprecatedOrDeleted = true;
+                } else {
+
+                    // also need to check if the available running version has been
+                    // deprecated (but not deleted)
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(downloadPage.openStream()));
+
+                    String inputLine;
+
+                    while ((inputLine = in.readLine()) != null && !deprecatedOrDeleted) {
+                        if (inputLine.lastIndexOf("Deprecated") != -1
+                                && inputLine.lastIndexOf("Deprecated Downloads") == -1
+                                && inputLine.lastIndexOf("Deprecated downloads") == -1) {
+                            deprecatedOrDeleted = true;
+                        }
+                    }
+
+                    in.close();
+                }
+
+                // informs the user about an updated version of the tool, unless the user
+                // is running a beta version
+                if (deprecatedOrDeleted && currentVersion.lastIndexOf("beta") == -1) {
+                    int option = JOptionPane.showConfirmDialog(null,
+                            "A newer version of " + toolName + " is available.\n"
+                            + "Do you want to upgrade?",
+                            "Upgrade Available",
+                            JOptionPane.YES_NO_CANCEL_OPTION);
+                    if (option == JOptionPane.YES_OPTION) {
+                        BareBonesBrowserLaunch.openURL("http://" + googleCodeToolName + ".googlecode.com/");
+                        System.exit(0);
+                    } else if (option == JOptionPane.CANCEL_OPTION) {
+                        System.exit(0);
+                    }
+                }
+            }
+        } catch (UnknownHostException e) {
+            // ignore exception
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

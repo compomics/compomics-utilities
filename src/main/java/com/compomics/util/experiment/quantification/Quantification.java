@@ -9,7 +9,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.matches.PeptideQuantification;
 import com.compomics.util.experiment.quantification.matches.PsmQuantification;
 import com.compomics.util.gui.waiting.WaitingHandler;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -147,7 +146,7 @@ public abstract class Quantification extends ExperimentObject {
     }
 
     /**
-     * Returns a spectrum quantification match
+     * Returns a spectrum quantification match.
      *
      * @param spectrumKey the key of the spectrum match
      * @return the desired match
@@ -155,11 +154,11 @@ public abstract class Quantification extends ExperimentObject {
      * retrieving the match
      */
     public PsmQuantification getSpectrumMatch(String spectrumKey) throws Exception {
-            return quantificationDB.getSpectrumMatch(spectrumKey);
+        return quantificationDB.getSpectrumMatch(spectrumKey);
     }
 
     /**
-     * Returns a peptide quantification match
+     * Returns a peptide quantification match.
      *
      * @param peptideKey the key of the match
      * @return the desired match
@@ -167,11 +166,11 @@ public abstract class Quantification extends ExperimentObject {
      * retrieving the match
      */
     public PeptideQuantification getPeptideMatch(String peptideKey) throws Exception {
-            return quantificationDB.getPeptideMatch(peptideKey);
+        return quantificationDB.getPeptideMatch(peptideKey);
     }
 
     /**
-     * Returns a protein quantification match
+     * Returns a protein quantification match.
      *
      * @param proteinKey the key of the match
      * @return the desired match
@@ -179,7 +178,7 @@ public abstract class Quantification extends ExperimentObject {
      * retrieving the match
      */
     public ProteinQuantification getProteinMatch(String proteinKey) throws Exception {
-            return quantificationDB.getProteinMatch(proteinKey);
+        return quantificationDB.getProteinMatch(proteinKey);
     }
 
     /**
@@ -209,8 +208,8 @@ public abstract class Quantification extends ExperimentObject {
      * @throws Exception
      */
     public void addPeptideQuantification(PeptideQuantification match) throws Exception {
-            peptideQuantification.add(match.getKey());
-            quantificationDB.addPeptideMatch(match);
+        peptideQuantification.add(match.getKey());
+        quantificationDB.addPeptideMatch(match);
     }
 
     /**
@@ -221,8 +220,8 @@ public abstract class Quantification extends ExperimentObject {
      * @throws Exception
      */
     public void addProteinQuantification(ProteinQuantification match) throws Exception {
-            proteinQuantification.add(match.getKey());
-            quantificationDB.addProteinMatch(match);
+        proteinQuantification.add(match.getKey());
+        quantificationDB.addProteinMatch(match);
     }
 
     /**
@@ -231,7 +230,7 @@ public abstract class Quantification extends ExperimentObject {
      * extremely slow if the cache is already full.
      *
      * @param identification
-     * @param waitingHandler 
+     * @param waitingHandler
      * @throws Exception
      */
     public void buildPeptidesAndProteinQuantifications(Identification identification, WaitingHandler waitingHandler) throws Exception {
@@ -274,17 +273,17 @@ public abstract class Quantification extends ExperimentObject {
             }
         }
         for (String fileName : identification.getSpectrumFiles()) {
-        for (String psmKey : identification.getSpectrumIdentification(fileName)) {
-            if (!psmIDentificationToQuantification.containsKey(psmKey)) {
-                psmIDentificationToQuantification.put(psmKey, new ArrayList<String>());
-            }
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
-                if (waitingHandler.isRunCanceled()) {
-                    return;
+            for (String psmKey : identification.getSpectrumIdentification(fileName)) {
+                if (!psmIDentificationToQuantification.containsKey(psmKey)) {
+                    psmIDentificationToQuantification.put(psmKey, new ArrayList<String>());
+                }
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressValue();
+                    if (waitingHandler.isRunCanceled()) {
+                        return;
+                    }
                 }
             }
-        }
         }
     }
 
@@ -295,18 +294,18 @@ public abstract class Quantification extends ExperimentObject {
      * @param match
      * @throws IllegalArgumentException
      * @throws IOException
-     * @throws SQLException  
+     * @throws SQLException
      */
     public void setMatchChanged(QuantificationMatch match) throws IllegalArgumentException, IOException, SQLException {
- try {
-        quantificationDB.updateMatch(match);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Error while writing match " + match.getKey() + " in the database.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Error while writing match " + match.getKey() + " in the database.");
-            }
+        try {
+            quantificationDB.updateMatch(match);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Error while writing match " + match.getKey() + " in the database.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error while writing match " + match.getKey() + " in the database.");
+        }
     }
 
     /**
@@ -314,7 +313,9 @@ public abstract class Quantification extends ExperimentObject {
      *
      * @param dbFolder the absolute path to the folder where the database is
      * located
+     * @param name 
      * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectsCache 
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */

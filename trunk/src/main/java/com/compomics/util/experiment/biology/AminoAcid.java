@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.aminoacids.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,8 +10,13 @@ import java.util.ArrayList;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class AminoAcid {
+public abstract class AminoAcid implements Serializable {
 
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -3158896310928354857L;
+    
     public static final AminoAcid A = new Alanine();
     public static final AminoAcid C = new Cysteine();
     public static final AminoAcid D = new AsparticAcid();

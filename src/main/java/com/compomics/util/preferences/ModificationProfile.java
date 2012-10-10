@@ -1,7 +1,9 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.biology.PTM;
 import java.awt.Color;
-import java.io.Serializable;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -19,16 +21,29 @@ public class ModificationProfile implements Serializable {
     static final long serialVersionUID = 342611308111304721L;
     /**
      * Mapping of the utilities modification names to the PeptideShaker names.
+     * @deprecated use the expected variable modification list and the 
      */
     private HashMap<String, String> modificationNames = new HashMap<String, String>();
     /**
-     * Mapping of the PeptideShaker names to the short names.
+     * List of the expected variable modifications
+     */
+    private ArrayList<String> variableModifications = new ArrayList<String>();
+    /**
+     * List of the expected fixed modifications.
+     */
+    private ArrayList<String> fixedModifications = new ArrayList<String>();
+    /**
+     * Mapping of the expected modification names to the short names.
      */
     private HashMap<String, String> shortNames = new HashMap<String, String>();
     /**
-     * Mapping of the PeptideShaker names to the color used.
+     * Mapping of the expected modification names to the color used.
      */
     private HashMap<String, Color> colors = new HashMap<String, Color>();
+    /**
+     * Back-up mapping of the PTMs for portability
+     */
+    private HashMap<String, PTM> backUp = new HashMap<String, PTM>();
 
     /**
      * Constructor.
@@ -37,118 +52,129 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the set of the utilities modification names included in this
-     * profile.
+     * Returns the expected variable modification names included in this profile.
      *
-     * @return the set of the utilities modification names included in this
-     * profile
+     * @return the expected variable modification names included in this profile
      */
-    public Set<String> getUtilitiesNames() {
-        return modificationNames.keySet();
+    public ArrayList<String> getVariableModifications() {
+        return variableModifications;
     }
-
+    
     /**
-     * Returns the modification family names included in this profile.
-     *
-     * @return the modification family names included in this profile
+     * Returns the searched fixed modifications names
+     * @return the searched fixed modifications names
      */
-    public Set<String> getFamilyNames() {
-        return shortNames.keySet();
-    }
-
-    /**
-     * Returns the modification family name corresponding to the given utilities
-     * name.
-     *
-     * @param utilitiesName the given utilities name
-     * @return the corresponding modification family name
-     */
-    public String getFamilyName(String utilitiesName) {
-        return modificationNames.get(utilitiesName);
+    public ArrayList<String> getFixedModifications() {
+        return fixedModifications;
     }
 
     /**
      * Returns the short name of the given modification.
      *
-     * @param familyName the PeptideShaker name of the modification
+     * @param modification the name of the expected modification
      * @return the corresponding short name
      */
-    public String getShortName(String familyName) {
-        return shortNames.get(familyName);
+    public String getShortName(String modification) {
+        return shortNames.get(modification);
     }
 
     /**
      * Returns the color used to code the given modification.
      *
-     * @param familyName the PeptideShaker name of the given modification
+     * @param modification the name of the given expected modification
      * @return the corresponding color
      */
-    public Color getColor(String familyName) {
-        return colors.get(familyName);
+    public Color getColor(String modification) {
+        return colors.get(modification);
     }
-
+    
     /**
-     * Sets a new family name for the given modification.
-     *
-     * @param utilitiesName the utilities name of the modification
-     * @param familyName the new family name
+     * Adds a variable modification. The modification name is added in the variable modifications names list and the modification is saved in the back-up.
+     * In case a modification with the same name was already used it will be silently overwritten.
+     * @param modification The modification to add
      */
-    public void setPeptideShakerName(String utilitiesName, String familyName) {
-        String oldKey = modificationNames.get(utilitiesName);
-        if (modificationNames.containsKey(utilitiesName)) {
-            if (!oldKey.equals(familyName) && !shortNames.containsKey(familyName)) {
-                shortNames.put(familyName, shortNames.get(oldKey));
-                colors.put(familyName, colors.get(oldKey));
-            }
-
+    public void addVariableModification(PTM modification) {
+        String modName = modification.getName();
+        if (!variableModifications.contains(modName)) {
+        variableModifications.add(modName);
         }
-        modificationNames.put(utilitiesName, familyName);
-        if (!modificationNames.containsValue(oldKey)) {
-            shortNames.remove(oldKey);
-            colors.remove(oldKey);
-        }
+        backUp.put(modName, modification);
     }
 
     /**
-     * Sets a new short name for the given modification.
+     * Adds a fixed modification. The modification name is added in the fixed modifications names list and the modification is saved in the back-up.
+     * In case a modification with the same name was already used it will be silently overwritten.
+     * @param modification The modification to add
+     */
+    public void addFixedModification(PTM modification) {
+        String modName = modification.getName();
+        if (!fixedModifications.contains(modName)) {
+        fixedModifications.add(modName);
+        }
+        backUp.put(modName, modification);
+    }
+
+    /**
+     * Sets a new short name for the given expected modification.
      *
-     * @param familyName the PeptideShaker name of the modification
+     * @param expectedModification the name of the expected modification
      * @param shortName the new short name
      */
-    public void setShortName(String familyName, String shortName) {
-        shortNames.put(familyName, shortName);
+    public void setShortName(String expectedModification, String shortName) {
+        shortNames.put(expectedModification, shortName);
     }
 
     /**
-     * Sets a new color for the modification.
+     * Sets a new color for the given expected modification.
      *
-     * @param familyName the family name of the modification
+     * @param expectedModification the name of the expected modification
      * @param color the new color
      */
-    public void setColor(String familyName, Color color) {
-        colors.put(familyName, color);
+    public void setColor(String expectedModification, Color color) {
+        colors.put(expectedModification, color);
     }
 
     /**
-     * Removes a modification from the profile.
+     * Returns a mapping of the expected modifications names to the colors used.
      *
-     * @param utilitiesName the utilities name of the modification
-     */
-    public void remove(String utilitiesName) {
-        String psName = modificationNames.get(utilitiesName);
-        modificationNames.remove(utilitiesName);
-        if (!modificationNames.values().contains(psName)) {
-            shortNames.remove(psName);
-            colors.remove(psName);
-        }
-    }
-
-    /**
-     * Returns a mapping of the PeptideShaker names to the colors used.
-     *
-     * @return a mapping of the PeptideShaker names to the colors used
+     * @return a mapping of the expected modifications names to the colors used
      */
     public HashMap<String, Color> getPtmColors() {
         return colors;
     }
+    
+    /**
+     * Checks the compatibility with older versions of the class and makes the necessary changes.
+     */
+    public void compatibilityCheck() {
+        if (fixedModifications == null) {
+            fixedModifications = new ArrayList<String>();
+        }
+        if (variableModifications == null) {
+            for (String modName : modificationNames.values()) {
+                variableModifications.add(modName);
+            }
+        }
+        if (backUp == null) {
+            backUp = new HashMap<String, PTM>();
+        }
+    }
+    
+    /**
+     * Returns the names of the backed-up PTMs
+     * @return the names of the backed-up PTMs
+     */
+    public Set<String> getBackedUpPtms() {
+        return backUp.keySet();
+    }
+    
+    /**
+     * Returns the back-ed up PTM with the given name
+     * @param modName the name of the PTM of interest
+     * @return the corresponding PTM. Null if not found.
+     */
+    public PTM getPtm(String modName) {
+        return backUp.get(modName);
+    }
+    
 }

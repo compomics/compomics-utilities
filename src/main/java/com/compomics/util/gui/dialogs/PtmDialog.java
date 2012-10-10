@@ -223,6 +223,17 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 return false;
             }
         }
+        if (name.endsWith(PTMFactory.SEARCH_SUFFIX)) {
+            String newName = name.replace(PTMFactory.SEARCH_SUFFIX, "SEARCH-ONLY");
+            int outcome = JOptionPane.showConfirmDialog(this, PTMFactory.SEARCH_SUFFIX
+                    + " should be avoided in the end of modification names. Shall " + name + " be replaced by "
+                    + newName + "?", "'" + PTMFactory.SEARCH_SUFFIX + "' ending name", JOptionPane.YES_NO_OPTION);
+            if (outcome == JOptionPane.YES_OPTION) {
+                nameTxt.setText(newName);
+            } else {
+                return false;
+            }
+        }
         name = nameTxt.getText().trim();
         if (ptmFactory.getDefaultModifications().contains(name)
                 && (currentPtm == null || !name.equals(currentPtm.getName()))) {
@@ -669,11 +680,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 }
             }
 
-            if (currentPtm != null) {
-                ptmFactory.replacePTM(currentPtm.getName(), newPTM);
-            } else {
                 ptmFactory.addUserPTM(newPTM);
-            }
 
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             ptmDialogParent.updateModifications();

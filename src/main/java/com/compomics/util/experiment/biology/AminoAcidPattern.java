@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,8 +13,12 @@ import java.util.regex.Pattern;
  *
  * @author Marc Vaudel
  */
-public class AminoAcidPattern {
-
+public class AminoAcidPattern implements Serializable {
+    
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -2823716418631089876L;
     /**
      * The index of the amino acid of interest if there is one. Can be a
      * modification site or a cleavage site. For trypsin: 0.
@@ -251,7 +256,6 @@ public class AminoAcidPattern {
     public boolean matches(String aminoAcidSequence) {
         Pattern pattern = getAsStringPattern();
         Matcher matcher = pattern.matcher(aminoAcidSequence);
-        matcher.matches();
         return matcher.find();
     }
 
@@ -303,6 +307,17 @@ public class AminoAcidPattern {
             return Collections.max(aaTargeted.keySet()) + 1;
         }
         return Math.max(Collections.max(aaTargeted.keySet()), Collections.max(aaExcluded.keySet())) + 1;
+    }
+
+    /**
+     * Computes a pattern which can be searched by standard search engines. i.e. a pattern targeting a single amino-acid and not a complex pattern
+     * @return a pattern which can be searched by standard search engines
+     */
+    public AminoAcidPattern getStandardSearchPattern() {
+        AminoAcidPattern result = new AminoAcidPattern();
+        result.setTarget(target);
+        result.setTargeted(target, getAminoAcidsAtTarget());
+        return result;
     }
 
     /**

@@ -28,7 +28,7 @@ public class PTMFactory implements Serializable {
     /**
      * User ptm file.
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.5.10.cus";
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.0.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -44,18 +44,22 @@ public class PTMFactory implements Serializable {
     /**
      * Map of omssa indexes.
      */
-    private static HashMap<String, ArrayList<Integer>> omssaIndexes = new HashMap<String, ArrayList<Integer>>();
+    private static HashMap<String, Integer> omssaIndexes = new HashMap<String, Integer>();
     /**
      * Unknown modification to be returned when the modification is not found.
      */
     public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new AminoAcidPattern());
+    /**
+     * Suffix for the modifications searched but not in the factory
+     */
+    public static final String SEARCH_SUFFIX = "_SEARCH_ONLY";
 
     /**
      * Constructor for the factory.
      */
     private PTMFactory() {
         ptmMap.put(unknownPTM.getName(), unknownPTM);
-        defaultMods.add("unknown"); // @TODO: the ptm tables should be in alphabetical order!
+        defaultMods.add("unknown");
     }
 
     /**
@@ -132,7 +136,7 @@ public class PTMFactory implements Serializable {
     public PTM getPTM(int index) {
         String name = null;
         for (String ptm : omssaIndexes.keySet()) {
-            if (omssaIndexes.get(ptm).contains(index)) {
+            if (omssaIndexes.get(ptm) == index) {
                 name = ptm;
                 break;
             }
@@ -144,38 +148,33 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Replaces an old ptm by a new.
+     * Returns the standard search compatible PTM corresponding to this pattern.
+     * i.e. a pattern targeting a single amino-acid and not a complex pattern.
      *
-     * @param oldName the name of the old ptm
-     * @param newPTM the new ptm
+     * @param modification the modification of interest
+     * @return a search compatible modification
      */
-    public void replacePTM(String oldName, PTM newPTM) {
-        String newName = newPTM.getName();
-        if (userMods.contains(oldName)) {
-            userMods.remove(oldName);
-            if (!userMods.contains(newName)) {
-                userMods.add(newName);
-            }
+    public PTM getSearchedPTM(PTM modification) {
+        if (!modification.isStandardSearch()) {
+            return new PTM(modification.getType(), modification.getName() + SEARCH_SUFFIX, modification.getMass(), modification.getPattern().getStandardSearchPattern());
+        } else {
+            return modification;
         }
-        if (defaultMods.contains(oldName)) {
-            defaultMods.remove(oldName);
-            if (!defaultMods.contains(newName)) {
-                defaultMods.add(newName); // @TODO: the ptm tables should be in alphabetical order!
-            }
-        }
-        if (!oldName.equals(newName)) {
-            ptmMap.remove(oldName);
-        }
-        ptmMap.put(newName, newPTM);
-        if (!newName.equals(oldName)) {
-            if (!omssaIndexes.containsKey(newName)) {
-                omssaIndexes.put(newName, new ArrayList<Integer>());
-            }
+    }
 
-            if (omssaIndexes.get(oldName) != null) { // @TODO: verify that is correct. if not included one can only open one project in reporter before having to restart reporter...
-                omssaIndexes.get(newName).addAll(omssaIndexes.get(oldName));
-                omssaIndexes.remove(oldName);
-            }
+    /**
+     * Returns the standard search compatible PTM corresponding to this pattern.
+     * i.e. a pattern targeting a single amino-acid and not a complex pattern.
+     *
+     * @param modificationName the name of the modification of interest
+     * @return a search compatible modification
+     */
+    public PTM getSearchedPTM(String modificationName) {
+        PTM modification = getPTM(modificationName);
+        if (!modification.isStandardSearch()) {
+            return new PTM(modification.getType(), modification.getName() + SEARCH_SUFFIX, modification.getMass(), modification.getPattern().getStandardSearchPattern());
+        } else {
+            return modification;
         }
     }
 
@@ -185,8 +184,11 @@ public class PTMFactory implements Serializable {
      * @param ptm the new modification to add
      */
     public void addUserPTM(PTM ptm) {
-        ptmMap.put(ptm.getName(), ptm);
-        userMods.add(ptm.getName());
+        String modName = ptm.getName();
+        ptmMap.put(modName, ptm);
+        if (!userMods.contains(modName)) {
+            userMods.add(ptm.getName());
+        }
         setUserOmssaIndexes();
     }
 
@@ -201,10 +203,8 @@ public class PTMFactory implements Serializable {
                 omssaIndex += 13;
             }
             ptm = userMods.get(rank - 1);
-            if (!omssaIndexes.containsKey(ptm)) {
-                omssaIndexes.put(ptm, new ArrayList<Integer>());
-            }
-            omssaIndexes.get(ptm).add(omssaIndex);
+            PTM searchedPtm = getSearchedPTM(ptm);
+            omssaIndexes.put(searchedPtm.getName(), omssaIndex);
         }
     }
 
@@ -262,7 +262,7 @@ public class PTMFactory implements Serializable {
      * @param modificationName the desired modification name to lower case
      * @return the corresponding index
      */
-    public ArrayList<Integer> getOMSSAIndexes(String modificationName) {
+    public Integer getOMSSAIndex(String modificationName) {
         return omssaIndexes.get(modificationName);
     }
 
@@ -425,7 +425,7 @@ public class PTMFactory implements Serializable {
             }
         }
         // Create and implement modification.
-        AminoAcidPattern pattern = new AminoAcidPattern(residues); // @TODO: this completly ignores user defined patterens!!
+        AminoAcidPattern pattern = new AminoAcidPattern(residues);
         PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), pattern);
 
         while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_neutralloss"))
@@ -456,7 +456,7 @@ public class PTMFactory implements Serializable {
             type = parser.next();
         }
 
-        if (!currentPTM.getName().startsWith("user modification ")) {
+        if (!currentPTM.getName().startsWith("user modification ") && !currentPTM.getName().endsWith(SEARCH_SUFFIX)) {
             ptmMap.put(currentPTM.getName(), currentPTM);
             if (userMod) {
                 if (!userMods.contains(currentPTM.getName())) {
@@ -464,10 +464,9 @@ public class PTMFactory implements Serializable {
                 }
             } else {
                 if (!defaultMods.contains(currentPTM.getName())) {
-                    defaultMods.add(currentPTM.getName()); // @TODO: the ptm tables should be in alphabetical order!
+                    defaultMods.add(currentPTM.getName());
                 }
-                omssaIndexes.put(currentPTM.getName(), new ArrayList<Integer>());
-                omssaIndexes.get(currentPTM.getName()).add(number);
+                omssaIndexes.put(currentPTM.getName(), number);
             }
         }
     }
@@ -595,7 +594,7 @@ public class PTMFactory implements Serializable {
         if (omssaIndex > 128) {
             omssaIndex += 13;
         }
-        PTM ptm = ptmMap.get(ptmName);
+        PTM ptm = getSearchedPTM(ptmName);
 
         String result = "\t<MSModSpec>\n";
         result += "\t\t<MSModSpec_mod>\n";

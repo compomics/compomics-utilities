@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.preferences.ModificationProfile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -693,6 +695,33 @@ public class PTMFactory implements Serializable {
      */
     public boolean isUserDefined(String ptmName) {
         return !defaultMods.contains(ptmName);
+    }
+
+    /**
+     * Verifies that the modifications backed-up in the search parameters are
+     * loaded and alerts the user in case conflicts are found
+     *
+     * @param searchParameters the search parameters to load
+     *@return returns a list of modifications already loaded which should be checked.
+     */
+    public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ModificationProfile modificationProfile = searchParameters.getModificationProfile();
+        ArrayList<String> toCheck = new ArrayList<String>();
+        for (String modification : modificationProfile.getBackedUpPtms()) {
+            if (ptmFactory.containsPTM(modification)) {
+                PTM oldPTM = ptmFactory.getPTM(modification);
+                if (!oldPTM.isSameAs(modificationProfile.getPtm(modification))) {
+                    toCheck.add(modification);
+                }
+                if (overwrite) {
+                    ptmFactory.addUserPTM(modificationProfile.getPtm(modification));
+                }
+            } else {
+                ptmFactory.addUserPTM(modificationProfile.getPtm(modification));
+            }
+        }
+        return toCheck;
     }
 
     /**

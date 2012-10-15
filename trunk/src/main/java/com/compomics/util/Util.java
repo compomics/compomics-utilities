@@ -122,18 +122,18 @@ public class Util {
      * @return the file name, or the complete path of no file name is detected
      */
     public static String getFileName(String filePath) {
-        
+
         String tempFileName = filePath;
-        
+
         int slash1 = tempFileName.lastIndexOf("/");
         int slash2 = tempFileName.lastIndexOf("\\");
-        
+
         int lastSlashIndex = Math.max(slash1, slash2);
-        
+
         if (lastSlashIndex != -1) {
             tempFileName = tempFileName.substring(lastSlashIndex + 1);
         }
-        
+
         return tempFileName;
     }
 
@@ -151,48 +151,48 @@ public class Util {
      * @return the file selected by the user, or null if no file was selected
      */
     public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, boolean openDialog) {
-        
+
         final String fileEnding = aFileEnding;
         final String fileFormatDescription = aFileFormatDescription;
         final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
-        
+
         fileChooser.setDialogTitle(aDialogTitle);
         fileChooser.setMultiSelectionEnabled(false);
-        
+
         javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-            
+
             @Override
             public boolean accept(File myFile) {
                 return myFile.getName().toLowerCase().endsWith(fileEnding) || myFile.isDirectory();
             }
-            
+
             @Override
             public String getDescription() {
                 return fileFormatDescription;
             }
         };
-        
+
         fileChooser.setFileFilter(filter);
-        
+
         int returnVal;
-        
+
         if (openDialog) {
             returnVal = fileChooser.showOpenDialog(parent);
         } else {
             returnVal = fileChooser.showSaveDialog(parent);
         }
-        
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            
+
             String selectedFile = fileChooser.getSelectedFile().getPath();
-            
+
             if (!selectedFile.endsWith(fileEnding)) {
                 selectedFile += fileEnding;
             }
-            
+
             File newFile = new File(selectedFile);
             int outcome = JOptionPane.YES_OPTION;
-            
+
             if (!openDialog && newFile.exists()) {
                 outcome = JOptionPane.showConfirmDialog(parent,
                         "Should " + selectedFile + " be overwritten?", "Selected File Already Exists",
@@ -202,14 +202,14 @@ public class Util {
                         "File Not Found.", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
-            
+
             if (outcome != JOptionPane.YES_OPTION) {
                 return null;
             } else {
                 return newFile;
             }
         }
-        
+
         return null;
     }
 
@@ -223,24 +223,24 @@ public class Util {
      * @return the table as a separated text file
      */
     public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
-        
+
         String tableAsString = "";
-        
+
         for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
             tableAsString += ((DefaultTableModel) table.getModel()).getColumnName(i) + separator;
         }
-        
+
         progressDialog.setIndeterminate(false);
         progressDialog.setMaxProgressValue(table.getRowCount());
-        
+
         tableAsString += System.getProperty("line.separator");
-        
+
         for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
-            
+
             progressDialog.increaseProgressValue();
-            
+
             for (int j = 0; j < table.getColumnCount() && !progressDialog.isRunCanceled(); j++) {
-                
+
                 if (table.getValueAt(i, j) != null) {
                     String tempValue = table.getValueAt(i, j).toString();
 
@@ -254,10 +254,10 @@ public class Util {
                     tableAsString += separator;
                 }
             }
-            
+
             tableAsString += System.getProperty("line.separator");
         }
-        
+
         return tableAsString;
     }
 
@@ -272,26 +272,26 @@ public class Util {
      * @throws IOException
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
-        
+
         for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
             writer.write(((DefaultTableModel) table.getModel()).getColumnName(i) + separator);
         }
-        
+
         if (progressDialog != null) {
             progressDialog.setIndeterminate(false);
             progressDialog.setMaxProgressValue(table.getRowCount());
         }
-        
+
         writer.write(System.getProperty("line.separator"));
-        
+
         for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
-            
+
             if (progressDialog != null) {
                 progressDialog.increaseProgressValue();
             }
-            
+
             for (int j = 0; j < table.getColumnCount() && !progressDialog.isRunCanceled(); j++) {
-                
+
                 if (table.getValueAt(i, j) != null) {
                     String tempValue = table.getValueAt(i, j).toString();
 
@@ -299,13 +299,13 @@ public class Util {
                     if (tempValue.indexOf("<html>") != -1 && removeHtml) {
                         tempValue = tempValue.replaceAll("\\<[^>]*>", "");
                     }
-                    
+
                     writer.write(tempValue + separator);
                 } else {
                     writer.write(separator);
                 }
             }
-            
+
             writer.write(System.getProperty("line.separator"));
         }
     }
@@ -318,10 +318,10 @@ public class Util {
      * @throws IOException
      */
     public static void copyFile(File in, File out) throws IOException {
-        
+
         FileChannel inChannel = new FileInputStream(in).getChannel();
         FileChannel outChannel = new FileOutputStream(out).getChannel();
-        
+
         try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         } catch (IOException e) {
@@ -402,8 +402,9 @@ public class Util {
             Integer bestDistance = null;
             if (lastj < sortedSerie2.size()) {
                 for (int j = lastj; j < sortedSerie2.size(); j++) {
-                    if (i < sortedSerie1.size()-1 && 
-                            (sortedSerie2.get(j) >= sortedSerie1.get(i + 1) || Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i + 1)) < Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i)))) {
+                    if (i < sortedSerie1.size() - 1
+                            && (sortedSerie2.get(j) >= sortedSerie1.get(i + 1) 
+                            || Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i + 1)) < Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i)))) {
                         break;
                     }
                     if (bestDistance == null || Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i)) < bestDistance) {
@@ -421,5 +422,4 @@ public class Util {
         }
         return result;
     }
-    
 }

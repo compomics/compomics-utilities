@@ -14,9 +14,9 @@ import java.util.regex.Pattern;
  * @author Marc Vaudel
  */
 public class AminoAcidPattern implements Serializable {
-    
+
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2823716418631089876L;
     /**
@@ -310,7 +310,9 @@ public class AminoAcidPattern implements Serializable {
     }
 
     /**
-     * Computes a pattern which can be searched by standard search engines. i.e. a pattern targeting a single amino-acid and not a complex pattern
+     * Computes a pattern which can be searched by standard search engines, i.e.,
+     * a pattern targeting a single amino-acid and not a complex pattern.
+     *
      * @return a pattern which can be searched by standard search engines
      */
     public AminoAcidPattern getStandardSearchPattern() {

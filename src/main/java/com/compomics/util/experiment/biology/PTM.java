@@ -3,7 +3,6 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * This class models a post-translational modification.
@@ -323,10 +322,14 @@ public class PTM extends ExperimentObject {
     public void setPattern(AminoAcidPattern pattern) {
         this.pattern = pattern;
     }
-    
+
     /**
-     * Indicates whether a modification can be searched with standard search engines. i.e. true if it targets a single amino acid position, false if it targets a complex pattern.
-     * @return a boolean indicating whether a modification can be searched with standard search engines
+     * Indicates whether a modification can be searched with standard search
+     * engines, i.e., true if it targets a single amino acid position, false if
+     * it targets a complex pattern.
+     *
+     * @return a boolean indicating whether a modification can be searched with
+     * standard search engines
      */
     public boolean isStandardSearch() {
         return pattern.length() == 1;

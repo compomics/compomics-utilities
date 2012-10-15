@@ -1,21 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.io;
 
 import java.io.*;
 
 /**
  * This class implements convenience methods for serialization and
- * deserialization
+ * deserialization.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class SerializationUtils {
 
     /**
-     * Writes an object to the destination file
+     * Writes an object to the destination file.
      *
      * @param object the object
      * @param destinationFile the destination file
@@ -49,7 +45,7 @@ public class SerializationUtils {
     }
 
     /**
-     * Reads an object from a serialized file
+     * Reads an object from a serialized file.
      *
      * @param serializedFile the serialized file
      * @return the object

@@ -63,17 +63,19 @@ public class EnzymeFactory {
     public Enzyme getEnzyme(String enzymeName) {
         return enzymes.get(enzymeName);
     }
-    
+
     /**
-     * Adds an enzyme in the factory
+     * Adds an enzyme in the factory.
+     *
      * @param enzyme the new enzyme to add
      */
     public void addEnzyme(Enzyme enzyme) {
         enzymes.put(enzyme.getName(), enzyme);
     }
-    
+
     /**
-     * Indicates whether an enzyme is loaded in the factory
+     * Indicates whether an enzyme is loaded in the factory.
+     *
      * @param enzyme the name of the enzyme
      * @return a boolean indicating whether an enzyme is loaded in the factory
      */

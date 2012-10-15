@@ -699,10 +699,11 @@ public class PTMFactory implements Serializable {
 
     /**
      * Verifies that the modifications backed-up in the search parameters are
-     * loaded and alerts the user in case conflicts are found
+     * loaded and alerts the user in case conflicts are found.
      *
      * @param searchParameters the search parameters to load
-     *@return returns a list of modifications already loaded which should be checked.
+     * @param overwrite if true, overwrite the modification
+     * @return returns a list of modifications already loaded which should be checked.
      */
     public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
         PTMFactory ptmFactory = PTMFactory.getInstance();

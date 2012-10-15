@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Enzyme;
@@ -10,18 +6,17 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This class groups the parameters used for identification
+ * This class groups the parameters used for identification.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class SearchParameters implements Serializable {
-    
+
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2773993307168773763L;
 
@@ -95,41 +90,41 @@ public class SearchParameters implements Serializable {
      */
     private static String[] rewindIons = {"x", "y", "z"};
     /**
-     * Maximal e-value cut-off
+     * Maximal e-value cut-off.
      */
     private Double maxEValue;
     /**
-     * The maximal hitlist length (OMSSA setting)
+     * The maximal hitlist length (OMSSA setting).
      */
     private Integer hitListLength;
     /**
      * The minimal charge to be considered for multiple fragment charges for
-     * OMSSA
+     * OMSSA.
      */
-    private Charge minimalChargeForMultipleChargedFragments; //Now that is a variable name
+    private Charge minimalChargeForMultipleChargedFragments; // now that is a variable name
     /**
-     * The minimal peptide length
+     * The minimal peptide length.
      */
     private Integer minPeptideLength;
     /**
-     * The maximal peptide length
+     * The maximal peptide length.
      */
     private Integer maxPeptideLength;
     /**
-     * Indicates whether the precursor removal option of OMSSA is used
+     * Indicates whether the precursor removal option of OMSSA is used.
      */
     private Boolean removePrecursor;
     /**
-     * Indicates whether the precursor scaling option of OMSSA is used
+     * Indicates whether the precursor scaling option of OMSSA is used.
      */
     private Boolean scalePrecursor;
     /**
-     * Indicates whether the precursor charge estimation option of OMSSA is used
+     * Indicates whether the precursor charge estimation option of OMSSA is used.
      */
     private Boolean estimateCharge;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public SearchParameters() {
     }
@@ -144,7 +139,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * sets the modification profile of the project.
+     * Sets the modification profile of the project.
      *
      * @param modificationProfile The modification profile
      */
@@ -406,7 +401,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * returns the maximal charge searched
+     * Returns the maximal charge searched.
      *
      * @return the maximal charge searched
      */
@@ -415,7 +410,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the maximal charge searched
+     * Sets the maximal charge searched.
      *
      * @param maxChargeSearched the maximal charge searched
      */
@@ -424,7 +419,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the minimal charge searched
+     * Returns the minimal charge searched.
      *
      * @return the minimal charge searched
      */
@@ -433,7 +428,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the minimal charge searched
+     * Sets the minimal charge searched.
      *
      * @param minChargeSearched the minimal charge searched
      */
@@ -442,7 +437,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the maximal e-value searched for
+     * Returns the maximal e-value searched for.
      *
      * @return the maximal e-value searched for
      */
@@ -451,7 +446,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the maximal e-value searched for
+     * Sets the maximal e-value searched for.
      *
      * @param maxEValue the maximal e-value searched for
      */
@@ -460,7 +455,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the length of the hitlist for OMSSA
+     * Returns the length of the hitlist for OMSSA.
      *
      * @return the length of the hitlist for OMSSA
      */
@@ -469,7 +464,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the length of the hitlist for OMSSA
+     * Sets the length of the hitlist for OMSSA.
      *
      * @param hitListLength the length of the hitlist for OMSSA
      */
@@ -479,7 +474,7 @@ public class SearchParameters implements Serializable {
 
     /**
      * Returns the minimal precursor charge to account for multiply charged
-     * fragments in OMSSA
+     * fragments in OMSSA.
      *
      * @return the minimal precursor charge to account for multiply charged
      * fragments in OMSSA
@@ -490,7 +485,7 @@ public class SearchParameters implements Serializable {
 
     /**
      * Sets the minimal precursor charge to account for multiply charged
-     * fragments in OMSSA
+     * fragments in OMSSA.
      *
      * @param minimalChargeForMultipleChargedFragments the minimal precursor
      * charge to account for multiply charged fragments in OMSSA
@@ -500,7 +495,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the maximal peptide length allowed
+     * Returns the maximal peptide length allowed.
      *
      * @return the maximal peptide length allowed
      */
@@ -509,7 +504,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the maximal peptide length allowed
+     * Sets the maximal peptide length allowed.
      *
      * @param maxPeptideLength the maximal peptide length allowed
      */
@@ -518,7 +513,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the minimal peptide length allowed
+     * Sets the minimal peptide length allowed.
      *
      * @return the minimal peptide length allowed
      */
@@ -527,7 +522,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the minimal peptide length allowed
+     * Sets the minimal peptide length allowed.
      *
      * @param minPeptideLength the minimal peptide length allowed
      */
@@ -536,7 +531,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Indicates whether the precursor charge shall be estimated for OMSSA
+     * Indicates whether the precursor charge shall be estimated for OMSSA.
      *
      * @return a boolean indicating whether the precursor charge shall be
      * estimated for OMSSA
@@ -546,7 +541,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets whether the precursor charge shall be estimated for OMSSA
+     * Sets whether the precursor charge shall be estimated for OMSSA.
      *
      * @param estimateCharge a boolean indicating whether the precursor charge
      * shall be estimated for OMSSA
@@ -556,7 +551,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Indicates whether the precursor shall be removed for OMSSA
+     * Indicates whether the precursor shall be removed for OMSSA.
      *
      * @return a boolean indicating whether the precursor shall be removed for
      * OMSSA
@@ -576,7 +571,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Indicates whether the precursor shall be scaled for OMSSA
+     * Indicates whether the precursor shall be scaled for OMSSA.
      *
      * @return a boolean indicating whether the precursor shall be scaled for
      * OMSSA
@@ -586,7 +581,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets whether the precursor shall be scaled for OMSSA
+     * Sets whether the precursor shall be scaled for OMSSA.
      *
      * @param scalePrecursor a boolean indicating whether the precursor shall be
      * scaled for OMSSA
@@ -596,20 +591,26 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Loads the identification parameters from a serialized file
+     * Loads the identification parameters from a serialized file.
      *
      * @param file the file
      * @return the modification file
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public static SearchParameters getIdentificationParameters(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         return (SearchParameters) SerializationUtils.readObject(file);
     }
 
     /**
-     * saves the a modification profile from a serialized file
+     * saves the a modification profile from a serialized file.
      *
+     * @param identificationParameters 
      * @param file the file
-     * @return the modification file
+     * @throws FileNotFoundException 
+     * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SerializationUtils.writeObject(identificationParameters, file);

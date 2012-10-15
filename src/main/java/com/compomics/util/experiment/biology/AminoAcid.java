@@ -13,10 +13,9 @@ import java.util.ArrayList;
 public abstract class AminoAcid implements Serializable {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -3158896310928354857L;
-    
     public static final AminoAcid A = new Alanine();
     public static final AminoAcid C = new Cysteine();
     public static final AminoAcid D = new AsparticAcid();

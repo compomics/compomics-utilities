@@ -1268,7 +1268,11 @@ public class Header implements Cloneable, Serializable {
             
             // have to check if gene name is in the header
             if (taxonomyEndIndex == -1) {
-                taxonomyEndIndex = header.iDescription.indexOf(" PE=");
+                if (header.iDescription.indexOf(" PE=") != -1) {
+                    taxonomyEndIndex = header.iDescription.indexOf(" PE=");
+                } else {
+                    taxonomyEndIndex = header.iDescription.length();
+                }
             }
 
             header.iTaxonomy = header.iDescription.substring(taxonomyStartIndex, taxonomyEndIndex);

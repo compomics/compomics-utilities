@@ -277,6 +277,7 @@ public class PropertiesManager {
         RollingFileAppender lRollingFileAppender = (RollingFileAppender) aLogger.getParent().getAppender("file");
         lRollingFileAppender.setFile(lNewLogFileName);
         lRollingFileAppender.activateOptions();
+        lRollingFileAppender.setThreshold(Priority.WARN);
         File lOldLogFile = new File(lOldLogFileName);
         if (lOldLogFile.exists()) {
             lOldLogFile.delete();

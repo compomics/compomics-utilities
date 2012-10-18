@@ -177,4 +177,24 @@ public class ModificationProfile implements Serializable {
         return backUp.get(modName);
     }
     
+    /**
+     * Removes a modification from the list of variable modifications
+     * @param modificationName the name of the modification
+     */
+    public void removeVariableModification(String modificationName) {
+        while (variableModifications.contains(modificationName)) {
+            variableModifications.remove(modificationName);
+        }
+    }
+    
+    /**
+     * Removes a modification from the list of fixed modifications
+     * @param modificationName the name of the modification
+     */
+    public void removeFixedModification(String modificationName) {
+        while (fixedModifications.contains(modificationName)) {
+            fixedModifications.remove(modificationName);
+        }
+    }
+    
 }

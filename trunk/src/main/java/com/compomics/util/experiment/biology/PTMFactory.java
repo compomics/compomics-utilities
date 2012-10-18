@@ -724,6 +724,52 @@ public class PTMFactory implements Serializable {
         }
         return toCheck;
     }
+    
+    /**
+     * Returns the expected modifications based on the modification profile, the peptide found and the modification details
+     * 
+     * @param modificationProfile the modification profile used for the search (available in the search parameters)
+     * @param peptide the peptide identified with the parent proteins (necessary for protein termini modifications)
+     * @param modificationMass the modification mass as found in the search results
+     * @param massTolerance the mass tolerance to use to match the modification mass
+     * @return a list of expected PTMs corresponding to the given characteristics. Empty if none found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     */
+    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, double modificationMass, double massTolerance) throws IOException, IllegalArgumentException, InterruptedException {
+        ArrayList<String> result = new ArrayList<String>();
+        
+        for (String variableModification : modificationProfile.getVariableModifications()) {
+            PTM ptm = getSearchedPTM(variableModification);
+            if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
+                result.add(variableModification);
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Returns the names of the possibly expected variable modification based on the name of the searched variable modification
+     * 
+     * @param modificationProfile the modification profile used for the search (available in the search parameters)
+     * @param searchedPTMName the name of the searched PTM
+     * @return the possible expected modification names
+     */
+    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, String searchedPTMName) {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String variableModification : modificationProfile.getVariableModifications()) {
+            String ptmName = getSearchedPTM(variableModification).getName();
+            if (ptmName.equalsIgnoreCase(searchedPTMName)) {
+                result.add(ptmName);
+            }
+        }
+        return result;
+    }
 
     /**
      * Sets the default neutral losses of PTMs when not implemented.

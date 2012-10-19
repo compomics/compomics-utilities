@@ -139,6 +139,9 @@ public class Util {
 
     /**
      * Returns the file selected by the user, or null if no file was selected.
+     * Note that the last selected folder value is not updated during this
+     * method, and the code calling this method therefore has to take care of
+     * this if wanted.
      *
      * @param parent the parent dialog or frame
      * @param aFileEnding the file type, e.g., .txt
@@ -403,7 +406,7 @@ public class Util {
             if (lastj < sortedSerie2.size()) {
                 for (int j = lastj; j < sortedSerie2.size(); j++) {
                     if (i < sortedSerie1.size() - 1
-                            && (sortedSerie2.get(j) >= sortedSerie1.get(i + 1) 
+                            && (sortedSerie2.get(j) >= sortedSerie1.get(i + 1)
                             || Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i + 1)) < Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i)))) {
                         break;
                     }

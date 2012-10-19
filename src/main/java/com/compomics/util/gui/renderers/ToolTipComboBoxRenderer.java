@@ -13,8 +13,6 @@ import javax.swing.plaf.basic.BasicComboBoxRenderer;
  * box list.
  *
  * @author  Harald Barsnes
- * 
- * Created March 2008
  */
 public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
 

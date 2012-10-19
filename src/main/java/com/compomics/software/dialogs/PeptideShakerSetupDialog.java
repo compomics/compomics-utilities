@@ -40,7 +40,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         initComponents();
 
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        
+
         // display the current peptide shaker path
         if (utilitiesUserPreferences != null) {
             peptideShakernstallationJTextField.setText(utilitiesUserPreferences.getPeptideShakerPath());
@@ -266,7 +266,6 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-
 
         File selectedFile = Util.getUserSelectedFile(this, ".jar", "PeptideShaker jar file (.jar)", "Select PeptideShaker Jar File", lastSelectedFolder, true);
 

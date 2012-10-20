@@ -48,7 +48,7 @@ public class AnnotationPreferences implements Serializable {
     /**
      * Shall PeptideShaker use automatic annotation.
      */
-    private boolean automaticAnnotation;
+    private boolean automaticAnnotation = true;
     /**
      * The types of ions to annotate.
      */
@@ -61,7 +61,7 @@ public class AnnotationPreferences implements Serializable {
      * Shall neutral losses be only considered for ions containing amino acids
      * of interest?
      */
-    private boolean neutralLossesSequenceDependant;
+    private boolean neutralLossesSequenceDependant = true;
     /**
      * The maximum fragment charge to be searched for.
      */
@@ -104,9 +104,12 @@ public class AnnotationPreferences implements Serializable {
      * @param currentPeptide
      * @param currentPrecursorCharge
      * @param newSpectrum
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
     public void setCurrentSettings(Peptide currentPeptide, int currentPrecursorCharge, boolean newSpectrum) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -124,9 +127,13 @@ public class AnnotationPreferences implements Serializable {
 
     /**
      * Updates the neutral losses and charge annotation settings.
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
     public void resetAutomaticAnnotation() throws IOException, IllegalArgumentException, InterruptedException {
 

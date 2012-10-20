@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
@@ -34,11 +35,11 @@ public class SearchParameters implements Serializable {
     /**
      * The precursor mass tolerance.
      */
-    private Double precursorTolerance;
+    private Double precursorTolerance = 10.0;
     /**
      * The ms2 ion tolerance.
      */
-    private Double fragmentIonMZTolerance;
+    private Double fragmentIonMZTolerance = 0.5;
     /**
      * The expected modifications. Modified peptides will be grouped and
      * displayed according to this classification.
@@ -51,7 +52,7 @@ public class SearchParameters implements Serializable {
     /**
      * The allowed number of missed cleavages.
      */
-    private Integer nMissedCleavages;
+    private Integer nMissedCleavages = 2;
     /**
      * The sequence database file used for identification.
      */
@@ -68,19 +69,19 @@ public class SearchParameters implements Serializable {
     /**
      * The first kind of ions searched for (typically a, b or c).
      */
-    private Integer forwardIon;
+    private Integer forwardIon = PeptideFragmentIon.B_ION;
     /**
      * The second kind of ions searched for (typically x, y or z).
      */
-    private Integer rewindIon;
+    private Integer rewindIon = PeptideFragmentIon.Y_ION;
     /**
      * The minimal charge searched (in absolute value)
      */
-    private Charge minChargeSearched;
+    private Charge minChargeSearched = new Charge(Charge.PLUS, 2);
     /**
      * The minimal charge searched (in absolute value)
      */
-    private Charge maxChargeSearched;
+    private Charge maxChargeSearched = new Charge(Charge.PLUS, 4);
     /**
      * Convenience array for forward ion type selection.
      */
@@ -92,18 +93,18 @@ public class SearchParameters implements Serializable {
     /**
      * Maximal e-value cut-off.
      */
-    private Double maxEValue;
+    private Double maxEValue = 100.0;
     /**
      * The maximal hitlist length (OMSSA setting).
      */
-    private Integer hitListLength;
+    private Integer hitListLength = 25;
     /**
      * The minimal charge to be considered for multiple fragment charges for
      * OMSSA.
      */
-    private Charge minimalChargeForMultipleChargedFragments; // now that is a variable name
+    private Charge minimalChargeForMultipleChargedFragments = new Charge(Charge.PLUS, 3);
     /**
-     * The minimal peptide length.
+     * The minimum peptide length.
      */
     private Integer minPeptideLength;
     /**
@@ -113,15 +114,16 @@ public class SearchParameters implements Serializable {
     /**
      * Indicates whether the precursor removal option of OMSSA is used.
      */
-    private Boolean removePrecursor;
+    private Boolean removePrecursor = true;
     /**
      * Indicates whether the precursor scaling option of OMSSA is used.
      */
-    private Boolean scalePrecursor;
+    private Boolean scalePrecursor = false;
     /**
-     * Indicates whether the precursor charge estimation option of OMSSA is used.
+     * Indicates whether the precursor charge estimation option of OMSSA is
+     * used.
      */
-    private Boolean estimateCharge;
+    private Boolean estimateCharge = true;
 
     /**
      * Constructor.
@@ -332,7 +334,7 @@ public class SearchParameters implements Serializable {
      * @return the rewindIons
      */
     public static String[] getRewindIons() {
-        return forwardIons;
+        return rewindIons;
     }
 
     /**
@@ -597,20 +599,20 @@ public class SearchParameters implements Serializable {
      * @return the modification file
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public static SearchParameters getIdentificationParameters(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         return (SearchParameters) SerializationUtils.readObject(file);
     }
 
     /**
-     * saves the a modification profile from a serialized file.
+     * Saves the a modification profile from a serialized file.
      *
-     * @param identificationParameters 
+     * @param identificationParameters
      * @param file the file
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SerializationUtils.writeObject(identificationParameters, file);

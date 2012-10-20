@@ -61,6 +61,7 @@ public class PTMFactory implements Serializable {
      */
     private PTMFactory() {
         ptmMap.put(unknownPTM.getName(), unknownPTM);
+        defaultMods = new ArrayList<String>();
         defaultMods.add("unknown");
     }
 
@@ -165,8 +166,8 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the standard search compatible PTM corresponding to this pattern.
-     * i.e. a pattern targeting a single amino-acid and not a complex pattern.
+     * Returns the standard search compatible PTM corresponding to this pattern,
+     * i.e., a pattern targeting a single amino-acid and not a complex pattern.
      *
      * @param modificationName the name of the modification of interest
      * @return a search compatible modification
@@ -770,10 +771,11 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the names of the possibly expected variable modification based on
-     * the name of the searched variable modification
+     * the name of the searched variable modification.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
+     * @param peptide the peptide
      * @param searchedPTMName the name of the searched PTM
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -786,7 +788,8 @@ public class PTMFactory implements Serializable {
     public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String searchedPTMName) throws IOException, IllegalArgumentException, InterruptedException {
 
         ArrayList<String> result = new ArrayList<String>();
-        for (String variableModification : modificationProfile.getAllModifications()) {
+
+        for (String variableModification : modificationProfile.getAllModifications()) { // @TODO: change back to getVariableModifications()??
             String ptmName = getSearchedPTM(variableModification).getName();
             if (ptmName.equalsIgnoreCase(searchedPTMName)) {
                 PTM ptm = getSearchedPTM(variableModification);
@@ -795,7 +798,7 @@ public class PTMFactory implements Serializable {
                 }
             }
         }
-        
+
         return result;
     }
 

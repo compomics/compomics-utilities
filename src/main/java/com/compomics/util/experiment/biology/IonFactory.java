@@ -74,7 +74,7 @@ public class IonFactory {
 
     /**
      * This method returns the theoretic ions expected from a peptide. /!\ this
-     * method will work only if the ptm found in the peptide are in the
+     * method will work only if the ptms found in the peptide are in the
      * PTMFactory.
      *
      * @param peptide The considered peptide
@@ -115,7 +115,9 @@ public class IonFactory {
                 for (NeutralLoss ptmNeutralLoss : ptm.getNeutralLosses()) {
                     boolean found = false;
                     for (NeutralLoss neutralLoss : possibleNeutralLosses) {
-                        if (ptmNeutralLoss.isSameAs(neutralLoss)) { //@TODO: we keep only different neutral losses. We might want to change that when people are working with modifications having reproducible motifs like ubiquitin or some glycons.
+                        // @TODO: we keep only different neutral losses. We might want to change that when people 
+                        //       are working with modifications having reproducible motifs like ubiquitin or some glycons.
+                        if (ptmNeutralLoss.isSameAs(neutralLoss)) {
                             found = true;
                             break;
                         }
@@ -215,19 +217,20 @@ public class IonFactory {
 
     /**
      * Convenience method returning the possible neutral losses combination as
-     * accounted by the factory. i.e. for now up to two neutral losses per peak.
+     * accounted by the factory, i.e., for now up to two neutral losses per peak.
      *
      * @param possibleNeutralLosses the possible neutral losses
      * @return the possible combinations
      */
     public static ArrayList<ArrayList<NeutralLoss>> getAccountedNeutralLosses(ArrayList<NeutralLoss> possibleNeutralLosses) {
+
         // We will account for up to two neutral losses per ion maximum
         ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<ArrayList<NeutralLoss>>();
         ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>();
         neutralLossesCombinations.add(tempList);
-        boolean found;
+
         for (NeutralLoss neutralLoss1 : possibleNeutralLosses) {
-            found = false;
+            boolean found = false;
             for (ArrayList<NeutralLoss> accountedCombination : neutralLossesCombinations) {
                 if (accountedCombination.size() == 1 && accountedCombination.get(0).isSameAs(neutralLoss1)) {
                     found = true;
@@ -262,6 +265,7 @@ public class IonFactory {
                 }
             }
         }
+
         return neutralLossesCombinations;
     }
 

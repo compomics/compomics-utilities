@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * This class stores the information about the modification preferences (colors,
- * Names) used for the selected project.
+ * names) used for the selected project.
  *
  * @author Marc Vaudel
  */
@@ -40,9 +40,9 @@ public class ModificationProfile implements Serializable {
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> colors = new HashMap<String, Color>();
+    private HashMap<String, Color> colors = new HashMap<String, Color>(); // @TODO: we have to provide a default set of colors
     /**
-     * Back-up mapping of the PTMs for portability
+     * Back-up mapping of the PTMs for portability.
      */
     private HashMap<String, PTM> backUp = new HashMap<String, PTM>();
 
@@ -63,7 +63,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the searched fixed modifications names
+     * Returns the searched fixed modifications names.
      *
      * @return the searched fixed modifications names
      */
@@ -72,7 +72,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Return the refinement modifications used for the second pass search
+     * Return the refinement modifications used for the second pass search.
      *
      * @return the refinement modifications
      */
@@ -81,7 +81,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns a list of all searched modifications
+     * Returns a list of all searched modifications.
      *
      * @return a list of all searched modifications
      */
@@ -94,7 +94,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns a list of all searched modifications but the fixed ones
+     * Returns a list of all searched modifications but the fixed ones.
      *
      * @return a list of all searched modifications but the fixed ones
      */
@@ -201,7 +201,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the names of the backed-up PTMs
+     * Returns the names of the backed-up PTMs.
      *
      * @return the names of the backed-up PTMs
      */
@@ -210,7 +210,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the back-ed up PTM with the given name
+     * Returns the back-ed up PTM with the given name.
      *
      * @param modName the name of the PTM of interest
      * @return the corresponding PTM. Null if not found.
@@ -220,7 +220,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Removes a modification from the list of variable modifications
+     * Removes a modification from the list of variable modifications.
      *
      * @param modificationName the name of the modification
      */
@@ -231,7 +231,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Removes a modification from the list of fixed modifications
+     * Removes a modification from the list of fixed modifications.
      *
      * @param modificationName the name of the modification
      */
@@ -243,7 +243,7 @@ public class ModificationProfile implements Serializable {
 
     /**
      * Removes a modification from the list of refinement modifications
-     * modifications
+     * modifications.
      *
      * @param modificationName the name of the modification
      */

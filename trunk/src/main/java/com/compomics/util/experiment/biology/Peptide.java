@@ -392,7 +392,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (nAA - target <= 1 && sequence.length() - 1 > target) {
+                if (target == nAA-1 && sequence.length() >= nAA) {
                     return pattern.isEnding(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -420,7 +420,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (target > 0 && sequence.length() - 1 > nAA) {
+                if (target == 0 && sequence.length() >= nAA) {
                     return pattern.isStarting(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -503,7 +503,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (nAA - target <= 1 && sequence.length() - 1 > target) {
+                if (target == nAA-1 && sequence.length() >= nAA) {
                     if (pattern.isEnding(sequence)) {
                         possibleSites.add(sequence.length() - 1);
                     }
@@ -532,7 +532,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (target > 0 && sequence.length() - 1 > nAA) {
+                if (target == 0 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
                         possibleSites.add(0);
                     }
@@ -598,7 +598,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (nAA - target <= 1 && sequence.length() - 1 > target) {
+                if (target == nAA-1 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
                         possibleSites.add(sequence.length() - 1);
                     }
@@ -611,7 +611,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (target > 0 && sequence.length() - 1 > nAA) {
+                if (target == 0 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
                         possibleSites.add(0);
                     }
@@ -684,7 +684,11 @@ public class Peptide extends ExperimentObject {
             if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
                 PTM ptm = pTMFactory.getPTM(modifications.get(i).getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                    if (ptm.getShortName() != null) {
                     nTerm = ptm.getShortName();
+                    } else {
+                        nTerm += ptm.getName();
+                    }
                 }
             }
         }
@@ -807,7 +811,11 @@ public class Peptide extends ExperimentObject {
             modifiedSequence += "<html>";
         }
 
+        try {
         modifiedSequence = modifiedSequence + getNTerminal() + "-";
+        }catch (Exception e) {
+            String debug = getNTerminal();
+        }
 
         for (int i = 0; i < sequence.length(); i++) {
 

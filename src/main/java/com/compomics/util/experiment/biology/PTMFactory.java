@@ -189,7 +189,7 @@ public class PTMFactory implements Serializable {
         String modName = ptm.getName();
         ptmMap.put(modName, ptm);
         if (!userMods.contains(modName)) {
-            userMods.add(ptm.getName());
+            userMods.add(modName);
         }
         setUserOmssaIndexes();
     }
@@ -216,6 +216,9 @@ public class PTMFactory implements Serializable {
      * @param ptmName the name of the ptm to remove
      */
     public void removeUserPtm(String ptmName) {
+        if (defaultMods.contains(ptmName)) {
+            throw new IllegalArgumentException("Impossible to remove default modification " + ptmName);
+        }
         ptmMap.remove(ptmName);
         userMods.remove(ptmName);
         omssaIndexes.remove(ptmName);
@@ -461,13 +464,17 @@ public class PTMFactory implements Serializable {
         if (!currentPTM.getName().startsWith("user modification ") && !currentPTM.getName().endsWith(SEARCH_SUFFIX)) {
             ptmMap.put(currentPTM.getName(), currentPTM);
             if (userMod) {
-                if (!userMods.contains(currentPTM.getName())) {
-                    userMods.add(currentPTM.getName());
+                if (defaultMods.contains(name)) {
+                    throw new IllegalArgumentException("Impossible to load " + name + " as user modification. Already defined as default modification.");
+                } else if (userMods.contains(name)) {
+                    throw new IllegalArgumentException(name + " is defined twice as user modification.");
                 }
+                userMods.add(currentPTM.getName());
             } else {
-                if (!defaultMods.contains(currentPTM.getName())) {
-                    defaultMods.add(currentPTM.getName());
+                if (defaultMods.contains(name)) {
+                    throw new IllegalArgumentException(name + " is defined twice as default modification.");
                 }
+                defaultMods.add(currentPTM.getName());
                 omssaIndexes.put(currentPTM.getName(), number);
             }
         }
@@ -707,20 +714,19 @@ public class PTMFactory implements Serializable {
      * checked.
      */
     public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
-        PTMFactory ptmFactory = PTMFactory.getInstance();
         ModificationProfile modificationProfile = searchParameters.getModificationProfile();
         ArrayList<String> toCheck = new ArrayList<String>();
         for (String modification : modificationProfile.getBackedUpPtms()) {
-            if (ptmFactory.containsPTM(modification)) {
-                PTM oldPTM = ptmFactory.getPTM(modification);
+            if (containsPTM(modification)) {
+                PTM oldPTM = getPTM(modification);
                 if (!oldPTM.isSameAs(modificationProfile.getPtm(modification))) {
                     toCheck.add(modification);
-                }
-                if (overwrite) {
-                    ptmFactory.addUserPTM(modificationProfile.getPtm(modification));
+                    if (overwrite) {
+                        ptmMap.put(modification, modificationProfile.getPtm(modification));
+                    }
                 }
             } else {
-                ptmFactory.addUserPTM(modificationProfile.getPtm(modification));
+                addUserPTM(modificationProfile.getPtm(modification));
             }
         }
         return toCheck;
@@ -728,7 +734,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the expected modifications based on the modification profile, the
-     * peptide found and the modification details.
+     * peptide found and the modification details
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
@@ -752,7 +758,7 @@ public class PTMFactory implements Serializable {
 
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String variableModification : modificationProfile.getVariableModifications()) {
+        for (String variableModification : modificationProfile.getAllModifications()) {
             PTM ptm = getSearchedPTM(variableModification);
             if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
                 result.add(variableModification);
@@ -764,21 +770,29 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the names of the possibly expected variable modification based on
-     * the name of the searched variable modification.
+     * the name of the searched variable modification
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
      * @param searchedPTMName the name of the searched PTM
-     * @return the possible expected modification names
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     * @return the possible expected modification names. Empty if not found.
      */
-    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, String searchedPTMName) {
+    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String searchedPTMName) throws IOException, IllegalArgumentException, InterruptedException {
 
         ArrayList<String> result = new ArrayList<String>();
-
-        for (String variableModification : modificationProfile.getVariableModifications()) {
+        for (String variableModification : modificationProfile.getAllModifications()) {
             String ptmName = getSearchedPTM(variableModification).getName();
             if (ptmName.equalsIgnoreCase(searchedPTMName)) {
-                result.add(ptmName);
+                PTM ptm = getSearchedPTM(variableModification);
+                if (peptide.isModifiable(ptm)) {
+                    result.add(ptmName);
+                }
             }
         }
         

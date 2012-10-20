@@ -80,7 +80,8 @@ public class Peptide extends ExperimentObject {
     /**
      * Constructor for the peptide.
      *
-     * @deprecated use the constructor without mass. The mass will be recalculated
+     * @deprecated use the constructor without mass. The mass will be
+     * recalculated.
      * @param aSequence The peptide sequence
      * @param mass The peptide mass
      * @param parentProteins The parent proteins
@@ -360,9 +361,8 @@ public class Peptide extends ExperimentObject {
                     return pattern.matches(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    Protein protein;
                     for (String accession : parentProteins) {
-                        protein = sequenceFactory.getProtein(accession);
+                        Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
                             int beginIndex = index - target;
                             int endIndex = index + sequence.length() - 1 + nAA - target;
@@ -392,13 +392,12 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (target == nAA-1 && sequence.length() >= nAA) {
+                if (target == nAA - 1 && sequence.length() >= nAA) {
                     return pattern.isEnding(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    Protein protein;
                     for (String accession : parentProteins) {
-                        protein = sequenceFactory.getProtein(accession);
+                        Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
                             int beginIndex = index + sequence.length() - target - 1;
                             int endIndex = beginIndex + nAA;
@@ -424,9 +423,8 @@ public class Peptide extends ExperimentObject {
                     return pattern.isStarting(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    Protein protein;
                     for (String accession : parentProteins) {
-                        protein = sequenceFactory.getProtein(accession);
+                        Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
                             int beginIndex = index - target;
                             int endIndex = beginIndex + nAA;
@@ -480,7 +478,7 @@ public class Peptide extends ExperimentObject {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.matches(tempSequence)) {
                                     for (int tempIndex : pattern.getIndexes(tempSequence)) {
-                                        int sequenceIndex = tempIndex-target;
+                                        int sequenceIndex = tempIndex - target;
                                         if (!possibleSites.contains(sequenceIndex)) {
                                             possibleSites.add(tempIndex);
                                         }
@@ -503,7 +501,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (target == nAA-1 && sequence.length() >= nAA) {
+                if (target == nAA - 1 && sequence.length() >= nAA) {
                     if (pattern.isEnding(sequence)) {
                         possibleSites.add(sequence.length() - 1);
                     }
@@ -572,6 +570,7 @@ public class Peptide extends ExperimentObject {
      * @param sequence the sequence of the peptide of interest
      * @param ptm the PTM considered
      * @return a list of potential modification sites
+     * @throws IllegalArgumentException  
      */
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) throws IllegalArgumentException {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
@@ -598,7 +597,7 @@ public class Peptide extends ExperimentObject {
                 pattern = ptm.getPattern();
                 target = pattern.getTarget();
                 nAA = pattern.length();
-                if (target == nAA-1 && sequence.length() >= nAA) {
+                if (target == nAA - 1 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
                         possibleSites.add(sequence.length() - 1);
                     }
@@ -685,7 +684,7 @@ public class Peptide extends ExperimentObject {
                 PTM ptm = pTMFactory.getPTM(modifications.get(i).getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
                     if (ptm.getShortName() != null) {
-                    nTerm = ptm.getShortName();
+                        nTerm = ptm.getShortName();
                     } else {
                         nTerm += ptm.getName();
                     }
@@ -812,8 +811,8 @@ public class Peptide extends ExperimentObject {
         }
 
         try {
-        modifiedSequence = modifiedSequence + getNTerminal() + "-";
-        }catch (Exception e) {
+            modifiedSequence = modifiedSequence + getNTerminal() + "-";
+        } catch (Exception e) {
             String debug = getNTerminal();
         }
 
@@ -987,12 +986,12 @@ public class Peptide extends ExperimentObject {
         for (int aa = 0; aa < sequence.length(); aa++) {
             try {
                 currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
-                
+
                 if (currentAA != null) {
                     mass += currentAA.monoisotopicMass;
                 } else {
                     System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
-                }   
+                }
             } catch (NullPointerException e) {
                 throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
             }

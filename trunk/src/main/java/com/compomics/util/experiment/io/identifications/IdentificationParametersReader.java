@@ -8,7 +8,6 @@ import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.swing.JOptionPane;
 
 /**
  * The identification parameters reader returns the parameters used for

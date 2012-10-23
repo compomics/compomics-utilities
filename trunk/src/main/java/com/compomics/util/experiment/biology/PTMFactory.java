@@ -2,6 +2,7 @@ package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -74,14 +75,7 @@ public class PTMFactory implements Serializable {
         if (instance == null) {
             try {
                 File savedFile = new File(SERIALIZATION_FILE);
-                FileInputStream fis = new FileInputStream(savedFile);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                ObjectInputStream in = new ObjectInputStream(bis);
-                Object factory = in.readObject();
-                fis.close();
-                bis.close();
-                in.close();
-                instance = (PTMFactory) factory;
+                instance = (PTMFactory) SerializationUtils.readObject(savedFile);
             } catch (Exception e) {
                 instance = new PTMFactory();
                 try {
@@ -121,13 +115,7 @@ public class PTMFactory implements Serializable {
         if (!factoryFile.getParentFile().exists()) {
             factoryFile.getParentFile().mkdir();
         }
-        FileOutputStream fos = new FileOutputStream(factoryFile);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(instance);
-        oos.close();
-        bos.close();
-        fos.close();
+        SerializationUtils.writeObject(instance, factoryFile);
     }
 
     /**
@@ -358,6 +346,9 @@ public class PTMFactory implements Serializable {
      * starting 'MSModSpec' tag, and upon completion, the parser will be set on
      * the closing 'MSModSpec' tag.
      *
+     * @param parser the parser
+     * @param userMod a boolean indicating whether we are parsing user
+     * modifications or not
      * @throws XmlPullParserException when the pull parser failed.
      * @throws IOException when the pull parser could not access the underlying
      * file.
@@ -401,7 +392,7 @@ public class PTMFactory implements Serializable {
         }
         // Right, we should be on the right start tag, so get the value.
         parser.next();
-        String name = parser.getText().trim();
+        String name = parser.getText().trim().toLowerCase();
         // Mass
         type = parser.next();
         while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_monomass"))) {
@@ -432,7 +423,7 @@ public class PTMFactory implements Serializable {
         }
         // Create and implement modification.
         AminoAcidPattern pattern = new AminoAcidPattern(residues);
-        PTM currentPTM = new PTM(getIndex(modType), name.toLowerCase(), new Double(mass), pattern);
+        PTM currentPTM = new PTM(getIndex(modType), name, new Double(mass), pattern);
 
         while (!(type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_neutralloss"))
                 && !(type == XmlPullParser.END_TAG && parser.getName().equals("MSModSpec"))) {
@@ -462,21 +453,24 @@ public class PTMFactory implements Serializable {
             type = parser.next();
         }
 
-        if (!currentPTM.getName().startsWith("user modification ") && !currentPTM.getName().endsWith(SEARCH_SUFFIX)) {
-            ptmMap.put(currentPTM.getName(), currentPTM);
+        if (!name.startsWith("user modification ")) {
+            if (!name.endsWith(SEARCH_SUFFIX)) {
+                ptmMap.put(name, currentPTM);
+            } else {
+                name = name.substring(0, name.lastIndexOf(SEARCH_SUFFIX));
+            }
             if (userMod) {
                 if (defaultMods.contains(name)) {
                     throw new IllegalArgumentException("Impossible to load " + name + " as user modification. Already defined as default modification.");
-                } else if (userMods.contains(name)) {
-                    throw new IllegalArgumentException(name + " is defined twice as user modification.");
+                } else if (!userMods.contains(name)) {
+                    userMods.add(name);
                 }
-                userMods.add(currentPTM.getName());
             } else {
                 if (defaultMods.contains(name)) {
                     throw new IllegalArgumentException(name + " is defined twice as default modification.");
                 }
-                defaultMods.add(currentPTM.getName());
-                omssaIndexes.put(currentPTM.getName(), number);
+                defaultMods.add(name);
+                omssaIndexes.put(name, number);
             }
         }
     }
@@ -754,7 +748,7 @@ public class PTMFactory implements Serializable {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      */
-    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, 
+    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
             double modificationMass, double massTolerance) throws IOException, IllegalArgumentException, InterruptedException {
 
         ArrayList<String> result = new ArrayList<String>();

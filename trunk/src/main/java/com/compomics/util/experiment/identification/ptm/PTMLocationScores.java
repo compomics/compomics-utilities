@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class scores PTM locations using various scores.
@@ -167,6 +166,7 @@ public class PTMLocationScores {
             Double peptideScore, bestScore = null, secondScore = null;
             Integer bestPosition = null, secondPosition = null;
             ArrayList<Integer> bestPositions = new ArrayList<Integer>();
+
             for (int pos : positionToScoreMap.keySet()) {
                 peptideScore = 0.0;
                 if (positionToScoreMap.get(pos).containsKey(1)) {
@@ -236,7 +236,6 @@ public class PTMLocationScores {
             }
 
             N = 0;
-            int aa;
             int posMin = Math.min(bestPosition, secondPosition);
             int posMax = Math.max(bestPosition, secondPosition);
 
@@ -248,14 +247,14 @@ public class PTMLocationScores {
                         if (ion.getSubType() == PeptideFragmentIon.A_ION
                                 || ion.getSubType() == PeptideFragmentIon.B_ION
                                 || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                            aa = fragmentIon.getNumber();
+                            int aa = fragmentIon.getNumber();
                             if (aa > posMin && aa <= posMax) {
                                 N++;
                             }
                         } else if (ion.getSubType() == PeptideFragmentIon.X_ION
                                 || ion.getSubType() == PeptideFragmentIon.Y_ION
                                 || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                            aa = peptide.getSequence().length() - fragmentIon.getNumber();
+                            int aa = peptide.getSequence().length() - fragmentIon.getNumber();
                             if (aa > posMin && aa <= posMax) {
                                 N++;
                             }
@@ -269,6 +268,7 @@ public class PTMLocationScores {
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, posMin + 1));
             matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = 0;
+
             for (IonMatch match : matches) {
                 Ion ion = match.ion;
                 if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -276,20 +276,21 @@ public class PTMLocationScores {
                     if (ion.getSubType() == PeptideFragmentIon.A_ION
                             || ion.getSubType() == PeptideFragmentIon.B_ION
                             || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                        aa = fragmentIon.getNumber();
+                        int aa = fragmentIon.getNumber();
                         if (aa > posMin && aa <= posMax) {
                             n++;
                         }
                     } else if (ion.getSubType() == PeptideFragmentIon.X_ION
                             || ion.getSubType() == PeptideFragmentIon.Y_ION
                             || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                        aa = peptide.getSequence().length() - fragmentIon.getNumber();
+                        int aa = peptide.getSequence().length() - fragmentIon.getNumber();
                         if (aa > posMin && aa <= posMax) {
                             n++;
                         }
                     }
                 }
             }
+
             double p1 = 0;
 
             for (int k = n; k <= N; k++) {
@@ -300,6 +301,7 @@ public class PTMLocationScores {
             tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, posMax + 1));
             matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = 0;
+
             for (IonMatch match : matches) {
                 Ion ion = match.ion;
                 if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -307,14 +309,14 @@ public class PTMLocationScores {
                     if (ion.getSubType() == PeptideFragmentIon.A_ION
                             || ion.getSubType() == PeptideFragmentIon.B_ION
                             || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                        aa = fragmentIon.getNumber();
+                        int aa = fragmentIon.getNumber();
                         if (aa > posMin && aa <= posMax) {
                             n++;
                         }
                     } else if (ion.getSubType() == PeptideFragmentIon.X_ION
                             || ion.getSubType() == PeptideFragmentIon.Y_ION
                             || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                        aa = peptide.getSequence().length() - fragmentIon.getNumber();
+                        int aa = peptide.getSequence().length() - fragmentIon.getNumber();
                         if (aa > posMin && aa <= posMax) {
                             n++;
                         }
@@ -349,7 +351,9 @@ public class PTMLocationScores {
             for (int pos : possibleSites) {
                 modificationProfile.add(pos + 1);
             }
-            result.put(modificationProfile, 100.0);
+            if (possibleSites.size() > 0) {
+                result.put(modificationProfile, 100.0);
+            }
         }
         return result;
     }

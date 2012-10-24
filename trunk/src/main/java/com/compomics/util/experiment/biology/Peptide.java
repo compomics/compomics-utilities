@@ -445,7 +445,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the potential modification sites as an ordered list of string. 0
-     * is the first aa. an empty list is returned if no possibility was found.
+     * is the first aa. An empty list is returned if no possibility was found.
      * This method does not account for protein terminal modifications.
      *
      * @param ptm the PTM considered
@@ -468,9 +468,8 @@ public class Peptide extends ExperimentObject {
                     return pattern.getIndexes(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-                    Protein protein;
                     for (String accession : parentProteins) {
-                        protein = sequenceFactory.getProtein(accession);
+                        Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
                             int beginIndex = index - target;
                             int endIndex = index + sequence.length() - 1 + nAA - target;
@@ -478,7 +477,7 @@ public class Peptide extends ExperimentObject {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.matches(tempSequence)) {
                                     for (int tempIndex : pattern.getIndexes(tempSequence)) {
-                                        int sequenceIndex = tempIndex - target;
+                                        Integer sequenceIndex = tempIndex - target;
                                         if (!possibleSites.contains(sequenceIndex)) {
                                             possibleSites.add(tempIndex);
                                         }
@@ -488,6 +487,7 @@ public class Peptide extends ExperimentObject {
                         }
                     }
                 }
+                return possibleSites;
             case PTM.MODC:
             case PTM.MODCP:
                 possibleSites.add(sequence.length() - 1);
@@ -570,7 +570,7 @@ public class Peptide extends ExperimentObject {
      * @param sequence the sequence of the peptide of interest
      * @param ptm the PTM considered
      * @return a list of potential modification sites
-     * @throws IllegalArgumentException  
+     * @throws IllegalArgumentException
      */
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) throws IllegalArgumentException {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();

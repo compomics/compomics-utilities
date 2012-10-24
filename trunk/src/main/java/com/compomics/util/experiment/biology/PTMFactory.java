@@ -55,7 +55,7 @@ public class PTMFactory implements Serializable {
     /**
      * Suffix for the modifications searched but not in the factory
      */
-    public static final String SEARCH_SUFFIX = "_SEARCH_ONLY";
+    public static final String SEARCH_SUFFIX = "|SEARCH-ONLY";
 
     /**
      * Constructor for the factory.
@@ -132,9 +132,17 @@ public class PTMFactory implements Serializable {
                 break;
             }
         }
+
         if (name != null) {
+            if (name.endsWith(SEARCH_SUFFIX)) {
+                name = name.substring(0, name.lastIndexOf(SEARCH_SUFFIX));
+            }
+        }
+
+        if (name != null && ptmMap.get(name) != null) {
             return ptmMap.get(name);
         }
+
         return unknownPTM;
     }
 
@@ -187,13 +195,12 @@ public class PTMFactory implements Serializable {
      * Sets the omssa indexes of all loaded user ptms.
      */
     private void setUserOmssaIndexes() {
-        String ptm;
         for (int rank = 1; rank <= userMods.size(); rank++) {
             int omssaIndex = rank + 118;
             if (omssaIndex > 128) {
                 omssaIndex += 13;
             }
-            ptm = userMods.get(rank - 1);
+            String ptm = userMods.get(rank - 1);
             PTM searchedPtm = getSearchedPTM(ptm);
             omssaIndexes.put(searchedPtm.getName(), omssaIndex);
         }
@@ -729,7 +736,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the expected modifications based on the modification profile, the
-     * peptide found and the modification details
+     * peptide found and the modification details.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
@@ -740,7 +747,7 @@ public class PTMFactory implements Serializable {
      * @param massTolerance the mass tolerance to use to match the modification
      * mass
      * @return a list of expected PTMs corresponding to the given
-     * characteristics. Empty if none found
+     * characteristics. Empty if none found.
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -753,19 +760,27 @@ public class PTMFactory implements Serializable {
 
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String variableModification : modificationProfile.getAllModifications()) {
-            PTM ptm = getSearchedPTM(variableModification);
+        for (String modification : modificationProfile.getAllModifications()) {
+            PTM ptm = getSearchedPTM(modification);
             if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
-                result.add(variableModification);
+                result.add(modification);
             }
         }
+        
+        // @TODO: the below code tries to remove the ptms not matching the patterns, but results in a null pointer exception... 
+//        for (String modification : modificationProfile.getAllModifications()) {
+//            PTM ptm = ptmMap.get(modification);
+//            if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
+//                result.add(modification);
+//            }
+//        }
 
         return result;
     }
 
     /**
-     * Returns the names of the possibly expected variable modification based on
-     * the name of the searched variable modification.
+     * Returns the names of the possibly expected modification based on
+     * the name of the searched modification.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
@@ -783,12 +798,23 @@ public class PTMFactory implements Serializable {
 
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String variableModification : modificationProfile.getAllModifications()) { // @TODO: change back to getVariableModifications()??
-            String ptmName = getSearchedPTM(variableModification).getName();
-            if (ptmName.equalsIgnoreCase(searchedPTMName)) {
-                PTM ptm = getSearchedPTM(variableModification);
+        // old code
+//        for (String modification : modificationProfile.getAllModifications()) {
+//            String ptmName = getSearchedPTM(modification).getName();
+//            if (ptmName.equalsIgnoreCase(searchedPTMName)) {
+//                PTM ptm = getSearchedPTM(modification);
+//                if (peptide.isModifiable(ptm)) {
+//                    result.add(ptmName);
+//                }
+//            }
+//        }
+        
+        // new code trying to remove the not matching patterns
+        for (String modification : modificationProfile.getAllModifications()) {
+            if (modification.equalsIgnoreCase(searchedPTMName)) {
+                PTM ptm = ptmMap.get(modification);
                 if (peptide.isModifiable(ptm)) {
-                    result.add(ptmName);
+                    result.add(modification);
                 }
             }
         }

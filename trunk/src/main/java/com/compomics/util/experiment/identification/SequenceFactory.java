@@ -664,7 +664,7 @@ public class SequenceFactory {
         if (molecularWeights.containsKey(accession)) {
             return molecularWeights.get(accession);
         }
-        
+
         // weight unknown, we need to calculate the weight
         Protein protein = getProtein(accession);
         double weight = protein.computeMolecularWeight() / 1000;

@@ -77,7 +77,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
-        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 5);
+        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 5).trim();
     }
 
     /**
@@ -402,19 +402,19 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param mzCorrections the m/z corrections to apply
      * @return the recalibrated list of peaks indexed by m/z
-     * @throws IllegalArgumentException  
+     * @throws IllegalArgumentException
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) throws IllegalArgumentException {
-        
+
         HashMap<Double, Peak> result = new HashMap<Double, Peak>();
         ArrayList<Double> keys = new ArrayList<Double>(mzCorrections.keySet());
         Collections.sort(keys);
-        
+
         for (Peak peak : peakList.values()) {
             double fragmentMz = peak.mz;
             double key1 = keys.get(0);
             double correction = 0.0;
-            
+
             if (fragmentMz <= key1) {
                 correction = mzCorrections.get(key1);
             } else {
@@ -438,7 +438,7 @@ public abstract class Spectrum extends ExperimentObject {
                     }
                 }
             }
-            
+
             result.put(peak.mz - correction, new Peak(peak.mz - correction, peak.intensity));
         }
         return result;

@@ -1,4 +1,3 @@
-
 package com.compomics.util.gui.ptm;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
@@ -28,7 +27,7 @@ import org.jfree.chart.plot.PlotOrientation;
 
 /**
  * A dialog where the modification details can be modified.
- * 
+ *
  * @author Harald Barsnes
  */
 public class ModificationsDialog extends javax.swing.JDialog implements PtmDialogParent {
@@ -82,19 +81,19 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Creates a new ModificationsDialog.
-     * 
-     * @param parentFrame 
+     *
+     * @param parentFrame
      * @param parent
-     * @param modal  
+     * @param modal
      */
     public ModificationsDialog(Frame parentFrame, PtmDialogParent parent, boolean modal) {
         super(parentFrame, modal);
         ptmDialogParent = parent;
         initComponents();
-        
+
         // set up tables
         setUpTables();
-        
+
         // get the psi-mod mappings
         try {
             PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
@@ -107,11 +106,11 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         searchIndexLabel.setText("");
         searchPreviousButton.setEnabled(false);
         searchNextButton.setEnabled(false);
-        
+
         setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
-    
+
     /**
      * Set up the table properties.
      */
@@ -194,7 +193,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         userModsTableToolTips.add("Affected Residues");
         userModsTableToolTips.add("PSI-MOD Mapping");
     }
-    
+
     /**
      * Update the max value of the mass sparklines.
      */
@@ -566,8 +565,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Opens the default modification popup menu.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void defaultModificationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_defaultModificationsTableMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON3) {
@@ -582,8 +581,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor into hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void defaultModificationsTableMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_defaultModificationsTableMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -591,8 +590,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Opens the link in a new browser.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void defaultModificationsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_defaultModificationsTableMouseReleased
         int row = defaultModificationsTable.rowAtPoint(evt.getPoint());
@@ -618,8 +617,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor to a hand cursor if over a link.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void defaultModificationsTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_defaultModificationsTableMouseMoved
         int row = defaultModificationsTable.rowAtPoint(evt.getPoint());
@@ -645,8 +644,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor to a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchNextButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchNextButtonMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -654,8 +653,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchNextButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchNextButtonMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -663,8 +662,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Find the next matching ptm.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchNextButtonActionPerformed
         if (searchCurrentSelection == searchPossibilities.size() - 1) {
@@ -677,8 +676,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor to a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchPreviousButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPreviousButtonMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -686,8 +685,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchPreviousButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPreviousButtonMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -695,8 +694,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Find the previous matching ptm.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchPreviousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPreviousButtonActionPerformed
         if (searchCurrentSelection == 0) {
@@ -709,8 +708,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Start the ptm search.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchInputTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchInputTxtMouseReleased
         if (searchInputTxt.getText().equals(searchWelcomeText)) {
@@ -720,8 +719,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Start the ptm search.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void searchInputTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchInputTxtKeyReleased
 
@@ -773,8 +772,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Opens the user mods popup dialog or the PtmDialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void userModificationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON3) {
@@ -791,8 +790,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Changes the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void userModificationsTableMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -800,8 +799,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Opens the protein link in the browser.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void userModificationsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseReleased
         editUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
@@ -830,8 +829,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Change the cursor to a hand cursor when over a link.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void userModificationsTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userModificationsTableMouseMoved
         int row = userModificationsTable.rowAtPoint(evt.getPoint());
@@ -857,8 +856,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Delete the given user ptm.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void deleteUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserPTMActionPerformed
         int row = userModificationsTable.getSelectedRow();
@@ -874,8 +873,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Edit user PTM.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void editUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPTMActionPerformed
         int row = userModificationsTable.getSelectedRow();
@@ -886,8 +885,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Add user ptm.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
         if (ptmFactory.getUserModifications().size() < 30) {
@@ -900,8 +899,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Change the cursor to a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void modificationsHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsHelpJButtonMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -909,8 +908,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Change the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void modificationsHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsHelpJButtonMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -918,12 +917,12 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Open the help dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void modificationsHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificationsHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/ModificationEditor.html"), 
+        new HelpDialog(this, getClass().getResource("/helpFiles/ModificationEditor.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 "Help - Modifications");
@@ -932,8 +931,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Edit a default ptm.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void editDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDefaultPtmJMenuItemActionPerformed
         String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
@@ -943,8 +942,8 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Edit user ptm.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
         String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
@@ -954,14 +953,13 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
     /**
      * Save the ptm details.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         ptmDialogParent.updateModifications();
         dispose();
     }//GEN-LAST:event_formWindowClosing
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addUserPTM;
     private javax.swing.JTable defaultModificationsTable;
@@ -986,7 +984,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     private javax.swing.JPopupMenu userPtmPopupMenu;
     // End of variables declaration//GEN-END:variables
 
-/**
+    /**
      * Table model for the default PTM table.
      */
     private class DefaultPTMTable extends DefaultTableModel {
@@ -1036,10 +1034,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                 case 4:
                     String residues = "";
                     for (AminoAcid residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
-                            if (!residues.equals("")) {
-                                residues += ", ";
-                            }
-                            residues += residue.singleLetterCode;
+                        if (!residues.equals("")) {
+                            residues += ", ";
+                        }
+                        residues += residue.singleLetterCode;
                     }
                     return residues;
                 case 5:
@@ -1127,10 +1125,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                 case 4:
                     String residues = "";
                     for (AminoAcid residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
-                            if (!residues.equals("")) {
-                                residues += ", ";
-                            }
-                            residues += residue.singleLetterCode;
+                        if (!residues.equals("")) {
+                            residues += ", ";
+                        }
+                        residues += residue.singleLetterCode;
                     }
                     return residues;
                 case 5:
@@ -1167,7 +1165,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             return false;
         }
     }
-    
+
     /**
      * Returns the protein accession number as a web link to the given PSI-MOD
      * at http://www.ebi.ac.uk/ontology-lookup.
@@ -1195,7 +1193,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         deleteUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
         updateMassSparklines();
     }
-    
+
     /**
      * Updates the PTM selection in the default table.
      */

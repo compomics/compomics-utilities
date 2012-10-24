@@ -40,9 +40,8 @@ public class DasAlignment {
                 while (iAlignment.indexOf("<block", startBlock) > -1) {
                     String blockStr = iAlignment.substring(iAlignment.indexOf(">", iAlignment.indexOf("<block", startBlock)), iAlignment.indexOf("</block", startBlock));
                     startBlock = iAlignment.indexOf("</block", startBlock) + 5;
-                    int segment1End = 0;
                     String segment1 = blockStr.substring(blockStr.indexOf("<segment"), blockStr.indexOf(">", blockStr.indexOf("<segment")) + 1);
-                    segment1End = blockStr.indexOf(">", blockStr.indexOf("<segment")) + 1;
+                    int segment1End = blockStr.indexOf(">", blockStr.indexOf("<segment")) + 1;
                     String segment2 = blockStr.substring(blockStr.indexOf("<segment", segment1End), blockStr.indexOf(">", blockStr.indexOf("<segment", segment1End)) + 1);
                     String pdbA = segment1.substring(segment1.indexOf("Id=\"") + 4, segment1.indexOf("\"", segment1.indexOf("Id=\"") + 4));
                     String startStrPdb = segment1.substring(segment1.indexOf("rt=\"") + 4, segment1.indexOf("\"", segment1.indexOf("rt=\"") + 4));
@@ -57,7 +56,6 @@ public class DasAlignment {
 
                     AlignmentBlock align = new AlignmentBlock(startPdb, endPdb, startSp, endSp, pdbA, spA);
                     block.add(align);
-
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Number format exception for pdb alignment!");

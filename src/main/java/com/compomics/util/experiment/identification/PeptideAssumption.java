@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
@@ -173,6 +172,8 @@ public class PeptideAssumption extends ExperimentObject {
 
     /**
      * Set the rank of the PeptideAssumption.
+     * 
+     * @param aRank the rank of the PeptideAssumptio
      */
     public void setRank(int aRank) {
         rank = aRank;

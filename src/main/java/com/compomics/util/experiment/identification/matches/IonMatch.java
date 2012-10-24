@@ -70,8 +70,12 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
-        double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
-        return ((peak.mz - theoreticMz) / theoreticMz) * 1000000;
+        if (charge != null) {
+            double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+            return ((peak.mz - theoreticMz) / theoreticMz) * 1000000;
+        } else {
+            return Double.MAX_VALUE;
+        }
     }
 
     /**

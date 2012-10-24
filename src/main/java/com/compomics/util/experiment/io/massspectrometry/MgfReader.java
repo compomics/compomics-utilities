@@ -7,6 +7,7 @@ import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.gui.waiting.WaitingHandler;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class MgfReader {
     public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
 
         ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
-        double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1.0, rt2 = -1.0;
+        double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1.0, rt2 = -1.0;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
@@ -62,12 +63,18 @@ public class MgfReader {
                 spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
+                try {
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
+                    e.printStackTrace();
+                }
             } else if (line.startsWith("CHARGE")) {
                 precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
-                precursorMass = Double.parseDouble(values[0]);
+                precursorMz = Double.parseDouble(values[0]);
                 if (values.length > 1) {
                     precursorIntensity = Double.parseDouble(values[1]);
                 } else {
@@ -109,9 +116,9 @@ public class MgfReader {
             } else if (line.equals("END IONS")) {
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
-                    precursor = new Precursor(precursorMass, precursorIntensity, precursorCharges, rt1, rt2);
+                    precursor = new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                 } else {
-                    precursor = new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                    precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, aFile.getName());
                 msnSpectrum.setScanNumber(scanNumber);
@@ -199,15 +206,21 @@ public class MgfReader {
                 }
             } else if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf('=') + 1).trim();
+                try {
+                    title = URLDecoder.decode(title, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
+                    e.printStackTrace();
+                }
                 spectrumTitles.add(title);
                 indexes.put(title, currentIndex);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
-                double precursorMass = Double.parseDouble(values[0]);
+                double precursorMz = Double.parseDouble(values[0]);
 
-                if (precursorMass > maxMz) {
-                    maxMz = precursorMass;
+                if (precursorMz > maxMz) {
+                    maxMz = precursorMz;
                 }
 
                 if (values.length > 1) {
@@ -366,15 +379,21 @@ public class MgfReader {
 
                 } else if (line.startsWith("TITLE")) {
                     title = line.substring(line.indexOf('=') + 1).trim();
+                    try {
+                        title = URLDecoder.decode(title, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
+                        e.printStackTrace();
+                    }
                     spectrumTitles.add(title);
                     indexes.put(title, writeIndex);
                 } else if (line.startsWith("PEPMASS")) {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
-                    double precursorMass = Double.parseDouble(values[0]);
+                    double precursorMz = Double.parseDouble(values[0]);
 
-                    if (precursorMass > maxMz) {
-                        maxMz = precursorMass;
+                    if (precursorMz > maxMz) {
+                        maxMz = precursorMz;
                     }
 
                     if (values.length > 1) {
@@ -458,7 +477,7 @@ public class MgfReader {
     public static MSnSpectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
         bufferedRandomAccessFile.seek(index);
-        double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
+        double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
@@ -472,12 +491,18 @@ public class MgfReader {
                 spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
+                try {
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
+                    e.printStackTrace();
+                }
             } else if (line.startsWith("CHARGE")) {
                 precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
-                precursorMass = Double.parseDouble(values[0]);
+                precursorMz = Double.parseDouble(values[0]);
                 if (values.length > 1) {
                     precursorIntensity = Double.parseDouble(values[1]);
                 } else {
@@ -527,9 +552,9 @@ public class MgfReader {
             } else if (line.equals("END IONS")) {
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
-                    precursor = new Precursor(precursorMass, precursorIntensity, precursorCharges, rt1, rt2);
+                    precursor = new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                 } else {
-                    precursor = new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                    precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, fileName);
                 msnSpectrum.setScanNumber(scanNumber);
@@ -585,7 +610,7 @@ public class MgfReader {
             } else if (charge.endsWith("-")) {
                 value = new Integer(charge.substring(0, charge.length() - 1));
                 result.add(new Charge(Charge.MINUS, value));
-            } else {
+            } else if (!charge.equalsIgnoreCase("Mr")) {
                 result.add(new Charge(Charge.PLUS, new Integer(charge)));
             }
         }
@@ -616,7 +641,7 @@ public class MgfReader {
 
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
-        double precursorMass = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
+        double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
@@ -637,12 +662,18 @@ public class MgfReader {
                     // not supported yet
                 } else if (line.startsWith("TITLE")) {
                     title = line.substring(line.indexOf("=") + 1);
+                    try {
+                        title = URLDecoder.decode(title, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
+                        e.printStackTrace();
+                    }
                 } else if (line.startsWith("CHARGE")) {
                     precursorCharges = parseCharges(line);
                 } else if (line.startsWith("PEPMASS")) {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
-                    precursorMass = Double.parseDouble(values[0]);
+                    precursorMz = Double.parseDouble(values[0]);
                     if (values.length > 1) {
                         precursorIntensity = Double.parseDouble(values[1]);
                     } else {
@@ -671,9 +702,9 @@ public class MgfReader {
                     }
                 } else {
                     if (rt1 != -1 && rt2 != -1) {
-                        return new Precursor(precursorMass, precursorIntensity, precursorCharges, rt1, rt2);
+                        return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                     }
-                    return new Precursor(rt, precursorMass, precursorIntensity, precursorCharges);
+                    return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
             }
         }

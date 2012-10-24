@@ -788,19 +788,14 @@ public class SpectrumFactory {
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {
 
-        // @TODO: not sure if this is needed here as the titles are fixed during import??
-
         // a special fix for mgf files with titles containing url encoding, e.g.: %3b instead of ;
         if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
-
             try {
                 spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // @TODO: only required for mascot??
             } catch (UnsupportedEncodingException e) {
-                System.out.println("An exception was thrown when trying to decode an mgf tile!");
+                System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
                 e.printStackTrace();
             }
-
-            //spectrumTitle = spectrumTitle.replaceAll("%3b", ";");
         }
 
         // a special fix for mgf files with titles containing \\ instead \

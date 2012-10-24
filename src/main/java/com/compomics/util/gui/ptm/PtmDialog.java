@@ -649,7 +649,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
 
-            PTM otherPTM, newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), pattern);
+            PTM newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), pattern);
             ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
 
             for (int row = 0; row < neutralLossesTable.getRowCount(); row++) {
@@ -670,7 +670,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
             for (String ptm : ptmFactory.getPTMs()) {
                 if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
-                    otherPTM = ptmFactory.getPTM(ptm);
+                    PTM otherPTM = ptmFactory.getPTM(ptm);
                     if (newPTM.isSameAs(otherPTM)) {
                         int outcome = JOptionPane.showConfirmDialog(this, "The modification " + ptm
                                 + " presents characteristics similar to your input. Are you sure you want to create this new modification?",
@@ -682,7 +682,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 }
             }
 
-                ptmFactory.addUserPTM(newPTM);
+            ptmFactory.addUserPTM(newPTM);
 
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             ptmDialogParent.updateModifications();
@@ -846,8 +846,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
     /**
      * Open the amino acid pattern dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
         if (evt.getButton() == MouseEvent.BUTTON1) {
@@ -858,7 +858,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         }
     }//GEN-LAST:event_residuesTxtMouseReleased
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;

@@ -220,7 +220,7 @@ public class SpectrumFactory {
      * not parsed correctly
      */
     public Precursor getPrecursor(String spectrumKey) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
-        return getPrecursor(spectrumKey, true);
+        return getPrecursor(spectrumKey, false);
     }
 
     /**
@@ -390,7 +390,7 @@ public class SpectrumFactory {
      *
      * @param spectrumKey the key of the spectrum
      * @param save boolean indicating whether the loaded precursor should be
-     * stored in the factory
+     * stored in the factory. False by default
      * @return the corresponding precursor
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
@@ -864,7 +864,7 @@ public class SpectrumFactory {
                 String spectrumKey = Spectrum.getSpectrumKey(mgfIndex.getFileName(), spectrumTitle);
 
                 try {
-                    Precursor precursor = getPrecursor(spectrumKey, false);
+                    Precursor precursor = getPrecursor(spectrumKey);
 
                     double rt = precursor.getRt();
 

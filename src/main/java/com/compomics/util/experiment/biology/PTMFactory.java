@@ -760,20 +760,12 @@ public class PTMFactory implements Serializable {
 
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String modification : modificationProfile.getAllModifications()) {
-            PTM ptm = getSearchedPTM(modification);
+        for (String variableModification : modificationProfile.getAllModifications()) {
+            PTM ptm = getPTM(variableModification);
             if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
-                result.add(modification);
+                result.add(variableModification);
             }
         }
-        
-        // @TODO: the below code tries to remove the ptms not matching the patterns, but results in a null pointer exception... 
-//        for (String modification : modificationProfile.getAllModifications()) {
-//            PTM ptm = ptmMap.get(modification);
-//            if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
-//                result.add(modification);
-//            }
-//        }
 
         return result;
     }
@@ -798,23 +790,12 @@ public class PTMFactory implements Serializable {
 
         ArrayList<String> result = new ArrayList<String>();
 
-        // old code
-//        for (String modification : modificationProfile.getAllModifications()) {
-//            String ptmName = getSearchedPTM(modification).getName();
-//            if (ptmName.equalsIgnoreCase(searchedPTMName)) {
-//                PTM ptm = getSearchedPTM(modification);
-//                if (peptide.isModifiable(ptm)) {
-//                    result.add(ptmName);
-//                }
-//            }
-//        }
-        
-        // new code trying to remove the not matching patterns
-        for (String modification : modificationProfile.getAllModifications()) {
-            if (modification.equalsIgnoreCase(searchedPTMName)) {
-                PTM ptm = ptmMap.get(modification);
+        for (String variableModification : modificationProfile.getAllModifications()) {
+            String ptmName = getSearchedPTM(variableModification).getName();
+            if (ptmName.equalsIgnoreCase(searchedPTMName)) {
+                PTM ptm = getPTM(variableModification);
                 if (peptide.isModifiable(ptm)) {
-                    result.add(modification);
+                    result.add(variableModification);
                 }
             }
         }

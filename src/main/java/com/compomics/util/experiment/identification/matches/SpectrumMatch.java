@@ -222,4 +222,30 @@ public class SpectrumMatch extends IdentificationMatch {
     public void setSpectrumNumber(Integer spectrumNumber) {
         this.spectrumNumber = spectrumNumber;
     }
+    
+    /**
+     * Removes an assumption from the mapping
+     * @param peptideAssumption the peptide assumption to remove
+     */
+    public void removeAssumption(PeptideAssumption peptideAssumption) {
+        ArrayList<Integer> seToRemove = new ArrayList<Integer>();
+        for (int se : assumptions.keySet()) {
+            ArrayList<Double> eValueToRemove = new ArrayList<Double>();
+            for (double eValue : assumptions.keySet()) {
+                assumptions.get(se).get(eValue).remove(peptideAssumption);
+                if (assumptions.get(se).get(eValue).isEmpty()) {
+                    eValueToRemove.add(eValue);
+                }
+            }
+            for (double eValue : eValueToRemove) {
+                assumptions.get(se).remove(eValue);
+            }
+            if (assumptions.get(se).isEmpty()) {
+                seToRemove.add(se);
+            }
+        }
+        for (int se : seToRemove) {
+            assumptions.remove(se);
+        }
+    }
 }

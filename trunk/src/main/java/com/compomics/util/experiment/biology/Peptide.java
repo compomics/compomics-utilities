@@ -973,12 +973,12 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Estimates the theoretic mass of the peptide.
+     * Estimates the theoretic mass of the peptide. The previous version is silently overwritten.
      *
      * @throws IllegalArgumentException if the peptide sequence contains unknown
      * amino acids
      */
-    private void estimateTheoreticMass() throws IllegalArgumentException {
+    public void estimateTheoreticMass() throws IllegalArgumentException {
 
         mass = Atom.H.mass;
         AminoAcid currentAA;

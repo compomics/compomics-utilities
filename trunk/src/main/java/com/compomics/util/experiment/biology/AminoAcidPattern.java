@@ -227,7 +227,7 @@ public class AminoAcidPattern implements Serializable {
 
     /**
      * Returns the indexes where the amino acid pattern was found in the input.
-     * 0 is the first amino acid.
+     * 1 is the first amino acid.
      *
      * @param input the amino acid input sequence as string
      * @return a list of indexes where the amino acid pattern was found
@@ -240,7 +240,7 @@ public class AminoAcidPattern implements Serializable {
         int index = 0;
         while (matcher.find(index)) {
             index = matcher.start();
-            result.add(index + target);
+            result.add(index + target + 1);
             index++;
         }
         return result;

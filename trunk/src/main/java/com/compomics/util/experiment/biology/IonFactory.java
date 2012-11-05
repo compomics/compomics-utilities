@@ -95,6 +95,9 @@ public class IonFactory {
             int location = ptmMatch.getModificationSite();
             String ptmName = ptmMatch.getTheoreticPtm();
             PTM ptm = ptmFactory.getPTM(ptmName);
+            if (ptm == null) {
+                throw new IllegalArgumentException("PTM " + ptmName + " not loaded in the PTM factory.");
+            }
             if (!modifications.containsKey(location)) {
                 modifications.put(location, new ArrayList<PTM>());
             }

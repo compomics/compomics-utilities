@@ -609,7 +609,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         String result = "";
 
         for (int i = 0; i < tempSequence.length(); i++) {
-            if (indexes.contains(i)) {
+            if (indexes.contains(i+1)) {
                 result += "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(Color.BLUE) + "\">";
             } else {
                 result += "<span style=\"color:#" + Util.color2Hex(Color.BLACK) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">";

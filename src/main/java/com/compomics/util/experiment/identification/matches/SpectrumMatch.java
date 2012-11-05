@@ -40,7 +40,8 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private ArrayList<Integer> advocates = new ArrayList<Integer>();
     /**
-     * The spectrum number in the mgf file. Will be used in case the spectrum title does not match
+     * The spectrum number in the mgf file. Will be used in case the spectrum
+     * title does not match
      */
     private Integer spectrumNumber = null;
 
@@ -208,7 +209,9 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the spectrum number in the spectrum file. Returns null if not implemented (for versions older than 3.4.17 for instance)
+     * Returns the spectrum number in the spectrum file. Returns null if not
+     * implemented (for versions older than 3.4.17 for instance)
+     *
      * @return the spectrum number in the spectrum file
      */
     public Integer getSpectrumNumber() {
@@ -217,21 +220,23 @@ public class SpectrumMatch extends IdentificationMatch {
 
     /**
      * Sets the spectrum number in the spectrum file
+     *
      * @param spectrumNumber the spectrum number in the spectrum file
      */
     public void setSpectrumNumber(Integer spectrumNumber) {
         this.spectrumNumber = spectrumNumber;
     }
-    
+
     /**
      * Removes an assumption from the mapping
+     *
      * @param peptideAssumption the peptide assumption to remove
      */
     public void removeAssumption(PeptideAssumption peptideAssumption) {
         ArrayList<Integer> seToRemove = new ArrayList<Integer>();
         for (int se : assumptions.keySet()) {
             ArrayList<Double> eValueToRemove = new ArrayList<Double>();
-            for (double eValue : assumptions.keySet()) {
+            for (double eValue : assumptions.get(se).keySet()) {
                 assumptions.get(se).get(eValue).remove(peptideAssumption);
                 if (assumptions.get(se).get(eValue).isEmpty()) {
                     eValueToRemove.add(eValue);
@@ -247,5 +252,42 @@ public class SpectrumMatch extends IdentificationMatch {
         for (int se : seToRemove) {
             assumptions.remove(se);
         }
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a peptide assumption from a
+     * search engine.
+     *
+     * @return a boolean indicating whether the spectrum match contains an
+     * assumption
+     */
+    public boolean hasAssumption() {
+        for (int se : assumptions.keySet()) {
+            for (ArrayList<PeptideAssumption> assumptionsAtEvalue : assumptions.get(se).values()) {
+                if (!assumptionsAtEvalue.isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a peptide assumption for
+     * the given advocate (for example a search engine, see the Advocate class)
+     *
+     * @param advocateId The index of the advocate
+     * @return a boolean indicating whether the spectrum match contains a
+     * peptide assumption for the given advocate
+     */
+    public boolean hasAssumption(int advocateId) {
+        if (assumptions.containsKey(advocateId)) {
+            for (ArrayList<PeptideAssumption> assumptionsAtEvalue : assumptions.get(advocateId).values()) {
+                if (!assumptionsAtEvalue.isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

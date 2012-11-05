@@ -444,7 +444,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the potential modification sites as an ordered list of string. 0
+     * Returns the potential modification sites as an ordered list of string. 1
      * is the first aa. An empty list is returned if no possibility was found.
      * This method does not account for protein terminal modifications.
      *
@@ -490,11 +490,11 @@ public class Peptide extends ExperimentObject {
                 return possibleSites;
             case PTM.MODC:
             case PTM.MODCP:
-                possibleSites.add(sequence.length() - 1);
+                possibleSites.add(sequence.length());
                 return possibleSites;
             case PTM.MODN:
             case PTM.MODNP:
-                possibleSites.add(0);
+                possibleSites.add(1);
                 return possibleSites;
             case PTM.MODCAA:
             case PTM.MODCPAA:
@@ -503,7 +503,7 @@ public class Peptide extends ExperimentObject {
                 nAA = pattern.length();
                 if (target == nAA - 1 && sequence.length() >= nAA) {
                     if (pattern.isEnding(sequence)) {
-                        possibleSites.add(sequence.length() - 1);
+                        possibleSites.add(sequence.length());
                     }
                     return possibleSites;
                 } else {
@@ -517,7 +517,7 @@ public class Peptide extends ExperimentObject {
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isEnding(tempSequence)) {
-                                    possibleSites.add(sequence.length() - 1);
+                                    possibleSites.add(sequence.length());
                                     return possibleSites;
                                 }
                             }
@@ -532,7 +532,7 @@ public class Peptide extends ExperimentObject {
                 nAA = pattern.length();
                 if (target == 0 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
-                        possibleSites.add(0);
+                        possibleSites.add(1);
                     }
                     return possibleSites;
                 } else {
@@ -546,7 +546,7 @@ public class Peptide extends ExperimentObject {
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isStarting(tempSequence)) {
-                                    possibleSites.add(0);
+                                    possibleSites.add(1);
                                     return possibleSites;
                                 }
                             }
@@ -559,7 +559,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the potential modification sites as an ordered list of string. 0
+     * Returns the potential modification sites as an ordered list of string. 1
      * is the first aa. an empty list is returned if no possibility was found.
      * This method does not account for protein terminal modifications. Only
      * works if the modification pattern can be fully found in the sequence
@@ -586,11 +586,11 @@ public class Peptide extends ExperimentObject {
                 }
             case PTM.MODC:
             case PTM.MODCP:
-                possibleSites.add(sequence.length() - 1);
+                possibleSites.add(sequence.length());
                 return possibleSites;
             case PTM.MODN:
             case PTM.MODNP:
-                possibleSites.add(0);
+                possibleSites.add(1);
                 return possibleSites;
             case PTM.MODCAA:
             case PTM.MODCPAA:
@@ -599,7 +599,7 @@ public class Peptide extends ExperimentObject {
                 nAA = pattern.length();
                 if (target == nAA - 1 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
-                        possibleSites.add(sequence.length() - 1);
+                        possibleSites.add(sequence.length());
                     }
                     return possibleSites;
                 } else {
@@ -612,7 +612,7 @@ public class Peptide extends ExperimentObject {
                 nAA = pattern.length();
                 if (target == 0 && sequence.length() >= nAA) {
                     if (pattern.isStarting(sequence)) {
-                        possibleSites.add(0);
+                        possibleSites.add(1);
                     }
                     return possibleSites;
                 } else {

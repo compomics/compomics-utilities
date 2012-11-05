@@ -353,6 +353,9 @@ public class SpectrumAnnotator {
 
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+            if (ptm == null) {
+                throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
+            }
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                 ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm);
                 if (!indexes.isEmpty()) {
@@ -360,7 +363,7 @@ public class SpectrumAnnotator {
                     modMin = indexes.get(0);
                     modMax = indexes.get(indexes.size() - 1);
                 }
-                neutralLossesMap.addNeutralLoss(neutralLoss, aaMin + 1, peptide.getSequence().length() - aaMax);
+                neutralLossesMap.addNeutralLoss(neutralLoss, modMin, peptide.getSequence().length() - modMax +1);
             }
         }
 

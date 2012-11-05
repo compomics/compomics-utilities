@@ -19,19 +19,19 @@ public class AminoAcidPatternTest {
         String input = "KTESTRTESTKPTESTK";
         ArrayList<Integer> indexes = AminoAcidPattern.getTrypsinExample().getIndexes(input);
         Assert.assertTrue(indexes.size() == 2);
-        Assert.assertTrue(indexes.get(0) == 0);
-        Assert.assertTrue(indexes.get(1) == 5);
+        Assert.assertTrue(indexes.get(0) == 1);
+        Assert.assertTrue(indexes.get(1) == 6);
         input = "KTESTRTESTKPTESTKT";
         indexes = AminoAcidPattern.getTrypsinExample().getIndexes(input);
         Assert.assertTrue(indexes.size() == 3);
-        Assert.assertTrue(indexes.get(0) == 0);
-        Assert.assertTrue(indexes.get(1) == 5);
-        Assert.assertTrue(indexes.get(2) == 16);
+        Assert.assertTrue(indexes.get(0) == 1);
+        Assert.assertTrue(indexes.get(1) == 6);
+        Assert.assertTrue(indexes.get(2) == 17);
         input = "RRR";
         indexes = AminoAcidPattern.getTrypsinExample().getIndexes(input);
         Assert.assertTrue(indexes.size() == 2);
-        Assert.assertTrue(indexes.get(0) == 0);
-        Assert.assertTrue(indexes.get(1) == 1);
+        Assert.assertTrue(indexes.get(0) == 1);
+        Assert.assertTrue(indexes.get(1) == 2);
     }
     
 }

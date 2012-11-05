@@ -27,12 +27,12 @@ public class PTMLocationScores {
     /**
      * Returns the A-score for the best PTM location without accounting for
      * neutral losses. In case the two best locations score the same they are
-     * both given with the score of 0.
+     * both given with the score of 0. Note that PTMs found on peptides must be
+     * loaded in the PTM factory.
      *
      * @param peptide The peptide of interest
-     * @param ptm The PTM to score
-     * @param nPTM The number of occurrences where this PTM is expected on this
-     * peptide
+     * @param ptms The PTMs to score, for instance different phosphorylations.
+     * These PTMs are considered as indistinguishable, i.e. of same mass.
      * @param spectrum The corresponding spectrum
      * @param iontypes The fragment ions to look for
      * @param charges The fragment ions charges to look for
@@ -40,25 +40,28 @@ public class PTMLocationScores {
      * @param mzTolerance The m/z tolerance to use
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException {
-        return getAScore(peptide, ptm, nPTM, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
+        return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
     }
 
     /**
      * Returns the A-score for the best PTM location accounting for neutral
      * losses. In case the two best locations score the same they are both given
-     * with the score of 0.
+     * with the score of 0. Note that PTMs found on peptides must be loaded in
+     * the PTM factory.
      *
      * @param peptide The peptide of interest
-     * @param ptm The PTM to score
-     * @param nPTM The number of occurrences where this PTM is expected on this
-     * peptide
+     * @param ptms The PTMs to score, for instance different phosphorylations.
+     * These PTMs are considered as indistinguishable, i.e. of same mass.
      * @param spectrum The corresponding spectrum
      * @param iontypes The fragment ions to look for
      * @param neutralLosses The neutral losses to look for
@@ -67,22 +70,28 @@ public class PTMLocationScores {
      * @param mzTolerance The m/z tolerance to use
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException {
-        return getAScore(peptide, ptm, nPTM, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
+        return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
     }
 
     /**
      * Returns the A-score for the best PTM location. In case the two best
-     * locations score the same they are both given with the score of 0.
+     * locations score the same they are both given with the score of 0. 0 is
+     * the first amino-acid. Note that PTMs found on peptides must be loaded in
+     * the PTM factory.
      *
      * @param peptide The peptide of interest
-     * @param ptm The PTM to score
+     * @param ptms The PTMs to score, for instance different phosphorylations.
+     * These PTMs are considered as indistinguishable, i.e. of same mass.
      * @param nPTM The number of occurrences where this PTM is expected on this
      * peptide
      * @param spectrum The corresponding spectrum
@@ -95,27 +104,57 @@ public class PTMLocationScores {
      * calculation shall account for neutral losses.
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
-     * @throws IOException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred while reading a protein sequence
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
      */
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
+    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) throws IOException, IllegalArgumentException, InterruptedException {
 
-        NeutralLossesMap scoringLossesMap = new NeutralLossesMap();
+        if (ptms.isEmpty()) {
+            throw new IllegalArgumentException("No PTM given for A-score calculation.");
+        }
 
+        int nPTM = 0;
+        for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+            if (modMatch.isVariable()) {
+                for (PTM ptm : ptms) {
+                    if (ptm.getName().equals(modMatch.getTheoreticPtm())) {
+                        nPTM++;
+                    }
+                }
+            }
+        }
+        if (nPTM == 0) {
+            throw new IllegalArgumentException("Given PTMs not found in the peptide for A-score calculation.");
+        }
+
+        PTM refPTM = ptms.get(0);
+        double ptmMass = refPTM.getMass();
+
+        NeutralLossesMap scoringLossesMap = new NeutralLossesMap();
         if (accountNeutralLosses) {
             // here annotation should be sequence and modification independant
             for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
-                if (Math.abs(neutralLoss.mass - ptm.getMass()) > mzTolerance) {
+                if (Math.abs(neutralLoss.mass - ptmMass) > mzTolerance) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
         }
 
         HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
-        ArrayList<Integer> possibleSites = peptide.getPotentialModificationSites(ptm);
+        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+        for (PTM ptm : ptms) {
+            for (int potentialSite : peptide.getPotentialModificationSites(ptm)) {
+                if (!possibleSites.contains(potentialSite)) {
+                    possibleSites.add(potentialSite);
+                }
+            }
+        }
 
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
@@ -129,7 +168,13 @@ public class PTMLocationScores {
             Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
 
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                boolean found = false;
+                for (PTM ptm : ptms) {
+                    if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                        found = true;
+                    }
+                }
+                if (!found) {
                     noModPeptide.addModificationMatch(modificationMatch);
                 }
             }
@@ -145,7 +190,7 @@ public class PTMLocationScores {
 
                 for (int pos : possibleSites) {
                     tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-                    tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, pos + 1));
+                    tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
                     matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance, false);
                     n = matches.size();
                     P = 0;
@@ -202,7 +247,7 @@ public class PTMLocationScores {
                 if (bestScore == null) {
                     bestScore = peptideScore;
                     bestPosition = pos;
-                    bestPositions.add(pos + 1);
+                    bestPositions.add(pos);
                 } else if (peptideScore >= bestScore) {
                     if (secondScore == null || bestScore >= secondScore) {
                         secondScore = bestScore;
@@ -213,7 +258,7 @@ public class PTMLocationScores {
                     }
                     bestScore = peptideScore;
                     bestPosition = pos;
-                    bestPositions.add(pos + 1);
+                    bestPositions.add(pos);
                 } else if (secondScore == null || peptideScore >= secondScore) {
                     secondScore = peptideScore;
                     secondPosition = pos;
@@ -226,8 +271,9 @@ public class PTMLocationScores {
             for (int i = 1; i <= 10; i++) {
                 try {
                     diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
-                } catch (Exception e) {
-                    diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+                } catch (NullPointerException e) {
+                    double debugDiff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+                    throw e;
                 }
                 if (diff >= maxDiff) {
                     bestI = i - 1;
@@ -265,7 +311,7 @@ public class PTMLocationScores {
 
             p = ((double) bestI + 1) / 100;
             tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-            tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, posMin + 1));
+            tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
             matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = 0;
 
@@ -298,7 +344,7 @@ public class PTMLocationScores {
             }
 
             tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
-            tempPeptide.addModificationMatch(new ModificationMatch(ptm.getName(), true, posMax + 1));
+            tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
             matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = 0;
 
@@ -333,27 +379,29 @@ public class PTMLocationScores {
                 result.put(bestPositions, 0.0);
             } else if (p1 < p2) {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-                modificationProfile.add(posMin + 1);
+                modificationProfile.add(posMin);
                 score1 = -10 * Math.log10(p1);
                 score2 = -10 * Math.log10(p2);
                 score = score1 - score2;
                 result.put(modificationProfile, score);
             } else {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-                modificationProfile.add(posMax + 1);
+                modificationProfile.add(posMax);
                 score1 = -10 * Math.log10(p1);
                 score2 = -10 * Math.log10(p2);
                 score = score2 - score1;
                 result.put(modificationProfile, score);
             }
-        } else {
+        } else if (possibleSites.size() == nPTM) {
             ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
             for (int pos : possibleSites) {
-                modificationProfile.add(pos + 1);
+                modificationProfile.add(pos);
             }
             if (possibleSites.size() > 0) {
                 result.put(modificationProfile, 100.0);
             }
+        } else {
+            throw new IllegalArgumentException("Found less potential modification sites than PTMs during A-score calculation.");
         }
         return result;
     }

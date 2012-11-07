@@ -74,11 +74,11 @@ public class SearchParameters implements Serializable {
      */
     private Integer rewindIon = PeptideFragmentIon.Y_ION;
     /**
-     * The minimal charge searched (in absolute value)
+     * The minimal charge searched (in absolute value).
      */
     private Charge minChargeSearched = new Charge(Charge.PLUS, 2);
     /**
-     * The minimal charge searched (in absolute value)
+     * The minimal charge searched (in absolute value).
      */
     private Charge maxChargeSearched = new Charge(Charge.PLUS, 4);
     /**
@@ -605,7 +605,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Saves the a modification profile from a serialized file.
+     * Saves the identification parameters to a serialized file.
      *
      * @param identificationParameters
      * @param file the file

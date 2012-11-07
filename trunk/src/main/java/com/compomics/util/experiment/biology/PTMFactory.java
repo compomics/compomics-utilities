@@ -53,7 +53,7 @@ public class PTMFactory implements Serializable {
      */
     public static final PTM unknownPTM = new PTM(PTM.MODAA, "unknown", 0, new AminoAcidPattern());
     /**
-     * Suffix for the modifications searched but not in the factory
+     * Suffix for the modifications searched but not in the factory.
      */
     public static final String SEARCH_SUFFIX = "|SEARCH-ONLY";
 

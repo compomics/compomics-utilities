@@ -81,6 +81,10 @@ public class UtilitiesUserPreferences implements Serializable {
      * path is provided.
      */
     private String relimsPath = null;
+    /**
+     * The local PRIDE projects folder.
+     */
+    private String localPrideFolder = "user.home";
 
     /**
      * Constructor
@@ -407,5 +411,23 @@ public class UtilitiesUserPreferences implements Serializable {
         }
         
         return userPreferences;
+    }
+
+    /**
+     * Returns the local PRIDE folder.
+     * 
+     * @return the localPrideFolder
+     */
+    public String getLocalPrideFolder() {
+        return localPrideFolder;
+    }
+
+    /**
+     * Set the local PRIDE folder.
+     * 
+     * @param localPrideFolder the localPrideFolder to set
+     */
+    public void setLocalPrideFolder(String localPrideFolder) {
+        this.localPrideFolder = localPrideFolder;
     }
 }

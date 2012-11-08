@@ -303,7 +303,7 @@ public class MgfReader {
      */
     public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        // @TODO: possible yo make this method even faster?? 
+        // @TODO: possible to make this method even faster?? 
         // replacing RandomAccessFile with BufferedRandomAccessFile helped a lot, but might still be room for more
 
         String fileName = mgfFile.getName();

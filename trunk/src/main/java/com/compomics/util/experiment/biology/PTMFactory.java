@@ -736,7 +736,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the expected modifications based on the modification profile, the
-     * peptide found and the modification details.
+     * peptide found and the modification details. Returns the names in a map where the modification names are indexed by the index on the sequence. 1 is the first amino acid.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
@@ -746,7 +746,7 @@ public class PTMFactory implements Serializable {
      * results
      * @param massTolerance the mass tolerance to use to match the modification
      * mass
-     * @return a list of expected PTMs corresponding to the given
+     * @return a map of expected PTMs corresponding to the given
      * characteristics. Empty if none found.
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -755,24 +755,29 @@ public class PTMFactory implements Serializable {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      */
-    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
             double modificationMass, double massTolerance) throws IOException, IllegalArgumentException, InterruptedException {
 
-        ArrayList<String> result = new ArrayList<String>();
+        HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
-        for (String variableModification : modificationProfile.getAllModifications()) {
-            PTM ptm = getPTM(variableModification);
-            if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance && peptide.isModifiable(ptm)) {
-                result.add(variableModification);
+        for (String ptmName : modificationProfile.getAllModifications()) {
+            PTM ptm = getPTM(ptmName);
+            if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance) {
+                for (int site : peptide.getPotentialModificationSites(ptm)) {
+                    if (!mapping.containsKey(site)) {
+                        mapping.put(site, new ArrayList<String>());
+                    }
+                    mapping.get(site).add(ptmName);
+                }
             }
         }
 
-        return result;
+        return mapping;
     }
 
     /**
      * Returns the names of the possibly expected modification based on
-     * the name of the searched modification.
+     * the name of the searched modification(s) in a map where the PTM names are indexed by their potential site on the sequence. 1 is the first amino acid.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
@@ -786,21 +791,24 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      * @return the possible expected modification names. Empty if not found.
      */
-    public ArrayList<String> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String searchedPTMName) throws IOException, IllegalArgumentException, InterruptedException {
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String searchedPTMName) throws IOException, IllegalArgumentException, InterruptedException {
 
-        ArrayList<String> result = new ArrayList<String>();
+        HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
         for (String variableModification : modificationProfile.getAllModifications()) {
             String ptmName = getSearchedPTM(variableModification).getName();
             if (ptmName.equalsIgnoreCase(searchedPTMName)) {
                 PTM ptm = getPTM(variableModification);
-                if (peptide.isModifiable(ptm)) {
-                    result.add(variableModification);
+                for (int site : peptide.getPotentialModificationSites(ptm)) {
+                    if (!mapping.containsKey(site)) {
+                        mapping.put(site, new ArrayList<String>());
+                    }
+                    mapping.get(site).add(ptmName);
                 }
             }
         }
 
-        return result;
+        return mapping;
     }
 
     /**

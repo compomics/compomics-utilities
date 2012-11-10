@@ -364,65 +364,27 @@ public class Util {
             inputStream.close();
         }
     }
-
+    
     /**
-     * Aligns two series of integer, minimizing the distance between them.
-     * Example: serie1 = {0, 1, 13, 25, 15, 6, 99} serie2 = {100, 2, 12, 14, 18,
-     * 30, 115, 1000} result = {0->null, 1->2, 6->null, 13->12, 15->14, 25->18,
-     * 99->100}
-     *
-     * @param serie1 first list of integer
-     * @param serie2 second list of integer
-     * @return a map of the doublets created.
+     * Convenience methods indicating whether the content of two lists have the same content
+     * @param list1 the first list
+     * @param list2 the second list
+     * @return a boolean indicating whether list1 has the same content as list2
      */
-    public static HashMap<Integer, Integer> align(Collection<Integer> serie1, Collection<Integer> serie2) {
-        HashMap<Integer, Integer> result = new HashMap<Integer, Integer>();
-        if (serie1 == null || serie1.isEmpty()) {
-            return result;
+    public static boolean sameLists(ArrayList<Integer> list1, ArrayList<Integer> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
         }
-        ArrayList<Integer> sortedSerie1 = new ArrayList<Integer>(serie1);
-        Collections.sort(sortedSerie1);
-        if (serie2 == null || serie2.isEmpty()) {
-            for (int index : serie1) {
-                result.put(index, null);
-            }
-            return result;
-        }
-        ArrayList<Integer> sortedSerie2 = new ArrayList<Integer>(serie2);
-        Collections.sort(sortedSerie2);
-        int lastj = 0;
-        int firsti = 0;
-        for (int i = 0; i < sortedSerie1.size() - 1; i++) {
-            if (Math.abs(sortedSerie1.get(i + 1) - sortedSerie2.get(0)) < Math.abs(sortedSerie1.get(i) - sortedSerie2.get(0))) {
-                result.put(i, null);
-                firsti = i + 1;
-            } else {
-                break;
+        ArrayList<Integer> list1copy = new ArrayList<Integer>(list1);
+        Collections.sort(list1copy);
+        ArrayList<Integer> list2copy = new ArrayList<Integer>(list2);
+        Collections.sort(list2copy);
+        for (int i = 0 ; i < list1copy.size() ; i++) {
+            if (!list1copy.get(i).equals(list2copy.get(i))) {
+                return false;
             }
         }
-        for (int i = firsti; i < sortedSerie1.size(); i++) {
-            Integer bestj = null;
-            Integer bestDistance = null;
-            if (lastj < sortedSerie2.size()) {
-                for (int j = lastj; j < sortedSerie2.size(); j++) {
-                    if (i < sortedSerie1.size() - 1
-                            && (sortedSerie2.get(j) >= sortedSerie1.get(i + 1)
-                            || Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i + 1)) < Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i)))) {
-                        break;
-                    }
-                    if (bestDistance == null || Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i)) < bestDistance) {
-                        bestDistance = Math.abs(sortedSerie2.get(j) - sortedSerie1.get(i));
-                        bestj = j;
-                    }
-                }
-            }
-            if (bestj != null) {
-                result.put(sortedSerie1.get(i), sortedSerie2.get(bestj));
-                lastj = bestj + 1;
-            } else {
-                result.put(sortedSerie1.get(i), null);
-            }
-        }
-        return result;
+        return true;
     }
+    
 }

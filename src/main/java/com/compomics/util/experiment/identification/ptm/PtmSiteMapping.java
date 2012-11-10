@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.ptm;
 
 import com.compomics.util.Util;
@@ -11,9 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class contains convenience methods to map ptms on potential sites
+ * This class contains convenience methods to map ptms on potential sites.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PtmSiteMapping {
 

@@ -186,7 +186,6 @@ public class MassErrorPlot extends JPanel {
 
             // set the colors and shape for the datapoints
             for (int i = 0; i < colors.size(); i++) {
-
                 if (useIntensityGrading) {
                     renderer.setSeriesPaint(i, colors.get(i));
                     renderer.setSeriesShape(i, renderer.getBaseShape());

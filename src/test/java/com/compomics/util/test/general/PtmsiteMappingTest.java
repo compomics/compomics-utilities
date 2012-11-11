@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.test.general;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.ptm.PtmSiteMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,12 +7,12 @@ import java.util.HashMap;
 import junit.framework.Assert;
 
 /**
- * This class tests the general methods of the util class
+ * This class tests the general methods of the util class.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PtmsiteMappingTest {
-    
+
     /**
      * Tests the results of the integer alignment method.
      * 
@@ -43,7 +38,7 @@ public class PtmsiteMappingTest {
      * result = {0->null, 1->null, 2->null, 3->null, 4->5, 7->null, 8->null, 9->null, 10->null}
      */
     public void testAlign() {
-        
+
         Integer[] array1 = {0, 1, 13, 25, 15, 6, 99};
         Integer[] array2 = {100, 2, 12, 14, 18, 30, 115, 1000};
         ArrayList<Integer> serie1 = new ArrayList<Integer>(Arrays.asList(array1));
@@ -64,8 +59,7 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.get(25) == 30);
         Assert.assertTrue(result.containsKey(99));
         Assert.assertTrue(result.get(99) == 100);
-        
-        
+
         Integer[] array3 = {5};
         Integer[] array4 = {0, 1, 2, 3, 4, 7, 8, 9, 10};
         ArrayList<Integer> serie3 = new ArrayList<Integer>(Arrays.asList(array3));
@@ -74,7 +68,7 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.size() == serie3.size());
         Assert.assertTrue(result.containsKey(5));
         Assert.assertTrue(result.get(5) == 4);
-        
+
         result = PtmSiteMapping.align(serie4, serie3);
         Assert.assertTrue(result.size() == serie4.size());
         Assert.assertTrue(result.containsKey(0));
@@ -122,7 +116,7 @@ public class PtmsiteMappingTest {
      * result = {0->null, 1->null, 2->null, 3->null, 4->5, 7->null, 8->null, 9->null, 10->null}
      */
     public void testAlignAll() {
-        
+
         Integer[] array1 = {0, 1, 13, 25, 15, 6, 99};
         Integer[] array2 = {100, 2, 12, 14, 18, 30, 115, 1000};
         ArrayList<Integer> serie1 = new ArrayList<Integer>(Arrays.asList(array1));
@@ -143,8 +137,7 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.get(25) == 30);
         Assert.assertTrue(result.containsKey(99));
         Assert.assertTrue(result.get(99) == 100);
-        
-        
+
         Integer[] array3 = {5};
         Integer[] array4 = {0, 1, 2, 3, 4, 7, 8, 9, 10};
         ArrayList<Integer> serie3 = new ArrayList<Integer>(Arrays.asList(array3));
@@ -153,7 +146,7 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.size() == serie3.size());
         Assert.assertTrue(result.containsKey(5));
         Assert.assertTrue(result.get(5) == 4);
-        
+
         result = PtmSiteMapping.align(serie4, serie3);
         Assert.assertTrue(result.size() == serie4.size());
         Assert.assertTrue(result.containsKey(0));
@@ -208,7 +201,7 @@ public class PtmsiteMappingTest {
      * result = {0->null, 1->null, 2->null, 3->null, 4->5, 7->null, 8->null, 9->null, 10->null}
      */
     public void testAlignMap() {
-        
+
         HashMap<Integer, ArrayList<Integer>> input = new HashMap<Integer, ArrayList<Integer>>();
         input.put(0, new ArrayList<Integer>());
         input.get(0).add(100);
@@ -260,7 +253,7 @@ public class PtmsiteMappingTest {
         input.get(6).add(1000);
         input.put(99, new ArrayList<Integer>());
         input.get(99).add(3);
-        
+
         HashMap<Integer, Integer> result = PtmSiteMapping.alignAll(input);
         Assert.assertTrue(result.size() == 9);
         Assert.assertTrue(result.containsKey(1));
@@ -281,7 +274,7 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.get(15) == 18);
         Assert.assertTrue(result.containsKey(25));
         Assert.assertTrue(result.get(25) == 30);
-        
+
         input = new HashMap<Integer, ArrayList<Integer>>();
         input.put(5, new ArrayList<Integer>());
         input.get(5).add(0);
@@ -297,8 +290,7 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.size() == 1);
         Assert.assertTrue(result.containsKey(5));
         Assert.assertTrue(result.get(5) == 4);
-        
-        
+
         input = new HashMap<Integer, ArrayList<Integer>>();
         input.put(0, new ArrayList<Integer>());
         input.get(0).add(5);
@@ -338,7 +330,5 @@ public class PtmsiteMappingTest {
         Assert.assertTrue(result.get(9) == null);
         Assert.assertTrue(result.containsKey(10));
         Assert.assertTrue(result.get(10) == null);
-        
     }
-    
 }

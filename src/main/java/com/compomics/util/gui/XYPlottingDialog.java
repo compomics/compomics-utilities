@@ -23,10 +23,14 @@ import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.entity.XYItemEntity;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
 import org.jfree.data.xy.*;
 
 /**
@@ -53,6 +57,10 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * The bubble size.
      */
     private double bubbleSize = 1.0;
+    /**
+     * The number if bins for the histograms.
+     */
+    private int numberOfBins = 100;
     /**
      * The dialog parent.
      */
@@ -111,6 +119,10 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * The color gradient to use.
      */
     private GradientColorCoding.ColorGradient colorGradient = GradientColorCoding.ColorGradient.BlueWhiteGreen;
+    /**
+     * The color used for the bars in the histograms.
+     */
+    private Color histogramColor = new Color(110, 196, 97);
 
     /**
      * Creates a new XYPlottingDialog.
@@ -121,9 +133,6 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * @param modal
      */
     public XYPlottingDialog(java.awt.Frame dialogParent, JTable table, ArrayList<String> tableToolTips, boolean modal) {
-        
-        // @TODO: add histogram version as well
-        
         super(dialogParent, modal);
         initComponents();
         this.dialogParent = dialogParent;
@@ -207,23 +216,11 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        plotTypeButtonGroup = new javax.swing.ButtonGroup();
+        dragButtonGroup = new javax.swing.ButtonGroup();
         backgroundPanel = new javax.swing.JPanel();
         xyPlotPanel = new javax.swing.JPanel();
         plotPanel = new javax.swing.JPanel();
-        settingsPanel = new javax.swing.JPanel();
-        xAxisLabel = new javax.swing.JLabel();
-        xAxisComboBox = new javax.swing.JComboBox();
-        xAxisTypeComboBox = new javax.swing.JComboBox();
-        yAxisLabel = new javax.swing.JLabel();
-        yAxisTypeComboBox = new javax.swing.JComboBox();
-        yAxisComboBox = new javax.swing.JComboBox();
-        colorsLabel = new javax.swing.JLabel();
-        colorsComboBox = new javax.swing.JComboBox();
-        switchXandYButton = new javax.swing.JButton();
-        bubbleSizeSpinner = new javax.swing.JSpinner();
-        bubbleSizeLabel = new javax.swing.JLabel();
-        dragToZoomCheckBox = new javax.swing.JCheckBox();
-        clearSelectionButton = new javax.swing.JButton();
         selectedValuesPanel = new javax.swing.JPanel();
         selectedValuesScrollPane = new javax.swing.JScrollPane();
         selectedValuesTable = new JTable() {
@@ -239,6 +236,25 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 };
             }
         };
+        plotTypePanel = new javax.swing.JPanel();
+        xyPlotRadioButton = new javax.swing.JRadioButton();
+        histogramRadioButton = new javax.swing.JRadioButton();
+        xAxisPanel = new javax.swing.JPanel();
+        xAxisComboBox = new javax.swing.JComboBox();
+        xAxisLabel = new javax.swing.JLabel();
+        yAxisComboBox = new javax.swing.JComboBox();
+        yAxisLabel = new javax.swing.JLabel();
+        colorLabel = new javax.swing.JLabel();
+        colorsComboBox = new javax.swing.JComboBox();
+        plotSettingsPanel = new javax.swing.JPanel();
+        bubbleOrBinSizeSpinner = new javax.swing.JSpinner();
+        bubbleOrBinSizeLabel = new javax.swing.JLabel();
+        dragSettingsPanel = new javax.swing.JPanel();
+        dragToSelectRadioButton = new javax.swing.JRadioButton();
+        dragToZoomRadioButton = new javax.swing.JRadioButton();
+        logAcisPanel = new javax.swing.JPanel();
+        xAxisLogCheckBox = new javax.swing.JCheckBox();
+        yAxisLogCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Statistics");
@@ -257,7 +273,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(xyPlotPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
+                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         xyPlotPanelLayout.setVerticalGroup(
@@ -266,156 +282,6 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-        );
-
-        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
-        settingsPanel.setOpaque(false);
-
-        xAxisLabel.setText("X Axis");
-
-        xAxisComboBox.setMaximumRowCount(30);
-        xAxisComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                xAxisComboBoxActionPerformed(evt);
-            }
-        });
-
-        xAxisTypeComboBox.setMaximumRowCount(30);
-        xAxisTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Linear", "Logarithmic" }));
-        xAxisTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                xAxisTypeComboBoxActionPerformed(evt);
-            }
-        });
-
-        yAxisLabel.setText("Y Axis");
-
-        yAxisTypeComboBox.setMaximumRowCount(30);
-        yAxisTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Linear", "Logarithmic" }));
-        yAxisTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yAxisTypeComboBoxActionPerformed(evt);
-            }
-        });
-
-        yAxisComboBox.setMaximumRowCount(30);
-        yAxisComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yAxisComboBoxActionPerformed(evt);
-            }
-        });
-
-        colorsLabel.setText("Colors");
-
-        colorsComboBox.setMaximumRowCount(30);
-        colorsComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                colorsComboBoxActionPerformed(evt);
-            }
-        });
-
-        switchXandYButton.setText("L");
-        switchXandYButton.setToolTipText("Switch X and Y axis");
-        switchXandYButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                switchXandYButtonActionPerformed(evt);
-            }
-        });
-
-        bubbleSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(1.0d), Double.valueOf(0.0d), null, Double.valueOf(0.1d)));
-        bubbleSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                bubbleSizeSpinnerStateChanged(evt);
-            }
-        });
-
-        bubbleSizeLabel.setText("Bubble Size");
-
-        dragToZoomCheckBox.setText("Drag to Zoom");
-        dragToZoomCheckBox.setIconTextGap(15);
-        dragToZoomCheckBox.setOpaque(false);
-
-        clearSelectionButton.setText("Clear Selection");
-        clearSelectionButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearSelectionButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
-        settingsPanel.setLayout(settingsPanelLayout);
-        settingsPanelLayout.setHorizontalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(bubbleSizeLabel)
-                                .addComponent(colorsLabel))
-                            .addComponent(yAxisLabel))
-                        .addGap(18, 18, 18)
-                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(colorsComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(yAxisComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(yAxisTypeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bubbleSizeSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(settingsPanelLayout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(dragToZoomCheckBox))
-                            .addComponent(clearSelectionButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)))
-                    .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(switchXandYButton)
-                        .addGroup(settingsPanelLayout.createSequentialGroup()
-                            .addComponent(xAxisLabel)
-                            .addGap(18, 18, 18)
-                            .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(xAxisTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(xAxisComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        settingsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bubbleSizeSpinner, colorsComboBox, xAxisComboBox, xAxisTypeComboBox, yAxisComboBox, yAxisTypeComboBox});
-
-        settingsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bubbleSizeLabel, colorsLabel, xAxisLabel, yAxisLabel});
-
-        settingsPanelLayout.setVerticalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(xAxisComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(xAxisTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(xAxisLabel)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(switchXandYButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(yAxisComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(yAxisTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(settingsPanelLayout.createSequentialGroup()
-                        .addComponent(yAxisLabel)
-                        .addGap(37, 37, 37)))
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bubbleSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bubbleSizeLabel))
-                .addGap(18, 18, 18)
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(colorsLabel)
-                    .addComponent(colorsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(dragToZoomCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(clearSelectionButton)
-                .addContainerGap(125, Short.MAX_VALUE))
         );
 
         selectedValuesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Values"));
@@ -439,7 +305,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectedValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
                 .addContainerGap())
         );
         selectedValuesPanelLayout.setVerticalGroup(
@@ -447,6 +313,263 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             .addGroup(selectedValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        plotTypePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Type"));
+        plotTypePanel.setOpaque(false);
+
+        plotTypeButtonGroup.add(xyPlotRadioButton);
+        xyPlotRadioButton.setSelected(true);
+        xyPlotRadioButton.setText("XY Plot");
+        xyPlotRadioButton.setIconTextGap(15);
+        xyPlotRadioButton.setOpaque(false);
+        xyPlotRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xyPlotRadioButtonActionPerformed(evt);
+            }
+        });
+
+        plotTypeButtonGroup.add(histogramRadioButton);
+        histogramRadioButton.setText("Histogram");
+        histogramRadioButton.setIconTextGap(15);
+        histogramRadioButton.setOpaque(false);
+        histogramRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                histogramRadioButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout plotTypePanelLayout = new javax.swing.GroupLayout(plotTypePanel);
+        plotTypePanel.setLayout(plotTypePanelLayout);
+        plotTypePanelLayout.setHorizontalGroup(
+            plotTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plotTypePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(xyPlotRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(histogramRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        plotTypePanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {histogramRadioButton, xyPlotRadioButton});
+
+        plotTypePanelLayout.setVerticalGroup(
+            plotTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plotTypePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plotTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(xyPlotRadioButton)
+                    .addComponent(histogramRadioButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        xAxisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Values"));
+        xAxisPanel.setOpaque(false);
+
+        xAxisComboBox.setMaximumRowCount(30);
+        xAxisComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xAxisComboBoxActionPerformed(evt);
+            }
+        });
+
+        xAxisLabel.setText("<html>\n<a href>X Axis</a>\n</html>");
+        xAxisLabel.setToolTipText("Click to swap x and y axis");
+        xAxisLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                xAxisLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                xAxisLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                xAxisLabelMouseExited(evt);
+            }
+        });
+
+        yAxisComboBox.setMaximumRowCount(30);
+        yAxisComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yAxisComboBoxActionPerformed(evt);
+            }
+        });
+
+        yAxisLabel.setText("<html>\n<a href>Y Axis</a>\n</html>");
+        yAxisLabel.setToolTipText("Click to swap x and y axis");
+        yAxisLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                yAxisLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                yAxisLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                yAxisLabelMouseExited(evt);
+            }
+        });
+
+        colorLabel.setText("Color");
+
+        colorsComboBox.setMaximumRowCount(30);
+        colorsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colorsComboBoxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout xAxisPanelLayout = new javax.swing.GroupLayout(xAxisPanel);
+        xAxisPanel.setLayout(xAxisPanelLayout);
+        xAxisPanelLayout.setHorizontalGroup(
+            xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(xAxisPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(xAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(yAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorLabel))
+                .addGap(20, 20, 20)
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(yAxisComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(xAxisComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        xAxisPanelLayout.setVerticalGroup(
+            xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(xAxisPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(xAxisComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(yAxisComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(yAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(colorLabel)
+                    .addComponent(colorsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        plotSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Settings"));
+        plotSettingsPanel.setOpaque(false);
+
+        bubbleOrBinSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(1.0d), Double.valueOf(0.0d), null, Double.valueOf(1.0d)));
+        bubbleOrBinSizeSpinner.setToolTipText("The size of the bubbles relative to the x-axis");
+        bubbleOrBinSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                bubbleOrBinSizeSpinnerStateChanged(evt);
+            }
+        });
+
+        bubbleOrBinSizeLabel.setText("Bubble");
+        bubbleOrBinSizeLabel.setToolTipText("The size of the bubbles relative to the x-axis");
+
+        javax.swing.GroupLayout plotSettingsPanelLayout = new javax.swing.GroupLayout(plotSettingsPanel);
+        plotSettingsPanel.setLayout(plotSettingsPanelLayout);
+        plotSettingsPanelLayout.setHorizontalGroup(
+            plotSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plotSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bubbleOrBinSizeLabel)
+                .addGap(18, 18, 18)
+                .addComponent(bubbleOrBinSizeSpinner)
+                .addContainerGap())
+        );
+        plotSettingsPanelLayout.setVerticalGroup(
+            plotSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plotSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plotSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bubbleOrBinSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bubbleOrBinSizeLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        dragSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Select vs. Zoom"));
+        dragSettingsPanel.setOpaque(false);
+
+        dragButtonGroup.add(dragToSelectRadioButton);
+        dragToSelectRadioButton.setSelected(true);
+        dragToSelectRadioButton.setText("Drag to Select");
+        dragToSelectRadioButton.setIconTextGap(15);
+        dragToSelectRadioButton.setOpaque(false);
+
+        dragButtonGroup.add(dragToZoomRadioButton);
+        dragToZoomRadioButton.setText("Drag to Zoom");
+        dragToZoomRadioButton.setIconTextGap(15);
+        dragToZoomRadioButton.setOpaque(false);
+
+        javax.swing.GroupLayout dragSettingsPanelLayout = new javax.swing.GroupLayout(dragSettingsPanel);
+        dragSettingsPanel.setLayout(dragSettingsPanelLayout);
+        dragSettingsPanelLayout.setHorizontalGroup(
+            dragSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dragSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(dragToSelectRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dragToZoomRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        dragSettingsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dragToSelectRadioButton, dragToZoomRadioButton});
+
+        dragSettingsPanelLayout.setVerticalGroup(
+            dragSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dragSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(dragSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dragToSelectRadioButton)
+                    .addComponent(dragToZoomRadioButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        logAcisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Logarithmic Axis"));
+        logAcisPanel.setOpaque(false);
+
+        xAxisLogCheckBox.setText("X Axis");
+        xAxisLogCheckBox.setToolTipText("Use logarithmic axis");
+        xAxisLogCheckBox.setIconTextGap(15);
+        xAxisLogCheckBox.setOpaque(false);
+        xAxisLogCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xAxisLogCheckBoxActionPerformed(evt);
+            }
+        });
+
+        yAxisLogCheckBox.setText("Y Axis");
+        yAxisLogCheckBox.setToolTipText("Use logarithmic axis");
+        yAxisLogCheckBox.setIconTextGap(15);
+        yAxisLogCheckBox.setOpaque(false);
+        yAxisLogCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yAxisLogCheckBoxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout logAcisPanelLayout = new javax.swing.GroupLayout(logAcisPanel);
+        logAcisPanel.setLayout(logAcisPanelLayout);
+        logAcisPanelLayout.setHorizontalGroup(
+            logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logAcisPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(xAxisLogCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(yAxisLogCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        logAcisPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {xAxisLogCheckBox, yAxisLogCheckBox});
+
+        logAcisPanelLayout.setVerticalGroup(
+            logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logAcisPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(xAxisLogCheckBox)
+                    .addComponent(yAxisLogCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -460,8 +583,13 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addComponent(xyPlotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(selectedValuesPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(xAxisPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(plotSettingsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dragSettingsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(logAcisPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(plotTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(selectedValuesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -469,8 +597,17 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(xyPlotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addComponent(plotTypePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(xAxisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(plotSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(logAcisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dragSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(xyPlotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selectedValuesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -509,37 +646,6 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_yAxisComboBoxActionPerformed
 
     /**
-     * Switch the x and y axis.
-     *
-     * @param evt
-     */
-    private void switchXandYButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchXandYButtonActionPerformed
-        String xAxis = (String) xAxisComboBox.getSelectedItem();
-        String yAxis = (String) yAxisComboBox.getSelectedItem();
-
-        xAxisComboBox.setSelectedItem(yAxis);
-        yAxisComboBox.setSelectedItem(xAxis);
-    }//GEN-LAST:event_switchXandYButtonActionPerformed
-
-    /**
-     * Update the plot.
-     *
-     * @param evt
-     */
-    private void xAxisTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xAxisTypeComboBoxActionPerformed
-        updatePlot();
-    }//GEN-LAST:event_xAxisTypeComboBoxActionPerformed
-
-    /**
-     * Update the plot.
-     *
-     * @param evt
-     */
-    private void yAxisTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yAxisTypeComboBoxActionPerformed
-        updatePlot();
-    }//GEN-LAST:event_yAxisTypeComboBoxActionPerformed
-
-    /**
      * Update the plot.
      *
      * @param evt
@@ -553,21 +659,14 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void bubbleSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bubbleSizeSpinnerStateChanged
-        bubbleSize = (Double) bubbleSizeSpinner.getValue();
+    private void bubbleOrBinSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bubbleOrBinSizeSpinnerStateChanged
+        if (xyPlotRadioButton.isSelected()) {
+            bubbleSize = (Double) bubbleOrBinSizeSpinner.getValue();
+        } else { // histogram selected
+            numberOfBins = (Integer) bubbleOrBinSizeSpinner.getValue();
+        }
         updatePlot();
-    }//GEN-LAST:event_bubbleSizeSpinnerStateChanged
-
-    /**
-     * Clear the list of selected data points.
-     *
-     * @param evt
-     */
-    private void clearSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSelectionButtonActionPerformed
-        selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
-        chartPanel.getChart().fireChartChanged();
-        filterTable();
-    }//GEN-LAST:event_clearSelectionButtonActionPerformed
+    }//GEN-LAST:event_bubbleOrBinSizeSpinnerStateChanged
 
     /**
      * Update the highlights in the plot.
@@ -586,27 +685,152 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     private void selectedValuesTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableMouseReleased
         chartPanel.getChart().fireChartChanged();
     }//GEN-LAST:event_selectedValuesTableMouseReleased
+
+    /**
+     * Update the plot.
+     *
+     * @param evt
+     */
+    private void xAxisLogCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xAxisLogCheckBoxActionPerformed
+        updatePlot();
+    }//GEN-LAST:event_xAxisLogCheckBoxActionPerformed
+
+    /**
+     * Update the plot.
+     *
+     * @param evt
+     */
+    private void yAxisLogCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yAxisLogCheckBoxActionPerformed
+        updatePlot();
+    }//GEN-LAST:event_yAxisLogCheckBoxActionPerformed
+
+    /**
+     * Update the plot.
+     *
+     * @param evt
+     */
+    private void xyPlotRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xyPlotRadioButtonActionPerformed
+        histogramRadioButtonActionPerformed(null);
+    }//GEN-LAST:event_xyPlotRadioButtonActionPerformed
+
+    /**
+     * Update the plot.
+     *
+     * @param evt
+     */
+    private void histogramRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_histogramRadioButtonActionPerformed
+
+        yAxisLabel.setEnabled(xyPlotRadioButton.isSelected());
+        yAxisComboBox.setEnabled(xyPlotRadioButton.isSelected());
+        colorLabel.setEnabled(xyPlotRadioButton.isSelected());
+        colorsComboBox.setEnabled(xyPlotRadioButton.isSelected());
+        xAxisLogCheckBox.setEnabled(xyPlotRadioButton.isSelected());
+        yAxisLogCheckBox.setEnabled(xyPlotRadioButton.isSelected());
+        yAxisLogCheckBox.setEnabled(xyPlotRadioButton.isSelected());
+        dragToSelectRadioButton.setEnabled(xyPlotRadioButton.isSelected());
+        dragToZoomRadioButton.setEnabled(xyPlotRadioButton.isSelected());
+
+        if (xyPlotRadioButton.isSelected()) {
+            bubbleOrBinSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(bubbleSize, Double.valueOf(0.0d), null, Double.valueOf(1.0d)));
+            bubbleOrBinSizeLabel.setText("Bubble");
+            bubbleOrBinSizeLabel.setToolTipText("The size of the bubbles relative to the x-axis");
+            bubbleOrBinSizeSpinner.setToolTipText("The size of the bubbles relative to the x-axis");
+        } else {
+            bubbleOrBinSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(numberOfBins, 1, null, 1));
+            bubbleOrBinSizeLabel.setText("Bins  ");
+            bubbleOrBinSizeLabel.setToolTipText("The number of bins for the histogram");
+            bubbleOrBinSizeSpinner.setToolTipText("The number of bins for the histogram");
+        }
+
+        updatePlot();
+    }//GEN-LAST:event_histogramRadioButtonActionPerformed
+
+    /**
+     * Turn the cursor into a hand cursor.
+     * 
+     * @param evt 
+     */
+    private void xAxisLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_xAxisLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_xAxisLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     * 
+     * @param evt 
+     */
+    private void xAxisLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_xAxisLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_xAxisLabelMouseExited
+
+    /**
+     * Switch the x and y axis.
+     *
+     * @param evt
+     */
+    private void xAxisLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_xAxisLabelMouseClicked
+        String xAxis = (String) xAxisComboBox.getSelectedItem();
+        String yAxis = (String) yAxisComboBox.getSelectedItem();
+
+        xAxisComboBox.setSelectedItem(yAxis);
+        yAxisComboBox.setSelectedItem(xAxis);
+    }//GEN-LAST:event_xAxisLabelMouseClicked
+
+    /**
+     * Turn the cursor into a hand cursor.
+     * 
+     * @param evt 
+     */
+    private void yAxisLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_yAxisLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     * 
+     * @param evt 
+     */
+    private void yAxisLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_yAxisLabelMouseExited
+
+    /**
+     * Switch the x and y axis.
+     *
+     * @param evt
+     */
+    private void yAxisLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseClicked
+        xAxisLabelMouseClicked(null);
+    }//GEN-LAST:event_yAxisLabelMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
-    private javax.swing.JLabel bubbleSizeLabel;
-    private javax.swing.JSpinner bubbleSizeSpinner;
-    private javax.swing.JButton clearSelectionButton;
+    private javax.swing.JLabel bubbleOrBinSizeLabel;
+    private javax.swing.JSpinner bubbleOrBinSizeSpinner;
+    private javax.swing.JLabel colorLabel;
     private javax.swing.JComboBox colorsComboBox;
-    private javax.swing.JLabel colorsLabel;
-    private javax.swing.JCheckBox dragToZoomCheckBox;
+    private javax.swing.ButtonGroup dragButtonGroup;
+    private javax.swing.JPanel dragSettingsPanel;
+    private javax.swing.JRadioButton dragToSelectRadioButton;
+    private javax.swing.JRadioButton dragToZoomRadioButton;
+    private javax.swing.JRadioButton histogramRadioButton;
+    private javax.swing.JPanel logAcisPanel;
     private javax.swing.JPanel plotPanel;
+    private javax.swing.JPanel plotSettingsPanel;
+    private javax.swing.ButtonGroup plotTypeButtonGroup;
+    private javax.swing.JPanel plotTypePanel;
     private javax.swing.JPanel selectedValuesPanel;
     private javax.swing.JScrollPane selectedValuesScrollPane;
     private javax.swing.JTable selectedValuesTable;
-    private javax.swing.JPanel settingsPanel;
-    private javax.swing.JButton switchXandYButton;
     private javax.swing.JComboBox xAxisComboBox;
     private javax.swing.JLabel xAxisLabel;
-    private javax.swing.JComboBox xAxisTypeComboBox;
+    private javax.swing.JCheckBox xAxisLogCheckBox;
+    private javax.swing.JPanel xAxisPanel;
     private javax.swing.JPanel xyPlotPanel;
+    private javax.swing.JRadioButton xyPlotRadioButton;
     private javax.swing.JComboBox yAxisComboBox;
     private javax.swing.JLabel yAxisLabel;
-    private javax.swing.JComboBox yAxisTypeComboBox;
+    private javax.swing.JCheckBox yAxisLogCheckBox;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -649,49 +873,114 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                     String xAxisName = (String) xAxisComboBox.getSelectedItem();
                     String yAxisName = (String) yAxisComboBox.getSelectedItem();
 
-                    ((TitledBorder) xyPlotPanel.getBorder()).setTitle(xAxisName + " vs. " + yAxisName);
-                    xyPlotPanel.revalidate();
-                    xyPlotPanel.repaint();
+                    if (histogramRadioButton.isSelected()) {
+                        
+                        ((TitledBorder) xyPlotPanel.getBorder()).setTitle(xAxisName);
+                        xyPlotPanel.revalidate();
+                        xyPlotPanel.repaint();
 
-                    DefaultXYDataset xyDataset = new DefaultXYDataset();
-                    DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
+                        progressDialog.setIndeterminate(false);
+                        progressDialog.setMaxProgressValue(tabelModel.getRowCount());
+                        progressDialog.setValue(0);
+                        
+                        int xAxisIndex = xAxisComboBox.getSelectedIndex();
+                        double[] values = new double[tabelModel.getRowCount()];
 
-                    ArrayList<String> datasetNames = new ArrayList<String>();
-                    HashMap<String, ArrayList<Integer>> datasets = new HashMap<String, ArrayList<Integer>>();
+                        // @TODO: possible to use batch selection here??
 
-                    int colorIndex = colorsComboBox.getSelectedIndex();
+                        for (int index = 0; index < tabelModel.getRowCount(); index++) {
+                            progressDialog.increaseProgressValue();
 
-                    progressDialog.setIndeterminate(false);
-                    progressDialog.setMaxProgressValue(tabelModel.getRowCount() * 2);
-                    progressDialog.setValue(0);
+                            // @TODO: support more data types!!
 
-                    // @TODO: possible to use batch selection here??
-
-                    for (int i = 0; i < tabelModel.getRowCount(); i++) {
-
-                        progressDialog.increaseProgressValue();
-
-                        ArrayList<Integer> tempArray;
-                        if (!datasets.containsKey("" + tabelModel.getValueAt(i, colorIndex))) {
-                            tempArray = new ArrayList<Integer>();
-                            datasetNames.add("" + tabelModel.getValueAt(i, colorIndex));
-                        } else {
-                            tempArray = datasets.get("" + tabelModel.getValueAt(i, colorIndex));
+                            if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+                                values[index] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
+                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+                                values[index] = ((Integer) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
+                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
+                                values[index] = ((Double) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
+                            }
+                            
+                            // @TODO: what about null values?
                         }
-                        tempArray.add(i);
-                        datasets.put("" + tabelModel.getValueAt(i, colorIndex), tempArray);
-                    }
+                        
+                        HistogramDataset dataset = new HistogramDataset();
+                        dataset.setType(HistogramType.FREQUENCY);
+                        dataset.addSeries(xAxisName, values, numberOfBins);
 
-                    int xAxisIndex = xAxisComboBox.getSelectedIndex();
-                    int yAxisIndex = yAxisComboBox.getSelectedIndex();
+                        JFreeChart chart = ChartFactory.createHistogram(null, xAxisName, "Frequency", dataset, PlotOrientation.VERTICAL, false, true, false);
 
-                    progressDialog.setIndeterminate(false);
-                    progressDialog.setMaxProgressValue(tabelModel.getRowCount());
-                    progressDialog.setValue(0);
+                        chartPanel = new ChartPanel(chart);
+                        chartPanel.setBorder(null);
+                        chart.setBorderVisible(false);
 
-                    int datasetCounter = 0;
+                        XYPlot plot = chart.getXYPlot();
 
-                    // @TODO: the below does not yet work
+                        // set up the chart renderer
+                        XYBarRenderer renderer = new XYBarRenderer();
+                        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+                        renderer.setShadowVisible(false);
+                        renderer.setSeriesPaint(0, histogramColor);
+                        plot.setRenderer(renderer);
+
+                        //plot.getRangeAxis().setRange(0, plot.getRangeAxis().getUpperBound());
+
+                        // hide unwanted chart details
+                        plot.setOutlineVisible(false);
+
+                        plot.setBackgroundPaint(Color.WHITE);
+                        chartPanel.setBackground(Color.WHITE);
+                        chart.setBackgroundPaint(Color.WHITE);
+
+                        plotPanel.add(chartPanel);
+                        plotPanel.revalidate();
+                        plotPanel.repaint();
+
+                    } else { // xy plot
+
+                        ((TitledBorder) xyPlotPanel.getBorder()).setTitle(xAxisName + " vs. " + yAxisName);
+                        xyPlotPanel.revalidate();
+                        xyPlotPanel.repaint();
+
+                        DefaultXYDataset xyDataset = new DefaultXYDataset();
+                        DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
+
+                        ArrayList<String> datasetNames = new ArrayList<String>();
+                        HashMap<String, ArrayList<Integer>> datasets = new HashMap<String, ArrayList<Integer>>();
+
+                        int colorIndex = colorsComboBox.getSelectedIndex();
+
+                        progressDialog.setIndeterminate(false);
+                        progressDialog.setMaxProgressValue(tabelModel.getRowCount() * 2);
+                        progressDialog.setValue(0);
+
+                        // @TODO: possible to use batch selection here??
+
+                        for (int i = 0; i < tabelModel.getRowCount(); i++) {
+
+                            progressDialog.increaseProgressValue();
+
+                            ArrayList<Integer> tempArray;
+                            if (!datasets.containsKey("" + tabelModel.getValueAt(i, colorIndex))) {
+                                tempArray = new ArrayList<Integer>();
+                                datasetNames.add("" + tabelModel.getValueAt(i, colorIndex));
+                            } else {
+                                tempArray = datasets.get("" + tabelModel.getValueAt(i, colorIndex));
+                            }
+                            tempArray.add(i);
+                            datasets.put("" + tabelModel.getValueAt(i, colorIndex), tempArray);
+                        }
+
+                        int xAxisIndex = xAxisComboBox.getSelectedIndex();
+                        int yAxisIndex = yAxisComboBox.getSelectedIndex();
+
+                        progressDialog.setIndeterminate(false);
+                        progressDialog.setMaxProgressValue(tabelModel.getRowCount());
+                        progressDialog.setValue(0);
+
+                        int datasetCounter = 0;
+
+                        // @TODO: the below does not yet work
 //                    HashMap<Integer, Color> datasetColors = new HashMap<Integer, Color>();
 //                    double minValue = 0, maxValue = 1;
 //
@@ -706,51 +995,51 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 //                        minValue = 0;
 //                        maxValue = colorRenderer.getMaxValue();
 //                    }
-                    
-                    
-                    // @TODO: add the option of filtering the data based on the values in one or more columns?
-                    //        for example remove all non-validated proteins or show only coverage > 50%?
-                    
 
-                    // split the data into the datasets
-                    for (String dataset : datasetNames) {
 
-                        double[][] tempDataXY = new double[2][datasets.get(dataset).size()];
-                        double[][] tempDataXYZ = new double[3][datasets.get(dataset).size()];
+                        // @TODO: add the option of filtering the data based on the values in one or more columns?
+                        //        for example remove all non-validated proteins or show only coverage > 50%?
 
-                        int counter = 0;
 
-                        for (Integer index : datasets.get(dataset)) {
+                        // split the data into the datasets
+                        for (String dataset : datasetNames) {
 
-                            progressDialog.increaseProgressValue();
+                            double[][] tempDataXY = new double[2][datasets.get(dataset).size()];
+                            double[][] tempDataXYZ = new double[3][datasets.get(dataset).size()];
 
-                            // @TODO: support more data types!!
+                            int counter = 0;
 
-                            if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
-                                tempDataXY[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
-                                tempDataXYZ[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
-                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
-                                tempDataXY[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
-                                tempDataXYZ[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
-                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
-                                tempDataXY[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
-                                tempDataXYZ[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
-                            }
+                            for (Integer index : datasets.get(dataset)) {
 
-                            if (tabelModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
-                                tempDataXY[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
-                                tempDataXYZ[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
-                            } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Integer) {
-                                tempDataXY[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
-                                tempDataXYZ[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
-                            } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Double) {
-                                tempDataXY[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
-                                tempDataXYZ[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
-                            }
+                                progressDialog.increaseProgressValue();
 
-                            tempDataXYZ[2][counter] = bubbleSize;
+                                // @TODO: support more data types!!
 
-                            // @TODO: the below does not yet work
+                                if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+                                    tempDataXY[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
+                                    tempDataXYZ[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
+                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+                                    tempDataXY[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
+                                    tempDataXYZ[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
+                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
+                                    tempDataXY[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
+                                    tempDataXYZ[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
+                                }
+
+                                if (tabelModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
+                                    tempDataXY[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
+                                    tempDataXYZ[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
+                                } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Integer) {
+                                    tempDataXY[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
+                                    tempDataXYZ[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
+                                } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Double) {
+                                    tempDataXY[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
+                                    tempDataXYZ[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
+                                }
+
+                                tempDataXYZ[2][counter] = bubbleSize;
+
+                                // @TODO: the below does not yet work
 //                            // get the color to use if using gradient color coding
 //                            if (tabelModel.getValueAt(index, colorIndex) instanceof Integer) {
 //                                datasetColors.put(datasetCounter,
@@ -770,122 +1059,122 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 //                                        minValue, maxValue, colorGradient));
 //                            }
 
-                            dataPointToRowNumber.put(datasetCounter + "_" + counter++, index);
-                        }
-
-                        xyDataset.addSeries(dataset, tempDataXY);
-                        xyzDataset.addSeries(dataset, tempDataXYZ);
-                        datasetCounter++;
-                    }
-
-                    // create the plot
-                    JFreeChart chart = ChartFactory.createBubbleChart(null, xAxisName, yAxisName, xyzDataset, PlotOrientation.VERTICAL, false, true, false);
-                    XYPlot plot = chart.getXYPlot();
-
-                    // set up the renderer
-                    XYBubbleRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_DOMAIN_AXIS) {
-
-                        @Override
-                        public Stroke getItemOutlineStroke(int row, int column) {
-
-                            boolean selectedInTable = false;
-                            int[] selectedRows = selectedValuesTable.getSelectedRows();
-
-                            for (int tableRowIndex : selectedRows) {
-                                if (dataPointToRowNumber.get(row + "_" + column).intValue()
-                                        == selectedValuesTable.convertRowIndexToModel(tableRowIndex)) {
-                                    selectedInTable = true;
-                                }
+                                dataPointToRowNumber.put(datasetCounter + "_" + counter++, index);
                             }
 
-                            if (selectedInTable) {
-                                BasicStroke stroke = (BasicStroke) super.getItemOutlineStroke(row, column);
-                                return new BasicStroke(stroke.getLineWidth() * 10f);
-                            } else {
-                                if (!selectedDataPoints.isEmpty()) {
-                                    if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
-                                        BasicStroke stroke = (BasicStroke) super.getItemOutlineStroke(row, column);
-                                        return new BasicStroke(stroke.getLineWidth() * 1.2f);
+                            xyDataset.addSeries(dataset, tempDataXY);
+                            xyzDataset.addSeries(dataset, tempDataXYZ);
+                            datasetCounter++;
+                        }
+
+                        // create the plot
+                        JFreeChart chart = ChartFactory.createBubbleChart(null, xAxisName, yAxisName, xyzDataset, PlotOrientation.VERTICAL, false, true, false);
+                        XYPlot plot = chart.getXYPlot();
+
+                        // set up the renderer
+                        XYBubbleRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_DOMAIN_AXIS) {
+
+                            @Override
+                            public Stroke getItemOutlineStroke(int row, int column) {
+
+                                boolean selectedInTable = false;
+                                int[] selectedRows = selectedValuesTable.getSelectedRows();
+
+                                for (int tableRowIndex : selectedRows) {
+                                    if (dataPointToRowNumber.get(row + "_" + column).intValue()
+                                            == selectedValuesTable.convertRowIndexToModel(tableRowIndex)) {
+                                        selectedInTable = true;
+                                    }
+                                }
+
+                                if (selectedInTable) {
+                                    BasicStroke stroke = (BasicStroke) super.getItemOutlineStroke(row, column);
+                                    return new BasicStroke(stroke.getLineWidth() * 10f);
+                                } else {
+                                    if (!selectedDataPoints.isEmpty()) {
+                                        if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
+                                            BasicStroke stroke = (BasicStroke) super.getItemOutlineStroke(row, column);
+                                            return new BasicStroke(stroke.getLineWidth() * 1.2f);
+                                        } else {
+                                            return super.getItemOutlineStroke(row, column);
+                                        }
                                     } else {
                                         return super.getItemOutlineStroke(row, column);
                                     }
+                                }
+                            }
+
+                            @Override
+                            public Paint getItemOutlinePaint(int row, int column) {
+
+                                boolean selectedInTable = false;
+                                int[] selectedRows = selectedValuesTable.getSelectedRows();
+
+                                for (int tableRowIndex : selectedRows) {
+                                    if (dataPointToRowNumber.get(row + "_" + column).intValue()
+                                            == selectedValuesTable.convertRowIndexToModel(tableRowIndex)) {
+                                        selectedInTable = true;
+                                    }
+                                }
+
+                                if (selectedInTable) {
+                                    return Color.BLUE; // @TODO: should not be hard coded here!!
                                 } else {
-                                    return super.getItemOutlineStroke(row, column);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public Paint getItemOutlinePaint(int row, int column) {
-
-                            boolean selectedInTable = false;
-                            int[] selectedRows = selectedValuesTable.getSelectedRows();
-
-                            for (int tableRowIndex : selectedRows) {
-                                if (dataPointToRowNumber.get(row + "_" + column).intValue()
-                                        == selectedValuesTable.convertRowIndexToModel(tableRowIndex)) {
-                                    selectedInTable = true;
-                                }
-                            }
-
-                            if (selectedInTable) {
-                                return Color.BLUE; // @TODO: should not be hard coded here!!
-                            } else {
-                                if (!selectedDataPoints.isEmpty()) {
-                                    if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
-                                        return Color.BLACK;
+                                    if (!selectedDataPoints.isEmpty()) {
+                                        if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
+                                            return Color.BLACK;
+                                        } else {
+                                            return Color.LIGHT_GRAY;
+                                        }
                                     } else {
-                                        return Color.LIGHT_GRAY;
+                                        return super.getItemOutlinePaint(row, column);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public Paint getItemPaint(int row, int column) {
+                                if (!selectedDataPoints.isEmpty()) {
+                                    Color tempColor = (Color) super.getItemPaint(row, column);
+                                    if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
+                                        return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 255);
+                                    } else {
+                                        return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 30); // @TODO: should not be hard coded here?
                                     }
                                 } else {
-                                    return super.getItemOutlinePaint(row, column);
+                                    return super.getItemPaint(row, column);
                                 }
                             }
-                        }
 
-                        @Override
-                        public Paint getItemPaint(int row, int column) {
-                            if (!selectedDataPoints.isEmpty()) {
-                                Color tempColor = (Color) super.getItemPaint(row, column);
-                                if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
-                                    return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 255);
+                            @Override
+                            public Paint getItemFillPaint(int row, int column) {
+                                if (!selectedDataPoints.isEmpty()) {
+                                    Color tempColor = (Color) super.getItemFillPaint(row, column);
+                                    if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
+                                        return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 255);
+                                    } else {
+                                        return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 30); // @TODO: should not be hard coded here?
+                                    }
                                 } else {
-                                    return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 30); // @TODO: should not be hard coded here?
+                                    return super.getItemFillPaint(row, column);
                                 }
-                            } else {
-                                return super.getItemPaint(row, column);
                             }
-                        }
+                        };
 
-                        @Override
-                        public Paint getItemFillPaint(int row, int column) {
-                            if (!selectedDataPoints.isEmpty()) {
-                                Color tempColor = (Color) super.getItemFillPaint(row, column);
-                                if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
-                                    return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 255);
-                                } else {
-                                    return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 30); // @TODO: should not be hard coded here?
+                        // set the colors for the data series
+                        if (cellRenderers.containsKey(new Integer(colorsComboBox.getSelectedIndex()))) {
+                            if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
+                                JSparklinesIntegerColorTableCellRenderer integerColorRenderer =
+                                        (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex()));
+                                HashMap<Integer, Color> colors = integerColorRenderer.getColors();
+
+                                for (int i = 0; i < datasetNames.size(); i++) {
+                                    Integer datasetInteger = new Integer(datasetNames.get(i));
+                                    renderer.setSeriesPaint(i, colors.get(new Integer(datasetInteger)));
                                 }
-                            } else {
-                                return super.getItemFillPaint(row, column);
                             }
-                        }
-                    };
 
-                    // set the colors for the data series
-                    if (cellRenderers.containsKey(new Integer(colorsComboBox.getSelectedIndex()))) {
-                        if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
-                            JSparklinesIntegerColorTableCellRenderer integerColorRenderer =
-                                    (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex()));
-                            HashMap<Integer, Color> colors = integerColorRenderer.getColors();
-
-                            for (int i = 0; i < datasetNames.size(); i++) {
-                                Integer datasetInteger = new Integer(datasetNames.get(i));
-                                renderer.setSeriesPaint(i, colors.get(new Integer(datasetInteger)));
-                            }
-                        } 
-                        
-                        // @TODO: the below does not yet work
+                            // @TODO: the below does not yet work
 //                        else if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesBarChartTableCellRenderer) {
 //                            for (int i = 0; i < datasetNames.size(); i++) {
 //                                renderer.setSeriesPaint(i, datasetColors.get(i));
@@ -895,130 +1184,134 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 //                                renderer.setSeriesPaint(i, datasetColors.get(i));
 //                            }
 //                        }
-                    }
+                        }
 
-                    renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator());
-                    plot.setRenderer(renderer);
+                        renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator());
+                        plot.setRenderer(renderer);
 
-                    // make all datapoints semitransparent
-                    plot.setForegroundAlpha(0.5f);
+                        // make all datapoints semitransparent
+                        plot.setForegroundAlpha(0.5f);
 
-                    // remove space before/after the domain axis
-                    plot.getDomainAxis().setUpperMargin(0);
-                    plot.getDomainAxis().setLowerMargin(0);
+                        // remove space before/after the domain axis
+                        plot.getDomainAxis().setUpperMargin(0);
+                        plot.getDomainAxis().setLowerMargin(0);
 
-                    plot.setRangeGridlinePaint(Color.black);
+                        plot.setRangeGridlinePaint(Color.black);
 
-                    // linear or logarithmic axis
-                    if (((String) xAxisTypeComboBox.getSelectedItem()).equalsIgnoreCase("Logarithmic")) {
-                        plot.setDomainAxis(new LogAxis(plot.getDomainAxis().getLabel()));
-                    }
-                    if (((String) yAxisTypeComboBox.getSelectedItem()).equalsIgnoreCase("Logarithmic")) {
-                        plot.setDomainAxis(new LogAxis(plot.getRangeAxis().getLabel()));
-                    }
+                        // linear or logarithmic axis
+                        if (xAxisLogCheckBox.isSelected()) {
+                            plot.setDomainAxis(new LogAxis(plot.getDomainAxis().getLabel()));
+                        }
+                        if (yAxisLogCheckBox.isSelected()) {
+                            plot.setRangeAxis(new LogAxis(plot.getRangeAxis().getLabel()));
+                        }
 
-                    // hide unwanted chart details
-                    plot.setDomainGridlinesVisible(false);
-                    chart.getPlot().setOutlineVisible(false);
+                        // hide unwanted chart details
+                        plot.setDomainGridlinesVisible(false);
+                        chart.getPlot().setOutlineVisible(false);
 
-                    // set background color
-                    chart.getPlot().setBackgroundPaint(Color.WHITE);
-                    chart.setBackgroundPaint(Color.WHITE);
+                        // set background color
+                        chart.getPlot().setBackgroundPaint(Color.WHITE);
+                        chart.setBackgroundPaint(Color.WHITE);
 
-                    chartPanel = new ChartPanel(chart) {
+                        chartPanel = new ChartPanel(chart) {
 
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            if (selectionActive) {
-                                setMouseZoomable(false);
-                                super.mouseReleased(e);
-                                setMouseZoomable(true);
-                            } else {
-                                super.mouseReleased(e);
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                if (selectionActive) {
+                                    setMouseZoomable(false);
+                                    super.mouseReleased(e);
+                                    setMouseZoomable(true);
+                                } else {
+                                    super.mouseReleased(e);
+                                }
                             }
-                        }
-                    };
+                        };
 
-                    chartPanel.setBackground(Color.WHITE);
+                        chartPanel.setBackground(Color.WHITE);
 
-                    // add the plot to the chart
-                    plotPanel.add(chartPanel);
-                    plotPanel.revalidate();
-                    plotPanel.repaint();
+                        // add the plot to the chart
+                        plotPanel.add(chartPanel);
+                        plotPanel.revalidate();
+                        plotPanel.repaint();
 
-                    // add chart mouse listener
-                    chartPanel.addChartMouseListener(new ChartMouseListener() {
+                        // add chart mouse listener
+                        chartPanel.addChartMouseListener(new ChartMouseListener() {
 
-                        public void chartMouseClicked(ChartMouseEvent cme) {
-                            mouseClickedInChart(cme);
-                        }
-
-                        public void chartMouseMoved(ChartMouseEvent cme) {
-                            mouseMovedInChart(cme);
-                        }
-                    });
-
-                    // add chart mouse motion listener
-                    chartPanel.addMouseMotionListener(new MouseAdapter() {
-
-                        @Override
-                        public void mouseDragged(MouseEvent e) {
-                            if (!dragToZoomCheckBox.isSelected()) {
-                                selectionActive = true;
-                                mouseDragged = true;
-                            } else {
-                                selectionActive = false;
-                                super.mouseDragged(e);
+                            public void chartMouseClicked(ChartMouseEvent cme) {
+                                mouseClickedInChart(cme);
                             }
-                        }
-                    });
 
-                    // add more chart mouse listeners
-                    chartPanel.addMouseListener(new MouseAdapter() {
+                            public void chartMouseMoved(ChartMouseEvent cme) {
+                                mouseMovedInChart(cme);
+                            }
+                        });
 
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            dragStart = e.getPoint();
-                            mouseDragged = false;
-                            super.mouseClicked(e);
-                        }
+                        // add chart mouse motion listener
+                        chartPanel.addMouseMotionListener(new MouseAdapter() {
 
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            if (mouseDragged) {
-                                dragEnd = e.getPoint();
+                            @Override
+                            public void mouseDragged(MouseEvent e) {
+                                if (!dragToZoomRadioButton.isSelected()) {
+                                    selectionActive = true;
+                                    mouseDragged = true;
+                                } else {
+                                    selectionActive = false;
+                                    super.mouseDragged(e);
+                                }
+                            }
+                        });
 
-                                double dragStartX = (dragStart.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
-                                double dragStartY = (dragStart.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
-                                double dragEndX = (dragEnd.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
-                                double dragEndY = (dragEnd.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
+                        // add more chart mouse listeners
+                        chartPanel.addMouseListener(new MouseAdapter() {
 
-                                ArrayList<XYItemEntity> entitiesFound = new ArrayList<XYItemEntity>();
-                                EntityCollection entities = chartPanel.getChartRenderingInfo().getEntityCollection();
-                                Iterator<ChartEntity> iterator = entities.iterator();
+                            @Override
+                            public void mousePressed(MouseEvent e) {
+                                dragStart = e.getPoint();
+                                mouseDragged = false;
+                                super.mouseClicked(e);
+                            }
 
-                                while (iterator.hasNext()) {
-                                    ChartEntity entity = iterator.next();
-                                    if (entity instanceof XYItemEntity) {
-                                        if (entity.getArea().intersects(dragStartX, dragStartY, dragEndX - dragStartX, dragEndY - dragStartY)) {
-                                            if (!entitiesFound.contains((XYItemEntity) entity)) {
-                                                entitiesFound.add((XYItemEntity) entity);
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                if (mouseDragged) {
+                                    dragEnd = e.getPoint();
+
+                                    // clear the old selection
+                                    selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();;
+
+                                    double dragStartX = (dragStart.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
+                                    double dragStartY = (dragStart.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
+                                    double dragEndX = (dragEnd.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
+                                    double dragEndY = (dragEnd.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
+
+                                    ArrayList<XYItemEntity> entitiesFound = new ArrayList<XYItemEntity>();
+                                    EntityCollection entities = chartPanel.getChartRenderingInfo().getEntityCollection();
+                                    Iterator<ChartEntity> iterator = entities.iterator();
+
+                                    while (iterator.hasNext()) {
+                                        ChartEntity entity = iterator.next();
+                                        if (entity instanceof XYItemEntity) {
+                                            if (entity.getArea().intersects(dragStartX, dragStartY, dragEndX - dragStartX, dragEndY - dragStartY)) {
+                                                if (!entitiesFound.contains((XYItemEntity) entity)) {
+                                                    entitiesFound.add((XYItemEntity) entity);
+                                                }
                                             }
                                         }
                                     }
+
+                                    for (XYItemEntity entity : entitiesFound) {
+                                        selectEntity(entity, false);
+                                    }
                                 }
 
-                                for (XYItemEntity entity : entitiesFound) {
-                                    selectEntity(entity, false);
-                                }
+                                mouseDragged = false;
+                                chartPanel.getChart().fireChartChanged();
+                                filterTable();
+                                super.mouseReleased(e);
                             }
-
-                            mouseDragged = false;
-                            chartPanel.getChart().fireChartChanged();
-                            filterTable();
-                            super.mouseReleased(e);
-                        }
-                    });
+                        });
+                    }
 
                     isPlotting = false;
                     filterTable();
@@ -1041,11 +1334,20 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             return;
         }
 
+        boolean dataPointsSelected = false;
+
+        // check if any data points are selected, and select/de-select them
         for (ChartEntity entity : entities) {
             // Get entity details
             if (entity instanceof XYItemEntity) {
                 selectEntity((XYItemEntity) entity, true);
+                dataPointsSelected = true;
             }
+        }
+
+        // if no data points was selected clear the selection
+        if (!dataPointsSelected) {
+            selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
         }
 
         filterTable();

@@ -4,6 +4,7 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import java.awt.Frame;
 import java.awt.Image;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -99,7 +100,7 @@ public class HelpDialog extends javax.swing.JDialog {
 
             textJEditorPane.setText(helpText);
 
-            if (fileName.getPath().startsWith("About")) {
+            if (fileName.getPath().substring(fileName.getPath().lastIndexOf(File.separator) + File.separator.length()).startsWith("About")) {
                 setTitle("About");
                 setIconImage(aboutIcon);
             } else {
@@ -195,7 +196,7 @@ public class HelpDialog extends javax.swing.JDialog {
 
             textJEditorPane.setText(helpText);
 
-            if (fileName.getPath().startsWith("About")) {
+            if (fileName.getPath().substring(fileName.getPath().lastIndexOf(File.separator) + File.separator.length()).startsWith("About")) {
                 setTitle("About");
                 setIconImage(aboutIcon);
             } else {

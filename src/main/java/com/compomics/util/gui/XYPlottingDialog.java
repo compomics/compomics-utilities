@@ -14,9 +14,7 @@ import javax.swing.RowFilter;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 import no.uib.jsparklines.data.XYDataPoint;
-import no.uib.jsparklines.renderers.JSparklinesBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.JSparklinesIntegerColorTableCellRenderer;
-import no.uib.jsparklines.renderers.JSparklinesTwoValueBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.util.GradientColorCoding;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.LogAxis;
@@ -95,6 +93,10 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      */
     private HashMap<String, Integer> dataPointToRowNumber;
     /**
+     * The index of the selected rows.
+     */
+    private ArrayList<Integer> selectedModelRows;
+    /**
      * The cell renderers for the table.
      */
     private HashMap<Integer, TableCellRenderer> cellRenderers;
@@ -110,11 +112,6 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * The table column header tool tips.
      */
     private ArrayList<String> tableToolTips;
-    /**
-     * The index of a column in the table that is unique across all the rows.
-     * Needed to filter the table based on the current selection.
-     */
-    private int uniqueColumnIndex = 0; // @TODO: find a way of not needing this!!
     /**
      * The color gradient to use.
      */
@@ -747,8 +744,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Turn the cursor into a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void xAxisLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_xAxisLabelMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -756,8 +753,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Change the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void xAxisLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_xAxisLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -778,8 +775,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Turn the cursor into a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void yAxisLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -787,8 +784,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Change the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void yAxisLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -802,7 +799,6 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     private void yAxisLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseClicked
         xAxisLabelMouseClicked(null);
     }//GEN-LAST:event_yAxisLabelMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JLabel bubbleOrBinSizeLabel;
@@ -841,6 +837,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         if (!isPlotting) {
             selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
             dataPointToRowNumber = new HashMap<String, Integer>();
+            selectedModelRows = new ArrayList<Integer>();
 
             isPlotting = true;
 
@@ -874,7 +871,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                     String yAxisName = (String) yAxisComboBox.getSelectedItem();
 
                     if (histogramRadioButton.isSelected()) {
-                        
+
                         ((TitledBorder) xyPlotPanel.getBorder()).setTitle(xAxisName);
                         xyPlotPanel.revalidate();
                         xyPlotPanel.repaint();
@@ -882,7 +879,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                         progressDialog.setIndeterminate(false);
                         progressDialog.setMaxProgressValue(tabelModel.getRowCount());
                         progressDialog.setValue(0);
-                        
+
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
                         double[] values = new double[tabelModel.getRowCount()];
 
@@ -900,10 +897,10 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                             } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
                                 values[index] = ((Double) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
                             }
-                            
+
                             // @TODO: what about null values?
                         }
-                        
+
                         HistogramDataset dataset = new HistogramDataset();
                         dataset.setType(HistogramType.FREQUENCY);
                         dataset.addSeries(xAxisName, values, numberOfBins);
@@ -1278,7 +1275,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                                     dragEnd = e.getPoint();
 
                                     // clear the old selection
-                                    selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();;
+                                    selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
+                                    selectedModelRows = new ArrayList<Integer>();
 
                                     double dragStartX = (dragStart.getX() - chartPanel.getInsets().left) / chartPanel.getScaleX();
                                     double dragStartY = (dragStart.getY() - chartPanel.getInsets().top) / chartPanel.getScaleY();
@@ -1348,6 +1346,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         // if no data points was selected clear the selection
         if (!dataPointsSelected) {
             selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
+            selectedModelRows = new ArrayList<Integer>();
         }
 
         filterTable();
@@ -1369,18 +1368,22 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             if (selectedDataPoints.get(seriesIndex).contains(itemIndex)) {
                 if (removeSelected) {
                     selectedDataPoints.get(seriesIndex).remove(itemIndex);
-
                     if (selectedDataPoints.get(seriesIndex).isEmpty()) {
                         selectedDataPoints.remove(seriesIndex);
                     }
+                    selectedModelRows.remove(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
                 }
             } else {
                 selectedDataPoints.get(seriesIndex).add(itemIndex);
+                selectedModelRows.add(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
             }
         } else {
             ArrayList<Integer> itemList = new ArrayList<Integer>();
             itemList.add(itemIndex);
             selectedDataPoints.put(seriesIndex, itemList);
+            if (!selectedModelRows.contains(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex))) {
+                selectedModelRows.add(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
+            }
         }
     }
 
@@ -1399,29 +1402,11 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      */
     public void filterTable() {
 
-        java.util.List<RowFilter<Object, Object>> filters = new ArrayList<RowFilter<Object, Object>>();
-
         if (selectedDataPoints.isEmpty()) {
             // no filtering, show all values
             ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(null);
         } else {
-            Iterator<Integer> iterator = selectedDataPoints.keySet().iterator();
-
-            while (iterator.hasNext()) {
-                Integer seriesKey = iterator.next();
-                ArrayList<Integer> indexKeys = selectedDataPoints.get(seriesKey);
-
-                for (Integer indexKey : indexKeys) {
-                    Integer rowNumber = dataPointToRowNumber.get(seriesKey + "_" + indexKey);
-                    filters.add(RowFilter.numberFilter(RowFilter.ComparisonType.EQUAL, (rowNumber + 1), uniqueColumnIndex)); // @TODO: find a way of getting rid of the uniqueColumnIndex
-                }
-            }
-
-            RowFilter<Object, Object> allFilters = RowFilter.orFilter(filters);
-
-            if (selectedValuesTable.getRowSorter() != null) {
-                ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(allFilters);
-            }
+            ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(new SelectedValuesTableFilter());
         }
 
         ((TitledBorder) selectedValuesPanel.getBorder()).setTitle("Selected Values (" + selectedValuesTable.getRowCount() + ")");
@@ -1456,5 +1441,19 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         }
 
         return entitiesForPoint;
+    }
+
+    /**
+     * A filter that filters the table based on if the datapoint is selected in
+     * the plot or not.
+     */
+    public class SelectedValuesTableFilter extends RowFilter<DefaultTableModel, Integer> {
+
+        public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+            if (selectedModelRows.isEmpty() || selectedModelRows.contains(entry.getIdentifier())) {
+                return true;
+            }
+            return false;
+        }
     }
 }

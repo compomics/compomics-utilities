@@ -92,8 +92,6 @@ public class PTMLocationScores {
      * @param peptide The peptide of interest
      * @param ptms The PTMs to score, for instance different phosphorylations.
      * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param nPTM The number of occurrences where this PTM is expected on this
-     * peptide
      * @param spectrum The corresponding spectrum
      * @param iontypes The fragment ions to look for
      * @param neutralLosses The neutral losses to look for

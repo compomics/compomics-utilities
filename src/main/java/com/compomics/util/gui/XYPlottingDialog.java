@@ -4,18 +4,16 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.Vector;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JTable;
-import javax.swing.RowFilter;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 import no.uib.jsparklines.data.XYDataPoint;
 import no.uib.jsparklines.renderers.JSparklinesIntegerColorTableCellRenderer;
+import no.uib.jsparklines.renderers.util.AreaRenderer;
 import no.uib.jsparklines.renderers.util.GradientColorCoding;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.entity.ChartEntity;
@@ -30,6 +28,13 @@ import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 import org.jfree.data.xy.*;
+import umontreal.iro.lecuyer.gof.KernelDensity;
+import umontreal.iro.lecuyer.probdist.EmpiricalDist;
+import umontreal.iro.lecuyer.probdist.NormalDist;
+import umontreal.iro.lecuyer.randvar.KernelDensityGen;
+import umontreal.iro.lecuyer.randvar.NormalGen;
+import umontreal.iro.lecuyer.rng.MRG31k3p;
+import umontreal.iro.lecuyer.rng.RandomStream;
 
 /**
  * A dialog that makes it straightforward to inspect compare the values of two
@@ -56,9 +61,18 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      */
     private double bubbleSize = 1.0;
     /**
+     * The bubble scaling factor in percent. 1.0 means no scaling.
+     */
+    private double bubbleScalingFactor = 1.0;
+    /**
      * The number if bins for the histograms.
      */
     private int numberOfBins = 100;
+    /**
+     * If true, the user defined bin size will be used instead of the automatic
+     * one.
+     */
+    private boolean userDefinedBinSize = false;
     /**
      * The dialog parent.
      */
@@ -161,20 +175,25 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     private void setUpGUI() {
 
         Vector<String> colummnNames = new Vector<String>();
+        Vector<String> colummnNamesExtended = new Vector<String>();
+        colummnNamesExtended.add(0, "[user defined]");
 
         int columnCount = tabelModel.getColumnCount();
 
         for (int i = 0; i < columnCount; i++) {
             if (tabelModel.getColumnName(i).trim().length() == 0) {
                 colummnNames.add("(column " + (i + 1) + ")");
+                colummnNamesExtended.add("(column " + (i + 1) + ")");
             } else {
                 colummnNames.add(tabelModel.getColumnName(i));
+                colummnNamesExtended.add(tabelModel.getColumnName(i));
             }
         }
 
         xAxisComboBox.setModel(new DefaultComboBoxModel(colummnNames));
         yAxisComboBox.setModel(new DefaultComboBoxModel(colummnNames));
         colorsComboBox.setModel(new DefaultComboBoxModel(colummnNames));
+        bubbleSizeComboBox.setModel(new DefaultComboBoxModel(colummnNamesExtended));
 
         selectedValuesTable.setModel(tabelModel);
 
@@ -216,8 +235,28 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         plotTypeButtonGroup = new javax.swing.ButtonGroup();
         dragButtonGroup = new javax.swing.ButtonGroup();
         backgroundPanel = new javax.swing.JPanel();
-        xyPlotPanel = new javax.swing.JPanel();
-        plotPanel = new javax.swing.JPanel();
+        plotTypePanel = new javax.swing.JPanel();
+        densityPlotRadioButton = new javax.swing.JRadioButton();
+        histogramRadioButton = new javax.swing.JRadioButton();
+        xyPlotRadioButton = new javax.swing.JRadioButton();
+        xAxisPanel = new javax.swing.JPanel();
+        xAxisComboBox = new javax.swing.JComboBox();
+        xAxisLabel = new javax.swing.JLabel();
+        yAxisComboBox = new javax.swing.JComboBox();
+        yAxisLabel = new javax.swing.JLabel();
+        colorLabel = new javax.swing.JLabel();
+        colorsComboBox = new javax.swing.JComboBox();
+        bubbleSizeLabel = new javax.swing.JLabel();
+        bubbleSizeComboBox = new javax.swing.JComboBox();
+        binSizeSpinner = new javax.swing.JSpinner();
+        binsLabel = new javax.swing.JLabel();
+        dragSettingsPanel = new javax.swing.JPanel();
+        dragToSelectRadioButton = new javax.swing.JRadioButton();
+        dragToZoomRadioButton = new javax.swing.JRadioButton();
+        logAcisPanel = new javax.swing.JPanel();
+        xAxisLogCheckBox = new javax.swing.JCheckBox();
+        yAxisLogCheckBox = new javax.swing.JCheckBox();
+        selectedValuesLayeredPane = new javax.swing.JLayeredPane();
         selectedValuesPanel = new javax.swing.JPanel();
         selectedValuesScrollPane = new javax.swing.JScrollPane();
         selectedValuesTable = new JTable() {
@@ -233,107 +272,55 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 };
             }
         };
-        plotTypePanel = new javax.swing.JPanel();
-        xyPlotRadioButton = new javax.swing.JRadioButton();
-        histogramRadioButton = new javax.swing.JRadioButton();
-        xAxisPanel = new javax.swing.JPanel();
-        xAxisComboBox = new javax.swing.JComboBox();
-        xAxisLabel = new javax.swing.JLabel();
-        yAxisComboBox = new javax.swing.JComboBox();
-        yAxisLabel = new javax.swing.JLabel();
-        colorLabel = new javax.swing.JLabel();
-        colorsComboBox = new javax.swing.JComboBox();
-        plotSettingsPanel = new javax.swing.JPanel();
-        bubbleOrBinSizeSpinner = new javax.swing.JSpinner();
-        bubbleOrBinSizeLabel = new javax.swing.JLabel();
-        dragSettingsPanel = new javax.swing.JPanel();
-        dragToSelectRadioButton = new javax.swing.JRadioButton();
-        dragToZoomRadioButton = new javax.swing.JRadioButton();
-        logAcisPanel = new javax.swing.JPanel();
-        xAxisLogCheckBox = new javax.swing.JCheckBox();
-        yAxisLogCheckBox = new javax.swing.JCheckBox();
+        selectedValuesTableOptionsJButton = new javax.swing.JButton();
+        contextMenuSelectedValuesTableBackgroundPanel = new javax.swing.JPanel();
+        plotLayeredPane = new javax.swing.JLayeredPane();
+        xyPlotPanel = new javax.swing.JPanel();
+        plotPanel = new javax.swing.JPanel();
+        plotOptionsJButton = new javax.swing.JButton();
+        contextMenuPlotBackgroundPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Statistics");
 
         backgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        xyPlotPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("XY Plot"));
-        xyPlotPanel.setOpaque(false);
-
-        plotPanel.setBackground(new java.awt.Color(255, 255, 255));
-        plotPanel.setLayout(new javax.swing.BoxLayout(plotPanel, javax.swing.BoxLayout.LINE_AXIS));
-
-        javax.swing.GroupLayout xyPlotPanelLayout = new javax.swing.GroupLayout(xyPlotPanel);
-        xyPlotPanel.setLayout(xyPlotPanelLayout);
-        xyPlotPanelLayout.setHorizontalGroup(
-            xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(xyPlotPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        xyPlotPanelLayout.setVerticalGroup(
-            xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(xyPlotPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        selectedValuesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Values"));
-        selectedValuesPanel.setOpaque(false);
-
-        selectedValuesTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                selectedValuesTableMouseReleased(evt);
+        backgroundPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                backgroundPanelComponentResized(evt);
             }
         });
-        selectedValuesTable.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                selectedValuesTableKeyReleased(evt);
-            }
-        });
-        selectedValuesScrollPane.setViewportView(selectedValuesTable);
-
-        javax.swing.GroupLayout selectedValuesPanelLayout = new javax.swing.GroupLayout(selectedValuesPanel);
-        selectedValuesPanel.setLayout(selectedValuesPanelLayout);
-        selectedValuesPanelLayout.setHorizontalGroup(
-            selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(selectedValuesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        selectedValuesPanelLayout.setVerticalGroup(
-            selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(selectedValuesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         plotTypePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Type"));
         plotTypePanel.setOpaque(false);
 
-        plotTypeButtonGroup.add(xyPlotRadioButton);
-        xyPlotRadioButton.setSelected(true);
-        xyPlotRadioButton.setText("XY Plot");
-        xyPlotRadioButton.setIconTextGap(15);
-        xyPlotRadioButton.setOpaque(false);
-        xyPlotRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        plotTypeButtonGroup.add(densityPlotRadioButton);
+        densityPlotRadioButton.setText("Density");
+        densityPlotRadioButton.setIconTextGap(10);
+        densityPlotRadioButton.setOpaque(false);
+        densityPlotRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                xyPlotRadioButtonActionPerformed(evt);
+                densityPlotRadioButtonActionPerformed(evt);
             }
         });
 
         plotTypeButtonGroup.add(histogramRadioButton);
         histogramRadioButton.setText("Histogram");
-        histogramRadioButton.setIconTextGap(15);
+        histogramRadioButton.setIconTextGap(10);
         histogramRadioButton.setOpaque(false);
         histogramRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 histogramRadioButtonActionPerformed(evt);
+            }
+        });
+
+        plotTypeButtonGroup.add(xyPlotRadioButton);
+        xyPlotRadioButton.setSelected(true);
+        xyPlotRadioButton.setText("XY Plot");
+        xyPlotRadioButton.setIconTextGap(10);
+        xyPlotRadioButton.setOpaque(false);
+        xyPlotRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xyPlotRadioButtonActionPerformed(evt);
             }
         });
 
@@ -343,21 +330,21 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             plotTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plotTypePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(xyPlotRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(histogramRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(xyPlotRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(histogramRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(densityPlotRadioButton)
+                .addContainerGap())
         );
-
-        plotTypePanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {histogramRadioButton, xyPlotRadioButton});
-
         plotTypePanelLayout.setVerticalGroup(
             plotTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plotTypePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(plotTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(xyPlotRadioButton)
-                    .addComponent(histogramRadioButton))
+                    .addComponent(densityPlotRadioButton)
+                    .addComponent(histogramRadioButton)
+                    .addComponent(xyPlotRadioButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -415,6 +402,37 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             }
         });
 
+        bubbleSizeLabel.setText("<html> <a href>Size</a> </html>");
+        bubbleSizeLabel.setToolTipText("Click to change the bubble scaling factor");
+        bubbleSizeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bubbleSizeLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                bubbleSizeLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                bubbleSizeLabelMouseExited(evt);
+            }
+        });
+
+        bubbleSizeComboBox.setMaximumRowCount(30);
+        bubbleSizeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bubbleSizeComboBoxActionPerformed(evt);
+            }
+        });
+
+        binSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        binSizeSpinner.setToolTipText("The size of the bubbles relative to the x-axis");
+        binSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                binSizeSpinnerStateChanged(evt);
+            }
+        });
+
+        binsLabel.setText("Bins");
+
         javax.swing.GroupLayout xAxisPanelLayout = new javax.swing.GroupLayout(xAxisPanel);
         xAxisPanel.setLayout(xAxisPanelLayout);
         xAxisPanelLayout.setHorizontalGroup(
@@ -424,12 +442,16 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(xAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(yAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(colorLabel))
-                .addGap(20, 20, 20)
+                    .addComponent(colorLabel)
+                    .addComponent(bubbleSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(binsLabel))
+                .addGap(18, 18, 18)
                 .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(yAxisComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(xAxisComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(yAxisComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bubbleSizeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(colorsComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(xAxisComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(binSizeSpinner))
                 .addContainerGap())
         );
         xAxisPanelLayout.setVerticalGroup(
@@ -445,43 +467,16 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                     .addComponent(yAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bubbleSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bubbleSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(colorLabel)
                     .addComponent(colorsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        plotSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Plot Settings"));
-        plotSettingsPanel.setOpaque(false);
-
-        bubbleOrBinSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(1.0d), Double.valueOf(0.0d), null, Double.valueOf(1.0d)));
-        bubbleOrBinSizeSpinner.setToolTipText("The size of the bubbles relative to the x-axis");
-        bubbleOrBinSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                bubbleOrBinSizeSpinnerStateChanged(evt);
-            }
-        });
-
-        bubbleOrBinSizeLabel.setText("Bubble");
-        bubbleOrBinSizeLabel.setToolTipText("The size of the bubbles relative to the x-axis");
-
-        javax.swing.GroupLayout plotSettingsPanelLayout = new javax.swing.GroupLayout(plotSettingsPanel);
-        plotSettingsPanel.setLayout(plotSettingsPanelLayout);
-        plotSettingsPanelLayout.setHorizontalGroup(
-            plotSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plotSettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bubbleOrBinSizeLabel)
-                .addGap(18, 18, 18)
-                .addComponent(bubbleOrBinSizeSpinner)
-                .addContainerGap())
-        );
-        plotSettingsPanelLayout.setVerticalGroup(
-            plotSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(plotSettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(plotSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bubbleOrBinSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bubbleOrBinSizeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(binSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(binsLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -570,6 +565,139 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        selectedValuesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Values"));
+        selectedValuesPanel.setOpaque(false);
+
+        selectedValuesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                selectedValuesTableMouseReleased(evt);
+            }
+        });
+        selectedValuesTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                selectedValuesTableKeyReleased(evt);
+            }
+        });
+        selectedValuesScrollPane.setViewportView(selectedValuesTable);
+
+        javax.swing.GroupLayout selectedValuesPanelLayout = new javax.swing.GroupLayout(selectedValuesPanel);
+        selectedValuesPanel.setLayout(selectedValuesPanelLayout);
+        selectedValuesPanelLayout.setHorizontalGroup(
+            selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(selectedValuesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        selectedValuesPanelLayout.setVerticalGroup(
+            selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(selectedValuesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        selectedValuesPanel.setBounds(0, 0, 1060, 240);
+        selectedValuesLayeredPane.add(selectedValuesPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        selectedValuesTableOptionsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_gray.png"))); // NOI18N
+        selectedValuesTableOptionsJButton.setToolTipText("Table Options");
+        selectedValuesTableOptionsJButton.setBorder(null);
+        selectedValuesTableOptionsJButton.setBorderPainted(false);
+        selectedValuesTableOptionsJButton.setContentAreaFilled(false);
+        selectedValuesTableOptionsJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_black.png"))); // NOI18N
+        selectedValuesTableOptionsJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                selectedValuesTableOptionsJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                selectedValuesTableOptionsJButtonMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                selectedValuesTableOptionsJButtonMouseReleased(evt);
+            }
+        });
+        selectedValuesTableOptionsJButton.setBounds(1020, 5, 10, 19);
+        selectedValuesLayeredPane.add(selectedValuesTableOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+
+        contextMenuSelectedValuesTableBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout contextMenuSelectedValuesTableBackgroundPanelLayout = new javax.swing.GroupLayout(contextMenuSelectedValuesTableBackgroundPanel);
+        contextMenuSelectedValuesTableBackgroundPanel.setLayout(contextMenuSelectedValuesTableBackgroundPanelLayout);
+        contextMenuSelectedValuesTableBackgroundPanelLayout.setHorizontalGroup(
+            contextMenuSelectedValuesTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        contextMenuSelectedValuesTableBackgroundPanelLayout.setVerticalGroup(
+            contextMenuSelectedValuesTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 19, Short.MAX_VALUE)
+        );
+
+        contextMenuSelectedValuesTableBackgroundPanel.setBounds(1010, 0, 30, 19);
+        selectedValuesLayeredPane.add(contextMenuSelectedValuesTableBackgroundPanel, javax.swing.JLayeredPane.POPUP_LAYER);
+
+        xyPlotPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("XY Plot"));
+        xyPlotPanel.setOpaque(false);
+
+        plotPanel.setBackground(new java.awt.Color(255, 255, 255));
+        plotPanel.setLayout(new javax.swing.BoxLayout(plotPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        javax.swing.GroupLayout xyPlotPanelLayout = new javax.swing.GroupLayout(xyPlotPanel);
+        xyPlotPanel.setLayout(xyPlotPanelLayout);
+        xyPlotPanelLayout.setHorizontalGroup(
+            xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(xyPlotPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        xyPlotPanelLayout.setVerticalGroup(
+            xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(xyPlotPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        xyPlotPanel.setBounds(0, 0, 810, 380);
+        plotLayeredPane.add(xyPlotPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        plotOptionsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_gray.png"))); // NOI18N
+        plotOptionsJButton.setToolTipText("Plot Options");
+        plotOptionsJButton.setBorder(null);
+        plotOptionsJButton.setBorderPainted(false);
+        plotOptionsJButton.setContentAreaFilled(false);
+        plotOptionsJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_black.png"))); // NOI18N
+        plotOptionsJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                plotOptionsJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                plotOptionsJButtonMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                plotOptionsJButtonMouseReleased(evt);
+            }
+        });
+        plotOptionsJButton.setBounds(780, 5, 10, 19);
+        plotLayeredPane.add(plotOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+
+        contextMenuPlotBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout contextMenuPlotBackgroundPanelLayout = new javax.swing.GroupLayout(contextMenuPlotBackgroundPanel);
+        contextMenuPlotBackgroundPanel.setLayout(contextMenuPlotBackgroundPanelLayout);
+        contextMenuPlotBackgroundPanelLayout.setHorizontalGroup(
+            contextMenuPlotBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        contextMenuPlotBackgroundPanelLayout.setVerticalGroup(
+            contextMenuPlotBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 19, Short.MAX_VALUE)
+        );
+
+        contextMenuPlotBackgroundPanel.setBounds(770, 0, 30, 19);
+        plotLayeredPane.add(contextMenuPlotBackgroundPanel, javax.swing.JLayeredPane.POPUP_LAYER);
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -578,15 +706,14 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(xyPlotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(plotLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(xAxisPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(plotSettingsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(dragSettingsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(logAcisPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(plotTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(selectedValuesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(selectedValuesLayeredPane))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -599,14 +726,12 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(xAxisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(plotSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(logAcisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dragSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(xyPlotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(plotLayeredPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectedValuesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(selectedValuesLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -656,14 +781,11 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void bubbleOrBinSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bubbleOrBinSizeSpinnerStateChanged
-        if (xyPlotRadioButton.isSelected()) {
-            bubbleSize = (Double) bubbleOrBinSizeSpinner.getValue();
-        } else { // histogram selected
-            numberOfBins = (Integer) bubbleOrBinSizeSpinner.getValue();
-        }
+    private void binSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_binSizeSpinnerStateChanged
+        numberOfBins = (Integer) binSizeSpinner.getValue();
+        userDefinedBinSize = true;
         updatePlot();
-    }//GEN-LAST:event_bubbleOrBinSizeSpinnerStateChanged
+    }//GEN-LAST:event_binSizeSpinnerStateChanged
 
     /**
      * Update the highlights in the plot.
@@ -706,9 +828,9 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void xyPlotRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xyPlotRadioButtonActionPerformed
+    private void densityPlotRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_densityPlotRadioButtonActionPerformed
         histogramRadioButtonActionPerformed(null);
-    }//GEN-LAST:event_xyPlotRadioButtonActionPerformed
+    }//GEN-LAST:event_densityPlotRadioButtonActionPerformed
 
     /**
      * Update the plot.
@@ -721,29 +843,19 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         yAxisComboBox.setEnabled(xyPlotRadioButton.isSelected());
         colorLabel.setEnabled(xyPlotRadioButton.isSelected());
         colorsComboBox.setEnabled(xyPlotRadioButton.isSelected());
-        xAxisLogCheckBox.setEnabled(xyPlotRadioButton.isSelected());
-        yAxisLogCheckBox.setEnabled(xyPlotRadioButton.isSelected());
-        yAxisLogCheckBox.setEnabled(xyPlotRadioButton.isSelected());
+        bubbleSizeLabel.setEnabled(xyPlotRadioButton.isSelected());
+        bubbleSizeComboBox.setEnabled(xyPlotRadioButton.isSelected());
         dragToSelectRadioButton.setEnabled(xyPlotRadioButton.isSelected());
         dragToZoomRadioButton.setEnabled(xyPlotRadioButton.isSelected());
 
-        if (xyPlotRadioButton.isSelected()) {
-            bubbleOrBinSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(bubbleSize, Double.valueOf(0.0d), null, Double.valueOf(1.0d)));
-            bubbleOrBinSizeLabel.setText("Bubble");
-            bubbleOrBinSizeLabel.setToolTipText("The size of the bubbles relative to the x-axis");
-            bubbleOrBinSizeSpinner.setToolTipText("The size of the bubbles relative to the x-axis");
-        } else {
-            bubbleOrBinSizeSpinner.setModel(new javax.swing.SpinnerNumberModel(numberOfBins, 1, null, 1));
-            bubbleOrBinSizeLabel.setText("Bins  ");
-            bubbleOrBinSizeLabel.setToolTipText("The number of bins for the histogram");
-            bubbleOrBinSizeSpinner.setToolTipText("The number of bins for the histogram");
-        }
+        binsLabel.setEnabled(histogramRadioButton.isSelected());
+        binSizeSpinner.setEnabled(histogramRadioButton.isSelected());
 
         updatePlot();
     }//GEN-LAST:event_histogramRadioButtonActionPerformed
 
     /**
-     * Turn the cursor into a hand cursor.
+     * Change the cursor into a hand cursor.
      *
      * @param evt
      */
@@ -774,7 +886,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_xAxisLabelMouseClicked
 
     /**
-     * Turn the cursor into a hand cursor.
+     * Change the cursor into a hand cursor.
      *
      * @param evt
      */
@@ -799,25 +911,214 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     private void yAxisLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yAxisLabelMouseClicked
         xAxisLabelMouseClicked(null);
     }//GEN-LAST:event_yAxisLabelMouseClicked
+
+    /**
+     * Update the plot.
+     *
+     * @param evt
+     */
+    private void xyPlotRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xyPlotRadioButtonActionPerformed
+        histogramRadioButtonActionPerformed(null);
+    }//GEN-LAST:event_xyPlotRadioButtonActionPerformed
+
+    /**
+     * Update the bubble size.
+     *
+     * @param evt
+     */
+    private void bubbleSizeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubbleSizeComboBoxActionPerformed
+        if (bubbleSizeComboBox.getSelectedIndex() == 0) {
+            String value = JOptionPane.showInputDialog(this, "Select the bubble size.", bubbleSize);
+            if (value != null) {
+                try {
+                    bubbleSize = new Double(value);
+                    updatePlot();
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Bubble size has to be a number.", "Bubble Size Error", JOptionPane.ERROR_MESSAGE);
+                    bubbleSizeComboBoxActionPerformed(null);
+                }
+            }
+        } else {
+            updatePlot();
+        }
+    }//GEN-LAST:event_bubbleSizeComboBoxActionPerformed
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void bubbleSizeLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bubbleSizeLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_bubbleSizeLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void bubbleSizeLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bubbleSizeLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_bubbleSizeLabelMouseExited
+
+    /**
+     * Open a dialog where the user can select the bubble scaling factor.
+     *
+     * @param evt
+     */
+    private void bubbleSizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bubbleSizeLabelMouseClicked
+        String value = JOptionPane.showInputDialog(this, "Select the bubble scaling factor.\nA value of 1 means no scaling.", bubbleScalingFactor);
+        if (value != null) {
+            try {
+                double tempBubbleScalingFactor = new Double(value);
+                if (tempBubbleScalingFactor > 0) {
+                    bubbleScalingFactor = tempBubbleScalingFactor;
+                    updatePlot();
+                } else {
+                    JOptionPane.showMessageDialog(this, "The bubble scaling factor has to be bigger than 0.", "Bubble Scaling Error", JOptionPane.ERROR_MESSAGE);
+                    bubbleSizeComboBoxActionPerformed(null);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Bubble scaling factor has to be a number.", "Bubble Scaling Error", JOptionPane.ERROR_MESSAGE);
+                bubbleSizeComboBoxActionPerformed(null);
+            }
+        }
+    }//GEN-LAST:event_bubbleSizeLabelMouseClicked
+
+    /**
+     * Resize the layered panes.
+     * 
+     * @param evt 
+     */
+    private void backgroundPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_backgroundPanelComponentResized
+
+        // resize the layered panels
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+
+                // move the icons
+                selectedValuesLayeredPane.getComponent(0).setBounds(
+                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(0).getWidth() - 15,
+                        0,
+                        selectedValuesLayeredPane.getComponent(0).getWidth(),
+                        selectedValuesLayeredPane.getComponent(0).getHeight());
+
+                selectedValuesLayeredPane.getComponent(1).setBounds(
+                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(1).getWidth() - 20,
+                        0,
+                        selectedValuesLayeredPane.getComponent(1).getWidth(),
+                        selectedValuesLayeredPane.getComponent(1).getHeight());
+
+                // resize the table area
+                selectedValuesLayeredPane.getComponent(2).setBounds(0, 0, selectedValuesLayeredPane.getWidth(), selectedValuesLayeredPane.getHeight());
+                selectedValuesLayeredPane.revalidate();
+                selectedValuesLayeredPane.repaint();
+                
+                // move the icons
+                plotLayeredPane.getComponent(0).setBounds(
+                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(0).getWidth() - 15,
+                        0,
+                        plotLayeredPane.getComponent(0).getWidth(),
+                        plotLayeredPane.getComponent(0).getHeight());
+
+                plotLayeredPane.getComponent(1).setBounds(
+                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(1).getWidth() - 20,
+                        0,
+                        plotLayeredPane.getComponent(1).getWidth(),
+                        plotLayeredPane.getComponent(1).getHeight());
+
+                // resize the plot area
+                plotLayeredPane.getComponent(2).setBounds(0, 0, plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
+                plotLayeredPane.revalidate();
+                plotLayeredPane.repaint();
+            }
+        });
+    }//GEN-LAST:event_backgroundPanelComponentResized
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void selectedValuesTableOptionsJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableOptionsJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_selectedValuesTableOptionsJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void selectedValuesTableOptionsJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableOptionsJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_selectedValuesTableOptionsJButtonMouseExited
+
+    /**
+     * Show the options for the selected values table.
+     * 
+     * @param evt 
+     */
+    private void selectedValuesTableOptionsJButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableOptionsJButtonMouseReleased
+        // @TODO: implement me!!
+        JOptionPane.showMessageDialog(this, "Not yet implemented.", "Not Implemented", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_selectedValuesTableOptionsJButtonMouseReleased
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void plotOptionsJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotOptionsJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_plotOptionsJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void plotOptionsJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotOptionsJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_plotOptionsJButtonMouseExited
+
+    /**
+     * Show the options for the plot.
+     * 
+     * @param evt 
+     */
+    private void plotOptionsJButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotOptionsJButtonMouseReleased
+        // @TODO: implement me!!
+        JOptionPane.showMessageDialog(this, "Not yet implemented.", "Not Implemented", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_plotOptionsJButtonMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
-    private javax.swing.JLabel bubbleOrBinSizeLabel;
-    private javax.swing.JSpinner bubbleOrBinSizeSpinner;
+    private javax.swing.JSpinner binSizeSpinner;
+    private javax.swing.JLabel binsLabel;
+    private javax.swing.JComboBox bubbleSizeComboBox;
+    private javax.swing.JLabel bubbleSizeLabel;
     private javax.swing.JLabel colorLabel;
     private javax.swing.JComboBox colorsComboBox;
+    private javax.swing.JPanel contextMenuPlotBackgroundPanel;
+    private javax.swing.JPanel contextMenuSelectedValuesTableBackgroundPanel;
+    private javax.swing.JRadioButton densityPlotRadioButton;
     private javax.swing.ButtonGroup dragButtonGroup;
     private javax.swing.JPanel dragSettingsPanel;
     private javax.swing.JRadioButton dragToSelectRadioButton;
     private javax.swing.JRadioButton dragToZoomRadioButton;
     private javax.swing.JRadioButton histogramRadioButton;
     private javax.swing.JPanel logAcisPanel;
+    private javax.swing.JLayeredPane plotLayeredPane;
+    private javax.swing.JButton plotOptionsJButton;
     private javax.swing.JPanel plotPanel;
-    private javax.swing.JPanel plotSettingsPanel;
     private javax.swing.ButtonGroup plotTypeButtonGroup;
     private javax.swing.JPanel plotTypePanel;
+    private javax.swing.JLayeredPane selectedValuesLayeredPane;
     private javax.swing.JPanel selectedValuesPanel;
     private javax.swing.JScrollPane selectedValuesScrollPane;
     private javax.swing.JTable selectedValuesTable;
+    private javax.swing.JButton selectedValuesTableOptionsJButton;
     private javax.swing.JComboBox xAxisComboBox;
     private javax.swing.JLabel xAxisLabel;
     private javax.swing.JCheckBox xAxisLogCheckBox;
@@ -870,7 +1171,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                     String xAxisName = (String) xAxisComboBox.getSelectedItem();
                     String yAxisName = (String) yAxisComboBox.getSelectedItem();
 
-                    if (histogramRadioButton.isSelected()) {
+                    if (histogramRadioButton.isSelected() || densityPlotRadioButton.isSelected()) {
 
                         ((TitledBorder) xyPlotPanel.getBorder()).setTitle(xAxisName);
                         xyPlotPanel.revalidate();
@@ -901,31 +1202,77 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                             // @TODO: what about null values?
                         }
 
-                        HistogramDataset dataset = new HistogramDataset();
-                        dataset.setType(HistogramType.FREQUENCY);
-                        dataset.addSeries(xAxisName, values, numberOfBins);
+                        XYPlot plot;
+                        JFreeChart chart;
 
-                        JFreeChart chart = ChartFactory.createHistogram(null, xAxisName, "Frequency", dataset, PlotOrientation.VERTICAL, false, true, false);
+                        if (densityPlotRadioButton.isSelected()) {
+
+                            NormalKernelDensityEstimator kernelEstimator = new NormalKernelDensityEstimator();
+                            ArrayList list = kernelEstimator.estimateDensityFunction(values);
+
+                            XYSeriesCollection lineChartDataset = new XYSeriesCollection();
+                            XYSeries tempSeries = new XYSeries("1");
+
+                            double[] xValues = (double[]) list.get(0);
+                            double[] yValues = (double[]) list.get(1);
+
+                            for (int i = 0; i < xValues.length; i++) {
+                                tempSeries.add(xValues[i], yValues[i]);
+                            }
+
+                            lineChartDataset.addSeries(tempSeries);
+
+                            AreaRenderer renderer = new AreaRenderer();
+                            renderer.setOutline(true);
+                            renderer.setSeriesFillPaint(0, histogramColor);
+                            renderer.setSeriesOutlinePaint(0, histogramColor.darker());
+
+                            chart = ChartFactory.createXYLineChart(null, xAxisName, "Density", lineChartDataset, PlotOrientation.VERTICAL, false, true, false);
+                            plot = chart.getXYPlot();
+                            plot.setRenderer(renderer);
+
+                        } else { // histogram
+
+                            HistogramDataset dataset = new HistogramDataset();
+                            dataset.setType(HistogramType.FREQUENCY);
+
+                            if (!userDefinedBinSize) {
+                                numberOfBins = getNumberOfBins(values);
+                                binSizeSpinner.setValue(numberOfBins);
+                            }
+
+                            userDefinedBinSize = false;
+
+                            dataset.addSeries(xAxisName, values, numberOfBins);
+
+                            chart = ChartFactory.createHistogram(null, xAxisName, "Frequency", dataset, PlotOrientation.VERTICAL, false, true, false);
+                            plot = chart.getXYPlot();
+
+                            // set up the chart renderer
+                            XYBarRenderer renderer = new XYBarRenderer();
+                            renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+                            renderer.setShadowVisible(false);
+                            renderer.setSeriesPaint(0, histogramColor);
+                            plot.setRenderer(renderer);
+                        }
+                        
+                        // linear or logarithmic axis
+                        if (xAxisLogCheckBox.isSelected()) {
+                            plot.setDomainAxis(new LogAxis(plot.getDomainAxis().getLabel()));
+                        }
+                        if (yAxisLogCheckBox.isSelected()) {
+                            plot.setRangeAxis(new LogAxis(plot.getRangeAxis().getLabel()));
+                        }
 
                         chartPanel = new ChartPanel(chart);
                         chartPanel.setBorder(null);
                         chart.setBorderVisible(false);
 
-                        XYPlot plot = chart.getXYPlot();
-
-                        // set up the chart renderer
-                        XYBarRenderer renderer = new XYBarRenderer();
-                        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-                        renderer.setShadowVisible(false);
-                        renderer.setSeriesPaint(0, histogramColor);
-                        plot.setRenderer(renderer);
-
-                        //plot.getRangeAxis().setRange(0, plot.getRangeAxis().getUpperBound());
-
                         // hide unwanted chart details
                         plot.setOutlineVisible(false);
 
                         plot.setBackgroundPaint(Color.WHITE);
+
                         chartPanel.setBackground(Color.WHITE);
                         chart.setBackgroundPaint(Color.WHITE);
 
@@ -970,6 +1317,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
                         int yAxisIndex = yAxisComboBox.getSelectedIndex();
+                        int bubbleSizeIndex = bubbleSizeComboBox.getSelectedIndex();
 
                         progressDialog.setIndeterminate(false);
                         progressDialog.setMaxProgressValue(tabelModel.getRowCount());
@@ -1034,7 +1382,17 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                                     tempDataXYZ[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
                                 }
 
-                                tempDataXYZ[2][counter] = bubbleSize;
+                                if (bubbleSizeIndex == 0) {
+                                    tempDataXYZ[2][counter] = bubbleSize * bubbleScalingFactor;
+                                } else {
+                                    if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof XYDataPoint) {
+                                        tempDataXYZ[2][counter] = ((XYDataPoint) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getX() * bubbleScalingFactor;
+                                    } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Integer) {
+                                        tempDataXYZ[2][counter] = ((Integer) tabelModel.getValueAt(index, bubbleSizeIndex - 1)) * bubbleScalingFactor;
+                                    } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Double) {
+                                        tempDataXYZ[2][counter] = ((Double) tabelModel.getValueAt(index, bubbleSizeIndex - 1)) * bubbleScalingFactor;
+                                    }
+                                }
 
                                 // @TODO: the below does not yet work
 //                            // get the color to use if using gradient color coding
@@ -1063,6 +1421,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                             xyzDataset.addSeries(dataset, tempDataXYZ);
                             datasetCounter++;
                         }
+
+                        progressDialog.setIndeterminate(true);
 
                         // create the plot
                         JFreeChart chart = ChartFactory.createBubbleChart(null, xAxisName, yAxisName, xyzDataset, PlotOrientation.VERTICAL, false, true, false);
@@ -1455,5 +1815,166 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             }
             return false;
         }
+    }
+
+    /**
+     * This class makes use of "SSJ: Stochastic Simulation in Java" library from
+     * iro.umontreal.ca to estimate probability density function of an array of
+     * double. It first generates independent and identically distributed random
+     * variables from the dataset, at which the density needs to be computed and
+     * then generates the vector of density estimates at the corresponding
+     * variables.
+     *
+     * The KernelDensityGen class from the same library is used: the class
+     * implements random variate generators for distributions obtained via
+     * kernel density estimation methods from a set of n individual observations
+     * x1,..., xn. The basic idea is to center a copy of the same symmetric
+     * density at each observation and take an equally weighted mixture of the n
+     * copies as an estimator of the density from which the observations come.
+     * The resulting kernel density has the general form: fn(x) =
+     * (1/nh)?i=1nk((x - xi)/h). K is the kernel (here a Gaussian is chosen) and
+     * h is the bandwidth (smoothing factor).
+     *
+     * @author Paola Masuzzo
+     */
+    public class NormalKernelDensityEstimator {
+        
+        // @TODO: move to a separate class?
+
+        //N, estimation precision, is set to a default of 512, as in most KDE algorithms default values, i.e. R "density"function, OmicSoft, Matlab algorithm
+        private final int n = 4096;
+        private EmpiricalDist empiricalDist;
+        private KernelDensityGen kernelDensityGen;
+        private double datasetSize;
+
+        /**
+         * This method init the KDE, i.e. sort values in ascending order,
+         * compute an empirical distribution out of it, makes use of a NormalGen
+         * to generate random variates from the normal distribution, and then
+         * use these variates to generate a kernel density generator of the
+         * empirical distribution.
+         *
+         * @param data
+         */
+        private void init(double[] data) {
+            datasetSize = (double) data.length;
+            Arrays.sort(data);
+            empiricalDist = new EmpiricalDist(data);
+            // new Stream to randomly generate numbers
+            // combined multiple recursive generator (CMRG)
+            RandomStream stream = new MRG31k3p();
+            NormalGen normalKernelDensityGen = new NormalGen(stream);
+            kernelDensityGen = new KernelDensityGen(stream, empiricalDist, normalKernelDensityGen);
+        }
+
+        public ArrayList estimateDensityFunction(Double[] data) {
+            // init the KDE with a normal generator
+            init(excludeNullValues(data));
+            return estimateDensityFunction();
+        }
+
+        public ArrayList estimateDensityFunction(double[] data) {
+            // init the KDE with a normal generator
+            init(data);
+            return estimateDensityFunction();
+        }
+
+        private ArrayList estimateDensityFunction() {
+
+            ArrayList densityFunction = new ArrayList();
+
+            // array for random samples
+            double[] randomSamples = new double[n];
+
+            // compute x values
+            for (int i = 0; i < n; i++) {
+                double nextDouble = kernelDensityGen.nextDouble();
+                randomSamples[i] = nextDouble;
+            }
+
+            Arrays.sort(randomSamples);
+            densityFunction.add(randomSamples);
+
+            // compute y values
+            // use normal default kernel
+            NormalDist kern = new NormalDist();
+
+            // calculate optimal bandwidth with the (ROBUST) Silverman's ‘rule of thumb’ (Scott Variation uses factor = 1.06)
+            double bandWidth = 0.99 * Math.min(empiricalDist.getSampleStandardDeviation(), (empiricalDist.getInterQuartileRange() / 1.34)) / Math.pow(datasetSize, 0.2);
+
+            // estimate density and store values in a vector
+            double[] estimatedDensityValues = KernelDensity.computeDensity(empiricalDist, kern, bandWidth, randomSamples);
+            densityFunction.add(estimatedDensityValues);
+
+            return densityFunction;
+        }
+
+        /**
+         * Exclude null values from an array of Double.
+         *
+         * @param data
+         * @return another double array with no longer null values
+         */
+        public double[] excludeNullValues(Double[] data) {
+            ArrayList<Double> list = new ArrayList<Double>();
+            for (Double value : data) {
+                if (value != null) {
+                    list.add(value);
+                }
+            }
+            double[] newArray = new double[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                newArray[i] = list.get(i);
+            }
+            return newArray;
+        }
+    }
+
+    /**
+     * Get the histogram bin size.
+     *
+     * @param values the values to calculate the bin size for
+     * @return the histogram bin size
+     */
+    private int getNumberOfBins(double[] values) {
+
+        // @TODO: this seems to always return very low number of bins??
+
+        // @TODO: when working this code should be moved out of this class!!
+
+        double minValue = Double.MAX_VALUE;
+        double maxValue = Double.MIN_VALUE;
+        
+        // Get a DescriptiveStatistics instance
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        // Add the data from the array
+        for (int i = 0; i < values.length; i++) {
+            stats.addValue(values[i]);
+            
+            if (values[i] > maxValue) {
+                maxValue = values[i];
+            }
+            if (values[i] < minValue) {
+                minValue = values[i];
+            }
+        }
+
+        double q1 = stats.getPercentile(25);
+        double q3 = stats.getPercentile(75);
+        double range = Math.abs(maxValue - minValue);
+
+        if (q3-q1 == 0 || values.length == 0) {
+            return 10;
+        }
+
+        int freedmanDiaconisValue = (int) Math.ceil((Math.pow(values.length, 1 / 3) * range)/(2*(q3-q1)));
+        //int freedmanDiaconisValue = (int) Math.ceil((Math.pow(values.length, 1 / 3) * range)/(3.5*stats.getStandardDeviation())); // scott
+        //int freedmanDiaconisValue = (int) Math.ceil(Math.log(2*values.length) + 1); // sturges
+
+        if (freedmanDiaconisValue == 0 || freedmanDiaconisValue < 10) {
+            return 10;
+        }
+
+        return freedmanDiaconisValue;
     }
 }

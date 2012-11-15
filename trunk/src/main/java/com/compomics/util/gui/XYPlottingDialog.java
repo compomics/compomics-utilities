@@ -1,9 +1,17 @@
 package com.compomics.util.gui;
 
+import com.compomics.util.Util;
+import com.compomics.util.gui.error_handlers.HelpDialog;
+import com.compomics.util.gui.export_graphics.ExportGraphicsDialog;
+import com.compomics.util.gui.export_graphics.ExportGraphicsDialogParent;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.Vector;
 import javax.swing.*;
@@ -42,7 +50,7 @@ import umontreal.iro.lecuyer.rng.RandomStream;
  *
  * @author Harald Barsnes
  */
-public class XYPlottingDialog extends javax.swing.JDialog {
+public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraphicsDialogParent {
 
     /**
      * The progress dialog.
@@ -134,6 +142,18 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * The color used for the bars in the histograms.
      */
     private Color histogramColor = new Color(110, 196, 97);
+    /**
+     * The last selected folder.
+     */
+    private String lastSelectedFolder = "user.home";
+    /**
+     * The normal icon for the parent dialog.
+     */
+    private Image normalIcon;
+    /**
+     * The icon to use when busy.
+     */
+    private Image waitingIcon;
 
     /**
      * Creates a new XYPlottingDialog.
@@ -142,12 +162,17 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * @param table the table to display the xy plot for
      * @param tableToolTips the table tooltips
      * @param modal
+     * @param normalIcon the normal icon for the parent dialog
+     * @param waitingIcon the icon to use when busy
      */
-    public XYPlottingDialog(java.awt.Frame dialogParent, JTable table, ArrayList<String> tableToolTips, boolean modal) {
+    public XYPlottingDialog(java.awt.Frame dialogParent, JTable table, ArrayList<String> tableToolTips,
+            Image normalIcon, Image waitingIcon, boolean modal) {
         super(dialogParent, modal);
         initComponents();
         this.dialogParent = dialogParent;
         this.tabelModel = table.getModel();
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
 
         cellRenderers = new HashMap<Integer, TableCellRenderer>();
         maxColumnWidths = new HashMap<Integer, Integer>();
@@ -234,6 +259,10 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
         plotTypeButtonGroup = new javax.swing.ButtonGroup();
         dragButtonGroup = new javax.swing.ButtonGroup();
+        plotPopupMenu = new javax.swing.JPopupMenu();
+        exportPlotMenuItem = new javax.swing.JMenuItem();
+        selectedValuesTablePopupMenu = new javax.swing.JPopupMenu();
+        exportSelectedValuesMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
         plotTypePanel = new javax.swing.JPanel();
         densityPlotRadioButton = new javax.swing.JRadioButton();
@@ -273,12 +302,30 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             }
         };
         selectedValuesTableOptionsJButton = new javax.swing.JButton();
+        selectedValuesTableHelpJButton = new javax.swing.JButton();
         contextMenuSelectedValuesTableBackgroundPanel = new javax.swing.JPanel();
         plotLayeredPane = new javax.swing.JLayeredPane();
         xyPlotPanel = new javax.swing.JPanel();
         plotPanel = new javax.swing.JPanel();
         plotOptionsJButton = new javax.swing.JButton();
+        plotHelpJButton = new javax.swing.JButton();
         contextMenuPlotBackgroundPanel = new javax.swing.JPanel();
+
+        exportPlotMenuItem.setText("Export");
+        exportPlotMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportPlotMenuItemActionPerformed(evt);
+            }
+        });
+        plotPopupMenu.add(exportPlotMenuItem);
+
+        exportSelectedValuesMenuItem.setText("Export");
+        exportSelectedValuesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportSelectedValuesMenuItemActionPerformed(evt);
+            }
+        });
+        selectedValuesTablePopupMenu.add(exportSelectedValuesMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Statistics");
@@ -521,7 +568,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         logAcisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Logarithmic Axis"));
         logAcisPanel.setOpaque(false);
 
-        xAxisLogCheckBox.setText("X Axis");
+        xAxisLogCheckBox.setText("Log X Axis");
         xAxisLogCheckBox.setToolTipText("Use logarithmic axis");
         xAxisLogCheckBox.setIconTextGap(15);
         xAxisLogCheckBox.setOpaque(false);
@@ -531,7 +578,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             }
         });
 
-        yAxisLogCheckBox.setText("Y Axis");
+        yAxisLogCheckBox.setText("Log Y Axis");
         yAxisLogCheckBox.setToolTipText("Use logarithmic axis");
         yAxisLogCheckBox.setIconTextGap(15);
         yAxisLogCheckBox.setOpaque(false);
@@ -617,8 +664,30 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 selectedValuesTableOptionsJButtonMouseReleased(evt);
             }
         });
-        selectedValuesTableOptionsJButton.setBounds(1020, 5, 10, 19);
+        selectedValuesTableOptionsJButton.setBounds(1025, 5, 10, 19);
         selectedValuesLayeredPane.add(selectedValuesTableOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+
+        selectedValuesTableHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame_grey.png"))); // NOI18N
+        selectedValuesTableHelpJButton.setToolTipText("Help");
+        selectedValuesTableHelpJButton.setBorder(null);
+        selectedValuesTableHelpJButton.setBorderPainted(false);
+        selectedValuesTableHelpJButton.setContentAreaFilled(false);
+        selectedValuesTableHelpJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame.png"))); // NOI18N
+        selectedValuesTableHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                selectedValuesTableHelpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                selectedValuesTableHelpJButtonMouseExited(evt);
+            }
+        });
+        selectedValuesTableHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectedValuesTableHelpJButtonActionPerformed(evt);
+            }
+        });
+        selectedValuesTableHelpJButton.setBounds(1035, 0, 10, 19);
+        selectedValuesLayeredPane.add(selectedValuesTableHelpJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         contextMenuSelectedValuesTableBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -679,8 +748,30 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                 plotOptionsJButtonMouseReleased(evt);
             }
         });
-        plotOptionsJButton.setBounds(780, 5, 10, 19);
+        plotOptionsJButton.setBounds(770, 5, 10, 19);
         plotLayeredPane.add(plotOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+
+        plotHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame_grey.png"))); // NOI18N
+        plotHelpJButton.setToolTipText("Help");
+        plotHelpJButton.setBorder(null);
+        plotHelpJButton.setBorderPainted(false);
+        plotHelpJButton.setContentAreaFilled(false);
+        plotHelpJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame.png"))); // NOI18N
+        plotHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                plotHelpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                plotHelpJButtonMouseExited(evt);
+            }
+        });
+        plotHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotHelpJButtonActionPerformed(evt);
+            }
+        });
+        plotHelpJButton.setBounds(780, 0, 10, 19);
+        plotLayeredPane.add(plotHelpJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         contextMenuPlotBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -987,8 +1078,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Resize the layered panes.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void backgroundPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_backgroundPanelComponentResized
 
@@ -999,37 +1090,49 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
                 // move the icons
                 selectedValuesLayeredPane.getComponent(0).setBounds(
-                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(0).getWidth() - 15,
-                        0,
+                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(0).getWidth() - 22,
+                        2,
                         selectedValuesLayeredPane.getComponent(0).getWidth(),
                         selectedValuesLayeredPane.getComponent(0).getHeight());
 
                 selectedValuesLayeredPane.getComponent(1).setBounds(
-                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(1).getWidth() - 20,
-                        0,
+                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(1).getWidth() - 10,
+                        -1,
                         selectedValuesLayeredPane.getComponent(1).getWidth(),
                         selectedValuesLayeredPane.getComponent(1).getHeight());
 
+                selectedValuesLayeredPane.getComponent(2).setBounds(
+                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(2).getWidth() - 24,
+                        -1,
+                        selectedValuesLayeredPane.getComponent(2).getWidth(),
+                        selectedValuesLayeredPane.getComponent(2).getHeight());
+
                 // resize the table area
-                selectedValuesLayeredPane.getComponent(2).setBounds(0, 0, selectedValuesLayeredPane.getWidth(), selectedValuesLayeredPane.getHeight());
+                selectedValuesLayeredPane.getComponent(3).setBounds(0, 0, selectedValuesLayeredPane.getWidth(), selectedValuesLayeredPane.getHeight());
                 selectedValuesLayeredPane.revalidate();
                 selectedValuesLayeredPane.repaint();
-                
+
                 // move the icons
                 plotLayeredPane.getComponent(0).setBounds(
-                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(0).getWidth() - 15,
-                        0,
+                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(0).getWidth() - 22,
+                        2,
                         plotLayeredPane.getComponent(0).getWidth(),
                         plotLayeredPane.getComponent(0).getHeight());
 
                 plotLayeredPane.getComponent(1).setBounds(
-                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(1).getWidth() - 20,
-                        0,
+                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(1).getWidth() - 10,
+                        -1,
                         plotLayeredPane.getComponent(1).getWidth(),
                         plotLayeredPane.getComponent(1).getHeight());
 
+                plotLayeredPane.getComponent(2).setBounds(
+                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(2).getWidth() - 22,
+                        -1,
+                        plotLayeredPane.getComponent(2).getWidth(),
+                        plotLayeredPane.getComponent(2).getHeight());
+
                 // resize the plot area
-                plotLayeredPane.getComponent(2).setBounds(0, 0, plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
+                plotLayeredPane.getComponent(3).setBounds(0, 0, plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
                 plotLayeredPane.revalidate();
                 plotLayeredPane.repaint();
             }
@@ -1056,12 +1159,11 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Show the options for the selected values table.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void selectedValuesTableOptionsJButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableOptionsJButtonMouseReleased
-        // @TODO: implement me!!
-        JOptionPane.showMessageDialog(this, "Not yet implemented.", "Not Implemented", JOptionPane.ERROR_MESSAGE);
+        selectedValuesTablePopupMenu.show(selectedValuesTableOptionsJButton, evt.getX(), evt.getY());
     }//GEN-LAST:event_selectedValuesTableOptionsJButtonMouseReleased
 
     /**
@@ -1084,14 +1186,139 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
     /**
      * Show the options for the plot.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void plotOptionsJButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotOptionsJButtonMouseReleased
-        // @TODO: implement me!!
-        JOptionPane.showMessageDialog(this, "Not yet implemented.", "Not Implemented", JOptionPane.ERROR_MESSAGE);
+        plotPopupMenu.show(plotOptionsJButton, evt.getX(), evt.getY());
     }//GEN-LAST:event_plotOptionsJButtonMouseReleased
 
+    /**
+     * Export the plot to file.
+     *
+     * @param evt
+     */
+    private void exportPlotMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPlotMenuItemActionPerformed
+        new ExportGraphicsDialog(this, this, true, chartPanel);
+    }//GEN-LAST:event_exportPlotMenuItemActionPerformed
+
+    /**
+     * Export the table to file.
+     *
+     * @param evt
+     */
+    private void exportSelectedValuesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportSelectedValuesMenuItemActionPerformed
+        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "(tab separated text file)", "Export Selected Values", lastSelectedFolder, false);
+        final XYPlottingDialog finalRef = this;
+
+        if (selectedFile != null) {
+
+            progressDialog = new ProgressDialogX(this, dialogParent,
+                    normalIcon,
+                    waitingIcon,
+                    true);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setTitle("Exporting Table. Please Wait...");
+
+            new Thread(new Runnable() {
+
+                public void run() {
+                    try {
+                        progressDialog.setVisible(true);
+                    } catch (IndexOutOfBoundsException e) {
+                        // ignore
+                    }
+                }
+            }, "ProgressDialog").start();
+
+            new Thread("TableExportThread") {
+
+                @Override
+                public void run() {
+                    try {
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile));
+                        Util.tableToFile(selectedValuesTable, "\t", progressDialog, true, writer);
+                        writer.close();
+
+                        boolean processCancelled = progressDialog.isRunCanceled();
+                        progressDialog.setRunFinished();
+
+                        if (!processCancelled) {
+                            JOptionPane.showMessageDialog(finalRef, "Data copied to file:\n" + selectedFile.getAbsolutePath(), "Data Exported.", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } catch (IOException e) {
+                        progressDialog.setRunFinished();
+                        JOptionPane.showMessageDialog(null, "An error occured when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        }
+    }//GEN-LAST:event_exportSelectedValuesMenuItemActionPerformed
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void plotHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotHelpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_plotHelpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void plotHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotHelpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_plotHelpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void plotHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotHelpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(this, getClass().getResource("/helpFiles/StatisticsDialog.html"),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                "Statistics - Help");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_plotHelpJButtonActionPerformed
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void selectedValuesTableHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableHelpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_selectedValuesTableHelpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void selectedValuesTableHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedValuesTableHelpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_selectedValuesTableHelpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void selectedValuesTableHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedValuesTableHelpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(this, getClass().getResource("/helpFiles/StatisticsDialog.html"),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                "Statistics - Help");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_selectedValuesTableHelpJButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JSpinner binSizeSpinner;
@@ -1107,18 +1334,24 @@ public class XYPlottingDialog extends javax.swing.JDialog {
     private javax.swing.JPanel dragSettingsPanel;
     private javax.swing.JRadioButton dragToSelectRadioButton;
     private javax.swing.JRadioButton dragToZoomRadioButton;
+    private javax.swing.JMenuItem exportPlotMenuItem;
+    private javax.swing.JMenuItem exportSelectedValuesMenuItem;
     private javax.swing.JRadioButton histogramRadioButton;
     private javax.swing.JPanel logAcisPanel;
+    private javax.swing.JButton plotHelpJButton;
     private javax.swing.JLayeredPane plotLayeredPane;
     private javax.swing.JButton plotOptionsJButton;
     private javax.swing.JPanel plotPanel;
+    private javax.swing.JPopupMenu plotPopupMenu;
     private javax.swing.ButtonGroup plotTypeButtonGroup;
     private javax.swing.JPanel plotTypePanel;
     private javax.swing.JLayeredPane selectedValuesLayeredPane;
     private javax.swing.JPanel selectedValuesPanel;
     private javax.swing.JScrollPane selectedValuesScrollPane;
     private javax.swing.JTable selectedValuesTable;
+    private javax.swing.JButton selectedValuesTableHelpJButton;
     private javax.swing.JButton selectedValuesTableOptionsJButton;
+    private javax.swing.JPopupMenu selectedValuesTablePopupMenu;
     private javax.swing.JComboBox xAxisComboBox;
     private javax.swing.JLabel xAxisLabel;
     private javax.swing.JCheckBox xAxisLogCheckBox;
@@ -1143,8 +1376,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
             isPlotting = true;
 
             progressDialog = new ProgressDialogX(this, dialogParent,
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                    normalIcon,
+                    waitingIcon,
                     true);
             progressDialog.setIndeterminate(true);
             progressDialog.setTitle("Loading Data. Please Wait...");
@@ -1255,7 +1488,7 @@ public class XYPlottingDialog extends javax.swing.JDialog {
                             renderer.setSeriesPaint(0, histogramColor);
                             plot.setRenderer(renderer);
                         }
-                        
+
                         // linear or logarithmic axis
                         if (xAxisLogCheckBox.isSelected()) {
                             plot.setDomainAxis(new LogAxis(plot.getDomainAxis().getLabel()));
@@ -1803,6 +2036,14 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         return entitiesForPoint;
     }
 
+    public void setSelectedExportFolder(String selectedFolder) {
+        lastSelectedFolder = selectedFolder;
+    }
+
+    public String getDefaultExportFolder() {
+        return lastSelectedFolder;
+    }
+
     /**
      * A filter that filters the table based on if the datapoint is selected in
      * the plot or not.
@@ -1838,9 +2079,8 @@ public class XYPlottingDialog extends javax.swing.JDialog {
      * @author Paola Masuzzo
      */
     public class NormalKernelDensityEstimator {
-        
-        // @TODO: move to a separate class?
 
+        // @TODO: move to a separate class?
         //N, estimation precision, is set to a default of 512, as in most KDE algorithms default values, i.e. R "density"function, OmicSoft, Matlab algorithm
         private final int n = 4096;
         private EmpiricalDist empiricalDist;
@@ -1944,13 +2184,13 @@ public class XYPlottingDialog extends javax.swing.JDialog {
 
         double minValue = Double.MAX_VALUE;
         double maxValue = Double.MIN_VALUE;
-        
+
         // Get a DescriptiveStatistics instance
         DescriptiveStatistics stats = new DescriptiveStatistics();
         // Add the data from the array
         for (int i = 0; i < values.length; i++) {
             stats.addValue(values[i]);
-            
+
             if (values[i] > maxValue) {
                 maxValue = values[i];
             }
@@ -1963,11 +2203,11 @@ public class XYPlottingDialog extends javax.swing.JDialog {
         double q3 = stats.getPercentile(75);
         double range = Math.abs(maxValue - minValue);
 
-        if (q3-q1 == 0 || values.length == 0) {
+        if (q3 - q1 == 0 || values.length == 0) {
             return 10;
         }
 
-        int freedmanDiaconisValue = (int) Math.ceil((Math.pow(values.length, 1 / 3) * range)/(2*(q3-q1)));
+        int freedmanDiaconisValue = (int) Math.ceil((Math.pow(values.length, 1 / 3) * range) / (2 * (q3 - q1)));
         //int freedmanDiaconisValue = (int) Math.ceil((Math.pow(values.length, 1 / 3) * range)/(3.5*stats.getStandardDeviation())); // scott
         //int freedmanDiaconisValue = (int) Math.ceil(Math.log(2*values.length) + 1); // sturges
 

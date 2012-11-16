@@ -50,7 +50,7 @@ import umontreal.iro.lecuyer.rng.RandomStream;
  *
  * @author Harald Barsnes
  */
-public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraphicsDialogParent {
+public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraphicsDialogParent, VisibleTableColumnsDialogParent {
 
     /**
      * The progress dialog.
@@ -154,6 +154,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * The icon to use when busy.
      */
     private Image waitingIcon;
+    /**
+     * The table columns.
+     */
+    private ArrayList<TableColumn> allTableColumns;
+    /**
+     * Boolean indicators of which columns to show.
+     */
+    private HashMap<Integer, Boolean> visibleColumns;
 
     /**
      * Creates a new XYPlottingDialog.
@@ -199,6 +207,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      */
     private void setUpGUI() {
 
+        // @TODO: only show the values of the supported type for each drop down menu...
+        
         Vector<String> colummnNames = new Vector<String>();
         Vector<String> colummnNamesExtended = new Vector<String>();
         colummnNamesExtended.add(0, "[user defined]");
@@ -221,6 +231,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         bubbleSizeComboBox.setModel(new DefaultComboBoxModel(colummnNamesExtended));
 
         selectedValuesTable.setModel(tabelModel);
+        
+        allTableColumns = new ArrayList<TableColumn>();
+        visibleColumns = new HashMap<Integer, Boolean>();
+
+        for (int i = 0; i < selectedValuesTable.getColumnCount(); i++) {
+            allTableColumns.add(selectedValuesTable.getColumn(selectedValuesTable.getColumnName(i)));
+            visibleColumns.put(i, true);
+        }
 
         selectedValuesScrollPane.getViewport().setOpaque(false);
         selectedValuesTable.getTableHeader().setReorderingAllowed(false);
@@ -263,6 +281,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         exportPlotMenuItem = new javax.swing.JMenuItem();
         selectedValuesTablePopupMenu = new javax.swing.JPopupMenu();
         exportSelectedValuesMenuItem = new javax.swing.JMenuItem();
+        hideColumnsMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
         plotTypePanel = new javax.swing.JPanel();
         densityPlotRadioButton = new javax.swing.JRadioButton();
@@ -326,6 +345,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }
         });
         selectedValuesTablePopupMenu.add(exportSelectedValuesMenuItem);
+
+        hideColumnsMenuItem.setText("Hide/Show Columns");
+        hideColumnsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hideColumnsMenuItemActionPerformed(evt);
+            }
+        });
+        selectedValuesTablePopupMenu.add(hideColumnsMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Statistics");
@@ -1319,6 +1346,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 "Statistics - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_selectedValuesTableHelpJButtonActionPerformed
+
+    private void hideColumnsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideColumnsMenuItemActionPerformed
+        new VisibleTableColumnsDialog(this, this, isPlotting);
+    }//GEN-LAST:event_hideColumnsMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JSpinner binSizeSpinner;
@@ -1336,6 +1367,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private javax.swing.JRadioButton dragToZoomRadioButton;
     private javax.swing.JMenuItem exportPlotMenuItem;
     private javax.swing.JMenuItem exportSelectedValuesMenuItem;
+    private javax.swing.JMenuItem hideColumnsMenuItem;
     private javax.swing.JRadioButton histogramRadioButton;
     private javax.swing.JPanel logAcisPanel;
     private javax.swing.JButton plotHelpJButton;
@@ -2042,6 +2074,22 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
     public String getDefaultExportFolder() {
         return lastSelectedFolder;
+    }
+
+    public void setVisibleColumns(HashMap<Integer,Boolean> showColumns) {
+        this.visibleColumns = showColumns;
+    }
+
+    public HashMap<Integer, Boolean> getVisibleColumns() {
+        return visibleColumns;
+    }
+
+    public JTable getTable() {
+        return selectedValuesTable;
+    }
+
+    public ArrayList<TableColumn> getAllTableColumns() {
+        return allTableColumns;
     }
 
     /**

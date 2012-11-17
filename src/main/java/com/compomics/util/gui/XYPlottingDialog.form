@@ -333,8 +333,14 @@
             </Component>
             <Component class="javax.swing.JLabel" name="colorLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Color"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;a href&gt;Color&lt;/a&gt; &lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Click to enable gradient colors"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="colorLabelMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="colorLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="colorLabelMouseExited"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="colorsComboBox">
               <Properties>

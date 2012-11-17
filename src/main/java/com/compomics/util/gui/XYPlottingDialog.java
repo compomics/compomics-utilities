@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 import no.uib.jsparklines.data.XYDataPoint;
+import no.uib.jsparklines.data.StartIndexes;
 import no.uib.jsparklines.renderers.JSparklinesIntegerColorTableCellRenderer;
 import no.uib.jsparklines.renderers.util.AreaRenderer;
 import no.uib.jsparklines.renderers.util.GradientColorCoding;
@@ -46,7 +47,9 @@ import umontreal.iro.lecuyer.rng.RandomStream;
 
 /**
  * A dialog that makes it straightforward to inspect compare the values of two
- * columns in a table in a XY plot.
+ * columns in a table in a XY plot. Currently supported data types for the plots
+ * are Integer, Double, XYDataPoint and StartIndexes. For XYDataPoint the x
+ * value is used, while for StartIndexes the first index is used.
  *
  * @author Harald Barsnes
  */
@@ -162,6 +165,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * Boolean indicators of which columns to show.
      */
     private HashMap<Integer, Boolean> visibleColumns;
+    /**
+     * If true, gradient color coding is used.
+     */
+    private boolean useGradientColorCoding = false;
 
     /**
      * Creates a new XYPlottingDialog.
@@ -480,7 +487,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }
         });
 
-        colorLabel.setText("Color");
+        colorLabel.setText("<html> <a href>Color</a> </html>");
+        colorLabel.setToolTipText("Click to enable gradient colors");
+        colorLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                colorLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                colorLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                colorLabelMouseExited(evt);
+            }
+        });
 
         colorsComboBox.setMaximumRowCount(30);
         colorsComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -529,7 +548,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(xAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(yAxisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(colorLabel)
+                    .addComponent(colorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bubbleSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(binsLabel))
                 .addGap(18, 18, 18)
@@ -558,7 +577,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     .addComponent(bubbleSizeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(colorLabel)
+                    .addComponent(colorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(xAxisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -680,7 +699,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectedValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -764,7 +783,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(xyPlotPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1360,9 +1379,48 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_selectedValuesTableHelpJButtonActionPerformed
 
+    /**
+     * Show the VisibleTableColumnsDialog.
+     *
+     * @param evt
+     */
     private void hideColumnsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideColumnsMenuItemActionPerformed
         new VisibleTableColumnsDialog(this, this, isPlotting);
     }//GEN-LAST:event_hideColumnsMenuItemActionPerformed
+
+    /**
+     * Enable/disable the gradient color coding.
+     *
+     * @param evt
+     */
+    private void colorLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorLabelMouseClicked
+        useGradientColorCoding = !useGradientColorCoding;
+        updatePlot();
+
+        if (useGradientColorCoding) {
+            colorLabel.setToolTipText("Click to disable gradient colors");
+        } else {
+            colorLabel.setToolTipText("Click to enable gradient colors");
+        }
+    }//GEN-LAST:event_colorLabelMouseClicked
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void colorLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_colorLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void colorLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_colorLabelMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JSpinner binSizeSpinner;
@@ -1462,8 +1520,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
                         double[] values = new double[tabelModel.getRowCount()];
 
-                        // @TODO: possible to use batch selection here??
-
                         for (int index = 0; index < tabelModel.getRowCount(); index++) {
                             progressDialog.increaseProgressValue();
 
@@ -1475,6 +1531,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 values[index] = ((Integer) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
                             } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
                                 values[index] = ((Double) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
+                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
+                                if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+                                    values[index] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                }
                             }
 
                             // @TODO: what about null values?
@@ -1571,31 +1631,69 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         HashMap<String, ArrayList<Integer>> datasets = new HashMap<String, ArrayList<Integer>>();
 
                         int colorIndex = colorsComboBox.getSelectedIndex();
+                        double minValue = Double.MAX_VALUE;
+                        double maxValue = Double.MIN_VALUE;
 
                         progressDialog.setIndeterminate(false);
                         progressDialog.setMaxProgressValue(tabelModel.getRowCount() * 2);
                         progressDialog.setValue(0);
-
-                        // @TODO: possible to use batch selection here??
 
                         for (int i = 0; i < tabelModel.getRowCount(); i++) {
 
                             progressDialog.increaseProgressValue();
 
                             ArrayList<Integer> tempArray;
-                            if (!datasets.containsKey("" + tabelModel.getValueAt(i, colorIndex))) {
+                            if (!datasets.containsKey(tabelModel.getValueAt(i, colorIndex).toString())) {
                                 tempArray = new ArrayList<Integer>();
-                                datasetNames.add("" + tabelModel.getValueAt(i, colorIndex));
+                                datasetNames.add(tabelModel.getValueAt(i, colorIndex).toString());
                             } else {
-                                tempArray = datasets.get("" + tabelModel.getValueAt(i, colorIndex));
+                                tempArray = datasets.get(tabelModel.getValueAt(i, colorIndex).toString());
                             }
                             tempArray.add(i);
-                            datasets.put("" + tabelModel.getValueAt(i, colorIndex), tempArray);
+                            datasets.put(tabelModel.getValueAt(i, colorIndex).toString(), tempArray);
+
+                            // get the min and max values for the color column
+                            if (tabelModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
+                                double tempColorValue = ((XYDataPoint) tabelModel.getValueAt(i, colorIndex)).getX();
+                                if (tempColorValue > maxValue) {
+                                    maxValue = tempColorValue;
+                                }
+                                if (tempColorValue < minValue) {
+                                    minValue = tempColorValue;
+                                }
+                            } else if (tabelModel.getValueAt(i, colorIndex) instanceof Integer) {
+                                int tempColorValue = (Integer) tabelModel.getValueAt(i, colorIndex);
+                                if (tempColorValue > maxValue) {
+                                    maxValue = tempColorValue;
+                                }
+                                if (tempColorValue < minValue) {
+                                    minValue = tempColorValue;
+                                }
+                            } else if (tabelModel.getValueAt(i, colorIndex) instanceof Double) {
+                                double tempColorValue = (Double) tabelModel.getValueAt(i, colorIndex);
+                                if (tempColorValue > maxValue) {
+                                    maxValue = tempColorValue;
+                                }
+                                if (tempColorValue < minValue) {
+                                    minValue = tempColorValue;
+                                }
+                            } else if (tabelModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
+                                if (((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
+                                    double tempColorValue = ((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().get(0);
+                                    if (tempColorValue > maxValue) {
+                                        maxValue = tempColorValue;
+                                    }
+                                    if (tempColorValue < minValue) {
+                                        minValue = tempColorValue;
+                                    }
+                                }
+                            }
                         }
 
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
                         int yAxisIndex = yAxisComboBox.getSelectedIndex();
                         int bubbleSizeIndex = bubbleSizeComboBox.getSelectedIndex();
+                        HashMap<Integer, Color> datasetColors = new HashMap<Integer, Color>();
 
                         progressDialog.setIndeterminate(false);
                         progressDialog.setMaxProgressValue(tabelModel.getRowCount());
@@ -1603,26 +1701,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         int datasetCounter = 0;
 
-                        // @TODO: the below does not yet work
-//                    HashMap<Integer, Color> datasetColors = new HashMap<Integer, Color>();
-//                    double minValue = 0, maxValue = 1;
-//
-//                    if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesBarChartTableCellRenderer) {
-//                        JSparklinesBarChartTableCellRenderer colorRenderer =
-//                                (JSparklinesBarChartTableCellRenderer) cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex()));
-//                        minValue = colorRenderer.getMinValue();
-//                        maxValue = colorRenderer.getMaxValue();
-//                    } else if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesTwoValueBarChartTableCellRenderer) {
-//                        JSparklinesTwoValueBarChartTableCellRenderer colorRenderer =
-//                                (JSparklinesTwoValueBarChartTableCellRenderer) cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex()));
-//                        minValue = 0;
-//                        maxValue = colorRenderer.getMaxValue();
-//                    }
-
 
                         // @TODO: add the option of filtering the data based on the values in one or more columns?
                         //        for example remove all non-validated proteins or show only coverage > 50%?
-
 
                         // split the data into the datasets
                         for (String dataset : datasetNames) {
@@ -1647,6 +1728,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
                                     tempDataXY[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
                                     tempDataXYZ[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
+                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+                                        tempDataXY[0][counter] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                        tempDataXYZ[0][counter] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                    }
                                 }
 
                                 if (tabelModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
@@ -1658,6 +1744,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Double) {
                                     tempDataXY[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
                                     tempDataXYZ[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
+                                } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().size() > 0) {
+                                        tempDataXY[1][counter] = ((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
+                                        tempDataXYZ[1][counter] = ((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
+                                    }
                                 }
 
                                 if (bubbleSizeIndex == 0) {
@@ -1669,30 +1760,39 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                         tempDataXYZ[2][counter] = ((Integer) tabelModel.getValueAt(index, bubbleSizeIndex - 1)) * bubbleScalingFactor;
                                     } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Double) {
                                         tempDataXYZ[2][counter] = ((Double) tabelModel.getValueAt(index, bubbleSizeIndex - 1)) * bubbleScalingFactor;
+                                    } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof StartIndexes) {
+                                        if (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().size() > 0) {
+                                            tempDataXYZ[2][counter] = (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0)) * bubbleScalingFactor;
+                                        } else {
+                                            tempDataXYZ[2][counter] = 0;
+                                        }
                                     }
                                 }
 
-                                // @TODO: the below does not yet work
-//                            // get the color to use if using gradient color coding
-//                            if (tabelModel.getValueAt(index, colorIndex) instanceof Integer) {
-//                                datasetColors.put(datasetCounter,
-//                                        GradientColorCoding.findGradientColor(((Integer) tabelModel.getValueAt(index, colorIndex)).doubleValue(),
-//                                        minValue, maxValue, colorGradient));
-//                            } else if (tabelModel.getValueAt(index, colorIndex) instanceof Double) {
-//                                datasetColors.put(datasetCounter,
-//                                        GradientColorCoding.findGradientColor((Double) tabelModel.getValueAt(index, colorIndex),
-//                                        minValue, maxValue, colorGradient));
-//                            } else if (tabelModel.getValueAt(index, colorIndex) instanceof XYDataPoint) {
-//                                datasetColors.put(datasetCounter,
-//                                        GradientColorCoding.findGradientColor(((XYDataPoint) tabelModel.getValueAt(index, colorIndex)).getX(),
-//                                        minValue, maxValue, colorGradient));
-//                            } else {
-//                                datasetColors.put(datasetCounter,
-//                                        GradientColorCoding.findGradientColor(minValue,
-//                                        minValue, maxValue, colorGradient));
-//                            }
-
                                 dataPointToRowNumber.put(datasetCounter + "_" + counter++, index);
+                            }
+
+                            // set the datasetcolor
+                            int tableRowIndex = datasets.get(dataset).get(0);
+
+                            Object tempObject = tabelModel.getValueAt(tableRowIndex, colorIndex);
+
+                            // get the color to use if using gradient color coding
+                            if (tempObject instanceof Integer) {
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((Integer) tempObject).doubleValue(), minValue, maxValue, colorGradient));
+                            } else if (tempObject instanceof Double) {
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor((Double) tempObject, minValue, maxValue, colorGradient));
+                            } else if (tempObject instanceof XYDataPoint) {
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((XYDataPoint) tempObject).getX(), minValue, maxValue, colorGradient));
+                            } else if (tempObject instanceof StartIndexes) {
+                                if (((StartIndexes) tempObject).getIndexes().size() > 0) {
+                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(
+                                            ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minValue, maxValue, colorGradient));
+                                } else {
+                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minValue, minValue, maxValue, colorGradient));
+                                }
+                            } else {
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minValue, minValue, maxValue, colorGradient));
                             }
 
                             xyDataset.addSeries(dataset, tempDataXY);
@@ -1797,6 +1897,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         };
 
                         // set the colors for the data series
+                        boolean isIntegerColorRenderer = false;
+
                         if (cellRenderers.containsKey(new Integer(colorsComboBox.getSelectedIndex()))) {
                             if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
                                 JSparklinesIntegerColorTableCellRenderer integerColorRenderer =
@@ -1807,18 +1909,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                     Integer datasetInteger = new Integer(datasetNames.get(i));
                                     renderer.setSeriesPaint(i, colors.get(new Integer(datasetInteger)));
                                 }
-                            }
 
-                            // @TODO: the below does not yet work
-//                        else if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesBarChartTableCellRenderer) {
-//                            for (int i = 0; i < datasetNames.size(); i++) {
-//                                renderer.setSeriesPaint(i, datasetColors.get(i));
-//                            }
-//                        } else if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesTwoValueBarChartTableCellRenderer) {
-//                            for (int i = 0; i < datasetNames.size(); i++) {
-//                                renderer.setSeriesPaint(i, datasetColors.get(i));
-//                            }
-//                        }
+                                isIntegerColorRenderer = true;
+                            }
+                        }
+
+                        if (!isIntegerColorRenderer && useGradientColorCoding) {
+                            for (int i = 0; i < datasetNames.size(); i++) {
+                                renderer.setSeriesPaint(i, datasetColors.get(i));
+                            }
                         }
 
                         renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator());

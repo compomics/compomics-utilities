@@ -199,7 +199,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         setUpGUI();
         updatePlot();
         setLocationRelativeTo(dialogParent);
-        setVisible(true);
+        backgroundPanelComponentResized(null);
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                setVisible(true);
+            }
+        });
     }
 
     /**
@@ -208,7 +215,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private void setUpGUI() {
 
         // @TODO: only show the values of the supported type for each drop down menu...
-        
+
         Vector<String> colummnNames = new Vector<String>();
         Vector<String> colummnNamesExtended = new Vector<String>();
         colummnNamesExtended.add(0, "[user defined]");
@@ -231,7 +238,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         bubbleSizeComboBox.setModel(new DefaultComboBoxModel(colummnNamesExtended));
 
         selectedValuesTable.setModel(tabelModel);
-        
+
         allTableColumns = new ArrayList<TableColumn>();
         visibleColumns = new HashMap<Integer, Boolean>();
 
@@ -264,6 +271,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             Integer columnIndex = iterator.next();
             selectedValuesTable.getColumn(selectedValuesTable.getColumnName(columnIndex)).setMaxWidth(maxColumnWidths.get(columnIndex));
         }
+
+        // correct the color for the upper right corner
+        JPanel selectedValuesCorner = new JPanel();
+        selectedValuesCorner.setBackground(selectedValuesTable.getTableHeader().getBackground());
+        selectedValuesScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, selectedValuesCorner);
     }
 
     /**
@@ -356,6 +368,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Statistics");
+        setMinimumSize(new java.awt.Dimension(800, 700));
 
         backgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
         backgroundPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -667,7 +680,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectedValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -751,7 +764,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(xyPlotPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1118,19 +1131,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 // move the icons
                 selectedValuesLayeredPane.getComponent(0).setBounds(
                         selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(0).getWidth() - 22,
-                        2,
+                        -2,
                         selectedValuesLayeredPane.getComponent(0).getWidth(),
                         selectedValuesLayeredPane.getComponent(0).getHeight());
 
                 selectedValuesLayeredPane.getComponent(1).setBounds(
                         selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(1).getWidth() - 10,
-                        -1,
+                        -4,
                         selectedValuesLayeredPane.getComponent(1).getWidth(),
                         selectedValuesLayeredPane.getComponent(1).getHeight());
 
                 selectedValuesLayeredPane.getComponent(2).setBounds(
-                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(2).getWidth() - 24,
-                        -1,
+                        selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(2).getWidth() - 5,
+                        -3,
                         selectedValuesLayeredPane.getComponent(2).getWidth(),
                         selectedValuesLayeredPane.getComponent(2).getHeight());
 
@@ -1142,19 +1155,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 // move the icons
                 plotLayeredPane.getComponent(0).setBounds(
                         plotLayeredPane.getWidth() - plotLayeredPane.getComponent(0).getWidth() - 22,
-                        2,
+                        -2,
                         plotLayeredPane.getComponent(0).getWidth(),
                         plotLayeredPane.getComponent(0).getHeight());
 
                 plotLayeredPane.getComponent(1).setBounds(
                         plotLayeredPane.getWidth() - plotLayeredPane.getComponent(1).getWidth() - 10,
-                        -1,
+                        -4,
                         plotLayeredPane.getComponent(1).getWidth(),
                         plotLayeredPane.getComponent(1).getHeight());
 
                 plotLayeredPane.getComponent(2).setBounds(
-                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(2).getWidth() - 22,
-                        -1,
+                        plotLayeredPane.getWidth() - plotLayeredPane.getComponent(2).getWidth() - 5,
+                        -3,
                         plotLayeredPane.getComponent(2).getWidth(),
                         plotLayeredPane.getComponent(2).getHeight());
 
@@ -2076,7 +2089,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         return lastSelectedFolder;
     }
 
-    public void setVisibleColumns(HashMap<Integer,Boolean> showColumns) {
+    public void setVisibleColumns(HashMap<Integer, Boolean> showColumns) {
         this.visibleColumns = showColumns;
     }
 

@@ -113,6 +113,7 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Visible Columns");
+        setMinimumSize(new java.awt.Dimension(297, 386));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 

@@ -32,6 +32,7 @@ import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.data.statistics.HistogramDataset;
@@ -44,6 +45,8 @@ import umontreal.iro.lecuyer.randvar.KernelDensityGen;
 import umontreal.iro.lecuyer.randvar.NormalGen;
 import umontreal.iro.lecuyer.rng.MRG31k3p;
 import umontreal.iro.lecuyer.rng.RandomStream;
+import org.apache.commons.math.stat.regression.SimpleRegression;
+import org.jfree.chart.annotations.XYTextAnnotation;
 
 /**
  * A dialog that makes it straightforward to inspect compare the values of two
@@ -169,6 +172,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * If true, gradient color coding is used.
      */
     private boolean useGradientColorCoding = false;
+    /**
+     * If true, the regression line is shown.
+     */
+    private boolean showRegressionLine = true;
 
     /**
      * Creates a new XYPlottingDialog.
@@ -298,6 +305,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         dragButtonGroup = new javax.swing.ButtonGroup();
         plotPopupMenu = new javax.swing.JPopupMenu();
         exportPlotMenuItem = new javax.swing.JMenuItem();
+        regressionLineCheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
         selectedValuesTablePopupMenu = new javax.swing.JPopupMenu();
         exportSelectedValuesMenuItem = new javax.swing.JMenuItem();
         hideColumnsMenuItem = new javax.swing.JMenuItem();
@@ -356,6 +364,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }
         });
         plotPopupMenu.add(exportPlotMenuItem);
+
+        regressionLineCheckBoxMenuItem.setSelected(true);
+        regressionLineCheckBoxMenuItem.setText("Regression Line");
+        regressionLineCheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regressionLineCheckBoxMenuItemActionPerformed(evt);
+            }
+        });
+        plotPopupMenu.add(regressionLineCheckBoxMenuItem);
 
         exportSelectedValuesMenuItem.setText("Export");
         exportSelectedValuesMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -997,7 +1014,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         bubbleSizeComboBox.setEnabled(xyPlotRadioButton.isSelected());
         dragToSelectRadioButton.setEnabled(xyPlotRadioButton.isSelected());
         dragToZoomRadioButton.setEnabled(xyPlotRadioButton.isSelected());
-
+        regressionLineCheckBoxMenuItem.setEnabled(xyPlotRadioButton.isSelected());
         binsLabel.setEnabled(histogramRadioButton.isSelected());
         binSizeSpinner.setEnabled(histogramRadioButton.isSelected());
 
@@ -1421,6 +1438,16 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private void colorLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorLabelMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_colorLabelMouseExited
+
+    /**
+     * Show/hide the regression line.
+     *
+     * @param evt
+     */
+    private void regressionLineCheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regressionLineCheckBoxMenuItemActionPerformed
+        showRegressionLine = regressionLineCheckBoxMenuItem.isSelected();
+        updatePlot();
+    }//GEN-LAST:event_regressionLineCheckBoxMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JSpinner binSizeSpinner;
@@ -1448,6 +1475,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private javax.swing.JPopupMenu plotPopupMenu;
     private javax.swing.ButtonGroup plotTypeButtonGroup;
     private javax.swing.JPanel plotTypePanel;
+    private javax.swing.JCheckBoxMenuItem regressionLineCheckBoxMenuItem;
     private javax.swing.JLayeredPane selectedValuesLayeredPane;
     private javax.swing.JPanel selectedValuesPanel;
     private javax.swing.JScrollPane selectedValuesScrollPane;
@@ -1624,15 +1652,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         xyPlotPanel.revalidate();
                         xyPlotPanel.repaint();
 
-                        DefaultXYDataset xyDataset = new DefaultXYDataset();
                         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
 
                         ArrayList<String> datasetNames = new ArrayList<String>();
                         HashMap<String, ArrayList<Integer>> datasets = new HashMap<String, ArrayList<Integer>>();
 
                         int colorIndex = colorsComboBox.getSelectedIndex();
-                        double minValue = Double.MAX_VALUE;
-                        double maxValue = Double.MIN_VALUE;
+                        double minColorValue = Double.MAX_VALUE;
+                        double maxColorValue = Double.MIN_VALUE;
 
                         progressDialog.setIndeterminate(false);
                         progressDialog.setMaxProgressValue(tabelModel.getRowCount() * 2);
@@ -1655,36 +1682,36 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             // get the min and max values for the color column
                             if (tabelModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
                                 double tempColorValue = ((XYDataPoint) tabelModel.getValueAt(i, colorIndex)).getX();
-                                if (tempColorValue > maxValue) {
-                                    maxValue = tempColorValue;
+                                if (tempColorValue > maxColorValue) {
+                                    maxColorValue = tempColorValue;
                                 }
-                                if (tempColorValue < minValue) {
-                                    minValue = tempColorValue;
+                                if (tempColorValue < minColorValue) {
+                                    minColorValue = tempColorValue;
                                 }
                             } else if (tabelModel.getValueAt(i, colorIndex) instanceof Integer) {
                                 int tempColorValue = (Integer) tabelModel.getValueAt(i, colorIndex);
-                                if (tempColorValue > maxValue) {
-                                    maxValue = tempColorValue;
+                                if (tempColorValue > maxColorValue) {
+                                    maxColorValue = tempColorValue;
                                 }
-                                if (tempColorValue < minValue) {
-                                    minValue = tempColorValue;
+                                if (tempColorValue < minColorValue) {
+                                    minColorValue = tempColorValue;
                                 }
                             } else if (tabelModel.getValueAt(i, colorIndex) instanceof Double) {
                                 double tempColorValue = (Double) tabelModel.getValueAt(i, colorIndex);
-                                if (tempColorValue > maxValue) {
-                                    maxValue = tempColorValue;
+                                if (tempColorValue > maxColorValue) {
+                                    maxColorValue = tempColorValue;
                                 }
-                                if (tempColorValue < minValue) {
-                                    minValue = tempColorValue;
+                                if (tempColorValue < minColorValue) {
+                                    minColorValue = tempColorValue;
                                 }
                             } else if (tabelModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
                                 if (((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
                                     double tempColorValue = ((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().get(0);
-                                    if (tempColorValue > maxValue) {
-                                        maxValue = tempColorValue;
+                                    if (tempColorValue > maxColorValue) {
+                                        maxColorValue = tempColorValue;
                                     }
-                                    if (tempColorValue < minValue) {
-                                        minValue = tempColorValue;
+                                    if (tempColorValue < minColorValue) {
+                                        minColorValue = tempColorValue;
                                     }
                                 }
                             }
@@ -1700,6 +1727,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         progressDialog.setValue(0);
 
                         int datasetCounter = 0;
+                        double minXValue = Double.MAX_VALUE;
+                        double maxXValue = Double.MIN_VALUE;
+                        double sx = 0, sy = 0, sxx = 0, sxy = 0, syy = 0;
+                        SimpleRegression simpleRegression = new SimpleRegression();
 
 
                         // @TODO: add the option of filtering the data based on the values in one or more columns?
@@ -1708,7 +1739,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         // split the data into the datasets
                         for (String dataset : datasetNames) {
 
-                            double[][] tempDataXY = new double[2][datasets.get(dataset).size()];
                             double[][] tempDataXYZ = new double[3][datasets.get(dataset).size()];
 
                             int counter = 0;
@@ -1720,36 +1750,39 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 // @TODO: support more data types!!
 
                                 if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
-                                    tempDataXY[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
                                     tempDataXYZ[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
                                 } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
-                                    tempDataXY[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
                                     tempDataXYZ[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
                                 } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
-                                    tempDataXY[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
                                     tempDataXYZ[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
                                 } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
                                     if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
-                                        tempDataXY[0][counter] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                         tempDataXYZ[0][counter] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
                                 }
 
                                 if (tabelModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
-                                    tempDataXY[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
                                     tempDataXYZ[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
                                 } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Integer) {
-                                    tempDataXY[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
                                     tempDataXYZ[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
                                 } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Double) {
-                                    tempDataXY[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
                                     tempDataXYZ[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
                                 } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof StartIndexes) {
                                     if (((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().size() > 0) {
-                                        tempDataXY[1][counter] = ((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
                                         tempDataXYZ[1][counter] = ((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
                                     }
                                 }
+
+                                // get the min and max x values
+                                if (tempDataXYZ[0][counter] > maxXValue) {
+                                    maxXValue = tempDataXYZ[0][counter];
+                                }
+                                if (tempDataXYZ[0][counter] < minXValue) {
+                                    minXValue = tempDataXYZ[0][counter];
+                                }
+
+                                // get the regression line data
+                                simpleRegression.addData(tempDataXYZ[0][counter], tempDataXYZ[1][counter]);
 
                                 if (bubbleSizeIndex == 0) {
                                     tempDataXYZ[2][counter] = bubbleSize * bubbleScalingFactor;
@@ -1779,32 +1812,52 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                             // get the color to use if using gradient color coding
                             if (tempObject instanceof Integer) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((Integer) tempObject).doubleValue(), minValue, maxValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((Integer) tempObject).doubleValue(), minColorValue, maxColorValue, colorGradient));
                             } else if (tempObject instanceof Double) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor((Double) tempObject, minValue, maxValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor((Double) tempObject, minColorValue, maxColorValue, colorGradient));
                             } else if (tempObject instanceof XYDataPoint) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((XYDataPoint) tempObject).getX(), minValue, maxValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((XYDataPoint) tempObject).getX(), minColorValue, maxColorValue, colorGradient));
                             } else if (tempObject instanceof StartIndexes) {
                                 if (((StartIndexes) tempObject).getIndexes().size() > 0) {
                                     datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(
-                                            ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minValue, maxValue, colorGradient));
+                                            ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minColorValue, maxColorValue, colorGradient));
                                 } else {
-                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minValue, minValue, maxValue, colorGradient));
+                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient));
                                 }
                             } else {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minValue, minValue, maxValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient));
                             }
 
-                            xyDataset.addSeries(dataset, tempDataXY);
                             xyzDataset.addSeries(dataset, tempDataXYZ);
                             datasetCounter++;
                         }
 
                         progressDialog.setIndeterminate(true);
 
+
                         // create the plot
                         JFreeChart chart = ChartFactory.createBubbleChart(null, xAxisName, yAxisName, xyzDataset, PlotOrientation.VERTICAL, false, true, false);
                         XYPlot plot = chart.getXYPlot();
+
+
+                        // add the regression line
+                        if (showRegressionLine) {
+                            XYSeriesCollection regressionData = new XYSeriesCollection();
+                            XYSeries regr = new XYSeries("RegressionLine");
+                            regr.add(minXValue, simpleRegression.predict(minXValue));
+                            regr.add(maxXValue, simpleRegression.predict(maxXValue));
+                            regressionData.addSeries(regr);
+
+                            // show the r squared value
+                            plot.addAnnotation(new XYTextAnnotation("R2=" + Util.roundDouble(simpleRegression.getRSquare(), 2), 
+                                    maxXValue*0.93, simpleRegression.predict(maxXValue)*0.99));
+
+                            StandardXYItemRenderer regressionRenderer = new StandardXYItemRenderer();
+                            regressionRenderer.setBaseSeriesVisibleInLegend(false);
+                            regressionRenderer.setSeriesPaint(0, Color.GRAY);
+                            plot.setDataset(1, regressionData);
+                            plot.setRenderer(1, regressionRenderer);
+                        }
 
                         // set up the renderer
                         XYBubbleRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_DOMAIN_AXIS) {

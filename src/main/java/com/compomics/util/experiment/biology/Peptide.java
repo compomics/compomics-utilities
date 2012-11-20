@@ -364,8 +364,8 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target;
-                            int endIndex = index + sequence.length() - 1 + nAA - target;
+                            int beginIndex = index - target -1;
+                            int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.matches(tempSequence)) {
@@ -399,8 +399,8 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index + sequence.length() - target - 1;
-                            int endIndex = beginIndex + nAA;
+                            int beginIndex = index - target -1;
+                            int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isEnding(tempSequence)) {
@@ -426,8 +426,8 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target;
-                            int endIndex = beginIndex + nAA;
+                            int beginIndex = index - target -1;
+                            int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isStarting(tempSequence)) {
@@ -471,8 +471,8 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target;
-                            int endIndex = index + sequence.length() - 1 + nAA - target;
+                            int beginIndex = index - target-1;
+                            int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.matches(tempSequence)) {
@@ -512,8 +512,8 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index + sequence.length() - target - 1;
-                            int endIndex = beginIndex + nAA;
+                            int beginIndex = index - target -1;
+                            int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isEnding(tempSequence)) {
@@ -541,8 +541,8 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target;
-                            int endIndex = beginIndex + nAA;
+                            int beginIndex = index - target -1;
+                            int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isStarting(tempSequence)) {

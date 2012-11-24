@@ -1,6 +1,7 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.PTMFactory;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public class ModificationProfile implements Serializable {
      * List of modifications searched during the second pass search
      */
     private ArrayList<String> refinementModifications = new ArrayList<String>();
+    /**
+     * Map of the omssa indexes used for user modifications in this search
+     */
+    private HashMap<Integer, String> omssaIndexes = new HashMap<Integer, String>();
     /**
      * Mapping of the expected modification names to the color used.
      */
@@ -252,4 +257,46 @@ public class ModificationProfile implements Serializable {
             refinementModifications.remove(modificationName);
         }
     }
+    
+    /**
+     * Sets the OMSSA index for a given modification. If another modification was already given with the same index the previous setting will be silently overwritten.
+     * @param modificationName the name of the modification
+     * @param omssaIndex the OMSSA index of the modification
+     */
+    public void setOmssaIndex(String modificationName, int omssaIndex) {
+        omssaIndexes.put(omssaIndex, modificationName);
+    }
+    
+    /**
+     * Returns the name of the modification indexed by the given OMSSA index. Null if not found.
+     * @param omssaIndex the OMSSA index of the modification to look for
+     */
+    public String getModification(int omssaIndex) {
+        return omssaIndexes.get(omssaIndex);
+    }
+    /**
+     * Returns the OMSSA index of a given modification, null if not found.
+     * @param modificationName the name of the modification
+     * @return the corresponding OMSSA index
+     */
+    public Integer getOmssaIndex(String modificationName) {
+        for (int index : omssaIndexes.keySet()) {
+            if (modificationName.equalsIgnoreCase(omssaIndexes.get(index))) {
+                return index;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Indicates whether the modification is contained in the profile, looking into all modifications (fixed, variable and refinement)
+     * @param modificationName the name of the modification
+     * @return a boolean indicating whether the modification is contained in the mapping
+     */
+    public boolean contains(String modificationName) {
+        return variableModifications.contains(modificationName)
+                || fixedModifications.contains(modificationName)
+                || refinementModifications.contains(modificationName);
+    }
+    
 }

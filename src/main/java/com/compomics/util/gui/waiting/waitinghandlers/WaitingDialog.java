@@ -89,6 +89,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * 'Search'.
      */
     private String processName;
+    /**
+     * The name of the tool using the waiting dialog. Used for the report.
+     */
+    private String toolName;
+    /**
+     * The version number of the tool using the waiting dialog. Used for the
+     * report.
+     */
+    private String toolVersion;
 
     /**
      * Creates a new WaitingDialog.
@@ -100,10 +109,13 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * feature
      * @param processName the name of the process we are waiting for, e.g.,
      * 'Import Data' or 'Search'
+     * @param toolName the name of the tool, need for the report
+     * @param toolVersion the version number of the tool, need for the report
      * @param modal
      */
-    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, String processName, boolean modal) {
-        this(waitingHandlerParent, normalIcon, waitingIcon, shakeWhenFinished, new ArrayList<String>(), processName, modal);
+    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, String processName,
+            String toolName, String toolVersion, boolean modal) {
+        this(waitingHandlerParent, normalIcon, waitingIcon, shakeWhenFinished, new ArrayList<String>(), processName, toolName, toolVersion, modal);
     }
 
     /**
@@ -116,9 +128,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * feature
      * @param processName the name of the process we are waiting for
      * @param modal
+     * @param toolName the name of the tool, need for the report
+     * @param toolVersion the version number of the tool, need for the report
      * @param tips the list of Tip of the day
      */
-    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, ArrayList<String> tips, String processName, boolean modal) {
+    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished,
+            ArrayList<String> tips, String processName, String toolName, String toolVersion, boolean modal) {
         super(waitingHandlerParent, modal);
         initComponents();
 
@@ -127,6 +142,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         this.normalIcon = normalIcon;
         this.shakeWhenFinished = shakeWhenFinished;
         this.processName = processName;
+        this.toolName = toolName;
+        this.toolVersion = toolVersion;
 
         setTitle(processName + " - Please Wait...");
 
@@ -1079,7 +1096,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         // Write the file header.
         output.append("# ------------------------------------------------------------------"
-                + System.getProperty("line.separator") + "# Compomics Report File"
+                + System.getProperty("line.separator") + "# " + toolName + " " + toolVersion + " Report File"
                 + System.getProperty("line.separator") + "#"
                 + System.getProperty("line.separator") + "# Originally saved by: " + System.getProperty("user.name") + host
                 + System.getProperty("line.separator") + "#                  on: " + sdf.format(new Date()));
@@ -1088,7 +1105,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             output.append(System.getProperty("line.separator") + "#                  as: " + aFile.getName());
         }
 
-        output.append(System.getProperty("line.separator") + "# ------------------------------------------------------------------" 
+        output.append(System.getProperty("line.separator") + "# ------------------------------------------------------------------"
                 + System.getProperty("line.separator") + System.getProperty("line.separator"));
 
         String report = reportArea.getText();

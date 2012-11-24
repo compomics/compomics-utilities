@@ -2,6 +2,8 @@ package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import org.xmlpull.v1.XmlPullParser;
@@ -31,23 +33,23 @@ public class PTMFactory implements Serializable {
     /**
      * User ptm file.
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.0.cus";
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.23.cus";
     /**
      * A map linking indexes with modifications.
      */
-    private static HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
+    private HashMap<String, PTM> ptmMap = new HashMap<String, PTM>();
     /**
      * List of the indexes of default modifications.
      */
-    private static ArrayList<String> defaultMods = new ArrayList<String>();
+    private ArrayList<String> defaultMods = new ArrayList<String>();
     /**
      * List of the indexes of user modifications.
      */
-    private static ArrayList<String> userMods = new ArrayList<String>();
+    private ArrayList<String> userMods = new ArrayList<String>();
     /**
-     * Map of omssa indexes.
+     * Map of omssa indexes for default modifications.
      */
-    private static HashMap<String, Integer> omssaIndexes = new HashMap<String, Integer>();
+    private HashMap<String, Integer> defaultOmssaIndexes = new HashMap<String, Integer>();
     /**
      * Unknown modification to be returned when the modification is not found.
      */
@@ -55,7 +57,7 @@ public class PTMFactory implements Serializable {
     /**
      * Suffix for the modifications searched but not in the factory.
      */
-    public static final String SEARCH_SUFFIX = "|SEARCH-ONLY";
+    public static final String SEARCH_SUFFIX = "|search-only";
 
     /**
      * Constructor for the factory.
@@ -122,22 +124,12 @@ public class PTMFactory implements Serializable {
      * Get a PTM according to its omssa index.
      *
      * @param index the PTM index
+     * @param modificationProfile the modification profile used for the search
      * @return the selected PTM
      */
-    public PTM getPTM(int index) {
+    public PTM getPTM(ModificationProfile modificationProfile, int index) {
         String name = null;
-        for (String ptm : omssaIndexes.keySet()) {
-            if (omssaIndexes.get(ptm) == index) {
-                name = ptm;
-                break;
-            }
-        }
-
-        if (name != null) {
-            if (name.endsWith(SEARCH_SUFFIX)) {
-                name = name.substring(0, name.lastIndexOf(SEARCH_SUFFIX));
-            }
-        }
+        name = modificationProfile.getModification(index);
 
         if (name != null && ptmMap.get(name) != null) {
             return ptmMap.get(name);
@@ -170,11 +162,7 @@ public class PTMFactory implements Serializable {
      */
     public PTM getSearchedPTM(String modificationName) {
         PTM modification = getPTM(modificationName);
-        if (!modification.isStandardSearch()) {
-            return new PTM(modification.getType(), modification.getName() + SEARCH_SUFFIX, modification.getMass(), modification.getPattern().getStandardSearchPattern());
-        } else {
-            return modification;
-        }
+        return getSearchedPTM(modification);
     }
 
     /**
@@ -187,22 +175,6 @@ public class PTMFactory implements Serializable {
         ptmMap.put(modName, ptm);
         if (!userMods.contains(modName)) {
             userMods.add(modName);
-        }
-        setUserOmssaIndexes();
-    }
-
-    /**
-     * Sets the omssa indexes of all loaded user ptms.
-     */
-    private void setUserOmssaIndexes() {
-        for (int rank = 1; rank <= userMods.size(); rank++) {
-            int omssaIndex = rank + 118;
-            if (omssaIndex > 128) {
-                omssaIndex += 13;
-            }
-            String ptm = userMods.get(rank - 1);
-            PTM searchedPtm = getSearchedPTM(ptm);
-            omssaIndexes.put(searchedPtm.getName(), omssaIndex);
         }
     }
 
@@ -217,8 +189,6 @@ public class PTMFactory implements Serializable {
         }
         ptmMap.remove(ptmName);
         userMods.remove(ptmName);
-        omssaIndexes.remove(ptmName);
-        setUserOmssaIndexes(); // I'm too lazy to move indexes here so I recalculate all of them. Should not take long.
     }
 
     /**
@@ -255,16 +225,6 @@ public class PTMFactory implements Serializable {
      */
     public boolean containsPTM(String name) {
         return ptmMap.containsKey(name);
-    }
-
-    /**
-     * Returns the index of the desired modification.
-     *
-     * @param modificationName the desired modification name to lower case
-     * @return the corresponding index
-     */
-    public Integer getOMSSAIndex(String modificationName) {
-        return omssaIndexes.get(modificationName);
     }
 
     /**
@@ -321,6 +281,23 @@ public class PTMFactory implements Serializable {
      * reading the file
      */
     public void importModifications(File modificationsFile, boolean userMod) throws XmlPullParserException, IOException {
+        importModifications(modificationsFile, userMod, false);
+    }
+
+    /**
+     * Import modifications from a modification file.
+     *
+     * @param modificationsFile A file containing modifications
+     * @param userMod A boolean indicating whether the file comprises user
+     * designed modification
+     * @param overwrite a boolean indicating whether modifications from the xml
+     * file should be overwritten
+     * @throws XmlPullParserException exception thrown whenever an error is
+     * encountered while parsing
+     * @throws IOException exception thrown whenever an error is encountered
+     * reading the file
+     */
+    public void importModifications(File modificationsFile, boolean userMod, boolean overwrite) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
@@ -337,12 +314,11 @@ public class PTMFactory implements Serializable {
             // If we find a 'MSModSpec' start tag,
             // we should parse the mod.
             if (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec")) {
-                parseMSModSpec(parser, userMod);
+                parseMSModSpec(parser, userMod, overwrite);
             }
             type = parser.next();
         }
         br.close();
-        setUserOmssaIndexes();
         setDefaultNeutralLosses();
         setDefaultReporterIons();
     }
@@ -356,11 +332,13 @@ public class PTMFactory implements Serializable {
      * @param parser the parser
      * @param userMod a boolean indicating whether we are parsing user
      * modifications or not
+     * @param overwrite a boolean indicating whether modifications from the xml
+     * file should be overwritten
      * @throws XmlPullParserException when the pull parser failed.
      * @throws IOException when the pull parser could not access the underlying
      * file.
      */
-    private void parseMSModSpec(XmlPullParser parser, boolean userMod) throws XmlPullParserException, IOException {
+    private void parseMSModSpec(XmlPullParser parser, boolean userMod, boolean overwrite) throws XmlPullParserException, IOException {
         // Check whether the XmlPullParser is correctly positioned (i.e. directly on the 'MSModSpec' start tag)
         if (!(parser.getName().equals("MSModSpec") && parser.getEventType() == XmlPullParser.START_TAG)) {
             throw new IllegalArgumentException("XmlPullParser should have been on the start tag for 'MSModSpec', but was on '" + parser.getName() + "' instead.");
@@ -469,15 +447,14 @@ public class PTMFactory implements Serializable {
             if (userMod) {
                 if (defaultMods.contains(name)) {
                     throw new IllegalArgumentException("Impossible to load " + name + " as user modification. Already defined as default modification.");
-                } else if (!userMods.contains(name)) {
+                } else if (!userMods.contains(name) || overwrite) {
                     userMods.add(name);
                 }
             } else {
-                if (defaultMods.contains(name)) {
-                    throw new IllegalArgumentException(name + " is defined twice as default modification.");
+                if (!defaultMods.contains(name) || overwrite) {
+                    defaultMods.add(name);
+                    defaultOmssaIndexes.put(name, number);
                 }
-                defaultMods.add(name);
-                omssaIndexes.put(name, number);
             }
         }
     }
@@ -736,7 +713,9 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the expected modifications based on the modification profile, the
-     * peptide found and the modification details. Returns the names in a map where the modification names are indexed by the index on the sequence. 1 is the first amino acid.
+     * peptide found and the modification details. Returns the names in a map
+     * where the modification names are indexed by the index on the sequence. 1
+     * is the first amino acid.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
@@ -760,7 +739,7 @@ public class PTMFactory implements Serializable {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
-        for (String ptmName : modificationProfile.getAllModifications()) {
+        for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
             PTM ptm = getPTM(ptmName);
             if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance) {
                 for (int site : peptide.getPotentialModificationSites(ptm)) {
@@ -776,13 +755,15 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns the names of the possibly expected modification based on
-     * the name of the searched modification(s) in a map where the PTM names are indexed by their potential site on the sequence. 1 is the first amino acid.
+     * Returns the names of the possibly expected modification based on the name
+     * of the expected modification in a map where the PTM names are indexed by
+     * their potential site on the sequence. 1 is the first amino acid.
+     * Candidate PTMs are expected non fixed modifications with the same mass.
      *
      * @param modificationProfile the modification profile used for the search
      * (available in the search parameters)
      * @param peptide the peptide
-     * @param searchedPTMName the name of the searched PTM
+     * @param ptmName the name of the searched PTM
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -791,13 +772,14 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      * @return the possible expected modification names. Empty if not found.
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String searchedPTMName) throws IOException, IllegalArgumentException, InterruptedException {
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName) throws IOException, IllegalArgumentException, InterruptedException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
-        for (String variableModification : modificationProfile.getAllModifications()) {
-            String ptmName = getSearchedPTM(variableModification).getName();
-            if (ptmName.equalsIgnoreCase(searchedPTMName)) {
+        PTM secondaryPTM, referencePTM = getPTM(ptmName);
+        for (String variableModification : modificationProfile.getAllNotFixedModifications()) {
+            secondaryPTM = getPTM(variableModification);
+            if (secondaryPTM.getMass() == referencePTM.getMass()) {
                 PTM ptm = getPTM(variableModification);
                 for (int site : peptide.getPotentialModificationSites(ptm)) {
                     if (!mapping.containsKey(site)) {
@@ -809,6 +791,66 @@ public class PTMFactory implements Serializable {
         }
 
         return mapping;
+    }
+
+    /**
+     * Removes the fixed modifications of the peptide and remaps the one
+     * searched for according to the ModificationProfile.
+     *
+     * @param modificationProfile
+     * @param peptide
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     */
+    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException {
+        ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
+        for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+            if (!modMatch.isVariable()) {
+                toRemove.add(modMatch);
+            }
+        }
+        for (ModificationMatch modMatch : toRemove) {
+            peptide.getModificationMatches().remove(modMatch);
+        }
+        ArrayList<Integer> taken = new ArrayList<Integer>();
+        for (String fixedModification : modificationProfile.getFixedModifications()) {
+            PTM ptm = getPTM(fixedModification);
+            for (int pos : peptide.getPotentialModificationSites(ptm)) {
+                peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
+                if (!taken.contains(pos)) {
+                    taken.add(pos);
+                } else {
+                    throw new IllegalArgumentException("Attempting to put two fixed modifications at position " + pos + " in peptide " + peptide.getSequence() + ".");
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the omssa indexes used for this search
+     *
+     * @param modificationProfile the modification profile of this search
+     */
+    public void setSearchedOMSSAIndexes(ModificationProfile modificationProfile) {
+        for (int rank = 1; rank <= userMods.size(); rank++) {
+            int omssaIndex = rank + 118; //Note that this index must be the same as in the getOmssaUserModBloc method
+            if (omssaIndex > 128) {
+                omssaIndex += 13;
+            }
+            String ptm = userMods.get(rank - 1);
+            if (modificationProfile.contains(ptm)) {
+                modificationProfile.setOmssaIndex(ptm, omssaIndex);
+            }
+        }
+        for (String ptm : defaultOmssaIndexes.keySet()) {
+            if (modificationProfile.contains(ptm)) {
+                modificationProfile.setOmssaIndex(ptm, defaultOmssaIndexes.get(ptm));
+            }
+        }
     }
 
     /**

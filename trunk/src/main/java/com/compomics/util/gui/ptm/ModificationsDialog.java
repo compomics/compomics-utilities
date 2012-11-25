@@ -272,6 +272,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         deleteUserPTM = new javax.swing.JButton();
         editUserPTM = new javax.swing.JButton();
         addUserPTM = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
         modificationsHelpJButton = new javax.swing.JButton();
 
         editDefaultPtmJMenuItem.setText("Edit");
@@ -415,7 +416,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(findJLabel)
@@ -452,6 +453,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         userModsScrollPane.setViewportView(userModificationsTable);
 
         deleteUserPTM.setText("Delete");
+        deleteUserPTM.setToolTipText("Delete a user defined modification");
         deleteUserPTM.setEnabled(false);
         deleteUserPTM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -460,6 +462,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         });
 
         editUserPTM.setText("Edit");
+        editUserPTM.setToolTipText("Edit a user defined modification");
         editUserPTM.setEnabled(false);
         editUserPTM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -468,9 +471,49 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         });
 
         addUserPTM.setText("Add");
+        addUserPTM.setToolTipText("Add a new user defined modification");
         addUserPTM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addUserPTMActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout userModsPanelLayout = new javax.swing.GroupLayout(userModsPanel);
+        userModsPanel.setLayout(userModsPanelLayout);
+        userModsPanelLayout.setHorizontalGroup(
+            userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(userModsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
+                    .addGroup(userModsPanelLayout.createSequentialGroup()
+                        .addGap(10, 518, Short.MAX_VALUE)
+                        .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        userModsPanelLayout.setVerticalGroup(
+            userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userModsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        modificationsSplitPane.setRightComponent(userModsPanel);
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
             }
         });
 
@@ -493,48 +536,19 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             }
         });
 
-        javax.swing.GroupLayout userModsPanelLayout = new javax.swing.GroupLayout(userModsPanel);
-        userModsPanel.setLayout(userModsPanelLayout);
-        userModsPanelLayout.setHorizontalGroup(
-            userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(userModsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
-                    .addGroup(userModsPanelLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        userModsPanelLayout.setVerticalGroup(
-            userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userModsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(modificationsHelpJButton, 0, 0, Short.MAX_VALUE)
-                    .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        modificationsSplitPane.setRightComponent(userModsPanel);
-
         javax.swing.GroupLayout modificationsEditorPanelLayout = new javax.swing.GroupLayout(modificationsEditorPanel);
         modificationsEditorPanel.setLayout(modificationsEditorPanelLayout);
         modificationsEditorPanelLayout.setHorizontalGroup(
             modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(modificationsSplitPane)
+                .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(modificationsSplitPane)
+                    .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(okButton)))
                 .addContainerGap())
         );
         modificationsEditorPanelLayout.setVerticalGroup(
@@ -542,6 +556,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(modificationsSplitPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(okButton)
+                    .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -555,9 +573,11 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 644, Short.MAX_VALUE)
+            .addGap(0, 663, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(modificationsEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(modificationsEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
 
         pack();
@@ -960,6 +980,16 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         ptmDialogParent.updateModifications();
         dispose();
     }//GEN-LAST:event_formWindowClosing
+
+    /**
+     * Close the dialog and updated the ptms in the dialog parent.
+     * 
+     * @param evt 
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        formWindowClosing(null);
+    }//GEN-LAST:event_okButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addUserPTM;
     private javax.swing.JTable defaultModificationsTable;
@@ -974,6 +1004,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     private javax.swing.JPanel modificationsEditorPanel;
     private javax.swing.JButton modificationsHelpJButton;
     private javax.swing.JSplitPane modificationsSplitPane;
+    private javax.swing.JButton okButton;
     private javax.swing.JLabel searchIndexLabel;
     private javax.swing.JTextField searchInputTxt;
     private javax.swing.JButton searchNextButton;

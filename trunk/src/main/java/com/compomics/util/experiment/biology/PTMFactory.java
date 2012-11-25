@@ -3,7 +3,6 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import org.xmlpull.v1.XmlPullParser;
@@ -128,8 +127,7 @@ public class PTMFactory implements Serializable {
      * @return the selected PTM
      */
     public PTM getPTM(ModificationProfile modificationProfile, int index) {
-        String name = null;
-        name = modificationProfile.getModification(index);
+        String name = modificationProfile.getModification(index);
 
         if (name != null && ptmMap.get(name) != null) {
             return ptmMap.get(name);

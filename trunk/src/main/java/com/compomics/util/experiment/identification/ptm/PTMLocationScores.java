@@ -161,9 +161,8 @@ public class PTMLocationScores {
             HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
             SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
 
-            double p, P, score1, score2, score;
-            int n, N = 0;
-            Peptide tempPeptide, noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+            int N = 0;
+            Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
 
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
                 boolean found = false;
@@ -181,24 +180,23 @@ public class PTMLocationScores {
                 N += fragmentIons.size();
             }
 
-
             for (int i = 0; i < spectrumMap.keySet().size(); i++) {
 
-                p = ((double) i + 1) / 100;
+                double p = ((double) i + 1) / 100;
 
                 for (int pos : possibleSites) {
-                    tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+                    Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
                     tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
                     matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance, false);
-                    n = matches.size();
-                    P = 0;
+                    int n = matches.size();
+                    double P = 0;
                     for (int k = n; k <= N; k++) {
                         P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
                     }
                     if (P <= Double.MIN_NORMAL) {
                         P = Double.MIN_NORMAL;
                     }
-                    score = -10 * Math.log10(P);
+                    double score = -10 * Math.log10(P);
                     if (!positionToScoreMap.containsKey(pos)) {
                         positionToScoreMap.put(pos, new HashMap<Integer, Double>());
                     }
@@ -206,12 +204,12 @@ public class PTMLocationScores {
                 }
             }
 
-            Double peptideScore, bestScore = null, secondScore = null;
+            Double bestScore = null, secondScore = null;
             Integer bestPosition = null, secondPosition = null;
             ArrayList<Integer> bestPositions = new ArrayList<Integer>();
 
             for (int pos : positionToScoreMap.keySet()) {
-                peptideScore = 0.0;
+                Double peptideScore = 0.0;
                 if (positionToScoreMap.get(pos).containsKey(1)) {
                     peptideScore += 0.5 * positionToScoreMap.get(pos).get(1);
                 }
@@ -307,11 +305,11 @@ public class PTMLocationScores {
                 }
             }
 
-            p = ((double) bestI + 1) / 100;
-            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+            double p = ((double) bestI + 1) / 100;
+            Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
             matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
-            n = 0;
+            int n = 0;
 
             for (IonMatch match : matches) {
                 Ion ion = match.ion;
@@ -378,16 +376,16 @@ public class PTMLocationScores {
             } else if (p1 < p2) {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
                 modificationProfile.add(posMin);
-                score1 = -10 * Math.log10(p1);
-                score2 = -10 * Math.log10(p2);
-                score = score1 - score2;
+                double score1 = -10 * Math.log10(p1);
+                double score2 = -10 * Math.log10(p2);
+                double score = score1 - score2;
                 result.put(modificationProfile, score);
             } else {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
                 modificationProfile.add(posMax);
-                score1 = -10 * Math.log10(p1);
-                score2 = -10 * Math.log10(p2);
-                score = score2 - score1;
+                double score1 = -10 * Math.log10(p1);
+                double score2 = -10 * Math.log10(p2);
+                double score = score2 - score1;
                 result.put(modificationProfile, score);
             }
         } else if (possibleSites.size() == nPTM) {

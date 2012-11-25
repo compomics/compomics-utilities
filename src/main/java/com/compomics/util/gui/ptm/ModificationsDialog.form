@@ -68,9 +68,12 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="644" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="663" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Component id="modificationsEditorPanel" alignment="0" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="modificationsEditorPanel" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -86,9 +89,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="modificationsSplitPane" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="modificationsSplitPane" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                          <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="okButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -96,9 +107,14 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="modificationsSplitPane" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="okButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="1"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -160,7 +176,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="defaultModsScrollPane" pref="220" max="32767" attributes="0"/>
+                          <Component id="defaultModsScrollPane" pref="221" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="findJLabel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -307,9 +323,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="userModsScrollPane" alignment="0" pref="725" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                  <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace min="10" pref="518" max="32767" attributes="0"/>
                                   <Component id="addUserPTM" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editUserPTM" min="-2" pref="65" max="-2" attributes="2"/>
@@ -325,10 +339,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="userModsScrollPane" pref="249" max="32767" attributes="0"/>
+                          <Component id="userModsScrollPane" pref="238" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="modificationsHelpJButton" alignment="1" min="0" pref="0" max="32767" attributes="1"/>
                               <Component id="deleteUserPTM" alignment="1" max="32767" attributes="1"/>
                               <Component id="editUserPTM" alignment="1" max="32767" attributes="1"/>
                               <Component id="addUserPTM" alignment="1" max="32767" attributes="1"/>
@@ -376,6 +389,7 @@
                 <Component class="javax.swing.JButton" name="deleteUserPTM">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Delete"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Delete a user defined modification"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -385,6 +399,7 @@
                 <Component class="javax.swing.JButton" name="editUserPTM">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Edit"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Edit a user defined modification"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -394,33 +409,42 @@
                 <Component class="javax.swing.JButton" name="addUserPTM">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Add a new user defined modification"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addUserPTMActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="modificationsHelpJButton">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/icons/help.GIF"/>
-                    </Property>
-                    <Property name="toolTipText" type="java.lang.String" value="Help"/>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="null"/>
-                    </Property>
-                    <Property name="borderPainted" type="boolean" value="false"/>
-                    <Property name="contentAreaFilled" type="boolean" value="false"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsHelpJButtonMouseEntered"/>
-                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsHelpJButtonMouseExited"/>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modificationsHelpJButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
             </Container>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="okButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="OK"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="modificationsHelpJButton">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/icons/help.GIF"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Help"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsHelpJButtonMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsHelpJButtonMouseExited"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modificationsHelpJButtonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

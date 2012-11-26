@@ -256,8 +256,9 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing of the protein headers
      */
-    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
         currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(fastaFile, waitingHandler);
     }
@@ -296,8 +297,9 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing of the protein headers
      */
-    private FastaIndex getFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException {
+    private FastaIndex getFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
         FastaIndex tempFastaIndex;
         if (indexFile.exists()) {
@@ -389,8 +391,9 @@ public class SequenceFactory {
      * found
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing of the protein headers
      */
-    private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);

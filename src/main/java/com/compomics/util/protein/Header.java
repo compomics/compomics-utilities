@@ -64,10 +64,12 @@ public class Header implements Cloneable, Serializable {
      * only an internally consistent naming scheme included to be able to later 
      * separate the databases. For example when linking to the online version 
      * of the database. The links themselves are not included as these might 
-     * change outside the control of the compomics-utilties library.
+     * change outside the control of the compomics-utilties library. Note that 
+     * the type is set to unknown by default, and is set to the correct type 
+     * during the parsing of the header.
      */
-    private DatabaseType databaseType = null;
-    
+    private DatabaseType databaseType = DatabaseType.Unknown;
+
     /**
      * A list of the database types. As there are no standard database names, this is 
      * only an internally consistent naming scheme included to be able to later 
@@ -142,8 +144,9 @@ public class Header implements Cloneable, Serializable {
      * @return  Header  with the Header instance representing the given header. The object
      *                  returned will have been parsed correctly if it is a standard SwissProt
      *                  or NCBI formatted header, and will be plain in all other cases.
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing 
      */
-    public static Header parseFromFASTA(String aFASTAHeader) {
+    public static Header parseFromFASTA(String aFASTAHeader) throws StringIndexOutOfBoundsException {
         Header result = null;
 
         if (aFASTAHeader == null) {
@@ -822,8 +825,13 @@ public class Header implements Cloneable, Serializable {
                         }
                     }
                 }
+            } catch (StringIndexOutOfBoundsException e) {
+                throw new StringIndexOutOfBoundsException("Unable to process FASTA header line:\n"
+                        + "'" + aFASTAHeader + "'\n"
+                        + "as a '" + result.databaseType + "' header.\n"
+                        + "Process cancelled.");
             } catch (RuntimeException excep) {
-                logger.error(" * Unable to process FASTA header line:\n\t" + aFASTAHeader + "\n\n");
+                logger.error(" * Unable to process FASTA header line:\n\t" + aFASTAHeader + "\n\n"); // @TODO: throw a proper exception!!!
                 throw excep;
             }
         }

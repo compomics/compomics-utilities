@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.ModificationProfile;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -730,14 +731,14 @@ public class Peptide extends ExperimentObject {
      * modification sites color coding. /!\ this method will work only if the
      * ptm found in the peptide are in the PTMFactory.
      *
-     * @param colors the ptm name to color mapping
+     * @param modificationProfile the modification profile of the search
      * @param includeHtmlStartEndTag if true, start and end html tags are added
      * @param peptide
      * @param mainModificationSites
      * @param secondaryModificationSites
      * @return the modified sequence as an HTML string
      */
-    public static String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag, Peptide peptide,
+    public static String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag, Peptide peptide,
             HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -757,7 +758,7 @@ public class Peptide extends ExperimentObject {
                 for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
-                        Color ptmColor = colors.get(ptmName);
+                        Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
                                 + sequence.charAt(i)
@@ -769,7 +770,7 @@ public class Peptide extends ExperimentObject {
                 for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
-                        Color ptmColor = colors.get(ptmName);
+                        Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
                                 + sequence.charAt(i)
@@ -795,11 +796,11 @@ public class Peptide extends ExperimentObject {
      * coding. /!\ this method will work only if the ptm found in the peptide
      * are in the PTMFactory.
      *
-     * @param colors the ptm name to color mapping
+     * @param modificationProfile the modification profile of the search containing the color coding of the modifications.
      * @param includeHtmlStartEndTag if true, start and end html tags are added
      * @return the modified sequence as an HTML string
      */
-    public String getModifiedSequenceAsHtml(HashMap<String, Color> colors, boolean includeHtmlStartEndTag) {
+    public String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         PTM ptm;
@@ -826,7 +827,7 @@ public class Peptide extends ExperimentObject {
 
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
 
-                        Color ptmColor = colors.get(modifications.get(j).getTheoreticPtm());
+                        Color ptmColor = modificationProfile.getColor(modifications.get(j).getTheoreticPtm());
 
                         modifiedSequence +=
                                 //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
@@ -863,7 +864,7 @@ public class Peptide extends ExperimentObject {
      * @param ptmColors the ptm color map
      * @return a map of the ptm short names to the ptm colors
      */
-    public HashMap<String, Color> getPTMShortNameColorMap(HashMap<String, Color> ptmColors) {
+    public HashMap<String, Color> getPTMShortNameColorMap(ModificationProfile modificationProfile) {
 
         HashMap<String, Color> shortNameColorMap = new HashMap<String, Color>();
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -872,7 +873,7 @@ public class Peptide extends ExperimentObject {
             PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
             if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
-                shortNameColorMap.put("<" + ptm.getShortName() + ">", ptmColors.get(modifications.get(j).getTheoreticPtm()));
+                shortNameColorMap.put("<" + ptm.getShortName() + ">", modificationProfile.getColor(modifications.get(j).getTheoreticPtm()));
             }
         }
 

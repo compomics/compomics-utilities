@@ -98,6 +98,10 @@ public abstract class Identification extends ExperimentObject {
      * @return the mgf files used in the spectrum identification map
      */
     public ArrayList<String> getSpectrumFiles() {
+        // compatibility check
+        if (spectrumIdentificationMap == null) {
+            updateSpectrumMapping();
+        }
         return new ArrayList<String>(spectrumIdentificationMap.keySet());
     }
 

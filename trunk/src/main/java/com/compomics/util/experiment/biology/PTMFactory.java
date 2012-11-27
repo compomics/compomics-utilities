@@ -5,6 +5,7 @@ import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
+import java.awt.Color;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -32,7 +33,7 @@ public class PTMFactory implements Serializable {
     /**
      * User ptm file.
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.23.cus";
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.27.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -45,6 +46,10 @@ public class PTMFactory implements Serializable {
      * List of the indexes of user modifications.
      */
     private ArrayList<String> userMods = new ArrayList<String>();
+    /**
+     * Mapping of the expected modification names to the color used.
+     */
+    private HashMap<String, Color> userColors = new HashMap<String, Color>(); 
     /**
      * Map of omssa indexes for default modifications.
      */
@@ -970,4 +975,53 @@ public class PTMFactory implements Serializable {
             }
         }
     }
+    
+    /**
+     * Returns the color used to code the given modification.
+     *
+     * @param modification the name of the given expected modification
+     * @return the corresponding color
+     */
+    public Color getColor(String modification) {
+        if (!userColors.containsKey(modification)) {
+            setColor(modification, getDefaultColor(modification));
+        }
+        return userColors.get(modification);
+    }
+    
+    /**
+     * Sets a new color for the given expected modification.
+     *
+     * @param expectedModification the name of the expected modification
+     * @param color the new color
+     */
+    public void setColor(String expectedModification, Color color) {
+        userColors.put(expectedModification, color);
+    }
+    
+    /**
+     * Returns a default color based on the modification name
+     * @param modification the name of the modification
+     * @return a default color.
+     */
+    public static Color getDefaultColor(String modification) {
+        if (modification.contains("phospho")) {
+            return Color.RED;
+        } else if (modification.contains("oxi")) {
+            return Color.BLUE;
+        } else if (modification.contains("itraq")) {
+            return Color.magenta;
+        } else if (modification.contains("carbamido")) {
+            return Color.GREEN;
+        } else if (modification.contains("ace")) {
+            return new Color(1, 0, 1);
+        } else if (modification.contains("glyco")) {
+            return Color.ORANGE;
+        } else {
+            float r = (float) Math.random();
+            float g = (float) Math.random();
+            float b = (float) Math.random();
+            return new Color(r, g, b);
+        }
+    } 
 }

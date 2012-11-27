@@ -45,7 +45,7 @@ public class ModificationProfile implements Serializable {
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> colors = new HashMap<String, Color>(); // @TODO: we have to provide a default set of colors
+    private HashMap<String, Color> colors = new HashMap<String, Color>(); 
     /**
      * Back-up mapping of the PTMs for portability.
      */
@@ -91,6 +91,7 @@ public class ModificationProfile implements Serializable {
      * @return a list of all searched modifications
      */
     public ArrayList<String> getAllModifications() {
+        compatibilityCheck();
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(fixedModifications);
         result.addAll(variableModifications);
@@ -108,16 +109,6 @@ public class ModificationProfile implements Serializable {
         result.addAll(variableModifications);
         result.addAll(refinementModifications);
         return result;
-    }
-
-    /**
-     * Returns the color used to code the given modification.
-     *
-     * @param modification the name of the given expected modification
-     * @return the corresponding color
-     */
-    public Color getColor(String modification) {
-        return colors.get(modification);
     }
 
     /**
@@ -179,26 +170,35 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns a mapping of the expected modifications names to the colors used.
+     * Returns the color used to code the given modification.
      *
-     * @return a mapping of the expected modifications names to the colors used
+     * @param modification the name of the given expected modification
+     * @return the corresponding color
      */
-    public HashMap<String, Color> getPtmColors() {
-        return colors;
+    public Color getColor(String modification) {
+        if (!colors.containsKey(modification)) {
+            PTMFactory ptmFactory = PTMFactory.getInstance();
+            setColor(modification, ptmFactory.getColor(modification));
+        }
+        return colors.get(modification);
     }
 
     /**
      * Checks the compatibility with older versions of the class and makes the
-     * necessary changes.
+     * necessary changes. By default all modifications are set as variable.
      */
     public void compatibilityCheck() {
         if (fixedModifications == null) {
             fixedModifications = new ArrayList<String>();
         }
         if (variableModifications == null) {
+            variableModifications = new ArrayList<String>();
             for (String modName : modificationNames.values()) {
                 variableModifications.add(modName);
             }
+        }
+        if (refinementModifications == null) {
+            refinementModifications = new ArrayList<String>();
         }
         if (backUp == null) {
             backUp = new HashMap<String, PTM>();

@@ -858,7 +858,7 @@ public class Peptide extends ExperimentObject {
      * Returns a map of the ptm short names to the ptm colors. E.g., key: <ox>,
      * element: oxidation of m.
      *
-     * @param ptmColors the ptm color map
+     * @param modificationProfile the ptm color map
      * @return a map of the ptm short names to the ptm colors
      */
     public HashMap<String, Color> getPTMShortNameColorMap(ModificationProfile modificationProfile) {

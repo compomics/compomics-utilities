@@ -230,7 +230,7 @@ public class Util {
         String tableAsString = "";
 
         for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
-            tableAsString += ((DefaultTableModel) table.getModel()).getColumnName(i) + separator;
+            tableAsString += table.getColumnName(i) + separator;
         }
 
         progressDialog.setIndeterminate(false);
@@ -277,7 +277,7 @@ public class Util {
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
 
         for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
-            writer.write(((DefaultTableModel) table.getModel()).getColumnName(i) + separator);
+            writer.write(table.getColumnName(i) + separator);
         }
 
         if (progressDialog != null) {

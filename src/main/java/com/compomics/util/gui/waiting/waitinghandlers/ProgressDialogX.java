@@ -193,12 +193,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
         });
     }
 
-    /**
-     * Makes the dialog indeterminate or not indeterminate. Also turns the paint
-     * progress string on or off.
-     *
-     * @param indeterminate
-     */
+    @Override
     public void setIndeterminate(final boolean indeterminate) {
 
         // invoke later to give time for components to update

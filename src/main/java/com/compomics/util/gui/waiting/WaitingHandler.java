@@ -1,5 +1,6 @@
 package com.compomics.util.gui.waiting;
 
+import java.text.SimpleDateFormat;
 import javax.swing.JEditorPane;
 import javax.swing.JProgressBar;
 
@@ -11,6 +12,12 @@ import javax.swing.JProgressBar;
  */
 public interface WaitingHandler {
 
+    /**
+     * Sets whether the primary progress bar is indeterminate or not. Also turns the paint
+     * progress string on or off.
+     * @param indeterminate a boolean indicating whether the primary progress bar shall be indeterminate or not
+     */
+    public void setIndeterminate(boolean indeterminate);
     /**
      * Set the maximum value of the progress bar.
      *
@@ -24,7 +31,7 @@ public interface WaitingHandler {
     public void increaseProgressValue();
 
     /**
-     * Increase the progress bar value by the given amount.
+     * Increase the progress bar value by the given number.
      *
      * @param increment the increment to increase the value by
      */
@@ -78,6 +85,14 @@ public interface WaitingHandler {
      * Set the analysis as canceled.
      */
     public void setRunCanceled();
+    /**
+     * Convenience date format.
+     */
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
+    /**
+     * The tab space to add when using tab.
+     */
+    public static String tab = "        "; // tab could be used, but lenght is locale dependent
     
     /**
      * Append text to the report.
@@ -114,15 +129,17 @@ public interface WaitingHandler {
 
     /**
      * Returns the primary progress bar for updates from external processes.
+     * Warning: shall not be used for command line processes
      *
      * @return the primary progress bar, can be null
      */
     public JProgressBar getPrimaryProgressBar();
 
     /**
-     * Display a given message to the user separatly from the main output. For
+     * Display a given message to the user separately from the main output. For
      * example a warning or error message. Usually in a separate dialog if a
-     * grahical waiting handler is used.
+     * graphical waiting handler is used.
+     * Warning: shall not be used for command line processes
      *
      * @param message the message to display
      * @param title the title of the message

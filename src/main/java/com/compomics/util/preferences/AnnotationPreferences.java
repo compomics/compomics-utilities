@@ -3,7 +3,9 @@ package com.compomics.util.preferences;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import java.io.IOException;
 import java.io.Serializable;
@@ -95,6 +97,21 @@ public class AnnotationPreferences implements Serializable {
      * Constructor.
      */
     public AnnotationPreferences() {
+    }
+    
+    /**
+     * Updates the annotation parameters based on the search parameters
+     * 
+     * @param searchParameters the search parameters where to take the information from
+     */
+    public void setPreferencesFromSearchParamaers(SearchParameters searchParameters)  {
+        clearIonTypes();
+        addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched1());
+        addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched2());
+        addIonType(Ion.IonType.PRECURSOR_ION);
+        addIonType(Ion.IonType.IMMONIUM_ION);
+        addIonType(Ion.IonType.REPORTER_ION);
+        setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
     }
 
     /**

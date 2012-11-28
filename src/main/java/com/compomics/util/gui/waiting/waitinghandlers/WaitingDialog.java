@@ -48,14 +48,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private boolean runCanceled = false;
     /**
-     * Convenience date format.
-     */
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
-    /**
-     * The tab space to add when using tab.
-     */
-    private String tab = "        "; // tab could be used, but lenght is locale dependent
-    /**
      * An array list of the tip of the day.
      */
     private ArrayList<String> tips = new ArrayList<String>();
@@ -1118,5 +1110,11 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     @Override
     public JProgressBar getPrimaryProgressBar() {
         return progressBar;
+    }
+
+    @Override
+    public void setIndeterminate(boolean indeterminate) {
+        progressBar.setIndeterminate(indeterminate);
+        progressBar.setStringPainted(!indeterminate);
     }
 }

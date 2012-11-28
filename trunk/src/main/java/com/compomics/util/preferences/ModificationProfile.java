@@ -257,25 +257,33 @@ public class ModificationProfile implements Serializable {
             refinementModifications.remove(modificationName);
         }
     }
-    
+
     /**
-     * Sets the OMSSA index for a given modification. If another modification was already given with the same index the previous setting will be silently overwritten.
+     * Sets the OMSSA index for a given modification. If another modification
+     * was already given with the same index the previous setting will be
+     * silently overwritten.
+     *
      * @param modificationName the name of the modification
      * @param omssaIndex the OMSSA index of the modification
      */
     public void setOmssaIndex(String modificationName, int omssaIndex) {
         omssaIndexes.put(omssaIndex, modificationName);
     }
-    
+
     /**
-     * Returns the name of the modification indexed by the given OMSSA index. Null if not found.
+     * Returns the name of the modification indexed by the given OMSSA index.
+     * Null if not found.
+     *
      * @param omssaIndex the OMSSA index of the modification to look for
+     * @return the name of the modification indexed by the given OMSSA index
      */
     public String getModification(int omssaIndex) {
         return omssaIndexes.get(omssaIndex);
     }
+
     /**
      * Returns the OMSSA index of a given modification, null if not found.
+     *
      * @param modificationName the name of the modification
      * @return the corresponding OMSSA index
      */
@@ -287,16 +295,18 @@ public class ModificationProfile implements Serializable {
         }
         return null;
     }
-    
+
     /**
-     * Indicates whether the modification is contained in the profile, looking into all modifications (fixed, variable and refinement)
+     * Indicates whether the modification is contained in the profile, looking
+     * into all modifications (fixed, variable and refinement)
+     *
      * @param modificationName the name of the modification
-     * @return a boolean indicating whether the modification is contained in the mapping
+     * @return a boolean indicating whether the modification is contained in the
+     * mapping
      */
     public boolean contains(String modificationName) {
         return variableModifications.contains(modificationName)
                 || fixedModifications.contains(modificationName)
                 || refinementModifications.contains(modificationName);
     }
-    
 }

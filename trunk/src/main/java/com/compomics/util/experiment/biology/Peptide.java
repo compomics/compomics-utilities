@@ -750,14 +750,13 @@ public class Peptide extends ExperimentObject {
         }
 
         modifiedSequence += peptide.getNTerminal() + "-";
-        int aa;
+
         for (int i = 0; i < sequence.length(); i++) {
-            aa = i + 1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
-            if (mainModificationSites.containsKey(aa)
-                    && !mainModificationSites.get(aa).isEmpty()) {
+            int aa = i + 1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
+            if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
-                    if (ptm.getType() == PTM.MODAA) {
+                    if (ptm.getType() == PTM.MODAA) { // @TODO: also annotate fixed mods??
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
@@ -765,11 +764,10 @@ public class Peptide extends ExperimentObject {
                                 + "</span>";
                     }
                 }
-            } else if (secondaryModificationSites.containsKey(aa)
-                    && !secondaryModificationSites.get(aa).isEmpty()) {
+            } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
-                    if (ptm.getType() == PTM.MODAA) {
+                    if (ptm.getType() == PTM.MODAA) { // @TODO: also annotate fixed mods??
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
@@ -803,7 +801,6 @@ public class Peptide extends ExperimentObject {
     public String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
-        PTM ptm;
 
         String modifiedSequence = "";
 
@@ -822,8 +819,8 @@ public class Peptide extends ExperimentObject {
             boolean modifiedResidue = false;
 
             for (int j = 0; j < modifications.size(); j++) {
-                ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
+                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) { // @TODO: also annotate fixed mods??
 
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
 

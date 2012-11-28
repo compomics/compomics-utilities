@@ -49,7 +49,7 @@ public class PTMFactory implements Serializable {
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> userColors = new HashMap<String, Color>(); 
+    private HashMap<String, Color> userColors = new HashMap<String, Color>();
     /**
      * Map of omssa indexes for default modifications.
      */
@@ -975,7 +975,7 @@ public class PTMFactory implements Serializable {
             }
         }
     }
-    
+
     /**
      * Returns the color used to code the given modification.
      *
@@ -988,7 +988,7 @@ public class PTMFactory implements Serializable {
         }
         return userColors.get(modification);
     }
-    
+
     /**
      * Sets a new color for the given expected modification.
      *
@@ -998,9 +998,10 @@ public class PTMFactory implements Serializable {
     public void setColor(String expectedModification, Color color) {
         userColors.put(expectedModification, color);
     }
-    
+
     /**
-     * Returns a default color based on the modification name
+     * Returns a default color based on the modification name.
+     *
      * @param modification the name of the modification
      * @return a default color.
      */
@@ -1012,9 +1013,9 @@ public class PTMFactory implements Serializable {
         } else if (modification.contains("itraq")) {
             return Color.magenta;
         } else if (modification.contains("carbamido")) {
-            return Color.GREEN;
+            return Color.LIGHT_GRAY;
         } else if (modification.contains("ace")) {
-            return new Color(1, 0, 1);
+            return new Color(153, 153, 0);
         } else if (modification.contains("glyco")) {
             return Color.ORANGE;
         } else {
@@ -1023,5 +1024,5 @@ public class PTMFactory implements Serializable {
             float b = (float) Math.random();
             return new Color(r, g, b);
         }
-    } 
+    }
 }

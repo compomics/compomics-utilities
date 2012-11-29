@@ -417,9 +417,27 @@ public class SequenceFragmentationPanel extends JPanel {
     private int estimateWidth() {
         int lEstimateX = iXStart;
 
+        ArrayList<String> unmodifiedString = new ArrayList<String>();
+
+        // remove the ptms, e.g., <oxidation>, as these will not be shown anyway
         for (int i = 0; i < iSequenceComponents.length; i++) {
+
+            String residue = iSequenceComponents[i];
+
+            // check if it's a modified sequence
+            boolean modified = residue.indexOf("<") != -1;
+
+            // remove the modification from the residue
+            if (modified) {
+                residue = residue.substring(0, residue.indexOf("<")) + residue.substring(residue.lastIndexOf(">") + 1);
+            }
+
+            unmodifiedString.add(residue);
+        }
+
+        for (int i = 0; i < unmodifiedString.size(); i++) {
             // Move X for a text component.
-            lEstimateX += this.getFontMetrics(iBaseFont).stringWidth(iSequenceComponents[i]) + iHorizontalSpace;
+            lEstimateX += this.getFontMetrics(iBaseFont).stringWidth(unmodifiedString.get(i)) + iHorizontalSpace;
             // Move the XLocation forwards with the component's length and the horizontal spacer.
             lEstimateX += iBarWidth + iHorizontalSpace;
         }

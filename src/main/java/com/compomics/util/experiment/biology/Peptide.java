@@ -736,10 +736,12 @@ public class Peptide extends ExperimentObject {
      * @param peptide
      * @param mainModificationSites
      * @param secondaryModificationSites
+     * @param showFixedMods if true, the fixed mods are annotated
      * @return the modified sequence as an HTML string
      */
     public static String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag, Peptide peptide,
-            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites) {
+            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites, 
+            boolean showFixedMods) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         String sequence = peptide.sequence;
@@ -752,28 +754,54 @@ public class Peptide extends ExperimentObject {
         modifiedSequence += peptide.getNTerminal() + "-";
 
         for (int i = 0; i < sequence.length(); i++) {
-            int aa = i + 1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that               
+            int aa = i + 1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that
+
+            boolean variableModFound = false;
+
             if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
-                    if (ptm.getType() == PTM.MODAA) { // @TODO: also annotate fixed mods??
+                    if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
                                 + sequence.charAt(i)
                                 + "</span>";
+                        variableModFound = true;
                     }
                 }
             } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
                     PTM ptm = pTMFactory.getPTM(ptmName);
-                    if (ptm.getType() == PTM.MODAA) { // @TODO: also annotate fixed mods??
+                    if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
                                 + sequence.charAt(i)
                                 + "</span>";
+                        variableModFound = true;
                     }
+                }
+            } 
+
+            if (!variableModFound && showFixedMods) {
+
+                boolean fixedModFound = false;
+
+                for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+                    if (modMatch.getModificationSite() == aa && !modMatch.isVariable()){ 
+                        PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                        Color ptmColor = modificationProfile.getColor(ptm.getName());
+                        modifiedSequence +=
+                                "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
+                                + sequence.charAt(i)
+                                + "</span>";
+                        fixedModFound = true;
+                    }
+                }
+
+                if (!fixedModFound) {
+                    modifiedSequence += sequence.charAt(i);
                 }
             } else {
                 modifiedSequence += sequence.charAt(i);
@@ -796,9 +824,10 @@ public class Peptide extends ExperimentObject {
      *
      * @param modificationProfile the modification profile of the search containing the color coding of the modifications.
      * @param includeHtmlStartEndTag if true, start and end html tags are added
+     * @param showFixedMods if true, the fixed mods are annotated
      * @return the modified sequence as an HTML string
      */
-    public String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag) {
+    public String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag, boolean showFixedMods) {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
 
@@ -820,7 +849,7 @@ public class Peptide extends ExperimentObject {
 
             for (int j = 0; j < modifications.size(); j++) {
                 PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) { // @TODO: also annotate fixed mods??
+                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
 
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
 
@@ -840,7 +869,26 @@ public class Peptide extends ExperimentObject {
                 }
             }
 
-            if (!modifiedResidue) {
+            if (!modifiedResidue && showFixedMods) {
+
+                boolean fixedModFound = false;
+
+                for (ModificationMatch modMatch : modifications) {
+                    if (modMatch.getModificationSite() == (i+1) && !modMatch.isVariable()){ 
+                        PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                        Color ptmColor = modificationProfile.getColor(ptm.getName());
+                        modifiedSequence +=
+                                "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
+                                + sequence.charAt(i)
+                                + "</span>";
+                        fixedModFound = true;
+                    }
+                }
+
+                if (!fixedModFound) {
+                    modifiedSequence += sequence.charAt(i);
+                }
+            } else {
                 modifiedSequence += sequence.charAt(i);
             }
         }
@@ -859,9 +907,10 @@ public class Peptide extends ExperimentObject {
      * element: oxidation of m.
      *
      * @param modificationProfile the ptm color map
+     * @param showFixedMods if true, the fixed modifications are annotated
      * @return a map of the ptm short names to the ptm colors
      */
-    public HashMap<String, Color> getPTMShortNameColorMap(ModificationProfile modificationProfile) {
+    public HashMap<String, Color> getPTMShortNameColorMap(ModificationProfile modificationProfile, boolean showFixedMods) {
 
         HashMap<String, Color> shortNameColorMap = new HashMap<String, Color>();
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -869,7 +918,8 @@ public class Peptide extends ExperimentObject {
         for (int j = 0; j < modifications.size(); j++) {
             PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
-            if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+            if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) 
+                    || (!modifications.get(j).isVariable() && showFixedMods)) {
                 shortNameColorMap.put("<" + ptm.getShortName() + ">", modificationProfile.getColor(modifications.get(j).getTheoreticPtm()));
             }
         }
@@ -881,9 +931,10 @@ public class Peptide extends ExperimentObject {
      * Returns a map of the ptm short names to the ptm long names for the
      * modification in this peptide. E.g., key: <ox>, element oxidation of m.
      *
+     * @param showFixedMods if true, the fixed modifications are annotated
      * @return a map of the ptm short names to the ptm long names
      */
-    public HashMap<String, String> getPTMShortNameMap() {
+    public HashMap<String, String> getPTMShortNameMap(boolean showFixedMods) {
 
         HashMap<String, String> shortNameMap = new HashMap<String, String>();
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -891,7 +942,8 @@ public class Peptide extends ExperimentObject {
         for (int j = 0; j < modifications.size(); j++) {
             PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
-            if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+            if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) 
+                    || (!modifications.get(j).isVariable() && showFixedMods)) {
                 shortNameMap.put("<" + ptm.getShortName() + ">", ptm.getName());
             }
         }
@@ -905,9 +957,10 @@ public class Peptide extends ExperimentObject {
      * PTMFactory.
      *
      * @param includeTerminals if true, the terminals are included
+     * @param showFixedMods if true, the fixed mods are annotated
      * @return the modified sequence as a string
      */
-    public String getModifiedSequenceAsString(boolean includeTerminals) {
+    public String getModifiedSequenceAsString(boolean includeTerminals, boolean showFixedMods) {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
@@ -924,8 +977,8 @@ public class Peptide extends ExperimentObject {
             for (int j = 0; j < modifications.size(); j++) {
                 PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
-                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
-
+                if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) 
+                        || (!modifications.get(j).isVariable() && showFixedMods)) {
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
                         modifiedSequence += sequence.charAt(i) + "<" + ptm.getShortName() + ">";
                         modifiedResidue = true;

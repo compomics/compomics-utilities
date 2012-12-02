@@ -443,7 +443,7 @@ public class PTMFactory implements Serializable {
 
         if (!name.startsWith("user modification ")) {
             if (!name.endsWith(SEARCH_SUFFIX)) {
-                ptmMap.put(name, currentPTM);
+                    ptmMap.put(name, currentPTM);
             } else {
                 name = name.substring(0, name.lastIndexOf(SEARCH_SUFFIX));
             }

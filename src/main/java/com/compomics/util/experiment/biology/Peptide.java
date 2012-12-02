@@ -678,16 +678,16 @@ public class Peptide extends ExperimentObject {
 
         String nTerm = "NH3";
 
-        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTMFactory ptmFactory = PTMFactory.getInstance();
 
         for (int i = 0; i < modifications.size(); i++) {
             if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
-                PTM ptm = pTMFactory.getPTM(modifications.get(i).getTheoreticPtm());
+                PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
                     if (ptm.getShortName() != null) {
                         nTerm = ptm.getShortName();
                     } else {
-                        nTerm += ptm.getName();
+                        nTerm = ptm.getName();
                     }
                 }
             }

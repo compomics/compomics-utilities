@@ -743,7 +743,7 @@ public class Peptide extends ExperimentObject {
             HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites, 
             boolean showFixedMods) {
 
-        PTMFactory pTMFactory = PTMFactory.getInstance();
+        PTMFactory ptmFactory = PTMFactory.getInstance();
         String sequence = peptide.sequence;
         String modifiedSequence = "";
 
@@ -760,7 +760,7 @@ public class Peptide extends ExperimentObject {
 
             if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
-                    PTM ptm = pTMFactory.getPTM(ptmName);
+                    PTM ptm = ptmFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
@@ -772,7 +772,7 @@ public class Peptide extends ExperimentObject {
                 }
             } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
-                    PTM ptm = pTMFactory.getPTM(ptmName);
+                    PTM ptm = ptmFactory.getPTM(ptmName);
                     if (ptm.getType() == PTM.MODAA) {
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
@@ -790,7 +790,7 @@ public class Peptide extends ExperimentObject {
 
                 for (ModificationMatch modMatch : peptide.getModificationMatches()) {
                     if (modMatch.getModificationSite() == aa && !modMatch.isVariable()){ 
-                        PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                        PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
                         Color ptmColor = modificationProfile.getColor(ptm.getName());
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"

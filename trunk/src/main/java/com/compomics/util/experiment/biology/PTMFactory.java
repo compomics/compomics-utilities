@@ -51,7 +51,7 @@ public class PTMFactory implements Serializable {
      */
     private HashMap<String, Color> userColors = new HashMap<String, Color>();
     /**
-     * Map of the short names
+     * Map of the short names.
      */
     private HashMap<String, String> shortNames = new HashMap<String, String>();
     /**
@@ -447,7 +447,7 @@ public class PTMFactory implements Serializable {
 
         if (!name.startsWith("user modification ")) {
             if (!name.endsWith(SEARCH_SUFFIX)) {
-                    ptmMap.put(name, currentPTM);
+                ptmMap.put(name, currentPTM);
             } else {
                 name = name.substring(0, name.lastIndexOf(SEARCH_SUFFIX));
             }
@@ -979,18 +979,20 @@ public class PTMFactory implements Serializable {
             }
         }
     }
-    
+
     /**
-     * Sets the short name for a modification
+     * Sets the short name for a modification.
+     *
      * @param modification the modification name
      * @param shortName the short name
      */
     public void setShortName(String modification, String shortName) {
         shortNames.put(modification, shortName);
     }
-    
+
     /**
-     * Returns the user favorite short name, a default short name otherwise
+     * Returns the user favorite short name, a default short name otherwise.
+     *
      * @param modification the name of the modification
      * @return the corresponding short name
      */
@@ -1001,9 +1003,10 @@ public class PTMFactory implements Serializable {
             return getDefaultShortName(modification);
         }
     }
-    
+
     /**
-     * Returns a default short name for a given modification
+     * Returns a default short name for a given modification.
+     *
      * @param modificationName the full name of the modification
      * @return the default short name
      */
@@ -1095,9 +1098,12 @@ public class PTMFactory implements Serializable {
         if (modificationName.contains("methylation")) {
             return "meth";
         }
+        if (modificationName.startsWith("pyro")) {
+            return "pyro";
+        }
         String result = modificationName;
         if (result.contains(" ")) {
-            result = result.substring(0, result.indexOf(" ")); 
+            result = result.substring(0, result.indexOf(" "));
         }
         return result;
     }
@@ -1132,7 +1138,9 @@ public class PTMFactory implements Serializable {
      * @return a default color.
      */
     public static Color getDefaultColor(String modification) {
-        if (modification.contains("phospho")) {
+        if (modification.contains("no modification")) {
+            return Color.LIGHT_GRAY;
+        } else if (modification.contains("phospho")) {
             return Color.RED;
         } else if (modification.contains("oxi")) {
             return Color.BLUE;

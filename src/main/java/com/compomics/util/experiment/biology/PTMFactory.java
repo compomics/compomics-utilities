@@ -33,7 +33,7 @@ public class PTMFactory implements Serializable {
     /**
      * User ptm file.
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.27.cus";
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.32.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -50,6 +50,10 @@ public class PTMFactory implements Serializable {
      * Mapping of the expected modification names to the color used.
      */
     private HashMap<String, Color> userColors = new HashMap<String, Color>();
+    /**
+     * Map of the short names
+     */
+    private HashMap<String, String> shortNames = new HashMap<String, String>();
     /**
      * Map of omssa indexes for default modifications.
      */
@@ -974,6 +978,128 @@ public class PTMFactory implements Serializable {
                 // cancel save
             }
         }
+    }
+    
+    /**
+     * Sets the short name for a modification
+     * @param modification the modification name
+     * @param shortName the short name
+     */
+    public void setShortName(String modification, String shortName) {
+        shortNames.put(modification, shortName);
+    }
+    
+    /**
+     * Returns the user favorite short name, a default short name otherwise
+     * @param modification the name of the modification
+     * @return the corresponding short name
+     */
+    public String getShortName(String modification) {
+        if (shortNames.containsKey(modification)) {
+            return shortNames.get(modification);
+        } else {
+            return getDefaultShortName(modification);
+        }
+    }
+    
+    /**
+     * Returns a default short name for a given modification
+     * @param modificationName the full name of the modification
+     * @return the default short name
+     */
+    public static String getDefaultShortName(String modificationName) {
+        if (modificationName.startsWith("oxidation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(13) + "";
+            aa.toUpperCase();
+            return aa + "ox";
+        }
+        if (modificationName.contains("oxidation")) {
+            return "ox";
+        }
+        if (modificationName.startsWith("phosphorylation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(19) + "";
+            aa.toUpperCase();
+            return "phospho" + aa;
+        }
+        if (modificationName.contains("phospho")) {
+            return "phospho";
+        }
+        if (modificationName.startsWith("sulfation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(19) + "";
+            aa.toUpperCase();
+            return "sulf" + aa;
+        }
+        if (modificationName.contains("sulfation")) {
+            return "sulf";
+        }
+        if (modificationName.startsWith("acetylation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(15) + "";
+            aa.toUpperCase();
+            return "ace" + aa;
+        }
+        if (modificationName.contains("acetylation")) {
+            return "ace";
+        }
+        if (modificationName.startsWith("deamidation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(15) + "";
+            aa.toUpperCase();
+            return "deam" + aa;
+        }
+        if (modificationName.contains("deamidation")) {
+            return "deam";
+        }
+        if (modificationName.contains("itraq")) {
+            return "itraq";
+        }
+        if (modificationName.contains("icat")) {
+            return "icat";
+        }
+        if (modificationName.contains("heavy arginine")) {
+            return "heavyR";
+        }
+        if (modificationName.contains("heavy lysine")) {
+            return "heavyK";
+        }
+        if (modificationName.contains("o18")) {
+            return "o18";
+        }
+        if (modificationName.contains("tmt")) {
+            return "tmt";
+        }
+        if (modificationName.contains("carbamidomethyl")) {
+            return "cmm";
+        }
+        if (modificationName.startsWith("di-methylation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(15) + "";
+            aa.toUpperCase();
+            return "dimeth" + aa;
+        }
+        if (modificationName.contains("di-methylation")
+                || modificationName.contains("dimethylation")) {
+            return "dimeth";
+        }
+        if (modificationName.startsWith("tri-methylation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(15) + "";
+            aa.toUpperCase();
+            return "trimeth" + aa;
+        }
+        if (modificationName.contains("tri-methylation")
+                || modificationName.contains("trimethylation")) {
+            return "trimeth²";
+        }
+        if (modificationName.startsWith("methylation of ") && !modificationName.contains("term")) {
+            String aa = modificationName.charAt(15) + "";
+            aa.toUpperCase();
+            return "meth" + aa;
+        }
+        if (modificationName.contains("methylation")) {
+            return "meth";
+        }
+        String result = modificationName;
+        if (result.contains(" ")) {
+            result = result.substring(0, result.indexOf(" ")); 
+        }
+        return result;
     }
 
     /**

@@ -903,7 +903,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a map of the ptm short names to the ptm colors. E.g., key: <ox>,
+     * Returns a map of the ptm short names to the ptm colors. E.g., key: &lt;ox&gt;,
      * element: oxidation of m.
      *
      * @param modificationProfile the ptm color map
@@ -929,7 +929,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns a map of the ptm short names to the ptm long names for the
-     * modification in this peptide. E.g., key: <ox>, element oxidation of m.
+     * modification in this peptide. E.g., key: &lt;ox&gt;, element oxidation of m.
      *
      * @param showFixedMods if true, the fixed modifications are annotated
      * @return a map of the ptm short names to the ptm long names

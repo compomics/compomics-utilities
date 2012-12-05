@@ -74,7 +74,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * This boolean holds whether or not the given sequence is a modified
      * sequence or a normal peptide sequence.
      *
-     * Normal: KENNY Modified: NH2-K<Ace>ENNY-COOH
+     * Normal: KENNY Modified: NH2-K&lt;Ace&gt;ENNY-COOH
      */
     private boolean isModifiedSequence;
     /**
@@ -82,11 +82,11 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private boolean iHighlightModifications;
     /**
-     * The modification colors. The keys as <mox>, <p>, etc.
+     * The modification colors. The keys as &lt;mox&gt;, &lt;p&gt;, etc.
      */
     private HashMap<String, Color> iModificationColors;
     /**
-     * The modification names map. E.g., key <ox>, element: oxidation of m.
+     * The modification names map. E.g., key &lt;ox&gt;, element: oxidation of m.
      */
     private HashMap<String, String> iModificationNames;
     /**
@@ -120,9 +120,9 @@ public class SequenceFragmentationPanel extends JPanel {
      * @param aHighlightModifications boolean decides whether the modification
      * are highlighted by adding a star above the modified residue instead if
      * displaying the PTM short name
-     * @param aModificationColors the modification colors, keys as <mox>, <p>,
+     * @param aModificationColors the modification colors, keys as &lt;mox&gt;, &lt;p&gt;,
      * etc
-     * @param aModificationNames the modification names, e.g., keys as <mox>,
+     * @param aModificationNames the modification names, e.g., keys as &lt;mox&gt;,
      * elements as Oxidation.
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
      * returns true.
@@ -146,9 +146,9 @@ public class SequenceFragmentationPanel extends JPanel {
      * @param aHighlightModifications boolean decides whether the modification
      * are highlighted by adding a star above the modified residue instead if
      * displaying the PTM short name
-     * @param aModificationColors the modification colors, keys as <mox>, <p>,
+     * @param aModificationColors the modification colors, keys as &lt;mox&gt;, &lt;p&gt;,
      * etc
-     * @param aModificationNames the modification names, e.g., keys as <mox>,
+     * @param aModificationNames the modification names, e.g., keys as &lt;mox&gt;,
      * elements as Oxidation.
      * @param forwardIon the forward ion type (for instance B ion) as indexed by
      * the PeptideFragmentIon static fields
@@ -337,8 +337,8 @@ public class SequenceFragmentationPanel extends JPanel {
      *
      * @param aSequence String with the Modified sequence of a peptideHit.
      * @return the modified sequence of the peptidehit in a String[]. Example:
-     * The peptide Ace-K<AceD3>ENNYR-COOH will return a String[] with
-     * [0]Ace-K<AceD3> [1]E [2]N [3]N [4]Y [5]R-COOH
+     * The peptide Ace-K&lt;AceD3&gt;ENNYR-COOH will return a String[] with
+     * [0]Ace-K&lt;AceD3&gt; [1]E [2]N [3]N [4]Y [5]R-COOH
      */
     private String[] parseSequenceIntoComponents(String aSequence) {
 
@@ -507,7 +507,7 @@ public class SequenceFragmentationPanel extends JPanel {
      *
      * @param lSequence String with peptide sequence.
      * @param boolModifiedSequence Boolean whether lSequence is a Modified
-     * Sequence "NH2-K<Ace>ENNY-COOH" or a Flat Sequence "KENNY".
+     * Sequence "NH2-K&lt;Ace&gt;ENNY-COOH" or a Flat Sequence "KENNY".
      */
     public void setSequence(String lSequence, boolean boolModifiedSequence) {
         isModifiedSequence = boolModifiedSequence;
@@ -518,7 +518,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * Set the ArrayList with FragmentIon matches. The double[] indexing b and y
      * ion intensities will be recalculated.
      *
-     * @param lIonMatches VeArrayListctor
+     * @param lIonMatches ArrayList
      */
     public void setIonMatches(ArrayList lIonMatches) {
         iIonMatches = lIonMatches;

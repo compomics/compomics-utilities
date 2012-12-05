@@ -236,10 +236,10 @@ public class AASequenceImpl implements Sequence {
 
     /**
      * This method allows the construction of an AASequenceImpl object, complete with modifications
-     * from an annotated sequence String (eg., something like: 'NH2-YS<P>FVATER-COOH' or 'Ace-MATHM<Mox>PIR-COOH').
+     * from an annotated sequence String (eg., something like: 'NH2-YS&lt;P&gt;FVATER-COOH' or 'Ace-MATHM&lt;Mox&gt;PIR-COOH').
      *
      * @param aAnnotatedSequence    String with the annotated sequence (eg., something like:
-     *                              'NH2-YS<P>FVATER-COOH' or 'Ace-MATHM<Mox>PIR-COOH')
+     *                              'NH2-YS&lt;P&gt;FVATER-COOH' or 'Ace-MATHM&lt;Mox&gt;PIR-COOH')
      * @return  AASequenceImpl with the sequence and annotated modifications.
      */
     public static AASequenceImpl parsePeptideFromAnnotatedSequence(String aAnnotatedSequence) {

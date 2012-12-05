@@ -1,8 +1,10 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.preferences.ModificationProfile;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
@@ -82,13 +84,9 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private boolean iHighlightModifications;
     /**
-     * The modification colors. The keys as &lt;mox&gt;, &lt;p&gt;, etc.
+     * The modification profile.
      */
-    private HashMap<String, Color> iModificationColors;
-    /**
-     * The modification names map. E.g., key &lt;ox&gt;, element: oxidation of m.
-     */
-    private HashMap<String, String> iModificationNames;
+    private ModificationProfile modificationProfile;
     /**
      * the forward ion type (for instance B ion) as indexed by the
      * PeptideFragmentIon static fields
@@ -130,9 +128,8 @@ public class SequenceFragmentationPanel extends JPanel {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
-            HashMap<String, String> aModificationNames) throws HeadlessException {
-        this(aSequence, aIonMatches, boolModifiedSequence, aHighlightModifications, aModificationColors, aModificationNames, PeptideFragmentIon.B_ION, PeptideFragmentIon.Y_ION);
+            boolean aHighlightModifications, ModificationProfile modificationProfile) throws HeadlessException {
+        this(aSequence, aIonMatches, boolModifiedSequence, aHighlightModifications, modificationProfile, PeptideFragmentIon.B_ION, PeptideFragmentIon.Y_ION);
     }
 
     /**
@@ -160,8 +157,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, HashMap<String, Color> aModificationColors,
-            HashMap<String, String> aModificationNames, int forwardIon, int rewindIon) throws HeadlessException {
+            boolean aHighlightModifications, ModificationProfile modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
         super();
 
         this.forwardIon = forwardIon;
@@ -169,12 +165,11 @@ public class SequenceFragmentationPanel extends JPanel {
         this.rewindIon = rewindIon;
         rewindColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
 
+        this.modificationProfile = modificationProfile;
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
         iIonMatches = aIonMatches;
         iHighlightModifications = aHighlightModifications;
-        iModificationColors = aModificationColors;
-        iModificationNames = aModificationNames;
 
         this.normalizeMatchedIons();
         this.setPreferredSize(new Dimension(estimateWidth(), estimateHeight()));
@@ -238,20 +233,20 @@ public class SequenceFragmentationPanel extends JPanel {
             // if modified, highlight the modification if highlighting is selected
             if (modified) {
 
-                if (iModificationColors.containsKey(modification)) {
-                    g2.setColor(iModificationColors.get(modification));
-                } else {
-                    g2.setColor(forwardColor);
+                Color color = modificationProfile.getColor(modification);
+                if (color != null) {
+                    color = forwardColor;
                 }
+                g2.setColor(color);
+
+                String shortName = PTMFactory.getInstance().getShortName(modification);
 
                 if (i == 0) {
                     String nTerminal = residue.substring(0, residue.length() - 1);
                     Rectangle tempRectangle = new Rectangle(xLocation - 1 + g2.getFontMetrics().stringWidth(nTerminal), yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
                             g2.getFontMetrics().stringWidth(residue.substring(residue.length() - 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
-                    if (iModificationNames.containsKey(modification)) {
-                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i + 1) + ")</html>", tempRectangle);
-                    }
+                    tooltipRectangles.put("<html>" + shortName + " (" + (i + 1) + ")</html>", tempRectangle);
                     g2.setColor(Color.BLACK);
                     g2.drawString(nTerminal, xLocation, yLocation);
                     g2.setColor(Color.WHITE);
@@ -261,9 +256,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
                             g2.getFontMetrics().stringWidth(residue.substring(0, 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
-                    if (iModificationNames.containsKey(modification)) {
-                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i + 1) + ")</html>", tempRectangle);
-                    }
+                    tooltipRectangles.put("<html>" + shortName + " (" + (i + 1) + ")</html>", tempRectangle);
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue.substring(0, 1), xLocation, yLocation);
                     g2.setColor(Color.BLACK);
@@ -272,9 +265,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
                             g2.getFontMetrics().stringWidth(residue) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
-                    if (iModificationNames.containsKey(modification)) {
-                        tooltipRectangles.put("<html>" + iModificationNames.get(modification) + " (" + (i + 1) + ")</html>", tempRectangle);
-                    }
+                    tooltipRectangles.put("<html>" + shortName + " (" + (i + 1) + ")</html>", tempRectangle);
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue, xLocation, yLocation);
                     g2.setColor(Color.BLACK);

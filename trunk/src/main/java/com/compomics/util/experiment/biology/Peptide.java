@@ -365,7 +365,7 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target -1;
+                            int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -400,7 +400,7 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target -1;
+                            int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -427,7 +427,7 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target -1;
+                            int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -472,7 +472,7 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target-1;
+                            int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -513,7 +513,7 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target -1;
+                            int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -542,7 +542,7 @@ public class Peptide extends ExperimentObject {
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
                         for (int index : protein.getPeptideStart(sequence)) {
-                            int beginIndex = index - target -1;
+                            int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
@@ -729,19 +729,73 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the modified sequence as an HTML string with potential
      * modification sites color coding. /!\ this method will work only if the
+     * ptm found in the peptide are in the PTMFactory. /!\ this method uses the
+     * modifications as set in the modification matches of this peptide and
+     * displays all of them
+     *
+     * @param modificationProfile the modification profile of the search
+     * @param includeHtmlStartEndTag if true, start and end html tags are added
+     * @return the modified sequence as an HTML string
+     */
+    public String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag) {
+        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<Integer, ArrayList<String>>(),
+                secondaryModificationSites = new HashMap<Integer, ArrayList<String>>(),
+                fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+        for (ModificationMatch modMatch : modifications) {
+            String modName = modMatch.getTheoreticPtm();
+            int modSite = modMatch.getModificationSite();
+            if (modMatch.isVariable()) {
+                if (modMatch.isConfident()) {
+                    if (!mainModificationSites.containsKey(modSite)) {
+                        mainModificationSites.put(modSite, new ArrayList<String>());
+                    }
+                    mainModificationSites.get(modSite).add(modName);
+                } else {
+                    if (!secondaryModificationSites.containsKey(modSite)) {
+                        secondaryModificationSites.put(modSite, new ArrayList<String>());
+                    }
+                    secondaryModificationSites.get(modSite).add(modName);
+                }
+            } else {
+                if (!fixedModificationSites.containsKey(modSite)) {
+                    fixedModificationSites.put(modSite, new ArrayList<String>());
+                }
+                fixedModificationSites.get(modSite).add(modName);
+            }
+        }
+        return getModifiedSequenceAsHtml(modificationProfile, includeHtmlStartEndTag, this, mainModificationSites, secondaryModificationSites, fixedModificationSites);
+    }
+
+    /**
+     * Returns the modified sequence as an HTML string with potential
+     * modification sites color coding. /!\ this method will work only if the
      * ptm found in the peptide are in the PTMFactory.
      *
      * @param modificationProfile the modification profile of the search
      * @param includeHtmlStartEndTag if true, start and end html tags are added
-     * @param peptide
-     * @param mainModificationSites
-     * @param secondaryModificationSites
-     * @param showFixedMods if true, the fixed mods are annotated
+     * @param peptide the peptide to annotate
+     * @param mainModificationSites the main variable modification sites in a
+     * map: aa number -> list of modifications (1 is the first AA) (can be null)
+     * @param secondaryModificationSites the secondary variable modification
+     * sites in a map: aa number -> list of modifications (1 is the first AA)
+     * (can be null)
+     * @param fixedModificationSites the fixed modification sites in a map: aa
+     * number -> list of modifications (1 is the first AA) (can be null)
      * @return the modified sequence as an HTML string
      */
     public static String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag, Peptide peptide,
-            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites, 
-            boolean showFixedMods) {
+            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites,
+            HashMap<Integer, ArrayList<String>> fixedModificationSites) {
+
+        if (mainModificationSites == null) {
+            mainModificationSites = new HashMap<Integer, ArrayList<String>>();
+        }
+        if (secondaryModificationSites == null) {
+            secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
+        }
+        if (fixedModificationSites == null) {
+            fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+        }
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
         String sequence = peptide.sequence;
@@ -753,10 +807,7 @@ public class Peptide extends ExperimentObject {
 
         modifiedSequence += peptide.getNTerminal() + "-";
 
-        for (int i = 0; i < sequence.length(); i++) {
-            int aa = i + 1;// @TODO: use a single reference for the amino acid indexing and remove all +1 - sorry about that
-
-            boolean variableModFound = false;
+        for (int aa = 1; aa <= sequence.length(); aa++) {
 
             if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
@@ -765,9 +816,8 @@ public class Peptide extends ExperimentObject {
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
-                                + sequence.charAt(i)
+                                + sequence.charAt(aa - 1)
                                 + "</span>";
-                        variableModFound = true;
                     }
                 }
             } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
@@ -777,34 +827,23 @@ public class Peptide extends ExperimentObject {
                         Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
-                                + sequence.charAt(i)
+                                + sequence.charAt(aa - 1)
                                 + "</span>";
-                        variableModFound = true;
                     }
                 }
-            } 
-
-            if (!variableModFound && showFixedMods) {
-
-                boolean fixedModFound = false;
-
-                for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-                    if (modMatch.getModificationSite() == aa && !modMatch.isVariable()){ 
-                        PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
-                        Color ptmColor = modificationProfile.getColor(ptm.getName());
+            } else if (fixedModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
+                for (String ptmName : fixedModificationSites.get(aa)) { //There should be only one
+                    PTM ptm = ptmFactory.getPTM(ptmName);
+                    if (ptm.getType() == PTM.MODAA) {
+                        Color ptmColor = modificationProfile.getColor(ptmName);
                         modifiedSequence +=
                                 "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
-                                + sequence.charAt(i)
+                                + sequence.charAt(aa - 1)
                                 + "</span>";
-                        fixedModFound = true;
                     }
                 }
-
-                if (!fixedModFound) {
-                    modifiedSequence += sequence.charAt(i);
-                }
             } else {
-                modifiedSequence += sequence.charAt(i);
+                modifiedSequence += sequence.charAt(aa - 1);
             }
         }
 
@@ -818,143 +857,10 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the modified sequence as an HTML string with modification color
-     * coding. /!\ this method will work only if the ptm found in the peptide
-     * are in the PTMFactory.
-     *
-     * @param modificationProfile the modification profile of the search containing the color coding of the modifications.
-     * @param includeHtmlStartEndTag if true, start and end html tags are added
-     * @param showFixedMods if true, the fixed mods are annotated
-     * @return the modified sequence as an HTML string
-     */
-    public String getModifiedSequenceAsHtml(ModificationProfile modificationProfile, boolean includeHtmlStartEndTag, boolean showFixedMods) {
-
-        PTMFactory pTMFactory = PTMFactory.getInstance();
-
-        String modifiedSequence = "";
-
-        if (includeHtmlStartEndTag) {
-            modifiedSequence += "<html>";
-        }
-
-        try {
-            modifiedSequence = modifiedSequence + getNTerminal() + "-";
-        } catch (Exception e) {
-            String debug = getNTerminal();
-        }
-
-        for (int i = 0; i < sequence.length(); i++) {
-
-            boolean modifiedResidue = false;
-
-            for (int j = 0; j < modifications.size(); j++) {
-                PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
-
-                    if (modifications.get(j).getModificationSite() == (i + 1)) {
-
-                        Color ptmColor = modificationProfile.getColor(modifications.get(j).getTheoreticPtm());
-
-                        modifiedSequence +=
-                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + "\">"
-                                //"<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
-                                "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
-                                + sequence.charAt(i)
-                                + "</span>";
-
-                        modifiedResidue = true;
-                    }
-                } else {
-                    // @TODO: do something with terminal mods too??
-                }
-            }
-
-            if (!modifiedResidue && showFixedMods) {
-
-                boolean fixedModFound = false;
-
-                for (ModificationMatch modMatch : modifications) {
-                    if (modMatch.getModificationSite() == (i+1) && !modMatch.isVariable()){ 
-                        PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-                        Color ptmColor = modificationProfile.getColor(ptm.getName());
-                        modifiedSequence +=
-                                "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
-                                + sequence.charAt(i)
-                                + "</span>";
-                        fixedModFound = true;
-                    }
-                }
-
-                if (!fixedModFound) {
-                    modifiedSequence += sequence.charAt(i);
-                }
-            } else {
-                modifiedSequence += sequence.charAt(i);
-            }
-        }
-
-        modifiedSequence = modifiedSequence + "-" + getCTerminal();
-
-        if (includeHtmlStartEndTag) {
-            modifiedSequence += "</html>";
-        }
-
-        return modifiedSequence;
-    }
-
-    /**
-     * Returns a map of the ptm short names to the ptm colors. E.g., key: &lt;ox&gt;,
-     * element: oxidation of m.
-     *
-     * @param modificationProfile the ptm color map
-     * @param showFixedMods if true, the fixed modifications are annotated
-     * @return a map of the ptm short names to the ptm colors
-     */
-    public HashMap<String, Color> getPTMShortNameColorMap(ModificationProfile modificationProfile, boolean showFixedMods) {
-
-        HashMap<String, Color> shortNameColorMap = new HashMap<String, Color>();
-        PTMFactory pTMFactory = PTMFactory.getInstance();
-
-        for (int j = 0; j < modifications.size(); j++) {
-            PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
-
-            if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) 
-                    || (!modifications.get(j).isVariable() && showFixedMods)) {
-                shortNameColorMap.put("<" + ptm.getShortName() + ">", modificationProfile.getColor(modifications.get(j).getTheoreticPtm()));
-            }
-        }
-
-        return shortNameColorMap;
-    }
-
-    /**
-     * Returns a map of the ptm short names to the ptm long names for the
-     * modification in this peptide. E.g., key: &lt;ox&gt;, element oxidation of m.
-     *
-     * @param showFixedMods if true, the fixed modifications are annotated
-     * @return a map of the ptm short names to the ptm long names
-     */
-    public HashMap<String, String> getPTMShortNameMap(boolean showFixedMods) {
-
-        HashMap<String, String> shortNameMap = new HashMap<String, String>();
-        PTMFactory pTMFactory = PTMFactory.getInstance();
-
-        for (int j = 0; j < modifications.size(); j++) {
-            PTM ptm = pTMFactory.getPTM(modifications.get(j).getTheoreticPtm());
-
-            if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) 
-                    || (!modifications.get(j).isVariable() && showFixedMods)) {
-                shortNameMap.put("<" + ptm.getShortName() + ">", ptm.getName());
-            }
-        }
-
-        return shortNameMap;
-    }
-
-    /**
      * Returns the modified sequence as a string, e.g., NH2-PEP<mod>TIDE-COOH.
      * /!\ this method will work only if the ptm found in the peptide are in the
      * PTMFactory.
+     * @TODO it should be possible to select the modifications to display
      *
      * @param includeTerminals if true, the terminals are included
      * @param showFixedMods if true, the fixed mods are annotated
@@ -977,7 +883,7 @@ public class Peptide extends ExperimentObject {
             for (int j = 0; j < modifications.size(); j++) {
                 PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
 
-                if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) 
+                if ((ptm.getType() == PTM.MODAA && modifications.get(j).isVariable())
                         || (!modifications.get(j).isVariable() && showFixedMods)) {
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
                         modifiedSequence += sequence.charAt(i) + "<" + ptm.getShortName() + ">";
@@ -1024,7 +930,28 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Estimates the theoretic mass of the peptide. The previous version is silently overwritten.
+     * Returns an indexed map of all fixed modifications amino acid (1 is the
+     * first) -> list of modification names
+     *
+     * @return
+     */
+    public HashMap<Integer, ArrayList<String>> getIndexedFixedModifications() {
+        HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>();
+        for (ModificationMatch modificationMatch : modifications) {
+            if (!modificationMatch.isVariable()) {
+                int aa = modificationMatch.getModificationSite();
+                if (!result.containsKey(aa)) {
+                    result.put(aa, new ArrayList<String>());
+                }
+                result.get(aa).add(modificationMatch.getTheoreticPtm());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Estimates the theoretic mass of the peptide. The previous version is
+     * silently overwritten.
      *
      * @throws IllegalArgumentException if the peptide sequence contains unknown
      * amino acids

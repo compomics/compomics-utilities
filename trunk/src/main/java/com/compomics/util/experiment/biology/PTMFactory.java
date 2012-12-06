@@ -1011,43 +1011,43 @@ public class PTMFactory implements Serializable {
      * @return the default short name
      */
     public static String getDefaultShortName(String modificationName) {
-        if (modificationName.startsWith("oxidation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(13) + "";
-            aa.toUpperCase();
-            return aa + "ox";
-        }
+//        if (modificationName.startsWith("oxidation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(13) + "";
+//            aa.toUpperCase();
+//            return aa + "ox";
+//        }
         if (modificationName.contains("oxidation")) {
             return "ox";
         }
-        if (modificationName.startsWith("phosphorylation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(19) + "";
-            aa.toUpperCase();
-            return "phospho" + aa;
-        }
+//        if (modificationName.startsWith("phosphorylation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(19) + "";
+//            aa.toUpperCase();
+//            return "p" + aa;
+//        }
         if (modificationName.contains("phospho")) {
-            return "phospho";
+            return "p";
         }
-        if (modificationName.startsWith("sulfation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(19) + "";
-            aa.toUpperCase();
-            return "sulf" + aa;
-        }
+//        if (modificationName.startsWith("sulfation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(19) + "";
+//            aa.toUpperCase();
+//            return "sulf" + aa;
+//        }
         if (modificationName.contains("sulfation")) {
             return "sulf";
         }
-        if (modificationName.startsWith("acetylation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(15) + "";
-            aa.toUpperCase();
-            return "ace" + aa;
-        }
+//        if (modificationName.startsWith("acetylation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(15) + "";
+//            aa.toUpperCase();
+//            return "ace" + aa;
+//        }
         if (modificationName.contains("acetylation")) {
             return "ace";
         }
-        if (modificationName.startsWith("deamidation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(15) + "";
-            aa.toUpperCase();
-            return "deam" + aa;
-        }
+//        if (modificationName.startsWith("deamidation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(15) + "";
+//            aa.toUpperCase();
+//            return "deam" + aa;
+//        }
         if (modificationName.contains("deamidation")) {
             return "deam";
         }
@@ -1072,33 +1072,33 @@ public class PTMFactory implements Serializable {
         if (modificationName.contains("carbamidomethyl")) {
             return "cmm";
         }
-        if (modificationName.startsWith("di-methylation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(15) + "";
-            aa.toUpperCase();
-            return "dimeth" + aa;
-        }
+//        if (modificationName.startsWith("di-methylation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(15) + "";
+//            aa.toUpperCase();
+//            return "dimeth" + aa;
+//        }
         if (modificationName.contains("di-methylation")
                 || modificationName.contains("dimethylation")) {
             return "dimeth";
         }
-        if (modificationName.startsWith("tri-methylation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(15) + "";
-            aa.toUpperCase();
-            return "trimeth" + aa;
-        }
+//        if (modificationName.startsWith("tri-methylation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(15) + "";
+//            aa.toUpperCase();
+//            return "trimeth" + aa;
+//        }
         if (modificationName.contains("tri-methylation")
                 || modificationName.contains("trimethylation")) {
             return "trimeth²";
         }
-        if (modificationName.startsWith("methylation of ") && !modificationName.contains("term")) {
-            String aa = modificationName.charAt(15) + "";
-            aa.toUpperCase();
-            return "meth" + aa;
-        }
+//        if (modificationName.startsWith("methylation of ") && !modificationName.contains("term")) {
+//            String aa = modificationName.charAt(15) + "";
+//            aa.toUpperCase();
+//            return "meth" + aa;
+//        }
         if (modificationName.contains("methylation")) {
             return "meth";
         }
-        if (modificationName.startsWith("pyro")) {
+        if (modificationName.contains("pyro")) {
             return "pyro";
         }
         String result = modificationName;
@@ -1142,7 +1142,7 @@ public class PTMFactory implements Serializable {
             return Color.LIGHT_GRAY;
         } else if (modification.contains("phospho")) {
             return Color.RED;
-        } else if (modification.contains("oxi")) {
+        } else if (modification.contains("ox")) {
             return Color.BLUE;
         } else if (modification.contains("itraq")) {
             return Color.magenta;

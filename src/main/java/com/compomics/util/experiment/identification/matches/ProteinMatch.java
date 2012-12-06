@@ -12,24 +12,24 @@ import java.util.List;
 /**
  * This class models a protein match.
  * <p/>
- * Created by IntelliJ IDEA. User: Marc Date: Jun 18, 2010 Time: 8:59:02 AM
+ * @author Marc Vaudel
  */
 public class ProteinMatch extends IdentificationMatch {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -6061842447053092696L;
     /**
-     * The matching protein(s) accessions
+     * The matching protein(s) accessions.
      */
     private ArrayList<String> theoreticProtein = new ArrayList<String>();
     /**
-     * The accession of the retained protein after protein inference resolution
+     * The accession of the retained protein after protein inference resolution.
      */
     private String mainMatch;
     /**
-     * The corresponding peptide match keys
+     * The corresponding peptide match keys.
      */
     private ArrayList<String> peptideMatches = new ArrayList<String>();
     /**
@@ -38,13 +38,13 @@ public class ProteinMatch extends IdentificationMatch {
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
 
     /**
-     * Constructor for the protein match
+     * Constructor for the protein match.
      */
     public ProteinMatch() {
     }
 
     /**
-     * Constructor for the protein match
+     * Constructor for the protein match.
      *
      * @param proteinAccession the matching protein
      * @throws IllegalArgumentException  
@@ -58,7 +58,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Constructor for the protein match
+     * Constructor for the protein match.
      *
      * @param peptide The corresponding peptide match
      */
@@ -114,7 +114,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * getter for the peptide matches
+     * Getter for the peptide matches.
      *
      * @return subordinated peptide matches
      */
@@ -123,7 +123,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * add a subordinated peptide match
+     * Add a subordinated peptide match.
      *
      * @param peptideMatchKey a peptide match
      */
@@ -134,7 +134,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the number of peptides found
+     * Returns the number of peptides found.
      *
      * @return the number of peptides found
      */
@@ -143,7 +143,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * methods indicates if the protein match is a decoy one
+     * Method indicates if the protein match is a decoy one.
      *
      * @return boolean indicating if the protein match is a decoy one
      */
@@ -158,7 +158,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Convenience method indicating whether a match is decoy based on the match
-     * key
+     * key.
      *
      * @param key the match key
      * @return a boolean indicating whether a match is decoy
@@ -186,7 +186,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Convenience method which returns the protein key of a peptide
+     * Convenience method which returns the protein key of a peptide.
      *
      * @param peptide the considered peptide
      * @return the protein match key
@@ -210,8 +210,8 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the number of proteins for the match corresponding to the given
-     * key
+     * Returns the number of proteins for the match corresponding to the given.
+     * key.
      *
      * @param matchKey the given key
      * @return the number of proteins for this match
@@ -221,7 +221,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the number of proteins for this match
+     * Returns the number of proteins for this match.
      *
      * @return the number of proteins for this match
      */
@@ -273,7 +273,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Returns a boolean indicating whether a protein was found in this protein
-     * match
+     * match.
      *
      * @param aProtein the inspected protein
      * @return a boolean indicating whether a protein was found in this protein
@@ -284,7 +284,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns a list of accessions from the given key
+     * Returns a list of accessions from the given key.
      *
      * @param key the given key
      * @return the corresponding list of accessions

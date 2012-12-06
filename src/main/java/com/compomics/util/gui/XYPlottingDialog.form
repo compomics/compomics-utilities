@@ -465,7 +465,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Logarithmic Axis"/>
+                <TitledBorder title="Logarithmic Values"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -476,10 +476,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="xAxisLogCheckBox" linkSize="5" min="-2" pref="110" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="yAxisLogCheckBox" linkSize="5" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="xAxisLogCheckBox" linkSize="6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="yAxisLogCheckBox" linkSize="6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <Component id="sizeLogCheckBox" linkSize="6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -490,6 +492,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="xAxisLogCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="yAxisLogCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="sizeLogCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -499,7 +502,7 @@
           <SubComponents>
             <Component class="javax.swing.JCheckBox" name="xAxisLogCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Log X Axis"/>
+                <Property name="text" type="java.lang.String" value="X Axis"/>
                 <Property name="toolTipText" type="java.lang.String" value="Use logarithmic axis"/>
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
@@ -510,13 +513,24 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="yAxisLogCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Log Y Axis"/>
+                <Property name="text" type="java.lang.String" value="Y Axis"/>
                 <Property name="toolTipText" type="java.lang.String" value="Use logarithmic axis"/>
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="yAxisLogCheckBoxActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="sizeLogCheckBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Size"/>
+                <Property name="toolTipText" type="java.lang.String" value="Use logarithmic scaling for the size"/>
+                <Property name="iconTextGap" type="int" value="15"/>
+                <Property name="opaque" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sizeLogCheckBoxActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

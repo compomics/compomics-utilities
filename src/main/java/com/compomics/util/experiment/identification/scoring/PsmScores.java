@@ -1,18 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.scoring;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
@@ -22,19 +14,16 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * this class contains different ways of scoring a match
+ * This class contains different ways of scoring a match.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PsmScores {
 
-
     /**
-     * Returns a PSM score like the peptide score calculated for the A-score
+     * Returns a PSM score like the peptide score calculated for the A-score.
      *
      * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
      * @param spectrum The corresponding spectrum
      * @param iontypes The fragment ions to look for
      * @param neutralLosses The neutral losses to look for
@@ -56,67 +45,66 @@ public class PsmScores {
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) throws IOException, IllegalArgumentException, InterruptedException {
 
+        HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
+        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
 
-            HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
-            SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+        int N = 0;
 
-            int N = 0;
+        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(iontypes, neutralLosses, charges, precursorCharge, peptide).values()) {
+            N += fragmentIons.size();
+        }
 
-            for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(iontypes, neutralLosses, charges, precursorCharge, peptide).values()) {
-                N += fragmentIons.size();
+        HashMap<Integer, Double> depthMap = new HashMap<Integer, Double>();
+
+        for (int i = 0; i < spectrumMap.keySet().size(); i++) {
+
+            double p = ((double) i + 1) / 100;
+
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(i), peptide, 0, mzTolerance, false);
+            int n = matches.size();
+            double P = 0;
+            for (int k = n; k <= N; k++) {
+                P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
             }
-            
-            HashMap<Integer, Double> depthMap = new HashMap<Integer, Double>();
+            if (P <= Double.MIN_NORMAL) {
+                P = Double.MIN_NORMAL;
+            }
+            double score = -10 * Math.log10(P);
+            depthMap.put(i + 1, score);
+        }
 
-            for (int i = 0; i < spectrumMap.keySet().size(); i++) {
+        Double peptideScore = 0.0;
+        if (depthMap.containsKey(1)) {
+            peptideScore += 0.5 * depthMap.get(1);
+        }
+        if (depthMap.containsKey(2)) {
+            peptideScore += 0.75 * depthMap.get(2);
+        }
+        if (depthMap.containsKey(3)) {
+            peptideScore += 1 * depthMap.get(3);
+        }
+        if (depthMap.containsKey(4)) {
+            peptideScore += 1 * depthMap.get(4);
+        }
+        if (depthMap.containsKey(5)) {
+            peptideScore += 1 * depthMap.get(5);
+        }
+        if (depthMap.containsKey(6)) {
+            peptideScore += 1 * depthMap.get(6);
+        }
+        if (depthMap.containsKey(7)) {
+            peptideScore += 0.75 * depthMap.get(7);
+        }
+        if (depthMap.containsKey(8)) {
+            peptideScore += 0.5 * depthMap.get(8);
+        }
+        if (depthMap.containsKey(9)) {
+            peptideScore += 0.25 * depthMap.get(9);
+        }
+        if (depthMap.containsKey(10)) {
+            peptideScore += 0.25 * depthMap.get(10);
+        }
 
-                double p = ((double) i + 1) / 100;
-
-                    ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(i), peptide, 0, mzTolerance, false);
-                    int n = matches.size();
-                    double P = 0;
-                    for (int k = n; k <= N; k++) {
-                        P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
-                    }
-                    if (P <= Double.MIN_NORMAL) {
-                        P = Double.MIN_NORMAL;
-                    }
-                    double score = -10 * Math.log10(P);
-                    depthMap.put(i + 1, score);
-                }
-
-                Double peptideScore = 0.0;
-                if (depthMap.containsKey(1)) {
-                    peptideScore += 0.5 * depthMap.get(1);
-                }
-                if (depthMap.containsKey(2)) {
-                    peptideScore += 0.75 * depthMap.get(2);
-                }
-                if (depthMap.containsKey(3)) {
-                    peptideScore += 1 * depthMap.get(3);
-                }
-                if (depthMap.containsKey(4)) {
-                    peptideScore += 1 * depthMap.get(4);
-                }
-                if (depthMap.containsKey(5)) {
-                    peptideScore += 1 * depthMap.get(5);
-                }
-                if (depthMap.containsKey(6)) {
-                    peptideScore += 1 * depthMap.get(6);
-                }
-                if (depthMap.containsKey(7)) {
-                    peptideScore += 0.75 * depthMap.get(7);
-                }
-                if (depthMap.containsKey(8)) {
-                    peptideScore += 0.5 * depthMap.get(8);
-                }
-                if (depthMap.containsKey(9)) {
-                    peptideScore += 0.25 * depthMap.get(9);
-                }
-                if (depthMap.containsKey(10)) {
-                    peptideScore += 0.25 * depthMap.get(10);
-                }
-                
         return peptideScore;
     }
 
@@ -152,11 +140,10 @@ public class PsmScores {
         Collections.sort(mz);
         double mzMax = mz.get(mz.size() - 1);
         int cpt = 0;
-        int cptTemp;
         double currentmzMin = 0;
 
         while (currentmzMin < mzMax) {
-            cptTemp = 0;
+            int cptTemp = 0;
             while (cpt < mz.size()
                     && mz.get(cpt) < currentmzMin + 20 * mzTolerance) {
                 cptTemp++;
@@ -175,7 +162,6 @@ public class PsmScores {
 
         cpt = 0;
         currentmzMin = 0;
-        Peak tempPeak;
 
         while (currentmzMin < mzMax) {
             intensities = new ArrayList<Double>();
@@ -183,7 +169,7 @@ public class PsmScores {
 
             while (cpt < mz.size()
                     && mz.get(cpt) < currentmzMin + 20 * mzTolerance) {
-                tempPeak = peakMap.get(mz.get(cpt));
+                Peak tempPeak = peakMap.get(mz.get(cpt));
                 intensities.add(-tempPeak.intensity);
                 tempMap.put(-tempPeak.intensity, tempPeak);
                 cpt++;

@@ -331,6 +331,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         logAcisPanel = new javax.swing.JPanel();
         xAxisLogCheckBox = new javax.swing.JCheckBox();
         yAxisLogCheckBox = new javax.swing.JCheckBox();
+        sizeLogCheckBox = new javax.swing.JCheckBox();
         selectedValuesLayeredPane = new javax.swing.JLayeredPane();
         selectedValuesPanel = new javax.swing.JPanel();
         selectedValuesScrollPane = new javax.swing.JScrollPane();
@@ -641,10 +642,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        logAcisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Logarithmic Axis"));
+        logAcisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Logarithmic Values"));
         logAcisPanel.setOpaque(false);
 
-        xAxisLogCheckBox.setText("Log X Axis");
+        xAxisLogCheckBox.setText("X Axis");
         xAxisLogCheckBox.setToolTipText("Use logarithmic axis");
         xAxisLogCheckBox.setIconTextGap(15);
         xAxisLogCheckBox.setOpaque(false);
@@ -654,7 +655,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }
         });
 
-        yAxisLogCheckBox.setText("Log Y Axis");
+        yAxisLogCheckBox.setText("Y Axis");
         yAxisLogCheckBox.setToolTipText("Use logarithmic axis");
         yAxisLogCheckBox.setIconTextGap(15);
         yAxisLogCheckBox.setOpaque(false);
@@ -664,19 +665,31 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }
         });
 
+        sizeLogCheckBox.setText("Size");
+        sizeLogCheckBox.setToolTipText("Use logarithmic scaling for the size");
+        sizeLogCheckBox.setIconTextGap(15);
+        sizeLogCheckBox.setOpaque(false);
+        sizeLogCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sizeLogCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout logAcisPanelLayout = new javax.swing.GroupLayout(logAcisPanel);
         logAcisPanel.setLayout(logAcisPanelLayout);
         logAcisPanelLayout.setHorizontalGroup(
             logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logAcisPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(xAxisLogCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(yAxisLogCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(xAxisLogCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(yAxisLogCheckBox)
+                .addGap(10, 10, 10)
+                .addComponent(sizeLogCheckBox)
+                .addGap(14, 14, 14))
         );
 
-        logAcisPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {xAxisLogCheckBox, yAxisLogCheckBox});
+        logAcisPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {sizeLogCheckBox, xAxisLogCheckBox, yAxisLogCheckBox});
 
         logAcisPanelLayout.setVerticalGroup(
             logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -684,7 +697,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 .addContainerGap()
                 .addGroup(logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(xAxisLogCheckBox)
-                    .addComponent(yAxisLogCheckBox))
+                    .addComponent(yAxisLogCheckBox)
+                    .addComponent(sizeLogCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1446,8 +1460,18 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      */
     private void regressionLineCheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regressionLineCheckBoxMenuItemActionPerformed
         showRegressionLine = regressionLineCheckBoxMenuItem.isSelected();
-        updatePlot();
+        updatePlot(); // @TODO: maybe not needed to redo the whole plot to show/hide the regression line?
     }//GEN-LAST:event_regressionLineCheckBoxMenuItemActionPerformed
+
+    /**
+     * Update the plot.
+     *
+     * @param evt
+     */
+    private void sizeLogCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeLogCheckBoxActionPerformed
+         updatePlot();
+    }//GEN-LAST:event_sizeLogCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JSpinner binSizeSpinner;
@@ -1483,6 +1507,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private javax.swing.JButton selectedValuesTableHelpJButton;
     private javax.swing.JButton selectedValuesTableOptionsJButton;
     private javax.swing.JPopupMenu selectedValuesTablePopupMenu;
+    private javax.swing.JCheckBox sizeLogCheckBox;
     private javax.swing.JComboBox xAxisComboBox;
     private javax.swing.JLabel xAxisLabel;
     private javax.swing.JCheckBox xAxisLogCheckBox;
@@ -1534,6 +1559,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     // setup the dataset
                     String xAxisName = (String) xAxisComboBox.getSelectedItem();
                     String yAxisName = (String) yAxisComboBox.getSelectedItem();
+                    double maxBubbleSize = 0.0;
+                    double xAxisRange = 1.0;
 
                     if (histogramRadioButton.isSelected() || densityPlotRadioButton.isSelected()) {
 
@@ -1785,21 +1812,34 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 simpleRegression.addData(tempDataXYZ[0][counter], tempDataXYZ[1][counter]);
 
                                 if (bubbleSizeIndex == 0) {
-                                    tempDataXYZ[2][counter] = bubbleSize * bubbleScalingFactor;
+                                    tempDataXYZ[2][counter] = bubbleSize;
                                 } else {
                                     if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof XYDataPoint) {
-                                        tempDataXYZ[2][counter] = ((XYDataPoint) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getX() * bubbleScalingFactor;
+                                        tempDataXYZ[2][counter] = ((XYDataPoint) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getX();
                                     } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Integer) {
-                                        tempDataXYZ[2][counter] = ((Integer) tabelModel.getValueAt(index, bubbleSizeIndex - 1)) * bubbleScalingFactor;
+                                        tempDataXYZ[2][counter] = ((Integer) tabelModel.getValueAt(index, bubbleSizeIndex - 1));
                                     } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Double) {
-                                        tempDataXYZ[2][counter] = ((Double) tabelModel.getValueAt(index, bubbleSizeIndex - 1)) * bubbleScalingFactor;
+                                        tempDataXYZ[2][counter] = ((Double) tabelModel.getValueAt(index, bubbleSizeIndex - 1));
                                     } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof StartIndexes) {
                                         if (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().size() > 0) {
-                                            tempDataXYZ[2][counter] = (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0)) * bubbleScalingFactor;
+                                            tempDataXYZ[2][counter] = (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0));
                                         } else {
                                             tempDataXYZ[2][counter] = 0;
                                         }
                                     }
+                                }
+
+                                // add log scaling if selected
+                                if (sizeLogCheckBox.isSelected()) {
+                                    tempDataXYZ[2][counter] = Math.log(tempDataXYZ[2][counter]) / Math.log(2);
+                                }
+
+                                // add the bubble scaling factor
+                                tempDataXYZ[2][counter] = tempDataXYZ[2][counter] * bubbleScalingFactor;
+
+                                // store the maximum bubble size
+                                if (tempDataXYZ[2][counter] > maxBubbleSize) {
+                                    maxBubbleSize = tempDataXYZ[2][counter];
                                 }
 
                                 dataPointToRowNumber.put(datasetCounter + "_" + counter++, index);
@@ -1993,6 +2033,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             plot.setRangeAxis(new LogAxis(plot.getRangeAxis().getLabel()));
                         }
 
+                        // store the x axis range to see of the bubbles are too big
+                        xAxisRange = plot.getDomainAxis().getUpperBound() - plot.getDomainAxis().getLowerBound();
+
                         // hide unwanted chart details
                         plot.setDomainGridlinesVisible(false);
                         chart.getPlot().setOutlineVisible(false);
@@ -2104,6 +2147,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     isPlotting = false;
                     filterTable();
                     progressDialog.setRunFinished();
+
+                    if (maxBubbleSize > xAxisRange && !sizeLogCheckBox.isSelected()) {
+                        int value = JOptionPane.showConfirmDialog(dialogParent, "Seems like your bubbles are too large.\nTurn on log scale?", "Log Scale?", JOptionPane.YES_NO_OPTION);
+                        if (value == JOptionPane.YES_OPTION) {
+                            sizeLogCheckBox.setSelected(true);
+                            updatePlot();
+                        }
+                    }
                 }
             }.start();
         }

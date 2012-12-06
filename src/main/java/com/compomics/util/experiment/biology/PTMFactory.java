@@ -714,6 +714,12 @@ public class PTMFactory implements Serializable {
             } else {
                 addUserPTM(modificationProfile.getPtm(modification));
             }
+            if (!shortNames.containsKey(modification)) {
+                PTM ptm = modificationProfile.getPtm(modification);
+                if (ptm.getShortName() != null) {
+                    shortNames.put(modification, ptm.getShortName());
+                }
+            }
         }
         return toCheck;
     }
@@ -1000,6 +1006,10 @@ public class PTMFactory implements Serializable {
         if (shortNames.containsKey(modification)) {
             return shortNames.get(modification);
         } else {
+            PTM ptm = getPTM(modification);
+            if (ptm.getShortName() != null) {
+                return ptm.getShortName();
+            }
             return getDefaultShortName(modification);
         }
     }

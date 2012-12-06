@@ -23,7 +23,7 @@ public class ModificationProfile implements Serializable {
     /**
      * Mapping of the utilities modification names to the PeptideShaker names.
      *
-     * @deprecated use the expected variable modification list and the
+     * @deprecated use the expected variable modification lists
      */
     private HashMap<String, String> modificationNames = new HashMap<String, String>();
     /**
@@ -124,6 +124,7 @@ public class ModificationProfile implements Serializable {
         if (!variableModifications.contains(modName)) {
             variableModifications.add(modName);
         }
+        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 
@@ -140,6 +141,7 @@ public class ModificationProfile implements Serializable {
         if (!refinementModifications.contains(modName)) {
             refinementModifications.add(modName);
         }
+        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 
@@ -156,6 +158,7 @@ public class ModificationProfile implements Serializable {
         if (!fixedModifications.contains(modName)) {
             fixedModifications.add(modName);
         }
+        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 

@@ -4,8 +4,10 @@ import com.compomics.software.dialogs.PeptideShakerSetupDialog;
 import com.compomics.software.dialogs.RelimsSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
+import com.compomics.util.Util;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.*;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -186,4 +188,5 @@ public class ToolFactory {
                     toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
 }

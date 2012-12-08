@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.software;
 
 import com.compomics.util.Util;
@@ -10,16 +6,21 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
- * This class groups some convenience methods for the use of compomics tools in command line
+ * This class groups some convenience methods for the use of compomics tools in
+ * command line.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class CommandLineUtils {
-    
+
+    /**
+     * The command line argument separator.
+     */
     public static final String SEPARATOR = ",";
-    
+
     /**
      * Returns the list of file as argument for the command line
+     *
      * @param files the files
      * @return the list of file as string for command line argument
      */
@@ -33,10 +34,11 @@ public class CommandLineUtils {
         }
         return result;
     }
-    
+
     /**
-     * Returns the file as argument for the command line
-     * @param files the files
+     * Returns the file as argument for the command line.
+     *
+     * @param file the file
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(File file) {
@@ -56,13 +58,15 @@ public class CommandLineUtils {
         }
         return results;
     }
-    
+
     /**
-     * Returns a list of files as imported from the command line option
+     * Returns a list of files as imported from the command line option.
+     *
      * @param optionInput the command line option
      * @param fileExtentions the file extensions to be considered
      * @return a list of file candidates
-     * @throws FileNotFoundException exception thrown whenever a file is not found
+     * @throws FileNotFoundException exception thrown whenever a file is not
+     * found
      */
     public static ArrayList<File> getFiles(String optionInput, ArrayList<String> fileExtentions) throws FileNotFoundException {
         ArrayList<File> result = new ArrayList<File>();
@@ -75,43 +79,42 @@ public class CommandLineUtils {
                         String fileName = Util.getFileName(childFile.getAbsolutePath());
                         for (String extention : fileExtentions) {
                             if (fileName.toLowerCase().endsWith(extention)) {
-                            if (childFile.exists()) {
-                                result.add(childFile);
-                                break;
-                            } else {
-                                throw new FileNotFoundException(childFile.getAbsolutePath() + " not found.");
-                            }
+                                if (childFile.exists()) {
+                                    result.add(childFile);
+                                    break;
+                                } else {
+                                    throw new FileNotFoundException(childFile.getAbsolutePath() + " not found.");
+                                }
                             }
                         }
                     }
                 } else {
                     String fileName = Util.getFileName(testFile.getAbsolutePath());
-                        for (String extention : fileExtentions) {
-                            if (fileName.toLowerCase().endsWith(extention)) {
-                        result.add(testFile);
-                        break;
-                            }
+                    for (String extention : fileExtentions) {
+                        if (fileName.toLowerCase().endsWith(extention)) {
+                            result.add(testFile);
+                            break;
                         }
                     }
+                }
             } else {
                 throw new FileNotFoundException(files.get(0) + " not found.");
             }
         } else {
             for (String file : files) {
-                        for (String extention : fileExtentions) {
-                            if (file.toLowerCase().endsWith(extention)) {
-                    File testFile = new File(file);
-                    if (testFile.exists()) {
-                        result.add(testFile);
-                    } else {
-                        throw new FileNotFoundException(file + " not found.");
+                for (String extention : fileExtentions) {
+                    if (file.toLowerCase().endsWith(extention)) {
+                        File testFile = new File(file);
+                        if (testFile.exists()) {
+                            result.add(testFile);
+                        } else {
+                            throw new FileNotFoundException(file + " not found.");
+                        }
+                        break;
                     }
-                    break;
-                            }
                 }
             }
         }
         return result;
     }
-    
 }

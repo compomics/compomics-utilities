@@ -6,18 +6,16 @@ import java.awt.Component;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * Includes general help methods that are used by the other classes.
  *
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class Util {
 
@@ -149,7 +147,7 @@ public class Util {
     }
 
     /**
-     * returns the extensions of a file
+     * Returns the extensions of a file.
      *
      * @param file the file
      * @return the extension of a file
@@ -158,9 +156,10 @@ public class Util {
         String fileName = getFileName(file.getAbsolutePath());
         return fileName.substring(fileName.lastIndexOf("."));
     }
-    
+
     /**
-     * Removes the extension from a file name or path
+     * Removes the extension from a file name or path.
+     *
      * @param fileName the file name
      * @return the file name without extension
      */
@@ -395,9 +394,11 @@ public class Util {
             inputStream.close();
         }
     }
-    
+
     /**
-     * Convenience methods indicating whether the content of two lists have the same content
+     * Convenience methods indicating whether the content of two lists have the
+     * same content.
+     *
      * @param list1 the first list
      * @param list2 the second list
      * @return a boolean indicating whether list1 has the same content as list2
@@ -410,12 +411,11 @@ public class Util {
         Collections.sort(list1copy);
         ArrayList<Integer> list2copy = new ArrayList<Integer>(list2);
         Collections.sort(list2copy);
-        for (int i = 0 ; i < list1copy.size() ; i++) {
+        for (int i = 0; i < list1copy.size(); i++) {
             if (!list1copy.get(i).equals(list2copy.get(i))) {
                 return false;
             }
         }
         return true;
     }
-    
 }

@@ -138,6 +138,37 @@ public class Util {
     }
 
     /**
+     * An OS independent getName alternative. Useful if the path is provided as
+     * a hardcoded string and opened in a different OS.
+     *
+     * @param file the file
+     * @return the file name, or the complete path of no file name is detected
+     */
+    public static String getFileName(File file) {
+        return getFileName(file.getAbsolutePath());
+    }
+
+    /**
+     * returns the extensions of a file
+     *
+     * @param file the file
+     * @return the extension of a file
+     */
+    public static String getExtension(File file) {
+        String fileName = getFileName(file.getAbsolutePath());
+        return fileName.substring(fileName.lastIndexOf("."));
+    }
+    
+    /**
+     * Removes the extension from a file name or path
+     * @param fileName the file name
+     * @return the file name without extension
+     */
+    public static String removeExtension(String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
+    /**
      * Returns the file selected by the user, or null if no file was selected.
      * Note that the last selected folder value is not updated during this
      * method, and the code calling this method therefore has to take care of

@@ -30,7 +30,7 @@ public class CommandLineUtils {
             if (!result.equals("")) {
                 result += SEPARATOR;
             }
-            result += file.getAbsolutePath();
+            result += "\"" + file.getAbsolutePath() + "\""; // @TODO: same quotes on mac/linux?
         }
         return result;
     }
@@ -42,7 +42,7 @@ public class CommandLineUtils {
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(File file) {
-        return file.getAbsolutePath();
+        return "\"" + file.getAbsolutePath() + "\""; // @TODO: same quotes on mac/linux?
     }
 
     /**

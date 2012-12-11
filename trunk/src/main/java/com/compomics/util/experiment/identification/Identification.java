@@ -16,6 +16,7 @@ import java.io.*;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -92,6 +93,44 @@ public abstract class Identification extends ExperimentObject {
      * The reference of the identification.
      */
     protected String reference;
+    /**
+     * The ordered list of spectrum file names.
+     */
+    private ArrayList<String> orderedSpectrumFileNames;
+
+    /**
+     * Returns the ordered list of spectrum file names.
+     *
+     * @return the ordered list of spectrum file names
+     */
+    public ArrayList<String> getOrderedSpectrumFileNames() {
+        if (orderedSpectrumFileNames == null) {
+            orderedSpectrumFileNames = getSpectrumFiles();
+
+            // default alphabetical ordering
+            Collections.sort(orderedSpectrumFileNames);
+        }
+
+        return orderedSpectrumFileNames;
+    }
+
+    /**
+     * Set the ordered list of spectrum file names. Note that the list provided
+     * has to be the same size as the number of spectrum files used.
+     *
+     * @param orderedSpectrumFileNames the ordered list of spectrum file names
+     * @throws IllegalArgumentException thrown if the length of the ordered file
+     * names as to be the same as the number of spectrum files
+     */
+    public void setOrderedListOfSpectrumFileNames(ArrayList<String> orderedSpectrumFileNames) throws IllegalArgumentException {
+
+        if (this.orderedSpectrumFileNames.size() != orderedSpectrumFileNames.size()) {
+            throw new IllegalArgumentException("The length of the ordered file names as to be the same as the number of spectrum files. "
+                    + orderedSpectrumFileNames.size() + "!=" + this.orderedSpectrumFileNames.size());
+        }
+
+        this.orderedSpectrumFileNames = orderedSpectrumFileNames;
+    }
 
     /**
      * Returns the mgf files used in the spectrum identification map as a list.
@@ -285,7 +324,6 @@ public abstract class Identification extends ExperimentObject {
         identificationDB.loadProteinMatches(waitingHandler);
     }
 
-
     /**
      * Loads all peptide matches in the cache of the database.
      *
@@ -300,7 +338,7 @@ public abstract class Identification extends ExperimentObject {
     public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadPeptideMatches(waitingHandler);
     }
-    
+
     /**
      * Loads all spectrum matches of the file in the cache of the database
      *
@@ -869,10 +907,10 @@ public abstract class Identification extends ExperimentObject {
     public ArrayList<String> getSpectrumIdentification(String spectrumFile) {
         return spectrumIdentificationMap.get(spectrumFile);
     }
-    
+
     /**
      * Returns the keys of all identified spectra indexed by the spectrum file.
-     * 
+     *
      * @return the keys of all identified spectra indexed by the spectrum file
      */
     public HashMap<String, ArrayList<String>> getSpectrumIdentificationMap() {
@@ -969,7 +1007,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
 
-        SpectrumMatch othermatch, spectrumMatch = getSpectrumMatch(spectrumMatchKey);
+        SpectrumMatch othermatch, spectrumMatch = getSpectrumMatch(spectrumMatchKey); // @TODO: batch selection??
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
@@ -978,12 +1016,13 @@ public abstract class Identification extends ExperimentObject {
         PeptideMatch peptideMatch;
 
         if (peptideIdentification.contains(peptideKey)) {
-            peptideMatch = getPeptideMatch(peptideKey);
+            peptideMatch = getPeptideMatch(peptideKey); // @TODO: batch selection??
             if (peptideMatch == null) {
                 throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
             }
             // correct protein inference discrepancies between spectrum matches
-                    loadSpectrumMatches(peptideMatch.getSpectrumMatches(), null);
+            loadSpectrumMatches(peptideMatch.getSpectrumMatches(), null);
+
             for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
                 othermatch = identificationDB.getSpectrumMatch(otherMatchKey);
                 if (othermatch == null) {
@@ -1032,8 +1071,8 @@ public abstract class Identification extends ExperimentObject {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
             if (!proteinMatch.getKey().equals(proteinKey)) {
                 throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
-                        + " Peptide :" + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with " + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
-                
+                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with " + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
+
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteins()) {
@@ -1292,7 +1331,7 @@ public abstract class Identification extends ExperimentObject {
         }
         updateSpectrumMapping();
     }
-    
+
     /**
      * Converts the old spectrum keys structure into the mapped version.
      */

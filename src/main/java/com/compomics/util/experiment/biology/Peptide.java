@@ -57,7 +57,7 @@ public class Peptide extends ExperimentObject {
      * Constructor for the peptide.
      *
      * @param aSequence The peptide sequence
-     * @param parentProteins The parent proteins
+     * @param parentProteins The parent proteins, cannot be null or empty
      * @param modifications The PTM of this peptide
      * @throws IllegalArgumentException Thrown if the peptide sequence contains
      * unknown amino acids
@@ -85,7 +85,7 @@ public class Peptide extends ExperimentObject {
      * recalculated.
      * @param aSequence The peptide sequence
      * @param mass The peptide mass
-     * @param parentProteins The parent proteins
+     * @param parentProteins The parent proteins, cannot be null or empty
      * @param modifications The PTM of this peptide
      */
     public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
@@ -197,7 +197,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Sets the parent proteins.
      *
-     * @param parentProteins the parent proteins as list
+     * @param parentProteins the parent proteins as list, cannot be null or empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
         if (parentProteins == null || parentProteins.isEmpty()) {

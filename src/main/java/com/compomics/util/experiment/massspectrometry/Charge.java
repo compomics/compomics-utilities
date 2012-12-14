@@ -85,4 +85,32 @@ public class Charge extends ExperimentObject {
 
         return temp;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.sign;
+        hash = 97 * hash + this.value;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Charge other = (Charge) obj;
+        if (this.sign != other.sign) {
+            return false;
+        }
+        if (this.value != other.value) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

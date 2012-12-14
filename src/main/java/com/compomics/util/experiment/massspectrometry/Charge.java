@@ -5,37 +5,37 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 /**
  * This class models a charge.
  *
- * Created by IntelliJ IDEA. User: Marc Date: Jun 23, 2010 Time: 10:01:29 AM
+ * @author Marc Vaudel
  */
 public class Charge extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -7119215126058492261L;
     /**
-     * static int to modele a positive charge
+     * Static int to modele a positive charge.
      */
     public final static int PLUS = +1;
     /**
-     * static int to modele a negative charge
+     * Static int to modele a negative charge.
      */
     public final static int MINUS = -1;
     /**
-     * static int to modele a neutral component
+     * Static int to modele a neutral component.
      */
     public final static int NEUTRAL = 0;
     /**
-     * sign of the charge according to the static fields
+     * Sign of the charge according to the static fields.
      */
     public int sign;
     /**
-     * value of the charge
+     * Value of the charge.
      */
     public int value;
 
     /**
-     * constructor for a charge
+     * Constructor for a charge.
      *
      * @param sign sign of the charge as specified in static fields
      * @param value value of the charge
@@ -46,7 +46,7 @@ public class Charge extends ExperimentObject {
     }
 
     /**
-     * returns a string representing the charge. For example 2+.
+     * Returns a string representing the charge. For example 2+.
      *
      * @return charge as a string
      */
@@ -111,6 +111,4 @@ public class Charge extends ExperimentObject {
         }
         return true;
     }
-    
-    
 }

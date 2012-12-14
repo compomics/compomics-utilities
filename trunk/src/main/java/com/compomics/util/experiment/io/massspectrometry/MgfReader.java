@@ -60,7 +60,16 @@ public class MgfReader {
             line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
+                // reset the spectrum details
                 spectrum = new HashMap<Double, Peak>();
+                precursorMz = 0; 
+                precursorIntensity = 0;
+                rt = -1.0; 
+                rt1 = -1.0; 
+                rt2 = -1.0;
+                precursorCharges = new ArrayList<Charge>();
+                scanNumber = ""; 
+                spectrumTitle = "";
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
                 try {
@@ -121,7 +130,9 @@ public class MgfReader {
                     precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, aFile.getName());
-                msnSpectrum.setScanNumber(scanNumber);
+                if (scanNumber.length() > 0) {
+                    msnSpectrum.setScanNumber(scanNumber);
+                }
                 spectra.add(msnSpectrum);
             } else if (!line.equals("")) {
                 try {

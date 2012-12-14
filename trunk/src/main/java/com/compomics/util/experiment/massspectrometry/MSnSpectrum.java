@@ -112,6 +112,7 @@ public class MSnSpectrum extends Spectrum {
             result += charge.toString();
         }
         result += System.getProperty("line.separator");
+        result += "SCANS=" + scanNumber + System.getProperty("line.separator");
 
         // add the values to a tree map to get them sorted in mz    
         TreeMap<Double, Double> sortedPeakList = new TreeMap<Double, Double>();

@@ -133,7 +133,9 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the mgf files used in the spectrum identification map as a list.
+     * Returns the names of the mgf files used in the spectrum identification map
+     * as a list. To get the complete file path use
+     * projectDetails.getSpectrumFile(...).
      *
      * @return the mgf files used in the spectrum identification map
      */

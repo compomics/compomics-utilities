@@ -224,7 +224,7 @@
             <Component class="javax.swing.JButton" name="peptideShakerButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/icons/peptide-shaker-medium-blue-shadow.png"/>
+                  <Image iconType="3" name="/icons/peptide-shaker-medium-orange-shadow.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Go to http://peptide-shaker.googlecode.com"/>
                 <Property name="borderPainted" type="boolean" value="false"/>

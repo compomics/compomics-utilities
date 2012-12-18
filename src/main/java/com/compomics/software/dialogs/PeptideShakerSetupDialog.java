@@ -145,7 +145,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
             }
         });
 
-        peptideShakerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/peptide-shaker-medium-blue-shadow.png"))); // NOI18N
+        peptideShakerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/peptide-shaker-medium-orange-shadow.png"))); // NOI18N
         peptideShakerButton.setToolTipText("Go to http://peptide-shaker.googlecode.com");
         peptideShakerButton.setBorderPainted(false);
         peptideShakerButton.setContentAreaFilled(false);

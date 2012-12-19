@@ -4,8 +4,10 @@ import com.compomics.software.dialogs.PeptideShakerSetupDialog;
 import com.compomics.software.dialogs.RelimsSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.*;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -15,17 +17,46 @@ import javax.swing.JOptionPane;
  * @author Marc Vaudel
  */
 public class ToolFactory {
+    
+    /**
+     * The command line argument for a cps file for PeptideShaker
+     */
+    public static final String peptideShakerFile = "-cps";
+    /**
+     * The command line argument for mgf files for SearchGUI
+     */
+    public static final String searchGuiSpectrumFile = "-mgf";
+    /**
+     * The command line argument for a parameters file for SearchGUI
+     */
+    public static final String searchGuiParametersFile = "-search_parameters";
 
     /**
      * Starts PeptideShaker from the location of utilities preferences.
      *
-     * @param parent a frame to display the path setting dialog
+     * @param parent a frame to display the path setting dialog (can be null)
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public static void startPeptideShaker(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+        startPeptideShaker(parent, null);
+    }
+
+    /**
+     * Starts PeptideShaker from the location of utilities preferences and opens
+     * the file given as argument. If null is given as file or if the file to
+     * open is not found, the tool will go for a default start.
+     *
+     * @param parent a frame to display the path setting dialog (can be null)
+     * @param file the file to open (cps format) (can be null)
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public static void startPeptideShaker(JFrame parent, File cpsFile) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
@@ -33,7 +64,14 @@ public class ToolFactory {
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         }
         if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
-            launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
+            if (cpsFile != null) {
+                ArrayList<String> args = new ArrayList<String>();
+                args.add(peptideShakerFile);
+                args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
+                launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
+            } else {
+                launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
+            }
         } else {
             throw new IllegalArgumentException("PeptideShaker not found in " + utilitiesUserPreferences.getPeptideShakerPath());
         }
@@ -46,7 +84,7 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -75,8 +113,8 @@ public class ToolFactory {
     public static void startRelims(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        
-        if (utilitiesUserPreferences.getRelimsPath() == null 
+
+        if (utilitiesUserPreferences.getRelimsPath() == null
                 || (utilitiesUserPreferences.getRelimsPath() != null && !(new File(utilitiesUserPreferences.getRelimsPath()).exists()))) {
             new RelimsSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -95,9 +133,24 @@ public class ToolFactory {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+        startSearchGUI(parent, null, null);
+    }
+
+    /**
+     * Starts SearchGUI from the location of utilities preferences.
+     *
+     * @param parent a frame to display the path setting dialog.
+     * @param mgfFiles the mgf files to search (can be null)
+     * @param searchParameters the search parameters as a file (can be null)
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (utilitiesUserPreferences.getSearchGuiPath() == null || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
@@ -105,7 +158,19 @@ public class ToolFactory {
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         }
         if (utilitiesUserPreferences.getSearchGuiPath() != null) {
-            launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
+            if (mgfFiles == null && searchParameters == null) {
+                launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
+            } else {
+                ArrayList<String> args = new ArrayList<String>();
+                if (mgfFiles != null) {
+                    args.add(searchGuiSpectrumFile);
+                    args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
+                } else if (searchParameters != null) {
+                    args.add(searchGuiParametersFile);
+                    args.add(CommandLineUtils.getCommandLineArgument(searchParameters));
+                }
+                launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
+            }
         } else {
             throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getSearchGuiPath());
         }
@@ -116,8 +181,25 @@ public class ToolFactory {
      *
      * @param toolPath the path to the tool
      * @param toolName the name of the tool (used for bug report)
+     * @param args the arguments to pass to the tool (ignored if null)
      */
     private static void launch(String toolPath, String toolName) throws IOException, InterruptedException {
+        launch(toolPath, toolName, null);
+    }
+
+    /**
+     * Generic method to start a tool.
+     *
+     * @param toolPath the path to the tool
+     * @param toolName the name of the tool (used for bug report)
+     * @param args the arguments to pass to the tool (ignored if null)
+     */
+    private static void launch(String toolPath, String toolName, ArrayList<String> args) throws IOException, InterruptedException {
+
+        String arguments = "";
+        if (args != null) {
+            arguments = CommandLineUtils.concatenate(args);
+        }
 
         boolean debug = false;
 
@@ -127,7 +209,7 @@ public class ToolFactory {
             quote = "\"";
         }
 
-        String cmdLine = "java -jar " + quote + toolPath + quote; //@TODO check the java home?
+        String cmdLine = "java -jar " + quote + toolPath + quote + " " + arguments; //@TODO check the java home?
 
         if (debug) {
             System.out.println(cmdLine);
@@ -186,5 +268,4 @@ public class ToolFactory {
                     toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
 }

@@ -1,5 +1,6 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.io.SerializationUtils;
 import java.awt.Color;
 import java.io.*;
 
@@ -375,13 +376,7 @@ public class UtilitiesUserPreferences implements Serializable {
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdir();
         }
-        FileOutputStream fos = new FileOutputStream(file);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(userPreferences);
-        oos.close();
-        bos.close();
-        fos.close();
+        SerializationUtils.writeObject(userPreferences, file);
     }
 
     /**
@@ -400,14 +395,7 @@ public class UtilitiesUserPreferences implements Serializable {
             userPreferences = new UtilitiesUserPreferences();
             UtilitiesUserPreferences.saveUserPreferences(userPreferences);
         } else {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            ObjectInputStream in = new ObjectInputStream(bis);
-            Object inObject = in.readObject();
-            fis.close();
-            bis.close();
-            in.close();
-            userPreferences = (UtilitiesUserPreferences) inObject;
+            userPreferences = (UtilitiesUserPreferences) SerializationUtils.readObject(file);
         }
         
         return userPreferences;

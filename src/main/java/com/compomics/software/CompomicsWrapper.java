@@ -60,7 +60,22 @@ public class CompomicsWrapper {
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      */
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass) {
+        launchTool(toolName, jarFile, splashName, mainClass, null);
+    }
 
+    /**
+     * Starts the launcher by calling the launch method. Use this as the main
+     * class in the jar file.
+     *
+     * @param toolName
+     * @param jarFile the jar file to execute
+     * @param splashName the splash name, for example peptide-shaker-splash.png
+     * @param mainClass the main class to execute, for example
+     * eu.isas.peptideshaker.gui.PeptideShakerGUI
+     * @param args the arguments to pass to the tool (ignored if null)
+     */
+    public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args) {
+        
         try {
             try {
                 userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -92,7 +107,7 @@ public class CompomicsWrapper {
                         "Seems like you are trying to start " + toolName + " from within a zip file!",
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
             }
-            launch(jarFile, splashName, mainClass);
+            launch(jarFile, splashName, mainClass, args);
 
             if (useStartUpLog) {
                 bw.flush();
@@ -118,9 +133,27 @@ public class CompomicsWrapper {
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      */
     private void launch(File jarFile, String splashName, String mainClass) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+            launch(jarFile, splashName, mainClass, null);
+    }
+
+    /**
+     * Launches the jar file with parameters to the jvm.
+     *
+     * @throws java.lang.Exception
+     * @param jarFile the jar file to execute
+     * @param splashName the splash name, for example peptide-shaker-splash.png
+     * @param mainClass the main class to execute, for example
+     * eu.isas.peptideshaker.gui.PeptideShakerGUI
+     * @param args the arguments to pass to the tool (ignored if null)
+     */
+    private void launch(File jarFile, String splashName, String mainClass, String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
         String temp = "", cmdLine;
         String options = "", currentOption;
+        String arguments = "";
+        if (args != null) {
+            arguments = CommandLineUtils.concatenate(args);
+        }
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
         if (!confFolder.exists()) {
@@ -342,7 +375,7 @@ public class CompomicsWrapper {
         // create the complete command line
         cmdLine = javaHome + "java -splash:" + quote + splashPath + quote + " " + options + " -cp "
                 + quote + jarFilePath + quote + uniprotProxyClassPath
-                + " " + mainClass;
+                + " " + mainClass + " " + arguments;
 
         if (useStartUpLog) {
             System.out.println(System.getProperty("line.separator") + cmdLine + System.getProperty("line.separator") + System.getProperty("line.separator"));
@@ -391,11 +424,11 @@ public class CompomicsWrapper {
                     if (userPreferences.getMemoryPreference() > 3 * 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 1024);
                         saveNewSettings(jarFile);
-                        launch(jarFile, splashName, mainClass);
+                        launch(jarFile, splashName, mainClass, args);
                     } else if (userPreferences.getMemoryPreference() > 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 512);
                         saveNewSettings(jarFile);
-                        launch(jarFile, splashName, mainClass);
+                        launch(jarFile, splashName, mainClass, args);
                     } else {
                         if (useStartUpLog) {
                             bw.write("Memory Limit:" + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));

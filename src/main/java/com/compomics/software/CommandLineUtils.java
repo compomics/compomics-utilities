@@ -34,6 +34,46 @@ public class CommandLineUtils {
         }
         return result;
     }
+    
+    /**
+     * Returns the list of arguments as space separated string for the command line
+     *
+     * @param files the arguments
+     * @return a comma separated string
+     */
+    public static String concatenate(ArrayList<String> args) {
+        if (args == null) {
+            return null;
+        }
+        String result = "";
+        for (String arg : args) {
+            if (!result.equals("")) {
+                result += " ";
+            }
+            result += arg;
+        }
+        return result;
+    }
+    
+    /**
+     * Returns the list of arguments as space separated string for the command line
+     *
+     * @param files the arguments
+     * @return a comma separated string
+     */
+    public static String concatenate(String[] args) {
+        if (args == null) {
+            return null;
+        }
+        String result = "";
+        for (String arg : args) {
+            if (!result.equals("")) {
+                result += " ";
+            }
+            result += arg;
+        }
+        return result;
+    }
 
     /**
      * Returns the file as argument for the command line.

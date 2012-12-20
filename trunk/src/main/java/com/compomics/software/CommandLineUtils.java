@@ -19,7 +19,7 @@ public class CommandLineUtils {
     public static final String SEPARATOR = ",";
 
     /**
-     * Returns the list of file as argument for the command line
+     * Returns the list of file as argument for the command line.
      *
      * @param files the files
      * @return the list of file as string for command line argument
@@ -34,11 +34,12 @@ public class CommandLineUtils {
         }
         return result;
     }
-    
+
     /**
-     * Returns the list of arguments as space separated string for the command line
+     * Returns the list of arguments as space separated string for the command
+     * line.
      *
-     * @param files the arguments
+     * @param args the arguments
      * @return a comma separated string
      */
     public static String concatenate(ArrayList<String> args) {
@@ -54,11 +55,12 @@ public class CommandLineUtils {
         }
         return result;
     }
-    
+
     /**
-     * Returns the list of arguments as space separated string for the command line
+     * Returns the list of arguments as space separated string for the command
+     * line.
      *
-     * @param files the arguments
+     * @param args the arguments
      * @return a comma separated string
      */
     public static String concatenate(String[] args) {

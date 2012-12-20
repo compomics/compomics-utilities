@@ -17,17 +17,17 @@ import javax.swing.JOptionPane;
  * @author Marc Vaudel
  */
 public class ToolFactory {
-    
+
     /**
-     * The command line argument for a cps file for PeptideShaker
+     * The command line argument for a cps file for PeptideShaker.
      */
     public static final String peptideShakerFile = "-cps";
     /**
-     * The command line argument for mgf files for SearchGUI
+     * The command line argument for mgf files for SearchGUI.
      */
     public static final String searchGuiSpectrumFile = "-mgf";
     /**
-     * The command line argument for a parameters file for SearchGUI
+     * The command line argument for a parameters file for SearchGUI.
      */
     public static final String searchGuiParametersFile = "-search_parameters";
 
@@ -50,7 +50,7 @@ public class ToolFactory {
      * open is not found, the tool will go for a default start.
      *
      * @param parent a frame to display the path setting dialog (can be null)
-     * @param file the file to open (cps format) (can be null)
+     * @param cpsFile the file to open (cps format) (can be null)
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
@@ -59,6 +59,7 @@ public class ToolFactory {
     public static void startPeptideShaker(JFrame parent, File cpsFile) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+
         if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
             new PeptideShakerSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -89,6 +90,7 @@ public class ToolFactory {
     public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+
         if (utilitiesUserPreferences.getReporterPath() == null || !(new File(utilitiesUserPreferences.getReporterPath()).exists())) {
             new ReporterSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -153,6 +155,7 @@ public class ToolFactory {
     public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+
         if (utilitiesUserPreferences.getSearchGuiPath() == null || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
             new SearchGuiSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();

@@ -58,14 +58,14 @@ public class FindPdbForUniprotAccessions {
      * @param aProteinAccession 
      */
     public FindPdbForUniprotAccessions(String aProteinAccession) {
-        
+
         this.iProteinAccession = aProteinAccession;
-        
+
         //find features
         String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
         readUrl(urlMake);
         iAlignments = iDasReader.getAllAlignments();
-        
+
         try {
             for (int a = 0; a < iAlignments.length; a++) {
                 DasAlignment align = iAlignments[a];

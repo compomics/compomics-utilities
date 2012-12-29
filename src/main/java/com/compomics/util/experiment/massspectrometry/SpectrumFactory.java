@@ -430,6 +430,8 @@ public class SpectrumFactory {
      * given spectrum file
      */
     public boolean spectrumLoaded(String fileName, String spectrumTitle) {
+            // a special fix for mgf files with strange titles...
+            spectrumTitle = fixMgfTitle(spectrumTitle, fileName);
         return mgfIndexesMap.containsKey(fileName) && mgfIndexesMap.get(fileName).containsSpectrum(spectrumTitle);
     }
 
@@ -473,10 +475,10 @@ public class SpectrumFactory {
             spectrumTitle = fixMgfTitle(spectrumTitle, name);
 
             if (mgfIndexesMap.get(name) == null) {
-                throw new IOException("Mgf file not found: \'" + name + "\'!");
+                throw new IOException("Mgf file not found: \'" + name + "\'.");
             }
             if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
-                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found!");
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found.");
             }
             try {
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);

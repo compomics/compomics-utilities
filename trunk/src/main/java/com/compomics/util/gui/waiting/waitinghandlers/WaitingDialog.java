@@ -154,11 +154,13 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             showTipOfTheDayCheckBox.setEnabled(false);
         }
 
+        if (waitingHandlerParent != null) {
         this.setLocationRelativeTo(waitingHandlerParent);
 
         // change the icon to a "waiting version"
         if (waitingIcon != null) {
             waitingHandlerParent.setIconImage(waitingIcon);
+        }
         }
     }
 
@@ -809,7 +811,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         secondaryJProgressBar.setString(processName + " Completed!");
 
         // change the icon back to the default version
-        if (normalIcon != null) {
+        if (normalIcon != null && waitingHandlerParent != null) {
             waitingHandlerParent.setIconImage(normalIcon);
         }
 
@@ -845,7 +847,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         this.setTitle(processName + " - Canceled");
 
         // change the icon back to the default version
-        if (normalIcon != null) {
+        if (normalIcon != null && waitingHandlerParent != null) {
             waitingHandlerParent.setIconImage(normalIcon);
         }
     }

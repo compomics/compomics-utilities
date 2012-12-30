@@ -7,7 +7,9 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * The identification parameters reader returns the parameters used for
@@ -208,9 +210,12 @@ public class IdentificationParametersReader {
      * in the Enzyme factory. The PTMs in the PTM factory.
      *
      * @param aProps the identification properties
+     * @param userModsFile if there are user modifications, provide the user
+     * modification file (usermods.xml)
      * @return the corresponding SearchParameters object
      */
-    public static SearchParameters getSearchParameters(Properties aProps) {
+    public static SearchParameters getSearchParameters(Properties aProps, File userModsFile) throws XmlPullParserException, FileNotFoundException, IOException {
+
         SearchParameters searchParameters = new SearchParameters();
 
         String temp = aProps.getProperty(IdentificationParametersReader.DATABASE_FILE);
@@ -222,6 +227,8 @@ public class IdentificationParametersReader {
 
         temp = aProps.getProperty(IdentificationParametersReader.FIXED_MODIFICATIONS);
 
+        HashMap<String, Integer> userIndexes = null;
+
         if (temp != null && !temp.trim().equals("")) {
 
             PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -230,6 +237,16 @@ public class IdentificationParametersReader {
 
             for (String ptmName : fixedMods) {
                 modificationProfile.addFixedModification(ptmFactory.getPTM(ptmName));
+                Integer index = ptmFactory.getDefaultOMSSAIndex(ptmName);
+                if (index == null) {
+                    if (userIndexes == null) {
+                        userIndexes = PTMFactory.getOMSSAIndexes(userModsFile);
+                    }
+                    if (userIndexes != null) {
+                        index = userIndexes.get(ptmName);
+                    }
+                }
+                modificationProfile.setOmssaIndex(ptmName, index);
             }
         }
 
@@ -243,6 +260,16 @@ public class IdentificationParametersReader {
 
             for (String ptmName : variableMods) {
                 modificationProfile.addVariableModification(ptmFactory.getPTM(ptmName));
+                Integer index = ptmFactory.getDefaultOMSSAIndex(ptmName);
+                if (index == null) {
+                    if (userIndexes == null) {
+                        userIndexes = PTMFactory.getOMSSAIndexes(userModsFile);
+                    }
+                    if (userIndexes != null) {
+                        index = userIndexes.get(ptmName);
+                    }
+                }
+                modificationProfile.setOmssaIndex(ptmName, index);
             }
         }
 

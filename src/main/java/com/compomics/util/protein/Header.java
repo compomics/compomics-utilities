@@ -11,16 +11,18 @@
  * Time: 13:43:28
  */
 package com.compomics.util.protein;
+
 import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import java.util.StringTokenizer;
 
 /**
- * This class represents the header for a Protein instance.
- * It is meant to work closely with FASTA format notation. The Header class knows how to
- * handle certain often-used headers such as SwissProt and NCBI formatted FASTA headers.<br />
- * Note that the Header class is it's own factory, and should be used as such.
+ * This class represents the header for a Protein instance. It is meant to work
+ * closely with FASTA format notation. The Header class knows how to handle
+ * certain often-used headers such as SwissProt and NCBI formatted FASTA
+ * headers.<br /> Note that the Header class is it's own factory, and should be
+ * used as such.
  *
  * @author Lennart Martens
  * @author Harald Barsnes
@@ -41,87 +43,88 @@ public class Header implements Cloneable, Serializable {
     }
     /**
      * The ID String corresponds to the String that is present as the first
-     * element following the opening '>'. It is most notably 'sw' for SwissProt, and
-     * 'gi' for NCBI. <br />
-     * ID is the first element in the abbreviated header String.
+     * element following the opening '>'. It is most notably 'sw' for SwissProt,
+     * and 'gi' for NCBI. <br /> ID is the first element in the abbreviated
+     * header String.
      */
     private String iID = null;
     /**
-     * The foreign ID is the ID of another database this entry is orignally from.
-     * Most notably used for SwissProt entries in NCBI. <br />
-     * The foreign ID String is an addendum to the accession String in the abbreviated
+     * The foreign ID is the ID of another database this entry is orignally
+     * from. Most notably used for SwissProt entries in NCBI. <br /> The foreign
+     * ID String is an addendum to the accession String in the abbreviated
      * header String.
      */
     private String iForeignID = null;
     /**
-     * The accession String is the unique identifier for the sequence in the respective database.
-     * Note that for NCBI, the accession number also defines a unique moment in time. <br />
-     * Accession String is the second element in the abbreviated header String.
+     * The accession String is the unique identifier for the sequence in the
+     * respective database. Note that for NCBI, the accession number also
+     * defines a unique moment in time. <br /> Accession String is the second
+     * element in the abbreviated header String.
      */
     private String iAccession = null;
     /**
-     * Extracted database name. As there are no standard database names, this is 
-     * only an internally consistent naming scheme included to be able to later 
-     * separate the databases. For example when linking to the online version 
-     * of the database. The links themselves are not included as these might 
-     * change outside the control of the compomics-utilties library. Note that 
-     * the type is set to unknown by default, and is set to the correct type 
-     * during the parsing of the header.
+     * Extracted database name. As there are no standard database names, this is
+     * only an internally consistent naming scheme included to be able to later
+     * separate the databases. For example when linking to the online version of
+     * the database. The links themselves are not included as these might change
+     * outside the control of the compomics-utilties library. Note that the type
+     * is set to unknown by default, and is set to the correct type during the
+     * parsing of the header.
      */
     private DatabaseType databaseType = DatabaseType.Unknown;
 
     /**
-     * A list of the database types. As there are no standard database names, this is 
-     * only an internally consistent naming scheme included to be able to later 
-     * separate the databases. For example when linking to the online version 
-     * of the database. The links themselves are not included as these might 
-     * change outside the control of the compomics-utilties library.
+     * A list of the database types. As there are no standard database names,
+     * this is only an internally consistent naming scheme included to be able
+     * to later separate the databases. For example when linking to the online
+     * version of the database. The links themselves are not included as these
+     * might change outside the control of the compomics-utilties library.
      */
     public enum DatabaseType {
 
-        UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis, 
-        Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, 
+        UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis,
+        Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana,
         Listeria, Generic_Header, Generic_Split_Header, GAFFA, UPS
     }
-
     /**
-     * The foreign accession String is an accession String in another database of significance.
-     * Most notably used for SwissProt accessions that are kept in the NCBI database. <br />
-     * The foreign accession String is an addendum to the foreign ID String in the abbreviated header String.
+     * The foreign accession String is an accession String in another database
+     * of significance. Most notably used for SwissProt accessions that are kept
+     * in the NCBI database. <br /> The foreign accession String is an addendum
+     * to the foreign ID String in the abbreviated header String.
      */
     private String iForeignAccession = null;
     /**
-     * The description is a more or less elaborate description of the protein in question. <br />
-     * The description is the third element (and final) in the abbreviated header String.
+     * The description is a more or less elaborate description of the protein in
+     * question. <br /> The description is the third element (and final) in the
+     * abbreviated header String.
      */
     private String iDescription = null;
     /**
-     * The name of the gene the protein comes from. Note that this is only available for 
-     * UniProt-based databases.
+     * The name of the gene the protein comes from. Note that this is only
+     * available for UniProt-based databases.
      */
     private String iGeneName = null;
     /**
-     * The protein evidence for the protein. Note that this is only available for 
-     * UniProt-based databases.
+     * The protein evidence for the protein. Note that this is only available
+     * for UniProt-based databases.
      */
     private String iProteinEvidence = null;
     /**
-     * The name of the taxonomy the protein comes from. Note that this is only available for 
-     * UniProt-based databases.
+     * The name of the taxonomy the protein comes from. Note that this is only
+     * available for UniProt-based databases.
      */
     private String iTaxonomy = null;
     /**
-     * The foreign Description is a description for an entry in another DB.
-     * Most notably, the SwissProt short description for an entry that is found within
-     * NCBI. <br />
-     * The foreign description is an addendum to the foreign accession String in the abbreviated
-     * header String.
+     * The foreign Description is a description for an entry in another DB. Most
+     * notably, the SwissProt short description for an entry that is found
+     * within NCBI. <br /> The foreign description is an addendum to the foreign
+     * accession String in the abbreviated header String.
      */
     private String iForeignDescription = null;
     /**
-     * This variable holds all unidentified parts for the Header.
-     * If the String was not (recognized as) a standard SwissProt or
-     * NCBI header, this variable holds the entire header.
+     * This variable holds all unidentified parts for the Header. If the String
+     * was not (recognized as) a standard SwissProt or NCBI header, this
+     * variable holds the entire header.
      */
     private String iRest = null;
     /**
@@ -138,13 +141,15 @@ public class Header implements Cloneable, Serializable {
     private int iEnd = -1;
 
     /**
-     * Factory method that constructs a Header instance based on a FASTA header line.
+     * Factory method that constructs a Header instance based on a FASTA header
+     * line.
      *
-     * @param   aFASTAHeader    the String with the original FASTA header line.
-     * @return  Header  with the Header instance representing the given header. The object
-     *                  returned will have been parsed correctly if it is a standard SwissProt
-     *                  or NCBI formatted header, and will be plain in all other cases.
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing 
+     * @param aFASTAHeader the String with the original FASTA header line.
+     * @return Header with the Header instance representing the given header.
+     * The object returned will have been parsed correctly if it is a standard
+     * SwissProt or NCBI formatted header, and will be plain in all other cases.
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing
      */
     public static Header parseFromFASTA(String aFASTAHeader) throws StringIndexOutOfBoundsException {
         Header result = null;
@@ -198,7 +203,7 @@ public class Header implements Cloneable, Serializable {
                             result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
                         result.iDescription = lSt.nextToken();
-                        
+
                         // try to get the gene name and taxonomy from the description
                         parseUniProtDescription(result);
 
@@ -498,13 +503,13 @@ public class Header implements Cloneable, Serializable {
                     // try to parse as a generic header with splitters
                     // should look something like this: 
                     // >generic_some_tag|proten_accession|a description for this protein
-                    
+
                     result.databaseType = DatabaseType.Generic_Split_Header;
-                    
+
                     result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.lastIndexOf("|") + 1).trim();
                     result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
-                    
+
                 } else if (aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*")) {
                     // Old (everything before 9.0 release (31 Oct 2006)) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -537,10 +542,10 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
-                    
+
                     // try to get the gene name and taxonomy
                     parseUniProtDescription(result);
-                    
+
                 } else if (aFASTAHeader.matches("^tr\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -563,10 +568,10 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "tr";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
-                    
+
                     // try to get the gene name and taxonomy
                     parseUniProtDescription(result);
-                    
+
                 } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -583,7 +588,7 @@ public class Header implements Cloneable, Serializable {
                     result.databaseType = DatabaseType.UniProt;
                     result.iID = "sw";
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
-                    
+
                     // try to get the gene name and taxonomy
                     parseUniProtDescription(result);
                 } else if (aFASTAHeader.matches("^FB.+\\stype=.*")) {
@@ -620,8 +625,8 @@ public class Header implements Cloneable, Serializable {
                         result.iStart = Integer.parseInt(aFASTAHeader.substring(index1 + 1, separation));
                         result.iEnd = Integer.parseInt(aFASTAHeader.substring(separation + 1, index2));
                     }
-                    result.iDescription = aFASTAHeader.substring(accessionEndLoc+1).trim();
-                } else if(aFASTAHeader.matches("^[^|\t]* [|] Symbol[^|]*[|] [^|]* [|].*")) {
+                    result.iDescription = aFASTAHeader.substring(accessionEndLoc + 1).trim();
+                } else if (aFASTAHeader.matches("^[^|\t]* [|] Symbol[^|]*[|] [^|]* [|].*")) {
                     // The Arabidopsis thaliana database; TAIR format
                     // We need to find two elements, separated by pipes:
                     //   - the accession number with version (retrieved as the part before the first pipe).
@@ -757,7 +762,7 @@ public class Header implements Cloneable, Serializable {
                     //   - the description
                     result.databaseType = DatabaseType.Generic_Header;
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
-                    
+
                     // Temporary storage variables.
                     int startSecAcc = -1;
                     int endSecAcc = -1;
@@ -765,7 +770,7 @@ public class Header implements Cloneable, Serializable {
                     String testDescription = null;
                     int testStart = -1;
                     int testEnd = -1;
-                    
+
                     if ((accessionEndLoc > 0) && (aFASTAHeader.indexOf("(") >= 0) && (aFASTAHeader.indexOf(")", aFASTAHeader.indexOf("(") + 1) >= 0)) {
                         // Now we have to see if there is location information present.
                         if (aFASTAHeader.substring(accessionEndLoc + 1, aFASTAHeader.indexOf(")", accessionEndLoc + 2) + 1).matches("[(][0-9]+-[0-9]+[)]") && !aFASTAHeader.substring(accessionEndLoc + 2, aFASTAHeader.indexOf(")", accessionEndLoc + 2)).equals(aFASTAHeader.substring(0, accessionEndLoc).trim())) {
@@ -803,6 +808,15 @@ public class Header implements Cloneable, Serializable {
                             result.iEnd = testEnd;
                         }
                     } else {
+                        //try >nonsense|accession|description
+                        if (aFASTAHeader.lastIndexOf("|") >= 0) {
+                            String end = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
+                            if (end.indexOf("|") >= 0) {
+                                result.iAccession = end.substring(0, end.indexOf("|"));
+                                result.iDescription = end.substring(end.indexOf("|")+1);
+                            }
+                        }
+
                         // Unknown.
                         // Everything is rest.
                         result.iRest = aFASTAHeader;
@@ -866,7 +880,7 @@ public class Header implements Cloneable, Serializable {
     public DatabaseType getDatabaseType() {
         return databaseType;
     }
-    
+
     public void setDatabaseType(DatabaseType aDatabaseType) {
         databaseType = aDatabaseType;
     }
@@ -886,7 +900,7 @@ public class Header implements Cloneable, Serializable {
     public void setDescription(String aDescription) {
         iDescription = aDescription;
     }
-    
+
     public String getGeneName() {
         return iGeneName;
     }
@@ -894,7 +908,7 @@ public class Header implements Cloneable, Serializable {
     public void setGeneName(String aGeneName) {
         iGeneName = aGeneName;
     }
-    
+
     public String getProteinEvidence() {
         return iProteinEvidence;
     }
@@ -902,7 +916,7 @@ public class Header implements Cloneable, Serializable {
     public void setProteinEvidence(String aProteinEvidence) {
         iProteinEvidence = aProteinEvidence;
     }
-    
+
     public String getTaxonomy() {
         return iTaxonomy;
     }
@@ -928,14 +942,14 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method returns an abbreviated version of the Header,
-     * suitable for inclusion in FASTA formatted files. <br />
-     * The abbreviated header is composed in the following way: <br />
+     * This method returns an abbreviated version of the Header, suitable for
+     * inclusion in FASTA formatted files. <br /> The abbreviated header is
+     * composed in the following way: <br />
      * <pre>
      *     >[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
      * </pre>
      *
-     * @return  String  with the abbreviated header.
+     * @return String with the abbreviated header.
      */
     public String getAbbreviatedFASTAHeader() {
         StringBuffer result = new StringBuffer(">" + this.getCoreHeader());
@@ -989,11 +1003,11 @@ public class Header implements Cloneable, Serializable {
     /**
      * This method reports on the entire header.
      *
-     * @return  String  with the full header.
+     * @return String with the full header.
      */
     public String toString() {
         String result;
-        
+
         if (databaseType == DatabaseType.Generic_Split_Header) { // @TODO: this special case is perhaps not needed?
             result = ">" + this.iID + "|" + this.iAccession + "|" + this.iDescription;
         } else {
@@ -1006,25 +1020,20 @@ public class Header implements Cloneable, Serializable {
                 }
             }
         }
-        
+
         return result;
     }
 
     /**
      * This method will attribute a score to the current header, based on the
-     * following scoring list:
-     *   <ul>
-     *      <li> SwissProt : 4 </li>
-     *      <li> IPI, SwissProt reference : 3 </li>
-     *      <li> IPI, TrEMBL or REFSEQ_NP reference : 2 </li>
-     *      <li> IPI, without SwissProt, TrEMBL or REFSEQ_NP reference : 1 </li>
-     *      <li> NCBI, SwissProt reference : 2</li>
-     *      <li> NCBI, other reference : 1</li>
-     *      <li> Unknown header format : 0</li>
-     *   </ul>
+     * following scoring list: <ul> <li> SwissProt : 4 </li> <li> IPI, SwissProt
+     * reference : 3 </li> <li> IPI, TrEMBL or REFSEQ_NP reference : 2 </li>
+     * <li> IPI, without SwissProt, TrEMBL or REFSEQ_NP reference : 1 </li> <li>
+     * NCBI, SwissProt reference : 2</li> <li> NCBI, other reference : 1</li>
+     * <li> Unknown header format : 0</li> </ul>
      *
-     * @return  int with the header score. The higher the score, the more interesting
-     *              a Header is.
+     * @return int with the header score. The higher the score, the more
+     * interesting a Header is.
      */
     public int getScore() {
         int score = -1;
@@ -1055,14 +1064,14 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method reports on the core information for the header, which is comprised
-     * of the ID and the accession String:
-     *   <pre>
+     * This method reports on the core information for the header, which is
+     * comprised of the ID and the accession String:
+     * <pre>
      *     [ID]|[accession_string]
-     *   </pre>
-     * This is mostly useful for appending this core as an addendum to another header.
+     * </pre> This is mostly useful for appending this core as an addendum to
+     * another header.
      *
-     * @return  String  with the header core data ([ID]|[accession_string]).
+     * @return String with the header core data ([ID]|[accession_string]).
      */
     public String getCoreHeader() {
         String result = null;
@@ -1091,11 +1100,12 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method allows the addition of an addendum to the list.
-     * If the addendum is already preceded with '^A', it is added
-     * as is, otherwise '^A' is prepended before addition to the list.
+     * This method allows the addition of an addendum to the list. If the
+     * addendum is already preceded with '^A', it is added as is, otherwise '^A'
+     * is prepended before addition to the list.
      *
-     * @param   aAddendum   String with the addendum, facultatively preceded by '^A'.
+     * @param aAddendum String with the addendum, facultatively preceded by
+     * '^A'.
      */
     public void addAddendum(String aAddendum) {
         // First see if we have addenda already.
@@ -1112,10 +1122,10 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method allows the caller to retrieve all addenda for the current header,
-     * or 'null' if there aren't any.
+     * This method allows the caller to retrieve all addenda for the current
+     * header, or 'null' if there aren't any.
      *
-     * @return  String  with the addenda, or 'null' if there aren't any.
+     * @return String with the addenda, or 'null' if there aren't any.
      */
     public String getAddenda() {
         String result = null;
@@ -1128,7 +1138,7 @@ public class Header implements Cloneable, Serializable {
     /**
      * This method reports on the presence of addenda for this header.
      *
-     * @return  boolean whether addenda are present.
+     * @return boolean whether addenda are present.
      */
     public boolean hasAddenda() {
         boolean result = false;
@@ -1141,11 +1151,11 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method reports on the full header, with the addenda (if present).
-     * If no addenda are present, this method reports the same information as
-     * the 'toString()' method.
+     * This method reports on the full header, with the addenda (if present). If
+     * no addenda are present, this method reports the same information as the
+     * 'toString()' method.
      *
-     * @return  String  with the header and addenda (if any).
+     * @return String with the header and addenda (if any).
      */
     public String getFullHeaderWithAddenda() {
         String result = this.toString();
@@ -1158,16 +1168,15 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method returns an abbreviated version of the Header,
-     * suitable for inclusion in FASTA formatted files. <br />
-     * The abbreviated header is composed in the following way: <br />
+     * This method returns an abbreviated version of the Header, suitable for
+     * inclusion in FASTA formatted files. <br /> The abbreviated header is
+     * composed in the following way: <br />
      * <pre>
      *     >[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]([addenda])
-     * </pre>
-     * Note that the output of this method is identical to that of the getAbbreviatedFASTAHeader()
-     * if no addenda are present.
+     * </pre> Note that the output of this method is identical to that of the
+     * getAbbreviatedFASTAHeader() if no addenda are present.
      *
-     * @return  String  with the abbreviated header and addenda (if any).
+     * @return String with the abbreviated header and addenda (if any).
      */
     public String getAbbreviatedFASTAHeaderWithAddenda() {
         String result = this.getAbbreviatedFASTAHeader();
@@ -1181,19 +1190,16 @@ public class Header implements Cloneable, Serializable {
 
     /**
      * This method allows the caller to add information to the header about
-     * location of the sequence in a certain master sequence. <br/>
-     * This information is typically specified right after the accession number:
-     *   <pre>
+     * location of the sequence in a certain master sequence. <br/> This
+     * information is typically specified right after the accession number:
+     * <pre>
      *     [id]|[accession_string] ([startindex]-[endindex])|...
-     *   </pre>
-     * <b>Please note the following:</b>
-     *   <ul>
-     *     <li>If an index is already present, it is removed and replaced.</li>
-     *     <li>If the header is of unknown format, the indeces are appended to the end of the header.</li>
-     *   </ul>
+     * </pre> <b>Please note the following:</b> <ul> <li>If an index is already
+     * present, it is removed and replaced.</li> <li>If the header is of unknown
+     * format, the indeces are appended to the end of the header.</li> </ul>
      *
-     * @param   aStart  int with the startindex.
-     * @param   aEnd    int with the endindex.
+     * @param aStart int with the startindex.
+     * @param aEnd int with the endindex.
      */
     public void setLocation(int aStart, int aEnd) {
         this.iStart = aStart;
@@ -1201,22 +1207,20 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method reports on the start index of the header.
-     * It returns '-1' if no location is specified.
+     * This method reports on the start index of the header. It returns '-1' if
+     * no location is specified.
      *
-     * @return  int with the start location, or '-1' if none
-     *              was defined.
+     * @return int with the start location, or '-1' if none was defined.
      */
     public int getStartLocation() {
         return iStart;
     }
 
     /**
-     * This method reports on the end index of the header.
-     * It returns '-1' if no location is specified.
+     * This method reports on the end index of the header. It returns '-1' if no
+     * location is specified.
      *
-     * @return  int with the end location, or '-1' if none
-     *              was defined.
+     * @return int with the end location, or '-1' if none was defined.
      */
     public int getEndLocation() {
         return iEnd;
@@ -1225,7 +1229,7 @@ public class Header implements Cloneable, Serializable {
     /**
      * This method provides a deep copy of the Header instance.
      *
-     * @return  Object  Header that is a deep copy of this Header.
+     * @return Object Header that is a deep copy of this Header.
      */
     public Object clone() {
         Object result = null;
@@ -1236,36 +1240,37 @@ public class Header implements Cloneable, Serializable {
         }
         return result;
     }
-    
+
     /**
-     * Tries to extract the gene name, taxonomy and the protein evidence level from a UniProt description.
-     * 
+     * Tries to extract the gene name, taxonomy and the protein evidence level
+     * from a UniProt description.
+     *
      * @param header the header to parse.
      */
-    private static void parseUniProtDescription (Header header) {
+    private static void parseUniProtDescription(Header header) {
         // try to get the gene name from the description
         if (header.iDescription.indexOf(" GN=") != -1) {
             int geneStartIndex = header.iDescription.indexOf(" GN=") + 4;
             int geneEndIndex = header.iDescription.indexOf(" ", geneStartIndex);
-            
+
             if (geneEndIndex != -1) {
                 header.iGeneName = header.iDescription.substring(geneStartIndex, geneEndIndex);
             } else {
                 header.iGeneName = header.iDescription.substring(geneStartIndex);
             }
         }
-        
+
         // try to get the protein evidence level from the description
         if (header.iDescription.indexOf(" PE=") != -1) {
             int evidenceStartIndex = header.iDescription.indexOf(" PE=") + 4;
             int evidenceEndIndex = header.iDescription.indexOf(" ", evidenceStartIndex);
-            
+
             if (evidenceEndIndex != -1) {
                 header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex, evidenceEndIndex);
             } else {
                 header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex);
             }
-            
+
             // http://www.uniprot.org/manual/protein_existence
         }
 
@@ -1273,7 +1278,7 @@ public class Header implements Cloneable, Serializable {
         if (header.iDescription.indexOf(" OS=") != -1) {
             int taxonomyStartIndex = header.iDescription.indexOf(" OS=") + 4;
             int taxonomyEndIndex = header.iDescription.indexOf(" GN=");
-            
+
             // have to check if gene name is in the header
             if (taxonomyEndIndex == -1) {
                 if (header.iDescription.indexOf(" PE=") != -1) {

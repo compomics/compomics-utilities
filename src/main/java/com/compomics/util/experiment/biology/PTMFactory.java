@@ -329,6 +329,64 @@ public class PTMFactory implements Serializable {
         setDefaultNeutralLosses();
         setDefaultReporterIons();
     }
+    
+    /**
+     * returns the default OMSSA index of the modification. Null if not found
+     * @param modificationName the name of the modification
+     * @return the default omssa index
+     */
+    public Integer getDefaultOMSSAIndex(String modificationName) {
+        return defaultOmssaIndexes.get(modificationName);
+    }
+
+    /**
+     * Imports the OMSSA indexes from an xml file
+     * 
+     * @param modificationsFile the modification file
+     * @return a map of all indexes: modification name -> OMSSA index
+     * @throws XmlPullParserException
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    public static HashMap<String, Integer> getOMSSAIndexes(File modificationsFile) throws XmlPullParserException, FileNotFoundException, IOException {
+
+        HashMap<String, Integer> indexes = new HashMap<String, Integer>();
+
+        // Create the pull parser.
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
+        factory.setNamespaceAware(true);
+        XmlPullParser parser = factory.newPullParser();
+        // Create a reader for the input file.
+        BufferedReader br = new BufferedReader(new FileReader(modificationsFile));
+        // Set the XML Pull Parser to read from this reader.
+        parser.setInput(br);
+        // Start the parsing.
+        int type = parser.next();
+        Integer number = null;
+        // Go through the whole document.
+        while (type != XmlPullParser.END_DOCUMENT) {
+            if (type == XmlPullParser.START_TAG && parser.getName().equals("MSMod")) {
+                parser.next();
+                String numberString = parser.getText();
+                try {
+                    number = new Integer(numberString);
+                } catch (NumberFormatException nfe) {
+                    throw new XmlPullParserException("Found non-parseable text '" + numberString + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");
+                }
+            }
+            if (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_name")) {
+                parser.next();
+                String name = parser.getText();
+                if (number != null) {
+                    indexes.put(name, number);
+                }
+            }
+            type = parser.next();
+        }
+        br.close();
+
+        return indexes;
+    }
 
     /**
      * This method parses a single MSModSpec tag's contents from the

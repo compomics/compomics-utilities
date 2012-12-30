@@ -105,7 +105,7 @@ public class SequenceFactory {
      * @throws InterruptedException
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException {
-
+        
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null) {

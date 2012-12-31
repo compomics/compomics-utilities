@@ -329,9 +329,10 @@ public class PTMFactory implements Serializable {
         setDefaultNeutralLosses();
         setDefaultReporterIons();
     }
-    
+
     /**
-     * returns the default OMSSA index of the modification. Null if not found
+     * Returns the default OMSSA index of the modification. Null if not found.
+     *
      * @param modificationName the name of the modification
      * @return the default omssa index
      */
@@ -340,13 +341,13 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Imports the OMSSA indexes from an xml file
-     * 
+     * Imports the OMSSA indexes from an xml file.
+     *
      * @param modificationsFile the modification file
      * @return a map of all indexes: modification name -> OMSSA index
      * @throws XmlPullParserException
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     public static HashMap<String, Integer> getOMSSAIndexes(File modificationsFile) throws XmlPullParserException, FileNotFoundException, IOException {
 
@@ -371,7 +372,8 @@ public class PTMFactory implements Serializable {
                 try {
                     number = new Integer(numberString);
                 } catch (NumberFormatException nfe) {
-                    throw new XmlPullParserException("Found non-parseable text '" + numberString + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");
+                    throw new XmlPullParserException("Found non-parseable text '" + numberString 
+                            + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");
                 }
             }
             if (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_name")) {

@@ -3,7 +3,6 @@ package com.compomics.util.gui.waiting.waitinghandlers;
 import com.compomics.util.gui.waiting.WaitingHandler;
 
 import javax.swing.*;
-import java.io.PrintStream;
 import java.util.Date;
 
 /**

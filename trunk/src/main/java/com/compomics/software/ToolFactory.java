@@ -21,15 +21,19 @@ public class ToolFactory {
     /**
      * The command line argument for a cps file for PeptideShaker.
      */
-    public static final String peptideShakerFile = "-cps";
+    public static final String peptideShakerFileOption = "-cps";
     /**
      * The command line argument for mgf files for SearchGUI.
      */
-    public static final String searchGuiSpectrumFile = "-mgf";
+    public static final String searchGuiSpectrumFileOption = "-mgf";
     /**
      * The command line argument for a parameters file for SearchGUI.
      */
-    public static final String searchGuiParametersFile = "-search_parameters";
+    public static final String searchGuiParametersFileOption = "-search_parameters";
+    /**
+     * The command line argument for an output folder
+     */
+    public static final String outputFolderOption = "-output_folder";
 
     /**
      * Starts PeptideShaker from the location of utilities preferences.
@@ -67,7 +71,7 @@ public class ToolFactory {
         if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
             if (cpsFile != null) {
                 ArrayList<String> args = new ArrayList<String>();
-                args.add(peptideShakerFile);
+                args.add(peptideShakerFileOption);
                 args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
                 launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
             } else {
@@ -138,7 +142,7 @@ public class ToolFactory {
      * @throws InterruptedException
      */
     public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
-        startSearchGUI(parent, null, null);
+        startSearchGUI(parent, null, null, null);
     }
 
     /**
@@ -152,7 +156,7 @@ public class ToolFactory {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
 
@@ -166,11 +170,16 @@ public class ToolFactory {
             } else {
                 ArrayList<String> args = new ArrayList<String>();
                 if (mgfFiles != null) {
-                    args.add(searchGuiSpectrumFile);
+                    args.add(searchGuiSpectrumFileOption);
                     args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
-                } else if (searchParameters != null) {
-                    args.add(searchGuiParametersFile);
+                }
+                if (searchParameters != null) {
+                    args.add(searchGuiParametersFileOption);
                     args.add(CommandLineUtils.getCommandLineArgument(searchParameters));
+                }
+                if (outputFolder != null) {
+                    args.add(outputFolderOption);
+                    args.add(CommandLineUtils.getCommandLineArgument(outputFolder));
                 }
                 launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
             }

@@ -4,7 +4,6 @@ import com.compomics.software.dialogs.PeptideShakerSetupDialog;
 import com.compomics.software.dialogs.RelimsSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
-import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.*;
 import java.util.ArrayList;
@@ -151,6 +150,7 @@ public class ToolFactory {
      * @param parent a frame to display the path setting dialog.
      * @param mgfFiles the mgf files to search (can be null)
      * @param searchParameters the search parameters as a file (can be null)
+     * @param File outputFolder the output folder
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException

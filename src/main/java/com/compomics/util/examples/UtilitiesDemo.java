@@ -698,7 +698,10 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         String path = this.getClass().getResource("UtilitiesDemo.class").getPath();
 
         if (path.lastIndexOf("/utilities-") != -1) {
-            path = path.substring(5, path.lastIndexOf("/utilities-"));
+            // remove starting 'file:' tag if there
+            if (path.startsWith("file:")) {
+                path = path.substring("file:".length(), path.lastIndexOf("/utilities-"));
+            }
             path = path.replace("%20", " ");
             path = path.replace("%5b", "[");
             path = path.replace("%5d", "]");

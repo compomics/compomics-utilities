@@ -150,7 +150,7 @@ public class ToolFactory {
      * @param parent a frame to display the path setting dialog.
      * @param mgfFiles the mgf files to search (can be null)
      * @param searchParameters the search parameters as a file (can be null)
-     * @param File outputFolder the output folder
+     * @param outputFolder outputFolder the output folder
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException

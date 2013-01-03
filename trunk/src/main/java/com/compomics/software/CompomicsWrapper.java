@@ -550,6 +550,8 @@ public class CompomicsWrapper {
             // remove starting 'file:' tag if there
             if (path.startsWith("file:")) {
                 path = path.substring("file:".length(), path.lastIndexOf("/" + toolName));
+            } else {
+                path = path.substring(0, path.lastIndexOf("/" + toolName));
             }
             path = path.replace("%20", " ");
             path = path.replace("%5b", "[");

@@ -701,6 +701,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // remove starting 'file:' tag if there
             if (path.startsWith("file:")) {
                 path = path.substring("file:".length(), path.lastIndexOf("/utilities-"));
+            } else {
+                path = path.substring(0, path.lastIndexOf("/utilities-"));
             }
             path = path.replace("%20", " ");
             path = path.replace("%5b", "[");

@@ -68,6 +68,8 @@ public class FileSystemAccessor {
         // remove starting 'file:' tag if there
         if (path.startsWith("file:")) {
             path = path.substring("file:".length(), path.lastIndexOf(lFileSeparator) + 1);
+        } else {
+            path = path.substring(0, path.lastIndexOf(lFileSeparator) + 1);
         }
         path = path.replace("%20", " ");
         path = path.replace("%5b", "[");

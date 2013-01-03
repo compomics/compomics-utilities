@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.*;
@@ -155,13 +154,22 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
 
         if (waitingHandlerParent != null) {
-        this.setLocationRelativeTo(waitingHandlerParent);
+            this.setLocationRelativeTo(waitingHandlerParent);
 
-        // change the icon to a "waiting version"
-        if (waitingIcon != null) {
-            waitingHandlerParent.setIconImage(waitingIcon);
+            // change the icon to a "waiting version"
+            if (waitingIcon != null) {
+                waitingHandlerParent.setIconImage(waitingIcon);
+            }
         }
-        }
+    }
+
+    /**
+     * Set if the dialog is to be closed when the process is complete.
+     * 
+     * @param close
+     */
+    public void closeWhenComplete(boolean close) {
+        closeDialogWhenImportCompletesCheckBox.setSelected(close);
     }
 
     /**

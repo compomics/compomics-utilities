@@ -172,6 +172,7 @@ public class Util {
      * Note that the last selected folder value is not updated during this
      * method, and the code calling this method therefore has to take care of
      * this if wanted.
+     * @TODO a version for folder selection would be useful as well :)
      *
      * @param parent the parent dialog or frame
      * @param aFileEnding the file type, e.g., .txt

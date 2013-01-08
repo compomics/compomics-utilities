@@ -45,7 +45,7 @@ public class ModificationProfile implements Serializable {
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> colors = new HashMap<String, Color>(); 
+    private HashMap<String, Color> colors = new HashMap<String, Color>();
     /**
      * Back-up mapping of the PTMs for portability.
      */
@@ -311,5 +311,24 @@ public class ModificationProfile implements Serializable {
         return variableModifications.contains(modificationName)
                 || fixedModifications.contains(modificationName)
                 || refinementModifications.contains(modificationName);
+    }
+
+    /**
+     * Returns a list containing all not fixed modifications with the same mass
+     * Warning: all modifications of the profile must be loaded in the ptm factory.
+     *
+     * @param ptmMass the mass
+     * @return a list of all not fixed modifications with the same mass
+     */
+    public ArrayList<String> getSimilarNotFixedModifications(Double ptmMass) {
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ArrayList<String> ptms = new ArrayList<String>();
+        for (String ptmName : getAllNotFixedModifications()) {
+            PTM ptm = ptmFactory.getPTM(ptmName);
+            if (ptm.getMass() == ptmMass) {
+                ptms.add(ptmName);
+            }
+        }
+        return ptms;
     }
 }

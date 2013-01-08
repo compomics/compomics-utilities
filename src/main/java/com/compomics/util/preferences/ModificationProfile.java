@@ -314,7 +314,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns a list containing all not fixed modifications with the same mass
+     * Returns a list containing all not fixed modifications with the same mass.
      * Warning: all modifications of the profile must be loaded in the ptm factory.
      *
      * @param ptmMass the mass

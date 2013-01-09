@@ -1199,7 +1199,7 @@ public abstract class Identification extends ExperimentObject {
      * closing the database connection
      */
     public void close() throws SQLException {
-        if (isDB && identificationDB != null) {
+        if (isDB != null && isDB && identificationDB != null) {
             identificationDB.close();
         }
     }
@@ -1259,12 +1259,11 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
      */
-    public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache, File directory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
         reference = newName;
         establishConnection(newDirectory, true, objectsCache);
-
-        File directory = new File(serializationDirectory);
+        
         File[] files = directory.listFiles();
         int nParameters = 0;
         for (HashMap<String, UrParameter> map : urParameters.values()) {

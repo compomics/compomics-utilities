@@ -1243,7 +1243,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Converts a serlialization based structure into a database based one.
+     * Converts a serialization based structure into a database based one.
      * Replaces the space separation by the standard separator.
      *
      * @param waitingHandler the waiting handler

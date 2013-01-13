@@ -156,7 +156,8 @@ public class ToolFactory {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder)
+            throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
 
@@ -221,7 +222,7 @@ public class ToolFactory {
             quote = "\"";
         }
 
-        String cmdLine = "java -jar " + quote + toolPath + quote + " " + arguments; //@TODO check the java home?
+        String cmdLine = "java -jar " + quote + toolPath + quote + " " + arguments;
 
         if (debug) {
             System.out.println(cmdLine);
@@ -268,7 +269,7 @@ public class ToolFactory {
         }
 
         if (error) {
-            File logFile = new File(toolPath + "/resources/conf", toolName + ".log");
+            File logFile = new File(new File(toolPath).getParentFile().getAbsolutePath() + "/resources/conf", toolName + ".log");
             FileWriter f = new FileWriter(logFile, true);
             f.write(System.getProperty("line.separator") + System.getProperty("line.separator") + temp + System.getProperty("line.separator") + System.getProperty("line.separator"));
             f.close();

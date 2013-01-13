@@ -692,7 +692,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * Returns the path to the jar file.
      *
-     * @return
+     * @return the path to the jar file
      */
     private String getJarFilePath() {
         String path = this.getClass().getResource("UtilitiesDemo.class").getPath();
@@ -2610,7 +2610,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_profileSpectrumJCheckBoxActionPerformed
 
     /**
-     * @see #setVariableComoboBoxPopupMenuWidth()
+     * @see #setVariableComoboBoxPopupMenuWidth(javax.swing.event.PopupMenuEvent evt)
      */
     private void enzymesJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_enzymesJComboBoxPopupMenuWillBecomeVisible
         setVariableComoboBoxPopupMenuWidth(evt);

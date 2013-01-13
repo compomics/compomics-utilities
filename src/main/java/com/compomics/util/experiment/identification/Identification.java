@@ -133,8 +133,8 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the names of the mgf files used in the spectrum identification map
-     * as a list. To get the complete file path use
+     * Returns the names of the mgf files used in the spectrum identification
+     * map as a list. To get the complete file path use
      * projectDetails.getSpectrumFile(...).
      *
      * @return the mgf files used in the spectrum identification map
@@ -1250,6 +1250,7 @@ public abstract class Identification extends ExperimentObject {
      * @param newDirectory the new directory where to store the data
      * @param newName
      * @param objectsCache
+     * @param directory the directory where the data is currently stored
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      * @throws IOException exception thrown whenever an error occurred while
@@ -1259,11 +1260,12 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
      */
-    public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache, File directory) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache, File directory)
+            throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         setIsDB(true);
         reference = newName;
         establishConnection(newDirectory, true, objectsCache);
-        
+
         File[] files = directory.listFiles();
         int nParameters = 0;
         for (HashMap<String, UrParameter> map : urParameters.values()) {

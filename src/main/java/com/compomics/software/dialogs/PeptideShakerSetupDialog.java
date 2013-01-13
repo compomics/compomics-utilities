@@ -291,7 +291,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        utilitiesUserPreferences.setPeptideShakerPath(lastSelectedFolder);
+        utilitiesUserPreferences.setPeptideShakerPath(peptideShakernstallationJTextField.getText());
         try {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         } catch (Exception e) {

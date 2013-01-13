@@ -27,12 +27,12 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
     /**
      * Creates a new SearchGuiSetupDialog.
-     * 
+     *
      * @param parent
      * @param modal
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public SearchGuiSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
@@ -268,7 +268,6 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-
         File selectedFile = Util.getUserSelectedFile(this, ".jar", "SearchGUI jar file (.jar)", "Select SearchGUI Jar File", lastSelectedFolder, true);
 
         if (selectedFile != null) {
@@ -293,7 +292,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        utilitiesUserPreferences.setSearchGuiPath(lastSelectedFolder);
+        utilitiesUserPreferences.setSearchGuiPath(searchGuiInstallationJTextField.getText());
         try {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         } catch (Exception e) {

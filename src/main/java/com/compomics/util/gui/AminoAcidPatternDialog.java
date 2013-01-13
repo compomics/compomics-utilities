@@ -128,6 +128,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 };
             }
         };
+        rightClickHelpLabel = new javax.swing.JLabel();
         testPanel = new javax.swing.JPanel();
         patternTestJScrollPane = new javax.swing.JScrollPane();
         patternTestEditorPane = new javax.swing.JEditorPane();
@@ -202,21 +203,30 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         });
         patternDesignScrollPane.setViewportView(patternDesignTable);
 
+        rightClickHelpLabel.setFont(rightClickHelpLabel.getFont().deriveFont((rightClickHelpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        rightClickHelpLabel.setText("Right click in the table for options.");
+
         javax.swing.GroupLayout patternDesignPanelLayout = new javax.swing.GroupLayout(patternDesignPanel);
         patternDesignPanel.setLayout(patternDesignPanelLayout);
         patternDesignPanelLayout.setHorizontalGroup(
             patternDesignPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(patternDesignPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                .addGroup(patternDesignPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addGroup(patternDesignPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(rightClickHelpLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         patternDesignPanelLayout.setVerticalGroup(
             patternDesignPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(patternDesignPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(patternDesignScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rightClickHelpLabel))
         );
 
         testPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pattern Test"));
@@ -262,7 +272,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             }
         });
 
-        exampleLabel.setText("<html>\n<a href>Show Example</a>\n</html>");
+        exampleLabel.setText("<html><i>\n<a href>Show Example</a></i>\n</html>");
         exampleLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 exampleLabelMouseClicked(evt);
@@ -373,7 +383,10 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void exampleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exampleLabelMouseClicked
-        new AminoAcidPatternDialog(null, AminoAcidPattern.getTrypsinExample(), false);
+        pattern = AminoAcidPattern.getTrypsinExample();
+        patternTestEditorPane.setText(exampleSequence);
+        testPattern();
+        repaintTable();
     }//GEN-LAST:event_exampleLabelMouseClicked
 
     /**
@@ -752,6 +765,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     private javax.swing.JEditorPane patternTestEditorPane;
     private javax.swing.JScrollPane patternTestJScrollPane;
     private javax.swing.JPopupMenu popupJMenu;
+    private javax.swing.JLabel rightClickHelpLabel;
     private javax.swing.JPanel testPanel;
     // End of variables declaration//GEN-END:variables
 }

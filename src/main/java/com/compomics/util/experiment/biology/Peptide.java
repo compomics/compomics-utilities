@@ -293,7 +293,8 @@ public class Peptide extends ExperimentObject {
                         try {
                             result.add(new Integer(localizationSplit[1]));
                         } catch (Exception e) {
-                            throw new IllegalArgumentException("Cannot parse modification localization " + localizationSplit + " for modification " + modification + " in peptide key " + peptideKey);
+                            throw new IllegalArgumentException("Cannot parse modification localization " 
+                                    + localizationSplit + " for modification " + modification + " in peptide key " + peptideKey);
                         }
                     }
                 }
@@ -459,7 +460,9 @@ public class Peptide extends ExperimentObject {
      * while reading a protein sequence
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException {
+
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
+
         switch (ptm.getType()) {
             case PTM.MODAA:
                 AminoAcidPattern pattern = ptm.getPattern();

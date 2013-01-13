@@ -77,9 +77,9 @@ public class UtilitiesUserPreferences implements Serializable {
      * provided.
      */
     private String reporterPath = null;
-     /**
-     * The path to the Relims installation (if any). Set to null if no
-     * path is provided.
+    /**
+     * The path to the Relims installation (if any). Set to null if no path is
+     * provided.
      */
     private String relimsPath = null;
     /**
@@ -308,7 +308,7 @@ public class UtilitiesUserPreferences implements Serializable {
     public void setSearchGuiPath(String searchGuiPath) {
         this.searchGuiPath = searchGuiPath;
     }
-    
+
     /**
      * Returns the path to the Relims installation.
      *
@@ -365,10 +365,10 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Convenience method saving the user preferences.
-     * 
+     *
      * @param userPreferences
-     * @throws FileNotFoundException 
-     * @throws IOException  
+     * @throws FileNotFoundException
+     * @throws IOException
      */
     public static void saveUserPreferences(UtilitiesUserPreferences userPreferences) throws FileNotFoundException, IOException {
 
@@ -383,27 +383,27 @@ public class UtilitiesUserPreferences implements Serializable {
      * Convenience method retrieving the user preferences.
      *
      * @return returns the utilities user preferences
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public static UtilitiesUserPreferences loadUserPreferences() throws FileNotFoundException, IOException, ClassNotFoundException {
         UtilitiesUserPreferences userPreferences;
         File file = new File(UtilitiesUserPreferences.USER_PREFERENCES_FILE);
-        
+
         if (!file.exists()) {
             userPreferences = new UtilitiesUserPreferences();
             UtilitiesUserPreferences.saveUserPreferences(userPreferences);
         } else {
             userPreferences = (UtilitiesUserPreferences) SerializationUtils.readObject(file);
         }
-        
+
         return userPreferences;
     }
 
     /**
      * Returns the local PRIDE folder.
-     * 
+     *
      * @return the localPrideFolder
      */
     public String getLocalPrideFolder() {
@@ -412,7 +412,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Set the local PRIDE folder.
-     * 
+     *
      * @param localPrideFolder the localPrideFolder to set
      */
     public void setLocalPrideFolder(String localPrideFolder) {

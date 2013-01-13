@@ -25,7 +25,7 @@ import java.util.Iterator;
 public class SequenceFragmentationPanel extends JPanel {
 
     /**
-     * A map of the rectangles that have tooltips, i.e., the fragement ion peaks
+     * A map of the rectangles that have tooltips, i.e., the fragment ion peaks
      * and the PTM highlighting.
      */
     private HashMap<String, Rectangle> tooltipRectangles;
@@ -41,14 +41,14 @@ public class SequenceFragmentationPanel extends JPanel {
      * Double array on b-ions for the sequence components. If '0', no
      * corresponding ions were given for the component. Otherwise, a double
      * between [0:1] is stored in the array that is relative with the intensity
-     * of the most intense fragmention.
+     * of the most intense fragment ion.
      */
     private double[] bIons;
     /**
      * Double array on y-ions for the sequence components. If '0', no
      * corresponding ions were given for the component. Otherwise, a double
      * between [0:1] is stored in the array that is relative with the intensity
-     * of the most intense fragmention.
+     * of the most intense fragment ion.
      */
     private double[] yIons;
     /**
@@ -440,9 +440,9 @@ public class SequenceFragmentationPanel extends JPanel {
     }
 
     /**
-     * Returns an estimation of the Width.
+     * Returns an estimation of the width.
      *
-     * @return
+     * @return an estimation of the width
      */
     private int estimateWidth() {
         int lEstimateX = iXStart;
@@ -479,7 +479,7 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * Returns an estimation of the height.
      *
-     * @return
+     * @return an estimation of the height
      */
     private int estimateHeight() {
         int lEstimateY = 0;
@@ -490,7 +490,7 @@ public class SequenceFragmentationPanel extends JPanel {
 
     /**
      * Build the normalized intensity indexes for the parts of the modified
-     * sequence that were covered by fragmentions.
+     * sequence that were covered by fragment ions.
      */
     private void normalizeMatchedIons() {
 

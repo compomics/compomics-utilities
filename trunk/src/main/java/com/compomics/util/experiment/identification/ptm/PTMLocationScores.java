@@ -281,8 +281,7 @@ public class PTMLocationScores {
             int posMin = Math.min(bestPosition, secondPosition);
             int posMax = Math.max(bestPosition, secondPosition);
 
-            for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(
-                    iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
+            for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
                 for (Ion ion : ions) {
                     if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                         PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);

@@ -133,7 +133,7 @@ public class CompomicsWrapper {
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      */
     private void launch(File jarFile, String splashName, String mainClass) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-            launch(jarFile, splashName, mainClass, null);
+        launch(jarFile, splashName, mainClass, null);
     }
 
     /**

@@ -46,7 +46,7 @@ public class PropertiesManager {
     /**
      * Get the application folder that contains the appropriate properties.
      *
-     * @param aTool The tool for which the properties are requisted.
+     * @param aTool The tool for which the properties are requested.
      * @return File (Directory) that contains the properties.
      */
     public File getApplicationFolder(CompomicsTools aTool) {
@@ -61,7 +61,7 @@ public class PropertiesManager {
     /**
      * Get the singleton instance to access properties of Computational Omics tools.
      *
-     * @return The Propertiesmanger to access user properties in their home directory.
+     * @return The PropertiesManger to access user properties in their home directory.
      */
     public static PropertiesManager getInstance() {
         if (singleton == null) {
@@ -226,7 +226,7 @@ public class PropertiesManager {
      * Returns the File handler for the given compomics tool and filename.
      * @param aTool
      * @param aPropertiesFileName
-     * @return
+     * @return the File handler for the given compomics tool and filename
      */
     private File getFile(CompomicsTools aTool, String aPropertiesFileName) {
         return new File(getApplicationFolder(aTool), aPropertiesFileName);

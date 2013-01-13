@@ -298,9 +298,9 @@ public class SequenceModificationPanel extends JPanel {
     }
 
     /**
-     * Returns an estimation of the Width.
+     * Returns an estimation of the width.
      *
-     * @return
+     * @return an estimation of the width
      */
     private int estimateWidth() {
         int lEstimateX = iXStart;
@@ -319,7 +319,7 @@ public class SequenceModificationPanel extends JPanel {
     /**
      * Returns an estimation of the height.
      *
-     * @return
+     * @return an estimation of the height
      */
     private int estimateHeight() {
         int lEstimateY = 0;

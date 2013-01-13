@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -75,7 +76,7 @@ public class CompomicsWrapper {
      * @param args the arguments to pass to the tool (ignored if null)
      */
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args) {
-        
+
         try {
             try {
                 userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -149,7 +150,6 @@ public class CompomicsWrapper {
     private void launch(File jarFile, String splashName, String mainClass, String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
         String temp = "", cmdLine;
-        String options = "", currentOption;
         String arguments = "";
         if (args != null) {
             arguments = CommandLineUtils.concatenate(args);
@@ -163,177 +163,16 @@ public class CompomicsWrapper {
         if (!confFolder.exists()) {
             throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
         }
-        File javaOptions = new File(confFolder, "JavaOptions.txt");
-        File nonStandardJavaHome = new File(confFolder, "JavaHome.txt");
 
-        File uniprotApiPropertiesFile = new File(confFolder, "proxy/uniprotjapi.properties");
-        String uniprotApiProperties = "";
-
-        // read any java option settings
-        if (javaOptions.exists()) {
-
-            try {
-                FileReader f = new FileReader(javaOptions);
-                BufferedReader b = new BufferedReader(f);
-
-                currentOption = b.readLine();
-
-                while (currentOption != null) {
-                    if (currentOption.startsWith("-Xmx")) {
-                        if (firstTry) {
-                            currentOption = currentOption.substring(4, currentOption.length() - 1);
-                            boolean input = false;
-                            for (char c : currentOption.toCharArray()) {
-                                if (c != '*') {
-                                    input = true;
-                                    break;
-                                }
-                            }
-                            if (input) {
-                                try {
-                                    userPreferences.setMemoryPreference(new Integer(currentOption));
-                                    saveNewSettings(jarFile);
-                                    if (useStartUpLog) {
-                                        bw.write("New memory setting saved: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
-                                    }
-                                } catch (Exception e) {
-
-                                    javax.swing.JOptionPane.showMessageDialog(null,
-                                            "Could not parse the memory setting:" + currentOption
-                                            + ". The value was reset to" + userPreferences.getMemoryPreference() + ".",
-                                            "Wrong memory settings", JOptionPane.WARNING_MESSAGE);
-                                }
-                            }
-                        }
-                    } else if (!currentOption.startsWith("#")) {
-
-                        // extract the proxy settings as these are needed for uniprotjapi.properties
-                        if (currentOption.startsWith("-Dhttp")) {
-
-                            proxySettingsFound = true;
-                            String[] tempProxySetting = currentOption.split("=");
-
-                            if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyHost")) { // proxy host
-                                uniprotApiProperties += "proxy.host=" + tempProxySetting[1] + System.getProperty("line.separator");
-                            } else if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyPort")) { // proxy port
-                                uniprotApiProperties += "proxy.port=" + tempProxySetting[1] + System.getProperty("line.separator");
-                            } else if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyUser")) { // proxy user name
-                                uniprotApiProperties += "username=" + tempProxySetting[1] + System.getProperty("line.separator");
-                            } else if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyPassword")) { // proxy password
-                                uniprotApiProperties += "password=" + tempProxySetting[1] + System.getProperty("line.separator");
-                            }
-                        }
-
-                        options += currentOption + " ";
-                    }
-                    currentOption = b.readLine();
-                }
-
-                // create the uniprot japi proxy settings file
-                if (proxySettingsFound) {
-                    FileWriter uniprotProxyWriter = new FileWriter(uniprotApiPropertiesFile);
-                    BufferedWriter uniprotProxyBufferedWriter = new BufferedWriter(uniprotProxyWriter);
-                    uniprotProxyBufferedWriter.write(uniprotApiProperties);
-                    uniprotProxyBufferedWriter.close();
-                    uniprotProxyWriter.close();
-                }
-
-                b.close();
-                f.close();
-
-                options += "-Xmx" + userPreferences.getMemoryPreference() + "M";
-
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-                if (useStartUpLog) {
-                    bw.write(ex.getMessage());
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                if (useStartUpLog) {
-                    bw.write(ex.getMessage());
-                }
-            }
-        } else {
-            options = "-Xms128M -Xmx1024M";
+        // get the java options
+        ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);
+        String options = "";
+        for (String currentOption : optionsAsList) {
+            options += currentOption + " ";
         }
-
-        // get the default java home location
-        String javaHome = System.getProperty("java.home") + File.separator
-                + "bin" + File.separator;
 
         // check if the user has set a non-standard Java home location
-        boolean usingStandardJavaHome = true;
-
-        if (nonStandardJavaHome.exists()) {
-
-            try {
-                FileReader f = new FileReader(nonStandardJavaHome);
-                BufferedReader b = new BufferedReader(f);
-
-                String tempLocation = b.readLine();
-
-                if (new File(tempLocation).exists()
-                        && (new File(tempLocation, "java.exe").exists() || new File(tempLocation, "java").exists())) {
-                    javaHome = tempLocation;
-                    usingStandardJavaHome = false;
-                } else {
-                    if (firstTry) {
-                        JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
-                                + "Using default Java home.", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-
-                b.close();
-                f.close();
-
-            } catch (FileNotFoundException ex) {
-                if (firstTry) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
-                            + "Using default Java home", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
-                }
-            } catch (IOException ex) {
-
-                if (firstTry) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error when reading non-standard Java home location.\n"
-                            + "Using default Java home.", "Java Home Error", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-        }
-
-        // set up the quote type, windows or linux/mac
-        String quote = "";
-
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
-            quote = "\"";
-        }
-
-        if (useStartUpLog) {
-            bw.write("original java.home: " + javaHome + System.getProperty("line.separator"));
-        }
-
-        // try to force the use of 64 bit Java if available
-        if (usingStandardJavaHome && javaHome.lastIndexOf(" (x86)") != -1 && System.getProperty("os.name").lastIndexOf("Windows") != -1) {
-
-            // default java 32 bit windows home looks like this:    C:\Program Files (x86)\Java\jre6\bin\javaw.exe
-            // default java 64 bit windows home looks like this:    C:\Program Files\Java\jre6\bin\javaw.exe
-
-            String tempJavaHome = javaHome.replaceAll(" \\(x86\\)", "");
-
-            if (useStartUpLog) {
-                bw.write("temp java.home: " + tempJavaHome + System.getProperty("line.separator"));
-            }
-
-            if (new File(tempJavaHome).exists()) {
-                javaHome = tempJavaHome;
-            }
-        }
-
-        if (useStartUpLog) {
-            bw.write("new java.home: " + javaHome + System.getProperty("line.separator"));
-        }
+        String javaHome = getJavaHome(confFolder, bw);
 
         // get the splash 
         String splashPath = confFolder.getAbsolutePath() + File.separator + splashName;
@@ -349,6 +188,11 @@ public class CompomicsWrapper {
         }
 
         String uniprotProxyClassPath = "";
+        String quote = "";
+
+        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
+            quote = "\"";
+        }
 
         // add the classpath for the uniprot proxy file
         if (proxySettingsFound) {
@@ -373,7 +217,7 @@ public class CompomicsWrapper {
         }
 
         // create the complete command line
-        cmdLine = javaHome + "java -splash:" + quote + splashPath + quote + " " + options + " -cp "
+        cmdLine = javaHome + " -splash:" + quote + splashPath + quote + " " + options + " -cp "
                 + quote + jarFilePath + quote + uniprotProxyClassPath
                 + " " + mainClass + " " + arguments;
 
@@ -648,5 +492,255 @@ public class CompomicsWrapper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get the Java options.
+     *
+     * @param confFolder the conf folder for the project
+     * @param jarFile the jar file for the project
+     * @param bw a buffered writer for log and errors, can be null
+     * @return the options to the Java Virtual Machine
+     * @throws IOException
+     */
+    private ArrayList<String> getJavaOptions(File confFolder, File jarFile, BufferedWriter bw) throws IOException {
+
+        try {
+            userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> options = new ArrayList<String>();
+
+        File javaOptions = new File(confFolder, "JavaOptions.txt");
+        File uniprotApiPropertiesFile = new File(confFolder, "proxy/uniprotjapi.properties");
+        String uniprotApiProperties = "";
+
+        // read any java option settings
+        if (javaOptions.exists()) {
+
+            try {
+                FileReader f = new FileReader(javaOptions);
+                BufferedReader b = new BufferedReader(f);
+
+                String currentOption = b.readLine();
+
+                while (currentOption != null) {
+                    if (currentOption.startsWith("-Xmx")) {
+                        if (firstTry) {
+                            currentOption = currentOption.substring(4, currentOption.length() - 1);
+                            boolean input = false;
+                            for (char c : currentOption.toCharArray()) {
+                                if (c != '*') {
+                                    input = true;
+                                    break;
+                                }
+                            }
+                            if (input) {
+                                try {
+                                    userPreferences.setMemoryPreference(new Integer(currentOption));
+                                    saveNewSettings(jarFile);
+                                    if (bw != null) {
+                                        bw.write("New memory setting saved: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
+                                    }
+                                } catch (Exception e) {
+                                    javax.swing.JOptionPane.showMessageDialog(null,
+                                            "Could not parse the memory setting:" + currentOption
+                                            + ". The value was reset to" + userPreferences.getMemoryPreference() + ".",
+                                            "Wrong memory settings", JOptionPane.WARNING_MESSAGE);
+                                }
+                            }
+                        }
+                    } else if (!currentOption.startsWith("#")) {
+
+                        // extract the proxy settings as these are needed for uniprotjapi.properties
+                        if (currentOption.startsWith("-Dhttp")) {
+
+                            proxySettingsFound = true;
+                            String[] tempProxySetting = currentOption.split("=");
+
+                            if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyHost")) { // proxy host
+                                uniprotApiProperties += "proxy.host=" + tempProxySetting[1] + System.getProperty("line.separator");
+                            } else if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyPort")) { // proxy port
+                                uniprotApiProperties += "proxy.port=" + tempProxySetting[1] + System.getProperty("line.separator");
+                            } else if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyUser")) { // proxy user name
+                                uniprotApiProperties += "username=" + tempProxySetting[1] + System.getProperty("line.separator");
+                            } else if (tempProxySetting[0].equalsIgnoreCase("-Dhttp.proxyPassword")) { // proxy password
+                                uniprotApiProperties += "password=" + tempProxySetting[1] + System.getProperty("line.separator");
+                            }
+                        }
+
+                        options.add(currentOption.trim());
+                    }
+
+                    currentOption = b.readLine();
+                }
+
+                // create the uniprot japi proxy settings file
+                if (proxySettingsFound) {
+                    FileWriter uniprotProxyWriter = new FileWriter(uniprotApiPropertiesFile);
+                    BufferedWriter uniprotProxyBufferedWriter = new BufferedWriter(uniprotProxyWriter);
+                    uniprotProxyBufferedWriter.write(uniprotApiProperties);
+                    uniprotProxyBufferedWriter.close();
+                    uniprotProxyWriter.close();
+                }
+
+                b.close();
+                f.close();
+
+                options.add("-Xmx" + userPreferences.getMemoryPreference() + "M");
+
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+                if (bw != null) {
+                    bw.write(ex.getMessage());
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                if (bw != null) {
+                    bw.write(ex.getMessage());
+                }
+            }
+        } else {
+            options.add("-Xms128M");
+            options.add("-Xmx1024M");
+        }
+
+        return options;
+    }
+
+    /**
+     * Returns the Java home.
+     *
+     * @param confFolder the conf folder
+     * @param bw a buffered writer for log and errors, can be null
+     *
+     * @return the Java home
+     * @throws IOException
+     */
+    private String getJavaHome(File confFolder, BufferedWriter bw) throws IOException {
+
+        boolean usingStandardJavaHome = true;
+
+        // get the default java home location
+        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator;
+
+        // get the user set java home
+        File nonStandardJavaHome = new File(confFolder, "JavaHome.txt");
+
+        if (nonStandardJavaHome.exists()) {
+
+            try {
+                FileReader f = new FileReader(nonStandardJavaHome);
+                BufferedReader b = new BufferedReader(f);
+
+                String tempLocation = b.readLine();
+
+                if (new File(tempLocation).exists()
+                        && (new File(tempLocation, "java.exe").exists() || new File(tempLocation, "java").exists())) {
+                    javaHome = tempLocation;
+                    usingStandardJavaHome = false;
+                } else {
+                    if (firstTry) {
+                        JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
+                                + "Using default Java home.", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+
+                b.close();
+                f.close();
+
+            } catch (FileNotFoundException ex) {
+                if (firstTry) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
+                            + "Using default Java home", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (IOException ex) {
+                if (firstTry) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error when reading non-standard Java home location.\n"
+                            + "Using default Java home.", "Java Home Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }
+
+        if (bw != null) {
+            bw.write("original java.home: " + javaHome + System.getProperty("line.separator"));
+        }
+
+        // try to force the use of 64 bit Java if available
+        if (usingStandardJavaHome && javaHome.lastIndexOf(" (x86)") != -1 && System.getProperty("os.name").lastIndexOf("Windows") != -1) {
+
+            // default java 32 bit windows home looks like this:    C:\Program Files (x86)\Java\jre6\bin\javaw.exe
+            // default java 64 bit windows home looks like this:    C:\Program Files\Java\jre6\bin\javaw.exe
+
+            String tempJavaHome = javaHome.replaceAll(" \\(x86\\)", "");
+
+            if (bw != null) {
+                bw.write("temp java.home: " + tempJavaHome + System.getProperty("line.separator"));
+            }
+
+            if (new File(tempJavaHome).exists()) {
+                javaHome = tempJavaHome;
+            }
+        }
+
+        if (bw != null) {
+            bw.write("new java.home: " + javaHome + System.getProperty("line.separator"));
+        }
+        
+        // set up the quote type, windows or linux/mac
+        String quote = "";
+
+        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
+            quote = "\"";
+        }
+
+        javaHome = quote + javaHome + "java" + quote;
+
+        return javaHome;
+    }
+
+    /**
+     * Returns a array list containing the Java home plus any parameters to the
+     * JVM. The fist index in the list will always contain the Java home. Note
+     * that this method assumes that the tool has folder called resources/conf
+     * in the same folder as the jar file.
+     *
+     * @param toolPath
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public ArrayList<String> getJavaHomeAndOptions(String toolPath) throws FileNotFoundException, IOException, ClassNotFoundException {
+
+        ArrayList<String> javaHomeAndOptions = new ArrayList<String>();
+
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        CompomicsWrapper wrapper = new CompomicsWrapper();
+        File confFolder = new File(new File(toolPath).getParentFile(), "resources/conf");
+        if (!confFolder.exists()) {
+            String path = URLDecoder.decode(new File(toolPath).getParentFile().getAbsolutePath(), "UTF-8");
+            confFolder = new File(path, "resources/conf");
+        }
+        if (!confFolder.exists()) {
+            throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
+        }
+        File debugOutput = new File(confFolder, "startup.log");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(debugOutput));
+        String javaHome = wrapper.getJavaHome(confFolder, bw);
+
+        javaHomeAndOptions.add(javaHome);
+
+        ArrayList<String> optionsAsList = wrapper.getJavaOptions(confFolder, new File(utilitiesUserPreferences.getPeptideShakerPath()), bw);
+
+        for (String tempOption : optionsAsList) {
+            javaHomeAndOptions.add(tempOption);
+        }
+
+        return javaHomeAndOptions;
     }
 }

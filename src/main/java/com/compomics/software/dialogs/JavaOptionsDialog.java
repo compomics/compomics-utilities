@@ -109,7 +109,10 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
         setTitle("Java Options");
         setResizable(false);
 
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Memory Settings"));
+        settingsPanel.setOpaque(false);
 
         memoryLimitLabel.setText("Memory Limit:");
 

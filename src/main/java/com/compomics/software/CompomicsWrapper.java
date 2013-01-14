@@ -283,7 +283,7 @@ public class CompomicsWrapper {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 "Failed to create the Java virtual machine.\n\n"
                                 + "Inspect the log file for details: resources/conf/startup.log.\n\n"
-                                + "Then go to Troubleshooting at http://", //@TODO move help to tool independent website
+                                + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com", // @TODO: move help to tool independent website
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
 
                         System.exit(0);
@@ -303,7 +303,7 @@ public class CompomicsWrapper {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 "An error occurred when starting the tool.\n\n"
                                 + "Inspect the log file for details: resources/conf/startup.log.\n\n"
-                                + "Then go to Troubleshooting at http://", //@TODO move help to tool independent website
+                                + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com", // @TODO: move help to tool independent website
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
                     }
 

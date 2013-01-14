@@ -46,7 +46,12 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
             lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
         }
 
-        setLocationRelativeTo(parent);
+        if (parent.isVisible()) {
+            setLocationRelativeTo(parent);
+        } else {
+            setLocationRelativeTo(null);
+        }
+        
         setVisible(true);
     }
 

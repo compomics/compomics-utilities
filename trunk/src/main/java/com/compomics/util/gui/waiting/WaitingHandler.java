@@ -6,18 +6,21 @@ import javax.swing.JProgressBar;
 
 /**
  * An interface for code dealing with how to handle information that is
- * displayed to the user during the loading of new projetcs.
+ * displayed to the user during the loading of new projects.
  *
  * @author Harald Barsnes
  */
 public interface WaitingHandler {
 
     /**
-     * Sets whether the primary progress bar is indeterminate or not. Also turns the paint
-     * progress string on or off.
-     * @param indeterminate a boolean indicating whether the primary progress bar shall be indeterminate or not
+     * Sets whether the primary progress bar is indeterminate or not. Also turns
+     * the paint progress string on or off.
+     *
+     * @param indeterminate a boolean indicating whether the primary progress
+     * bar shall be indeterminate or not
      */
     public void setIndeterminate(boolean indeterminate);
+
     /**
      * Set the maximum value of the progress bar.
      *
@@ -93,12 +96,13 @@ public interface WaitingHandler {
      * The tab space to add when using tab.
      */
     public static String tab = "        "; // tab could be used, but lenght is locale dependent
-    
+
     /**
      * Append text to the report.
      *
      * @param report the text to append
-     * @param includeDate if the date and time is to be added to the front of the text
+     * @param includeDate if the date and time is to be added to the front of
+     * the text
      * @param addNewLine add a new line after the text?
      */
     public void appendReport(String report, boolean includeDate, boolean addNewLine);
@@ -138,8 +142,8 @@ public interface WaitingHandler {
     /**
      * Display a given message to the user separately from the main output. For
      * example a warning or error message. Usually in a separate dialog if a
-     * graphical waiting handler is used.
-     * Warning: shall not be used for command line processes
+     * graphical waiting handler is used. Warning: shall not be used for command
+     * line processes
      *
      * @param message the message to display
      * @param title the title of the message
@@ -149,9 +153,9 @@ public interface WaitingHandler {
     public void displayMessage(String message, String title, int messageType);
 
     /**
-     * Display a given html containing message to the user separatly from the
+     * Display a given HTML containing message to the user separately from the
      * main output. For example a warning or error message. Usually in a
-     * separate dialog if a grahical waiting handler is used. The html links
+     * separate dialog if a graphical waiting handler is used. The HTML links
      * should be clickable.
      *
      * @param messagePane
@@ -159,10 +163,10 @@ public interface WaitingHandler {
      * @param messageType
      */
     public void displayHtmlMessage(JEditorPane messagePane, String title, int messageType);
-    
+
     /**
      * Sets the text describing what is currently waited for.
-     * 
+     *
      * @param text a text describing what is currently waited for
      */
     public void setWaitingText(String text);

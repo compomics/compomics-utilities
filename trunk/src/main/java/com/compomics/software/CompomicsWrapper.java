@@ -425,11 +425,11 @@ public class CompomicsWrapper {
     }
 
     /**
-     * Check if a newer version of the tool is available on Google Code.
+     * Check if a newer version of the tool is available on GoogleCode.
      *
      * @param currentVersion the version number of the tool currently running
      * @param toolName the name of the tool, e.g., "PeptideShaker"
-     * @param googleCodeToolName the google code name of the tool, e.g.,
+     * @param googleCodeToolName the GoogleCode name of the tool, e.g.,
      * "peptide-shaker"
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
@@ -471,7 +471,8 @@ public class CompomicsWrapper {
 
                 // informs the user about an updated version of the tool, unless the user
                 // is running a beta version
-                if (deprecatedOrDeleted && currentVersion.lastIndexOf("beta") == -1) {
+                if (deprecatedOrDeleted && currentVersion.lastIndexOf("beta") == -1
+                        && currentVersion.lastIndexOf("${version}") == -1) {
                     int option = JOptionPane.showConfirmDialog(null,
                             "A newer version of " + toolName + " is available.\n"
                             + "Do you want to upgrade?",
@@ -690,7 +691,7 @@ public class CompomicsWrapper {
         if (bw != null) {
             bw.write("new java.home: " + javaHome + System.getProperty("line.separator"));
         }
-        
+
         // set up the quote type, windows or linux/mac
         String quote = "";
 
@@ -704,13 +705,14 @@ public class CompomicsWrapper {
     }
 
     /**
-     * Returns a array list containing the Java home plus any parameters to the
+     * Returns an array list containing the Java home plus any parameters to the
      * JVM. The fist index in the list will always contain the Java home. Note
      * that this method assumes that the tool has folder called resources/conf
      * in the same folder as the jar file.
      *
-     * @param toolPath
-     * @return
+     * @param toolPath the path to the jar file of the tool
+     * @return an array list containing the Java home plus any
+     * parameters to the JVM
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException

@@ -19,6 +19,9 @@ import javax.swing.table.DefaultTableModel;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 import no.uib.olsdialog.OLSDialog;
 import no.uib.olsdialog.OLSInputable;
+import uk.ac.ebi.ols.soap.Query;
+import uk.ac.ebi.ols.soap.QueryService;
+import uk.ac.ebi.ols.soap.QueryServiceLocator;
 
 /**
  * This dialog allows the user to create/edit PTMs.
@@ -37,7 +40,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
     /**
-     * The edited ptm.
+     * The edited PTM.
      */
     private PTM currentPtm = null;
     /**
@@ -49,15 +52,15 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
     /**
-     * The ptm to pride map.
+     * The PTM to pride map.
      */
     private PtmToPrideMap ptmToPrideMap;
     /**
-     * The modification cv term.
+     * The modification CV term.
      */
     private CvTerm cvTerm = null;
     /**
-     * Boolean indicating wheter the user can edit the ptm or not.
+     * Boolean indicating whether the user can edit the PTM or not.
      */
     private boolean editable;
     /**
@@ -71,8 +74,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param parent the JDialog parent
      * @param ptmDialogParent the PtmDialogParent parent
      * @param ptmToPrideMap the PTM to PRIDE map
-     * @param currentPTM the ptm to edit (can be null)
-     * @param editable boolean indicating wheter the user can edit the ptm
+     * @param currentPTM the PTM to edit (can be null)
+     * @param editable boolean indicating whether the user can edit the PTM
      * details
      */
     public PtmDialog(JDialog parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
@@ -100,8 +103,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param parent the JFrame parent
      * @param ptmDialogParent the PtmDialogParent parent
      * @param ptmToPrideMap the PTM to PRIDE map
-     * @param currentPTM the ptm to edit (can be null)
-     * @param editable boolean indicating wheter the user can edit the ptm
+     * @param currentPTM the PTM to edit (can be null)
+     * @param editable boolean indicating whether the user can edit the PTM
      * details
      */
     public PtmDialog(JFrame parent, PtmDialogParent ptmDialogParent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
@@ -642,7 +645,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
-     * Add the ptm to the PtmDialogParent.
+     * Add the PTM to the PtmDialogParent.
      *
      * @param evt
      */
@@ -683,7 +686,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
 
             ptmFactory.addUserPTM(newPTM);
-
+            cvTerm.setValue(massTxt.getText()); // set the modification mass, note that this means that the mass can be different from the one in PSI-MOD...
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             ptmDialogParent.updateModifications();
             saveChanges();
@@ -890,7 +893,52 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     @Override
     public void insertOLSResult(String field, String selectedValue,
             String accession, String ontologyShort, String ontologyLong, int modifiedRow, String mappedTerm, Map<String, String> metadata) {
-        cvTerm = new CvTerm(ontologyShort, accession, selectedValue, null);
+
+        Double monoMass = null;
+
+        // get the mono diff mass
+        try {
+            QueryService locator = new QueryServiceLocator();
+            Query olsConnection = locator.getOntologyQuery();
+            Map<String, String> metaData = olsConnection.getTermMetadata(accession, ontologyShort);
+            String monoMassAsString = metaData.get("DiffMono");
+            if (monoMassAsString != null) {
+                monoMass = new Double(monoMassAsString).doubleValue();
+
+                try {
+                    double userMass = new Double(massTxt.getText()).doubleValue();
+
+                    if (monoMass != userMass) {
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "The modification mass has been updated.",
+                                "Modification Mass", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (NumberFormatException e) {
+                    // ignore
+                }
+
+                massTxt.setText(monoMassAsString);
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "The modification selected has no mass. Using user defined mass.",
+                        "Modification Mass", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error connecting to the OLS.",
+                    "OLS Connection Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+
+        if (monoMass != null) {
+            cvTerm = new CvTerm(ontologyShort, accession, selectedValue, monoMass.toString());
+        } else {
+            cvTerm = new CvTerm(ontologyShort, accession, selectedValue, monoMass.toString());
+        }
+
         updateModMappingText();
     }
 

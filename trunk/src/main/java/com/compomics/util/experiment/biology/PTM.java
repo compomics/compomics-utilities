@@ -185,9 +185,9 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Sets the ptm name.
+     * Sets the PTM name.
      *
-     * @param name the ptm name
+     * @param name the PTM name
      */
     public void setName(String name) {
         this.name = name;
@@ -203,9 +203,9 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Sets the short ptm name.
+     * Sets the short PTM name.
      *
-     * @param shortName the ptm name
+     * @param shortName the PTM name
      */
     public void setShortName(String shortName) {
         this.shortName = shortName;

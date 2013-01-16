@@ -14,13 +14,13 @@ public class PtmToPrideMap implements Serializable {
     /**
      * Serialization number for backward compatibility.
      */
-        static final long serialVersionUID = 7368502853292052566L;
+    static final long serialVersionUID = 7368502853292052566L;
     /**
      * The name of the file to save.
      */
     public static String fileName = "modMap.cus";
     /**
-     * Map of the cv terms indexed by modification user name.
+     * Map of the CV terms indexed by modification user name.
      */
     private HashMap<String, CvTerm> modToCvMap = new HashMap<String, CvTerm>();
 
@@ -31,11 +31,11 @@ public class PtmToPrideMap implements Serializable {
     }
 
     /**
-     * Returns the cv term corresponding to the given PTM name. Null if not
+     * Returns the CV term corresponding to the given PTM name. Null if not
      * found.
      *
-     * @param ptmName the ptm name
-     * @return the corresponding cv term
+     * @param ptmName the PTM name
+     * @return the corresponding CV term
      */
     public CvTerm getCVTerm(String ptmName) {
         return modToCvMap.get(ptmName);
@@ -55,7 +55,7 @@ public class PtmToPrideMap implements Serializable {
     /**
      * Returns the default cvTerm of a modification when it exists.
      *
-     * @param ptmName the ptm Name according to the xml file
+     * @param ptmName the PTM Name according to the XML file
      * @return a default CV term
      */
     public static CvTerm getDefaultCVTerm(String ptmName) {
@@ -368,11 +368,11 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Asparagine dHexHexNAc")) {
             return new CvTerm("MOD", "MOD:00510", "HexNAc(1)dHex(1)", "349.137281");
         } else if (ptmName.equalsIgnoreCase("Serine HexNAc")) {
-            return new CvTerm("MOD", "MOD:01675", "HexNAc S", "203.079373");  
+            return new CvTerm("MOD", "MOD:01675", "HexNAc S", "203.079373");
         } else if (ptmName.equalsIgnoreCase("Threonine HexNAc")) {
-            return new CvTerm("MOD", "MOD:01676", "HexNAc S", "203.079373");  
+            return new CvTerm("MOD", "MOD:01676", "HexNAc S", "203.079373");
         } else if (ptmName.equalsIgnoreCase("palmitoleyl of S")) {
-            return new CvTerm("MOD", "MOD:01423", "Palmitoleyl", "236.214016");  
+            return new CvTerm("MOD", "MOD:01423", "Palmitoleyl", "236.214016");
         } else if (ptmName.equalsIgnoreCase("palmitoleyl of C")) {
             return new CvTerm("MOD", "MOD:01423", "Palmitoleyl", "236.214016");
         } else if (ptmName.equalsIgnoreCase("palmitoleyl of T")) {
@@ -420,7 +420,7 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("carboxymethylated selenocysteine")) {
             return null; // @TODO: no mapping found!!
         }
-        
+
         return null;
     }
 }

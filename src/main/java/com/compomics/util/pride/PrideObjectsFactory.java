@@ -237,7 +237,7 @@ public class PrideObjectsFactory {
     /**
      * Adds a contact group in the PRIDE objects.
      *
-     * @param contactGroup the conact group to add
+     * @param contactGroup the contact group to add
      * @throws IOException exception thrown whenever an error occurred while
      * saving
      */

@@ -926,7 +926,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             JOptionPane.showMessageDialog(this, "Report written to file '" + filePath + "'.", "Report Saved", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ioe) {
             JOptionPane.showMessageDialog(this, new String[]{"Error writing report to file:", ioe.getMessage()}, "Save Failed", JOptionPane.ERROR_MESSAGE);
-
         } finally {
             if (bw != null) {
                 try {

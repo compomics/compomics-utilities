@@ -9,6 +9,7 @@ import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.pride.CvTerm;
 import com.compomics.util.pride.PrideObjectsFactory;
 import com.compomics.util.pride.PtmToPrideMap;
+import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
@@ -52,7 +53,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
     /**
-     * The PTM to pride map.
+     * The PTM to PRIDE map.
      */
     private PtmToPrideMap ptmToPrideMap;
     /**
@@ -195,6 +196,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
             setTitle("Edit Modification");
         }
+
+        validateInput(false);
     }
 
     /**
@@ -204,64 +207,177 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @return a boolean indicating whether the input can be translated into a
      * PTM
      */
-    private boolean validateInput() {
+    private boolean validateInput(boolean showMessage) {
+
+        boolean error = false;
+
+        nameLabel.setForeground(Color.BLACK);
+        massLabel.setForeground(Color.BLACK);
+        patternLabel.setForeground(Color.BLACK);
+
+        nameLabel.setToolTipText(null);
+        nameTxt.setToolTipText(null);
+        massLabel.setToolTipText(null);
+        massTxt.setToolTipText(null);
+        patternLabel.setToolTipText(null);
+        residuesTxt.setToolTipText(null);
+
+        // check the modification mass
+        if (massTxt.getText().trim().length() == 0) {
+            error = true;
+            massLabel.setForeground(Color.RED);
+            massLabel.setToolTipText("Please provide a modification mass.");
+            massTxt.setToolTipText("Please provide a modification mass.");
+        } else {
+            try {
+                new Double(massTxt.getText().trim());
+            } catch (Exception e) {
+                if (showMessage) {
+                    JOptionPane.showMessageDialog(this, "Please verify the input for the modification mass.",
+                            "Wrong Mass", JOptionPane.WARNING_MESSAGE);
+                }
+                error = true;
+                massLabel.setForeground(Color.RED);
+                massLabel.setToolTipText("Please verify the input for the modification mass.");
+                massTxt.setToolTipText("Please verify the input for the modification mass.");
+            }
+        }
+
         String name = nameTxt.getText().trim();
+
+        // check the length of the modification name
+        if (name.length() == 0) {
+            error = true;
+            nameLabel.setForeground(Color.RED);
+            nameLabel.setToolTipText("Please provide a modification name.");
+            nameTxt.setToolTipText("Please provide a modification name.");
+        }
+
+        // check if name contains the modification separator
         if (name.contains(Peptide.MODIFICATION_SEPARATOR)) {
             String newName = name.replace(Peptide.MODIFICATION_SEPARATOR, " ");
-            int outcome = JOptionPane.showConfirmDialog(this, Peptide.MODIFICATION_SEPARATOR
-                    + " should be avoided in modification names. Shall " + name + " be replaced by "
-                    + newName + "?", "'" + Peptide.MODIFICATION_SEPARATOR + "' in name", JOptionPane.YES_NO_OPTION);
-            if (outcome == JOptionPane.YES_OPTION) {
-                nameTxt.setText(newName);
+
+            if (showMessage && !error) {
+                int outcome = JOptionPane.showConfirmDialog(this, "\'" + Peptide.MODIFICATION_SEPARATOR
+                        + "\' should be avoided in modification names."
+                        + "\nShall " + name + " be replaced by "
+                        + newName + "?", "'" + Peptide.MODIFICATION_SEPARATOR + "' in Name", JOptionPane.YES_NO_OPTION);
+                if (outcome == JOptionPane.YES_OPTION) {
+                    nameTxt.setText(newName);
+                } else {
+                    error = true;
+                    nameLabel.setForeground(Color.RED);
+                    nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
+                    nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
+                }
             } else {
-                return false;
+                error = true;
+                nameLabel.setForeground(Color.RED);
+                nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
+                nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
             }
         }
+
+        // check if name contains the modification location separator
         if (name.contains(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR)) {
             String newName = name.replace(Peptide.MODIFICATION_LOCALIZATION_SEPARATOR, "AT-AA");
-            int outcome = JOptionPane.showConfirmDialog(this, Peptide.MODIFICATION_LOCALIZATION_SEPARATOR
-                    + " should be avoided in modification names. Shall " + name + " be replaced by "
-                    + newName + "?", "'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "' in name", JOptionPane.YES_NO_OPTION);
-            if (outcome == JOptionPane.YES_OPTION) {
-                nameTxt.setText(newName);
+
+            if (showMessage && !error) {
+                int outcome = JOptionPane.showConfirmDialog(this, "\'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR
+                        + "\' should be avoided in modification names.\n"
+                        + "Shall " + name + " be replaced by "
+                        + newName + "?", "'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "' in Name", JOptionPane.YES_NO_OPTION);
+                if (outcome == JOptionPane.YES_OPTION) {
+                    nameTxt.setText(newName);
+                } else {
+                    error = true;
+                    nameLabel.setForeground(Color.RED);
+                    nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "\' should be avoided in modification names.");
+                    nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "\' should be avoided in modification names.");
+                }
             } else {
-                return false;
+                error = true;
+                nameLabel.setForeground(Color.RED);
+                nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "\' should be avoided in modification names.");
+                nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_LOCALIZATION_SEPARATOR + "\' should be avoided in modification names.");
             }
         }
-        if (name.endsWith(PTMFactory.SEARCH_SUFFIX)) {
+
+        // check if name ends in the search suffix tag
+        if (name.contains(PTMFactory.SEARCH_SUFFIX)) {
             String newName = name.replace(PTMFactory.SEARCH_SUFFIX, "SEARCH-ONLY");
-            int outcome = JOptionPane.showConfirmDialog(this, PTMFactory.SEARCH_SUFFIX
-                    + " should be avoided in the end of modification names. Shall " + name + " be replaced by "
-                    + newName + "?", "'" + PTMFactory.SEARCH_SUFFIX + "' ending name", JOptionPane.YES_NO_OPTION);
-            if (outcome == JOptionPane.YES_OPTION) {
-                nameTxt.setText(newName);
+
+            if (showMessage && !error) {
+                int outcome = JOptionPane.showConfirmDialog(this, "\'" + PTMFactory.SEARCH_SUFFIX
+                        + "\' should be avoided in the end of modification names.\n"
+                        + "Shall " + name + " be replaced by "
+                        + newName + "?", "'" + PTMFactory.SEARCH_SUFFIX + "' Ending Name", JOptionPane.YES_NO_OPTION);
+                if (outcome == JOptionPane.YES_OPTION) {
+                    nameTxt.setText(newName);
+                } else {
+                    error = true;
+                    nameLabel.setForeground(Color.RED);
+                    nameLabel.setToolTipText("\'" + PTMFactory.SEARCH_SUFFIX + "\' should be avoided in modification names.");
+                    nameTxt.setToolTipText("\'" + PTMFactory.SEARCH_SUFFIX + "\' should be avoided in modification names.");
+                }
             } else {
-                return false;
+                error = true;
+                nameLabel.setForeground(Color.RED);
+                nameLabel.setToolTipText("\'" + PTMFactory.SEARCH_SUFFIX + "\' should be avoided in modification names.");
+                nameTxt.setToolTipText("\'" + PTMFactory.SEARCH_SUFFIX + "\' should be avoided in modification names.");
             }
         }
+
+        // check that the modification name does not already exist as a default modification
         name = nameTxt.getText().trim();
         if (ptmFactory.getDefaultModifications().contains(name)
                 && (currentPtm == null || !name.equals(currentPtm.getName()))) {
-            JOptionPane.showMessageDialog(this, "A modification named " + name + " alredy exists in the "
-                    + "default modification lists. Please select the default modification or use another name.",
-                    "Modification already exists", JOptionPane.WARNING_MESSAGE);
-            return false;
+            if (showMessage && !error) {
+                JOptionPane.showMessageDialog(this, "A modification named \'" + name + "\' already exists in the "
+                        + "default modification lists.\n"
+                        + "Please select the default modification or use another name.",
+                        "Modification Already Exists", JOptionPane.WARNING_MESSAGE);
+            } else {
+                nameLabel.setForeground(Color.RED);
+                nameLabel.setToolTipText(
+                        "<html>A modification named \'" + name + "\' already exists in the "
+                        + "default modification lists.<br>"
+                        + "Please select the default modification or use another name.</html>");
+                nameTxt.setToolTipText(
+                        "<html>A modification named \'" + name + "\' already exists in the "
+                        + "default modification lists.<br>"
+                        + "Please select the default modification or use another name.</html>");
+            }
+            error = true;
         }
+
+        // check that the modification does not already exist as a user defined modification
         if (ptmFactory.getUserModifications().contains(name)
                 && (currentPtm == null || !name.equals(currentPtm.getName()))) {
-            int outcome = JOptionPane.showConfirmDialog(this, "There is already a modification named " + name
-                    + ". Shall it be overwritten?", "Modification already exists", JOptionPane.YES_NO_OPTION);
-            if (outcome == JOptionPane.NO_OPTION) {
-                return false;
+            if (showMessage && !error) {
+                JOptionPane.showMessageDialog(this, "There is already a modification named \'" + name + "\'!",
+                        "Modification Already Exists", JOptionPane.WARNING_MESSAGE);
             }
+            error = true;
+            nameLabel.setForeground(Color.RED);
+            nameLabel.setToolTipText("There is already a modification named \'" + name + "\'!");
+            nameTxt.setToolTipText("There is already a modification named \'" + name + "\'!");
         }
-        try {
-            new Double(massTxt.getText().trim());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Please verify the input for the modification mass.",
-                    "Wrong mass", JOptionPane.WARNING_MESSAGE);
-            return false;
+
+        // check that a modification pattern is given
+        if (residuesTxt.getText().length() == 0) {
+            if (showMessage && !error) {
+                JOptionPane.showMessageDialog(this, "Please verify the input for the modification pattern.",
+                        "Missing Pattern", JOptionPane.WARNING_MESSAGE);
+            }
+            error = true;
+            patternLabel.setForeground(Color.RED);
+            patternLabel.setToolTipText("Please provide a modification pattern.");
+            residuesTxt.setToolTipText("Please provide a modification pattern.");
         }
+
+        okButton.setEnabled(!error);
+
         return true;
     }
 
@@ -279,11 +395,11 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         detailsPanel = new javax.swing.JPanel();
         typeCmb = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
         nameTxt = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        massLabel = new javax.swing.JLabel();
         massTxt = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        patternLabel = new javax.swing.JLabel();
         residuesTxt = new javax.swing.JTextField();
         neutralLossesAndReporterIonsPanel = new javax.swing.JPanel();
         neutralLossesJScrollPane = new javax.swing.JScrollPane();
@@ -308,6 +424,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         okButton.setText("OK");
+        okButton.setEnabled(false);
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -330,22 +447,32 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         jLabel1.setText("Type");
         jLabel1.setToolTipText("The modification type. See help for details.");
 
-        jLabel2.setText("Name");
-        jLabel2.setToolTipText("The modification name");
+        nameLabel.setText("Name");
+        nameLabel.setToolTipText("The modification name");
 
         nameTxt.setEditable(false);
         nameTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         nameTxt.setToolTipText("The modification name");
+        nameTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nameTxtKeyReleased(evt);
+            }
+        });
 
-        jLabel3.setText("Mass (Da)");
-        jLabel3.setToolTipText("Monoisotopic mass in Dalton");
+        massLabel.setText("Mass (Da)");
+        massLabel.setToolTipText("Monoisotopic mass in Dalton");
 
         massTxt.setEditable(false);
         massTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         massTxt.setToolTipText("Monoisotopic mass in Dalton");
+        massTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                massTxtKeyReleased(evt);
+            }
+        });
 
-        jLabel5.setText("Pattern");
-        jLabel5.setToolTipText("Residues modified");
+        patternLabel.setText("Pattern");
+        patternLabel.setToolTipText("Residues modified");
 
         residuesTxt.setEditable(false);
         residuesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -365,7 +492,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -373,8 +500,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                             .addComponent(typeCmb, 0, 345, Short.MAX_VALUE)))
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(patternLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(massLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(residuesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
@@ -382,7 +509,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addContainerGap(58, Short.MAX_VALUE))
         );
 
-        detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel5});
+        detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, massLabel, nameLabel, patternLabel});
 
         detailsPanelLayout.setVerticalGroup(
             detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,15 +521,15 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTxt)
-                    .addComponent(jLabel2))
+                    .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(massTxt)
-                    .addComponent(jLabel3))
+                    .addComponent(massLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(residuesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                    .addComponent(patternLabel))
                 .addContainerGap())
         );
 
@@ -650,7 +777,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        if (validateInput()) {
+        if (validateInput(true)) {
 
             PTM newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), pattern);
             ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
@@ -675,9 +802,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
                     PTM otherPTM = ptmFactory.getPTM(ptm);
                     if (newPTM.isSameAs(otherPTM)) {
-                        int outcome = JOptionPane.showConfirmDialog(this, "The modification " + ptm
-                                + " presents characteristics similar to your input. Are you sure you want to create this new modification?",
-                                "Modification already exists", JOptionPane.YES_NO_OPTION);
+                        int outcome = JOptionPane.showConfirmDialog(this, "The modification \'" + ptm
+                                + "\' presents characteristics similar to your input.\n"
+                                + "Are you sure you want to create this new modification?",
+                                "Modification Already Exists", JOptionPane.YES_NO_OPTION);
                         if (outcome == JOptionPane.NO_OPTION) {
                             return;
                         }
@@ -685,8 +813,14 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 }
             }
 
-            ptmFactory.addUserPTM(newPTM);
-            cvTerm.setValue(massTxt.getText()); // set the modification mass, note that this means that the mass can be different from the one in PSI-MOD...
+            if (editable) {
+                ptmFactory.addUserPTM(newPTM); // note: "editable" is here used to decide if it's a user ptm
+            }
+
+            if (cvTerm != null) {
+                cvTerm.setValue(massTxt.getText()); // set the modification mass, note that this means that the mass can be different from the one in PSI-MOD...
+            }
+
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             ptmDialogParent.updateModifications();
             saveChanges();
@@ -776,7 +910,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }//GEN-LAST:event_helpJButtonActionPerformed
 
     /**
-     * Add a new ptm dependent neutral losses.
+     * Add a new PTM dependent neutral losses.
      *
      * @param evt
      */
@@ -786,7 +920,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }//GEN-LAST:event_addNeutralLossActionPerformed
 
     /**
-     * Add a new ptm dependent reporter ion.
+     * Add a new PTM dependent reporter ion.
      *
      * @param evt
      */
@@ -858,9 +992,28 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             if (!dialog.isCanceled()) {
                 pattern = dialog.getPattern();
                 residuesTxt.setText(pattern.toString());
+                validateInput(false);
             }
         }
     }//GEN-LAST:event_residuesTxtMouseReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void nameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_nameTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void massTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_massTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_massTxtKeyReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
@@ -869,17 +1022,17 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JButton helpJButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel massLabel;
     private javax.swing.JTextField massTxt;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JPanel neutralLossesAndReporterIonsPanel;
     private javax.swing.JScrollPane neutralLossesJScrollPane;
     private javax.swing.JTable neutralLossesTable;
     private javax.swing.JButton okButton;
     private javax.swing.JButton olsJButton;
+    private javax.swing.JLabel patternLabel;
     private javax.swing.JTextField psiModMappingJTextField;
     private javax.swing.JPanel psiModMappingPanel;
     private javax.swing.JButton removeNeutralLoss;
@@ -981,7 +1134,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }
 
     /**
-     * Table model for the neutral losses table
+     * Table model for the neutral losses table.
      */
     private class NeutralLossesTable extends DefaultTableModel {
 
@@ -1057,7 +1210,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }
 
     /**
-     * Table model for the reporter ions table
+     * Table model for the reporter ions table.
      */
     private class ReporterIonsTable extends DefaultTableModel {
 

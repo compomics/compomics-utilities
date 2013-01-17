@@ -31,7 +31,7 @@ public class PTMFactory implements Serializable {
      */
     private static PTMFactory instance = null;
     /**
-     * User ptm file.
+     * User PTM file.
      */
     private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.32.cus";
     /**
@@ -55,7 +55,7 @@ public class PTMFactory implements Serializable {
      */
     private HashMap<String, String> shortNames = new HashMap<String, String>();
     /**
-     * Map of omssa indexes for default modifications.
+     * Map of OMSSA indexes for default modifications.
      */
     private HashMap<String, Integer> defaultOmssaIndexes = new HashMap<String, Integer>();
     /**
@@ -129,7 +129,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Get a PTM according to its omssa index.
+     * Get a PTM according to its OMSSA index.
      *
      * @param index the PTM index
      * @param modificationProfile the modification profile used for the search
@@ -182,13 +182,15 @@ public class PTMFactory implements Serializable {
         ptmMap.put(modName, ptm);
         if (!userMods.contains(modName)) {
             userMods.add(modName);
+        } else {
+            userMods.set(userMods.indexOf(modName), modName);
         }
     }
 
     /**
-     * Removes a user ptm.
+     * Removes a user PTM.
      *
-     * @param ptmName the name of the ptm to remove
+     * @param ptmName the name of the PTM to remove
      */
     public void removeUserPtm(String ptmName) {
         if (defaultMods.contains(ptmName)) {
@@ -235,7 +237,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Getter for a ptm according to its measured characteristics.
+     * Getter for a PTM according to its measured characteristics.
      *
      * @deprecated This method can generate inconsistent results in case a
      * measurement matches to various PTMs.
@@ -334,14 +336,14 @@ public class PTMFactory implements Serializable {
      * Returns the default OMSSA index of the modification. Null if not found.
      *
      * @param modificationName the name of the modification
-     * @return the default omssa index
+     * @return the default OMSSA index
      */
     public Integer getDefaultOMSSAIndex(String modificationName) {
         return defaultOmssaIndexes.get(modificationName);
     }
 
     /**
-     * Imports the OMSSA indexes from an xml file.
+     * Imports the OMSSA indexes from an XML file.
      *
      * @param modificationsFile the modification file
      * @return a map of all indexes: modification name -> OMSSA index
@@ -399,7 +401,7 @@ public class PTMFactory implements Serializable {
      * @param parser the parser
      * @param userMod a boolean indicating whether we are parsing user
      * modifications or not
-     * @param overwrite a boolean indicating whether modifications from the xml
+     * @param overwrite a boolean indicating whether modifications from the XML
      * file should be overwritten
      * @throws XmlPullParserException when the pull parser failed.
      * @throws IOException when the pull parser could not access the underlying
@@ -586,7 +588,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Writes the omssa modification file corresponding to the PTMs loaded in
+     * Writes the OMSSA modification file corresponding to the PTMs loaded in
      * the factory in the given file.
      *
      * @param file the file
@@ -642,7 +644,7 @@ public class PTMFactory implements Serializable {
      *
      * @param ptmName the name of the PTM
      * @param cpt the index of this PTM
-     * @return a string containing the xml bloc
+     * @return a string containing the XML bloc
      */
     public String getOmssaUserModBloc(String ptmName, int cpt) {
         int omssaIndex = cpt + 118;
@@ -740,11 +742,11 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Convenience method returning a boolean indicating whether a ptm is user
+     * Convenience method returning a boolean indicating whether a PTM is user
      * defined or default.
      *
      * @param ptmName
-     * @return boolean indicating whether a ptm is user
+     * @return boolean indicating whether a PTM is user defined
      */
     public boolean isUserDefined(String ptmName) {
         return !defaultMods.contains(ptmName);
@@ -904,7 +906,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Set the omssa indexes used for this search
+     * Set the OMSSA indexes used for this search.
      *
      * @param modificationProfile the modification profile of this search
      */

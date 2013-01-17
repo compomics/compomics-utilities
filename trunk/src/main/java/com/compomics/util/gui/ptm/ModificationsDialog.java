@@ -67,7 +67,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
      */
     private ArrayList<String> userModsTableToolTips;
     /**
-     * The lines of the ptms concerned by the search
+     * The lines of the PTMs concerned by the search.
      */
     private ArrayList<Integer> searchPossibilities = new ArrayList<Integer>();
     /**
@@ -584,7 +584,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Opens the default modification popup menu.
+     * Opens the default modification pop up menu.
      *
      * @param evt
      */
@@ -681,7 +681,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_searchNextButtonMouseExited
 
     /**
-     * Find the next matching ptm.
+     * Find the next matching PTM.
      *
      * @param evt
      */
@@ -713,7 +713,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_searchPreviousButtonMouseExited
 
     /**
-     * Find the previous matching ptm.
+     * Find the previous matching PTM.
      *
      * @param evt
      */
@@ -727,7 +727,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_searchPreviousButtonActionPerformed
 
     /**
-     * Start the ptm search.
+     * Start the PTM search.
      *
      * @param evt
      */
@@ -738,7 +738,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_searchInputTxtMouseReleased
 
     /**
-     * Start the ptm search.
+     * Start the PTM search.
      *
      * @param evt
      */
@@ -791,7 +791,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_searchInputTxtKeyReleased
 
     /**
-     * Opens the user mods popup dialog or the PtmDialog.
+     * Opens the user mods pop up dialog or the PtmDialog.
      *
      * @param evt
      */
@@ -875,7 +875,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_userModificationsTableMouseMoved
 
     /**
-     * Delete the given user ptm.
+     * Delete the given user PTM.
      *
      * @param evt
      */
@@ -904,7 +904,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_editUserPTMActionPerformed
 
     /**
-     * Add user ptm.
+     * Add user PTM.
      *
      * @param evt
      */
@@ -950,7 +950,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_modificationsHelpJButtonActionPerformed
 
     /**
-     * Edit a default ptm.
+     * Edit a default PTM.
      *
      * @param evt
      */
@@ -961,7 +961,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_editDefaultPtmJMenuItemActionPerformed
 
     /**
-     * Edit user ptm.
+     * Edit user PTM.
      *
      * @param evt
      */
@@ -972,7 +972,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_editUserPtmJMenuItemActionPerformed
 
     /**
-     * Save the ptm details.
+     * Save the PTM details.
      *
      * @param evt
      */
@@ -982,7 +982,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     }//GEN-LAST:event_formWindowClosing
 
     /**
-     * Close the dialog and updated the ptms in the dialog parent.
+     * Close the dialog and updated the PTMs in the dialog parent.
      * 
      * @param evt 
      */

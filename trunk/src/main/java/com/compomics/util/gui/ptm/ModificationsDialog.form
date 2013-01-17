@@ -92,7 +92,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="modificationsSplitPane" pref="609" max="32767" attributes="0"/>
+                      <Component id="modificationsSplitPane" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
@@ -108,7 +108,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="modificationsSplitPane" max="32767" attributes="0"/>
+                  <Component id="modificationsSplitPane" pref="483" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="okButton" min="-2" max="-2" attributes="0"/>
@@ -176,7 +176,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="defaultModsScrollPane" pref="175" max="32767" attributes="0"/>
+                          <Component id="defaultModsScrollPane" pref="224" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="findJLabel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -211,9 +211,9 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="defaultModificationsTableMouseReleased"/>
                         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="defaultModificationsTableMouseClicked"/>
                         <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="defaultModificationsTableMouseExited"/>
-                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="defaultModificationsTableMouseReleased"/>
                         <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="defaultModificationsTableMouseMoved"/>
                       </Events>
                       <AuxValues>
@@ -339,7 +339,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="userModsScrollPane" pref="155" max="32767" attributes="0"/>
+                          <Component id="userModsScrollPane" pref="114" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="deleteUserPTM" alignment="1" max="32767" attributes="1"/>

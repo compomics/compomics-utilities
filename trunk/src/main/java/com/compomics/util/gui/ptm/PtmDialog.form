@@ -90,6 +90,7 @@
         <Component class="javax.swing.JButton" name="okButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="OK"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
@@ -113,7 +114,7 @@
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jLabel2" linkSize="2" pref="65" max="32767" attributes="0"/>
+                                  <Component id="nameLabel" linkSize="2" pref="65" max="32767" attributes="0"/>
                                   <Component id="jLabel1" linkSize="2" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -124,8 +125,8 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" linkSize="2" min="-2" pref="65" max="-2" attributes="1"/>
-                                  <Component id="jLabel3" linkSize="2" min="-2" pref="65" max="-2" attributes="1"/>
+                                  <Component id="patternLabel" linkSize="2" min="-2" pref="65" max="-2" attributes="1"/>
+                                  <Component id="massLabel" linkSize="2" min="-2" pref="65" max="-2" attributes="1"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -149,17 +150,17 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="nameTxt" alignment="3" max="32767" attributes="1"/>
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="massTxt" alignment="3" max="32767" attributes="1"/>
-                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="massLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="residuesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="patternLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -196,7 +197,7 @@
                 <Property name="toolTipText" type="java.lang.String" value="The modification type. See help for details."/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel2">
+            <Component class="javax.swing.JLabel" name="nameLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Name"/>
                 <Property name="toolTipText" type="java.lang.String" value="The modification name"/>
@@ -208,8 +209,11 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="The modification name"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameTxtKeyReleased"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel3">
+            <Component class="javax.swing.JLabel" name="massLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Mass (Da)"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
@@ -221,8 +225,11 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="massTxtKeyReleased"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel5">
+            <Component class="javax.swing.JLabel" name="patternLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Pattern"/>
                 <Property name="toolTipText" type="java.lang.String" value="Residues modified"/>

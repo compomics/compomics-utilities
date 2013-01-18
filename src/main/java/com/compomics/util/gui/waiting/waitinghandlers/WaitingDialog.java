@@ -165,7 +165,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     /**
      * Set if the dialog is to be closed when the process is complete.
-     * 
+     *
      * @param close
      */
     public void closeWhenComplete(boolean close) {
@@ -618,7 +618,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         JFileChooser fc = new JFileChooser(getLastSelectedFolder());
 
         FileFilter filter = new FileFilter() {
-
             @Override
             public boolean accept(File myFile) {
                 return myFile.getName().toLowerCase().endsWith("txt")
@@ -660,7 +659,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         // resize the layered panels
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
                 resizeLayeredPanes();
             }
@@ -684,7 +682,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private void tipOfTheDayJPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tipOfTheDayJPanelComponentResized
         // resize the layered panels
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
                 resizeLayeredPanes();
             }
@@ -949,7 +946,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         dialog = this;
 
         shakeTimer = new Timer(5, new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 double TWO_PI = Math.PI * 2.0;
                 double SHAKE_CYCLE = 50;
@@ -1000,37 +996,42 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private void resizeLayeredPanes() {
 
-        // resize the report area
-        layeredPane.getComponent(1).setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
+        // invoke later to give time for components to update
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
 
-        // move the tip of the day panel
-        layeredPane.getComponent(0).setBounds(layeredPane.getWidth() - 255, layeredPane.getHeight() - 300, 230, 280);
+                // resize the report area
+                layeredPane.getComponent(1).setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
 
-        layeredPane.revalidate();
-        layeredPane.repaint();
+                // move the tip of the day panel
+                layeredPane.getComponent(0).setBounds(layeredPane.getWidth() - 255, layeredPane.getHeight() - 300, 230, 280);
 
+                layeredPane.revalidate();
+                layeredPane.repaint();
 
-        // resize the tip of the day panel
-        tipOfTheDayLayeredPane.getComponent(2).setBounds(0, 0, tipOfTheDayLayeredPane.getWidth(), tipOfTheDayLayeredPane.getHeight());
+                // resize the tip of the day panel
+                tipOfTheDayLayeredPane.getComponent(2).setBounds(0, 0, tipOfTheDayLayeredPane.getWidth(), tipOfTheDayLayeredPane.getHeight());
 
-        //move the buttons
-        tipOfTheDayLayeredPane.getComponent(0).setBounds(
-                tipOfTheDayLayeredPane.getWidth() - 40, -2,
-                tipOfTheDayLayeredPane.getComponent(0).getWidth(), tipOfTheDayLayeredPane.getComponent(0).getHeight());
+                //move the buttons
+                tipOfTheDayLayeredPane.getComponent(0).setBounds(
+                        tipOfTheDayLayeredPane.getWidth() - 40, -2,
+                        tipOfTheDayLayeredPane.getComponent(0).getWidth(), tipOfTheDayLayeredPane.getComponent(0).getHeight());
 
-        tipOfTheDayLayeredPane.getComponent(1).setBounds(
-                tipOfTheDayLayeredPane.getWidth() - 40, tipOfTheDayLayeredPane.getHeight() - 35,
-                tipOfTheDayLayeredPane.getComponent(1).getWidth(), tipOfTheDayLayeredPane.getComponent(1).getHeight());
+                tipOfTheDayLayeredPane.getComponent(1).setBounds(
+                        tipOfTheDayLayeredPane.getWidth() - 40, tipOfTheDayLayeredPane.getHeight() - 35,
+                        tipOfTheDayLayeredPane.getComponent(1).getWidth(), tipOfTheDayLayeredPane.getComponent(1).getHeight());
 
-        tipOfTheDayLayeredPane.revalidate();
-        tipOfTheDayLayeredPane.repaint();
+                tipOfTheDayLayeredPane.revalidate();
+                tipOfTheDayLayeredPane.repaint();
+            }
+        });
     }
 
     /**
      * Returns a random tip of the day text as HTML ready to insert into the tip
      * of the day panel.
      *
-     * @return a random tip of the day text as html
+     * @return a random tip of the day text as HTML
      */
     private String getTipOfTheDay() {
 

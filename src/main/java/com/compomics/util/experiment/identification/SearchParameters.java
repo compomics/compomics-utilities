@@ -7,6 +7,7 @@ import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.HashMap;
+import no.uib.jsparklines.data.XYDataPoint;
 
 /**
  * This class groups the parameters used for identification.
@@ -36,7 +37,7 @@ public class SearchParameters implements Serializable {
      */
     private Double precursorTolerance = 10.0;
     /**
-     * The ms2 ion tolerance.
+     * The MS2 ion tolerance.
      */
     private Double fragmentIonMZTolerance = 0.5;
     /**
@@ -63,8 +64,15 @@ public class SearchParameters implements Serializable {
     /**
      * The list of fraction molecular weights. The key is the fraction file
      * path.
+     * 
+     * @deprecated use fractionMolecularWeightRanges instead
      */
     private HashMap<String, Double> fractionMolecularWeights = new HashMap<String, Double>();
+    /**
+     * The list of fraction molecular weights. The key is the fraction file
+     * path.
+     */
+    private HashMap<String, XYDataPoint> fractionMolecularWeightRanges = new HashMap<String, XYDataPoint>();
     /**
      * The first kind of ions searched for (typically a, b or c).
      */
@@ -149,9 +157,9 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the ms2 ion m/z tolerance.
+     * Returns the MS2 ion m/z tolerance.
      *
-     * @return the ms2 ion m/z tolerance
+     * @return the MS2 ion m/z tolerance
      */
     public Double getFragmentIonAccuracy() {
         return fragmentIonMZTolerance;
@@ -385,6 +393,7 @@ public class SearchParameters implements Serializable {
      * Returns the user provided molecular weights of the fractions. The key is
      * the fraction file path.
      *
+     * @deprecated use getFractionMolecularWeightRanges instead
      * @return the user provided molecular weights of the fractions
      */
     public HashMap<String, Double> getFractionMolecularWeights() {
@@ -395,10 +404,31 @@ public class SearchParameters implements Serializable {
      * Set the user provided molecular weights of the fractions. The key is the
      * fraction file path.
      *
+     * @deprecated use setFractionMolecularWeightRanges instead
      * @param fractionMolecularWeights the fractionMolecularWeights to set
      */
     public void setFractionMolecularWeights(HashMap<String, Double> fractionMolecularWeights) {
         this.fractionMolecularWeights = fractionMolecularWeights;
+    }
+
+    /**
+     * Returns the user provided molecular weight ranges for the fractions. The
+     * key is the fraction file path.
+     *
+     * @return the user provided molecular weight ranges of the fractions
+     */
+    public HashMap<String, XYDataPoint> getFractionMolecularWeightRanges() {
+        return fractionMolecularWeightRanges;
+    }
+
+    /**
+     * Set the user provided molecular weight ranges for the fractions. The key
+     * is the fraction file path.
+     *
+     * @param fractionMolecularWeightRanges the fractionMolecularWeightRanges to set
+     */
+    public void setFractionMolecularWeightRanges(HashMap<String, XYDataPoint> fractionMolecularWeightRanges) {
+        this.fractionMolecularWeightRanges = fractionMolecularWeightRanges;
     }
 
     /**
@@ -456,18 +486,18 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the length of the hitlist for OMSSA.
+     * Returns the length of the hit list for OMSSA.
      *
-     * @return the length of the hitlist for OMSSA
+     * @return the length of the hit list for OMSSA
      */
     public Integer getHitListLength() {
         return hitListLength;
     }
 
     /**
-     * Sets the length of the hitlist for OMSSA.
+     * Sets the length of the hit list for OMSSA.
      *
-     * @param hitListLength the length of the hitlist for OMSSA
+     * @param hitListLength the length of the hit list for OMSSA
      */
     public void setHitListLength(Integer hitListLength) {
         this.hitListLength = hitListLength;

@@ -315,7 +315,7 @@ public class ModificationProfile implements Serializable {
 
     /**
      * Returns a list containing all not fixed modifications with the same mass.
-     * Warning: all modifications of the profile must be loaded in the ptm factory.
+     * Warning: all modifications of the profile must be loaded in the PTM factory.
      *
      * @param ptmMass the mass
      * @return a list of all not fixed modifications with the same mass
@@ -325,7 +325,7 @@ public class ModificationProfile implements Serializable {
         ArrayList<String> ptms = new ArrayList<String>();
         for (String ptmName : getAllNotFixedModifications()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
-            if (ptm.getMass() == ptmMass) {
+            if (!ptms.contains(ptmName) && ptm.getMass() == ptmMass) {
                 ptms.add(ptmName);
             }
         }

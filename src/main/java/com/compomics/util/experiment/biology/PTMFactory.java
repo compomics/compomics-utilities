@@ -496,7 +496,8 @@ public class PTMFactory implements Serializable {
                         double neutralLossMass = new Double(doubleString);
                         neutralLosses.add(new NeutralLoss(name + " " + cpt, neutralLossMass, true));
                     } catch (Exception e) {
-                        throw new XmlPullParserException("Found non-parseable text '" + doubleString + "' for the value of the 'MSMassSet_monomass' neutral loss tag on line " + parser.getLineNumber() + ".");
+                        throw new XmlPullParserException("Found non-parseable text '" + doubleString 
+                                + "' for the value of the 'MSMassSet_monomass' neutral loss tag on line " + parser.getLineNumber() + ".");
                     }
                     cpt++;
                 }

@@ -1127,4 +1127,34 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         progressBar.setIndeterminate(indeterminate);
         progressBar.setStringPainted(!indeterminate);
     }
+
+    /**
+     * Set if the value for if the dialog is to be closed when completed and if
+     * the option is enabled or not.
+     *
+     * @param closeWhenComplete if true, the dialog closes when completed
+     * @param enabled enable or disable the check box
+     */
+    public void setCloseDialogWhenImportCompletes(boolean closeWhenComplete, boolean enabled) {
+        closeDialogWhenImportCompletesCheckBox.setSelected(closeWhenComplete);
+        closeDialogWhenImportCompletesCheckBox.setEnabled(enabled);
+    }
+
+    /**
+     * Set the run to not finished.
+     */
+    public void setRunNotFinished() {
+
+        runFinished = false;
+        okButton.setText("Cancel");
+        //progressBar.setIndeterminate(true);
+        //secondaryJProgressBar.setIndeterminate(true);
+
+        secondaryJProgressBar.setString(null);
+
+        // change the icon back to the waiting version
+        if (waitingIcon != null && waitingHandlerParent != null) {
+            waitingHandlerParent.setIconImage(waitingIcon);
+        }
+    }
 }

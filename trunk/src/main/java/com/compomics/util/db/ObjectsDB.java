@@ -405,6 +405,10 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("Retrieving object, table:" + tableName + ", key: " + objectKey);
         }
+        
+        if (dbConnection == null) {
+            return object;
+        }
 
         long start = System.currentTimeMillis();
 

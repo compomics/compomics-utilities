@@ -465,10 +465,12 @@ public class SpectrumFactory {
      * not parsed correctly
      */
     private synchronized Precursor getPrecursor(String spectrumKey, boolean save, int errorCounter) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+
         Precursor currentPrecursor = null;
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String name = fileName;
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
+
         if (name.endsWith(".mgf")) {
 
             // a special fix for mgf files with strange titles...

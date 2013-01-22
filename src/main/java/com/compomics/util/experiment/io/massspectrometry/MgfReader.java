@@ -11,7 +11,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -21,11 +20,6 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  * @author Harald Barsnes
  */
 public class MgfReader {
-
-    /**
-     * The pattern used to pick up double values.
-     */
-    private static Pattern doublePattern = Pattern.compile("\\D");
 
     /**
      * General constructor for an mgf reader.
@@ -38,8 +32,8 @@ public class MgfReader {
      *
      * @param aFile the mgf file
      * @return list of MSnSpectra imported from the file
-     * @throws FileNotFoundException Exeption thrown if a problem is encountered
-     * reading the file
+     * @throws FileNotFoundException Exception thrown if a problem is
+     * encountered reading the file
      * @throws IOException Exception thrown if a problem is encountered reading
      * the file
      * @throws IllegalArgumentException thrown when a parameter in the file
@@ -62,13 +56,13 @@ public class MgfReader {
             if (line.equals("BEGIN IONS")) {
                 // reset the spectrum details
                 spectrum = new HashMap<Double, Peak>();
-                precursorMz = 0; 
+                precursorMz = 0;
                 precursorIntensity = 0;
-                rt = -1.0; 
-                rt1 = -1.0; 
+                rt = -1.0;
+                rt1 = -1.0;
                 rt2 = -1.0;
                 precursorCharges = new ArrayList<Charge>();
-                scanNumber = ""; 
+                scanNumber = "";
                 spectrumTitle = "";
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
@@ -100,6 +94,8 @@ public class MgfReader {
                         rt2 = new Double(rtWindow[1]);
                     }
                 } catch (Exception e) {
+                    System.out.println("An exception was thrown when trying to decode the retention time: " + spectrumTitle);
+                    e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
             } else if (line.startsWith("TOLU")) {
@@ -120,8 +116,10 @@ public class MgfReader {
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Cannot parse scan number.");
                 }
-            } else if (line.startsWith("INSTRUMENT")) {
-                // ion series not implemented
+            } else if (line.startsWith("TAG")) {
+                // sequence tag not implemented
+            } else if (line.startsWith("RAWSCANS")) {
+                // raw scans not implemented
             } else if (line.equals("END IONS")) {
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
@@ -477,8 +475,8 @@ public class MgfReader {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the MGF file (@TODO get this from the random
-     * access file?)
+     * @param fileName The name of the MGF file (
+     * @TODO get this from the random access file?)
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -521,7 +519,6 @@ public class MgfReader {
                 }
             } else if (line.startsWith("RTINSECONDS")) {
                 try {
-                    // @TODO: ought to be replaced by code below, but this failes the SpectrumTest... (@Harald: the Pattern is wrong, it should include the '.')
                     String rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
@@ -530,14 +527,9 @@ public class MgfReader {
                         rt1 = new Double(rtWindow[0]);
                         rt2 = new Double(rtWindow[1]);
                     }
-//                try {
-//                    String value = line.substring(line.indexOf('=') + 1);
-//                    String[] temp = doublePattern.split(value);
-//                    rt = new Double(temp[0]);
-//                } catch (NumberFormatException e) {
-//                    throw new IllegalArgumentException("Cannot parse retention time.");
-//                }
                 } catch (Exception e) {
+                    System.out.println("An exception was thrown when trying to decode the retention time: " + spectrumTitle);
+                    e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
             } else if (line.startsWith("TOLU")) {
@@ -640,8 +632,7 @@ public class MgfReader {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the mgf file (@TODO get this from the random
-     * access file?)
+     * @param fileName The name of the mgf file (@TODO get this from the random     access file?)
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -659,64 +650,59 @@ public class MgfReader {
 
             line = line.trim();
 
-            if (!line.equals("")) {
-
-                if (line.equals("BEGIN IONS")
-                        || line.startsWith("TOLU")
-                        || line.startsWith("TOL")
-                        || line.startsWith("SEQ")
-                        || line.startsWith("COMP")
-                        || line.startsWith("ETAG")
-                        || line.startsWith("TAG")
-                        || line.startsWith("SCANS")
-                        || line.startsWith("INSTRUMENT")) {
-                    // not supported yet
-                } else if (line.startsWith("TITLE")) {
-                    title = line.substring(line.indexOf("=") + 1);
-                    try {
-                        title = URLDecoder.decode(title, "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
-                        e.printStackTrace();
-                    }
-                } else if (line.startsWith("CHARGE")) {
-                    precursorCharges = parseCharges(line);
-                } else if (line.startsWith("PEPMASS")) {
-                    String temp = line.substring(line.indexOf("=") + 1);
-                    String[] values = temp.split("\\s");
-                    precursorMz = Double.parseDouble(values[0]);
-                    if (values.length > 1) {
-                        precursorIntensity = Double.parseDouble(values[1]);
-                    } else {
-                        precursorIntensity = 0.0;
-                    }
-                } else if (line.startsWith("RTINSECONDS")) {
-                    try {
-                        // @TODO: ought to be replaced by code below, but this failes the SpectrumTest... (@Harald: the Pattern is wrong, it should include the '.')
-                        String rtInput = line.substring(line.indexOf('=') + 1);
-                        String[] rtWindow = rtInput.split("-");
-                        if (rtWindow.length == 1) {
-                            rt = new Double(rtWindow[0]);
-                        } else if (rtWindow.length == 2) {
-                            rt1 = new Double(rtWindow[0]);
-                            rt2 = new Double(rtWindow[1]);
-                        }
-//                try {
-//                    String value = line.substring(line.indexOf('=') + 1);
-//                    String[] temp = doublePattern.split(value);
-//                    rt = new Double(temp[0]);
-//                } catch (NumberFormatException e) {
-//                    throw new IllegalArgumentException("Cannot parse retention time.");
-//                }
-                    } catch (Exception e) {
-                        // ignore exception, RT will not be parsed
-                    }
-                } else {
-                    if (rt1 != -1 && rt2 != -1) {
-                        return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
-                    }
-                    return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
+            if (line.equals("BEGIN IONS")
+                    || line.startsWith("TOLU")
+                    || line.startsWith("TOL")
+                    || line.startsWith("SEQ")
+                    || line.startsWith("COMP")
+                    || line.startsWith("ETAG")
+                    || line.startsWith("TAG")
+                    || line.startsWith("SCANS")
+                    || line.startsWith("INSTRUMENT")
+                    || line.startsWith("RAWSCANS")) {
+                // not supported yet
+            } else if (line.startsWith("TITLE")) {
+                title = line.substring(line.indexOf("=") + 1);
+                try {
+                    title = URLDecoder.decode(title, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
+                    e.printStackTrace();
                 }
+            } else if (line.startsWith("CHARGE")) {
+                precursorCharges = parseCharges(line);
+            } else if (line.startsWith("PEPMASS")) {
+                String temp = line.substring(line.indexOf("=") + 1);
+                String[] values = temp.split("\\s");
+                precursorMz = Double.parseDouble(values[0]);
+                if (values.length > 1) {
+                    precursorIntensity = Double.parseDouble(values[1]);
+                } else {
+                    precursorIntensity = 0.0;
+                }
+            } else if (line.startsWith("RTINSECONDS")) {
+                try {
+                    String rtInput = line.substring(line.indexOf('=') + 1);
+                    String[] rtWindow = rtInput.split("-");
+                    if (rtWindow.length == 1) {
+                        rt = new Double(rtWindow[0]);
+                    } else if (rtWindow.length == 2) {
+                        rt1 = new Double(rtWindow[0]);
+                        rt2 = new Double(rtWindow[1]);
+                    }
+                } catch (Exception e) {
+                    System.out.println("An exception was thrown when trying to decode the retention time: " + title);
+                    e.printStackTrace();
+                    // ignore exception, RT will not be parsed
+                }
+            } else if (line.equals("END IONS")) {
+                
+                // @TODO: would perhaps be faster to return as soon as a peak is read?
+                
+                if (rt1 != -1 && rt2 != -1) {
+                    return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
+                }
+                return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
             }
         }
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);

@@ -503,7 +503,7 @@ public class ObjectsDB implements Serializable {
      * Returns an arraylist with the content in the given table.
      *
      * @param tableName the table to get the content for
-     * @return an arraylist with the content in the given tabl
+     * @return an arraylist with the content in the given table
      * @throws SQLException
      */
     public ArrayList<String> tableContent(String tableName) throws SQLException {

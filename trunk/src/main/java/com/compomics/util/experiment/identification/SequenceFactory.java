@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.protein.Header;
 import java.io.*;
 import java.util.ArrayList;
@@ -275,15 +276,7 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      */
     private FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
-        FastaIndex tempFastaIndex;
-        if (indexFile.exists()) {
-            tempFastaIndex = getIndex(indexFile);
-            return tempFastaIndex;
-        }
-        tempFastaIndex = createFastaIndex(fastaFile);
-        writeIndex(tempFastaIndex, fastaFile.getParentFile());
-        return tempFastaIndex;
+        return getFastaIndex(fastaFile, null);
     }
 
     /**
@@ -303,8 +296,12 @@ public class SequenceFactory {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
         FastaIndex tempFastaIndex;
         if (indexFile.exists()) {
-            tempFastaIndex = getIndex(indexFile);
+            try {
+                tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
             return tempFastaIndex;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         tempFastaIndex = createFastaIndex(fastaFile, waitingHandler);
 
@@ -324,35 +321,8 @@ public class SequenceFactory {
      */
     private void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
-        FileOutputStream fos = new FileOutputStream(new File(directory, fastaIndex.getFileName() + ".cui"));
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(fastaIndex);
-        oos.close();
-        bos.close();
-        fos.close();
-    }
-
-    /**
-     * Deserializes the index of the FASTA file.
-     *
-     * @param fastaIndex the FASTA cui index file
-     * @return the corresponding FastaIndex instance
-     * @throws FileNotFoundException exception thrown if the file was not found
-     * @throws IOException exception thrown if an error occurred while reading
-     * the FASTA file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing the file index
-     */
-    private FastaIndex getIndex(File fastaIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(fastaIndex);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        ObjectInputStream in = new ObjectInputStream(bis);
-        FastaIndex index = (FastaIndex) in.readObject();
-        fis.close();
-        bis.close();
-        in.close();
-        return index;
+        File destinationFile = new File(directory, fastaIndex.getFileName() + ".cui");
+        SerializationUtils.writeObject(fastaIndex, destinationFile);
     }
 
     /**
@@ -365,20 +335,6 @@ public class SequenceFactory {
         if (currentFastaFile != null) {
             currentFastaFile.close();
         }
-    }
-
-    /**
-     * Static method to create a FASTA index for a FASTA file.
-     *
-     * @param fastaFile the FASTA file
-     * @return the corresponding FASTA index
-     * @throws FileNotFoundException exception thrown if the FASTA file was not
-     * found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     */
-    private static FastaIndex createFastaIndex(File fastaFile) throws FileNotFoundException, IOException {
-        return createFastaIndex(fastaFile, null);
     }
 
     /**

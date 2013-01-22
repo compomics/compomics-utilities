@@ -13,7 +13,6 @@ import java.util.HashMap;
  */
 public class MgfIndex extends ExperimentObject {
 
-    static final long serialVersionUID = -5591103342266964263L;
     /**
      * The map of all indexes: spectrum title -> index in the file.
      */

@@ -101,18 +101,20 @@ public class MSnSpectrum extends Spectrum {
         } else if (precursor.getRt() != -1) {
             result += "RTINSECONDS=" + precursor.getRt() + System.getProperty("line.separator");
         }
-        result += "CHARGE=";
-        boolean first = true;
-        for (Charge charge : precursor.getPossibleCharges()) {
-            if (first) {
-                first = false;
-            } else {
-                result += " and ";
+        if (!precursor.getPossibleCharges().isEmpty()) {
+            result += "CHARGE=";
+            boolean first = true;
+            for (Charge charge : precursor.getPossibleCharges()) {
+                if (first) {
+                    first = false;
+                } else {
+                    result += " and ";
+                }
+                result += charge.toString();
             }
-            result += charge.toString();
-        }
         result += System.getProperty("line.separator");
-        if (scanNumber != null) {
+        }
+        if (scanNumber != null && !scanNumber.equals("")) {
             result += "SCANS=" + scanNumber + System.getProperty("line.separator");
         }
 

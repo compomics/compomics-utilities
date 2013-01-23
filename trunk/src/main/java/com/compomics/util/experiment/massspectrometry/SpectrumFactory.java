@@ -33,11 +33,11 @@ public class SpectrumFactory {
     /**
      * Map of already loaded spectra.
      */
-    private static HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
+    private HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
     /**
      * Map of already loaded precursors.
      */
-    private static HashMap<String, Precursor> loadedPrecursorsMap = new HashMap<String, Precursor>();
+    private HashMap<String, Precursor> loadedPrecursorsMap = new HashMap<String, Precursor>();
     /**
      * Amount of spectra in cache, one by default.
      */
@@ -49,29 +49,29 @@ public class SpectrumFactory {
     /**
      * List of the loaded spectra.
      */
-    private static ArrayList<String> loadedSpectra = new ArrayList<String>();
+    private ArrayList<String> loadedSpectra = new ArrayList<String>();
     /**
      * List of the loaded precursors.
      */
-    private static ArrayList<String> loadedPrecursors = new ArrayList<String>();
+    private ArrayList<String> loadedPrecursors = new ArrayList<String>();
     /**
      * Map of the random access files of the loaded mgf files (filename ->
      * random access file).
      */
-    private static HashMap<String, BufferedRandomAccessFile> mgfFilesMap = new HashMap<String, BufferedRandomAccessFile>();
+    private HashMap<String, BufferedRandomAccessFile> mgfFilesMap = new HashMap<String, BufferedRandomAccessFile>();
     /**
      * Map of the mgf indexes (fileName -> mgf index).
      */
-    private static HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
+    private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
     /**
      * Map of the mzML unmarshallers (fileName -> unmarshaller).
      */
-    private static HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
+    private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
     /**
      * Map of the spectrum file mapped according to the name used by the search
      * engine.
      */
-    private static HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
+    private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
 
     /**
      * Constructor.
@@ -600,10 +600,12 @@ public class SpectrumFactory {
      * occurred while parsing the file
      */
     private synchronized Spectrum getSpectrum(String spectrumKey, int errorCounter) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
+
         Spectrum currentSpectrum = null;
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String name = fileName;
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
+
         if (name.endsWith(".mgf")) {
 
             // a special fix for mgf files with strange titles...
@@ -723,7 +725,7 @@ public class SpectrumFactory {
     /**
      * Deserializes the index of an mgf file.
      *
-     * @param mgfIndex the mgf index cuifile
+     * @param mgfIndex the mgf index cui file
      * @return the corresponding mgf index object
      * @throws FileNotFoundException exception thrown whenever the file was not
      * found

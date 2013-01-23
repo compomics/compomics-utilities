@@ -113,11 +113,11 @@ public class SearchParameters implements Serializable {
     /**
      * The minimum peptide length.
      */
-    private Integer minPeptideLength;
+    private Integer minPeptideLength = 6;
     /**
      * The maximal peptide length.
      */
-    private Integer maxPeptideLength;
+    private Integer maxPeptideLength = 30;
     /**
      * Indicates whether the precursor removal option of OMSSA is used.
      */

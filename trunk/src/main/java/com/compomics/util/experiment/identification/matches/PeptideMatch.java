@@ -17,7 +17,7 @@ public class PeptideMatch extends IdentificationMatch {
      */
     static final long serialVersionUID = 7195830246336841081L;
     /**
-     * The theoretic peptide mathing.
+     * The theoretic peptide match.
      */
     private Peptide theoreticPeptide;
     /**

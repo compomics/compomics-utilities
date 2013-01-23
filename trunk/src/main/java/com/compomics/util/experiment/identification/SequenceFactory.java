@@ -51,7 +51,7 @@ public class SequenceFactory {
      */
     public static final String[] decoyFlags = {"REVERSED", "RND", "SHUFFLED"};
     /**
-     * Hashmap of the currently calculated protein molecular weights.
+     * HashMap of the currently calculated protein molecular weights.
      */
     private static HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
 
@@ -106,7 +106,7 @@ public class SequenceFactory {
      * @throws InterruptedException
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException {
-        
+
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null) {
@@ -257,7 +257,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing of the protein headers
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing of the protein headers
      */
     public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
         currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
@@ -290,7 +291,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing of the protein headers
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing of the protein headers
      */
     private FastaIndex getFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
@@ -298,7 +300,7 @@ public class SequenceFactory {
         if (indexFile.exists()) {
             try {
                 tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
-            return tempFastaIndex;
+                return tempFastaIndex;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -347,7 +349,8 @@ public class SequenceFactory {
      * found
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the parsing of the protein headers
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing of the protein headers
      */
     private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException {
 
@@ -464,7 +467,7 @@ public class SequenceFactory {
      * @param waitingHandler the waiting handler
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
-     * @throws IllegalArgumentException exdeption thrown whenever a protein is
+     * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
      * @throws InterruptedException
      * @throws FileNotFoundException
@@ -607,7 +610,7 @@ public class SequenceFactory {
 
         return aaMap;
     }
-    
+
     /**
      * Returns the protein's molecular weight.
      *
@@ -615,7 +618,7 @@ public class SequenceFactory {
      * @return the protein's molecular weight
      * @throws IOException
      * @throws IllegalArgumentException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException {
 
@@ -628,6 +631,6 @@ public class SequenceFactory {
         Protein protein = getProtein(accession);
         double weight = protein.computeMolecularWeight() / 1000;
         molecularWeights.put(accession, weight);
-        return weight;   
+        return weight;
     }
 }

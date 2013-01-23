@@ -197,7 +197,8 @@ public class Peptide extends ExperimentObject {
     /**
      * Sets the parent proteins.
      *
-     * @param parentProteins the parent proteins as list, cannot be null or empty
+     * @param parentProteins the parent proteins as list, cannot be null or
+     * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
         if (parentProteins == null || parentProteins.isEmpty()) {
@@ -293,7 +294,7 @@ public class Peptide extends ExperimentObject {
                         try {
                             result.add(new Integer(localizationSplit[1]));
                         } catch (Exception e) {
-                            throw new IllegalArgumentException("Cannot parse modification localization " 
+                            throw new IllegalArgumentException("Cannot parse modification localization "
                                     + localizationSplit + " for modification " + modification + " in peptide key " + peptideKey);
                         }
                     }
@@ -447,8 +448,8 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the potential modification sites as an ordered list of string. 1
-     * is the first aa. An empty list is returned if no possibility was found.
-     * This method does not account for protein terminal modifications.
+     * is the first amino acid. An empty list is returned if no possibility was
+     * found. This method does not account for protein terminal modifications.
      *
      * @param ptm the PTM considered
      * @return a list of potential modification sites
@@ -672,7 +673,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the N-terminal of the peptide as a String. Returns "NH3" if the
      * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ this method will work only if the ptm found in the peptide are in the
+     * /!\ this method will work only if the PTM found in the peptide are in the
      * PTMFactory.
      *
      * @return the N-terminal of the peptide as a String, e.g., "NH3"
@@ -699,7 +700,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the C-terminal of the peptide as a String. Returns "COOH" if the
      * terminal is not modified, otherwise returns the name of the modification.
-     * /!\ This method will work only if the ptm found in the peptide are in the
+     * /!\ This method will work only if the PTM found in the peptide are in the
      * PTMFactory.
      *
      * @return the C-terminal of the peptide as a String, e.g., "COOH"
@@ -724,15 +725,15 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with ptm tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the ptm found in the peptide are in the
+     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
+     * this method will work only if the PTM found in the peptide are in the
      * PTMFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
-     * @param useHtmlColorCoding if true, color coded html is used, otherwise
-     * ptm tags, e.g, &lt;mox&gt;, are used
-     * @param includeHtmlStartEndTags if true, start and end html tags are added
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
+     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true the short names are used in the tags
      * @return the modified sequence as an tagged string
      */
@@ -764,19 +765,19 @@ public class Peptide extends ExperimentObject {
                 fixedModificationSites.get(modSite).add(modName);
             }
         }
-        return getTaggedModifiedSequence(modificationProfile, this, mainModificationSites, secondaryModificationSites, 
+        return getTaggedModifiedSequence(modificationProfile, this, mainModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
     }
 
     /**
      * Returns the modified sequence as an tagged string with potential
-     * modification sites color coded or with ptm tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the ptm found in the peptide are in the
+     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
+     * This method will work only if the PTM found in the peptide are in the
      * PTMFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
-     * @param includeHtmlStartEndTags if true, start and end html tags are added
+     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
      * @param mainModificationSites the main variable modification sites in a
      * map: aa number -> list of modifications (1 is the first AA) (can be null)
@@ -785,8 +786,8 @@ public class Peptide extends ExperimentObject {
      * (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number -> list of modifications (1 is the first AA) (can be null)
-     * @param useHtmlColorCoding if true, color coded html is used, otherwise
-     * ptm tags, e.g, &lt;mox&gt;, are used
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
@@ -843,15 +844,15 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the single residue as a tagged string (html color or ptm tag).
+     * Returns the single residue as a tagged string (HTML color or PTM tag).
      *
      * @param residue the residue to tag
-     * @param ptmName the name of the ptm
+     * @param ptmName the name of the PTM
      * @param modificationProfile the modification profile
      * @param mainPtm if true, white font is used on colored background, if
      * false colored font on white background
-     * @param useHtmlColorCoding if true, color coded html is used, otherwise
-     * ptm tags, e.g, &lt;mox&gt;, are used
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @return the single residue as a tagged string
      */

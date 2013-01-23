@@ -7,75 +7,76 @@ import java.util.ArrayList;
 /**
  * This class models an enzyme.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Aug 23, 2010
- * Time: 1:44:12 PM
+ * @author Marc Vaudel
  */
 public class Enzyme extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -1852087173903613377L;
 
     /*
-     * The enzyme id
+     * The enzyme id.
      */
     private int id;
 
     /*
-     * The enzyme name
+     * The enzyme name.
      */
     private String name;
 
     /*
-     * The amino-acids before cleavage
+     * The amino-acids before cleavage.
      */
     private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>();
 
     /*
-     * The amino-acids after cleavage
+     * The amino-acids after cleavage.
      */
     private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>();
 
     /*
-     * The restriction amino-acids before cleavage
+     * The restriction amino-acids before cleavage.
      */
     private ArrayList<Character> restrictionBefore = new ArrayList<Character>();
 
     /*
-     * The restriction amino-acids after cleavage
+     * The restriction amino-acids after cleavage.
      */
     private ArrayList<Character> restrictionAfter = new ArrayList<Character>();
 
     /**
-     * Get the enzyme name
+     * Get the enzyme name.
      *
-     * @return          The enzyme name as String
+     * @return The enzyme name as String
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Get the enzyme id
+     * Get the enzyme id.
      *
-     * @return          The enzyme number
+     * @return The enzyme number
      */
     public int getId() {
         return id;
     }
 
     /**
-     * Constructor for an Enzyme
+     * Constructor for an Enzyme.
      *
-     * @param id                    the enzyme id which should be OMSSA compatible.
-     * @param name                  the name of the enzyme
-     * @param aminoAcidBefore       the amino-acids which can be found before the cleavage
-     * @param restrictionBefore     the amino-acids which should not be found before the cleavage
-     * @param aminoAcidAfter        the amino-acids which should be found after the cleavage
-     * @param restrictionAfter      the amino-acids which should not be found after the cleavage
+     * @param id the enzyme id which should be OMSSA compatible.
+     * @param name the name of the enzyme
+     * @param aminoAcidBefore the amino-acids which can be found before the
+     * cleavage
+     * @param restrictionBefore the amino-acids which should not be found before
+     * the cleavage
+     * @param aminoAcidAfter the amino-acids which should be found after the
+     * cleavage
+     * @param restrictionAfter the amino-acids which should not be found after
+     * the cleavage
      */
     public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
         this.id = id;
@@ -95,9 +96,9 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Get the X!Tandem enzyme format
+     * Get the X!Tandem enzyme format.
      *
-     * @return          The enzyme X!Tandem format as String
+     * @return The enzyme X!Tandem format as String
      */
     public String getXTandemFormat() {
         String result = "";
@@ -140,7 +141,8 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids potentially following the cleavage
+     * Getter for the amino acids potentially following the cleavage.
+     *
      * @return the amino acids potentially following the cleavage
      */
     public ArrayList<Character> getAminoAcidAfter() {
@@ -148,7 +150,8 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids potentially preceding the cleavage
+     * Getter for the amino acids potentially preceding the cleavage.
+     *
      * @return the amino acids potentially preceding the cleavage
      */
     public ArrayList<Character> getAminoAcidBefore() {
@@ -156,7 +159,8 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids restricting when following the cleavage
+     * Getter for the amino acids restricting when following the cleavage.
+     *
      * @return the amino acids restricting when following the cleavage
      */
     public ArrayList<Character> getRestrictionAfter() {
@@ -164,16 +168,20 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Getter for the amino acids restricting when preceding the cleavage
+     * Getter for the amino acids restricting when preceding the cleavage.
+     *
      * @return the amino acids restricting when preceding the cleavage
      */
     public ArrayList<Character> getRestrictionBefore() {
         return restrictionBefore;
     }
-    
+
     /**
-     * Returns a boolean indicating whether a cleavage site was implemented for this enzyme
-     * @return a boolean indicating whether a cleavage site was implemented for this enzyme
+     * Returns a boolean indicating whether a cleavage site was implemented for
+     * this enzyme.
+     *
+     * @return a boolean indicating whether a cleavage site was implemented for
+     * this enzyme
      */
     public boolean enzymeCleaves() {
         return !getAminoAcidBefore().isEmpty() || !getAminoAcidAfter().isEmpty();
@@ -181,21 +189,30 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Digests a protein sequence in a list of expected peptide sequences.
-     * 
-     * @param sequence              the protein sequence
-     * @param nMissedCleavages      the allowed number of missed cleavages
-     * @param nMin                  the minimal size for a peptide
-     * @param nMax                  the maximal size for a peptide
+     *
+     * @param sequence the protein sequence
+     * @param nMissedCleavages the allowed number of missed cleavages
+     * @param nMin the minimal size for a peptide
+     * @param nMax the maximal size for a peptide
      * @return a list of expected peptide sequences
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
+
+        // @TODO: misses the first peptide: e.g., for TREQIREMNPNYTEFKFPQIKAH (with tyrpsin and 2 MC) the initial TR will be ignored!!
+        
+        // @TODO: also creates peptides that are not in the sequence, e.g., for TREQIREMNPNYTEFKFPQIKAH (with tyrpsin and 2 MC) 
+        //        the bogus peptides EMNPNYTEFKFPQIKFPQIKAH and EQIREMNPNYTEFKEMNPNYTEFKFPQIK are created!!
+
         ArrayList<String> noCleavage = new ArrayList<String>();
-        String tempPeptide, tempSequence = sequence;
-        int tempCleavage, cleavage;
+        String tempSequence = sequence;
+
+        // iterate the sequence and find the peptides with no missed cleavages
         while (tempSequence.length() > 1) {
-            cleavage = 0;
+
+            int cleavage = 0;
+
             for (Character aa : getAminoAcidAfter()) {
-                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
+                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
                 while (getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
                 }
@@ -203,8 +220,9 @@ public class Enzyme extends ExperimentObject {
                     cleavage = tempCleavage;
                 }
             }
+
             for (Character aa : getAminoAcidBefore()) {
-                tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
+                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
                 while (getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
                 }
@@ -212,24 +230,31 @@ public class Enzyme extends ExperimentObject {
                     cleavage = tempCleavage;
                 }
             }
+
             if (cleavage == 0) {
                 if (tempSequence.length() <= nMax && tempSequence.length() >= nMin) {
                     noCleavage.add(tempSequence);
                 }
                 break;
             }
-            tempPeptide = tempSequence.substring(cleavage + 1);
+
+            String tempPeptide = tempSequence.substring(cleavage + 1);
             if (tempPeptide.length() <= nMax) {
                 noCleavage.add(tempPeptide);
             }
             tempSequence = tempSequence.substring(0, cleavage + 1);
         }
+
         ArrayList<String> result = new ArrayList<String>();
+
+        // add the peptides with no missed cleavages that satisfy the rules
         for (String peptide : noCleavage) {
             if (peptide.length() >= nMin && peptide.length() <= nMax) {
                 result.add(peptide);
             }
         }
+
+        // add the peptides with missed cleavages
         if (nMissedCleavages > 0 && noCleavage.size() > 0) {
             for (int nmc = 1; nmc <= nMissedCleavages; nmc++) {
                 if (noCleavage.size() > 0) {
@@ -245,6 +270,7 @@ public class Enzyme extends ExperimentObject {
                 }
             }
         }
+
         return result;
     }
 }

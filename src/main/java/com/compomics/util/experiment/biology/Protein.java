@@ -15,20 +15,20 @@ import java.util.HashMap;
 public class Protein extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 1987224639519365761L;
     /**
-     * The protein accession
+     * The protein accession.
      */
     private String accession;
     /**
      * Boolean indicating if the protein is not existing (decoy protein for
-     * instance)
+     * instance).
      */
     private boolean decoy;
     /**
-     * The protein sequence
+     * The protein sequence.
      */
     private String sequence;
     /**
@@ -37,7 +37,7 @@ public class Protein extends ExperimentObject {
     private DatabaseType databaseType;
 
     /**
-     * Constructor for a protein
+     * Constructor for a protein.
      */
     public Protein() {
     }
@@ -288,23 +288,67 @@ public class Protein extends ExperimentObject {
 
         return result;
     }
-    
+
     /**
-     * Returns a boolean indicating whether the protein starts with the given peptide
+     * Returns a boolean indicating whether the protein starts with the given
+     * peptide.
+     *
      * @param peptideSequence the peptide sequence
-     * @return a boolean indicating whether the protein starts with the given peptide
+     * @return a boolean indicating whether the protein starts with the given
+     * peptide
      */
     public boolean isNTerm(String peptideSequence) {
         return sequence.startsWith(peptideSequence);
     }
-    
+
     /**
-     * Returns a boolean indicating whether the protein ends with the given peptide
+     * Returns a boolean indicating whether the protein ends with the given
+     * peptide.
+     *
      * @param peptideSequence the peptide sequence
-     * @return a boolean indicating whether the protein ends with the given peptide
+     * @return a boolean indicating whether the protein ends with the given
+     * peptide
      */
     public boolean isCTerm(String peptideSequence) {
         return sequence.endsWith(peptideSequence);
+    }
+
+    /**
+     * Returns true of the peptide is non-enzymatic, i.e., has one or more end
+     * points that cannot be caused by the enzyme alone. False means that both
+     * the endpoints of the peptides could be caused by the selected enzyme, or
+     * that it is a terminal peptide (where one end point is most likely not
+     * enzymatic). Note that if a peptide maps to multiple locations on the
+     * protein sequence this method returns true if one or more of these
+     * peptides are non-enzymatic, even if not all mappings are non-enzymatic.
+     *
+     * @param peptideSequence the peptide sequence to check
+     * @param enzyme the enzyme to use
+     * @param numberOfMissedCleavages the maximum number of missed cleavages
+     * @param minPeptideSize the minimum peptide size
+     * @param maxPeptideSize the maximum peptide size
+     * @return true of the peptide is non-enzymatic
+     * @throws IOException
+     */
+    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, int numberOfMissedCleavages, int minPeptideSize, int maxPeptideSize) throws IOException {
+
+        // get the surrounding amino acids
+        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 2);
+
+        // iterate the possible extended peptide sequences
+        for (int index : surroundingAminoAcids.keySet()) {
+            String before = surroundingAminoAcids.get(index)[0];
+            String after = surroundingAminoAcids.get(index)[1];
+            String extendedPeptideSequence = before + peptideSequence + after;
+
+            ArrayList<String> peptides = enzyme.digest(extendedPeptideSequence, numberOfMissedCleavages, minPeptideSize, maxPeptideSize);
+
+            if (!peptides.contains(peptideSequence)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

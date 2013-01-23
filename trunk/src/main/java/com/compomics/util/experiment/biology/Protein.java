@@ -354,8 +354,7 @@ public class Protein extends ExperimentObject {
     /**
      * Returns the amino acids surrounding a peptide in the sequence of the
      * given protein in a map: peptide start index -> (amino acids before, amino
-     * acids after) The number of amino acids is taken from the display
-     * preferences.
+     * acids after).
      *
      * @param peptide the sequence of the peptide of interest
      * @param nAA the number of amino acids to include
@@ -370,12 +369,12 @@ public class Protein extends ExperimentObject {
 
         for (int startIndex : startIndexes) {
 
-            startIndex--; // the provided indexes are not zero based
 
             result.put(startIndex, new String[2]);
             String subsequence = "";
 
-            for (int aa = startIndex - nAA; aa < startIndex; aa++) {
+            int stringIndex = startIndex - 1;
+            for (int aa = stringIndex - nAA; aa < stringIndex; aa++) {
                 if (aa >= 0 && aa < sequence.length()) {
                     subsequence += sequence.charAt(aa);
                 }
@@ -384,7 +383,7 @@ public class Protein extends ExperimentObject {
             result.get(startIndex)[0] = subsequence;
             subsequence = "";
 
-            for (int aa = startIndex + peptide.length(); aa < startIndex + peptide.length() + nAA; aa++) {
+            for (int aa = stringIndex + peptide.length(); aa < stringIndex + peptide.length() + nAA; aa++) {
                 if (aa >= 0 && aa < sequence.length()) {
                     subsequence += sequence.charAt(aa);
                 }

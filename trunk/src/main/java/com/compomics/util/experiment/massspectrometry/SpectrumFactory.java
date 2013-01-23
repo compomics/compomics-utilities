@@ -3,6 +3,7 @@ package com.compomics.util.experiment.massspectrometry;
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
 import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.io.SerializationUtils;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -110,7 +111,14 @@ public class SpectrumFactory {
      * Clears the factory getInstance() needs to be called afterwards.
      */
     public void clearFactory() {
-        instance = new SpectrumFactory();
+        currentSpectrumMap.clear();
+        loadedPrecursorsMap.clear();
+        loadedSpectra.clear();
+        loadedPrecursors.clear();
+        mgfFilesMap.clear();
+        mgfIndexesMap.clear();
+        mzMLUnmarshallers.clear();
+        idToSpectrumName.clear();
     }
 
     /**
@@ -173,7 +181,6 @@ public class SpectrumFactory {
             } else {
                 try {
                     mgfIndex = getIndex(indexFile);
-                    checkIndexVersion(mgfIndex, spectrumFile.getParentFile(), waitingHandler);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
@@ -712,14 +719,8 @@ public class SpectrumFactory {
      * while writing the file
      */
     public void writeIndex(MgfIndex mgfIndex, File directory) throws IOException {
-        // Serialize the file index as compomics utilities index
-        FileOutputStream fos = new FileOutputStream(new File(directory, mgfIndex.getFileName() + ".cui"));
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(mgfIndex);
-        oos.close();
-        bos.close();
-        fos.close();
+        File indexFile = new File(directory, mgfIndex.getFileName() + ".cui");
+        SerializationUtils.writeObject(mgfIndex, indexFile);
     }
 
     /**
@@ -735,14 +736,7 @@ public class SpectrumFactory {
      * occurred while deserializing the object
      */
     public MgfIndex getIndex(File mgfIndex) throws FileNotFoundException, IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(mgfIndex);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        ObjectInputStream in = new ObjectInputStream(bis);
-        MgfIndex index = (MgfIndex) in.readObject();
-        fis.close();
-        bis.close();
-        in.close();
-        return index;
+        return (MgfIndex) SerializationUtils.readObject(mgfIndex);
     }
 
     /**
@@ -832,79 +826,5 @@ public class SpectrumFactory {
      */
     public File getSpectrumFileFromIdName(String idName) {
         return idToSpectrumName.get(idName);
-    }
-
-    /**
-     * Checks and updates the MgfIndex if this one is from an older version.
-     *
-     * @param mgfIndex the MgfIndex to check
-     * @param directory the directory where to write the new index in case it
-     * has been changed
-     * 
-     * @throws IOException Exception thrown whenever an error occurred while
-     * reading the mgf file or writing the index. If a reading error happens at
-     * this point we are in trouble...
-     */
-    private void checkIndexVersion(MgfIndex mgfIndex, File directory, WaitingHandler waitingHandler) throws IOException {
-
-        if (mgfIndex.getMaxRT() == null || mgfIndex.getMinRT() == null
-                || mgfIndex.getMaxMz() == null || mgfIndex.getMaxIntensity() == null) {
-
-            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = -1;
-
-            if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressValue(getSpectrumTitles(mgfIndex.getFileName()).size());
-                waitingHandler.setSecondaryProgressValue(0);
-            }
-
-            for (String spectrumTitle : getSpectrumTitles(mgfIndex.getFileName())) {
-
-                if (waitingHandler != null) {
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                    waitingHandler.increaseSecondaryProgressValue();
-                }
-
-                String spectrumKey = Spectrum.getSpectrumKey(mgfIndex.getFileName(), spectrumTitle);
-
-                try {
-                    Precursor precursor = getPrecursor(spectrumKey);
-
-                    double rt = precursor.getRt();
-
-                    if (rt > maxRT) {
-                        maxRT = rt;
-                    }
-
-                    if (rt < minRT) {
-                        minRT = rt;
-                    }
-
-                    if (precursor.getMz() > maxMz) {
-                        maxMz = precursor.getMz();
-                    }
-
-                    Spectrum spectrum = getSpectrum(spectrumKey);
-                    double tempMaxIntensity = spectrum.getMaxIntensity();
-
-                    if (tempMaxIntensity > maxIntensity) {
-                        maxIntensity = tempMaxIntensity;
-                    }
-                } catch (MzMLUnmarshallerException e) {
-                    // Should not happen when working with mgf files
-                }
-            }
-
-            if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIndeterminate(true);
-            }
-
-            mgfIndex.setMaxRT(maxRT);
-            mgfIndex.setMinRT(minRT);
-            mgfIndex.setMaxMz(maxMz);
-            writeIndex(mgfIndex, directory);
-        }
     }
 }

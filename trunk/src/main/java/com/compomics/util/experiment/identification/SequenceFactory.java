@@ -25,27 +25,27 @@ public class SequenceFactory {
     /**
      * Map of the currently loaded Headers.
      */
-    private static HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
+    private HashMap<String, Header> currentHeaderMap = new HashMap<String, Header>();
     /**
      * Map of the currently loaded proteins.
      */
-    private static HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
+    private HashMap<String, Protein> currentProteinMap = new HashMap<String, Protein>();
     /**
      * Index of the FASTA file.
      */
-    private static FastaIndex fastaIndex;
+    private FastaIndex fastaIndex = null;
     /**
      * Random access file of the current FASTA file.
      */
-    private static BufferedRandomAccessFile currentFastaFile;
+    private BufferedRandomAccessFile currentFastaFile = null;
     /**
      * Number of proteins to keep in cache, 1 by default.
      */
-    private static int nCache = 1;
+    private int nCache = 1;
     /**
      * List of accessions of the loaded proteins.
      */
-    private static ArrayList<String> loadedProteins = new ArrayList<String>();
+    private ArrayList<String> loadedProteins = new ArrayList<String>();
     /**
      * Recognized flags for a decoy protein.
      */
@@ -53,7 +53,7 @@ public class SequenceFactory {
     /**
      * HashMap of the currently calculated protein molecular weights.
      */
-    private static HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
+    private HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
 
     /**
      * Constructor.
@@ -91,7 +91,12 @@ public class SequenceFactory {
      * Clears the factory getInstance() needs to be called afterwards.
      */
     public void clearFactory() {
-        instance = new SequenceFactory();
+        currentHeaderMap.clear();
+        currentProteinMap.clear();
+        fastaIndex = null;
+        currentFastaFile = null;
+        loadedProteins.clear();
+        molecularWeights.clear();
     }
 
     /**
@@ -563,7 +568,7 @@ public class SequenceFactory {
      * @param nCache the new size of the cache
      */
     public void setnCache(int nCache) {
-        SequenceFactory.nCache = nCache;
+        this.nCache = nCache;
     }
 
     /**

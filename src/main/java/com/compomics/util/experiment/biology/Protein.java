@@ -318,9 +318,9 @@ public class Protein extends ExperimentObject {
      * points that cannot be caused by the enzyme alone. False means that both
      * the endpoints of the peptides could be caused by the selected enzyme, or
      * that it is a terminal peptide (where one end point is most likely not
-     * enzymatic). Note that if a peptide maps to multiple locations on the
+     * enzymatic). Note that if a peptide maps to multiple locations in the
      * protein sequence this method returns true if one or more of these
-     * peptides are non-enzymatic, even if not all mappings are non-enzymatic.
+     * peptides are enzymatic, even if not all mappings are enzymatic.
      *
      * @param peptideSequence the peptide sequence to check
      * @param enzyme the enzyme to use
@@ -337,20 +337,48 @@ public class Protein extends ExperimentObject {
 
         // iterate the possible extended peptide sequences
         for (int index : surroundingAminoAcids.keySet()) {
-            String aaBefore = surroundingAminoAcids.get(index)[0];
-            String nTerm = sequence.charAt(0) + "";
-            if (enzyme.isCleavageSite(aaBefore, nTerm)) {
-                return true;
-            }
-            String aaAfter = surroundingAminoAcids.get(index)[1];
-            String cTerm = sequence.charAt(sequence.length()-1) + "";
-            if (enzyme.isCleavageSite(cTerm, aaAfter)) {
-                return true;
-            }
+
+            String before = surroundingAminoAcids.get(index)[0];
+            String after = surroundingAminoAcids.get(index)[1];
+            String extendedPeptideSequence = before + peptideSequence + after;
             
+            ArrayList<String> peptides = enzyme.digest(extendedPeptideSequence, numberOfMissedCleavages, minPeptideSize, maxPeptideSize);
+            
+            if (peptides.contains(peptideSequence)) {
+                return true;
+            }
         }
 
         return false;
+        
+        
+        // alternative implementation. does not seem to work as wanted
+        
+//        // iterate the possible extended peptide sequences
+//        for (int index : surroundingAminoAcids.keySet()) {
+//
+//            String aaBefore = surroundingAminoAcids.get(index)[0];
+//            String nTerm = sequence.charAt(0) + "";
+//            boolean nTermSideEnzymatic = false;
+//
+//            if (enzyme.isCleavageSite(aaBefore, nTerm)) {
+//                nTermSideEnzymatic = true;
+//            }
+//
+//            String aaAfter = surroundingAminoAcids.get(index)[1];
+//            String cTerm = sequence.charAt(sequence.length() - 1) + "";
+//            boolean cTermSideEnzymatic = false;
+//
+//            if (enzyme.isCleavageSite(cTerm, aaAfter)) {
+//                cTermSideEnzymatic = true;
+//            }
+//
+//            if (nTermSideEnzymatic && cTermSideEnzymatic) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
     }
 
     /**

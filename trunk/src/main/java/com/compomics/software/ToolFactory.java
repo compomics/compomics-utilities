@@ -216,11 +216,7 @@ public class ToolFactory {
 
         boolean debug = false;
 
-        String quote = "";
-
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
-            quote = "\"";
-        }
+        String quote = CommandLineUtils.getQuoteType();
 
         String cmdLine = "java -jar " + quote + toolPath + quote + " " + arguments;
 

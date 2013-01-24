@@ -19,14 +19,6 @@ import javax.swing.SwingUtilities;
 public class HelpDialog extends javax.swing.JDialog {
 
     /**
-     * The default width of the frame.
-     */
-    private int windowWidth = 500;
-    /**
-     * The default height reduction relative to the parent frame.
-     */
-    private int windowHeightReduction = 300;
-    /**
      * The parent of the parent is a Frame.
      */
     private Frame frameParent = null;
@@ -34,17 +26,9 @@ public class HelpDialog extends javax.swing.JDialog {
      * The parent of the parent is a JDialog.
      */
     private JDialog dialogParent = null;
-    /**
-     * The icon to use for the about pages.
-     */
-    private Image aboutIcon;
-    /**
-     * The icon to use for the help pages.
-     */
-    private Image helpIcon;
 
     /**
-     * Creates a new HelpDialog with a Frame as a parent.
+     * Creates a new HelpDialog with a JFrame as a parent.
      *
      * @param parent
      * @param fileName the name of the help file
@@ -53,24 +37,53 @@ public class HelpDialog extends javax.swing.JDialog {
      * @param title the title to use for the dialog
      */
     public HelpDialog(Frame parent, URL fileName, Image helpIcon, Image aboutIcon, String title) {
-        this(parent, fileName, null, helpIcon, aboutIcon, title);
+        this(parent, fileName, null, helpIcon, aboutIcon, title, 500, 300);
     }
-
+    
     /**
-     * Creates a new HelpDialog with a Frame as a parent.
+     * Creates a new HelpDialog with a JFrame as a parent.
      *
      * @param parent
      * @param fileName the name of the help file
-     * @param reference a reference in the html file to scroll to, can be null
+     * @param helpIcon the icon to use for the help pages
+     * @param aboutIcon the icon to use for the about pages
+     * @param title the title to use for the dialog
+     * @param windowWidth the window width
+     * @param windowHeightReduction the window height reduction
+     */
+    public HelpDialog(Frame parent, URL fileName, Image helpIcon, Image aboutIcon, String title, int windowWidth, int windowHeightReduction) {
+        this(parent, fileName, null, helpIcon, aboutIcon, title, windowWidth, windowHeightReduction);
+    }
+    
+    /**
+     * Creates a new HelpDialog with a JFrame as a parent.
+     *
+     * @param parent
+     * @param fileName the name of the help file
+     * @param reference a reference in the HTML file to scroll to, can be null
      * @param helpIcon the icon to use for the help pages
      * @param aboutIcon the icon to use for the about pages
      * @param title the title to use for the dialog
      */
     public HelpDialog(Frame parent, URL fileName, String reference, Image helpIcon, Image aboutIcon, String title) {
+        this(parent, fileName, reference, helpIcon, aboutIcon, title, 500, 300);
+    }
+
+    /**
+     * Creates a new HelpDialog with a JFrame as a parent.
+     *
+     * @param parent
+     * @param fileName the name of the help file
+     * @param reference a reference in the HTML file to scroll to, can be null
+     * @param helpIcon the icon to use for the help pages
+     * @param aboutIcon the icon to use for the about pages
+     * @param title the title to use for the dialog
+     * @param windowWidth the window width
+     * @param windowHeightReduction the window height reduction
+     */
+    public HelpDialog(Frame parent, URL fileName, String reference, Image helpIcon, Image aboutIcon, String title, int windowWidth, int windowHeightReduction) {
         super(parent, true);
         frameParent = parent;
-        this.helpIcon = helpIcon;
-        this.aboutIcon = aboutIcon;
 
         initComponents();
 
@@ -139,7 +152,7 @@ public class HelpDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Creates a new HelpDialog object with a Frame as a parent.
+     * Creates a new HelpDialog object with a JDialog as a parent.
      *
      * @param parent
      * @param fileName the name of the help file
@@ -148,25 +161,54 @@ public class HelpDialog extends javax.swing.JDialog {
      * @param title the title to use for the dialog
      */
     public HelpDialog(JDialog parent, URL fileName, Image helpIcon, Image aboutIcon, String title) {
-        this(parent, fileName, null, helpIcon, aboutIcon, title);
+        this(parent, fileName, null, helpIcon, aboutIcon, title, 500, 300);
     }
-
+    
     /**
-     * Creates a new HelpDialog with a Frame as a parent.
+     * Creates a new HelpDialog object with a JDialog as a parent.
      *
      * @param parent
      * @param fileName the name of the help file
-     * @param reference a reference in the html file to scroll to, can be null
+     * @param helpIcon the icon to use for the help pages
+     * @param aboutIcon the icon to use for the about pages
+     * @param title the title to use for the dialog
+     * @param windowWidth the window width
+     * @param windowHeightReduction the window height reduction
+     */
+    public HelpDialog(JDialog parent, URL fileName, Image helpIcon, Image aboutIcon, String title, int windowWidth, int windowHeightReduction) {
+        this(parent, fileName, null, helpIcon, aboutIcon, title, windowWidth, windowHeightReduction);
+    }
+    
+    /**
+     * Creates a new HelpDialog with a JDialog as a parent.
+     *
+     * @param parent
+     * @param fileName the name of the help file
+     * @param reference a reference in the HTML file to scroll to, can be null
      * @param helpIcon the icon to use for the help pages
      * @param aboutIcon the icon to use for the about pages
      * @param title the title to use for the dialog
      */
     public HelpDialog(JDialog parent, URL fileName, String reference, Image helpIcon, Image aboutIcon, String title) {
+        this(parent, fileName, reference, helpIcon, aboutIcon, title, 500, 300);
+    }
+
+    /**
+     * Creates a new HelpDialog with a JDialog as a parent.
+     *
+     * @param parent
+     * @param fileName the name of the help file
+     * @param reference a reference in the HTML file to scroll to, can be null
+     * @param helpIcon the icon to use for the help pages
+     * @param aboutIcon the icon to use for the about pages
+     * @param title the title to use for the dialog
+     * @param windowWidth the window width
+     * @param windowHeightReduction the window height reduction
+     */
+    public HelpDialog(JDialog parent, URL fileName, String reference, Image helpIcon, Image aboutIcon, String title, int windowWidth, int windowHeightReduction) {
         super(parent, true);
 
         dialogParent = parent;
-        this.helpIcon = helpIcon;
-        this.aboutIcon = aboutIcon;
 
         initComponents();
 

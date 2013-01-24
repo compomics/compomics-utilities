@@ -113,7 +113,7 @@ public class PeptideAssumption extends ExperimentObject {
      * Returns the precursor mass error (in ppm or Da). Note that the value is
      * returns as (experimental mass - theoretical mass) and that negative
      * values thus can occur. If an error of more than 1 Da it will be
-     * substracted from the error. The C13 error can be retrieved by the
+     * subtracted from the error. The C13 error can be retrieved by the
      * function getC13().
      *
      * @param measuredMZ the precursor m/z
@@ -137,7 +137,7 @@ public class PeptideAssumption extends ExperimentObject {
     /**
      * Returns the file.
      *
-     * @return the idenitfication file
+     * @return the identification file
      */
     public String getFile() {
         return file;

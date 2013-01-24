@@ -58,7 +58,7 @@ public class CommandLineUtils {
 
     /**
      * Returns the list of arguments as space separated string for the command
-     * line.
+     * line. Adds quotes where they seem to be needed.
      *
      * @param args the arguments
      * @return a comma separated string
@@ -67,14 +67,40 @@ public class CommandLineUtils {
         if (args == null) {
             return null;
         }
+
+        String quote = getQuoteType();
         String result = "";
+
         for (String arg : args) {
             if (!result.equals("")) {
                 result += " ";
             }
+
+            // add quotes around the arguments in order to support file names with spaces
+            if (!arg.startsWith("-") && !arg.startsWith("\"") && !arg.startsWith("\'")) {
+                arg = quote + arg + quote;
+            }
+
             result += arg;
         }
+
         return result;
+    }
+
+    /**
+     * Returns the quote type to use. For example around file paths with spaces.
+     *
+     * @return the quote type to use
+     */
+    public static String getQuoteType() {
+
+        String quote = "";
+
+        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
+            quote = "\"";
+        }
+
+        return quote;
     }
 
     /**

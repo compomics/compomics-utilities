@@ -194,11 +194,7 @@ public class CompomicsWrapper {
         }
 
         String uniprotProxyClassPath = "";
-        String quote = "";
-
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
-            quote = "\"";
-        }
+        String quote = CommandLineUtils.getQuoteType();
 
         // add the classpath for the uniprot proxy file
         if (proxySettingsFound) {
@@ -699,11 +695,7 @@ public class CompomicsWrapper {
         }
 
         // set up the quote type, windows or linux/mac
-        String quote = "";
-
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
-            quote = "\"";
-        }
+        String quote = CommandLineUtils.getQuoteType();
 
         javaHome = quote + javaHome + "java" + quote;
 
@@ -717,8 +709,8 @@ public class CompomicsWrapper {
      * in the same folder as the jar file.
      *
      * @param toolPath the path to the jar file of the tool
-     * @return an array list containing the Java home plus any
-     * parameters to the JVM
+     * @return an array list containing the Java home plus any parameters to the
+     * JVM
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException

@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class models an enzyme.
@@ -188,6 +189,48 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
+     * Returns a boolean indicating whether the given amino acids represent a
+     * cleavage site. Trypsin example: (D, E) returns false (R, D) returns true
+     * Note: returns false if no cleavage site is implemented
+     *
+     * @param aaBefore the amino acid before the cleavage site
+     * @param aaAfter the amino acid after the cleavage site
+     * @return true if the amino acid combination can represent a cleavage site
+     */
+    public boolean isCleavageSite(String aaBefore, String aaAfter) {
+
+        for (Character aa1 : aminoAcidBefore) {
+            if (aaBefore.equals(aa1 + "")) {
+                boolean restriction = false;
+                for (Character aa2 : restrictionAfter) {
+                    if (aaAfter.equals(aa2 + "")) {
+                        restriction = true;
+                        break;
+                    }
+                }
+                if (!restriction) {
+                    return true;
+                }
+            }
+        }
+        for (Character aa1 : aminoAcidAfter) {
+            if (aaBefore.equals(aa1 + "")) {
+                boolean restriction = false;
+                for (Character aa2 : restrictionBefore) {
+                    if (aaAfter.equals(aa2 + "")) {
+                        restriction = true;
+                        break;
+                    }
+                }
+                if (!restriction) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Digests a protein sequence in a list of expected peptide sequences.
      *
      * @param sequence the protein sequence
@@ -198,79 +241,65 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
 
-        // @TODO: misses the first peptide: e.g., for TREQIREMNPNYTEFKFPQIKAH (with tyrpsin and 2 MC) the initial TR will be ignored!!
-        
-        // @TODO: also creates peptides that are not in the sequence, e.g., for TREQIREMNPNYTEFKFPQIKAH (with tyrpsin and 2 MC) 
-        //        the bogus peptides EMNPNYTEFKFPQIKFPQIKAH and EQIREMNPNYTEFKEMNPNYTEFKFPQIK are created!!
+        String aa, aaBefore = "",
+                aaAfter = "",
+                currentPeptide = "";
 
-        ArrayList<String> noCleavage = new ArrayList<String>();
-        String tempSequence = sequence;
+        ArrayList<String> results = new ArrayList<String>();
 
-        // iterate the sequence and find the peptides with no missed cleavages
-        while (tempSequence.length() > 1) {
-
-            int cleavage = 0;
-
-            for (Character aa : getAminoAcidAfter()) {
-                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
-                while (getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
-                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
-                }
-                if (tempCleavage > cleavage && !getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
-                    cleavage = tempCleavage;
-                }
-            }
-
-            for (Character aa : getAminoAcidBefore()) {
-                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
-                while (getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
-                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
-                }
-                if (tempCleavage > cleavage && !getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
-                    cleavage = tempCleavage;
-                }
-            }
-
-            if (cleavage == 0) {
-                if (tempSequence.length() <= nMax && tempSequence.length() >= nMin) {
-                    noCleavage.add(tempSequence);
-                }
-                break;
-            }
-
-            String tempPeptide = tempSequence.substring(cleavage + 1);
-            if (tempPeptide.length() <= nMax) {
-                noCleavage.add(tempPeptide);
-            }
-            tempSequence = tempSequence.substring(0, cleavage + 1);
+        HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
+        for (int i = 1; i <= nMissedCleavages; i++) {
+            mc.put(i, new ArrayList<String>());
         }
 
-        ArrayList<String> result = new ArrayList<String>();
+        for (int i = 0; i < sequence.length(); i++) {
 
-        // add the peptides with no missed cleavages that satisfy the rules
-        for (String peptide : noCleavage) {
-            if (peptide.length() >= nMin && peptide.length() <= nMax) {
-                result.add(peptide);
-            }
-        }
+            aa = sequence.charAt(i) + "";
 
-        // add the peptides with missed cleavages
-        if (nMissedCleavages > 0 && noCleavage.size() > 0) {
-            for (int nmc = 1; nmc <= nMissedCleavages; nmc++) {
-                if (noCleavage.size() > 0) {
-                    for (int i = noCleavage.size() - 1; i > 0; i--) {
-                        noCleavage.set(i, noCleavage.get(i) + noCleavage.get(i - 1));
+            aaBefore = aaAfter;
+            aaAfter = aa;
+
+            if (isCleavageSite(aaBefore, aaAfter) && !currentPeptide.equals("")) {
+
+                if (currentPeptide.length() >= nMin && currentPeptide.length() <= nMax && !results.contains(currentPeptide)) {
+                    results.add(currentPeptide);
+                }
+                for (int nMc : mc.keySet()) {
+                    mc.get(nMc).add(currentPeptide);
+                    while (mc.get(nMc).size() > nMc + 1) {
+                        mc.get(nMc).remove(0);
                     }
-                    noCleavage.remove(0);
-                    for (String peptide : noCleavage) {
-                        if (peptide.length() <= nMax && peptide.length() >= nMin) {
-                            result.add(peptide);
-                        }
+                    String mcSequence = "";
+                    for (String subPeptide : mc.get(nMc)) {
+                        mcSequence += subPeptide;
+                    }
+                    if (mcSequence.length() >= nMin && mcSequence.length() <= nMax && !results.contains(mcSequence)) {
+                        results.add(mcSequence);
                     }
                 }
+                currentPeptide = "";
+            }
+            currentPeptide += aa;
+        }
+
+
+        if (currentPeptide.length() >= nMin && currentPeptide.length() <= nMax && !results.contains(currentPeptide)) {
+            results.add(currentPeptide);
+        }
+        for (int nMc : mc.keySet()) {
+            mc.get(nMc).add(currentPeptide);
+            while (mc.get(nMc).size() > nMc + 1) {
+                mc.get(nMc).remove(0);
+            }
+            String mcSequence = "";
+            for (String subPeptide : mc.get(nMc)) {
+                mcSequence += subPeptide;
+            }
+            if (mcSequence.length() >= nMin && mcSequence.length() <= nMax && !results.contains(mcSequence)) {
+                results.add(mcSequence);
             }
         }
 
-        return result;
+        return results;
     }
 }

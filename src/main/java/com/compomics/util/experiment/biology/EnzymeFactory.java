@@ -21,7 +21,7 @@ public class EnzymeFactory {
     /**
      * The imported enzymes.
      */
-    private static HashMap<String, Enzyme> enzymes = null;
+    private HashMap<String, Enzyme> enzymes = null;
     /**
      * The instance of the factory.
      */

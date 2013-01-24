@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.Enzyme;
@@ -14,9 +10,9 @@ import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * This test verifies the digestion by the enzyme class
+ * This test verifies the digestion by the enzyme class.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class DigestionTest extends TestCase {
 
@@ -30,14 +26,12 @@ public class DigestionTest extends TestCase {
         Enzyme enzyme = enzymeFactory.getEnzyme("Trypsin");
         ArrayList<String> peptides = enzyme.digest(testSequence, 2, 4, 8);
 
-        Assert.assertTrue(peptides.size()==6);
+        Assert.assertTrue(peptides.size() == 6);
         Assert.assertTrue(peptides.contains("MKMMK"));
         Assert.assertTrue(peptides.contains("MMKMMR"));
         Assert.assertTrue(peptides.contains("MKMMKMMR"));
         Assert.assertTrue(peptides.contains("MMKMMR"));
         Assert.assertTrue(peptides.contains("MMMKPMMR"));
         Assert.assertTrue(peptides.contains("MMMMRMM"));
-        
-        
     }
 }

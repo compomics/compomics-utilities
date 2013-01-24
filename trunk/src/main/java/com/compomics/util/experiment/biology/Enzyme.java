@@ -191,7 +191,7 @@ public class Enzyme extends ExperimentObject {
     /**
      * Returns a boolean indicating whether the given amino acids represent a
      * cleavage site. Trypsin example: (D, E) returns false (R, D) returns true
-     * Note: returns false if no cleavage site is implemented
+     * Note: returns false if no cleavage site is implemented.
      *
      * @param aaBefore the amino acid before the cleavage site
      * @param aaAfter the amino acid after the cleavage site
@@ -213,6 +213,7 @@ public class Enzyme extends ExperimentObject {
                 }
             }
         }
+
         for (Character aa1 : aminoAcidAfter) {
             if (aaBefore.equals(aa1 + "")) {
                 boolean restriction = false;
@@ -227,6 +228,7 @@ public class Enzyme extends ExperimentObject {
                 }
             }
         }
+
         return false;
     }
 

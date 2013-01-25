@@ -374,7 +374,7 @@ public class PTMFactory implements Serializable {
                 try {
                     number = new Integer(numberString);
                 } catch (NumberFormatException nfe) {
-                    throw new XmlPullParserException("Found non-parseable text '" + numberString 
+                    throw new XmlPullParserException("Found non-parseable text '" + numberString
                             + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");
                 }
             }
@@ -496,7 +496,7 @@ public class PTMFactory implements Serializable {
                         double neutralLossMass = new Double(doubleString);
                         neutralLosses.add(new NeutralLoss(name + " " + cpt, neutralLossMass, true));
                     } catch (Exception e) {
-                        throw new XmlPullParserException("Found non-parseable text '" + doubleString 
+                        throw new XmlPullParserException("Found non-parseable text '" + doubleString
                                 + "' for the value of the 'MSMassSet_monomass' neutral loss tag on line " + parser.getLineNumber() + ".");
                     }
                     cpt++;
@@ -872,6 +872,7 @@ public class PTMFactory implements Serializable {
     /**
      * Removes the fixed modifications of the peptide and remaps the one
      * searched for according to the ModificationProfile.
+     * Note: for protein terminal modification the protein must be loaded in the sequence factory
      *
      * @param modificationProfile
      * @param peptide
@@ -892,17 +893,50 @@ public class PTMFactory implements Serializable {
         for (ModificationMatch modMatch : toRemove) {
             peptide.getModificationMatches().remove(modMatch);
         }
-        ArrayList<Integer> taken = new ArrayList<Integer>();
+        HashMap<Integer, Double> taken = new HashMap<Integer, Double>();
         for (String fixedModification : modificationProfile.getFixedModifications()) {
             PTM ptm = getPTM(fixedModification);
+            if (ptm.getType() == PTM.MODAA) {
             for (int pos : peptide.getPotentialModificationSites(ptm)) {
-                peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
-                if (!taken.contains(pos)) {
-                    taken.add(pos);
-                } else {
-                    throw new IllegalArgumentException("Attempting to put two fixed modifications at position " + pos + " in peptide " + peptide.getSequence() + ".");
+                if (!taken.containsKey(pos)) {
+                    taken.put(pos, ptm.getMass());
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
+                } else if (taken.get(pos) != ptm.getMass()) {
+                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
                 }
             }
+            } else if (ptm.getType() == PTM.MODC) {
+                if (!peptide.isCterm().isEmpty()) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
+                }
+            } else if (ptm.getType() == PTM.MODN) {
+                if (!peptide.isNterm().isEmpty()) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                }
+            } else if (ptm.getType() == PTM.MODCAA) {
+                String sequence = peptide.getSequence();
+                if (peptide.getPotentialModificationSites(ptm).contains(sequence.length()) && !peptide.isCterm().isEmpty()) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
+                }
+            } else if (ptm.getType() == PTM.MODNAA) {
+                if (peptide.getPotentialModificationSites(ptm).contains(1) && !peptide.isNterm().isEmpty()) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                }
+            } else if (ptm.getType() == PTM.MODCP) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
+            } else if (ptm.getType() == PTM.MODNP) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+            } else if (ptm.getType() == PTM.MODCPAA) {
+                String sequence = peptide.getSequence();
+                if (peptide.getPotentialModificationSites(ptm).contains(sequence.length())) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, sequence.length()));
+                }
+            } else if (ptm.getType() == PTM.MODNPAA) {
+                if (peptide.getPotentialModificationSites(ptm).contains(1)) {
+                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                }
+            }
+                
         }
     }
 

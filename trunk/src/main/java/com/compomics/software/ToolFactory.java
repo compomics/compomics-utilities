@@ -265,14 +265,14 @@ public class ToolFactory {
         }
 
         if (error) {
-            File logFile = new File(new File(toolPath).getParentFile().getAbsolutePath() + "/resources/conf", toolName + ".log");
+            File logFile = new File(new File(toolPath).getParentFile().getAbsolutePath() + "/resources/", toolName + ".log");
             FileWriter f = new FileWriter(logFile, true);
             f.write(System.getProperty("line.separator") + System.getProperty("line.separator") + temp + System.getProperty("line.separator") + System.getProperty("line.separator"));
             f.close();
 
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Failed to start " + toolName + ".\n\n"
-                    + "Inspect the log file for details: resources/conf/" + toolName + ".log.\n\n"
+                    + "Inspect the log file for details: resources/" + toolName + ".log.\n\n"
                     + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com.",
                     toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
         }

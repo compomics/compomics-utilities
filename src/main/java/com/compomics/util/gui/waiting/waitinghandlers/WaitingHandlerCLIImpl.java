@@ -14,11 +14,11 @@ import java.util.Date;
 public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     /**
-     * A boolean indicating whether the run was canceled
+     * A boolean indicating whether the run was canceled.
      */
     private boolean boolCanceled = false;
     /**
-     * The report to append
+     * The report to append.
      */
     protected String iReport = "";
 
@@ -79,14 +79,14 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void appendReport(String report, boolean includeDate, boolean addNewLine) {
-        
+
         String tempReport = report;
-        
+
         if (includeDate) {
             Date date = new Date();
             tempReport = date + " " + report;
         }
-        
+
         if (addNewLine) {
             tempReport = tempReport + System.getProperty("line.separator");
         }
@@ -110,6 +110,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     @Override
     public boolean isRunCanceled() {
         return boolCanceled;
+    }
+
+    @Override
+    public boolean isRunFinished() {
+        // not used in command line
+        return false;
     }
 
     /**

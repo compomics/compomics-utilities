@@ -14,14 +14,14 @@ import javax.swing.*;
 public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandler {
 
     /**
-     * If set to true, trying to close the progess bar will be ignored. Use this
+     * If set to true, trying to close the progress bar will be ignored. Use this
      * option if the process being monitored can not be stopped. <br> Note:
      * replaced by unstoppable.
      */
     private boolean doNothingOnClose = false;
     /**
      * Set this to true of the process the progress bar is used for is not
-     * possible to stop, or not possble to stop nicely. If the user still tries
+     * possible to stop, or not possible to stop nicely. If the user still tries
      * to close the progress bar the a warning message is first shown were the
      * user has to confirm that he/she still wants to close the progress bar.
      */
@@ -31,7 +31,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating wheter the process has been completed.
+     * Boolean indicating whether the process has been completed.
      */
     private boolean finished = false;
     /**
@@ -456,6 +456,11 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     @Override
     public boolean isRunCanceled() {
         return canceled;
+    }
+    
+    @Override
+    public boolean isRunFinished() {
+        return finished;
     }
 
     @Override

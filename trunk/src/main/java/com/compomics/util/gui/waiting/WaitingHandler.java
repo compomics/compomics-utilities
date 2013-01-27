@@ -123,6 +123,13 @@ public interface WaitingHandler {
      * @return true if the run is canceled
      */
     public boolean isRunCanceled();
+    
+    /**
+     * Returns true if the run is finished.
+     *
+     * @return true if the run is finished
+     */
+    public boolean isRunFinished();
 
     /**
      * Returns the secondary progress bar for updates from external processes.

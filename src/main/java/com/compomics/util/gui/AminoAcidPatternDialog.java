@@ -21,15 +21,15 @@ import java.awt.Toolkit;
 public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
     /**
-     * The pattern displayed
+     * The pattern displayed.
      */
     private AminoAcidPattern pattern;
     /**
-     * A boolean indicating whether the pattern can be edited
+     * A boolean indicating whether the pattern can be edited.
      */
     private boolean editable;
     /**
-     * A boolean indicating whether the used clicked the cancel button
+     * A boolean indicating whether the used clicked the cancel button.
      */
     private boolean cancel = false;
     /**
@@ -369,7 +369,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_exampleLabelMouseEntered
 
     /**
-     * Change the cursor bck to the default cursor.
+     * Change the cursor back to the default cursor.
      *
      * @param evt
      */
@@ -395,23 +395,10 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void moveUpJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpJMenuItemActionPerformed
-        
-        // @TODO: don't know how to implement this...
-        
-//        int selectedRow = patternDesignTable.getSelectedRow();
-//        int selectedColumn = patternDesignTable.getSelectedColumn();
-//
-//        Object[] tempRow = new Object[]{
-//            patternDesignTable.getValueAt(selectedRow - 1, 0),
-//            patternDesignTable.getValueAt(selectedRow - 1, 1),
-//            patternDesignTable.getValueAt(selectedRow - 1, 2),
-//            patternDesignTable.getValueAt(selectedRow - 1, 3)
-//        };
-//
-//        ((DefaultTableModel) patternDesignTable.getModel()).removeRow(selectedRow - 1);
-//        ((DefaultTableModel) patternDesignTable.getModel()).insertRow(selectedRow, tempRow);
-//
-//        patternDesignTable.changeSelection(selectedRow - 1, selectedColumn, false, false);
+        int selectedRow = patternDesignTable.getSelectedRow();
+        int selectedColumn = patternDesignTable.getSelectedColumn();
+        pattern.swapRows(selectedRow, selectedRow - 1);
+        patternDesignTable.changeSelection(selectedRow - 1, selectedColumn, false, false);
     }//GEN-LAST:event_moveUpJMenuItemActionPerformed
 
     /**
@@ -420,32 +407,18 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void moveDownJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownJMenuItemActionPerformed
-        
-        // @TODO: don't know how to implement this...
-        
-//        int selectedRow = patternDesignTable.getSelectedRow();
-//        int selectedColumn = patternDesignTable.getSelectedColumn();
-//
-//        Object[] tempRow = new Object[]{
-//            patternDesignTable.getValueAt(selectedRow + 1, 0),
-//            patternDesignTable.getValueAt(selectedRow + 1, 1),
-//            patternDesignTable.getValueAt(selectedRow + 1, 2),
-//            patternDesignTable.getValueAt(selectedRow + 1, 3)
-//        };
-//
-//        ((DefaultTableModel) patternDesignTable.getModel()).removeRow(selectedRow + 1);
-//        ((DefaultTableModel) patternDesignTable.getModel()).insertRow(selectedRow, tempRow);
-//
-//        patternDesignTable.changeSelection(selectedRow + 1, selectedColumn, false, false);
+        int selectedRow = patternDesignTable.getSelectedRow();
+        int selectedColumn = patternDesignTable.getSelectedColumn();
+        pattern.swapRows(selectedRow, selectedRow + 1);
+        patternDesignTable.changeSelection(selectedRow + 1, selectedColumn, false, false);
     }//GEN-LAST:event_moveDownJMenuItemActionPerformed
 
     /**
-     * Delets the selected row.
-     * 
-     * @param evt 
+     * Deletes the selected row.
+     *
+     * @param evt
      */
     private void deleteSelectedRowJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedRowJMenuItemActionPerformed
-
         int selectedRow = patternDesignTable.getSelectedRow();
 
         if (selectedRow != -1) {
@@ -458,8 +431,8 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
     /**
      * Adds a new row to the list.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
         pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<AminoAcid>());
@@ -468,8 +441,8 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
     /**
      * Test the pattern.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void patternDesignTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_patternDesignTableKeyReleased
         testPattern();
@@ -477,20 +450,20 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
     /**
      * Test the pattern.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void patternDesignTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignTableMouseReleased
         testPattern();
     }//GEN-LAST:event_patternDesignTableMouseReleased
 
     /**
-     * Show the popup menu.
-     * 
+     * Show the pop up menu.
+     *
      * @param evt
      */
     private void patternDesignTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignTableMouseClicked
-         if (evt.getButton() == 3) {
+        if (evt.getButton() == 3) {
 
             int selectedRow = patternDesignTable.rowAtPoint(evt.getPoint());
             int column = patternDesignTable.columnAtPoint(evt.getPoint());
@@ -500,13 +473,13 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             moveUpJMenuItem.setEnabled(false);
             moveDownJMenuItem.setEnabled(false);
             deleteSelectedRowJMenuItem.setEnabled(true);
-            
-            if (selectedRow > 1) {
+
+            if (selectedRow > 0) {
                 moveUpJMenuItem.setEnabled(true);
             }
-            
-            if (selectedRow < patternDesignTable.getRowCount()) {
-                this.moveDownJMenuItem.setEnabled(true);
+
+            if (selectedRow < patternDesignTable.getRowCount() - 1) {
+                moveDownJMenuItem.setEnabled(true);
             }
 
             popupJMenu.show(evt.getComponent(), evt.getX(), evt.getY());
@@ -514,8 +487,8 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_patternDesignTableMouseClicked
 
     /**
-     * Show the popup menu.
-     * 
+     * Show the pop up menu.
+     *
      * @param evt
      */
     private void patternDesignScrollPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignScrollPaneMouseClicked
@@ -525,15 +498,15 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 moveDownJMenuItem.setEnabled(false);
                 deleteSelectedRowJMenuItem.setEnabled(false);
             }
-            
+
             popupJMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_patternDesignScrollPaneMouseClicked
 
     /**
      * Test the pattern.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void patternTestEditorPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_patternTestEditorPaneKeyReleased
         testPattern();
@@ -622,7 +595,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         String result = "";
 
         for (int i = 0; i < tempSequence.length(); i++) {
-            if (indexes.contains(i+1)) {
+            if (indexes.contains(i + 1)) {
                 result += "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(Color.BLUE) + "\">";
             } else {
                 result += "<span style=\"color:#" + Util.color2Hex(Color.BLACK) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">";
@@ -728,7 +701,6 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     private void repaintTable() {
 
         SwingUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 patternDesignTable.revalidate();
@@ -744,7 +716,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      */
     private boolean validateInput() {
 
-        // @TODO: validate input and make sure that the targeted index has no rejected amino acid
+        // @TODO: validate input and make sure that the targeted index has no rejected amino acid. @marc: why cannot target have any rejected amino acids?
 
         return true;
     }

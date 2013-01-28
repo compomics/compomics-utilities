@@ -121,11 +121,11 @@ public class SearchParameters implements Serializable {
     /**
      * Indicates whether the precursor removal option of OMSSA is used.
      */
-    private Boolean removePrecursor = true;
+    private Boolean removePrecursor = false;
     /**
      * Indicates whether the precursor scaling option of OMSSA is used.
      */
-    private Boolean scalePrecursor = false;
+    private Boolean scalePrecursor = true;
     /**
      * Indicates whether the precursor charge estimation option of OMSSA is
      * used.

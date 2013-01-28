@@ -79,6 +79,38 @@ public class AminoAcidPattern implements Serializable {
         }
         aaTargeted.put(0, aminoAcids);
     }
+    
+    /**
+     * Swap two rows in the pattern.
+     * 
+     * @param fromRow
+     * @param toRow
+     * @throws IllegalArgumentException 
+     */
+    public void swapRows (int fromRow, int toRow) throws IllegalArgumentException { 
+        
+        if (aaTargeted.size() < fromRow || aaExcluded.size() < fromRow || fromRow < 0 || toRow < 0) {
+            throw new IllegalArgumentException("Illegal row index: " + fromRow);
+        }
+        if (aaTargeted.size() < toRow || aaExcluded.size() < fromRow || toRow < 0 || fromRow < 0) {
+            throw new IllegalArgumentException("Illegal row index: " + toRow);
+        }
+        
+        ArrayList<AminoAcid> toRowDataTarget = aaTargeted.get(toRow);
+        ArrayList<AminoAcid> toRowDataExcluded = aaExcluded.get(toRow);
+        
+        aaTargeted.put(toRow, aaTargeted.get(fromRow));
+        aaExcluded.put(toRow, aaExcluded.get(fromRow));
+        
+        aaTargeted.put(fromRow, toRowDataTarget);
+        aaExcluded.put(fromRow, toRowDataExcluded);
+        
+        if (target == fromRow) {
+            target = toRow;
+        } else if (target == toRow) {
+            target = fromRow;
+        }
+    }
 
     /**
      * Returns the index of the amino acid of interest in the pattern. Null if

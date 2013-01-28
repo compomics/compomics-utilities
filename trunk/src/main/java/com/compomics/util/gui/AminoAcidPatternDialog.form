@@ -193,8 +193,8 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patternDesignTableMouseClicked"/>
                     <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patternDesignTableMouseReleased"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patternDesignTableMouseClicked"/>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="patternDesignTableKeyReleased"/>
                   </Events>
                   <AuxValues>
@@ -255,7 +255,7 @@
               <SubComponents>
                 <Component class="javax.swing.JEditorPane" name="patternTestEditorPane">
                   <Properties>
-                    <Property name="contentType" type="java.lang.String" value="text/html"/>
+                    <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="patternTestEditorPaneKeyReleased"/>

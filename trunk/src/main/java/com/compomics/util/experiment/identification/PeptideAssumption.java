@@ -97,24 +97,28 @@ public class PeptideAssumption extends ExperimentObject {
     }
 
     /**
-     * Returns the distance in Da between the experimental mass and theoretic
-     * mass, image of the error between the precursor mass and the peptide
-     * monoisotopic mass (typically for the C13 option).
+     * Returns the precursor mass error (in ppm or Da). Note that the value is
+     * returns as (experimental mass - theoretical mass) and that negative
+     * values thus can occur. 
+     * The isotopic error can subtracted and retrieved by the
+     * function getIsotopeNumber().
      *
      * @param measuredMZ the precursor m/z
-     * @return the distance in Da between the experimental mass and theoretic
-     * mass
+     * @param ppm if true the error is returns in ppm, false returns the error
+     * in Da
+     * @param subtractIsotope if true the isotope number will be subtracted from the theoretic mass
+     * @return the precursor mass error (in ppm or Da)
      */
-    public int getC13(double measuredMZ) {
-        return (int) Math.round(measuredMZ * identificationCharge.value - identificationCharge.value * ElementaryIon.proton.getTheoreticMass() - peptide.getMass());
+    public double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, subtractIsotope);
     }
 
     /**
      * Returns the precursor mass error (in ppm or Da). Note that the value is
      * returns as (experimental mass - theoretical mass) and that negative
-     * values thus can occur. If an error of more than 1 Da it will be
-     * subtracted from the error. The C13 error can be retrieved by the
-     * function getC13().
+     * values thus can occur. 
+     * The isotopic error is subtracted and can be retrieved by the
+     * function getIsotopeNumber().
      *
      * @param measuredMZ the precursor m/z
      * @param ppm if true the error is returns in ppm, false returns the error
@@ -122,7 +126,16 @@ public class PeptideAssumption extends ExperimentObject {
      * @return the precursor mass error (in ppm or Da)
      */
     public double getDeltaMass(double measuredMZ, boolean ppm) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm);
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
+    }
+    
+    /**
+     * Returns the precursor isotope number according to the number of protons 
+     * @param measuredMZ
+     * @return 
+     */
+    public int getIsotopeNumber(double measuredMZ) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber();
     }
 
     /**

@@ -64,7 +64,7 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
-        sequence = sequence.replaceAll("[#*§$%&]", "");
+        sequence = sequence.replaceAll("[#*$%&]", "");
         for (ModificationMatch mod : modifications) {
             if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
                 throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
@@ -90,7 +90,7 @@ public class Peptide extends ExperimentObject {
      */
     public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
         this.sequence = aSequence;
-        sequence = sequence.replaceAll("[#*§$%&]", "");
+        sequence = sequence.replaceAll("[#*$%&]", "");
         this.mass = mass;
         for (ModificationMatch mod : modifications) {
             this.modifications.add(mod);

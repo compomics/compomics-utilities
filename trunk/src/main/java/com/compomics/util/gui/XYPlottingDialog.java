@@ -2403,7 +2403,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             // use normal default kernel
             NormalDist kern = new NormalDist();
 
-            // calculate optimal bandwidth with the (ROBUST) Silverman's ‘rule of thumb’ (Scott Variation uses factor = 1.06)
+            // calculate optimal bandwidth with the (ROBUST) Silverman's "rule of thumb" (Scott Variation uses factor = 1.06)
             double bandWidth = 0.99 * Math.min(empiricalDist.getSampleStandardDeviation(), (empiricalDist.getInterQuartileRange() / 1.34)) / Math.pow(datasetSize, 0.2);
 
             // estimate density and store values in a vector

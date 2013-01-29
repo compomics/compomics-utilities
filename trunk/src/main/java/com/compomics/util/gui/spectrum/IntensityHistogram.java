@@ -83,7 +83,7 @@ public class IntensityHistogram extends JPanel {
             }
         }
         // create the peak histograms
-        // @TODO use the Freedman–Diaconis rule
+        // @TODO use the Freedman-Diaconis rule
         int bins = 30; // @TODO: make this a user selection!
         
 

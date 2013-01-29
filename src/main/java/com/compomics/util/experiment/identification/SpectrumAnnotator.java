@@ -79,6 +79,10 @@ public class SpectrumAnnotator {
      */
     private boolean isPpm;
     /**
+     * boolean indicating whether the isotopic number shall be removed from the theoretic mass when matching an ion. False by default for ms2 ions.
+     */
+    private static final boolean subtractIsotope = false;
+    /**
      * m/z shift applied to all theoretic peaks.
      */
     private double massShift = 0;
@@ -121,7 +125,7 @@ public class SpectrumAnnotator {
                     if (chargeValidated(peptideIon, charge, precursorCharge)
                             && lossesValidated(neutralLosses, peptideIon, peptide)) {
                         ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
-                        if (Math.abs(ionMatch.getError(isPpm)) <= mzTolerance) {
+                        if (Math.abs(ionMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
                             result.add(ionMatch);
                         }
                     }
@@ -141,7 +145,7 @@ public class SpectrumAnnotator {
     public static Vector<DefaultSpectrumAnnotation> getSpectrumAnnotation(ArrayList<IonMatch> ionMatches) {
         Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
         for (IonMatch ionMatch : ionMatches) {
-            currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(),
+            currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(subtractIsotope),
                     SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()));
         }
         return currentAnnotations;
@@ -175,14 +179,14 @@ public class SpectrumAnnotator {
 
             IonMatch tempMatch = new IonMatch(new Peak(mz.get(indexMax), 0), theoreticIon, charge);
 
-            if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
+            if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
                 Peak currentPeak = peakMap.get(mz.get(indexMax));
                 bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
             }
 
             tempMatch = new IonMatch(new Peak(mz.get(indexMin), 0), theoreticIon, charge);
 
-            if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
+            if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
                 Peak currentPeak = peakMap.get(mz.get(indexMin));
                 if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                     bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
@@ -195,7 +199,7 @@ public class SpectrumAnnotator {
                 double currentMz = mz.get(index);
                 tempMatch = new IonMatch(new Peak(currentMz, 0), theoreticIon, charge);
 
-                if (Math.abs(tempMatch.getError(isPpm)) <= mzTolerance) {
+                if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
                     Peak currentPeak = peakMap.get(mz.get(index));
                     if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
                         bestMatch = new IonMatch(currentPeak, theoreticIon, charge);

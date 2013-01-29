@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.ElementaryElement;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.*;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -58,24 +59,66 @@ public class IonMatch extends ExperimentObject {
     /**
      * Get the absolute matching error in Da.
      *
+     * @param subtractIsotope indicates whether the isotope number shall be subtracted
+     * @return the absolute matching error
+     */
+    public double getAbsoluteError(boolean subtractIsotope) {
+        double theoreticMass = ion.getTheoreticMass();
+        if (subtractIsotope) {
+            theoreticMass -= getIsotopeNumber() * ElementaryElement.neutron.getMass();
+        }
+        return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
+    }
+
+    /**
+     * Get the absolute matching error in Da without isotope removal.
+     *
      * @return the absolute matching error
      */
     public double getAbsoluteError() {
-        return peak.mz - ((ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
+        return getAbsoluteError(false);
     }
 
     /**
      * Get the relative m/z matching error in ppm.
      *
+     * @param subtractIsotope indicates whether the isotope number shall be subtracted
      * @return the relative matching error
      */
-    public double getRelativeError() {
+    public double getRelativeError(boolean subtractIsotope) {
         if (charge != null && charge.value != 0) {
-            double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+            double theoreticMass = ion.getTheoreticMass();
+            if (subtractIsotope) {
+                theoreticMass -= getIsotopeNumber() * ElementaryElement.neutron.getMass();
+            }
+            double theoreticMz = (theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
             return ((peak.mz - theoreticMz) / theoreticMz) * 1000000;
         } else {
             return Double.MAX_VALUE;
         }
+    }
+
+    /**
+     * Get the relative m/z matching error in ppm without isotope removal.
+     *
+     * @return the relative matching error
+     */
+    public double getRelativeError() {
+        return getRelativeError(false);
+    }
+
+    /**
+     * Returns the distance in number of neutrons between the experimental mass
+     * and theoretic mass, image of the isotope number: 1 typically indicates
+     * C13 isotope.
+     *
+     * @return the distance in number of neutrons between the experimental mass
+     * and theoretic mass
+     */
+    public int getIsotopeNumber() {
+        double experimentalMass = peak.mz * charge.value - charge.value * ElementaryIon.proton.getTheoreticMass();
+        double result = (experimentalMass - ion.getTheoreticMass()) / ElementaryElement.neutron.getMass();
+        return (int) Math.round(result);
     }
 
     /**
@@ -85,11 +128,11 @@ public class IonMatch extends ExperimentObject {
      * in ppm (true) or in Dalton (false)
      * @return the match m/z error
      */
-    public double getError(boolean isPpm) {
+    public double getError(boolean isPpm, boolean subtractIsotope) {
         if (isPpm) {
-            return getRelativeError();
+            return getRelativeError(subtractIsotope);
         } else {
-            return getAbsoluteError();
+            return getAbsoluteError(subtractIsotope);
         }
     }
 
@@ -122,9 +165,9 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public static String getPeakAnnotation(boolean html, Ion ion, Charge charge) {
-        
+
         String result = "";
-        
+
         switch (ion.getType()) {
             case PEPTIDE_FRAGMENT_ION:
                 if (html) {
@@ -233,7 +276,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match error
      */
     public CvTerm getIonMassErrorPrideCvTerm() {
-        return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError() + "");
+        return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError(true) + "");
     }
 
     /**

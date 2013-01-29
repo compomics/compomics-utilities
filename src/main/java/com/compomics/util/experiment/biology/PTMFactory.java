@@ -1195,7 +1195,7 @@ public class PTMFactory implements Serializable {
 //        }
         if (modificationName.contains("tri-methylation")
                 || modificationName.contains("trimethylation")) {
-            return "trimeth²";
+            return "trimeth";
         }
 //        if (modificationName.startsWith("methylation of ") && !modificationName.contains("term")) {
 //            String aa = modificationName.charAt(15) + "";

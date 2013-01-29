@@ -13,7 +13,7 @@ public class Proline extends AminoAcid {
         singleLetterCode = "P";
         threeLetterCode = "Pro";
         name = "Proline";
-        averageMass = 97.11680;
-        monoisotopicMass = 97.05277;
+        averageMass = 97.1152;
+        monoisotopicMass = 97.052764;
     }
 }

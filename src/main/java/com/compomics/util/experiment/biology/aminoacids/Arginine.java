@@ -13,7 +13,7 @@ public class Arginine extends AminoAcid {
         singleLetterCode = "R";
         threeLetterCode = "Arg";
         name = "Arginine";
-        averageMass = 156.18800;
-        monoisotopicMass = 156.10112;
+        averageMass = 156.1857;
+        monoisotopicMass = 156.101111;
     }
 }

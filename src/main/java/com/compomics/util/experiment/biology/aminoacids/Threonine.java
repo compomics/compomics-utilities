@@ -13,7 +13,7 @@ public class Threonine extends AminoAcid {
         singleLetterCode = "T";
         threeLetterCode = "Thr";
         name = "Threonine";
-        averageMass = 101.10510;
-        monoisotopicMass = 101.04768;
+        averageMass = 101.1039;
+        monoisotopicMass = 101.047679;
     }
 }

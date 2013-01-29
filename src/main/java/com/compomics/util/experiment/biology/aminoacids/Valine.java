@@ -13,7 +13,7 @@ public class Valine extends AminoAcid {
         singleLetterCode = "V";
         threeLetterCode = "Val";
         name = "Valine";
-        averageMass = 99.13280;
-        monoisotopicMass = 99.06842;
+        averageMass = 99.1311;
+        monoisotopicMass = 99.068414;
     }
 }

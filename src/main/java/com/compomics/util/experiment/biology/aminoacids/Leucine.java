@@ -13,7 +13,7 @@ public class Leucine extends AminoAcid {
         singleLetterCode = "L";
         threeLetterCode = "Leu";
         name = "Leucine";
-        averageMass = 113.15980;
-        monoisotopicMass = 113.08407;
+        averageMass = 113.1576;
+        monoisotopicMass = 113.084064;
     }
 }

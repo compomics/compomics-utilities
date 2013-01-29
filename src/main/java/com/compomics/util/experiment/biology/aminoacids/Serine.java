@@ -13,7 +13,7 @@ public class Serine extends AminoAcid {
         singleLetterCode = "S";
         threeLetterCode = "Ser";
         name = "Serine";
-        averageMass = 87.07800;
-        monoisotopicMass = 87.03203;
+        averageMass = 87.0773;
+        monoisotopicMass = 87.032028;
     }
 }

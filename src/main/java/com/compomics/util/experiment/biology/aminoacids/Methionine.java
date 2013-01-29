@@ -13,7 +13,7 @@ public class Methionine extends AminoAcid {
         singleLetterCode = "M";
         threeLetterCode = "Met";
         name = "Methionine";
-        averageMass = 131.19940;
-        monoisotopicMass = 131.04050;
+        averageMass = 131.1961;
+        monoisotopicMass = 131.040485;
     }
 }

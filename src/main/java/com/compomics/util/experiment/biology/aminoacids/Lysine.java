@@ -13,7 +13,7 @@ public class Lysine extends AminoAcid {
         singleLetterCode = "K";
         threeLetterCode = "Lys";
         name = "Lysine";
-        averageMass = 128.17450;
-        monoisotopicMass = 128.09497;
+        averageMass = 128.1723;
+        monoisotopicMass = 128.094963;
     }
 }

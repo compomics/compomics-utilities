@@ -13,7 +13,7 @@ public class Asparagine extends AminoAcid {
         singleLetterCode = "N";
         threeLetterCode = "Asp";
         name = "Asparagine";
-        averageMass = 114.10390;
-        monoisotopicMass = 114.04293;
+        averageMass = 114.1026;
+        monoisotopicMass = 114.042927;
     }
 }

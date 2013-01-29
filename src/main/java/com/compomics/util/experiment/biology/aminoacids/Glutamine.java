@@ -13,7 +13,7 @@ public class Glutamine extends AminoAcid {
         singleLetterCode = "Q";
         threeLetterCode = "Gln";
         name = "Glutamine";
-        averageMass = 128.13091;
-        monoisotopicMass = 128.05858;
+        averageMass = 128.1292;
+        monoisotopicMass = 128.058578;
     }
 }

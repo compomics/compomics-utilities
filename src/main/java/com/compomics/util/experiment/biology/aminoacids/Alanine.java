@@ -13,7 +13,7 @@ public class Alanine extends AminoAcid {
         singleLetterCode = "A";
         threeLetterCode = "Ala";
         name = "Alanine";
-        averageMass = 71.07870;
-        monoisotopicMass = 71.03712;
+        averageMass = 71.0779;
+        monoisotopicMass = 71.037114;
     }
 }

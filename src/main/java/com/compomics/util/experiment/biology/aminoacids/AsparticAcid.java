@@ -13,7 +13,7 @@ public class AsparticAcid extends AminoAcid {
         singleLetterCode = "D";
         threeLetterCode = "Asp";
         name = "Aspartic Acid";
-        averageMass = 115.08850;
-        monoisotopicMass = 115.02695;
+        averageMass = 115.0874;
+        monoisotopicMass = 115.026943;
     }
 }

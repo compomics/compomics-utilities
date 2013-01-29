@@ -945,11 +945,10 @@ public class Peptide extends ExperimentObject {
     public void estimateTheoreticMass() throws IllegalArgumentException {
 
         mass = Atom.H.mass;
-        AminoAcid currentAA;
-
+        
         for (int aa = 0; aa < sequence.length(); aa++) {
             try {
-                currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
+                AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
 
                 if (currentAA != null) {
                     mass += currentAA.monoisotopicMass;

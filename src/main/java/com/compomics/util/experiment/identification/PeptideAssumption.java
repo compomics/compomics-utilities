@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -99,14 +98,14 @@ public class PeptideAssumption extends ExperimentObject {
     /**
      * Returns the precursor mass error (in ppm or Da). Note that the value is
      * returns as (experimental mass - theoretical mass) and that negative
-     * values thus can occur. 
-     * The isotopic error can subtracted and retrieved by the
-     * function getIsotopeNumber().
+     * values thus can occur. The isotopic error can subtracted and retrieved by
+     * the function getIsotopeNumber().
      *
      * @param measuredMZ the precursor m/z
      * @param ppm if true the error is returns in ppm, false returns the error
      * in Da
-     * @param subtractIsotope if true the isotope number will be subtracted from the theoretic mass
+     * @param subtractIsotope if true the isotope number will be subtracted from
+     * the theoretic mass
      * @return the precursor mass error (in ppm or Da)
      */
     public double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
@@ -116,9 +115,8 @@ public class PeptideAssumption extends ExperimentObject {
     /**
      * Returns the precursor mass error (in ppm or Da). Note that the value is
      * returns as (experimental mass - theoretical mass) and that negative
-     * values thus can occur. 
-     * The isotopic error is subtracted and can be retrieved by the
-     * function getIsotopeNumber().
+     * values thus can occur. The isotopic error is subtracted and can be
+     * retrieved by the function getIsotopeNumber().
      *
      * @param measuredMZ the precursor m/z
      * @param ppm if true the error is returns in ppm, false returns the error
@@ -128,11 +126,12 @@ public class PeptideAssumption extends ExperimentObject {
     public double getDeltaMass(double measuredMZ, boolean ppm) {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
     }
-    
+
     /**
-     * Returns the precursor isotope number according to the number of protons 
+     * Returns the precursor isotope number according to the number of protons.
+     *
      * @param measuredMZ
-     * @return 
+     * @return the precursor isotope number according to the number of protons
      */
     public int getIsotopeNumber(double measuredMZ) {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber();
@@ -185,7 +184,7 @@ public class PeptideAssumption extends ExperimentObject {
 
     /**
      * Set the rank of the PeptideAssumption.
-     * 
+     *
      * @param aRank the rank of the PeptideAssumptio
      */
     public void setRank(int aRank) {

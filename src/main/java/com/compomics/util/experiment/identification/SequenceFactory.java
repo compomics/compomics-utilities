@@ -312,7 +312,7 @@ public class SequenceFactory {
         }
         tempFastaIndex = createFastaIndex(fastaFile, waitingHandler);
 
-        if (!waitingHandler.isRunCanceled()) {
+        if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
             writeIndex(tempFastaIndex, fastaFile.getParentFile());
         }
         return tempFastaIndex;

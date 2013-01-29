@@ -13,7 +13,7 @@ public class Glycine extends AminoAcid {
         singleLetterCode = "G";
         threeLetterCode = "Gly";
         name = "Glycine";
-        averageMass = 57.05170;
-        monoisotopicMass = 57.02147;
+        averageMass = 57.0513;
+        monoisotopicMass = 57.021464;
     }
 }

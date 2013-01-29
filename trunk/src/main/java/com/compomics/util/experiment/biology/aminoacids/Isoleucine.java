@@ -13,7 +13,7 @@ public class Isoleucine extends AminoAcid {
         singleLetterCode = "I";
         threeLetterCode = "Ile";
         name = "Isoleucine";
-        averageMass = 113.15980;
-        monoisotopicMass = 113.08407;
+        averageMass = 113.1576;
+        monoisotopicMass = 113.084064;
     }
 }

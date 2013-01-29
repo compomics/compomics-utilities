@@ -13,7 +13,7 @@ public class GlutamicAcid extends AminoAcid {
         singleLetterCode = "E";
         threeLetterCode = "Glu";
         name = "Glutamic Acid";
-        averageMass = 129.11560;
-        monoisotopicMass = 129.0460;
+        averageMass = 129.114;
+        monoisotopicMass = 129.042593;
     }
 }

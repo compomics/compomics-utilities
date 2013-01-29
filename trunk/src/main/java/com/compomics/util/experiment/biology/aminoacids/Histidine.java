@@ -13,7 +13,7 @@ public class Histidine extends AminoAcid {
         singleLetterCode = "H";
         threeLetterCode = "His";
         name = "Histidine";
-        averageMass = 137.14140;
-        monoisotopicMass = 137.05891;
+        averageMass = 137.1393;
+        monoisotopicMass = 137.058912;
     }
 }

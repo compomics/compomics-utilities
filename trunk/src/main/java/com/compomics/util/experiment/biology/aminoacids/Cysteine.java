@@ -13,7 +13,7 @@ public class Cysteine extends AminoAcid {
         singleLetterCode = "C";
         threeLetterCode = "Cys";
         name = "Cysteine";
-        averageMass = 103.14500;
-        monoisotopicMass = 103.00919;
+        averageMass = 103.1429;
+        monoisotopicMass = 103.009185;
     }
 }

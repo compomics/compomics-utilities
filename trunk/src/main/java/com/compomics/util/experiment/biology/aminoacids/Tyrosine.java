@@ -13,7 +13,7 @@ public class Tyrosine extends AminoAcid {
         singleLetterCode = "Y";
         threeLetterCode = "Tyr";
         name = "Tyrosine";
-        averageMass = 163.17661;
+        averageMass = 163.1733;
         monoisotopicMass = 163.06332;
     }
 }

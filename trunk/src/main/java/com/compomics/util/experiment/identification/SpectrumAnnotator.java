@@ -25,7 +25,7 @@ import java.util.Vector;
 /**
  * The spectrum annotator annotates peaks in a spectrum.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class SpectrumAnnotator {
 
@@ -74,12 +74,13 @@ public class SpectrumAnnotator {
      */
     private double mzTolerance;
     /**
-     * boolean indicating whether the tolerance is in ppm (true) or in Dalton
-     * (false)
+     * Boolean indicating whether the tolerance is in ppm (true) or in Dalton
+     * (false).
      */
     private boolean isPpm;
     /**
-     * boolean indicating whether the isotopic number shall be removed from the theoretic mass when matching an ion. False by default for ms2 ions.
+     * Boolean indicating whether the isotopic number shall be removed from the
+     * theoretic mass when matching an ion. False by default for ms2 ions.
      */
     private static final boolean subtractIsotope = false;
     /**
@@ -367,7 +368,7 @@ public class SpectrumAnnotator {
                     modMin = indexes.get(0);
                     modMax = indexes.get(indexes.size() - 1);
                 }
-                neutralLossesMap.addNeutralLoss(neutralLoss, modMin, peptide.getSequence().length() - modMax +1);
+                neutralLossesMap.addNeutralLoss(neutralLoss, modMin, peptide.getSequence().length() - modMax + 1);
             }
         }
 

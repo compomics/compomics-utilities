@@ -299,7 +299,7 @@ public class PTMFactory implements Serializable {
      * @param modificationsFile A file containing modifications
      * @param userMod A boolean indicating whether the file comprises user
      * designed modification
-     * @param overwrite a boolean indicating whether modifications from the xml
+     * @param overwrite a boolean indicating whether modifications from the XML
      * file should be overwritten
      * @throws XmlPullParserException exception thrown whenever an error is
      * encountered while parsing
@@ -516,7 +516,11 @@ public class PTMFactory implements Serializable {
             }
             if (userMod) {
                 if (defaultMods.contains(name)) {
-                    throw new IllegalArgumentException("Impossible to load " + name + " as user modification. Already defined as default modification.");
+                    if (!name.equalsIgnoreCase("unknown")) {
+                        throw new IllegalArgumentException("Impossible to load \'" + name + "\' as user modification. Already defined as default modification.");
+                    } else {
+                        System.out.println("Impossible to load \'" + name + "\' as user modification. Already defined as default modification.");
+                    }
                 } else if (!userMods.contains(name) || overwrite) {
                     userMods.add(name);
                 }

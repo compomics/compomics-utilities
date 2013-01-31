@@ -30,7 +30,7 @@ public class CommandLineUtils {
             if (!result.equals("")) {
                 result += SEPARATOR;
             }
-            result += "\"" + file.getAbsolutePath() + "\""; // @TODO: same quotes on mac/linux?
+            result += getQuoteType() + file.getAbsolutePath() + getQuoteType();
         }
         return result;
     }
@@ -43,16 +43,27 @@ public class CommandLineUtils {
      * @return a comma separated string
      */
     public static String concatenate(ArrayList<String> args) {
+
         if (args == null) {
             return null;
         }
+
+        String quote = getQuoteType();
         String result = "";
+
         for (String arg : args) {
             if (!result.equals("")) {
                 result += " ";
             }
+
+            // add quotes around the arguments in order to support file names with spaces
+            if (!arg.startsWith("-") && !arg.startsWith("\"") && !arg.startsWith("\'")) {
+                arg = quote + arg + quote;
+            }
+
             result += arg;
         }
+
         return result;
     }
 
@@ -64,6 +75,7 @@ public class CommandLineUtils {
      * @return a comma separated string
      */
     public static String concatenate(String[] args) {
+
         if (args == null) {
             return null;
         }
@@ -96,7 +108,7 @@ public class CommandLineUtils {
 
         String quote = "";
 
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) { // @TODO: no quotes on mac/linux?
+        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
             quote = "\"";
         }
 
@@ -110,7 +122,7 @@ public class CommandLineUtils {
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(File file) {
-        return "\"" + file.getAbsolutePath() + "\""; // @TODO: same quotes on mac/linux?
+        return getQuoteType() + file.getAbsolutePath() + getQuoteType();
     }
 
     /**

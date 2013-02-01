@@ -940,7 +940,7 @@ public class Header implements Cloneable, Serializable {
     public void setRest(String aRest) {
         iRest = aRest;
     }
-
+    
     /**
      * This method returns an abbreviated version of the Header, suitable for
      * inclusion in FASTA formatted files. <br /> The abbreviated header is
@@ -952,7 +952,22 @@ public class Header implements Cloneable, Serializable {
      * @return String with the abbreviated header.
      */
     public String getAbbreviatedFASTAHeader() {
-        StringBuffer result = new StringBuffer(">" + this.getCoreHeader());
+        return getAbbreviatedFASTAHeader("");
+    }
+
+    /**
+     * This method returns an abbreviated version of the Header, suitable for
+     * inclusion in FASTA formatted files. <br /> The abbreviated header is
+     * composed in the following way: <br />
+     * <pre>
+     *     >[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
+     * </pre>
+     *
+     * @param decoyTag the decoy tag to add
+     * @return String with the abbreviated header.
+     */
+    public String getAbbreviatedFASTAHeader(String decoyTag) {
+        StringBuffer result = new StringBuffer(">" + this.getCoreHeader() + decoyTag);
         if (this.iID == null) {
             // Apparently we have not been able to identify and parse
             // this header.
@@ -1006,21 +1021,33 @@ public class Header implements Cloneable, Serializable {
      * @return String with the full header.
      */
     public String toString() {
+        return toString("");
+    }
+    
+    /**
+     * This method reports on the entire header, with the given decoy tag added.
+     *
+     * @param decoyTag the decoy tag to add
+     * @return String with the full header.
+     */
+    public String toString(String decoyTag) {
         String result;
 
         if (databaseType == DatabaseType.Generic_Split_Header) { // @TODO: this special case is perhaps not needed?
-            result = ">" + this.iID + "|" + this.iAccession + "|" + this.iDescription;
+            result = ">" + this.iID + decoyTag + "|" + this.iAccession + "|" + this.iDescription;
         } else {
             if (this.iID == null) {
-                result = this.getAbbreviatedFASTAHeader();
+                result = this.getAbbreviatedFASTAHeader(decoyTag);
             } else {
-                result = this.getAbbreviatedFASTAHeader();
+                result = this.getAbbreviatedFASTAHeader(decoyTag);
                 if (this.iRest != null) {
                     result += " " + this.iRest;
                 }
             }
         }
 
+        result += decoyTag;
+        
         return result;
     }
 

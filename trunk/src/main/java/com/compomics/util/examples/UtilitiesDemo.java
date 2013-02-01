@@ -668,7 +668,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 spectrumPanelMaxPadding, false, false, false, 2, profileMode);
 
         spectrumPanel.addSpectrumPanelListener(new SpectrumPanelListener() {
-
             public void rescaled(RescalingEvent rescalingEvent) {
                 SpectrumPanel source = (SpectrumPanel) rescalingEvent.getSource();
                 double minMass = rescalingEvent.getMinMass();
@@ -2610,7 +2609,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     }//GEN-LAST:event_profileSpectrumJCheckBoxActionPerformed
 
     /**
-     * @see #setVariableComoboBoxPopupMenuWidth(javax.swing.event.PopupMenuEvent evt)
+     * @see #setVariableComoboBoxPopupMenuWidth(javax.swing.event.PopupMenuEvent
+     * evt)
      */
     private void enzymesJComboBoxPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_enzymesJComboBoxPopupMenuWillBecomeVisible
         setVariableComoboBoxPopupMenuWidth(evt);
@@ -2796,10 +2796,16 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     private void getHeaderValuesFastaFormat(Header proteinHeader) {
 
+        String accession = proteinHeader.getAccession();
+
+        if (proteinHeader.getStartLocation() != -1) {
+            accession += " (" + proteinHeader.getStartLocation() + "-" + proteinHeader.getEndLocation() + ")"; // special dbtoolkit pattern
+        }
+
         ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
                     proteinHeaderJTable.getRowCount() + 1,
                     "Accession",
-                    proteinHeader.getAccession()
+                    accession
                 });
 
         ((DefaultTableModel) proteinHeaderJTable.getModel()).addRow(new Object[]{
@@ -2965,7 +2971,6 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         JFileChooser fileChooser = new JFileChooser("user.home");
 
         FileFilter filter = new FileFilter() {
-
             @Override
             public boolean accept(File myFile) {
                 return myFile.getName().toLowerCase().endsWith("fasta")
@@ -3031,7 +3036,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 colorCounter = 0;
 
                 if (peffFormat) {
-                    
+
                     // @TODO: support ModResPsi!!
 
                     ((DefaultTableModel) peffAnnotationsJTable.getModel()).addRow(new Object[]{
@@ -3411,10 +3416,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 try {
-                UtilitiesGUIDefaults.setLookAndFeel();
+                    UtilitiesGUIDefaults.setLookAndFeel();
                 } catch (Exception e) {
                     // do nothing
                 }
@@ -3572,7 +3576,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
      * @param table the table
      * @param colIndex the colum index
      * @param margin the margin to add
-     * @return the prefereed width of the column
+     * @return the preferred width of the column
      */
     public int getPreferredColumnWidth(JTable table, int colIndex, int margin) {
 

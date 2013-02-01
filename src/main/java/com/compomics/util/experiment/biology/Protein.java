@@ -163,7 +163,7 @@ public class Protein extends ExperimentObject {
 
             for (Character aa : enzyme.getAminoAcidAfter()) {
                 int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
-                while (enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage)) && tempCleavage > cleavage) {
+                while (tempCleavage > cleavage && enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
                 }
                 if (tempCleavage > cleavage && !enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
@@ -173,7 +173,7 @@ public class Protein extends ExperimentObject {
 
             for (Character aa : enzyme.getAminoAcidBefore()) {
                 int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
-                while (enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1)) && tempCleavage > cleavage) {
+                while (tempCleavage > cleavage && enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
                     tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
                 }
                 if (tempCleavage > cleavage && !enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
@@ -341,44 +341,15 @@ public class Protein extends ExperimentObject {
             String before = surroundingAminoAcids.get(index)[0];
             String after = surroundingAminoAcids.get(index)[1];
             String extendedPeptideSequence = before + peptideSequence + after;
-            
+
             ArrayList<String> peptides = enzyme.digest(extendedPeptideSequence, numberOfMissedCleavages, minPeptideSize, maxPeptideSize);
-            
+
             if (peptides.contains(peptideSequence)) {
                 return true;
             }
         }
 
         return false;
-        
-        
-        // alternative implementation. does not seem to work as wanted
-        
-//        // iterate the possible extended peptide sequences
-//        for (int index : surroundingAminoAcids.keySet()) {
-//
-//            String aaBefore = surroundingAminoAcids.get(index)[0];
-//            String nTerm = sequence.charAt(0) + "";
-//            boolean nTermSideEnzymatic = false;
-//
-//            if (enzyme.isCleavageSite(aaBefore, nTerm)) {
-//                nTermSideEnzymatic = true;
-//            }
-//
-//            String aaAfter = surroundingAminoAcids.get(index)[1];
-//            String cTerm = sequence.charAt(sequence.length() - 1) + "";
-//            boolean cTermSideEnzymatic = false;
-//
-//            if (enzyme.isCleavageSite(cTerm, aaAfter)) {
-//                cTermSideEnzymatic = true;
-//            }
-//
-//            if (nTermSideEnzymatic && cTermSideEnzymatic) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
     }
 
     /**

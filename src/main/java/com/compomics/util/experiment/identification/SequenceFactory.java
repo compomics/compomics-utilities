@@ -264,8 +264,10 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      * @throws StringIndexOutOfBoundsException thrown if issues occur during the
      * parsing of the protein headers
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
      */
-    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
         currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(fastaFile, waitingHandler);
     }
@@ -280,8 +282,10 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
      */
-    private FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+    private FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException, IllegalArgumentException {
         return getFastaIndex(fastaFile, null);
     }
 
@@ -298,6 +302,8 @@ public class SequenceFactory {
      * occurred while deserializing the file index
      * @throws StringIndexOutOfBoundsException thrown if issues occur during the
      * parsing of the protein headers
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
      */
     private FastaIndex getFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
         File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
@@ -356,15 +362,16 @@ public class SequenceFactory {
      * reading the file
      * @throws StringIndexOutOfBoundsException thrown if issues occur during the
      * parsing of the protein headers
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
      */
-    private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException {
+    private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            //progressBar.setStringPainted(true);
             waitingHandler.setMaxSecondaryProgressValue(100);
             waitingHandler.setSecondaryProgressValue(0);
         }
@@ -380,15 +387,26 @@ public class SequenceFactory {
             if (line.startsWith(">")) {
                 Header fastaHeader = Header.parseFromFASTA(line);
                 String accession = fastaHeader.getAccession();
+
+//                if (fastaHeader.getStartLocation() != -1) {
+//                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
+//                }
+
                 if (accession == null) {
                     accession = fastaHeader.getRest();
                 }
+
+                if (indexes.containsKey(accession)) {
+                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
+                }
+
                 indexes.put(accession, index);
                 if (!isDecoy(accession)) {
                     nTarget++;
                 } else if (!decoy) {
                     decoy = true;
                 }
+
                 if (waitingHandler != null) {
                     waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
                     if (waitingHandler.isRunCanceled()) {
@@ -402,7 +420,6 @@ public class SequenceFactory {
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(true);
-            //progressBar.setStringPainted(false);
         }
 
         bufferedRandomAccessFile.close();
@@ -517,6 +534,22 @@ public class SequenceFactory {
 
             bufferedWriter.write(decoyHeader.toString() + System.getProperty("line.separator"));
             bufferedWriter.write(decoySequence + System.getProperty("line.separator"));
+            
+            // possible fix for the dbtoolkit uniprot format
+//            Protein currentProtein = getProtein(accession);
+//            Header currentHeader = getHeader(accession);
+//            String reversedSequence = reverseSequence(currentProtein.getSequence());
+//
+//            bufferedWriter.write(currentHeader.toString() + System.getProperty("line.separator"));
+//            bufferedWriter.write(currentProtein.getSequence() + System.getProperty("line.separator"));
+//
+//            // @TODO: this might not be the best way of doing this, but was easier than trying to change the parsing in the Header class...
+//            if (currentHeader.toString("_" + decoyFlags[0]).equalsIgnoreCase(currentHeader.toString())) {
+//                currentHeader.setRest(currentProtein.getAccession() + "_" + decoyFlags[0]);
+//            }
+//
+//            bufferedWriter.write(currentHeader.toString("_" + decoyFlags[0]) + System.getProperty("line.separator"));
+//            bufferedWriter.write(reversedSequence + System.getProperty("line.separator"));
         }
 
         bufferedWriter.close();

@@ -93,7 +93,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         patternDesignTable.getColumn("Ref").setCellRenderer(new NimbusCheckBoxRenderer());
 
         patternTestEditorPane.setText(exampleSequence);
-        testPattern();
+        displayPattern();
         repaintTable();
     }
 
@@ -385,7 +385,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     private void exampleLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exampleLabelMouseClicked
         pattern = AminoAcidPattern.getTrypsinExample();
         patternTestEditorPane.setText(exampleSequence);
-        testPattern();
+        displayPattern();
         repaintTable();
     }//GEN-LAST:event_exampleLabelMouseClicked
 
@@ -424,7 +424,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         if (selectedRow != -1) {
             pattern.removeAA(selectedRow);
             repaintTable();
-            testPattern();
+            displayPattern();
             validateInput();
         }
     }//GEN-LAST:event_deleteSelectedRowJMenuItemActionPerformed
@@ -445,7 +445,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void patternDesignTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_patternDesignTableKeyReleased
-        testPattern();
+        displayPattern();
     }//GEN-LAST:event_patternDesignTableKeyReleased
 
     /**
@@ -454,7 +454,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void patternDesignTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternDesignTableMouseReleased
-        testPattern();
+        displayPattern();
     }//GEN-LAST:event_patternDesignTableMouseReleased
 
     /**
@@ -509,7 +509,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void patternTestEditorPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_patternTestEditorPaneKeyReleased
-        testPattern();
+        displayPattern();
     }//GEN-LAST:event_patternTestEditorPaneKeyReleased
 
     /**
@@ -580,7 +580,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * Tests the pattern on the test text and puts highlights the text every
      * time the pattern is found.
      */
-    private void testPattern() {
+    private void displayPattern() {
 
         String tempSequence = patternTestEditorPane.getText();
         int caretPosition = patternTestEditorPane.getCaretPosition();
@@ -716,7 +716,17 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      */
     private boolean validateInput() {
 
-        // @TODO: validate input and make sure that the targeted index has no rejected amino acid. @marc: why cannot target have any rejected amino acids?
+        // check for empty target
+        if (pattern.getAminoAcidsAtTarget().size() < 1) {
+            JOptionPane.showMessageDialog(this, "There has to be at least one amino acid for the targeted residue!", "Empty Target", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // check for excluded amino acids in target
+        if (pattern.getExcludedAA(pattern.getTarget()).size() > 0) {
+            JOptionPane.showMessageDialog(this, "Excluded amino acids not allowed for the targeted residue!", "Exclud Error", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
 
         return true;
     }

@@ -15,7 +15,13 @@ public interface ImportSettingsDialogParent {
      * @param idFilter the identification filter used
      */
     public void setIdFilter(IdFilter idFilter);
-
+    
+    /**
+     * Returns the identification filter used.
+     *
+     * @return the identification filter used
+     */
+    public IdFilter getIdFilter();
     /**
      * Sets the filter settings field to the given text.
      *

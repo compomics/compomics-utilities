@@ -23,6 +23,10 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 public class IdFilter implements Serializable {
 
     /**
+     * Serial number for backward compatibility.
+     */
+    //static final long serialVersionUID = -6656074270981104708L; // @TODO: should be added calculated and added
+    /**
      * The minimal peptide length allowed.
      */
     private int minPepLength;
@@ -56,10 +60,6 @@ public class IdFilter implements Serializable {
      * ignored.
      */
     private boolean unknownPtm;
-    /**
-     * The spectrum factory.
-     */
-    private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance(100);
 
     /**
      * Constructor with default settings.
@@ -211,12 +211,13 @@ public class IdFilter implements Serializable {
      * @param spectrumKey the key of the spectrum used to get the precursor the
      * precursor should be accessible via the spectrum factory
      *
+     * @param spectrumFactory the spectrum factory
      * @return a boolean indicating whether the given assumption passes the
      * filter
      * @throws IOException
      * @throws MzMLUnmarshallerException
      */
-    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey) throws IOException, MzMLUnmarshallerException {
+    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory) throws IOException, MzMLUnmarshallerException {
 
         Precursor precursor = spectrumFactory.getPrecursor(spectrumKey);
 

@@ -60,7 +60,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * Constructor for the protein match.
      *
-     * @param peptide The corresponding peptide match
+     * @param peptide the corresponding peptide match
      */
     public ProteinMatch(Peptide peptide) {
         ArrayList<String> parentProteins = peptide.getParentProteins();

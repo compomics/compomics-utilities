@@ -290,6 +290,8 @@ public class CompomicsWrapper {
 
                         System.exit(0);
                     }
+                } else if (temp.toLowerCase().contains("cgcontextgetctm: invalid context") || temp.toLowerCase().contains("cgcontextsetbasectm: invalid context")) {
+                    System.out.println("Mac OS/Java error (can be ignored): " + temp);
                 } else {
 
                     if (useStartUpLog) {
@@ -297,10 +299,10 @@ public class CompomicsWrapper {
                         bw.close();
                     }
 
-                    if (temp.lastIndexOf("NoClassDefFound") != -1) {
+                    if (temp.lastIndexOf("noclassdeffound") != -1) {
                         JOptionPane.showMessageDialog(null,
                                 "Seems like you are trying to start the tool from within a zip file!",
-                                "Sartup Failed", JOptionPane.ERROR_MESSAGE);
+                                "Startup Failed", JOptionPane.ERROR_MESSAGE);
                     } else {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 "An error occurred when starting the tool.\n\n"

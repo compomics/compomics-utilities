@@ -9,7 +9,6 @@ import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.*;
-import javax.crypto.SealedObject;
 
 /**
  * This class models a peptide.
@@ -640,30 +639,38 @@ public class Peptide extends ExperimentObject {
     public boolean isSameAs(Peptide anotherPeptide) {
         return getKey().equals(anotherPeptide.getKey());
     }
-    
+
     /**
-     * Indicates whether another peptide has the same sequence and modification status without accounting for modification localization.
+     * Indicates whether another peptide has the same sequence and modification
+     * status without accounting for modification localization.
+     *
      * @param anotherPeptide the other peptide to compare to this instance
-     * @return a boolean indicating whether the other peptide has the same sequence and modification status.
+     * @return a boolean indicating whether the other peptide has the same
+     * sequence and modification status.
      */
     public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide) {
         return isSameSequence(anotherPeptide) && isSameModificationStatus(anotherPeptide);
     }
-    
+
     /**
-     * Returns a bookean indicating whether another peptide has the same sequence as the given peptide
+     * Returns a boolean indicating whether another peptide has the same
+     * sequence as the given peptide
+     *
      * @param anotherPeptide the other peptide to compare
-     * @return a boolean indicating whether the other peptide has the same sequence
+     * @return a boolean indicating whether the other peptide has the same
+     * sequence
      */
     public boolean isSameSequence(Peptide anotherPeptide) {
         return sequence.equals(anotherPeptide.getSequence());
     }
-    
+
     /**
-     * Indicates whether another peptide has the same variable modifications as this peptide. The localization of the PTM is not accounted for.
-     * 
+     * Indicates whether another peptide has the same variable modifications as
+     * this peptide. The localization of the PTM is not accounted for.
+     *
      * @param anotherPeptide the other peptide
-     * @return a boolean indicating whether the other peptide has the same variable modifications as the peptide of interets
+     * @return a boolean indicating whether the other peptide has the same
+     * variable modifications as the peptide of interest
      */
     public boolean isSameModificationStatus(Peptide anotherPeptide) {
         if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
@@ -673,7 +680,7 @@ public class Peptide extends ExperimentObject {
         Collections.sort(modifications1);
         ArrayList<String> modifications2 = getModificationFamily(anotherPeptide.getKey());
         Collections.sort(modifications2);
-        for (int i = 0 ; i < modifications1.size() ; i++) {
+        for (int i = 0; i < modifications1.size(); i++) {
             if (!modifications1.get(i).equals(modifications2.get(i))) {
                 return false;
             }
@@ -729,7 +736,7 @@ public class Peptide extends ExperimentObject {
             }
             Collections.sort(sites1);
             Collections.sort(sites2);
-            for (int i = 0 ; i < sites1.size() ; i++) {
+            for (int i = 0; i < sites1.size(); i++) {
                 if (sites1.get(i) != sites2.get(i)) {
                     return false;
                 }
@@ -1013,7 +1020,7 @@ public class Peptide extends ExperimentObject {
     public void estimateTheoreticMass() throws IllegalArgumentException {
 
         mass = Atom.H.mass;
-        
+
         for (int aa = 0; aa < sequence.length(); aa++) {
             try {
                 AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));

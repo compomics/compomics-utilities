@@ -9,6 +9,7 @@ import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.*;
+import javax.crypto.SealedObject;
 
 /**
  * This class models a peptide.
@@ -639,6 +640,46 @@ public class Peptide extends ExperimentObject {
     public boolean isSameAs(Peptide anotherPeptide) {
         return getKey().equals(anotherPeptide.getKey());
     }
+    
+    /**
+     * Indicates whether another peptide has the same sequence and modification status without accounting for modification localization.
+     * @param anotherPeptide the other peptide to compare to this instance
+     * @return a boolean indicating whether the other peptide has the same sequence and modification status.
+     */
+    public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide) {
+        return isSameSequence(anotherPeptide) && isSameModificationStatus(anotherPeptide);
+    }
+    
+    /**
+     * Returns a bookean indicating whether another peptide has the same sequence as the given peptide
+     * @param anotherPeptide the other peptide to compare
+     * @return a boolean indicating whether the other peptide has the same sequence
+     */
+    public boolean isSameSequence(Peptide anotherPeptide) {
+        return sequence.equals(anotherPeptide.getSequence());
+    }
+    
+    /**
+     * Indicates whether another peptide has the same variable modifications as this peptide. The localization of the PTM is not accounted for.
+     * 
+     * @param anotherPeptide the other peptide
+     * @return a boolean indicating whether the other peptide has the same variable modifications as the peptide of interets
+     */
+    public boolean isSameModificationStatus(Peptide anotherPeptide) {
+        if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
+            return false;
+        }
+        ArrayList<String> modifications1 = getModificationFamily(getKey());
+        Collections.sort(modifications1);
+        ArrayList<String> modifications2 = getModificationFamily(anotherPeptide.getKey());
+        Collections.sort(modifications2);
+        for (int i = 0 ; i < modifications1.size() ; i++) {
+            if (!modifications1.get(i).equals(modifications2.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Indicates whether another peptide has the same modifications at the same
@@ -653,18 +694,45 @@ public class Peptide extends ExperimentObject {
         if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
             return false;
         }
-        boolean found;
-        for (ModificationMatch modificationMatch1 : modifications) {
-            found = false;
-            for (ModificationMatch modificationMatch2 : anotherPeptide.getModificationMatches()) {
-                if (modificationMatch1.getTheoreticPtm().equals(modificationMatch2.getTheoreticPtm())
-                        && modificationMatch1.getModificationSite() == modificationMatch2.getModificationSite()) {
-                    found = true;
-                    break;
-                }
+        HashMap<String, ArrayList<Integer>> ptmToPositionsMap1 = new HashMap<String, ArrayList<Integer>>();
+        HashMap<String, ArrayList<Integer>> ptmToPositionsMap2 = new HashMap<String, ArrayList<Integer>>();
+        for (ModificationMatch modificationMatch : modifications) {
+            String modName = modificationMatch.getTheoreticPtm();
+            if (!ptmToPositionsMap1.containsKey(modName)) {
+                ptmToPositionsMap1.put(modName, new ArrayList<Integer>());
             }
-            if (!found) {
+            int position = modificationMatch.getModificationSite();
+            if (ptmToPositionsMap1.get(modName).contains(position)) {
+                throw new IllegalArgumentException("Duplicated modification " + modName + " at site " + position + " in peptide " + sequence + " can impair peptide comparison.");
+            }
+            ptmToPositionsMap1.get(modName).add(position);
+        }
+        for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
+            String modName = modificationMatch.getTheoreticPtm();
+            if (!ptmToPositionsMap2.containsKey(modName)) {
+                ptmToPositionsMap2.put(modName, new ArrayList<Integer>());
+            }
+            int position = modificationMatch.getModificationSite();
+            if (ptmToPositionsMap2.get(modName).contains(position)) {
+                throw new IllegalArgumentException("Duplicated modification " + modName + " at site " + position + " in peptide " + sequence + " can impair peptide comparison.");
+            }
+            ptmToPositionsMap2.get(modName).add(position);
+        }
+        for (String modName : ptmToPositionsMap1.keySet()) {
+            if (!ptmToPositionsMap2.containsKey(modName)) {
                 return false;
+            }
+            ArrayList<Integer> sites1 = ptmToPositionsMap1.get(modName);
+            ArrayList<Integer> sites2 = ptmToPositionsMap2.get(modName);
+            if (sites1.size() != sites2.size()) {
+                return false;
+            }
+            Collections.sort(sites1);
+            Collections.sort(sites2);
+            for (int i = 0 ; i < sites1.size() ; i++) {
+                if (sites1.get(i) != sites2.get(i)) {
+                    return false;
+                }
             }
         }
         return true;

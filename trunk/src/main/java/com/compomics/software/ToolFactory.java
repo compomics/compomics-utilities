@@ -62,22 +62,27 @@ public class ToolFactory {
     public static void startPeptideShaker(JFrame parent, File cpsFile) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        boolean openPeptideShaker = true;
 
         if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
-            new PeptideShakerSetupDialog(parent, true);
+            PeptideShakerSetupDialog peptideShakerSetupDialog = new PeptideShakerSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            openPeptideShaker = !peptideShakerSetupDialog.isDialogCanceled();
         }
-        if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
-            if (cpsFile != null) {
-                ArrayList<String> args = new ArrayList<String>();
-                args.add(peptideShakerFileOption);
-                args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
-                launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
+        if (openPeptideShaker) {
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null
+                    && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
+                if (cpsFile != null) {
+                    ArrayList<String> args = new ArrayList<String>();
+                    args.add(peptideShakerFileOption);
+                    args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
+                    launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
+                } else {
+                    launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
+                }
             } else {
-                launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
+                throw new IllegalArgumentException("PeptideShaker not found in " + utilitiesUserPreferences.getPeptideShakerPath());
             }
-        } else {
-            throw new IllegalArgumentException("PeptideShaker not found in " + utilitiesUserPreferences.getPeptideShakerPath());
         }
     }
 
@@ -93,15 +98,20 @@ public class ToolFactory {
     public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        boolean openReporter = true;
 
         if (utilitiesUserPreferences.getReporterPath() == null || !(new File(utilitiesUserPreferences.getReporterPath()).exists())) {
-            new ReporterSetupDialog(parent, true);
+            ReporterSetupDialog reporterSetupDialog = new ReporterSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            openReporter = !reporterSetupDialog.isDialogCanceled();
         }
-        if (utilitiesUserPreferences.getReporterPath() != null) {
-            launch(utilitiesUserPreferences.getReporterPath(), "Reporter");
-        } else {
-            throw new IllegalArgumentException("Reporter not found in " + utilitiesUserPreferences.getReporterPath());
+        if (openReporter) {
+            if (utilitiesUserPreferences.getReporterPath() != null
+                    && new File(utilitiesUserPreferences.getReporterPath()).exists()) {
+                launch(utilitiesUserPreferences.getReporterPath(), "Reporter");
+            } else {
+                throw new IllegalArgumentException("Reporter not found in " + utilitiesUserPreferences.getReporterPath());
+            }
         }
     }
 
@@ -160,32 +170,37 @@ public class ToolFactory {
             throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        boolean openSearchGUI = true;
 
         if (utilitiesUserPreferences.getSearchGuiPath() == null || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
-            new SearchGuiSetupDialog(parent, true);
+            SearchGuiSetupDialog searchGuiSetupDialog = new SearchGuiSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            openSearchGUI = !searchGuiSetupDialog.isDialogCanceled();
         }
-        if (utilitiesUserPreferences.getSearchGuiPath() != null) {
-            if (mgfFiles == null && searchParameters == null) {
-                launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
+        if (openSearchGUI) {
+            if (utilitiesUserPreferences.getSearchGuiPath() != null
+                    && new File(utilitiesUserPreferences.getSearchGuiPath()).exists()) {
+                if (mgfFiles == null && searchParameters == null) {
+                    launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
+                } else {
+                    ArrayList<String> args = new ArrayList<String>();
+                    if (mgfFiles != null) {
+                        args.add(searchGuiSpectrumFileOption);
+                        args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
+                    }
+                    if (searchParameters != null) {
+                        args.add(searchGuiParametersFileOption);
+                        args.add(CommandLineUtils.getCommandLineArgument(searchParameters));
+                    }
+                    if (outputFolder != null) {
+                        args.add(outputFolderOption);
+                        args.add(CommandLineUtils.getCommandLineArgument(outputFolder));
+                    }
+                    launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
+                }
             } else {
-                ArrayList<String> args = new ArrayList<String>();
-                if (mgfFiles != null) {
-                    args.add(searchGuiSpectrumFileOption);
-                    args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
-                }
-                if (searchParameters != null) {
-                    args.add(searchGuiParametersFileOption);
-                    args.add(CommandLineUtils.getCommandLineArgument(searchParameters));
-                }
-                if (outputFolder != null) {
-                    args.add(outputFolderOption);
-                    args.add(CommandLineUtils.getCommandLineArgument(outputFolder));
-                }
-                launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
+                throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getSearchGuiPath());
             }
-        } else {
-            throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getSearchGuiPath());
         }
     }
 

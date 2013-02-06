@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 /**
  * A dialog used to set up the connection to Relims.
  *
+ * @deprecated the original relims is not used anymore
  * @author Harald Barsnes
  */
 public class RelimsSetupDialog extends javax.swing.JDialog {

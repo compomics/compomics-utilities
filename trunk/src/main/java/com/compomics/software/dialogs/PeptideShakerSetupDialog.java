@@ -24,6 +24,10 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * The selected folder.
      */
     private String lastSelectedFolder = "";
+    /**
+     * Set to true if the dialog was canceled.
+     */
+    private boolean dialogCanceled = true;
 
     /**
      * Creates a new PeptideShakerSetupDialog.
@@ -75,9 +79,14 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
 
         jLabel2.setText("jLabel2");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("PeptideShaker Settings");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -294,6 +303,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         utilitiesUserPreferences.setPeptideShakerPath(peptideShakernstallationJTextField.getText());
         try {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            dialogCanceled = false;
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
@@ -354,6 +364,16 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     private void peptideShakerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peptideShakerButtonMouseClicked
         openPeptideShakerWebPage();
     }//GEN-LAST:event_peptideShakerButtonMouseClicked
+
+    /**
+     * Close the dialog without saving.
+     * 
+     * @param evt 
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cancelButtonActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseButton;
@@ -376,5 +396,14 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         BareBonesBrowserLaunch.openURL("http://peptide-shaker.googlecode.com");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }
+    
+    /**
+     * Returns true of the dialog was canceled by the user.
+     * 
+     * @return the dialogCanceled
+     */
+    public boolean isDialogCanceled() {
+        return dialogCanceled;
     }
 }

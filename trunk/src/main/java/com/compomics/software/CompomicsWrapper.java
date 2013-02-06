@@ -430,7 +430,8 @@ public class CompomicsWrapper {
 
     /**
      * Check if a newer version of the tool is available on GoogleCode, and
-     * closes the tool if the user decided to upgrade.
+     * closes the tool if the user decided to upgrade. No zip file tag used (see 
+     * the other checkForNewVersion method).
      *
      * @param currentVersion the version number of the tool currently running
      * @param toolName the name of the tool, e.g., "PeptideShaker"
@@ -438,7 +439,7 @@ public class CompomicsWrapper {
      * "peptide-shaker"
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
-        checkForNewVersion(currentVersion, toolName, googleCodeToolName, true);
+        checkForNewVersion(currentVersion, toolName, googleCodeToolName, true, "");
     }
 
     /**
@@ -450,14 +451,16 @@ public class CompomicsWrapper {
      * "peptide-shaker"
      * @param closeToolWhenUpgrading if true, the tool will close when the
      * download page is opened, false only opens the download page
+     * @param zipFileTag the zip file tag, e.g., SearchGUI-1.10.4_windows.zip
+     * has the tag "_windows"
      */
-    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading) {
+    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading, String zipFileTag) {
 
         try {
             boolean deprecatedOrDeleted = false;
             URL downloadPage = new URL(
                     "http://code.google.com/p/" + googleCodeToolName + "/downloads/detail?name=" + toolName + "-"
-                    + currentVersion + ".zip");
+                    + currentVersion + zipFileTag + ".zip");
 
             if ((java.net.HttpURLConnection) downloadPage.openConnection() != null) {
 

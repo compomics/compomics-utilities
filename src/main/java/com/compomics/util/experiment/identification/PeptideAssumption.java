@@ -36,7 +36,8 @@ public class PeptideAssumption extends ExperimentObject {
      */
     private Charge identificationCharge;
     /**
-     * The e-value.
+     * The score, the lower the better.
+     * Ought to be renamed but kept for backward compatibility
      */
     private double eValue;
     /**
@@ -66,6 +67,24 @@ public class PeptideAssumption extends ExperimentObject {
         this.identificationCharge = identificationCharge;
         this.eValue = eValue;
         this.file = identificationFile;
+    }
+
+    /**
+     * Constructor for a peptide assumption.
+     *
+     * @param aPeptide the theoretic peptide
+     * @param rank the identification rank
+     * @param advocate the advocate used
+     * @param identificationCharge the charge used by the search engine for
+     * identification
+     * @param score the score (the lower, the better)
+     */
+    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score) {
+        this.peptide = aPeptide;
+        this.rank = rank;
+        this.advocate = advocate;
+        this.identificationCharge = identificationCharge;
+        this.eValue = score;
     }
 
     /**

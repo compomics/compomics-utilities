@@ -167,8 +167,9 @@ public class PTMLocationScores {
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
                 boolean found = false;
                 for (PTM ptm : ptms) {
-                    if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                    if (modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
                         found = true;
+                        break;
                     }
                 }
                 if (!found) {

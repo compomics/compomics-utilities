@@ -65,6 +65,7 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         sequence = sequence.replaceAll("[#*$%&]", "");
+        HashMap<String, ArrayList<Integer>> ptmToPositionsMap = new HashMap<String, ArrayList<Integer>>();
         for (ModificationMatch mod : modifications) {
             if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
                 throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
@@ -72,6 +73,14 @@ public class Peptide extends ExperimentObject {
             if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
                 throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
             }
+            String modName = mod.getTheoreticPtm();
+            int position = mod.getModificationSite();
+            if (!ptmToPositionsMap.containsKey(modName)) {
+                ptmToPositionsMap.put(modName, new ArrayList<Integer>());
+            } else if (ptmToPositionsMap.get(modName).contains(position)) {
+                throw new IllegalArgumentException("Duplicate modification (" + modName + ") at position " + position + " on peptide " + aSequence + ".");
+            }
+            ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
         }
         setParentProteins(parentProteins);
@@ -92,7 +101,16 @@ public class Peptide extends ExperimentObject {
         this.sequence = aSequence;
         sequence = sequence.replaceAll("[#*$%&]", "");
         this.mass = mass;
+        HashMap<String, ArrayList<Integer>> ptmToPositionsMap = new HashMap<String, ArrayList<Integer>>();
         for (ModificationMatch mod : modifications) {
+            String modName = mod.getTheoreticPtm();
+            int position = mod.getModificationSite();
+            if (!ptmToPositionsMap.containsKey(modName)) {
+                ptmToPositionsMap.put(modName, new ArrayList<Integer>());
+            } else if (ptmToPositionsMap.get(modName).contains(position)) {
+                throw new IllegalArgumentException("Duplicate modification (" + modName + ") at position " + position + " on peptide " + aSequence + ".");
+            }
+            ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
         }
         setParentProteins(parentProteins);
@@ -129,6 +147,13 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
+        String modName = modificationMatch.getTheoreticPtm();
+        int position = modificationMatch.getModificationSite();
+        for (ModificationMatch mod : modifications) {
+            if (mod.getModificationSite() == position && mod.getTheoreticPtm().equals(modName)) {
+                throw new IllegalArgumentException("Trying to add duplicate modification (" + modName + ") at position " + position + " on peptide " + sequence + ".");
+            }
+        }
         modifications.add(modificationMatch);
     }
 

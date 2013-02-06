@@ -429,7 +429,8 @@ public class CompomicsWrapper {
     }
 
     /**
-     * Check if a newer version of the tool is available on GoogleCode.
+     * Check if a newer version of the tool is available on GoogleCode, and
+     * closes the tool if the user decided to upgrade.
      *
      * @param currentVersion the version number of the tool currently running
      * @param toolName the name of the tool, e.g., "PeptideShaker"
@@ -437,6 +438,20 @@ public class CompomicsWrapper {
      * "peptide-shaker"
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
+        checkForNewVersion(currentVersion, toolName, googleCodeToolName, true);
+    }
+
+    /**
+     * Check if a newer version of the tool is available on GoogleCode.
+     *
+     * @param currentVersion the version number of the tool currently running
+     * @param toolName the name of the tool, e.g., "PeptideShaker"
+     * @param googleCodeToolName the GoogleCode name of the tool, e.g.,
+     * "peptide-shaker"
+     * @param closeToolWhenUpgrading if true, the tool will close when the
+     * download page is opened, false only opens the download page
+     */
+    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading) {
 
         try {
             boolean deprecatedOrDeleted = false;
@@ -484,9 +499,13 @@ public class CompomicsWrapper {
                             JOptionPane.YES_NO_CANCEL_OPTION);
                     if (option == JOptionPane.YES_OPTION) {
                         BareBonesBrowserLaunch.openURL("http://" + googleCodeToolName + ".googlecode.com/");
-                        System.exit(0);
+                        if (closeToolWhenUpgrading) {
+                            System.exit(0);
+                        }
                     } else if (option == JOptionPane.CANCEL_OPTION) {
-                        System.exit(0);
+                        if (closeToolWhenUpgrading) {
+                            System.exit(0);
+                        }
                     }
                 }
             }

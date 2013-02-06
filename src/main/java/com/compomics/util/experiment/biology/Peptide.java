@@ -77,8 +77,6 @@ public class Peptide extends ExperimentObject {
             int position = mod.getModificationSite();
             if (!ptmToPositionsMap.containsKey(modName)) {
                 ptmToPositionsMap.put(modName, new ArrayList<Integer>());
-            } else if (ptmToPositionsMap.get(modName).contains(position)) {
-                throw new IllegalArgumentException("Duplicate modification (" + modName + ") at position " + position + " on peptide " + aSequence + ".");
             }
             ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
@@ -107,8 +105,6 @@ public class Peptide extends ExperimentObject {
             int position = mod.getModificationSite();
             if (!ptmToPositionsMap.containsKey(modName)) {
                 ptmToPositionsMap.put(modName, new ArrayList<Integer>());
-            } else if (ptmToPositionsMap.get(modName).contains(position)) {
-                throw new IllegalArgumentException("Duplicate modification (" + modName + ") at position " + position + " on peptide " + aSequence + ".");
             }
             ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
@@ -147,13 +143,6 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
-        String modName = modificationMatch.getTheoreticPtm();
-        int position = modificationMatch.getModificationSite();
-        for (ModificationMatch mod : modifications) {
-            if (mod.getModificationSite() == position && mod.getTheoreticPtm().equals(modName)) {
-                throw new IllegalArgumentException("Trying to add duplicate modification (" + modName + ") at position " + position + " on peptide " + sequence + ".");
-            }
-        }
         modifications.add(modificationMatch);
     }
 
@@ -734,9 +723,6 @@ public class Peptide extends ExperimentObject {
                 ptmToPositionsMap1.put(modName, new ArrayList<Integer>());
             }
             int position = modificationMatch.getModificationSite();
-            if (ptmToPositionsMap1.get(modName).contains(position)) {
-                throw new IllegalArgumentException("Duplicated modification " + modName + " at site " + position + " in peptide " + sequence + " can impair peptide comparison.");
-            }
             ptmToPositionsMap1.get(modName).add(position);
         }
         for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
@@ -745,9 +731,6 @@ public class Peptide extends ExperimentObject {
                 ptmToPositionsMap2.put(modName, new ArrayList<Integer>());
             }
             int position = modificationMatch.getModificationSite();
-            if (ptmToPositionsMap2.get(modName).contains(position)) {
-                throw new IllegalArgumentException("Duplicated modification " + modName + " at site " + position + " in peptide " + sequence + " can impair peptide comparison.");
-            }
             ptmToPositionsMap2.get(modName).add(position);
         }
         for (String modName : ptmToPositionsMap1.keySet()) {

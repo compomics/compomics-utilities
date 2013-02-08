@@ -64,7 +64,7 @@ public class SearchParameters implements Serializable {
     /**
      * The list of fraction molecular weights. The key is the fraction file
      * path.
-     * 
+     *
      * @deprecated use fractionMolecularWeightRanges instead
      */
     private HashMap<String, Double> fractionMolecularWeights = new HashMap<String, Double>();
@@ -425,7 +425,8 @@ public class SearchParameters implements Serializable {
      * Set the user provided molecular weight ranges for the fractions. The key
      * is the fraction file path.
      *
-     * @param fractionMolecularWeightRanges the fractionMolecularWeightRanges to set
+     * @param fractionMolecularWeightRanges the fractionMolecularWeightRanges to
+     * set
      */
     public void setFractionMolecularWeightRanges(HashMap<String, XYDataPoint> fractionMolecularWeightRanges) {
         this.fractionMolecularWeightRanges = fractionMolecularWeightRanges;
@@ -645,5 +646,104 @@ public class SearchParameters implements Serializable {
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SerializationUtils.writeObject(identificationParameters, file);
+    }
+
+    /**
+     * Returns true of the search parameter objects have identical settings.
+     *
+     * @param otherSearchParameters the parameters to compare to
+     * @return true of the search parameter objects have identical settings
+     */
+    public boolean equals(SearchParameters otherSearchParameters) {
+
+        if (otherSearchParameters == null) {
+            return false;
+        }
+        if (this.getPrecursorAccuracyType() != otherSearchParameters.getPrecursorAccuracyType()) {
+            return false;
+        }
+        if (this.getPrecursorAccuracy().doubleValue() != otherSearchParameters.getPrecursorAccuracy().doubleValue()) {
+            return false;
+        }
+        if (this.getFragmentIonAccuracy().doubleValue() != otherSearchParameters.getFragmentIonAccuracy().doubleValue()) {
+            return false;
+        }
+        if (this.getnMissedCleavages().intValue() != otherSearchParameters.getnMissedCleavages().intValue()) {
+            return false;
+        }
+        if (!this.getFastaFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getFastaFile().getAbsolutePath())) {
+            return false;
+        }
+        if (this.getIonSearched1().intValue() != otherSearchParameters.getIonSearched1().intValue()) {
+            return false;
+        }
+        if (this.getIonSearched2().intValue() != otherSearchParameters.getIonSearched2().intValue()) {
+            return false;
+        }
+        if (!this.getMinChargeSearched().equals(otherSearchParameters.getMinChargeSearched())) {
+            return false;
+        }
+        if (!this.getMaxChargeSearched().equals(otherSearchParameters.getMaxChargeSearched())) {
+            return false;
+        }
+        if (this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() != null
+                && this.getMinPeptideLength().intValue() != otherSearchParameters.getMinPeptideLength().intValue()) {
+            return false;
+        }
+        if ((this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() == null)
+                || (this.getMinPeptideLength() == null && otherSearchParameters.getMinPeptideLength() != null)) {
+            return false;
+        }
+        if (this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() != null
+                && this.getMaxPeptideLength().intValue() != otherSearchParameters.getMaxPeptideLength().intValue()) {
+            return false;
+        }
+        if ((this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() == null)
+                || (this.getMaxPeptideLength() == null && otherSearchParameters.getMaxPeptideLength() != null)) {
+            return false;
+        }
+        if (this.getMaxEValue().doubleValue() != otherSearchParameters.getMaxEValue().doubleValue()) {
+            return false;
+        }
+        if (this.getHitListLength().intValue() != otherSearchParameters.getHitListLength().intValue()) {
+            return false;
+        }
+        if (!this.getMinimalChargeForMultipleChargedFragments().equals(otherSearchParameters.getMinimalChargeForMultipleChargedFragments())) {
+            return false;
+        }
+        if (this.isRemovePrecursor().booleanValue() != otherSearchParameters.isRemovePrecursor().booleanValue()) {
+            return false;
+        }
+        if (this.isScalePrecursor().booleanValue() != otherSearchParameters.isScalePrecursor().booleanValue()) {
+            return false;
+        }
+        if (this.isEstimateCharge().booleanValue() != otherSearchParameters.isEstimateCharge().booleanValue()) {
+            return false;
+        }
+        if (!this.getEnzyme().equals(otherSearchParameters.getEnzyme())) {
+            return false;
+        }
+        if (this.getParametersFile() != null && otherSearchParameters.getParametersFile() != null
+                && !this.getParametersFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getParametersFile().getAbsolutePath())) {
+            return false;
+        }
+        if ((this.getParametersFile() != null && otherSearchParameters.getParametersFile() == null)
+                || (this.getParametersFile() == null && otherSearchParameters.getParametersFile() != null)) {
+            return false;
+        }
+        if (!this.getModificationProfile().equals(otherSearchParameters.getModificationProfile())) {
+            return false;
+        }
+        if (this.getFractionMolecularWeightRanges() != null && otherSearchParameters.getFractionMolecularWeightRanges() != null) {
+            if (!this.getFractionMolecularWeightRanges().equals(otherSearchParameters.getFractionMolecularWeightRanges())) {
+                return false;
+            }
+        }
+        if ((this.getFractionMolecularWeightRanges() != null && otherSearchParameters.getFractionMolecularWeightRanges() == null)
+                || (this.getFractionMolecularWeightRanges() == null && otherSearchParameters.getFractionMolecularWeightRanges() != null)) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -293,6 +293,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Modification Details");
+        setMinimumSize(new java.awt.Dimension(500, 500));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -314,14 +315,14 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         defaultModificationsTable.setModel(new DefaultPTMTable());
         defaultModificationsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         defaultModificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                defaultModificationsTableMouseReleased(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 defaultModificationsTableMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 defaultModificationsTableMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                defaultModificationsTableMouseReleased(evt);
             }
         });
         defaultModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -416,7 +417,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(findJLabel)
@@ -499,7 +500,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -543,7 +544,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(modificationsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                    .addComponent(modificationsSplitPane)
                     .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)

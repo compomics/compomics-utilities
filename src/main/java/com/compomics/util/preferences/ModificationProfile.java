@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -23,7 +24,7 @@ public class ModificationProfile implements Serializable {
     /**
      * Mapping of the utilities modification names to the PeptideShaker names.
      *
-     * @deprecated use the expected variable modification lists
+     * @deprecated use the expected variable modification lists.
      */
     private HashMap<String, String> modificationNames = new HashMap<String, String>();
     /**
@@ -31,15 +32,15 @@ public class ModificationProfile implements Serializable {
      */
     private ArrayList<String> fixedModifications = new ArrayList<String>();
     /**
-     * List of the expected variable modifications
+     * List of the expected variable modifications.
      */
     private ArrayList<String> variableModifications = new ArrayList<String>();
     /**
-     * List of modifications searched during the second pass search
+     * List of modifications searched during the second pass search.
      */
     private ArrayList<String> refinementModifications = new ArrayList<String>();
     /**
-     * Map of the omssa indexes used for user modifications in this search
+     * Map of the OMSSA indexes used for user modifications in this search.
      */
     private HashMap<Integer, String> omssaIndexes = new HashMap<Integer, String>();
     /**
@@ -315,7 +316,8 @@ public class ModificationProfile implements Serializable {
 
     /**
      * Returns a list containing all not fixed modifications with the same mass.
-     * Warning: all modifications of the profile must be loaded in the PTM factory.
+     * Warning: all modifications of the profile must be loaded in the PTM
+     * factory.
      *
      * @param ptmMass the mass
      * @return a list of all not fixed modifications with the same mass
@@ -330,5 +332,82 @@ public class ModificationProfile implements Serializable {
             }
         }
         return ptms;
+    }
+
+    /**
+     * Returns true of the two profiles are identical.
+     *
+     * @param otherProfile the profile to compare against
+     * @return true of the two profiles are identical
+     */
+    public boolean equals(ModificationProfile otherProfile) {
+
+        if (otherProfile == null) {
+            return false;
+        }
+        
+        // note that the following three tests results in false even if only the order is different
+        
+        if (!this.getVariableModifications().equals(otherProfile.getVariableModifications())) {
+            return false;
+        }
+        if (!this.getFixedModifications().equals(otherProfile.getFixedModifications())) {
+            return false;
+        }
+        if (!this.getRefinementModifications().equals(otherProfile.getRefinementModifications())) {
+            return false;
+        }
+
+        if (this.omssaIndexes.size() != otherProfile.omssaIndexes.size()) {
+            return false;
+        }
+
+        Iterator<Integer> omssaIndexkeys = this.omssaIndexes.keySet().iterator();
+
+        while (omssaIndexkeys.hasNext()) {
+            Integer tempKey = omssaIndexkeys.next();
+            if (!otherProfile.omssaIndexes.containsKey(tempKey)) {
+                return false;
+            }
+            if (!this.omssaIndexes.get(tempKey).equals(otherProfile.omssaIndexes.get(tempKey))) {
+                return false;
+            }
+        }
+
+        if (this.colors.size() != otherProfile.colors.size()) {
+            return false;
+        }
+
+        Iterator<String> colorKeys = this.colors.keySet().iterator();
+
+        while (colorKeys.hasNext()) {
+            String tempKey = colorKeys.next();
+            if (!otherProfile.colors.containsKey(tempKey)) {
+                return false;
+            }
+            if (!this.colors.get(tempKey).equals(otherProfile.colors.get(tempKey))) {
+                return false;
+            }
+        }
+
+        if (this.backUp.size() != otherProfile.backUp.size()) {
+            return false;
+        }
+
+        Iterator<String> backupKeys = this.backUp.keySet().iterator();
+
+        while (backupKeys.hasNext()) {
+            String tempKey = backupKeys.next();
+            if (!otherProfile.backUp.containsKey(tempKey)) {
+                return false;
+            }
+            
+            // @TODO: a test for identical ptms (and not just name as above) should be added
+//            if (!this.backUp.get(tempKey).equals(otherProfile.backUp.get(tempKey))) {
+//                return false;
+//            }
+        }
+
+        return true;
     }
 }

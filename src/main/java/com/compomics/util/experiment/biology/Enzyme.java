@@ -243,10 +243,7 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
 
-        String aa, aaBefore = "",
-                aaAfter = "",
-                currentPeptide = "";
-
+        String aa, aaBefore, aaAfter = "", currentPeptide = "";
         ArrayList<String> results = new ArrayList<String>();
 
         HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
@@ -303,5 +300,38 @@ public class Enzyme extends ExperimentObject {
         }
 
         return results;
+    }
+
+    /**
+     * Returns true of the two enzymes are identical.
+     *
+     * @param otherEnzyme the enzyme to compare against.
+     * @return true of the two enzymes are identical
+     */
+    public boolean equals(Enzyme otherEnzyme) {
+
+        if (otherEnzyme == null) {
+            return false;
+        }
+        if (this.getId() != otherEnzyme.getId()) {
+            return false;
+        }
+        if (!this.getName().equalsIgnoreCase(otherEnzyme.getName())) {
+            return false;
+        }
+        if (!this.getAminoAcidBefore().equals(otherEnzyme.getAminoAcidBefore())) {
+            return false;
+        }
+        if (!this.getRestrictionBefore().equals(otherEnzyme.getRestrictionBefore())) {
+            return false;
+        }
+        if (!this.getAminoAcidAfter().equals(otherEnzyme.getAminoAcidAfter())) {
+            return false;
+        }
+        if (!this.getRestrictionAfter().equals(otherEnzyme.getRestrictionAfter())) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.11.9</version>
+    <version>3.11.10</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -415,8 +415,7 @@
             <artifactId>commons-compress</artifactId>
             <version>1.4</version>
         </dependency>
-        
-        
+
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
@@ -434,6 +433,28 @@
             <artifactId>ssj</artifactId>
             <version>2.5.0</version>
             <type>jar</type>
+        </dependency>
+        
+        <!-- Used for PRIDE XML schema validation.-->
+        <dependency>
+            <groupId>msv</groupId>
+            <artifactId>msv</artifactId>
+            <version>20050913</version>
+        </dependency>
+        <dependency>
+            <groupId>msv</groupId>
+            <artifactId>isorelax</artifactId>
+            <version>20050913</version>
+        </dependency>
+        <dependency>
+            <groupId>msv</groupId>
+            <artifactId>relaxngDatatype</artifactId>
+            <version>20050913</version>
+        </dependency>
+        <dependency>
+            <groupId>msv</groupId>
+            <artifactId>xsdlib</artifactId>
+            <version>20050913</version>
         </dependency>
 
     </dependencies>

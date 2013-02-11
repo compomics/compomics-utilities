@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 /**
- * A window used to display help text in html format.
+ * A window used to display help text in HTML format.
  * 
  * @author Harald Barsnes
  * 
@@ -42,6 +42,10 @@ public class HelpWindow extends javax.swing.JFrame {
                 helpText += s;
                 s = b.readLine();
             }
+            
+            b.close();
+            streamReader.close();
+            stream.close();
 
             textJEditorPane.setText(helpText);
 
@@ -84,6 +88,10 @@ public class HelpWindow extends javax.swing.JFrame {
                 helpText += s;
                 s = b.readLine();
             }
+            
+            b.close();
+            streamReader.close();
+            stream.close();
 
             textJEditorPane.setText(helpText);
 

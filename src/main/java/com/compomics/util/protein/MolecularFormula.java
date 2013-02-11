@@ -66,6 +66,7 @@ public class MolecularFormula {
                     iElements.put(lAa, lAaFormula);
                 }
             }
+            br.close();
         } catch(Exception e){
             logger.error(e);
         }

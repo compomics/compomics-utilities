@@ -159,8 +159,6 @@ public class DateChooser extends JDialog {
         jpanChooser.add(jpanDateHolder, BorderLayout.CENTER);
         jpanChooser.add(jpanScrollDate, BorderLayout.SOUTH);
 
-        JPanel jpanButtons = getButtonPanel();
-
         this.getContentPane().add(jpanChooser, BorderLayout.CENTER);
         // this.getContentPane().add(jpanButtons, BorderLayout.SOUTH);
 
@@ -231,7 +229,7 @@ public class DateChooser extends JDialog {
                     lblDays[i].setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
                 }
                 lblDays[i].setText("" + displayDay);
-                iDays[i] = new Integer(displayDay);
+                iDays[i] = Integer.valueOf(displayDay);
                 displayDay++;
             }
         }

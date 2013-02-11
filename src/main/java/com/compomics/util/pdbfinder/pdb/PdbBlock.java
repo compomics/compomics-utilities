@@ -10,15 +10,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas Colaert
- * Date: 9-jul-2008
- * Time: 13:53:46
+ * Created by IntelliJ IDEA. User: Niklaas Colaert Date: 9-jul-2008 Time:
+ * 13:53:46
  */
 public class PdbBlock {
-    
-    // @TODO: add JavaDoc...
 
+    // @TODO: add JavaDoc...
     private String iBlock;
     private int iStart_protein;
     private int iEnd_protein;
@@ -118,6 +115,9 @@ public class PdbBlock {
                 input.append((char) i);
             }
 
+            r.close();
+            in.close();
+
             lSequence = readFasta(input.toString(), aPdbAccession);
 
         } catch (MalformedURLException e) {
@@ -135,7 +135,7 @@ public class PdbBlock {
 
         String[] lLines = lFasta.split("\n");
         boolean lSequenceNeeded = false;
-        String lSequence = "";
+        StringBuilder lSequence = new StringBuilder();
 
         for (int i = 0; i < lLines.length; i++) {
             if (lLines[i].startsWith(">")) {
@@ -148,11 +148,11 @@ public class PdbBlock {
                 }
             } else {
                 if (lSequenceNeeded) {
-                    lSequence = lSequence + lLines[i];
+                    lSequence.append(lLines[i]);
                 }
             }
         }
 
-        return lSequence;
+        return lSequence.toString();
     }
 }

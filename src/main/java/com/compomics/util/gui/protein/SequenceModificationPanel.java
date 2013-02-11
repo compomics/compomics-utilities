@@ -112,7 +112,7 @@ public class SequenceModificationPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Drawing offsets.
-        int yLocation = new Double(iMaxBarHeight).intValue() + iYStart;
+        int yLocation = ((int) iMaxBarHeight) + iYStart;
         int xLocation = iXStart;
 
         int lFontHeight = g2.getFontMetrics().getHeight();
@@ -160,7 +160,7 @@ public class SequenceModificationPanel extends JPanel {
                 if (currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] > 0) {
                     g2.setColor(currentModificationProfile.getColor());
 
-                    int lBarHeight = (new Double((currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / maxAScore) * iMaxBarHeight).intValue());
+                    int lBarHeight = (int) ((currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / maxAScore) * iMaxBarHeight);
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }
@@ -186,7 +186,7 @@ public class SequenceModificationPanel extends JPanel {
                 if (currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] > 0) {
                     g2.setColor(currentModificationProfile.getColor());
 
-                    int lBarHeight = (new Double((currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100) * iMaxBarHeight).intValue());
+                    int lBarHeight = (int) ((currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100) * iMaxBarHeight);
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }

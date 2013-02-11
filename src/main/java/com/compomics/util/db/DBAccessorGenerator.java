@@ -11,7 +11,6 @@
  * Time: 14:14:26
  */
 package com.compomics.util.db;
-import org.apache.log4j.Logger;
 
 import com.compomics.util.general.CommandLineParser;
 
@@ -50,6 +49,7 @@ public class DBAccessorGenerator {
      * @param   aUrl    String with the URL for the database.
      * @param   aTable  String with the tablename to generate the accessor object for.
      * @param   aPackageName    String with the packagename for the generated class. Can be empty String.
+     * @throws GeneratorException  
      */
     public void startGenerator(String aDriver, String aUrl, String aTable, String aPackageName) throws GeneratorException {
         this.startGenerator(aDriver, aUrl, aTable, null, null, aPackageName, false);
@@ -74,7 +74,9 @@ public class DBAccessorGenerator {
         // Okay, we've got our connection, now get the MetaData.
         DBMetaData dbmd = this.getMetaData(lConn, aTable);
 
-        if(aDebug) System.out.println("\n\n" + dbmd.toString() + "\n");
+        if(aDebug) {
+            System.out.println("\n\n" + dbmd.toString() + "\n");
+        }
         // Close the connection.
         try {
             lConn.close();
@@ -88,6 +90,8 @@ public class DBAccessorGenerator {
 
     /**
      * The main method allows to run this tool from the command-line.
+     * 
+     * @param args 
      */
     public static void main(String[] args) {
         DBAccessorGenerator dba = new DBAccessorGenerator();
@@ -186,7 +190,6 @@ public class DBAccessorGenerator {
      * @exception   GeneratorException  when metadata could not be read.
      */
     private DBMetaData getMetaData(Connection lConn, String aTable) throws GeneratorException {
-        DBMetaData dbmd = null;
 
         // Get the metadata.
         DatabaseMetaData meta = null;
@@ -206,8 +209,8 @@ public class DBAccessorGenerator {
             boolean once = false;
             while(rs.next()) {
                 names.add(rs.getString("COLUMN_NAME"));
-                types.add(new Integer(rs.getInt("DATA_TYPE")));
-                sizes.add(new Integer(rs.getInt("COLUMN_SIZE")));
+                types.add(Integer.valueOf(rs.getInt("DATA_TYPE")));
+                sizes.add(Integer.valueOf(rs.getInt("COLUMN_SIZE")));
                 once = true;
             }
             rs.close();
@@ -237,8 +240,7 @@ public class DBAccessorGenerator {
         }
 
         // Initialize metadata wrapper and return.
-        dbmd = new DBMetaData(aTable, names, types, sizes, pkColumns);
-
+        DBMetaData dbmd = new DBMetaData(aTable, names, types, sizes, pkColumns);
         return dbmd;
     }
 

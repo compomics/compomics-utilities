@@ -244,7 +244,7 @@ public class SequenceFragmentationPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Drawing offsets.
-        int yLocation = new Double(iMaxBarHeight).intValue() + iXStart;
+        int yLocation = ((int) iMaxBarHeight) + iXStart;
         int xLocation = iXStart;
 
         int lFontHeight = g2.getFontMetrics().getHeight();
@@ -324,7 +324,7 @@ public class SequenceFragmentationPanel extends JPanel {
             // bIon Bar
             if (i <= bIons.length - 1) {
                 if (bIons[i] != 0) {
-                    lBarHeight = (new Double(bIons[i] * iMaxBarHeight).intValue());
+                    lBarHeight = (int) (bIons[i] * iMaxBarHeight);
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }
@@ -339,7 +339,7 @@ public class SequenceFragmentationPanel extends JPanel {
             // yIon Bar
             if (i <= yIons.length - 1) {
                 if (yIons[yIons.length - (i + 1)] != 0) {
-                    lBarHeight = (new Double(yIons[yIons.length - (i + 1)] * iMaxBarHeight).intValue());
+                    lBarHeight = (int) (yIons[yIons.length - (i + 1)] * iMaxBarHeight);
                     if (lBarHeight < 5) {
                         lBarHeight = 7;
                     }

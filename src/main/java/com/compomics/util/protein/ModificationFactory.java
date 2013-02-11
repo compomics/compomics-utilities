@@ -283,12 +283,12 @@ public class ModificationFactory {
                         int count = ((Integer) duplicateCodes.get(code)).intValue();
                         count++;
                         codeToTitle.put(code + count, title);
-                        duplicateCodes.put(code, new Integer(count));
+                        duplicateCodes.put(code, Integer.valueOf(count));
                     } else {
                         previous = codeToTitle.put(code, title);
                         // Here conflicts can arise.
                         if (previous != null) {
-                            duplicateCodes.put(code, new Integer(1));
+                            duplicateCodes.put(code, Integer.valueOf(1));
                             codeToTitle.put(code + "0", previous);
                             codeToTitle.put(code + "1", title);
                             codeToTitle.remove(code);
@@ -332,7 +332,7 @@ public class ModificationFactory {
                 in = new FileInputStream(temp);
             }
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 // Trim the line.
                 line = line.trim();
@@ -488,12 +488,12 @@ public class ModificationFactory {
                             int count = ((Integer) duplicateCodes.get(code)).intValue();
                             count++;
                             codeToTitle.put(code + count, title);
-                            duplicateCodes.put(code, new Integer(count));
+                            duplicateCodes.put(code, Integer.valueOf(count));
                         } else {
                             Object previous = codeToTitle.put(code, title);
                             // Here conflicts can arise.
                             if (previous != null) {
-                                duplicateCodes.put(code, new Integer(1));
+                                duplicateCodes.put(code, Integer.valueOf(1));
                                 codeToTitle.put(code + "0", previous);
                                 codeToTitle.put(code + "1", title);
                                 codeToTitle.remove(code);

@@ -116,7 +116,7 @@ public class IsotopeDistributionGui extends JFrame {
         //get the elements that can be used
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("elements.txt")));
-            String line = null;
+            String line;
             String[] lHeaderElements = null;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#")) {
@@ -140,6 +140,7 @@ public class IsotopeDistributionGui extends JFrame {
                     iElements.put(lAa, lAaFormula);
                 }
             }
+            br.close();
         } catch (Exception e) {
             logger.error(e);
         }

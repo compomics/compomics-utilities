@@ -25,7 +25,7 @@ public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
      */
     private int align;
     /**
-     * The maxium width of a tool tip (in number of characters). Tooltips
+     * The maximum width of a tool tip (in number of characters). Tooltips
      * longer than the maximum will be split into multiple lines.
      */
     private final int MAX_TOOLTIP_WIDTH = 40;
@@ -33,7 +33,7 @@ public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
     /**
      * Creates a new instance of the MyComboBoxRenderer.
      * 
-     * @param tooltips vector containg the tooltips
+     * @param tooltips vector containing the tooltips
      * @param align the horizontal alignment of the text
      */
     public ToolTipComboBoxRenderer(Vector tooltips, int align) {
@@ -44,7 +44,7 @@ public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
     /**
      * Set the tooltips.
      * 
-     * @param tooltips vector containg the tooltips
+     * @param tooltips vector containing the tooltips
      */
     public void setToolTips(Vector tooltips) {
         this.tooltips = tooltips;

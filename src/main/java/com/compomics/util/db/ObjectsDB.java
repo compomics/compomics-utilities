@@ -163,6 +163,7 @@ public class ObjectsDB implements Serializable {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
             oos.close();
+            bos.close();
             ps.setBytes(2, bos.toByteArray());
             ps.executeUpdate();
         }
@@ -360,6 +361,7 @@ public class ObjectsDB implements Serializable {
                     ObjectInputStream in = new ObjectInputStream(bis);
                     Object object = in.readObject();
                     in.close();
+                    bis.close();
 
                     objectsCache.addObject(dbName, tableName, key, object, false);
                     if (waitingHandler != null) {
@@ -595,6 +597,7 @@ public class ObjectsDB implements Serializable {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
             oos.close();
+            bos.close();
             ps.setBytes(1, bos.toByteArray());
             ps.executeUpdate();
         }

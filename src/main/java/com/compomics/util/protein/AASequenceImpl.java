@@ -673,7 +673,7 @@ public class AASequenceImpl implements Sequence {
         // divide by the number of additions.
         int additions = 0;
         for (int i = 0; i < iSequence.length(); i++) {
-            String key = new Character(iSequence.charAt(i)).toString();
+            String key = Character.toString(iSequence.charAt(i));
             double index = 0.0;
             if (tempList.containsKey(key)) {
                 index = Double.parseDouble(tempList.getProperty(key));

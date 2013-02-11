@@ -28,7 +28,7 @@ public class EnzymeFactoryTest extends TestCase {
             ArrayList<Enzyme> enzymes = enzymeFactory.getEnzymes();
             Enzyme testEnzyme = enzymes.get(0);
         } catch (Exception e) {
-            String report = e.getLocalizedMessage();
+            e.printStackTrace();
         }
     }
 }

@@ -1089,7 +1089,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         if (monoMass != null) {
             cvTerm = new CvTerm(ontologyShort, accession, selectedValue, monoMass.toString());
         } else {
-            cvTerm = new CvTerm(ontologyShort, accession, selectedValue, monoMass.toString());
+            cvTerm = new CvTerm(ontologyShort, accession, selectedValue, null);
         }
 
         updateModMappingText();

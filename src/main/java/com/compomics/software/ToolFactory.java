@@ -265,6 +265,10 @@ public class ToolFactory {
             line = br.readLine();
             error = true;
         }
+        
+        br.close();
+        isr.close();
+        stderr.close();
 
         if (debug) {
             System.out.println("</ERROR>");

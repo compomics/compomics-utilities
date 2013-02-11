@@ -168,7 +168,7 @@ public class MassErrorPlot extends JPanel {
 
                 xyDataset.addSeries(ionMatch.getPeakAnnotation(true), dataXY);
 
-                // use the two lines below is all points ought to have the same color
+                // use the two lines below if all points ought to have the same color
                 //int alphaLevel = Double.valueOf((ionMatch.peak.intensity / totalIntensity) / (maxAnnotatedIntensity / totalIntensity) * 255).intValue();
                 //colors.add(new Color(255, 0, 0, alphaLevel)); // @TODO: make color selectable by the user?
 
@@ -186,7 +186,7 @@ public class MassErrorPlot extends JPanel {
 
             // set the colors and shape for the datapoints
             for (int i = 0; i < colors.size(); i++) {
-                if (useIntensityGrading) {
+                if (useIntensityGrading) { // @TODO: implement itensity color grading?
                     renderer.setSeriesPaint(i, colors.get(i));
                     renderer.setSeriesShape(i, renderer.getBaseShape());
                 } else {

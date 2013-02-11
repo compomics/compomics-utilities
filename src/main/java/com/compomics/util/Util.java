@@ -253,21 +253,21 @@ public class Util {
      * @param table the table to turn in to text
      * @param separator the text separator
      * @param progressDialog the progress dialog
-     * @param removeHtml if true, html is converted to text
+     * @param removeHtml if true, HTML is converted to text
      * @return the table as a separated text file
      */
     public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
 
-        String tableAsString = "";
+        StringBuilder tableAsString = new StringBuilder();
 
         for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
-            tableAsString += table.getColumnName(i) + separator;
+            tableAsString.append(table.getColumnName(i)).append(separator);
         }
 
         progressDialog.setIndeterminate(false);
         progressDialog.setMaxProgressValue(table.getRowCount());
 
-        tableAsString += System.getProperty("line.separator");
+        tableAsString.append(System.getProperty("line.separator"));
 
         for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
 
@@ -283,16 +283,16 @@ public class Util {
                         tempValue = tempValue.replaceAll("\\<[^>]*>", "");
                     }
 
-                    tableAsString += tempValue + separator;
+                    tableAsString.append(tempValue).append(separator);
                 } else {
-                    tableAsString += separator;
+                    tableAsString.append(separator);
                 }
             }
 
-            tableAsString += System.getProperty("line.separator");
+            tableAsString.append(System.getProperty("line.separator"));
         }
 
-        return tableAsString;
+        return tableAsString.toString();
     }
 
     /**
@@ -359,6 +359,12 @@ public class Util {
         try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         } catch (IOException e) {
+            if (inChannel != null) {
+                inChannel.close();
+            }
+            if (outChannel != null) {
+                outChannel.close();
+            }
             throw e;
         } finally {
             if (inChannel != null) {

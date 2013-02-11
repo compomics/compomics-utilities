@@ -39,7 +39,7 @@ public class HelpDialog extends javax.swing.JDialog {
     public HelpDialog(Frame parent, URL fileName, Image helpIcon, Image aboutIcon, String title) {
         this(parent, fileName, null, helpIcon, aboutIcon, title, 500, 300);
     }
-    
+
     /**
      * Creates a new HelpDialog with a JFrame as a parent.
      *
@@ -54,7 +54,7 @@ public class HelpDialog extends javax.swing.JDialog {
     public HelpDialog(Frame parent, URL fileName, Image helpIcon, Image aboutIcon, String title, int windowWidth, int windowHeightReduction) {
         this(parent, fileName, null, helpIcon, aboutIcon, title, windowWidth, windowHeightReduction);
     }
-    
+
     /**
      * Creates a new HelpDialog with a JFrame as a parent.
      *
@@ -99,6 +99,10 @@ public class HelpDialog extends javax.swing.JDialog {
                 s = b.readLine();
             }
 
+            b.close();
+            streamReader.close();
+            stream.close();
+
             String imageTag = "<img src=\"";
             int index = 0;
 
@@ -138,7 +142,6 @@ public class HelpDialog extends javax.swing.JDialog {
 
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     textJEditorPane.scrollToReference(marker);
                 }
@@ -163,7 +166,7 @@ public class HelpDialog extends javax.swing.JDialog {
     public HelpDialog(JDialog parent, URL fileName, Image helpIcon, Image aboutIcon, String title) {
         this(parent, fileName, null, helpIcon, aboutIcon, title, 500, 300);
     }
-    
+
     /**
      * Creates a new HelpDialog object with a JDialog as a parent.
      *
@@ -178,7 +181,7 @@ public class HelpDialog extends javax.swing.JDialog {
     public HelpDialog(JDialog parent, URL fileName, Image helpIcon, Image aboutIcon, String title, int windowWidth, int windowHeightReduction) {
         this(parent, fileName, null, helpIcon, aboutIcon, title, windowWidth, windowHeightReduction);
     }
-    
+
     /**
      * Creates a new HelpDialog with a JDialog as a parent.
      *
@@ -224,6 +227,10 @@ public class HelpDialog extends javax.swing.JDialog {
                 s = b.readLine();
             }
 
+            b.close();
+            streamReader.close();
+            stream.close();
+
             String imageTag = "<img src=\"";
             int index = 0;
 
@@ -261,7 +268,6 @@ public class HelpDialog extends javax.swing.JDialog {
 
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     textJEditorPane.scrollToReference(marker);
                 }

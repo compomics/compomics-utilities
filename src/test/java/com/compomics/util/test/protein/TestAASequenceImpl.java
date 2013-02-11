@@ -421,9 +421,9 @@ public class TestAASequenceImpl extends TestCase {
         Vector modifs = seq.getModifications();
         // To check against.
         Vector ints = new Vector(3);
-        ints.add(new Integer(0));
-        ints.add(new Integer(6));
-        ints.add(new Integer(8));
+        ints.add(Integer.valueOf(0));
+        ints.add(Integer.valueOf(6));
+        ints.add(Integer.valueOf(8));
 
         int liSize = modifs.size();
         Assert.assertEquals(3, liSize);
@@ -492,9 +492,9 @@ public class TestAASequenceImpl extends TestCase {
         Vector modifs = seq.getModifications();
         // To check against.
         Vector ints = new Vector(3);
-        ints.add(new Integer(2));
-        ints.add(new Integer(4));
-        ints.add(new Integer(10));
+        ints.add(Integer.valueOf(2));
+        ints.add(Integer.valueOf(4));
+        ints.add(Integer.valueOf(10));
 
         int liSize = modifs.size();
         Assert.assertEquals(3, liSize);

@@ -262,7 +262,7 @@ public class FolderMonitor implements Runnable {
             Vector toProcess = new Vector();
 
             // The files that will be found in the folder.
-            File[] files = null;
+            File[] files;
 
             // Get all the files, currently stored in the folder.
             if(this.iFilter != null) {
@@ -301,7 +301,7 @@ public class FolderMonitor implements Runnable {
                 // If the filesize is not yet stored, store it now.
                 if(iFileProps.get(lName) == null) {
                     try {
-                        iFileProps.put(lName, new Long(lFile.length()));
+                        iFileProps.put(lName, Long.valueOf(lFile.length()));
                     } catch(Exception e) {
                     }
                 } else {
@@ -313,7 +313,7 @@ public class FolderMonitor implements Runnable {
                             // add it to the list to be processed.
                             toProcess.add(lFile);
                         } else {
-                            iFileProps.put(lName, new Long(lFile.length()));
+                            iFileProps.put(lName, Long.valueOf(lFile.length()));
                         }
                     } catch(Exception e){
                     }
@@ -400,7 +400,7 @@ public class FolderMonitor implements Runnable {
     }
 
     /**
-     * This method can be consutled to find put whether the monitor is running.
+     * This method can be consulted to find out whether the monitor is running.
      *
      * @return  boolean that indicates whether the monitor is running.
      */
@@ -508,7 +508,7 @@ public class FolderMonitor implements Runnable {
                 }
             }
         });
-        params2.put(FolderMonitor.LIMIT, new Integer(5));
+        params2.put(FolderMonitor.LIMIT, Integer.valueOf(5));
 
         FolderMonitor fm = new FolderMonitor(new File("f:/temp"), 1000, FolderMonitor.GATHER_FILES_FOR_PICKUP, params2, null);
         Thread t = new Thread(fm);

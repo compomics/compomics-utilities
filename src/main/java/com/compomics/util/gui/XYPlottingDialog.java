@@ -1992,15 +1992,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         // set the colors for the data series
                         boolean isIntegerColorRenderer = false;
 
-                        if (cellRenderers.containsKey(new Integer(colorsComboBox.getSelectedIndex()))) {
-                            if (cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
+                        if (cellRenderers.containsKey(Integer.valueOf(colorsComboBox.getSelectedIndex()))) {
+                            if (cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
                                 JSparklinesIntegerColorTableCellRenderer integerColorRenderer =
-                                        (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(new Integer(colorsComboBox.getSelectedIndex()));
+                                        (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex()));
                                 HashMap<Integer, Color> colors = integerColorRenderer.getColors();
 
                                 for (int i = 0; i < datasetNames.size(); i++) {
-                                    Integer datasetInteger = new Integer(datasetNames.get(i));
-                                    renderer.setSeriesPaint(i, colors.get(new Integer(datasetInteger)));
+                                    Integer datasetInteger = Integer.valueOf(datasetNames.get(i));
+                                    renderer.setSeriesPaint(i, colors.get(Integer.valueOf(datasetInteger)));
                                 }
 
                                 isIntegerColorRenderer = true;

@@ -116,7 +116,7 @@ public class MassCalc {
      *								elementlist to use.
      */
     public MassCalc(int aMassListIdentifier) {
-        if (allMaps.size() == 0) {
+        if (allMaps.isEmpty()) {
             allMaps.add(MONOELEMENTS, this.loadMassesFromPropFile("MonoElementMasses.properties"));
             allMaps.add(MONOAA, this.loadMassesFromPropFile("MonoAAMasses.properties"));
             allMaps.add(MONONUCLEOTIDES, this.loadMassesFromPropFile("MonoNucleotideMasses.properties"));
@@ -281,10 +281,10 @@ public class MassCalc {
             // Add the multiplicity to the existing value.
             int tempValue = ((Integer) aBruto.get(aElement)).intValue();
             tempValue += aMultiplicity;
-            aBruto.put(aElement, new Integer(tempValue));
+            aBruto.put(aElement, Integer.valueOf(tempValue));
         } else {
             // Not yet there, simply insert it.
-            aBruto.put(aElement, new Integer(aMultiplicity));
+            aBruto.put(aElement, Integer.valueOf(aMultiplicity));
         }
     }
 
@@ -302,7 +302,7 @@ public class MassCalc {
         // Okay, we'll need to find out the element name.
         // It can consist of one or two letters, the second
         // being lowercase if present.
-        String element = new Character(aSCI.current()).toString();
+        String element = Character.toString(aSCI.current());
         int multiplicity = 1;
 
         // First of all, check whether there IS a next (the element
@@ -316,7 +316,7 @@ public class MassCalc {
             if (Character.isLetter(next) && Character.isLowerCase(next)) {
                 // Add the second char to the element String and
                 // move the position one step further.
-                element += new Character(next).toString();
+                element += Character.toString(next);
                 next = aSCI.next();
             } else if (next == '<') {
                 // It's the start of a modification tag.
@@ -337,7 +337,7 @@ public class MassCalc {
 
         // Voila.
         result[ELEMENT] = element;
-        result[MULTIPLICITY] = new Integer(multiplicity);
+        result[MULTIPLICITY] = Integer.valueOf(multiplicity);
 
         return result;
     }
@@ -360,7 +360,7 @@ public class MassCalc {
             mp = 1;
         } else {
             // The current char is the first of the number.
-            String number = new Character(aSCI.current()).toString();
+            String number = Character.toString(aSCI.current());
 
             // Fence-post.
             char next = aSCI.next();
@@ -368,7 +368,7 @@ public class MassCalc {
             while ((next != StringCharacterIterator.DONE) && Character.isDigit(next)) {
 
                 // Add it to the number.
-                number += new Character(next).toString();
+                number += Character.toString(next);
 
                 // Increment.
                 next = aSCI.next();
@@ -393,14 +393,14 @@ public class MassCalc {
      * @return	double	with the mass of the inner formula.
      */
     private double getInnerFormulaMass(StringCharacterIterator aSCI) throws UnknownElementMassException {
-        double mass = 0.0;
+
         int multiplicity;
 
         // Isolate inner formula String.
         String inner = this.isolateInnerPartString(aSCI, '(', ')', false);
 
         // Calculate mass.
-        mass = this.calculateMass(inner);
+        double mass = this.calculateMass(inner);
 
         // Get multiplicity.
         multiplicity = this.getMultiplicity(aSCI);
@@ -472,7 +472,7 @@ public class MassCalc {
             // Set the index for the char to retrieve.
             aSCI.setIndex(i);
             // Get the current char and append it to the String.
-            innerFormula += new Character(aSCI.current()).toString();
+            innerFormula += Character.valueOf(aSCI.current());
         }
 
         // Reset the index on the SCI to the correct endposition (which is
@@ -481,8 +481,8 @@ public class MassCalc {
         aSCI.setIndex(imPosition);
 
         // All done.
-        return ((aKeepTokens ? new Character(aOpener).toString() : "")
-                + innerFormula + (aKeepTokens ? new Character(aCloser).toString() : ""));
+        return ((aKeepTokens ? Character.valueOf(aOpener) : "")
+                + innerFormula + (aKeepTokens ? Character.toString(aCloser) : ""));
     }
 
     /**

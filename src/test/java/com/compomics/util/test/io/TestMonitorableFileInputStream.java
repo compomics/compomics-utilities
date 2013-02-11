@@ -94,6 +94,8 @@ public class TestMonitorableFileInputStream extends TestCase {
             Assert.assertTrue((full>=mis.monitorProgress()) && (mis.monitorProgress()>=0));
             mis.close();
             Assert.assertEquals(ze.getSize(), counter);
+            zis.close();
+            mis.close();
         } catch(IOException ioe) {
             fail("IOException occurred while testing the MonitorableInputStream: "+ ioe.getMessage() + ".");
         }
@@ -116,6 +118,7 @@ public class TestMonitorableFileInputStream extends TestCase {
                 counter++;
             }
             Assert.assertTrue((full>=mis.monitorProgress()) && (mis.monitorProgress()>=0));
+            zis.close();
             mis.close();
         } catch(IOException ioe) {
             fail("IOException occurred while testing the MonitorableInputStream: "+ ioe.getMessage() + ".");

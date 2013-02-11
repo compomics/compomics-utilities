@@ -78,7 +78,7 @@ public class FragmentIonTableCellRenderer implements TableCellRenderer {
 
         label.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        if (indices.contains(new Integer(row)) && !isSelected) {
+        if (indices.contains(Integer.valueOf(row)) && !isSelected) {
             label.setBackground(backgroundColor);
             label.setForeground(foregroundColor);
         }

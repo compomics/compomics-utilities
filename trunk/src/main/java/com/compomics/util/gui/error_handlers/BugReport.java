@@ -115,23 +115,24 @@ public class BugReport extends javax.swing.JDialog {
      * Displays the content of the log file.
      */
     private void insertLogFileContent() {
-        String log = "";
+        StringBuilder log = new StringBuilder();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(logFile));
             String line;
             while ((line = br.readLine()) != null) {
-                log += line + System.getProperty("line.separator");
+                log.append(line).append(System.getProperty("line.separator"));
             }
+            br.close();
         } catch (FileNotFoundException e) {
-            log = toolName + ".log not found.";
+            log.append(toolName).append(".log not found.");
             e.printStackTrace();
         } catch (IOException e) {
-            log = "An error occured while reading resources/" + toolName + ".log.";
+            log.append("An error occured while reading resources/").append(toolName).append(".log.");
             e.printStackTrace();
         }
 
-        logTxt.setText(log);
+        logTxt.setText(log.toString());
         logTxt.setCaretPosition(0);
     }
 

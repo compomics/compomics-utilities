@@ -67,7 +67,7 @@ public class TestModificationImplementation extends TestCase {
 
         // Let's get it to throw some IllegalArgumentExceptions.
         HashMap dodgy = new HashMap();
-        dodgy.put(new Integer(3), "test");
+        dodgy.put(Integer.valueOf(3), "test");
         try {
             mod = new ModificationImplementation("test", "tt", dodgy, 1);
             fail("No IllegalArgumentException thrown when attempting to pass a HashMap with Integer key and String value!!");

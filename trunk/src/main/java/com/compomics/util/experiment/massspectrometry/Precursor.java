@@ -175,17 +175,17 @@ public class Precursor extends ExperimentObject {
      * @return the possible charges as a string
      */
     public String getPossibleChargesAsString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         boolean first = true;
         for (Charge charge : possibleCharges) {
             if (first) {
                 first = false;
             } else {
-                result += ", ";
+                result.append(", ");
             }
-            result += charge.toString();
+            result.append(charge.toString());
         }
-        return result;
+        return result.toString();
     }
 
     /**

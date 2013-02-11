@@ -18,7 +18,7 @@ public class PtmToPrideMap implements Serializable {
     /**
      * The name of the file to save.
      */
-    public static String fileName = "modMap.cus";
+    public final static String fileName = "modMap.cus";
     /**
      * Map of the CV terms indexed by modification user name.
      */

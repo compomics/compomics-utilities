@@ -149,11 +149,11 @@ public abstract class Ion extends ExperimentObject {
             names.add(neutralLoss.name);
         }
         Collections.sort(names);
-        String result = "";
+        StringBuffer result = new StringBuffer();
         for (String name : names) {
-            result += "-" + name;
+            result.append("-").append(name);
         }
-        return result;
+        return result.toString();
     }
 
     /**

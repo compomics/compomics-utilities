@@ -65,6 +65,7 @@ public class IsotopicElement {
                     }
                 }
             }
+            br.close();
         } catch(Exception e){
             lLogger.error(e);
         }

@@ -251,6 +251,10 @@ public class CompomicsWrapper {
                 line = br.readLine();
                 error = true;
             }
+            
+            br.close();
+            isr.close();
+            stderr.close();
 
             int exitVal = p.waitFor();
 

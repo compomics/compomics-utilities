@@ -41,11 +41,11 @@ public class Peptide extends ExperimentObject {
      * Separator preceding confident localization of the confident localization
      * of a modification
      */
-    public static String MODIFICATION_LOCALIZATION_SEPARATOR = "-ATAA-";
+    public final static String MODIFICATION_LOCALIZATION_SEPARATOR = "-ATAA-";
     /**
      * Separator used to separate modifications in peptide keys
      */
-    public static String MODIFICATION_SEPARATOR = "_";
+    public final static String MODIFICATION_SEPARATOR = "_";
 
     /**
      * Constructor for the peptide.
@@ -306,10 +306,10 @@ public class Peptide extends ExperimentObject {
                 if (localizationSplit.length == 2) {
                     if (localizationSplit[0].equals(modification)) {
                         try {
-                            result.add(new Integer(localizationSplit[1]));
+                            result.add(Integer.valueOf(localizationSplit[1]));
                         } catch (Exception e) {
                             throw new IllegalArgumentException("Cannot parse modification localization "
-                                    + localizationSplit + " for modification " + modification + " in peptide key " + peptideKey);
+                                    + localizationSplit.toString() + " for modification " + modification + " in peptide key " + peptideKey);
                         }
                     }
                 }

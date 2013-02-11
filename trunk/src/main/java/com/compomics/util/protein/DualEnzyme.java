@@ -70,8 +70,8 @@ public class DualEnzyme extends Enzyme {
      * @param   aCtermCleavage  String composed of the residues after which cleavage
      *                          will occur at the C-terminus of the resultant peptide
      *                          (this String will be uppercased).
-     * @param   aRestrict   String comosed of the residus which inhibit cleavage
-     *                      if present behind any of the cleavable residus (this String will be uppercased).
+     * @param   aRestrict   String composed of the residues which inhibit cleavage
+     *                      if present behind any of the cleavable residues (this String will be uppercased).
      * @param   aPosition   String which should correspond to "Cterm" or "Nterm"
      *                      for each position respectively.
      * @param   aMiscleavages   int with the number of supported missed cleavages.
@@ -93,8 +93,8 @@ public class DualEnzyme extends Enzyme {
      * @param   aCtermCleavage  String composed of the residues after which cleavage
      *                          will occur at the C-terminus of the resultant peptide
      *                          (this String will be uppercased).
-     * @param   aRestrict   String comosed of the residus which inhibit cleavage
-     *                      if present behind any of the cleavable residus (this String will be uppercased).
+     * @param   aRestrict   String composed of the residues which inhibit cleavage
+     *                      if present behind any of the cleavable residues (this String will be uppercased).
      * @param   aPosition   String which should correspond to "Cterm" or "Nterm"
      *                      for each position respectively.
      */
@@ -105,9 +105,9 @@ public class DualEnzyme extends Enzyme {
     }
 
     /**
-     * This method allows the caller to specify the cleavable residus.
+     * This method allows the caller to specify the cleavable residues.
      *
-     * @param   aCleavage   char[] with the cleavable residus
+     * @param   aCleavage   char[] with the cleavable residues
      *                      (in <b>UPPER CASE</b>!).
      */
     public void setCleavage(char[] aCleavage) {
@@ -116,8 +116,8 @@ public class DualEnzyme extends Enzyme {
             iNtermCleavables = new HashMap(aCleavage.length);
             iCtermCleavables = new HashMap(aCleavage.length);
             for(int i = 0; i < aCleavage.length; i++) {
-                iNtermCleavables.put(new Character(aCleavage[i]), "1");
-                iCtermCleavables.put(new Character(aCleavage[i]), "1");
+                iNtermCleavables.put(Character.valueOf(aCleavage[i]), "1");
+                iCtermCleavables.put(Character.valueOf(aCleavage[i]), "1");
             }
         } else {
             iNtermCleavables = new HashMap();
@@ -126,12 +126,12 @@ public class DualEnzyme extends Enzyme {
     }
 
     /**
-     * This method allows the caller to specify the cleavable residus.
+     * This method allows the caller to specify the cleavable residues.
      * They will be read from the String as a continuous summation of
      * characters (i.e: 'RKGH').
      *
      * @param   aCleavage   String with the continuous characters
-     *                      corresponding to the cleavable residus.
+     *                      corresponding to the cleavable residues.
      *                      Note that the String is uppercased.
      */
     public void setCleavage(String aCleavage) {
@@ -143,9 +143,9 @@ public class DualEnzyme extends Enzyme {
     }
 
     /**
-     * This method allows the caller to specify the cleavable residus.
+     * This method allows the caller to specify the cleavable residues.
      *
-     * @param   aCleavage   char[] with the cleavable residus
+     * @param   aCleavage   char[] with the cleavable residues
      *                      (in <b>UPPER CASE</b>!).
      * @param   aTerminus   int with the code for the terminal position in
      *                      the resultant peptide. Can be 'NTERMINAL' or 'CTERMINAL'.
@@ -155,7 +155,7 @@ public class DualEnzyme extends Enzyme {
         if(aCleavage != null) {
             cleavables = new HashMap(aCleavage.length);
             for(int i = 0; i < aCleavage.length; i++) {
-                cleavables.put(new Character(aCleavage[i]), "1");
+                cleavables.put(Character.valueOf(aCleavage[i]), "1");
             }
         } else {
             cleavables = new HashMap();
@@ -181,7 +181,7 @@ public class DualEnzyme extends Enzyme {
      * characters (i.e: 'RKGH').
      *
      * @param   aCleavage   String with the continuous characters
-     *                      corresponding to the cleavable residus.
+     *                      corresponding to the cleavable residues.
      *                      Note that the String is uppercased.
      * @param   aTerminus   int with the code for the terminal position in
      *                      the resultant peptide. Can be 'NTERMINAL' or 'CTERMINAL'.
@@ -232,10 +232,10 @@ public class DualEnzyme extends Enzyme {
     }
 
     /**
-     * Simple getter for the cleavable residus of the Enzyme.
+     * Simple getter for the cleavable residues of the Enzyme.
      * For a DualEnzyme, it returns [nterms]X[cterms]
      *
-     * @return  char[]  with the cleavable residus, structured as [nterms]X[cterms].
+     * @return  char[]  with the cleavable residues, structured as [nterms]X[cterms].
      */
     public char[] getCleavage() {
         Set nTermKeys = iNtermCleavables.keySet();
@@ -312,7 +312,7 @@ public class DualEnzyme extends Enzyme {
     }
 
     /**
-     * This cleave method will proces sequence XDYRZ solely into
+     * This cleave method will process sequence XDYRZ solely into
      * YR peptides.
      *
      * @param   aProtein    Protein instance to cleave.
@@ -556,8 +556,8 @@ public class DualEnzyme extends Enzyme {
         if(this.getPosition() == Enzyme.CTERM) {
             // First check N-terminal side.
             if((aStart-1) >= 0) {
-                Character residue = new Character(aParentSequence.charAt(aStart-1));
-                Character possRestrict = new Character(aParentSequence.charAt(aStart));
+                Character residue = Character.valueOf(aParentSequence.charAt(aStart-1));
+                Character possRestrict = Character.valueOf(aParentSequence.charAt(aStart));
                 if((this.iNtermCleavables.get(residue) != null) && (this.iRestrictors.get(possRestrict) == null)) {
                     result += 1;
                 }
@@ -567,10 +567,10 @@ public class DualEnzyme extends Enzyme {
             }
 
             // Now C-terminal side.
-            Character residue = new Character(aParentSequence.charAt(aEnd));
+            Character residue = Character.valueOf(aParentSequence.charAt(aEnd));
             if((this.iCtermCleavables.get(residue) != null) || ((aEnd+1) == maxLength)) {
                 if((aEnd+1) < maxLength) {
-                    if(this.iRestrictors.get(new Character(aParentSequence.charAt(aEnd+1))) == null)
+                    if(this.iRestrictors.get(Character.valueOf(aParentSequence.charAt(aEnd+1))) == null)
                         result += 2;
                 } else {
                     // The cleavage site appears to be the C-terminal residue in
@@ -580,11 +580,11 @@ public class DualEnzyme extends Enzyme {
             }
         } else {
             // First check N-terminal side.
-            Character residue = new Character(aParentSequence.charAt(aStart));
+            Character residue = Character.valueOf(aParentSequence.charAt(aStart));
             if((iNtermCleavables.get(residue) != null)) {
                 // The site is potentially cleavable.
                 // What about restriction residues?
-                if( ((aStart+1) < maxLength) && (iRestrictors.get(new Character(aParentSequence.charAt(aStart+1))) != null) ) {
+                if( ((aStart+1) < maxLength) && (iRestrictors.get(Character.valueOf(aParentSequence.charAt(aStart+1))) != null) ) {
                     // Do nothing, since it is not a site.
                 } else {
                     // It is a true site.
@@ -597,10 +597,10 @@ public class DualEnzyme extends Enzyme {
 
             // Now C-terminal side.
             if((aEnd+1) < maxLength) {
-                Character residue2 = new Character(aParentSequence.charAt(aEnd+1));
+                Character residue2 = Character.valueOf(aParentSequence.charAt(aEnd+1));
                 if(this.iCtermCleavables.get(residue2) != null) {
                     if((aEnd+2) < maxLength) {
-                        if(this.iRestrictors.get(new Character(aParentSequence.charAt(aEnd+2))) == null)
+                        if(this.iRestrictors.get(Character.valueOf(aParentSequence.charAt(aEnd+2))) == null)
                             result += 2;
                     } else {
                         // The cleavage site appears to be the C-terminal residue in
@@ -659,10 +659,10 @@ public class DualEnzyme extends Enzyme {
         }
         // Okay, that checks out.
         // Now we first see whether this position really can be cleaved.
-        if(aCleavables.containsKey(new Character(aSequence[aPosition]))) {
+        if(aCleavables.containsKey(Character.valueOf(aSequence[aPosition]))) {
             // Okay, it could possibly be a cleavage site.
             // See if it has a C-terminal residue, and whether it is a restrictor.
-            if( (aPosition+1 < aSequence.length) && aRestrictors.containsKey(new Character(aSequence[aPosition+1])) ) {
+            if( (aPosition+1 < aSequence.length) && aRestrictors.containsKey(Character.valueOf(aSequence[aPosition+1])) ) {
                 // It is a restrictor!
                 cleavable = false;
             } else {

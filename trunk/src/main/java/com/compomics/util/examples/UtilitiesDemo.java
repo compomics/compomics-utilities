@@ -350,7 +350,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
                     ((DefaultTableModel) peptideAJXTable.getModel()).addRow(
                             new Object[]{
-                                new Integer(i),
+                                Integer.valueOf(i),
                                 Math.floor(lIso.getPercTot()[i] * 10000.0) / 100.0,
                                 Math.floor(lIso.getPercMax()[i] * 10000.0) / 100.0});
                 }
@@ -400,7 +400,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
                         ((DefaultTableModel) peptideBJXTable.getModel()).addRow(
                                 new Object[]{
-                                    new Integer(i),
+                                    Integer.valueOf(i),
                                     Math.floor(lIso.getPercTot()[i] * 10000.0) / 100.0,
                                     Math.floor(lIso.getPercMax()[i] * 10000.0) / 100.0});
                     }
@@ -469,6 +469,9 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
                 currentLine = b.readLine();
             }
+            
+            b.close();
+            f.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error reading chromatogram data:\n" + e.toString(), "Error Reading Chromatogram Data", JOptionPane.ERROR_MESSAGE);
@@ -561,11 +564,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 //            // ------------test: annotation second spectrum--------------
 
             // store the annotations for later use
-            allAnnotations.put(new Integer(0), currentAnnotations);
+            allAnnotations.put(Integer.valueOf(0), currentAnnotations);
             spectrumAPanel.setAnnotations(currentAnnotations);
 
             // store a unique reference to each spectrum panel for linking purposes
-            linkedSpectrumPanels.put(new Integer(0), spectrumAPanel);
+            linkedSpectrumPanels.put(Integer.valueOf(0), spectrumAPanel);
 
             // remove the default spectrum panel border, given that our
             // spectrum panel already has a border
@@ -626,11 +629,11 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             currentAnnotations.add(new DefaultSpectrumAnnotation(120, 0.08159999999999457, SpectrumPanel.determineColorOfPeak("iF"), "iF"));
 
             // store the annotations for later use
-            allAnnotations.put(new Integer(1), currentAnnotations);
+            allAnnotations.put(Integer.valueOf(1), currentAnnotations);
             spectrumBPanel.setAnnotations(currentAnnotations);
 
             // store a unique reference to each spectrum panel for linking purposes
-            linkedSpectrumPanels.put(new Integer(1), spectrumBPanel);
+            linkedSpectrumPanels.put(Integer.valueOf(1), spectrumBPanel);
 
             // remove the default spectrum panel border, given that our
             // spectrum panel already has a border
@@ -3136,7 +3139,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                 // read the first sequence
                 while (currentSequenceLine != null && !currentSequenceLine.startsWith(">")) {
 
-                    currentSequenceLine.trim();
+                    currentSequenceLine = currentSequenceLine.trim();
                     currentSequenceLine = currentSequenceLine.replaceAll("\\W", "");
 
                     currentSequence += currentSequenceLine + "\n";
@@ -3177,7 +3180,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             // read the first sequence
             while (currentSequenceLine != null && !currentSequenceLine.startsWith(">")) {
 
-                currentSequenceLine.trim();
+                currentSequenceLine = currentSequenceLine.trim();
                 currentSequenceLine = currentSequenceLine.replaceAll("\\W", "");
 
                 currentSequence += currentSequenceLine + "\n";

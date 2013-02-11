@@ -1232,9 +1232,9 @@ public abstract class GraphicsPanel extends JPanel {
                         if (iClickedList != null && iClickedList.size() > 0) {
                             // Copy the current clickedlist into the stored sequence.
                             iStoredSequence = (Vector) iClickedList.clone();
-                            iStoredSequence.add(new Integer(iClickedIndex));
+                            iStoredSequence.add(Integer.valueOf(iClickedIndex));
                             iStoredSequenceDatasetIndices = (Vector) iClickedListDatasetIndices.clone();
-                            iStoredSequenceDatasetIndices.add(new Integer(iClickedDataSetIndex));
+                            iStoredSequenceDatasetIndices.add(Integer.valueOf(iClickedDataSetIndex));
                             iClicked = false;
                             // Reset the clicked list.
                             iClickedList = new Vector(15, 5);
@@ -1245,8 +1245,8 @@ public abstract class GraphicsPanel extends JPanel {
                         if (iClicked && iClickedIndex != iHighLightIndex) {
                             // We need the current point to be stored in the previously clicked
                             // Vector and set the current one as clicked.
-                            iClickedList.add(new Integer(iClickedIndex));
-                            iClickedListDatasetIndices.add(new Integer(iClickedDataSetIndex));
+                            iClickedList.add(Integer.valueOf(iClickedIndex));
+                            iClickedListDatasetIndices.add(Integer.valueOf(iClickedDataSetIndex));
                         }
                         iClicked = true;
                         iClickedIndex = iHighLightIndex;
@@ -2326,10 +2326,10 @@ public abstract class GraphicsPanel extends JPanel {
                 if (aAlreadyAnnotated.containsKey(key)) {
                     int count = ((Integer) aAlreadyAnnotated.get(key)).intValue();
                     spacer += count * (g.getFontMetrics().getAscent() + 4);
-                    aAlreadyAnnotated.put(key, new Integer(count + 1));
+                    aAlreadyAnnotated.put(key, Integer.valueOf(count + 1));
                     showArrow = false;
                 } else {
-                    aAlreadyAnnotated.put(key, new Integer(1));
+                    aAlreadyAnnotated.put(key, Integer.valueOf(1));
                 }
                 this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow, aAlreadyAnnotated.get(key));
             }

@@ -63,6 +63,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      *                          (note that this is unlike the profile modes of the other graphics
      *                          panels)
      * @param labelDifference   the number of neutrons to add due to the label
+     * @throws IOException  
      */
     public IsotopicDistributionPanel(String peptideSequence, Integer peptideCharge, boolean profileMode, int labelDifference) throws IOException {
 
@@ -198,7 +199,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * Rescales to show all peaks, adds a minimum padding on the left side
      * to make sure the that first peak is not too close to the y-axis.
      */
-    public void rescaleWithLeftSidePadding() {
+    private void rescaleWithLeftSidePadding() {
 
         double tempMinXValue = getMinXAxisValue();
         tempMinXValue -= 1;
@@ -254,7 +255,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         //get the elements that can be used
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("elements.txt")));
-            String line = null;
+            String line;
             String[] lHeaderElements = null;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#")) {
@@ -278,6 +279,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
                     iElements.put(lAa, lAaFormula);
                 }
             }
+            br.close();
         } catch (Exception e) {
             logger.error(e);
         }

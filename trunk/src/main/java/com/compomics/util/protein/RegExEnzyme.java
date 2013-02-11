@@ -148,7 +148,7 @@ public class RegExEnzyme extends Enzyme {
         while (matcher.find() && end <= aEnd) {
             int tmp = matcher.end(); // end of pattern match (site of cleaving)
             // check we are not at the end of the sequence and that we are not at a restricted cleavage site
-            if ( tmp < aParentSequence.length() && iRestrictors.containsKey( new Character(aParentSequence.charAt(tmp)) ) ) {
+            if ( tmp < aParentSequence.length() && iRestrictors.containsKey(Character.valueOf(aParentSequence.charAt(tmp)) ) ) {
                 // resticted, do not cleave here
             } else { // remember the cleavage position
                 // we are at a valid cleavage site, now we have to distinguish between N-terminal and C-terminal cleavage
@@ -159,22 +159,22 @@ public class RegExEnzyme extends Enzyme {
                 } else {
                     throw new IllegalStateException("Cleavage position is not specified correctly! Can not determine if the proviced peptide is a valid enzymatic product!");
                 }
-                ends.add(new Integer(end));
+                ends.add(Integer.valueOf(end));
             }
         }
 
         // check N-terminal side of peptide: the start of the peptide -1 = the position of a cleavage site
         // check C-terminal side of peptide: the end of the peptide = the position of a cleavage site
         // if both are true we have a fully enzymatic peptide
-        if ( ends.contains(new Integer(aStart-1)) || (aStart == 1) ) {
+        if ( ends.contains(Integer.valueOf(aStart-1)) || (aStart == 1) ) {
             // if the start -1 of the peptide is the end of a cleavage site or it is the start of the entire sequence,
             // then we have already a N-terminal peptide. If it also ends at a cleavage site, then it is fully enzymatic
-            if ( ends.contains(new Integer(aEnd)) ) {
+            if ( ends.contains(Integer.valueOf(aEnd)) ) {
                 result = Enzyme.FULLY_ENZYMATIC;
             } else {
                 result = Enzyme.N_TERM_ENZYMATIC;
             }
-        } else if ( ends.contains(new Integer(aEnd)) || (aEnd == aParentSequence.length()) ) {
+        } else if ( ends.contains(Integer.valueOf(aEnd)) || (aEnd == aParentSequence.length()) ) {
             // if the end of the peptide is the end of a cleavage site or the peptide ends at the end of the entire
             //  sequence and since we know it did not start at a cleavage site, it can only be a C-terminal peptide
             result = Enzyme.C_TERM_ENZYMATIC;
@@ -283,14 +283,14 @@ public class RegExEnzyme extends Enzyme {
                     if ( iPosition == Enzyme.CTERM ) {
                         String pep = sequence.substring(startPos, currEnd);
                         peptides.add( pep );
-                        startIndices.add( new Integer(headerStart + startPos) );
-                        endIndices.add( new Integer(headerStart + startPos + pep.length()) );
+                        startIndices.add(Integer.valueOf(headerStart + startPos) );
+                        endIndices.add( Integer.valueOf(headerStart + startPos + pep.length()) );
                         startPos = currEnd; // update the start position of the peptide only if we have cleaved
                     } else if ( iPosition == Enzyme.NTERM ) {
                         String pep = sequence.substring(startPos, currEnd-1);
                         peptides.add( pep );
-                        startIndices.add( new Integer(headerStart + startPos) );
-                        endIndices.add( new Integer(headerStart + startPos + pep.length()) );
+                        startIndices.add(Integer.valueOf(headerStart + startPos) );
+                        endIndices.add(Integer.valueOf(headerStart + startPos + pep.length()) );
                         startPos = currEnd-1; // update the start position of the peptide only if we have cleaved
                     } else {
                         // should be covered by the constructor (does not allow differnt values form CTERM/NTERM
@@ -305,8 +305,8 @@ public class RegExEnzyme extends Enzyme {
         // now add the rest of the sequence (everything after the last match)
         String lastPep = sequence.substring(startPos, sequence.length());
         peptides.add(lastPep);
-        startIndices.add( new Integer(headerStart + startPos) );
-        endIndices.add( new Integer((headerStart + startPos + lastPep.length())) );
+        startIndices.add( Integer.valueOf(headerStart + startPos) );
+        endIndices.add( Integer.valueOf((headerStart + startPos + lastPep.length())) );
     }
 
     /**

@@ -106,7 +106,6 @@ public class TestMonitorableInputStream extends TestCase {
         // First just the InputStream.
         final String input = TestCaseLM.getFullFilePath("testMonitor.zip").replace("%20", " ");
         try {
-            File inputFile = new File(input);
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input), true);
             ZipInputStream zis = new ZipInputStream(mis);
             ZipEntry ze = zis.getNextEntry();
@@ -119,6 +118,7 @@ public class TestMonitorableInputStream extends TestCase {
             Assert.assertTrue((full>=mis.monitorProgress()) && (mis.monitorProgress()>=0));
             mis.close();
             Assert.assertEquals(ze.getSize(), counter);
+            zis.close();
         } catch(IOException ioe) {
             fail("IOException occurred while testing the MonitorableInputStream: "+ ioe.getMessage() + ".");
         }
@@ -131,7 +131,6 @@ public class TestMonitorableInputStream extends TestCase {
         // First just the InputStream.
         final String input = TestCaseLM.getFullFilePath("test.spr.gz").replace("%20", " ");
         try {
-            File inputFile = new File(input);
             MonitorableInputStream mis = new MonitorableInputStream(new FileInputStream(input), true);
             GZIPInputStream zis = new GZIPInputStream(mis);
             int full = mis.getMaximum();
@@ -141,6 +140,7 @@ public class TestMonitorableInputStream extends TestCase {
                 counter++;
             }
             Assert.assertTrue((full>=mis.monitorProgress()) && (mis.monitorProgress()>=0));
+            zis.close();
             mis.close();
         } catch(IOException ioe) {
             fail("IOException occurred while testing the MonitorableInputStream: "+ ioe.getMessage() + ".");

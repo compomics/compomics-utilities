@@ -47,11 +47,11 @@ public class ProteinMatch extends IdentificationMatch {
      * Constructor for the protein match.
      *
      * @param proteinAccession the matching protein
-     * @throws IllegalArgumentException  
+     * @throws IllegalArgumentException
      */
     public ProteinMatch(String proteinAccession) throws IllegalArgumentException {
         if (proteinAccession.contains(PROTEIN_KEY_SPLITTER)) {
-            throw new IllegalArgumentException("Protein accession containing '"+ PROTEIN_KEY_SPLITTER +"' are not supported. Conflicting accession: " + mainMatch);
+            throw new IllegalArgumentException("Protein accession containing '" + PROTEIN_KEY_SPLITTER + "' are not supported. Conflicting accession: " + mainMatch);
         }
         theoreticProtein.add(proteinAccession);
         mainMatch = proteinAccession;
@@ -290,7 +290,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the corresponding list of accessions
      */
     public static String[] getAccessions(String key) {
-        return key.split(PROTEIN_KEY_SPLITTER); 
+        return key.split(PROTEIN_KEY_SPLITTER);
     }
 
     @Override

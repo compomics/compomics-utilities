@@ -18,11 +18,11 @@ import java.util.Vector;
 
 /**
  * Maps uniprot protein accession numbers to PDB file ids.
- * 
+ *
  * @author Niklaas Colaert
  */
 public class FindPdbForUniprotAccessions {
-    
+
     /**
      * The protein accession number.
      */
@@ -54,8 +54,8 @@ public class FindPdbForUniprotAccessions {
 
     /**
      * @TODO: JavaDoc missing...
-     * 
-     * @param aProteinAccession 
+     *
+     * @param aProteinAccession
      */
     public FindPdbForUniprotAccessions(String aProteinAccession) {
 
@@ -103,10 +103,10 @@ public class FindPdbForUniprotAccessions {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Returns true if the PDB URL was read, false otherwise.
-     * 
+     *
      * @return true if the PDB URL was read, false otherwise
      */
     public boolean urlWasRead() {
@@ -114,9 +114,9 @@ public class FindPdbForUniprotAccessions {
     }
 
     /**
-     * Returns a vector of the PDB files mapped to the given protein 
-     * accession number.
-     * 
+     * Returns a vector of the PDB files mapped to the given protein accession
+     * number.
+     *
      * @return a vector of the PDB files
      */
     public Vector<PdbParameter> getPdbs() {
@@ -125,15 +125,15 @@ public class FindPdbForUniprotAccessions {
 
     /**
      * Tries to read the PDB URL.
-     * 
+     *
      * @param aUrl the PDB URL to read
      */
     private void readUrl(String aUrl) {
-        
+
         urlRead = false;
-        
+
         this.iUrl = aUrl;
-        
+
         try {
             URL myURL = new URL(aUrl);
             StringBuilder input = new StringBuilder();
@@ -145,6 +145,9 @@ public class FindPdbForUniprotAccessions {
             while ((i = r.read()) != -1) {
                 input.append((char) i);
             }
+
+            r.close();
+            in.close();
 
             iDasReader = new DasAnnotationServerAlingmentReader(input.toString());
             urlRead = true;
@@ -164,29 +167,29 @@ public class FindPdbForUniprotAccessions {
 
     /**
      * Main method. Used for testing purposes.
-     * 
-     * @param args 
+     *
+     * @param args
      */
     public static void main(String[] args) {
         String lAccession = "O75369";
         FindPdbForUniprotAccessions lF = new FindPdbForUniprotAccessions(lAccession);
 
         System.out.println("Found " + lF.getPdbs().size() + " pdf file(s) for " + lAccession);
-        
+
         for (int i = 0; i < lF.getPdbs().size(); i++) {
             PdbParameter lParam = lF.getPdbs().get(i);
             System.out.println((i + 1) + ". " + lParam.getPdbaccession() + " : " + lParam.getTitle() + " (" + lParam.getExperiment_type() + ") " + lParam.getResolution());
             System.out.println("\t\tDownload from : " + "http://www.rcsb.org/pdb/files/" + lParam.getPdbaccession() + ".pdb");
             System.out.println(lParam.getBlocks().length + " block(s) found in this pdf file");
             PdbBlock[] lBlocks = lParam.getBlocks();
-            
+
             for (int j = 0; j < lBlocks.length; j++) {
                 System.out.println("\tBlock : " + lBlocks[j].getBlock());
                 System.out.println("\tAlignment between uniprot protein sequence and sequences in this block");
                 System.out.println("\t\tStart block " + lBlocks[j].getStart_block() + " <=> Start protein " + lBlocks[j].getStart_protein());
                 System.out.println("\t\tEnd block " + lBlocks[j].getEnd_block() + " <=> End protein " + lBlocks[j].getEnd_protein());
             }
-            
+
             System.out.println("\n");
         }
     }

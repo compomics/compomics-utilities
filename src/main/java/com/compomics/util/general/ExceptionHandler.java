@@ -18,7 +18,7 @@ public class ExceptionHandler {
     /**
      * The parent frame used to display feedback.
      */
-    private JFrame parent;
+    private JFrame parent = null;
 
     /**
      * Constructor.
@@ -30,6 +30,12 @@ public class ExceptionHandler {
     }
 
     /**
+     * Constructor without GUI
+     */
+    public ExceptionHandler() {
+    }
+
+    /**
      * Method called whenever an exception is caught.
      *
      * @param e the exception caught
@@ -38,30 +44,32 @@ public class ExceptionHandler {
         if (!exceptionCaught.contains(getExceptionType(e))) {
             e.printStackTrace();
             exceptionCaught.add(getExceptionType(e));
-            if (getExceptionType(e).equals("Protein not found")) {
-                JOptionPane.showMessageDialog(parent,
-                        e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
-                        + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            } else if (getExceptionType(e).equals("Serialization")) {
-                JOptionPane.showMessageDialog(parent,
-                        e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
-                        + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            } else {
+            if (parent != null) {
+                if (getExceptionType(e).equals("Protein not found")) {
+                    JOptionPane.showMessageDialog(parent,
+                            e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
+                            + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (getExceptionType(e).equals("Serialization")) {
+                    JOptionPane.showMessageDialog(parent,
+                            e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
+                            + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
 
-                String error = "";
+                    String error = "";
 
-                if (e.getLocalizedMessage() != null) {
-                    error = ": " + e.getLocalizedMessage();
+                    if (e.getLocalizedMessage() != null) {
+                        error = ": " + e.getLocalizedMessage();
+                    }
+
+                    JOptionPane.showMessageDialog(parent,
+                            "An error occured" + error + ".\n"
+                            + "Please contact the developers.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                JOptionPane.showMessageDialog(parent,
-                        "An error occured" + error + ".\n"
-                        + "Please contact the developers.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

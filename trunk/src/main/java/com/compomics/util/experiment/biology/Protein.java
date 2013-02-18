@@ -330,21 +330,20 @@ public class Protein extends ExperimentObject {
      * @return true of the peptide is non-enzymatic
      * @throws IOException
      */
-    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, int numberOfMissedCleavages, int minPeptideSize, int maxPeptideSize) throws IOException {
+    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme) throws IOException {
 
         // get the surrounding amino acids
         HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 2);
+        
+        String firstAA = peptideSequence.charAt(0) + "";
+        String lastAA = peptideSequence.charAt(peptideSequence.length()-1) + "";
 
         // iterate the possible extended peptide sequences
         for (int index : surroundingAminoAcids.keySet()) {
 
             String before = surroundingAminoAcids.get(index)[0];
             String after = surroundingAminoAcids.get(index)[1];
-            String extendedPeptideSequence = before + peptideSequence + after;
-
-            ArrayList<String> peptides = enzyme.digest(extendedPeptideSequence, numberOfMissedCleavages, minPeptideSize, maxPeptideSize);
-
-            if (peptides.contains(peptideSequence)) {
+            if (enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)) {
                 return true;
             }
         }

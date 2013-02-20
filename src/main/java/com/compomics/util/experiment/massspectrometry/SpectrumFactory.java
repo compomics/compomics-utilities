@@ -177,14 +177,22 @@ public class SpectrumFactory {
 
             if (!indexFile.exists()) {
                 mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                writeIndex(mgfIndex, spectrumFile.getParentFile());
+                try {
+                    writeIndex(mgfIndex, spectrumFile.getParentFile());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 try {
                     mgfIndex = getIndex(indexFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                    writeIndex(mgfIndex, spectrumFile.getParentFile());
+                    try {
+                        writeIndex(mgfIndex, spectrumFile.getParentFile());
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
 
@@ -437,8 +445,8 @@ public class SpectrumFactory {
      * given spectrum file
      */
     public boolean spectrumLoaded(String fileName, String spectrumTitle) {
-            // a special fix for mgf files with strange titles...
-            spectrumTitle = fixMgfTitle(spectrumTitle, fileName);
+        // a special fix for mgf files with strange titles...
+        spectrumTitle = fixMgfTitle(spectrumTitle, fileName);
         return mgfIndexesMap.containsKey(fileName) && mgfIndexesMap.get(fileName).containsSpectrum(spectrumTitle);
     }
 

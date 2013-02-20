@@ -319,7 +319,11 @@ public class SequenceFactory {
         tempFastaIndex = createFastaIndex(fastaFile, waitingHandler);
 
         if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
-            writeIndex(tempFastaIndex, fastaFile.getParentFile());
+            try {
+                writeIndex(tempFastaIndex, fastaFile.getParentFile());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return tempFastaIndex;
     }
@@ -534,7 +538,7 @@ public class SequenceFactory {
 
             bufferedWriter.write(decoyHeader.toString() + System.getProperty("line.separator"));
             bufferedWriter.write(decoySequence + System.getProperty("line.separator"));
-            
+
             // possible fix for the dbtoolkit uniprot format
 //            Protein currentProtein = getProtein(accession);
 //            Header currentHeader = getHeader(accession);

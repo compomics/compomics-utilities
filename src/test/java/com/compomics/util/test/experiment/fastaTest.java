@@ -2,10 +2,15 @@ package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.Writer;
 
 /**
  * This test will try to load proteins from a fasta file
@@ -18,6 +23,22 @@ public class fastaTest extends TestCase {
 
     public void testImport() {
         try {
+            
+//            File testFile = new File("src/test/resources/experiment/sequence_database_file.fasta");
+//            BufferedReader reader = new BufferedReader(new FileReader(testFile));
+//            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(testFile.getParent(), "sequence_database_file_corrected.fasta")));
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                if (line.startsWith(">")) {
+//                    line = line.substring(1);
+//                    line = ">generic|" + line + "|" + line;
+//                }
+//                writer.write(line);
+//                writer.newLine();
+//            }
+//            writer.close();
+//            reader.close();
+            
             File fastaFile = new File("src/test/resources/experiment/sgd.fasta");
             sequenceFactory.loadFastaFile(fastaFile);
             Assert.assertTrue(sequenceFactory.getNTargetSequences() == 0);

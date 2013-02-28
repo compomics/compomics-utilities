@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -57,15 +58,15 @@ public class PeptideAssumption extends ExperimentObject {
      * @param advocate the advocate used
      * @param identificationCharge the charge used by the search engine for
      * identification
-     * @param eValue the e-value
+     * @param score the score, typically a search engine e-value (whether the score is ascending or descending can be known from the SearchEngine class)
      * @param identificationFile the identification file
      */
-    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double eValue, String identificationFile) {
+    public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score, String identificationFile) {
         this.peptide = aPeptide;
         this.rank = rank;
         this.advocate = advocate;
         this.identificationCharge = identificationCharge;
-        this.eValue = eValue;
+        this.eValue = score;
         this.file = identificationFile;
     }
 
@@ -77,7 +78,7 @@ public class PeptideAssumption extends ExperimentObject {
      * @param advocate the advocate used
      * @param identificationCharge the charge used by the search engine for
      * identification
-     * @param score the score (the lower, the better)
+     * @param score the score (whether the score is ascending or descending can be known from the SearchEngine class)
      */
     public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score) {
         this.peptide = aPeptide;
@@ -145,6 +146,14 @@ public class PeptideAssumption extends ExperimentObject {
     public double getDeltaMass(double measuredMZ, boolean ppm) {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
     }
+    
+    /**
+     * Returns the theoretic m/z expected for this assumption
+     * @return the theoretic m/z expected for this assumption
+     */
+    public double getTheoreticMz() {
+        return (peptide.getMass() + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
+    }
 
     /**
      * Returns the precursor isotope number according to the number of protons.
@@ -158,10 +167,18 @@ public class PeptideAssumption extends ExperimentObject {
 
     /**
      * Returns the e-value assigned by the advocate.
-     *
+     * @deprecated use getScore instead
      * @return the e-value
      */
     public double getEValue() {
+        return eValue;
+    }
+
+    /**
+     * Returns the score assigned by the advocate.
+     * @return the score
+     */
+    public double getScore() {
         return eValue;
     }
 

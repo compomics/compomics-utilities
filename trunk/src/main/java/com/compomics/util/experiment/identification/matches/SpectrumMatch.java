@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.advocates.SearchEngine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,8 +61,8 @@ public class SpectrumMatch extends IdentificationMatch {
     public SpectrumMatch(String spectrumKey, PeptideAssumption assumption) {
         int advocateId = assumption.getAdvocate();
         assumptions.put(advocateId, new HashMap<Double, ArrayList<PeptideAssumption>>());
-        assumptions.get(advocateId).put(assumption.getEValue(), new ArrayList<PeptideAssumption>());
-        assumptions.get(advocateId).get(assumption.getEValue()).add(assumption);
+        assumptions.get(advocateId).put(assumption.getScore(), new ArrayList<PeptideAssumption>());
+        assumptions.get(advocateId).get(assumption.getScore()).add(assumption);
         firstHits.put(advocateId, assumption);
         advocates.add(advocateId);
         this.spectrumKey = spectrumKey;
@@ -149,16 +150,18 @@ public class SpectrumMatch extends IdentificationMatch {
                 }
             }
         }
-        if (!firstHits.containsKey(otherAdvocateId) || firstHits.get(otherAdvocateId).getEValue() > otherAssumption.getEValue()) {
+        if (!firstHits.containsKey(otherAdvocateId) || 
+                !SearchEngine.isAscendingScore(otherAdvocateId) && firstHits.get(otherAdvocateId).getScore() > otherAssumption.getScore() ||
+                SearchEngine.isAscendingScore(otherAdvocateId) && firstHits.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
             firstHits.put(otherAdvocateId, otherAssumption);
         }
         if (!assumptions.containsKey(otherAdvocateId)) {
             assumptions.put(otherAdvocateId, new HashMap<Double, ArrayList<PeptideAssumption>>());
         }
-        if (!assumptions.get(otherAdvocateId).containsKey(otherAssumption.getEValue())) {
-            assumptions.get(otherAdvocateId).put(otherAssumption.getEValue(), new ArrayList<PeptideAssumption>());
+        if (!assumptions.get(otherAdvocateId).containsKey(otherAssumption.getScore())) {
+            assumptions.get(otherAdvocateId).put(otherAssumption.getScore(), new ArrayList<PeptideAssumption>());
         }
-        assumptions.get(otherAdvocateId).get(otherAssumption.getEValue()).add(otherAssumption);
+        assumptions.get(otherAdvocateId).get(otherAssumption.getScore()).add(otherAssumption);
         if (!advocates.contains(otherAdvocateId)) {
             advocates.add(otherAdvocateId);
         }

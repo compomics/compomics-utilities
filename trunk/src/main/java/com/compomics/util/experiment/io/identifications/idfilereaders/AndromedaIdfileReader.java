@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -33,7 +34,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * Andromeda result file in random access.
      */
-    private BufferedRandomAccessFile bufferedRandomAccessFile;
+    private BufferedRandomAccessFile bufferedRandomAccessFile = null;
     /**
      * The name of the Andromeda result file.
      */
@@ -65,7 +66,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public AndromedaIdfileReader(File resFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
         bufferedRandomAccessFile = new BufferedRandomAccessFile(resFile, "r", 1024 * 100);
 
-        fileName = resFile.getName();
+        fileName = Util.getFileName(resFile);
 
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressValue(100);
@@ -85,9 +86,9 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
                 index.put(title, currentIndex);
                 newTitle = false;
-            }
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressValue((int) (currentIndex / progressUnit));
+            }
             }
         }
     }
@@ -99,6 +100,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
+        
+        if (bufferedRandomAccessFile == null) {
+            throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
+        }
+        
         HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
 
         for (String title : index.keySet()) {
@@ -152,7 +158,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         double score = new Double(temp[1]);
 
-        return new PeptideAssumption(peptide, rank, Advocate.ANDROMEDA, charge, -score, fileName);
+        return new PeptideAssumption(peptide, rank, Advocate.ANDROMEDA, charge, score, fileName);
     }
 
     @Override

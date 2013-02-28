@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.identifications;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
 import com.compomics.util.gui.waiting.WaitingHandler;
 
@@ -172,14 +173,19 @@ public class IdfileReaderFactory {
      * @return the index of the search engine
      */
     public int getSearchEngine(File aFile) {
-        if (aFile.getName().endsWith("dat")) {
+        String fileName = Util.getFileName(aFile);
+        if (fileName.endsWith(".dat")) {
             return SearchEngine.MASCOT;
-        } else if (aFile.getName().endsWith("omx")) {
+        } else if (fileName.endsWith(".omx")) {
             return SearchEngine.OMSSA;
-        } else if (aFile.getName().endsWith(".t.xml")) {
-            if (!aFile.getName().equals("mods.xml") && !aFile.getName().equals("usermods.xml")) {
+        } else if (fileName.endsWith(".t.xml")) {
+            if (!fileName.equals("mods.xml") && !fileName.equals("usermods.xml")) {
                 return SearchEngine.XTANDEM;
             }
+        } else if (fileName.endsWith(".out")) {
+            return SearchEngine.PEPNOVO;
+        } else if (fileName.endsWith(".res")) {
+            return SearchEngine.ANDROMEDA;
         }
         return -1;
     }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
@@ -25,9 +21,9 @@ import java.util.HashSet;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
- * This class can be used to parse PepNovo identification files
+ * This class can be used to parse PepNovo identification files.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PepNovoIdfileReader extends ExperimentObject implements IdfileReader {
 
@@ -45,12 +41,12 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      */
     private String fileName;
     /**
-     * The standard format 
+     * The standard format.
      */
     public static final String tableHeader = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
 
     /**
-     * Default constructor for the purpose of instantiation
+     * Default constructor for the purpose of instantiation.
      */
     public PepNovoIdfileReader() {
     }
@@ -82,15 +78,16 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public PepNovoIdfileReader(File idnetificationFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
-        bufferedRandomAccessFile = new BufferedRandomAccessFile(idnetificationFile, "r", 1024 * 100);
+    public PepNovoIdfileReader(File identificationFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        fileName = Util.getFileName(idnetificationFile);
+        bufferedRandomAccessFile = new BufferedRandomAccessFile(identificationFile, "r", 1024 * 100);
+
+        fileName = Util.getFileName(identificationFile);
 
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressValue(100);
         }
-        long currentIndex = 0;
+
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         index = new HashMap<String, Long>();
@@ -98,7 +95,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         String line, spectrumTitle;
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (line.startsWith(">>")) {
-                currentIndex = bufferedRandomAccessFile.getFilePointer();
+                long currentIndex = bufferedRandomAccessFile.getFilePointer();
                 int startIndex = line.indexOf(" ", 2);
                 int endIndex = line.lastIndexOf("#Problem");
                 if (endIndex == -1) {
@@ -158,7 +155,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         }
 
         return spectrumMatches;
-
     }
 
     @Override
@@ -170,37 +166,38 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     public void close() throws IOException {
         bufferedRandomAccessFile.close();
     }
-    
+
     /**
-     * Returns a Peptide Assumption from a pep novo result line. the rank score is taken as reference score. All additional parameters are attached as PeptideAssumptionDetails.
+     * Returns a Peptide Assumption from a pep novo result line. the rank score
+     * is taken as reference score. All additional parameters are attached as
+     * PeptideAssumptionDetails.
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
      * @return the corresponding assumption
      */
     private PeptideAssumption getAssumptionFromLine(String line, int rank) {
-        
+
         String[] lineComponents = line.trim().split("\t");
-        
+
         Double rankScore = new Double(lineComponents[1]);
         Double pepNovoScore = new Double(lineComponents[2]);
         Double nGap = new Double(lineComponents[3]);
         Double cGap = new Double(lineComponents[4]);
         Integer charge = new Integer(lineComponents[6]);
-        
+
         String sequence = lineComponents[7];
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
-        
+
         Peptide peptide = new Peptide(sequence, new ArrayList<String>(), modificationMatches);
         PeptideAssumption result = new PeptideAssumption(peptide, rank, Advocate.PEPNOVO, new Charge(Charge.PLUS, charge), rankScore, fileName);
-        
+
         PeptideAssumptionDetails peptideAssumptionDetails = new PeptideAssumptionDetails();
         peptideAssumptionDetails.setPepNovoScore(pepNovoScore);
         peptideAssumptionDetails.setcTermGap(cGap);
         peptideAssumptionDetails.setnTermGap(nGap);
         result.addUrParam(peptideAssumptionDetails);
-        
+
         return result;
-        
     }
 }

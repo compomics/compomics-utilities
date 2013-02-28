@@ -111,11 +111,13 @@ public class SearchParameters implements Serializable {
      */
     private Charge minimalChargeForMultipleChargedFragments = new Charge(Charge.PLUS, 3);
     /**
-     * The minimum peptide length (for semi and non tryptic searches with OMSSA).
+     * The minimum peptide length (for semi and non tryptic searches with
+     * OMSSA).
      */
     private Integer minPeptideLength = 6;
     /**
-     * The maximal peptide length (for semi and non tryptic searches with OMSSA).
+     * The maximal peptide length (for semi and non tryptic searches with
+     * OMSSA).
      */
     private Integer maxPeptideLength = 30;
     /**
@@ -127,7 +129,8 @@ public class SearchParameters implements Serializable {
      */
     private Boolean scalePrecursor = true;
     /**
-     * Indicates whether the precursor charge estimation option (OMSSA and TagDB).
+     * Indicates whether the precursor charge estimation option (OMSSA and
+     * TagDB).
      */
     private Boolean estimateCharge = true;
     /**
@@ -135,11 +138,12 @@ public class SearchParameters implements Serializable {
      */
     private Boolean correctPrecursorMass = true;
     /**
-     * Indicates whether the low quality spectra shall be discarded (TagDB setting).
+     * Indicates whether the low quality spectra shall be discarded (TagDB
+     * setting).
      */
     private Boolean discardLowQualitySpectra = true;
     /**
-     * Tag-db fragmentation model
+     * Tag-db fragmentation model.
      */
     private String fragmentationModel;
     /**
@@ -763,39 +767,50 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether the precursor mass shall be corrected (TagDB setting)
-     * @return a boolean indicating whether the precursor mass shall be corrected (TagDB setting)
+     * Returns a boolean indicating whether the precursor mass shall be
+     * corrected (TagDB setting).
+     *
+     * @return a boolean indicating whether the precursor mass shall be
+     * corrected (TagDB setting)
      */
     public Boolean isCorrectPrecursorMass() {
         return correctPrecursorMass;
     }
 
     /**
-     * Sets whether the precursor mass shall be corrected (TagDB setting)
-     * @param correctPrecursorMass a boolean indicating whether the precursor mass shall be corrected (TagDB setting)
+     * Sets whether the precursor mass shall be corrected (TagDB setting).
+     *
+     * @param correctPrecursorMass a boolean indicating whether the precursor
+     * mass shall be corrected (TagDB setting)
      */
     public void correctPrecursorMass(Boolean correctPrecursorMass) {
         this.correctPrecursorMass = correctPrecursorMass;
     }
 
     /**
-     * Returns a boolean indicating whether low quality spectra shall be discarded
-     * @return a boolean indicating whether low quality spectra shall be discarded
+     * Returns a boolean indicating whether low quality spectra shall be
+     * discarded.
+     *
+     * @return a boolean indicating whether low quality spectra shall be
+     * discarded
      */
     public Boolean getDiscardLowQualitySpectra() {
         return discardLowQualitySpectra;
     }
 
     /**
-     * Sets whether low quality spectra shall be discarded
-     * @param discardLowQualitySpectra a boolean indicating whether low quality spectra shall be discarded
+     * Sets whether low quality spectra shall be discarded.
+     *
+     * @param discardLowQualitySpectra a boolean indicating whether low quality
+     * spectra shall be discarded
      */
     public void setDiscardLowQualitySpectra(Boolean discardLowQualitySpectra) {
         this.discardLowQualitySpectra = discardLowQualitySpectra;
     }
 
     /**
-     * Returns the name of the fragmentation model
+     * Returns the name of the fragmentation model.
+     *
      * @return the name of the fragmentation model
      */
     public String getFragmentationModel() {
@@ -803,7 +818,8 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets the name of the fragmentation model
+     * Sets the name of the fragmentation model.
+     *
      * @param fragmentationModel the name of the fragmentation model
      */
     public void setFragmentationModel(String fragmentationModel) {
@@ -811,7 +827,8 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether a blast query shall be generated
+     * Returns a boolean indicating whether a blast query shall be generated.
+     *
      * @return a boolean indicating whether a blast query shall be generated
      */
     public Boolean generateQuery() {
@@ -819,11 +836,12 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Sets a boolean indicating whether a blast query shall be generated
-     * @param generateQuery a boolean indicating whether a blast query shall be generated
+     * Sets a boolean indicating whether a blast query shall be generated.
+     *
+     * @param generateQuery a boolean indicating whether a blast query shall be
+     * generated
      */
     public void setGenerateQuery(Boolean generateQuery) {
         this.generateQuery = generateQuery;
     }
-    
 }

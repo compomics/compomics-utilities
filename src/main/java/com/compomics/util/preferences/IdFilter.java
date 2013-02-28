@@ -115,7 +115,7 @@ public class IdFilter implements Serializable {
         }
 
         int searchEngine = assumption.getAdvocate();
-        double eValue = assumption.getEValue();
+        double eValue = assumption.getScore();
 
         if (searchEngine == Advocate.MASCOT && eValue > mascotMaxEvalue
                 || searchEngine == Advocate.OMSSA && eValue > omssaMaxEvalue

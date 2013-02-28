@@ -98,11 +98,11 @@ public class SearchParameters implements Serializable {
      */
     private static String[] rewindIons = {"x", "y", "z"};
     /**
-     * Maximal e-value cut-off.
+     * Maximal e-value cut-off. (OMSSA and X!Tandem only)
      */
     private Double maxEValue = 100.0;
     /**
-     * The maximal hitlist length (OMSSA setting).
+     * The maximal hitlist length (OMSSA and TagDB setting. TagDB max is 20).
      */
     private Integer hitListLength = 25;
     /**
@@ -111,11 +111,11 @@ public class SearchParameters implements Serializable {
      */
     private Charge minimalChargeForMultipleChargedFragments = new Charge(Charge.PLUS, 3);
     /**
-     * The minimum peptide length.
+     * The minimum peptide length (for semi and non tryptic searches with OMSSA).
      */
     private Integer minPeptideLength = 6;
     /**
-     * The maximal peptide length.
+     * The maximal peptide length (for semi and non tryptic searches with OMSSA).
      */
     private Integer maxPeptideLength = 30;
     /**
@@ -127,10 +127,25 @@ public class SearchParameters implements Serializable {
      */
     private Boolean scalePrecursor = true;
     /**
-     * Indicates whether the precursor charge estimation option of OMSSA is
-     * used.
+     * Indicates whether the precursor charge estimation option (OMSSA and TagDB).
      */
     private Boolean estimateCharge = true;
+    /**
+     * Indicates whether the precursor mass shall be corrected (TagDB setting).
+     */
+    private Boolean correctPrecursorMass = true;
+    /**
+     * Indicates whether the low quality spectra shall be discarded (TagDB setting).
+     */
+    private Boolean discardLowQualitySpectra = true;
+    /**
+     * Tag-db fragmentation model
+     */
+    private String fragmentationModel;
+    /**
+     * Indicates whether a blast query shall be generated (TagDB setting).
+     */
+    private Boolean generateQuery = false;
 
     /**
      * Constructor.
@@ -746,4 +761,69 @@ public class SearchParameters implements Serializable {
 
         return true;
     }
+
+    /**
+     * Returns a boolean indicating whether the precursor mass shall be corrected (TagDB setting)
+     * @return a boolean indicating whether the precursor mass shall be corrected (TagDB setting)
+     */
+    public Boolean isCorrectPrecursorMass() {
+        return correctPrecursorMass;
+    }
+
+    /**
+     * Sets whether the precursor mass shall be corrected (TagDB setting)
+     * @param correctPrecursorMass a boolean indicating whether the precursor mass shall be corrected (TagDB setting)
+     */
+    public void correctPrecursorMass(Boolean correctPrecursorMass) {
+        this.correctPrecursorMass = correctPrecursorMass;
+    }
+
+    /**
+     * Returns a boolean indicating whether low quality spectra shall be discarded
+     * @return a boolean indicating whether low quality spectra shall be discarded
+     */
+    public Boolean getDiscardLowQualitySpectra() {
+        return discardLowQualitySpectra;
+    }
+
+    /**
+     * Sets whether low quality spectra shall be discarded
+     * @param discardLowQualitySpectra a boolean indicating whether low quality spectra shall be discarded
+     */
+    public void setDiscardLowQualitySpectra(Boolean discardLowQualitySpectra) {
+        this.discardLowQualitySpectra = discardLowQualitySpectra;
+    }
+
+    /**
+     * Returns the name of the fragmentation model
+     * @return the name of the fragmentation model
+     */
+    public String getFragmentationModel() {
+        return fragmentationModel;
+    }
+
+    /**
+     * Sets the name of the fragmentation model
+     * @param fragmentationModel the name of the fragmentation model
+     */
+    public void setFragmentationModel(String fragmentationModel) {
+        this.fragmentationModel = fragmentationModel;
+    }
+
+    /**
+     * Returns a boolean indicating whether a blast query shall be generated
+     * @return a boolean indicating whether a blast query shall be generated
+     */
+    public Boolean generateQuery() {
+        return generateQuery;
+    }
+
+    /**
+     * Sets a boolean indicating whether a blast query shall be generated
+     * @param generateQuery a boolean indicating whether a blast query shall be generated
+     */
+    public void setGenerateQuery(Boolean generateQuery) {
+        this.generateQuery = generateQuery;
+    }
+    
 }

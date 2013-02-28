@@ -324,9 +324,6 @@ public class Protein extends ExperimentObject {
      *
      * @param peptideSequence the peptide sequence to check
      * @param enzyme the enzyme to use
-     * @param numberOfMissedCleavages the maximum number of missed cleavages
-     * @param minPeptideSize the minimum peptide size
-     * @param maxPeptideSize the maximum peptide size
      * @return true of the peptide is non-enzymatic
      * @throws IOException
      */

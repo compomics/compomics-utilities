@@ -53,6 +53,8 @@ public class SearchEngine extends ExperimentObject implements Advocate {
                 return "Peptizer";
             case ANDROMEDA:
                 return "Andromeda";
+            case PEPTIDE_SHAKER:
+                return "PeptideShaker";
             case PEPNOVO:
                 return "PepNovo";
             default:
@@ -77,9 +79,14 @@ public class SearchEngine extends ExperimentObject implements Advocate {
     public int getId() {
         return id;
     }
+
     /**
-     * Indicates whether a search engine score is increasing when the quality of the match increases. Typically false for an e-value or a PEP, true for a confidence.
-     * @param id the index of the search engine according to the Advocate static fields
+     * Indicates whether a search engine score is increasing when the quality of
+     * the match increases. Typically false for an e-value or a PEP, true for a
+     * confidence.
+     *
+     * @param id the index of the search engine according to the Advocate static
+     * fields
      * @return true if the score is ascending, false otherwise
      */
     public static boolean isAscendingScore(int id) {
@@ -91,6 +98,8 @@ public class SearchEngine extends ExperimentObject implements Advocate {
             case XTANDEM:
                 return false;
             case ANDROMEDA:
+                return true;
+            case PEPTIDE_SHAKER:
                 return true;
             case PEPNOVO:
                 return true;

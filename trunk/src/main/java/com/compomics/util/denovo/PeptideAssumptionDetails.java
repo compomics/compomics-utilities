@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.denovo;
 
 import com.compomics.util.experiment.personalization.UrParameter;
@@ -9,34 +5,34 @@ import com.compomics.util.experiment.personalization.UrParameter;
 /**
  * This class contains the de novo specific details of a spectrum match
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PeptideAssumptionDetails implements UrParameter {
 
-    
     /**
-     * The mass gap from the N-terminal to the start of the resources novo sequence.
+     * The mass gap from the N-terminal to the start of the resources novo
+     * sequence.
      */
     private double nTermGap;
-
     /**
-     * The mass gap from the C-terminal to the end of the resources novo sequence.
+     * The mass gap from the C-terminal to the end of the resources novo
+     * sequence.
      */
     private double cTermGap;
     /**
-     * The pep novo score
+     * The pep novo score.
      */
     private double pepNovoScore;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public PeptideAssumptionDetails() {
-        
     }
 
     /**
-     * Returns the N-term Gap
+     * Returns the N-term Gap.
+     *
      * @return the N-term Gap
      */
     public double getnTermGap() {
@@ -44,7 +40,8 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Sets the N-term Gap
+     * Sets the N-term Gap.
+     *
      * @param nTermGap the N-term Gap
      */
     public void setnTermGap(double nTermGap) {
@@ -52,7 +49,8 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Returns the C-term Gap
+     * Returns the C-term Gap.
+     *
      * @return the C-term Gap
      */
     public double getcTermGap() {
@@ -60,7 +58,8 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Sets the C-term Gap
+     * Sets the C-term Gap.
+     *
      * @param cTermGap the C-term Gap
      */
     public void setcTermGap(double cTermGap) {
@@ -68,7 +67,8 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Returns the pep novo score
+     * Returns the pep novo score.
+     *
      * @return the pep novo score
      */
     public double getPepNovoScore() {
@@ -76,13 +76,14 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Sets the pep novo score
+     * Sets the pep novo score.
+     *
      * @param pepNovoScore the pep novo score
      */
     public void setPepNovoScore(double pepNovoScore) {
         this.pepNovoScore = pepNovoScore;
     }
-    
+
     @Override
     public String getFamilyName() {
         return "deNovo";
@@ -92,5 +93,4 @@ public class PeptideAssumptionDetails implements UrParameter {
     public int getIndex() {
         return 1;
     }
-    
 }

@@ -4,42 +4,41 @@ import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * This class models a search engine. For now only Mascot, OMSSA and X!Tandem are implemented.
+ * This class models a search engine. For now only Mascot, OMSSA and X!Tandem
+ * are implemented.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 22, 2010
- * Time: 1:56:59 PM
+ * @author Marc Vaudel
  */
 public class SearchEngine extends ExperimentObject implements Advocate {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 9162799394758139976L;
     /**
-     * index of the search engine
+     * Index of the search engine.
      */
     private int id;
 
     /**
-     * constructor for a search engine
+     * Constructor for a search engine.
      */
     public SearchEngine() {
     }
 
     /**
-     * constructor for a search engine
+     * Constructor for a search engine.
      *
-     * @param searchEngineId    the search engine index
+     * @param searchEngineId the search engine index
      */
     public SearchEngine(int searchEngineId) {
         id = searchEngineId;
     }
 
     /**
-     * getter for the search engine name
+     * Getter for the search engine name.
      *
+     * @param id the id of the search engine
      * @return the search engine name
      */
     public static String getName(int id) {
@@ -50,15 +49,19 @@ public class SearchEngine extends ExperimentObject implements Advocate {
                 return "OMSSA";
             case XTANDEM:
                 return "X!Tandem";
+            case PEPTIZER:
+                return "Peptizer";
             case ANDROMEDA:
                 return "Andromeda";
+            case PEPTIDE_SHAKER:
+                return "PeptideShaker";
             default:
                 return "Unknown";
         }
     }
-    
+
     /**
-     * getter for the search engine name
+     * Getter for the search engine name.
      *
      * @return the search engine name
      */
@@ -67,7 +70,7 @@ public class SearchEngine extends ExperimentObject implements Advocate {
     }
 
     /**
-     * getter for the search engine index
+     * Getter for the search engine index.
      *
      * @return the search engine index
      */

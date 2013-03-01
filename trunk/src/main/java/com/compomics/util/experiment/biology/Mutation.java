@@ -1,27 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology;
 
 /**
- * This class represents a mutation of one amino acid to another from the 20-letter amino acid alphabet.
- * 
+ * This class represents a mutation of one amino acid to another from the
+ * 20-letter amino acid alphabet.
+ *
  * @author Thilo Muth
  */
 public class Mutation {
-    
 
     /**
      * The original amino acid.
      */
     private AminoAcid origin;
-
     /**
-     * The mutated aminc acid.
+     * The mutated amino acid.
      */
     private AminoAcid target;
-
     /**
      * The mass shift between original and target amino acid.
      */
@@ -29,6 +23,9 @@ public class Mutation {
 
     /**
      * Constructs a mutation from one amino acid (origin) to another (target).
+     *
+     * @param origin the origin
+     * @param target the target
      */
     public Mutation(AminoAcid origin, AminoAcid target) {
         this.origin = origin;
@@ -38,7 +35,8 @@ public class Mutation {
 
     /**
      * Returns the mass shift.
-      * @return The mass shift.
+     *
+     * @return The mass shift.
      */
     public double getMassShift() {
         return massShift;
@@ -46,6 +44,7 @@ public class Mutation {
 
     /**
      * Get rounded mass shift.
+     *
      * @return Rounded mass shift.
      */
     public int getRoundedMassShift() {
@@ -54,6 +53,7 @@ public class Mutation {
 
     /**
      * Returns the origin amino acid.
+     *
      * @return The origin amino acid.
      */
     public AminoAcid getOrigin() {
@@ -62,6 +62,7 @@ public class Mutation {
 
     /**
      * Returns the target amino acid.
+     *
      * @return The target amino acid.
      */
     public AminoAcid getTarget() {
@@ -70,11 +71,13 @@ public class Mutation {
 
     /**
      * Overwritten equals method.
+     *
      * @param mutation The mutation to be compared.
      * @return True if both mutations are the same.
      */
     public boolean equals(Mutation mutation) {
-        if(this.origin.singleLetterCode.equals(mutation.getOrigin().singleLetterCode) && this.target.singleLetterCode.equals(mutation.getTarget().singleLetterCode)) {
+        if (this.origin.singleLetterCode.equals(mutation.getOrigin().singleLetterCode) 
+                && this.target.singleLetterCode.equals(mutation.getTarget().singleLetterCode)) {
             return true;
         } else {
             return false;
@@ -83,6 +86,6 @@ public class Mutation {
 
     @Override
     public String toString() {
-        return this.origin.threeLetterCode + " => "  + this.target.threeLetterCode;
+        return this.origin.threeLetterCode + " => " + this.target.threeLetterCode;
     }
 }

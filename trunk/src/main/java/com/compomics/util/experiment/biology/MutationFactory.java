@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.biology;
 
 import java.util.ArrayList;
@@ -20,12 +16,10 @@ public class MutationFactory {
      * List of amino acids.
      */
     private static List<AminoAcid> aminoAcids;
-
     /**
      * List of mutations.
      */
     private static List<Mutation> mutations;
-
     /**
      * Mapping from mutation as string to mutation object.
      */
@@ -39,30 +33,37 @@ public class MutationFactory {
 
     /**
      * Returns the requested mutation by lookup in the mutation map.
+     *
      * @param mutation The mutation as parameter.
      * @return The requested mutation.
      */
-    public static Mutation getMutation(Mutation mutation){
-        if(mutationMap == null) createMutations();
+    public static Mutation getMutation(Mutation mutation) {
+        if (mutationMap == null) {
+            createMutations();
+        }
         return mutationMap.get(mutation.toString());
     }
 
     /**
-     * This method creates all possible mutations for the 20 essential amino acids.
+     * This method creates all possible mutations for the 20 essential amino
+     * acids.
+     *
      * @return All possible mutation for the 20 essential amino acids.
      */
     public static List<Mutation> createMutations() {
         // Create essential amino acids.
-        if(aminoAcids == null) createAminoAcids();
+        if (aminoAcids == null) {
+            createAminoAcids();
+        }
         // Create mutations
-        if(mutations == null) {
+        if (mutations == null) {
             mutations = new ArrayList<Mutation>();
             mutationMap = new HashMap<String, Mutation>();
-            for(AminoAcid aa1 : aminoAcids) {
-                for(AminoAcid aa2 : aminoAcids) {
-                    if(!aa1.equals(aa2)) {
+            for (AminoAcid aa1 : aminoAcids) {
+                for (AminoAcid aa2 : aminoAcids) {
+                    if (!aa1.equals(aa2)) {
                         Mutation mutation = new Mutation(aa1, aa2);
-                        if(getMutation(mutation) == null) {
+                        if (getMutation(mutation) == null) {
                             mutations.add(mutation);
                             mutationMap.put(mutation.toString(), mutation);
                         }
@@ -73,8 +74,15 @@ public class MutationFactory {
         return mutations;
     }
 
+    /**
+     * Returns the mutation as a string.
+     * 
+     * @return the mutation as a string
+     */
     public static List<String> getMutationsAsString() {
-        if(mutationMap == null) createMutations();
+        if (mutationMap == null) {
+            createMutations();
+        }
         return new ArrayList(mutationMap.keySet());
     }
 
@@ -104,5 +112,4 @@ public class MutationFactory {
         aminoAcids.add(AminoAcid.W);
         aminoAcids.add(AminoAcid.Y);
     }
-    
 }

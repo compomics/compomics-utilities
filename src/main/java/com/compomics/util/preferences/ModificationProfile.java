@@ -215,6 +215,9 @@ public class ModificationProfile implements Serializable {
      * @return the names of the backed-up PTMs
      */
     public Set<String> getBackedUpPtms() {
+        if (backUp == null) {
+            backUp = new HashMap<String, PTM>();
+        }
         return backUp.keySet();
     }
 

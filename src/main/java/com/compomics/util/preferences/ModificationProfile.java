@@ -216,7 +216,7 @@ public class ModificationProfile implements Serializable {
      */
     public Set<String> getBackedUpPtms() {
         if (backUp == null) {
-            backUp = new HashMap<String, PTM>();
+            repair();
         }
         return backUp.keySet();
     }
@@ -412,5 +412,30 @@ public class ModificationProfile implements Serializable {
         }
 
         return true;
+    }
+    
+    /**
+     * Sets empty lists and maps to the values lost due to backward compatibilty issues
+     */
+    public void repair() {
+       
+        if (fixedModifications == null) {
+        fixedModifications = new ArrayList<String>();
+        }
+        if (variableModifications == null) {
+            variableModifications = new ArrayList<String>();
+        }
+        if (refinementModifications == null) {
+            refinementModifications = new ArrayList<String>();
+        }
+        if (omssaIndexes == null) {
+            omssaIndexes = new HashMap<Integer, String>();
+        }
+        if (colors == null) {
+            colors = new HashMap<String, Color>();
+        }
+        if (backUp == null) {
+            backUp = new HashMap<String, PTM>();
+        }
     }
 }

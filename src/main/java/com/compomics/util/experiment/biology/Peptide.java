@@ -216,10 +216,9 @@ public class Peptide extends ExperimentObject {
      * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
-        if (parentProteins == null || parentProteins.isEmpty()) {
-            throw new IllegalArgumentException("Trying to set an empty protein list to peptide " + sequence + ".");
-        }
+        if (parentProteins != null && !parentProteins.isEmpty()) {
         this.parentProteins = parentProteins;
+        }
     }
 
     /**

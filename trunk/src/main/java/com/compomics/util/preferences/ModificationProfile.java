@@ -348,9 +348,9 @@ public class ModificationProfile implements Serializable {
         if (otherProfile == null) {
             return false;
         }
-        
+
         // note that the following three tests results in false even if only the order is different
-        
+
         if (!this.getVariableModifications().equals(otherProfile.getVariableModifications())) {
             return false;
         }
@@ -404,7 +404,7 @@ public class ModificationProfile implements Serializable {
             if (!otherProfile.backUp.containsKey(tempKey)) {
                 return false;
             }
-            
+
             // @TODO: a test for identical ptms (and not just name as above) should be added
 //            if (!this.backUp.get(tempKey).equals(otherProfile.backUp.get(tempKey))) {
 //                return false;
@@ -413,14 +413,14 @@ public class ModificationProfile implements Serializable {
 
         return true;
     }
-    
+
     /**
-     * Sets empty lists and maps to the values lost due to backward compatibilty issues
+     * Sets empty lists and maps to the values lost due to backward
+     * compatability issues.
      */
     public void repair() {
-       
         if (fixedModifications == null) {
-        fixedModifications = new ArrayList<String>();
+            fixedModifications = new ArrayList<String>();
         }
         if (variableModifications == null) {
             variableModifications = new ArrayList<String>();

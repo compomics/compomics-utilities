@@ -122,8 +122,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
         HashSet<SpectrumMatch> spectrumMatches = new HashSet<SpectrumMatch>();
 
-        HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
-
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressValue(index.size());
         }
@@ -132,8 +130,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
             SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
 
-
             int cpt = 1;
+            bufferedRandomAccessFile.seek(index.get(title));
             String line = bufferedRandomAccessFile.getNextLine();
             if (!line.equals(tableHeader)) {
                 throw new IllegalArgumentException("Unrecognized table format. Expected: \"" + tableHeader + "\", found:\"" + line + "\".");
@@ -144,7 +142,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                 currentMatch.addHit(Advocate.PEPNOVO, getAssumptionFromLine(line, cpt));
                 cpt++;
             }
-            result.add(currentMatch);
+            spectrumMatches.add(currentMatch);
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled()) {
                     break;

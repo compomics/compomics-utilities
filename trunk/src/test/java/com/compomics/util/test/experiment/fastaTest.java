@@ -24,22 +24,17 @@ public class fastaTest extends TestCase {
     public void testImport() {
         try {
             
-//            File testFile = new File("src/test/resources/experiment/SL_csativa_cdna.6frame_translation.fasta");
+//            File testFile = new File("src/test/resources/experiment/peptide sequences.txt");
 //            BufferedReader reader = new BufferedReader(new FileReader(testFile));
-//            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(testFile.getParent(), "SL_csativa_cdna.6frame_translation_corrected.fasta")));
+//            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(testFile.getParent(), "peptide sequences.fasta")));
 //            String line;
 //            while ((line = reader.readLine()) != null) {
-//                String[] splitted = line.split(">");
-//                boolean first = true;
-//                for (String stuck : splitted) {
-//                    if (first) {
-//                        first = false;
-//                    } else {
-//                        writer.write(">");
-//                    }
-//                    writer.write(stuck);
-//                    writer.newLine();
+//                if (line.startsWith(">")) {
+//                    String accession = line.substring(1);
+//                    line = ">generic|" + accession + "|" + accession;
 //                }
+//                writer.write(line);
+//                writer.newLine();
 //            }
 //            writer.close();
 //            reader.close();

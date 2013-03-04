@@ -117,7 +117,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      */
     private boolean selectionActive = false; // @TODO: can this be combined with mouseDragged??
     /**
-     * The datapoint to model row number map.
+     * The data point to model row number map.
      */
     private HashMap<String, Integer> dataPointToRowNumber;
     /**
@@ -133,7 +133,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      */
     private HashMap<Integer, Integer> maxColumnWidths;
     /**
-     * The minmum column widths for the table.
+     * The minimum column widths for the table.
      */
     private HashMap<Integer, Integer> minColumnWidths;
     /**
@@ -176,6 +176,18 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * If true, the regression line is shown.
      */
     private boolean showRegressionLine = true;
+    /**
+     * The data filters.
+     */
+    private HashMap<String, String> filters = new HashMap<String, String>();
+    /**
+     * The column names.
+     */
+    private Vector<String> colummnNames;
+    /**
+     * The rows remaining after applying the data filters.
+     */
+    private ArrayList<Integer> rowsAfterDataFiltering = new ArrayList<Integer>();
 
     /**
      * Creates a new XYPlottingDialog.
@@ -216,7 +228,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         backgroundPanelComponentResized(null);
 
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
                 setVisible(true);
             }
@@ -228,9 +239,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      */
     private void setUpGUI() {
 
-        // @TODO: only show the values of the supported type for each drop down menu...
+        // @TODO: only show the values of the supported types for each drop down menu...
 
-        Vector<String> colummnNames = new Vector<String>();
+        colummnNames = new Vector<String>();
         Vector<String> colummnNamesExtended = new Vector<String>();
         colummnNamesExtended.add(0, "[user defined]");
 
@@ -357,6 +368,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         plotOptionsJButton = new javax.swing.JButton();
         plotHelpJButton = new javax.swing.JButton();
         contextMenuPlotBackgroundPanel = new javax.swing.JPanel();
+        filterPanel = new javax.swing.JPanel();
+        editFiltersButton = new javax.swing.JButton();
 
         exportPlotMenuItem.setText("Export");
         exportPlotMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -681,16 +694,13 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logAcisPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(xAxisLogCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(yAxisLogCheckBox)
+                .addComponent(xAxisLogCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(9, 9, 9)
+                .addComponent(yAxisLogCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(10, 10, 10)
-                .addComponent(sizeLogCheckBox)
+                .addComponent(sizeLogCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(14, 14, 14))
         );
-
-        logAcisPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {sizeLogCheckBox, xAxisLogCheckBox, yAxisLogCheckBox});
-
         logAcisPanelLayout.setVerticalGroup(
             logAcisPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logAcisPanelLayout.createSequentialGroup()
@@ -723,18 +733,18 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectedValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1038, Short.MAX_VALUE)
                 .addContainerGap())
         );
         selectedValuesPanelLayout.setVerticalGroup(
             selectedValuesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(selectedValuesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addComponent(selectedValuesScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        selectedValuesPanel.setBounds(0, 0, 1060, 240);
+        selectedValuesPanel.setBounds(0, 0, 1070, 190);
         selectedValuesLayeredPane.add(selectedValuesPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         selectedValuesTableOptionsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_gray.png"))); // NOI18N
@@ -814,11 +824,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             xyPlotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(xyPlotPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        xyPlotPanel.setBounds(0, 0, 810, 380);
+        xyPlotPanel.setBounds(0, 0, 810, 440);
         plotLayeredPane.add(xyPlotPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         plotOptionsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_gray.png"))); // NOI18N
@@ -879,6 +889,33 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         contextMenuPlotBackgroundPanel.setBounds(770, 0, 30, 19);
         plotLayeredPane.add(contextMenuPlotBackgroundPanel, javax.swing.JLayeredPane.POPUP_LAYER);
 
+        filterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Filters"));
+        filterPanel.setOpaque(false);
+
+        editFiltersButton.setText("Edit Data Filters");
+        editFiltersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editFiltersButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
+        filterPanel.setLayout(filterPanelLayout);
+        filterPanelLayout.setHorizontalGroup(
+            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(editFiltersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        filterPanelLayout.setVerticalGroup(
+            filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(editFiltersButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -886,15 +923,16 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                    .addComponent(selectedValuesLayeredPane)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addComponent(plotLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(xAxisPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(dragSettingsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(logAcisPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(plotTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(selectedValuesLayeredPane))
+                            .addComponent(plotTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -909,10 +947,12 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(logAcisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dragSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(dragSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(plotLayeredPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectedValuesLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(selectedValuesLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1175,7 +1215,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
         // resize the layered panels
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
 
                 // move the icons
@@ -1311,7 +1350,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             progressDialog.setTitle("Exporting Table. Please Wait...");
 
             new Thread(new Runnable() {
-
                 public void run() {
                     try {
                         progressDialog.setVisible(true);
@@ -1322,7 +1360,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }, "ProgressDialog").start();
 
             new Thread("TableExportThread") {
-
                 @Override
                 public void run() {
                     try {
@@ -1469,9 +1506,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * @param evt
      */
     private void sizeLogCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeLogCheckBoxActionPerformed
-         updatePlot();
+        updatePlot();
     }//GEN-LAST:event_sizeLogCheckBoxActionPerformed
 
+    /**
+     * Edit the filters.
+     *
+     * @param evt
+     */
+    private void editFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFiltersButtonActionPerformed
+        new XYPlotFiltersDialog(this, true);
+    }//GEN-LAST:event_editFiltersButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JSpinner binSizeSpinner;
@@ -1487,8 +1532,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private javax.swing.JPanel dragSettingsPanel;
     private javax.swing.JRadioButton dragToSelectRadioButton;
     private javax.swing.JRadioButton dragToZoomRadioButton;
+    private javax.swing.JButton editFiltersButton;
     private javax.swing.JMenuItem exportPlotMenuItem;
     private javax.swing.JMenuItem exportSelectedValuesMenuItem;
+    private javax.swing.JPanel filterPanel;
     private javax.swing.JMenuItem hideColumnsMenuItem;
     private javax.swing.JRadioButton histogramRadioButton;
     private javax.swing.JPanel logAcisPanel;
@@ -1522,7 +1569,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     /**
      * Update the plot.
      */
-    private void updatePlot() {
+    public void updatePlot() {
 
         if (!isPlotting) {
             selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
@@ -1539,7 +1586,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             progressDialog.setTitle("Loading Data. Please Wait...");
 
             new Thread(new Runnable() {
-
                 public void run() {
                     try {
                         progressDialog.setVisible(true);
@@ -1550,7 +1596,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }, "ProgressDialog").start();
 
             new Thread("XYPlottingThread") {
-
                 @Override
                 public void run() {
 
@@ -1561,6 +1606,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     String yAxisName = (String) yAxisComboBox.getSelectedItem();
                     double maxBubbleSize = 0.0;
                     double xAxisRange = 1.0;
+
+                    // apply the data filters
+                    filterData();
 
                     if (histogramRadioButton.isSelected() || densityPlotRadioButton.isSelected()) {
 
@@ -1578,21 +1626,24 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         for (int index = 0; index < tabelModel.getRowCount(); index++) {
                             progressDialog.increaseProgressValue();
 
-                            // @TODO: support more data types!!
+                            if (rowsAfterDataFiltering.contains(index)) {
 
-                            if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
-                                values[index] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
-                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
-                                values[index] = ((Integer) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
-                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
-                                values[index] = ((Double) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
-                            } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
-                                if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
-                                    values[index] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                // @TODO: support more data types!!
+
+                                if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+                                    values[index] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
+                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+                                    values[index] = ((Integer) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
+                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
+                                    values[index] = ((Double) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
+                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+                                        values[index] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                    }
                                 }
-                            }
 
-                            // @TODO: what about null values?
+                                // @TODO: what about null values?
+                            }
                         }
 
                         XYPlot plot;
@@ -1696,49 +1747,52 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                             progressDialog.increaseProgressValue();
 
-                            ArrayList<Integer> tempArray;
-                            if (!datasets.containsKey(tabelModel.getValueAt(i, colorIndex).toString())) {
-                                tempArray = new ArrayList<Integer>();
-                                datasetNames.add(tabelModel.getValueAt(i, colorIndex).toString());
-                            } else {
-                                tempArray = datasets.get(tabelModel.getValueAt(i, colorIndex).toString());
-                            }
-                            tempArray.add(i);
-                            datasets.put(tabelModel.getValueAt(i, colorIndex).toString(), tempArray);
+                            if (rowsAfterDataFiltering.contains(i)) {
 
-                            // get the min and max values for the color column
-                            if (tabelModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
-                                double tempColorValue = ((XYDataPoint) tabelModel.getValueAt(i, colorIndex)).getX();
-                                if (tempColorValue > maxColorValue) {
-                                    maxColorValue = tempColorValue;
+                                ArrayList<Integer> tempArray;
+                                if (!datasets.containsKey(tabelModel.getValueAt(i, colorIndex).toString())) {
+                                    tempArray = new ArrayList<Integer>();
+                                    datasetNames.add(tabelModel.getValueAt(i, colorIndex).toString());
+                                } else {
+                                    tempArray = datasets.get(tabelModel.getValueAt(i, colorIndex).toString());
                                 }
-                                if (tempColorValue < minColorValue) {
-                                    minColorValue = tempColorValue;
-                                }
-                            } else if (tabelModel.getValueAt(i, colorIndex) instanceof Integer) {
-                                int tempColorValue = (Integer) tabelModel.getValueAt(i, colorIndex);
-                                if (tempColorValue > maxColorValue) {
-                                    maxColorValue = tempColorValue;
-                                }
-                                if (tempColorValue < minColorValue) {
-                                    minColorValue = tempColorValue;
-                                }
-                            } else if (tabelModel.getValueAt(i, colorIndex) instanceof Double) {
-                                double tempColorValue = (Double) tabelModel.getValueAt(i, colorIndex);
-                                if (tempColorValue > maxColorValue) {
-                                    maxColorValue = tempColorValue;
-                                }
-                                if (tempColorValue < minColorValue) {
-                                    minColorValue = tempColorValue;
-                                }
-                            } else if (tabelModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
-                                if (((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
-                                    double tempColorValue = ((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().get(0);
+                                tempArray.add(i);
+                                datasets.put(tabelModel.getValueAt(i, colorIndex).toString(), tempArray);
+
+                                // get the min and max values for the color column
+                                if (tabelModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
+                                    double tempColorValue = ((XYDataPoint) tabelModel.getValueAt(i, colorIndex)).getX();
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
+                                    }
+                                } else if (tabelModel.getValueAt(i, colorIndex) instanceof Integer) {
+                                    int tempColorValue = (Integer) tabelModel.getValueAt(i, colorIndex);
+                                    if (tempColorValue > maxColorValue) {
+                                        maxColorValue = tempColorValue;
+                                    }
+                                    if (tempColorValue < minColorValue) {
+                                        minColorValue = tempColorValue;
+                                    }
+                                } else if (tabelModel.getValueAt(i, colorIndex) instanceof Double) {
+                                    double tempColorValue = (Double) tabelModel.getValueAt(i, colorIndex);
+                                    if (tempColorValue > maxColorValue) {
+                                        maxColorValue = tempColorValue;
+                                    }
+                                    if (tempColorValue < minColorValue) {
+                                        minColorValue = tempColorValue;
+                                    }
+                                } else if (tabelModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
+                                        double tempColorValue = ((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().get(0);
+                                        if (tempColorValue > maxColorValue) {
+                                            maxColorValue = tempColorValue;
+                                        }
+                                        if (tempColorValue < minColorValue) {
+                                            minColorValue = tempColorValue;
+                                        }
                                     }
                                 }
                             }
@@ -1889,8 +1943,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             regressionData.addSeries(regr);
 
                             // show the r squared value
-                            plot.addAnnotation(new XYTextAnnotation("R2=" + Util.roundDouble(simpleRegression.getRSquare(), 2), 
-                                    maxXValue*0.93, simpleRegression.predict(maxXValue)*0.99));
+                            plot.addAnnotation(new XYTextAnnotation("R2=" + Util.roundDouble(simpleRegression.getRSquare(), 2),
+                                    maxXValue * 0.93, simpleRegression.predict(maxXValue) * 0.99));
 
                             StandardXYItemRenderer regressionRenderer = new StandardXYItemRenderer();
                             regressionRenderer.setBaseSeriesVisibleInLegend(false);
@@ -1901,7 +1955,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         // set up the renderer
                         XYBubbleRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_DOMAIN_AXIS) {
-
                             @Override
                             public Stroke getItemOutlineStroke(int row, int column) {
 
@@ -2045,7 +2098,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         chart.setBackgroundPaint(Color.WHITE);
 
                         chartPanel = new ChartPanel(chart) {
-
                             @Override
                             public void mouseReleased(MouseEvent e) {
                                 if (selectionActive) {
@@ -2067,7 +2119,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         // add chart mouse listener
                         chartPanel.addChartMouseListener(new ChartMouseListener() {
-
                             public void chartMouseClicked(ChartMouseEvent cme) {
                                 mouseClickedInChart(cme);
                             }
@@ -2079,7 +2130,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         // add chart mouse motion listener
                         chartPanel.addMouseMotionListener(new MouseAdapter() {
-
                             @Override
                             public void mouseDragged(MouseEvent e) {
                                 if (!dragToZoomRadioButton.isSelected()) {
@@ -2094,7 +2144,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         // add more chart mouse listeners
                         chartPanel.addMouseListener(new MouseAdapter() {
-
                             @Override
                             public void mousePressed(MouseEvent e) {
                                 dragStart = e.getPoint();
@@ -2161,7 +2210,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     }
 
     /**
-     * Handles mouse clicks in the chart panel. Selects/de-selects datapoints.
+     * Handles mouse clicks in the chart panel. Selects/de-selects data points.
      *
      * @param event
      */
@@ -2184,7 +2233,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             }
         }
 
-        // if no data points was selected clear the selection
+        // if no data points were selected then clear the selection
         if (!dataPointsSelected) {
             selectedDataPoints = new HashMap<Integer, ArrayList<Integer>>();
             selectedModelRows = new ArrayList<Integer>();
@@ -2239,17 +2288,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
     /**
      * Filters the selected values table according to the currently selected
-     * values.
+     * values and the current data filters.
      */
     public void filterTable() {
-
-        if (selectedDataPoints.isEmpty()) {
-            // no filtering, show all values
-            ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(null);
-        } else {
-            ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(new SelectedValuesTableFilter());
-        }
-
+        ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(new SelectedValuesTableFilter());
         ((TitledBorder) selectedValuesPanel.getBorder()).setTitle("Selected Values (" + selectedValuesTable.getRowCount() + ")");
         selectedValuesPanel.repaint();
     }
@@ -2309,15 +2351,23 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     }
 
     /**
-     * A filter that filters the table based on if the datapoint is selected in
+     * A filter that filters the table based on if the data point is selected in
      * the plot or not.
      */
     public class SelectedValuesTableFilter extends RowFilter<DefaultTableModel, Integer> {
 
         public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+
+            // see if the row has already been filtered out
+            if (!rowsAfterDataFiltering.contains(entry.getIdentifier())) {
+                return false;
+            }
+
+            // see of the data point is currently selected
             if (selectedModelRows.isEmpty() || selectedModelRows.contains(entry.getIdentifier())) {
                 return true;
             }
+
             return false;
         }
     }
@@ -2352,7 +2402,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         private double datasetSize;
 
         /**
-         * This method init the KDE, i.e. sort values in ascending order,
+         * This method initiates the KDE, i.e. sort values in ascending order,
          * compute an empirical distribution out of it, makes use of a NormalGen
          * to generate random variates from the normal distribution, and then
          * use these variates to generate a kernel density generator of the
@@ -2480,5 +2530,152 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         }
 
         return freedmanDiaconisValue;
+    }
+
+    /**
+     * Return the column names.
+     *
+     * @return the column names
+     */
+    public Vector<String> getColummnNames() {
+        return colummnNames;
+    }
+
+    /**
+     * Return the data filters.
+     *
+     * @return the data filters
+     */
+    public HashMap<String, String> getDataFilters() {
+        return filters;
+    }
+
+    /**
+     * Set the data filters.
+     *
+     * @param filters the filters to set
+     */
+    public void setDataFilters(HashMap<String, String> filters) {
+        this.filters = filters;
+    }
+
+    /**
+     * Apply the data filters.
+     */
+    private void filterData() {
+
+        rowsAfterDataFiltering = new ArrayList<Integer>();
+
+        boolean filterError = false;
+
+        for (int i = 0; i < tabelModel.getRowCount(); i++) {
+
+            boolean include = true;
+
+            for (int j = 0; j < tabelModel.getColumnCount(); j++) {
+                String filter = filters.get(tabelModel.getColumnName(j));
+
+                if (filter != null) {
+
+                    // @TODO: what about AND/OR filters? or support for ranges, e.g., [500-1000]?
+
+                    if (filter.startsWith(">")) {
+
+                        if (tabelModel.getValueAt(i, j) instanceof String) {
+                            // not supported
+                            filterError = true;
+                        } else {
+
+                            try {
+                                double value = Double.valueOf(filter.substring(1));
+
+                                if (tabelModel.getValueAt(i, j) instanceof Integer) {
+                                    if ((Integer) tabelModel.getValueAt(i, j) <= value) {
+                                        include = false;
+                                    }
+                                } else if (tabelModel.getValueAt(i, j) instanceof Double) {
+                                    if ((Double) tabelModel.getValueAt(i, j) <= value) {
+                                        include = false;
+                                    }
+                                } else if (tabelModel.getValueAt(i, j) instanceof XYDataPoint) {
+                                    if (((XYDataPoint) tabelModel.getValueAt(i, j)).getX() <= value) {
+                                        include = false;
+                                    }
+                                }
+                            } catch (NumberFormatException e) {
+                                filterError = true;
+                            }
+                        }
+                    } else if (filter.startsWith("<")) {
+
+                        if (tabelModel.getValueAt(i, j) instanceof String) {
+                            // not supported
+                            filterError = true;
+                        } else {
+
+                            try {
+                                double value = Double.valueOf(filter.substring(1));
+
+                                if (tabelModel.getValueAt(i, j) instanceof Integer) {
+                                    if ((Integer) tabelModel.getValueAt(i, j) >= value) {
+                                        include = false;
+                                    }
+                                } else if (tabelModel.getValueAt(i, j) instanceof Double) {
+                                    if ((Double) tabelModel.getValueAt(i, j) >= value) {
+                                        include = false;
+                                    }
+                                } else if (tabelModel.getValueAt(i, j) instanceof XYDataPoint) {
+                                    if (((XYDataPoint) tabelModel.getValueAt(i, j)).getX() >= value) {
+                                        include = false;
+                                    }
+                                }
+                            } catch (NumberFormatException e) {
+                                filterError = true;
+                            }
+                        }
+                    } else if (filter.startsWith("=")) {
+
+                        if (tabelModel.getValueAt(i, j) instanceof String) {
+
+                            String pattern = filter.substring(1); // @TODO: support patterns
+
+                            if (!((String) tabelModel.getValueAt(i, j)).equalsIgnoreCase(pattern)) {
+                                include = false;
+                            }
+
+                        } else {
+
+                            try {
+                                double value = Double.valueOf(filter.substring(1));
+
+                                if (tabelModel.getValueAt(i, j) instanceof Integer) {
+                                    if (((Integer) tabelModel.getValueAt(i, j)).intValue() != value) {
+                                        include = false;
+                                    }
+                                } else if (tabelModel.getValueAt(i, j) instanceof Double) {
+                                    if (((Double) tabelModel.getValueAt(i, j)).doubleValue() != value) {
+                                        include = false;
+                                    }
+                                } else if (tabelModel.getValueAt(i, j) instanceof XYDataPoint) {
+                                    if (((XYDataPoint) tabelModel.getValueAt(i, j)).getX() != value) {
+                                        include = false;
+                                    }
+                                }
+                            } catch (NumberFormatException e) {
+                                filterError = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (include) {
+                rowsAfterDataFiltering.add(i);
+            }
+        }
+
+        if (filterError) {
+            JOptionPane.showMessageDialog(this, "There was an error with one of the filters. Please check the filter settings.", "Filter Error", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

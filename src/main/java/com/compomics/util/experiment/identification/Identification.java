@@ -30,7 +30,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * The version UID for Serialization/Deserialization compatibility.
      */
-    static final long serialVersionUID = -2551700699384242554L;
+    static final long serialVersionUID = -2551700699384242554L; // @TODO: update??
     /**
      * Extention for a serialized hit. cuh for Compomics Utilities Hit.
      *
@@ -46,11 +46,11 @@ public abstract class Identification extends ExperimentObject {
      */
     protected ArrayList<String> peptideIdentification = new ArrayList<String>();
     /**
-     * List of all imported psms indexed by mgf file name.
+     * List of all imported PSMs indexed by mgf file name.
      */
     protected HashMap<String, ArrayList<String>> spectrumIdentificationMap = new HashMap<String, ArrayList<String>>();
     /**
-     * List of the keys of all imported psms.
+     * List of the keys of all imported PSMs.
      *
      * @deprecated use file specific mapping instead
      */
@@ -310,6 +310,24 @@ public abstract class Identification extends ExperimentObject {
     public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadProteinMatchParameters(urParameter, waitingHandler);
     }
+    
+    /**
+     * Loads the desired protein match parameters of the given type in the cache
+     * of the database.
+     *
+     * @param proteinKeys the list of protein keys of the parameters to load
+     * @param urParameter the parameter type
+     * @param waitingHandler the waiting handler
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadProteinMatchParameters(proteinKeys, urParameter, waitingHandler);
+    }
 
     /**
      * Loads all protein matches in the cache of the database.
@@ -324,6 +342,23 @@ public abstract class Identification extends ExperimentObject {
      */
     public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadProteinMatches(waitingHandler);
+    }
+    
+    /**
+     * Loads the desired protein matches of the given type in the cache of the
+     * database.
+     *
+     * @param proteinKeys the list of protein keys to load
+     * @param waitingHandler the waiting handler
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        identificationDB.loadProteinMatches(proteinKeys, waitingHandler);
     }
 
     /**

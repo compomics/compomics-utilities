@@ -21,7 +21,7 @@ import java.util.HashMap;
  */
 public class IdentificationDB implements Serializable {
 
-    static final long serialVersionUID = 691986038787590646L;
+    static final long serialVersionUID = 691986038787590646L; // @TODO: update??
     /**
      * The name which will be used for the database.
      */
@@ -513,6 +513,30 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
+     * Loads the desired protein match parameters of the given type in the cache
+     * of the database.
+     *
+     * @param proteinKeys the list of protein keys of the parameters to load
+     * @param urParameter the parameter type
+     * @param waitingHandler the waiting handler
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(proteinKeys.size());
+        }
+        String tableName = getProteinParameterTable(urParameter);
+        objectsDB.loadObjects(tableName, proteinKeys, waitingHandler);
+    }
+    
+    /**
      * Loads all protein matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler
@@ -525,6 +549,28 @@ public class IdentificationDB implements Serializable {
      */
     public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         objectsDB.loadObjects(proteinTableName, waitingHandler);
+    }
+    
+    /**
+     * Loads the desired protein matches of the given type in the cache of the
+     * database.
+     *
+     * @param proteinKeys the list of protein keys to load
+     * @param waitingHandler the waiting handler
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressValue(proteinKeys.size());
+        }
+        objectsDB.loadObjects(proteinTableName, proteinKeys, waitingHandler);
     }
 
     /**

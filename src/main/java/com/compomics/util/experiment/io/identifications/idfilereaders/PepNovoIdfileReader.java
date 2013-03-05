@@ -15,6 +15,7 @@ import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -133,7 +134,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
         for (String title : index.keySet()) {
 
-            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
+            String decodedTitle = URLDecoder.decode(title, "utf-8");
+            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, decodedTitle));
 
             int cpt = 1;
             bufferedRandomAccessFile.seek(index.get(title));
@@ -154,7 +156,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                 }
                 waitingHandler.increaseSecondaryProgressValue();
             }
-
         }
 
         return spectrumMatches;

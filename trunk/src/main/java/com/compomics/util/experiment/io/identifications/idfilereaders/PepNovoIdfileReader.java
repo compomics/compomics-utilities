@@ -96,12 +96,17 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (line.startsWith(">>")) {
                 long currentIndex = bufferedRandomAccessFile.getFilePointer();
-                int startIndex = line.indexOf(" ", 2);
-                int endIndex = line.lastIndexOf("#Problem");
+                
+                String[] temp = line.split("\\s+");
+                String formatted = "";
+                for (int i = 3; i < temp.length; i++) {
+                        formatted += (temp[i] + " ");
+                }                
+                int endIndex = formatted.lastIndexOf("#Problem");
                 if (endIndex == -1) {
-                    endIndex = line.lastIndexOf("(SQS");
+                    endIndex = formatted.lastIndexOf("(SQS");
                 }
-                spectrumTitle = line.substring(startIndex, endIndex).trim();
+                spectrumTitle = formatted.substring(0, endIndex).trim();
                 index.put(spectrumTitle, currentIndex);
                 if (waitingHandler != null) {
                     if (waitingHandler.isRunCanceled()) {

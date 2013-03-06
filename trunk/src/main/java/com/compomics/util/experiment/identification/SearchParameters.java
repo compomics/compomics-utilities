@@ -690,8 +690,14 @@ public class SearchParameters implements Serializable {
         if (this.getnMissedCleavages().intValue() != otherSearchParameters.getnMissedCleavages().intValue()) {
             return false;
         }
-        if (!this.getFastaFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getFastaFile().getAbsolutePath())) {
+        if ((this.getFastaFile() == null && otherSearchParameters.getFastaFile() != null)
+                || (this.getFastaFile() != null && otherSearchParameters.getFastaFile() == null)) {
             return false;
+        }
+        if (this.getFastaFile() != null && otherSearchParameters.getFastaFile() != null) {
+            if (!this.getFastaFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getFastaFile().getAbsolutePath())) {
+                return false;
+            }
         }
         if (this.getIonSearched1().intValue() != otherSearchParameters.getIonSearched1().intValue()) {
             return false;

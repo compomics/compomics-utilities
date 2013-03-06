@@ -134,18 +134,12 @@ public class MgfReader {
                 spectra.add(msnSpectrum);
             } else if (!line.equals("")) {
                 try {
-                    Double mz = new Double(line.substring(0, line.indexOf(' ')));
-                    Double intensity = new Double(line.substring(line.indexOf(' ')));
+                    String values[] = line.split("\\s+");
+                    Double mz = new Double(values[0]);
+                    Double intensity = new Double(values[1]);
                     spectrum.put(mz, new Peak(mz, intensity));
                 } catch (Exception e1) {
-                    // try with tab separated
-                    try {
-                        Double mz = new Double(line.substring(0, line.indexOf('\t')));
-                        Double intensity = new Double(line.substring(line.indexOf('\t')));
-                        spectrum.put(mz, new Peak(mz, intensity));
-                    } catch (Exception e2) {
-                        // ignore comments and all other lines
-                    }
+                    // ignore comments and all other lines
                 }
             }
         }
@@ -564,18 +558,12 @@ public class MgfReader {
                 return msnSpectrum;
             } else if (!line.equals("")) {
                 try {
-                    Double mz = new Double(line.substring(0, line.indexOf(' ')));
-                    Double intensity = new Double(line.substring(line.indexOf(' ')));
+                    String values[] = line.split("\\s+");
+                    Double mz = new Double(values[0]);
+                    Double intensity = new Double(values[1]);
                     spectrum.put(mz, new Peak(mz, intensity));
                 } catch (Exception e1) {
-                    // try with tab separated
-                    try {
-                        Double mz = new Double(line.substring(0, line.indexOf('\t')));
-                        Double intensity = new Double(line.substring(line.indexOf('\t')));
-                        spectrum.put(mz, new Peak(mz, intensity));
-                    } catch (Exception e2) {
-                        // ignore comments and all other lines
-                    }
+                    // ignore comments and all other lines
                 }
             }
         }

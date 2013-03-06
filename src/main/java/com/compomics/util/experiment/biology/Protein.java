@@ -269,8 +269,8 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the list of indexes where a peptide can be found in the protein
-     * sequence.
-     * Note: it might be faster to use an AminoAcidPattern matching to the protein sequence
+     * sequence. Note: it might be faster to use an AminoAcidPattern matching to
+     * the protein sequence.
      *
      * @param peptide the sequence of the peptide of interest
      * @return the list of indexes where a peptide can be found in a protein
@@ -332,9 +332,9 @@ public class Protein extends ExperimentObject {
 
         // get the surrounding amino acids
         HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 2);
-        
+
         String firstAA = peptideSequence.charAt(0) + "";
-        String lastAA = peptideSequence.charAt(peptideSequence.length()-1) + "";
+        String lastAA = peptideSequence.charAt(peptideSequence.length() - 1) + "";
 
         // iterate the possible extended peptide sequences
         for (int index : surroundingAminoAcids.keySet()) {

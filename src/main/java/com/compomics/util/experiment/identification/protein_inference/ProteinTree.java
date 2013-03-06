@@ -1,52 +1,42 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
- * This class sorts the proteins into groups
+ * This class sorts the proteins into groups.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ProteinTree {
 
     /**
-     * The maximal size allowed for a node
+     * The maximal size allowed for a node.
      */
     private int maxNodeSize;
     /**
-     * The maximal size allowed for a node
+     * The maximal size allowed for a node.
      */
     private int initialTagSize;
     /**
-     * The maximal cache size in number of peptides
+     * The maximal cache size in number of peptides.
      */
     private int cacheSize;
     /**
-     * Instance of the sequence factory
+     * Instance of the sequence factory.
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
-     * the tree containing the accessions indexed by sequence tags
+     * the tree containing the accessions indexed by sequence tags.
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
 
     /**
-     * Creates a tree based on the proteins present in the sequence factory
+     * Creates a tree based on the proteins present in the sequence factory.
      */
     public ProteinTree() {
     }
@@ -108,7 +98,7 @@ public class ProteinTree {
 
     /**
      * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence
+     * sequence.
      *
      * @param peptideSequence the peptide sequence
      * @return the peptide to protein mapping: Accession -> list of indexes
@@ -130,7 +120,7 @@ public class ProteinTree {
     }
 
     /**
-     * Returns a map of the amino acids found on the sequence: aa -> indexes
+     * Returns a map of the amino acids found on the sequence: aa -> indexes.
      *
      * @param accession the accession of the protein of interest
      * @param seeds the indexes where to start looking at
@@ -218,25 +208,25 @@ public class ProteinTree {
     }
 
     /**
-     * Class representing a node in the tree
+     * Class representing a node in the tree.
      */
     private class Node {
 
         /**
-         * The index, ie depth in the tree, of the node
+         * The index, ie depth in the tree, of the node.
          */
         private int index;
         /**
-         * List of accessions contained in this node
+         * List of accessions contained in this node.
          */
         private HashMap<String, ArrayList<Integer>> accessions = new HashMap<String, ArrayList<Integer>>();
         /**
-         * Sutree starting from this node
+         * Sutree starting from this node.
          */
         private HashMap<Character, Node> subtree = null;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param index the depth of the node
          */
@@ -246,7 +236,7 @@ public class ProteinTree {
 
         /**
          * Returns the protein mappings for the given peptide sequence. An empty
-         * map if not found
+         * map if not found.
          *
          * @param peptideSequence the given peptide sequence
          * @return the protein mapping for the given peptide sequence
@@ -278,7 +268,7 @@ public class ProteinTree {
 
         /**
          * Splits the node into subnode if its size is larger than the
-         * maxNodeSize and does the same for every sub node
+         * maxNodeSize and does the same for every sub node.
          *
          * @throws IOException
          * @throws IllegalArgumentException
@@ -305,7 +295,7 @@ public class ProteinTree {
         }
 
         /**
-         * Adds an accession to the node
+         * Adds an accession to the node.
          *
          * @param accession the accession to add
          * @param indexes the indexes in this accession where the key can be
@@ -316,7 +306,7 @@ public class ProteinTree {
         }
 
         /**
-         * Returns all the protein mapping of the node
+         * Returns all the protein mapping of the node.
          *
          * @return all the protein mappings of the node
          */
@@ -338,10 +328,10 @@ public class ProteinTree {
                             Collections.sort(indexes);
                             int previousIndex = -1;
                             ArrayList<Integer> singleIndexes = new ArrayList<Integer>(indexes.size());
-                            for (int index : indexes) {
-                                if (index != previousIndex) {
-                                    singleIndexes.add(index);
-                                    previousIndex = index;
+                            for (int tempIndex : indexes) {
+                                if (tempIndex != previousIndex) {
+                                    singleIndexes.add(tempIndex);
+                                    previousIndex = tempIndex;
                                 }
                             }
                             result.put(accession, singleIndexes);

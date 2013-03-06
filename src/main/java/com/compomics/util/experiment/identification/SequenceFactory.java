@@ -98,9 +98,9 @@ public class SequenceFactory {
         loadedProteins.clear();
         molecularWeights.clear();
     }
-    
+
     /**
-     * Empties the cache of the factory
+     * Empties the cache of the factory.
      */
     public void emptyCache() {
         currentHeaderMap.clear();

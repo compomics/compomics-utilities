@@ -217,7 +217,7 @@ public class Peptide extends ExperimentObject {
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
         if (parentProteins != null && !parentProteins.isEmpty()) {
-        this.parentProteins = parentProteins;
+            this.parentProteins = parentProteins;
         }
     }
 
@@ -1103,17 +1103,19 @@ public class Peptide extends ExperimentObject {
         }
         return result;
     }
-    
+
     /**
-     * Returns the sequence of this peptide as AminoAcidPattern
+     * Returns the sequence of this peptide as AminoAcidPattern.
+     *
      * @return the sequence of this peptide as AminoAcidPattern
      */
     public AminoAcidPattern getSequenceAsPattern() {
         return getSequenceAsPattern(sequence);
     }
-    
+
     /**
-     * Returns the given sequence as AminoAcidPattern
+     * Returns the given sequence as AminoAcidPattern.
+     *
      * @param sequence the sequence of interest
      * @return the sequence as AminoAcidPattern
      */

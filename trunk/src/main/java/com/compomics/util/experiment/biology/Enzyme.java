@@ -236,7 +236,7 @@ public class Enzyme extends ExperimentObject {
      * Digests a protein sequence in a list of expected peptide sequences.
      *
      * @param sequence the protein sequence
-     * @param nMissedCleavages the allowed number of missed cleavages
+     * @param nMissedCleavages the allowed maximal number of missed cleavages
      * @param nMin the minimal size for a peptide
      * @param nMax the maximal size for a peptide
      * @return a list of expected peptide sequences

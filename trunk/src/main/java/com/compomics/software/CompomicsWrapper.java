@@ -113,6 +113,8 @@ public class CompomicsWrapper {
                 JOptionPane.showMessageDialog(null,
                         "Seems like you are trying to start " + toolName + " from within a zip file!",
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             launch(jarFile, splashName, mainClass, args);
 

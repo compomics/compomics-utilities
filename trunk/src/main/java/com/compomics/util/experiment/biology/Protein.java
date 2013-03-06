@@ -270,6 +270,7 @@ public class Protein extends ExperimentObject {
     /**
      * Returns the list of indexes where a peptide can be found in the protein
      * sequence.
+     * Note: it might be faster to use an AminoAcidPattern matching to the protein sequence
      *
      * @param peptide the sequence of the peptide of interest
      * @return the list of indexes where a peptide can be found in a protein

@@ -1103,4 +1103,21 @@ public class Peptide extends ExperimentObject {
         }
         return result;
     }
+    
+    /**
+     * Returns the sequence of this peptide as AminoAcidPattern
+     * @return the sequence of this peptide as AminoAcidPattern
+     */
+    public AminoAcidPattern getSequenceAsPattern() {
+        return getSequenceAsPattern(sequence);
+    }
+    
+    /**
+     * Returns the given sequence as AminoAcidPattern
+     * @param sequence the sequence of interest
+     * @return the sequence as AminoAcidPattern
+     */
+    public static AminoAcidPattern getSequenceAsPattern(String sequence) {
+        return new AminoAcidPattern(sequence);
+    }
 }

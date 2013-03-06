@@ -135,7 +135,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         for (String title : index.keySet()) {
 
             String decodedTitle = URLDecoder.decode(title, "utf-8");
-            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, decodedTitle));
+            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle));
 
             int cpt = 1;
             bufferedRandomAccessFile.seek(index.get(title));
@@ -159,6 +159,15 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         }
 
         return spectrumMatches;
+    }
+    
+    /**
+     * Returns the spectrum file name.
+     * This method assumes that the pepnovo output file is the mgf file name + ".out"
+     * @return the spectrum file name
+     */
+    public String getMgfFileName() {
+        return fileName.substring(0, fileName.length() - 4);
     }
 
     @Override

@@ -50,6 +50,23 @@ public class ProteinTree {
      * 3.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 5000.
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     */
+    public void initiateTree(int initialTagSize, int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException {
+        initiateTree(initialTagSize, maxNodeSize, null);
+    }
+
+    /**
+     * Initiates the tree.
+     *
+     * @TODO: add progress bar?
+     * @param initialTagSize the initial size of peptide tag. Large initial size
+     * are slow to query, low initial size are slow to initiate. I typically use
+     * 3.
+     * @param maxNodeSize the maximal size of a node. large nodes will be fast
+     * to initiate but slow to query. I typically use 5000.
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed (takes more memory)
      * @throws IOException

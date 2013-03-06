@@ -120,6 +120,16 @@ public class SpectrumFactory {
         mzMLUnmarshallers.clear();
         idToSpectrumName.clear();
     }
+    
+    /**
+     * Empties the cache
+     */
+    public void emptyCache() {
+        currentSpectrumMap.clear();
+        loadedPrecursorsMap.clear();
+        loadedSpectra.clear();
+        loadedPrecursors.clear();
+    }
 
     /**
      * Sets the spectrum cache size.

@@ -98,6 +98,16 @@ public class SequenceFactory {
         loadedProteins.clear();
         molecularWeights.clear();
     }
+    
+    /**
+     * Empties the cache of the factory
+     */
+    public void emptyCache() {
+        currentHeaderMap.clear();
+        currentProteinMap.clear();
+        loadedProteins.clear();
+        molecularWeights.clear();
+    }
 
     /**
      * Returns the desired protein.

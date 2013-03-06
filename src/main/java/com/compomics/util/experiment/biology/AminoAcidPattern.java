@@ -43,6 +43,22 @@ public class AminoAcidPattern implements Serializable {
         aaTargeted.put(0, new ArrayList<AminoAcid>());
         aaExcluded.put(0, new ArrayList<AminoAcid>());
     }
+    
+    /**
+     * Constructor taking a sequence of targeted amino acids as input
+     * @param sequence a sequence of targeted amino acids
+     */
+    public AminoAcidPattern(String sequence) {
+        target = 0;
+        aaExcluded.put(0, new ArrayList<AminoAcid>());
+        for (int i = 0 ; i < sequence.length() ; i++) {
+            char letter = sequence.charAt(i);
+            AminoAcid aa = AminoAcid.getAminoAcid(letter);
+            ArrayList<AminoAcid> list = new ArrayList<AminoAcid>();
+            list.add(aa);
+            aaTargeted.put(i, list);
+        }
+    }
 
     /**
      * Creates a pattern from another pattern.

@@ -8,7 +8,7 @@ package com.compomics.util.gui.ptm;
 public interface PtmDialogParent {
 
     /**
-     * Update the ptm inforamtion in the parent.
+     * Update the PTM information in the parent.
      */
     public void updateModifications();
 }

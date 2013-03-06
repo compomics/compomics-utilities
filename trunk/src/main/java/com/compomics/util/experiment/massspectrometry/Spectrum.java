@@ -263,7 +263,7 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the m/z and intensity values as an array in acending order sorted
+     * Returns the m/z and intensity values as an array in increasing order sorted
      * on m/z value.
      *
      * @return the m/z and intensity values as an array

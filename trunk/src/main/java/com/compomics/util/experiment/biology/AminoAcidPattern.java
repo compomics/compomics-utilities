@@ -43,15 +43,16 @@ public class AminoAcidPattern implements Serializable {
         aaTargeted.put(0, new ArrayList<AminoAcid>());
         aaExcluded.put(0, new ArrayList<AminoAcid>());
     }
-    
+
     /**
-     * Constructor taking a sequence of targeted amino acids as input
+     * Constructor taking a sequence of targeted amino acids as input.
+     *
      * @param sequence a sequence of targeted amino acids
      */
     public AminoAcidPattern(String sequence) {
         target = 0;
         aaExcluded.put(0, new ArrayList<AminoAcid>());
-        for (int i = 0 ; i < sequence.length() ; i++) {
+        for (int i = 0; i < sequence.length(); i++) {
             char letter = sequence.charAt(i);
             AminoAcid aa = AminoAcid.getAminoAcid(letter);
             ArrayList<AminoAcid> list = new ArrayList<AminoAcid>();
@@ -95,32 +96,32 @@ public class AminoAcidPattern implements Serializable {
         }
         aaTargeted.put(0, aminoAcids);
     }
-    
+
     /**
      * Swap two rows in the pattern.
-     * 
+     *
      * @param fromRow
      * @param toRow
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException
      */
-    public void swapRows (int fromRow, int toRow) throws IllegalArgumentException { 
-        
+    public void swapRows(int fromRow, int toRow) throws IllegalArgumentException {
+
         if (aaTargeted.size() < fromRow || aaExcluded.size() < fromRow || fromRow < 0 || toRow < 0) {
             throw new IllegalArgumentException("Illegal row index: " + fromRow);
         }
         if (aaTargeted.size() < toRow || aaExcluded.size() < fromRow || toRow < 0 || fromRow < 0) {
             throw new IllegalArgumentException("Illegal row index: " + toRow);
         }
-        
+
         ArrayList<AminoAcid> toRowDataTarget = aaTargeted.get(toRow);
         ArrayList<AminoAcid> toRowDataExcluded = aaExcluded.get(toRow);
-        
+
         aaTargeted.put(toRow, aaTargeted.get(fromRow));
         aaExcluded.put(toRow, aaExcluded.get(fromRow));
-        
+
         aaTargeted.put(fromRow, toRowDataTarget);
         aaExcluded.put(fromRow, toRowDataExcluded);
-        
+
         if (target == fromRow) {
             target = toRow;
         } else if (target == toRow) {
@@ -358,8 +359,8 @@ public class AminoAcidPattern implements Serializable {
     }
 
     /**
-     * Computes a pattern which can be searched by standard search engines, i.e.,
-     * a pattern targeting a single amino-acid and not a complex pattern.
+     * Computes a pattern which can be searched by standard search engines,
+     * i.e., a pattern targeting a single amino-acid and not a complex pattern.
      *
      * @return a pattern which can be searched by standard search engines
      */

@@ -16,32 +16,26 @@ public class Enzyme extends ExperimentObject {
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = -1852087173903613377L;
-
     /*
      * The enzyme id.
      */
     private int id;
-
     /*
      * The enzyme name.
      */
     private String name;
-
     /*
      * The amino-acids before cleavage.
      */
     private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>();
-
     /*
      * The amino-acids after cleavage.
      */
     private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>();
-
     /*
      * The restriction amino-acids before cleavage.
      */
     private ArrayList<Character> restrictionBefore = new ArrayList<Character>();
-
     /*
      * The restriction amino-acids after cleavage.
      */
@@ -236,7 +230,7 @@ public class Enzyme extends ExperimentObject {
      * Digests a protein sequence in a list of expected peptide sequences.
      *
      * @param sequence the protein sequence
-     * @param nMissedCleavages the allowed maximal number of missed cleavages
+     * @param nMissedCleavages the maximum number of missed cleavages
      * @param nMin the minimal size for a peptide
      * @param nMax the maximal size for a peptide
      * @return a list of expected peptide sequences

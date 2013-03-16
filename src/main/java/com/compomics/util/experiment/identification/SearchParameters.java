@@ -134,20 +134,20 @@ public class SearchParameters implements Serializable {
      */
     private Boolean estimateCharge = true;
     /**
-     * Indicates whether the precursor mass shall be corrected (TagDB setting).
+     * Indicates whether the precursor mass shall be corrected (DeNovoGUI setting).
      */
     private Boolean correctPrecursorMass = true;
     /**
-     * Indicates whether the low quality spectra shall be discarded (TagDB
+     * Indicates whether the low quality spectra shall be discarded (DeNovoGUI
      * setting).
      */
     private Boolean discardLowQualitySpectra = true;
     /**
-     * Tag-db fragmentation model.
+     * DeNovoGUI fragmentation model.
      */
-    private String fragmentationModel;
+    private String fragmentationModel = "CID_IT_TRYP";
     /**
-     * Indicates whether a blast query shall be generated (TagDB setting).
+     * Indicates whether a blast query shall be generated (DeNovoGUI setting).
      */
     private Boolean generateQuery = false;
 
@@ -675,6 +675,10 @@ public class SearchParameters implements Serializable {
      */
     public boolean equals(SearchParameters otherSearchParameters) {
 
+        
+        // @TODO: extend with the de novo parameters!!!
+        
+        
         if (otherSearchParameters == null) {
             return false;
         }

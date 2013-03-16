@@ -499,7 +499,7 @@ public class ObjectsCache {
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
 
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size() + 1);
+            waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size() + 1); // @TODO: something wrong with the counter here? saving seems to be stuck at 100% for quite a while 
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
         }

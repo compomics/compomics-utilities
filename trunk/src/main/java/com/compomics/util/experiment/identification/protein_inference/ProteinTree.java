@@ -31,7 +31,7 @@ public class ProteinTree {
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
-     * the tree containing the accessions indexed by sequence tags.
+     * The tree containing the accessions indexed by sequence tags.
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
 
@@ -74,12 +74,16 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException {
+
         this.initialTagSize = initialTagSize;
         this.maxNodeSize = maxNodeSize;
         tree.clear();
+
         for (String accession : sequenceFactory.getAccessions()) {
+
             String sequence = sequenceFactory.getProtein(accession).getSequence();
             HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(sequence.length());
+
             for (int i = 0; i < sequence.length() - initialTagSize; i++) {
                 if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1) + "", sequence.charAt(i) + "")) {
                     char[] tagValue = new char[initialTagSize];
@@ -99,6 +103,7 @@ public class ProteinTree {
                     indexes.add(i);
                 }
             }
+
             for (String tag : tagToIndexesMap.keySet()) {
                 Node node = tree.get(tag);
                 if (node == null) {
@@ -108,6 +113,7 @@ public class ProteinTree {
                 node.addAccession(accession, tagToIndexesMap.get(tag));
             }
         }
+
         for (Node node : tree.values()) {
             node.splitNode();
         }
@@ -124,11 +130,14 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException {
+
         if (peptideSequence.length() < initialTagSize) {
             throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
         }
+
         String tag = peptideSequence.substring(0, initialTagSize);
         Node node = tree.get(tag);
+
         if (node != null) {
             return node.getProteinMapping(peptideSequence);
         } else {
@@ -148,8 +157,10 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset) throws IOException, IllegalArgumentException, InterruptedException {
+
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
         HashMap<Character, ArrayList<Integer>> result = new HashMap<Character, ArrayList<Integer>>();
+
         for (int startIndex : seeds) {
             int index = startIndex + offset;
             if (index < proteinSequence.length()) {
@@ -162,13 +173,13 @@ public class ProteinTree {
                 indexes.add(startIndex);
             }
         }
+
         return result;
     }
 
     /**
      * Matches an amino-acid in a protein sequence based on a seedlist. Example:
      * sequence TESTEIST seeds: 0, 3, 7 offset: 2 expectedChar: I result: 3
-     *
      *
      * @param accession the accession of the protein
      * @param seeds the indexes where to start looking for
@@ -181,17 +192,19 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, int offset, char expectedChar) throws IOException, IllegalArgumentException, InterruptedException {
+
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
         ArrayList<Integer> results = new ArrayList<Integer>();
-        int index;
+
         for (int startIndex : seeds) {
-            index = startIndex + offset;
+            int index = startIndex + offset;
             if (index < proteinSequence.length()) {
                 if (proteinSequence.charAt(index) == expectedChar) {
                     results.add(startIndex);
                 }
             }
         }
+
         return results;
     }
 
@@ -209,9 +222,11 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence) throws IOException, IllegalArgumentException, InterruptedException {
+
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
         ArrayList<Integer> results = new ArrayList<Integer>();
         int peptideLength = peptideSequence.length();
+
         for (int startIndex : seeds) {
             int endIndex = startIndex + peptideLength;
             if (endIndex < proteinSequence.length()) {
@@ -221,6 +236,7 @@ public class ProteinTree {
                 }
             }
         }
+
         return results;
     }
 

@@ -30,7 +30,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Constructor without GUI
+     * Constructor without GUI.
      */
     public ExceptionHandler() {
     }
@@ -47,13 +47,13 @@ public class ExceptionHandler {
             if (parent != null) {
                 if (getExceptionType(e).equals("Protein not found")) {
                     JOptionPane.showMessageDialog(parent,
-                            e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
-                            + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
+                            e.getLocalizedMessage() + "\nPlease see the Database help page: "
+                            + "http://code.google.com/p/searchgui/wiki/DatabaseHelp.\nThis message will appear only once.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else if (getExceptionType(e).equals("Serialization")) {
                     JOptionPane.showMessageDialog(parent,
-                            e.getLocalizedMessage() + "\nPlease refer to the troubleshooting section "
+                            e.getLocalizedMessage() + "\nPlease see the troubleshooting section "
                             + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
@@ -80,7 +80,7 @@ public class ExceptionHandler {
      * @param e the exception to get the type fro
      * @return the exception type as a string
      */
-    private String getExceptionType(Exception e) {
+    public static String getExceptionType(Exception e) {
         if (e.getLocalizedMessage() == null) {
             return "null pointer";
         } else if (e.getLocalizedMessage().startsWith("Protein not found")) {

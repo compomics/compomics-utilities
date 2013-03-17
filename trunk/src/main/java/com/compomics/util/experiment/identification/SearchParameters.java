@@ -675,10 +675,6 @@ public class SearchParameters implements Serializable {
      */
     public boolean equals(SearchParameters otherSearchParameters) {
 
-        
-        // @TODO: extend with the de novo parameters!!!
-        
-        
         if (otherSearchParameters == null) {
             return false;
         }
@@ -772,6 +768,17 @@ public class SearchParameters implements Serializable {
                 || (this.getFractionMolecularWeightRanges() == null && otherSearchParameters.getFractionMolecularWeightRanges() != null)) {
             return false;
         }
+        
+        // de novo sequencing parameters
+        if (!this.getFragmentationModel().equalsIgnoreCase(otherSearchParameters.getFragmentationModel())) {
+            return false;
+        }
+        if (!this.isCorrectPrecursorMass().booleanValue() != otherSearchParameters.isCorrectPrecursorMass()) {
+            return false;
+        }
+        if (!this.getDiscardLowQualitySpectra().booleanValue() != otherSearchParameters.getDiscardLowQualitySpectra()) {
+            return false;
+        }
 
         return true;
     }
@@ -784,7 +791,11 @@ public class SearchParameters implements Serializable {
      * corrected (TagDB setting)
      */
     public Boolean isCorrectPrecursorMass() {
-        return correctPrecursorMass;
+        if (correctPrecursorMass != null) {
+            return correctPrecursorMass;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -805,7 +816,11 @@ public class SearchParameters implements Serializable {
      * discarded
      */
     public Boolean getDiscardLowQualitySpectra() {
-        return discardLowQualitySpectra;
+        if (discardLowQualitySpectra != null) {
+            return discardLowQualitySpectra;
+        } else {
+            return true;
+        }
     }
 
     /**

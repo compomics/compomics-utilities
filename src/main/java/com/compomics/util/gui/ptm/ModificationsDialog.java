@@ -946,7 +946,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         new HelpDialog(this, getClass().getResource("/helpFiles/ModificationEditor.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Help - Modifications");
+                "Help - Modifications", 500, 10);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_modificationsHelpJButtonActionPerformed
 

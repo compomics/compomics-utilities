@@ -37,7 +37,11 @@ public class SequenceFactory {
     /**
      * Random access file of the current FASTA file.
      */
-    private BufferedRandomAccessFile currentFastaFile = null;
+    private BufferedRandomAccessFile currentRandomAccessFile = null;
+    /**
+     * The fasta file currently loaded
+     */
+    private File currentFastaFile = null;
     /**
      * Number of proteins to keep in cache, 1 by default.
      */
@@ -90,10 +94,12 @@ public class SequenceFactory {
     /**
      * Clears the factory getInstance() needs to be called afterwards.
      */
-    public void clearFactory() {
+    public void clearFactory() throws IOException {
+        closeFile();
         currentHeaderMap.clear();
         currentProteinMap.clear();
         fastaIndex = null;
+        currentRandomAccessFile = null;
         currentFastaFile = null;
         loadedProteins.clear();
         molecularWeights.clear();
@@ -110,7 +116,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the desired protein.
+     * Returns the desired protein. If the protein is not found, the database
+     * will be reindexed.
      *
      * @param accession accession of the desired protein
      * @return the desired protein
@@ -120,7 +127,25 @@ public class SequenceFactory {
      * while reading the FASTA file
      * @throws InterruptedException
      */
-    public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException {
+    public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+        return getProtein(accession, true);
+    }
+
+    /**
+     * Returns the desired protein. Eventually reindexes the database if the
+     * protein is not found.
+     *
+     * @param accession accession of the desired protein
+     * @param reindex a boolean indicating whether the database should be
+     * reindexed in case the protein is not found.
+     * @return the desired protein
+     * @throws IOException thrown whenever an error is encountered while reading
+     * the FASTA file
+     * @throws IllegalArgumentException thrown whenever an error is encountered
+     * while reading the FASTA file
+     * @throws InterruptedException
+     */
+    private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         Protein currentProtein = currentProteinMap.get(accession);
 
@@ -129,6 +154,10 @@ public class SequenceFactory {
             Long index = fastaIndex.getIndex(accession);
 
             if (index == null) {
+                if (reindex) {
+                    fastaIndex = getFastaIndex(true, null);
+                    return getProtein(accession, false);
+                }
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
 
@@ -161,11 +190,11 @@ public class SequenceFactory {
     private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException {
 
         try {
-            currentFastaFile.seek(index);
+            currentRandomAccessFile.seek(index);
             String line, sequence = "";
             Header currentHeader = currentHeaderMap.get(accession);
 
-            while ((line = currentFastaFile.readLine()) != null) {
+            while ((line = currentRandomAccessFile.readLine()) != null) {
                 line = line.trim();
 
                 if (line.startsWith(">")) {
@@ -204,7 +233,22 @@ public class SequenceFactory {
      * not found
      * @throws InterruptedException
      */
-    public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException {
+    public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+        return getHeader(accession, true);
+    }
+
+    /**
+     * Returns the desired header for the protein in the FASTA file.
+     *
+     * @param accession accession of the desired protein
+     * @return the corresponding header
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the FASTA file
+     * @throws IllegalArgumentException exception thrown whenever a protein is
+     * not found
+     * @throws InterruptedException
+     */
+    private Header getHeader(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         Header result = currentHeaderMap.get(accession);
 
@@ -213,6 +257,10 @@ public class SequenceFactory {
             Long index = fastaIndex.getIndex(accession);
 
             if (index == null) {
+                if (reindex) {
+                    fastaIndex = getFastaIndex(true, null);
+                    return getHeader(accession, false);
+                }
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
             return getHeader(index, 0);
@@ -233,8 +281,8 @@ public class SequenceFactory {
     private synchronized Header getHeader(long index, int nTries) throws InterruptedException, IOException {
 
         try {
-            currentFastaFile.seek(index);
-            return Header.parseFromFASTA(currentFastaFile.readLine());
+            currentRandomAccessFile.seek(index);
+            return Header.parseFromFASTA(currentRandomAccessFile.readLine());
         } catch (IOException e) {
             if (nTries <= 100) {
                 wait(10);
@@ -255,10 +303,13 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing of the protein headers
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
      */
-    public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
-        fastaIndex = getFastaIndex(fastaFile);
+    public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
+        loadFastaFile(fastaFile, null);
     }
 
     /**
@@ -278,8 +329,9 @@ public class SequenceFactory {
      * found
      */
     public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
-        currentFastaFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
-        fastaIndex = getFastaIndex(fastaFile, waitingHandler);
+        currentFastaFile = fastaFile;
+        currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
+        fastaIndex = getFastaIndex(false, waitingHandler);
     }
 
     /**
@@ -295,14 +347,18 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private FastaIndex getFastaIndex(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException, IllegalArgumentException {
-        return getFastaIndex(fastaFile, null);
+    private FastaIndex getFastaIndex() throws FileNotFoundException, IOException, ClassNotFoundException, IllegalArgumentException {
+        return getFastaIndex(false, null);
     }
 
     /**
-     * Returns the file index of a FASTA file.
+     * Returns the file index of the FASTA file loaded in the factory (see currentFastaFile attribute). If a deserialization problem
+     * occurs the file will be automatically overwritten and the stacktrace
+     * printed.
      *
      * @param fastaFile the FASTA file
+     * @param overwrite boolean indicating whether the index .cui file shall be
+     * overwritten if present.
      * @param waitingHandler a waitingHandler showing the progress
      * @return the index of the FASTA file
      * @throws FileNotFoundException exception thrown if the file was not found
@@ -315,22 +371,25 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private FastaIndex getFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
-        File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
+    private FastaIndex getFastaIndex(boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+
         FastaIndex tempFastaIndex;
-        if (indexFile.exists()) {
-            try {
-                tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
-                return tempFastaIndex;
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (!overwrite) {
+            File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
+            if (indexFile.exists()) {
+                try {
+                    tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
+                    return tempFastaIndex;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
-        tempFastaIndex = createFastaIndex(fastaFile, waitingHandler);
+        tempFastaIndex = createFastaIndex(currentFastaFile, waitingHandler);
 
         if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
             try {
-                writeIndex(tempFastaIndex, fastaFile.getParentFile());
+                writeIndex(tempFastaIndex, currentFastaFile.getParentFile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -359,8 +418,8 @@ public class SequenceFactory {
      * closing the file
      */
     public void closeFile() throws IOException {
-        if (currentFastaFile != null) {
-            currentFastaFile.close();
+        if (currentRandomAccessFile != null) {
+            currentRandomAccessFile.close();
         }
     }
 
@@ -577,7 +636,7 @@ public class SequenceFactory {
             destinationFile.delete();
         } else {
             // now (re-)index the new target-decoy file
-            loadFastaFile(destinationFile);
+            loadFastaFile(destinationFile, null);
         }
     }
 
@@ -628,7 +687,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException {
+    public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         HashMap<String, Integer> aaMap = new HashMap<String, Integer>();
         ArrayList<String> accessions = getAccessions();
@@ -672,7 +731,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException {
+    public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         // see if we've already calculated the weight of this protein
         if (molecularWeights.containsKey(accession)) {

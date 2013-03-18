@@ -815,7 +815,7 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
-            double modificationMass, double massTolerance) throws IOException, IllegalArgumentException, InterruptedException {
+            double modificationMass, double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
@@ -852,7 +852,7 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      * @return the possible expected modification names. Empty if not found.
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName) throws IOException, IllegalArgumentException, InterruptedException {
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
@@ -887,7 +887,7 @@ public class PTMFactory implements Serializable {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException {
+    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             if (!modMatch.isVariable()) {

@@ -8,6 +8,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -368,7 +369,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      */
-    public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException {
+    public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         switch (ptm.getType()) {
             case PTM.MODAA:
                 AminoAcidPattern pattern = ptm.getPattern();
@@ -474,7 +475,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
@@ -1066,7 +1067,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading the protein sequence
      */
-    public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException {
+    public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
         for (String accession : parentProteins) {
@@ -1092,7 +1093,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      */
-    public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException {
+    public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
         for (String accession : parentProteins) {

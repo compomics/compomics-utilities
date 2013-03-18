@@ -54,7 +54,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException {
+    public void initiateTree(int initialTagSize, int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
         initiateTree(initialTagSize, maxNodeSize, null);
     }
 
@@ -73,7 +73,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException {
+    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         this.initialTagSize = initialTagSize;
         this.maxNodeSize = maxNodeSize;
@@ -129,7 +129,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws InterruptedException
      */
-    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException {
+    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
 
         if (peptideSequence.length() < initialTagSize) {
             throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
@@ -156,7 +156,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset) throws IOException, IllegalArgumentException, InterruptedException {
+    HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
         HashMap<Character, ArrayList<Integer>> result = new HashMap<Character, ArrayList<Integer>>();
@@ -191,7 +191,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, int offset, char expectedChar) throws IOException, IllegalArgumentException, InterruptedException {
+    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, int offset, char expectedChar) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
         ArrayList<Integer> results = new ArrayList<Integer>();
@@ -221,7 +221,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence) throws IOException, IllegalArgumentException, InterruptedException {
+    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
         ArrayList<Integer> results = new ArrayList<Integer>();
@@ -276,7 +276,7 @@ public class ProteinTree {
          * @throws IOException
          * @throws InterruptedException
          */
-        public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException {
+        public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
             if (index == peptideSequence.length()) {
                 return getAllMappings();
             } else if (accessions != null) {
@@ -307,7 +307,7 @@ public class ProteinTree {
          * @throws IllegalArgumentException
          * @throws InterruptedException
          */
-        public void splitNode() throws IOException, IllegalArgumentException, InterruptedException {
+        public void splitNode() throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
             if (accessions.size() > maxNodeSize) {
                 subtree = new HashMap<Character, Node>();
                 for (String accession : accessions.keySet()) {

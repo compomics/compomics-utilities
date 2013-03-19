@@ -144,7 +144,6 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     @Override
     public void setWaitingText(String text) {
         displayMessage("Waiting Message:", text, 1);
-
     }
 
     @Override

@@ -56,6 +56,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
+     * @throws ClassNotFoundException  
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
         initiateTree(initialTagSize, maxNodeSize, null, waitingHandler);
@@ -77,6 +78,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
+     * @throws ClassNotFoundException
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
@@ -174,6 +176,7 @@ public class ProteinTree {
      * where the peptide can be found on the sequence
      * @throws IOException
      * @throws InterruptedException
+     * @throws ClassNotFoundException  
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
 

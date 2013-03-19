@@ -253,7 +253,7 @@ public class CompomicsWrapper {
                 line = br.readLine();
                 error = true;
             }
-            
+
             br.close();
             isr.close();
             stderr.close();
@@ -436,7 +436,7 @@ public class CompomicsWrapper {
 
     /**
      * Check if a newer version of the tool is available on GoogleCode, and
-     * closes the tool if the user decided to upgrade. No zip file tag used (see 
+     * closes the tool if the user decided to upgrade. No zip file tag used (see
      * the other checkForNewVersion method).
      *
      * @param currentVersion the version number of the tool currently running
@@ -669,6 +669,11 @@ public class CompomicsWrapper {
                 BufferedReader b = new BufferedReader(f);
 
                 String tempLocation = b.readLine();
+
+                // add an ending slash if not there
+                if (!tempLocation.endsWith(File.separator)) {
+                    tempLocation += File.separator;
+                }
 
                 if (new File(tempLocation).exists()
                         && (new File(tempLocation, "java.exe").exists() || new File(tempLocation, "java").exists())) {

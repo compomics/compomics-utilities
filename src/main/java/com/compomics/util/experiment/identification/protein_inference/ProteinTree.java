@@ -2,6 +2,8 @@ package com.compomics.util.experiment.identification.protein_inference;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.TagFactory;
+import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,18 +46,19 @@ public class ProteinTree {
     /**
      * Initiates the tree.
      *
-     * @TODO: add progress bar?
      * @param initialTagSize the initial size of peptide tag. Large initial size
      * are slow to query, low initial size are slow to initiate. I typically use
      * 3.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 5000.
+     * @param waitingHandler the waiting handler used to display progress to the
+     * user. Can be null but strongly recommended :)
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
-        initiateTree(initialTagSize, maxNodeSize, null);
+    public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+        initiateTree(initialTagSize, maxNodeSize, null, waitingHandler);
     }
 
     /**
@@ -69,15 +72,32 @@ public class ProteinTree {
      * to initiate but slow to query. I typically use 5000.
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed (takes more memory)
+     * @param waitingHandler the waiting handler used to display progress to the
+     * user. Can be null but strongly recommended :)
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         this.initialTagSize = initialTagSize;
         this.maxNodeSize = maxNodeSize;
         tree.clear();
+
+        HashMap<String, Boolean> splittingProgress = new HashMap<String, Boolean>();
+        int progressTagSize = Math.min(2, initialTagSize);
+
+        if (waitingHandler != null) {
+            // For the progress of the splitting we create a list of tags and show when they are encountered
+            for (String tag : TagFactory.getAminoAcidCombinations(progressTagSize)) {
+                splittingProgress.put(tag, Boolean.FALSE);
+            }
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            int totalProgress = sequenceFactory.getAccessions().size() + splittingProgress.size();
+            waitingHandler.setMaxSecondaryProgressValue(totalProgress);
+            waitingHandler.setSecondaryProgressValue(0);
+        }
+
 
         for (String accession : sequenceFactory.getAccessions()) {
 
@@ -112,10 +132,36 @@ public class ProteinTree {
                 }
                 node.addAccession(accession, tagToIndexesMap.get(tag));
             }
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
+            }
         }
 
-        for (Node node : tree.values()) {
+        for (String tag : tree.keySet()) {
+            Node node = tree.get(tag);
             node.splitNode();
+            if (waitingHandler != null) {
+                String subTag;
+                if (initialTagSize > progressTagSize) {
+                    subTag = tag.substring(0, progressTagSize);
+                } else {
+                    subTag = tag;
+                }
+                Boolean newTag = splittingProgress.get(subTag);
+                if (newTag == null) {
+                    throw new IllegalArgumentException("Unexpected amino acid sequence: " + subTag + " when indexing the database.");
+                }
+                if (!newTag) {
+                    waitingHandler.increaseSecondaryProgressValue();
+                    splittingProgress.put(subTag, true);
+                    if (waitingHandler.isRunCanceled()) {
+                        return;
+                    }
+                }
+            }
         }
     }
 

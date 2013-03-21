@@ -16,7 +16,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Serial version UID for post-serialization compatibility.
      */
-    static final long serialVersionUID = -4343570286224891504L; // @TODO: does this have to be updated to keep the Relims links? 
+    static final long serialVersionUID = -4343570286224891504L;
     /**
      * Location of the user preferences file.
      */

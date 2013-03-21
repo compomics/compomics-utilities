@@ -31,12 +31,12 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
     /**
      * Creates a new ReporterSetupDialog.
-     * 
+     *
      * @param parent
      * @param modal
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public ReporterSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
@@ -44,7 +44,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
         initComponents();
 
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        
+
         // display the current reporter path
         if (utilitiesUserPreferences != null) {
             reporterInstallationJTextField.setText(utilitiesUserPreferences.getReporterPath());
@@ -296,6 +296,15 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+
+        // reload the user preferences as these may have been changed by other tools
+        try {
+            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "An error occured when reading the user preferences.", "File Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+
         utilitiesUserPreferences.setReporterPath(reporterInstallationJTextField.getText());
         try {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
@@ -363,13 +372,12 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
 
     /**
      * Close the dialog without saving.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cancelButtonActionPerformed(null);
     }//GEN-LAST:event_formWindowClosing
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseButton;
@@ -393,10 +401,10 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
         BareBonesBrowserLaunch.openURL("http://reporter.googlecode.com");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
-    
+
     /**
      * Returns true of the dialog was canceled by the user.
-     * 
+     *
      * @return the dialogCanceled
      */
     public boolean isDialogCanceled() {

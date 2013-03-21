@@ -813,6 +813,8 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
             double modificationMass, double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException {
@@ -850,6 +852,8 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      * @return the possible expected modification names. Empty if not found.
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
@@ -875,8 +879,8 @@ public class PTMFactory implements Serializable {
 
     /**
      * Removes the fixed modifications of the peptide and remaps the one
-     * searched for according to the ModificationProfile.
-     * Note: for protein terminal modification the protein must be loaded in the sequence factory
+     * searched for according to the ModificationProfile. Note: for protein
+     * terminal modification the protein must be loaded in the sequence factory
      *
      * @param modificationProfile
      * @param peptide
@@ -886,6 +890,8 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
@@ -901,14 +907,14 @@ public class PTMFactory implements Serializable {
         for (String fixedModification : modificationProfile.getFixedModifications()) {
             PTM ptm = getPTM(fixedModification);
             if (ptm.getType() == PTM.MODAA) {
-            for (int pos : peptide.getPotentialModificationSites(ptm)) {
-                if (!taken.containsKey(pos)) {
-                    taken.put(pos, ptm.getMass());
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
-                } else if (taken.get(pos) != ptm.getMass()) {
-                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
+                for (int pos : peptide.getPotentialModificationSites(ptm)) {
+                    if (!taken.containsKey(pos)) {
+                        taken.put(pos, ptm.getMass());
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
+                    } else if (taken.get(pos) != ptm.getMass()) {
+                        throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
+                    }
                 }
-            }
             } else if (ptm.getType() == PTM.MODC) {
                 if (!peptide.isCterm().isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
@@ -927,9 +933,9 @@ public class PTMFactory implements Serializable {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             } else if (ptm.getType() == PTM.MODCP) {
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
+                peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
             } else if (ptm.getType() == PTM.MODNP) {
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
             } else if (ptm.getType() == PTM.MODCPAA) {
                 String sequence = peptide.getSequence();
                 if (peptide.getPotentialModificationSites(ptm).contains(sequence.length())) {
@@ -940,7 +946,7 @@ public class PTMFactory implements Serializable {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             }
-                
+
         }
     }
 

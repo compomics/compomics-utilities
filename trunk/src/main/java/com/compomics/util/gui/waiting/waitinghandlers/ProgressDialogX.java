@@ -256,7 +256,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
         progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Please Wait");
+        setTitle("Please Wait...");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {

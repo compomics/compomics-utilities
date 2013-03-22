@@ -180,7 +180,7 @@ public class SpectrumFactory {
 
         String fileName = spectrumFile.getName();
 
-        if (fileName.endsWith(".mgf")) {
+        if (fileName.toLowerCase().endsWith(".mgf")) {
 
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
             MgfIndex mgfIndex;
@@ -209,7 +209,7 @@ public class SpectrumFactory {
             mgfFilesMap.put(fileName, new BufferedRandomAccessFile(spectrumFile, "r", 1024 * 100));
             mgfIndexesMap.put(fileName, mgfIndex);
 
-        } else if (fileName.endsWith(".mzml")) {
+        } else if (fileName.toLowerCase().endsWith(".mzml")) {
             MzMLUnmarshaller mzMLUnmarshaller = new MzMLUnmarshaller(spectrumFile);
             mzMLUnmarshallers.put(fileName, mzMLUnmarshaller);
         } else {
@@ -496,7 +496,7 @@ public class SpectrumFactory {
         String name = fileName;
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
 
-        if (name.endsWith(".mgf")) {
+        if (name.toLowerCase().endsWith(".mgf")) {
 
             // a special fix for mgf files with strange titles...
             spectrumTitle = fixMgfTitle(spectrumTitle, name);
@@ -521,7 +521,7 @@ public class SpectrumFactory {
                     throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumKey);
                 }
             }
-        } else if (name.endsWith(".mzml")) {
+        } else if (name.toLowerCase().endsWith(".mzml")) {
             uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
             int level = 2;
             double mzPrec = 0.0;
@@ -631,7 +631,7 @@ public class SpectrumFactory {
         String name = fileName;
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
 
-        if (name.endsWith(".mgf")) {
+        if (name.toLowerCase().endsWith(".mgf")) {
 
             // a special fix for mgf files with strange titles...
             spectrumTitle = fixMgfTitle(spectrumTitle, name);
@@ -656,7 +656,7 @@ public class SpectrumFactory {
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumKey);
                 }
             }
-        } else if (name.endsWith(".mzml")) {
+        } else if (name.toLowerCase().endsWith(".mzml")) {
 
             if (mzMLUnmarshallers.get(name) == null) {
                 throw new IOException("mzML file not found: \'" + name + "\'!");

@@ -5,14 +5,11 @@ import javax.swing.filechooser.*;
 
 /**
  * File filter for *.mzML files.
- * 
- * Created March 2008
- * 
- * @author  Harald Barsnes
+ *
+ * @author Harald Barsnes
  */
-
 public class MzMlFileFilter extends FileFilter {
-    
+
     /**
      * Accept all directories, and *.mzML files.
      *
@@ -23,22 +20,21 @@ public class MzMlFileFilter extends FileFilter {
         if (f.isDirectory()) {
             return true;
         }
-        
+
         String extension = FileFilterUtils.getExtension(f);
         if (extension != null) {
-            
+
             if (extension.equals(FileFilterUtils.mzML)
                     || extension.equals(FileFilterUtils.MZML)
-                    || extension.equals(FileFilterUtils.mzml)){
+                    || extension.equals(FileFilterUtils.mzml)) {
                 return true;
-            } 
-            else {
+            } else {
                 return false;
             }
-        }        
+        }
         return false;
     }
-    
+
     /**
      * The description of this filter
      *

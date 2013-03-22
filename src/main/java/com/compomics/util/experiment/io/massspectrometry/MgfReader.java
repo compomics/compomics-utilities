@@ -311,7 +311,7 @@ public class MgfReader {
 
         String fileName = mgfFile.getName();
 
-        if (fileName.endsWith(".mgf")) {
+        if (fileName.toLowerCase().endsWith(".mgf")) {
 
             ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
             ArrayList<String> spectrumTitles = new ArrayList<String>();

@@ -5,14 +5,11 @@ import javax.swing.filechooser.*;
 
 /**
  * File filter for *.mgf files.
- * 
- * Created March 2008
- * 
- * @author  Harald Barsnes
+ *
+ * @author Harald Barsnes
  */
-
 public class MgfFileFilter extends FileFilter {
-    
+
     /**
      * Accept all directories, *.mgf files.
      *
@@ -23,20 +20,19 @@ public class MgfFileFilter extends FileFilter {
         if (f.isDirectory()) {
             return true;
         }
-        
+
         String extension = FileFilterUtils.getExtension(f);
         if (extension != null) {
             if (extension.equals(FileFilterUtils.mgf)
-                    || extension.equals(FileFilterUtils.MGF)){
+                    || extension.equals(FileFilterUtils.MGF)) {
                 return true;
-            } 
-            else {
+            } else {
                 return false;
             }
-        }        
+        }
         return false;
     }
-    
+
     /**
      * The description of this filter
      *

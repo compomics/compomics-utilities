@@ -77,7 +77,8 @@ public abstract class Identification extends ExperimentObject {
      * Map of long keys (>100 characters) which will be referenced by their
      * index for file creation/database storage.
      *
-     * @deprecated use the database instead @TODO implement this for db keys
+     * @deprecated use the database instead
+     * @TODO implement this for db keys
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
@@ -310,7 +311,7 @@ public abstract class Identification extends ExperimentObject {
     public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadProteinMatchParameters(urParameter, waitingHandler);
     }
-    
+
     /**
      * Loads the desired protein match parameters of the given type in the cache
      * of the database.
@@ -343,7 +344,7 @@ public abstract class Identification extends ExperimentObject {
     public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
         identificationDB.loadProteinMatches(waitingHandler);
     }
-    
+
     /**
      * Loads the desired protein matches of the given type in the cache of the
      * database.
@@ -1107,8 +1108,12 @@ public abstract class Identification extends ExperimentObject {
         } else {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
             if (!proteinMatch.getKey().equals(proteinKey)) {
+
+                // @TODO: if one is a subset of the other, is it possible to simply use the biggest set for both??
+                // @TODO: or would using peptide to protein remapping for all search engines solve the problem?? use ProteinTree?
+
                 throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
-                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with " 
+                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
                         + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
             }
             proteinIdentification.add(proteinKey);

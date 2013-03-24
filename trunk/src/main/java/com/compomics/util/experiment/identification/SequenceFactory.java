@@ -39,7 +39,7 @@ public class SequenceFactory {
      */
     private BufferedRandomAccessFile currentRandomAccessFile = null;
     /**
-     * The fasta file currently loaded
+     * The FASTA file currently loaded
      */
     private File currentFastaFile = null;
     /**
@@ -58,6 +58,10 @@ public class SequenceFactory {
      * HashMap of the currently calculated protein molecular weights.
      */
     private HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
+    /**
+     * The tag added after adding decoy sequences to a FASTA file.
+     */
+    private static String targetDecoyFileNameTag = "_concatenated_target_decoy.fasta";
 
     /**
      * Constructor.
@@ -93,6 +97,8 @@ public class SequenceFactory {
 
     /**
      * Clears the factory getInstance() needs to be called afterwards.
+     *
+     * @throws IOException
      */
     public void clearFactory() throws IOException {
         closeFile();
@@ -117,7 +123,7 @@ public class SequenceFactory {
 
     /**
      * Returns the desired protein. If the protein is not found, the database
-     * will be reindexed.
+     * will be re-indexed.
      *
      * @param accession accession of the desired protein
      * @return the desired protein
@@ -126,18 +132,20 @@ public class SequenceFactory {
      * @throws IllegalArgumentException thrown whenever an error is encountered
      * while reading the FASTA file
      * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         return getProtein(accession, true);
     }
 
     /**
-     * Returns the desired protein. Eventually reindexes the database if the
+     * Returns the desired protein. Eventually re-indexes the database if the
      * protein is not found.
      *
      * @param accession accession of the desired protein
      * @param reindex a boolean indicating whether the database should be
-     * reindexed in case the protein is not found.
+     * re-indexed in case the protein is not found.
      * @return the desired protein
      * @throws IOException thrown whenever an error is encountered while reading
      * the FASTA file
@@ -232,6 +240,8 @@ public class SequenceFactory {
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
      * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         return getHeader(accession, true);
@@ -352,9 +362,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the file index of the FASTA file loaded in the factory (see currentFastaFile attribute). If a deserialization problem
-     * occurs the file will be automatically overwritten and the stacktrace
-     * printed.
+     * Returns the file index of the FASTA file loaded in the factory (see
+     * currentFastaFile attribute). If a deserialization problem occurs the file
+     * will be automatically overwritten and the stacktrace printed.
      *
      * @param fastaFile the FASTA file
      * @param overwrite boolean indicating whether the index .cui file shall be
@@ -686,6 +696,8 @@ public class SequenceFactory {
      * reading the database
      * @throws IllegalArgumentException
      * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -730,6 +742,8 @@ public class SequenceFactory {
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -743,5 +757,23 @@ public class SequenceFactory {
         double weight = protein.computeMolecularWeight() / 1000;
         molecularWeights.put(accession, weight);
         return weight;
+    }
+
+    /**
+     * Returns the target-decoy file name tag.
+     *
+     * @return the targetDecoyFileNameTag
+     */
+    public static String getTargetDecoyFileNameTag() {
+        return targetDecoyFileNameTag;
+    }
+
+    /**
+     * Set the target-decoy file name tag.
+     *
+     * @param targetDecoyFileNameTag the targetDecoyFileNameTag to set
+     */
+    public static void setTargetDecoyFileNameTag(String targetDecoyFileNameTag) {
+        SequenceFactory.targetDecoyFileNameTag = targetDecoyFileNameTag;
     }
 }

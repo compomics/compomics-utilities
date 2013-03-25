@@ -1,6 +1,7 @@
 package com.compomics.software.dialogs;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -251,6 +252,13 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
 
                 if (outcome == JOptionPane.OK_OPTION) {
                     javaOptionsDialogParent.getUtilitiesUserPreferences().setMemoryPreference(newValue);
+
+                    try {
+                        UtilitiesUserPreferences.saveUserPreferences(javaOptionsDialogParent.getUtilitiesUserPreferences());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     if (welcomeDialog != null) {
                         welcomeDialog.setVisible(false);
                     }

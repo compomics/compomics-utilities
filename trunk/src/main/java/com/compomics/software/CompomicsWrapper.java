@@ -97,8 +97,10 @@ public class CompomicsWrapper {
                 bw = new BufferedWriter(new FileWriter(debugOutput));
                 bw.write("Memory settings read from the user preferences: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
                 String arguments = "args: ";
-                for (String arg : args) {
-                    arguments += arg + " ";
+                if (args != null) {
+                    for (String arg : args) {
+                        arguments += arg + " ";
+                    }
                 }
                 bw.write(arguments);
                 bw.newLine();

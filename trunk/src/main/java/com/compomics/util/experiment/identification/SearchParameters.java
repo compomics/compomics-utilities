@@ -6,6 +6,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import no.uib.jsparklines.data.XYDataPoint;
 
@@ -665,6 +666,189 @@ public class SearchParameters implements Serializable {
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SerializationUtils.writeObject(identificationParameters, file);
+    }
+    
+    /**
+     * Saves the identification parameters as a human readable text file.
+     *
+     * @param file the file
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public void saveIdentificationParametersAsTextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileWriter fw = new FileWriter(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(toString());
+        bw.close();
+        fw.close();
+    }
+    
+    public String toString() {
+        
+        StringBuilder output = new StringBuilder();
+
+        // Write the file header.
+        output.append("# ------------------------------------------------------------------");
+        output.append(System.getProperty("line.separator"));
+        output.append("# Search Parameters");
+        output.append(System.getProperty("line.separator"));
+        output.append("# ------------------------------------------------------------------");
+        output.append(System.getProperty("line.separator"));
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("DATABASE_FILE=");
+        if (fastaFile != null) {
+            output.append(fastaFile.getAbsolutePath());
+        }
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("ENZYME=");
+        if (enzyme != null) {
+            output.append(enzyme.getName());
+        }
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("FIXED_MODIFICATIONS=");
+        if (utilitiesModificationProfile != null) {
+            ArrayList<String> fixedPtms = utilitiesModificationProfile.getFixedModifications();
+            boolean first = true;
+            for (String ptm : fixedPtms) {
+                if (first) {
+                    output.append(ptm);
+                    first = false;
+                } else {
+                    output.append("//" + ptm);
+                } 
+            }
+        }
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("VARIABLE_MODIFICATIONS=");
+        if (utilitiesModificationProfile != null) {
+            ArrayList<String> fixedPtms = utilitiesModificationProfile.getVariableModifications();
+            boolean first = true;
+            for (String ptm : fixedPtms) {
+                if (first) {
+                    output.append(ptm);
+                    first = false;
+                } else {
+                    output.append("//" + ptm);
+                } 
+            }
+        }
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("MAX_MISSED_CLEAVAGES=");
+        output.append(nMissedCleavages);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("PRECURSOR_MASS_TOLERANCE=");
+        output.append(precursorTolerance);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("PRECURSOR_MASS_TOLERANCE_UNIT=");
+        if (currentPrecursorAccuracyType == currentPrecursorAccuracyType.PPM) {
+            output.append("ppm");
+        } else {
+            output.append("Da");
+        }
+        output.append(System.getProperty("line.separator"));
+
+        output.append("FRAGMENT_MASS_TOLERANCE=");
+        output.append(fragmentIonMZTolerance);
+        output.append(System.getProperty("line.separator"));
+
+        output.append("FRAGMENT_ION_TYPE_1=");
+        if (forwardIon == PeptideFragmentIon.A_ION) {
+            output.append("a");
+        } else if (forwardIon == PeptideFragmentIon.B_ION) {
+            output.append("b");
+        } else if (forwardIon == PeptideFragmentIon.C_ION) {
+            output.append("c");
+        } else if (forwardIon == PeptideFragmentIon.X_ION) {
+            output.append("x");
+        } else if (forwardIon == PeptideFragmentIon.Y_ION) {
+            output.append("y");
+        } else if (forwardIon == PeptideFragmentIon.Z_ION) {
+            output.append("z");
+        }
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("FRAGMENT_ION_TYPE_2=");
+        if (rewindIon == PeptideFragmentIon.A_ION) {
+            output.append("a");
+        } else if (rewindIon == PeptideFragmentIon.B_ION) {
+            output.append("b");
+        } else if (rewindIon == PeptideFragmentIon.C_ION) {
+            output.append("c");
+        } else if (rewindIon == PeptideFragmentIon.X_ION) {
+            output.append("x");
+        } else if (rewindIon == PeptideFragmentIon.Y_ION) {
+            output.append("y");
+        } else if (rewindIon == PeptideFragmentIon.Z_ION) {
+            output.append("z");
+        }
+        output.append(System.getProperty("line.separator"));
+
+        output.append("PRECURSOR_CHARGE_LOWER_BOUND=");
+        output.append(minChargeSearched);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("PRECURSOR_CHARGE_UPPER_BOUND=");
+        output.append(maxChargeSearched);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("EVALUE_CUTOFF=");
+        output.append(maxEValue);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("MAXIMUM_HITLIST_LENGTH=");
+        output.append(hitListLength);
+        output.append(System.getProperty("line.separator"));
+
+        output.append("OMSSA_PRECURSOR_ELIMINATION=");
+        output.append(removePrecursor);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("OMSSA_PRECURSOR_SCALING=");
+        output.append(scalePrecursor);
+        output.append(System.getProperty("line.separator"));
+
+        output.append("OMSSA_MINIMAL_PEPTIDE_SIZE=");
+        output.append(minPeptideLength);
+        output.append(System.getProperty("line.separator"));
+        
+        output.append("OMSSA_MAXIMAL_PEPTIDE_SIZE=");
+        output.append(maxPeptideLength);
+        output.append(System.getProperty("line.separator"));
+
+        output.append("OMSSA_PRECURSOR_CHARGE_TO_CONSIDER_MULTIPLY_CHARGED_FRAGMENTS=");
+        output.append(minimalChargeForMultipleChargedFragments);
+        output.append(System.getProperty("line.separator"));
+
+        output.append("OMSSA_CHARGE_ESTIMATION=");
+        output.append(estimateCharge);
+        output.append(System.getProperty("line.separator"));
+
+        // de novo options
+        output.append(System.getProperty("line.separator"));
+        output.append("DeNovo Options:");
+        output.append(System.getProperty("line.separator"));
+        output.append("CORRECT_PRECURSOR_MASS=");
+        output.append(correctPrecursorMass);
+        output.append(System.getProperty("line.separator"));
+        output.append("DISCARD_LOW_QUALITY_SPECTRA=");
+        output.append(discardLowQualitySpectra);
+        output.append(System.getProperty("line.separator"));
+        output.append("FRAGMENTATION_MODEL=");
+        output.append(fragmentationModel);
+        output.append(System.getProperty("line.separator"));
+        output.append("GENERATE_QUERY=");
+        output.append(generateQuery);
+        output.append(System.getProperty("line.separator"));
+
+        return output.toString();
     }
 
     /**

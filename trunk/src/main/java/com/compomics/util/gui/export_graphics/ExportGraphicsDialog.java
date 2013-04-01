@@ -4,7 +4,6 @@ import com.compomics.util.Export;
 import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Component;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JDialog;
@@ -348,8 +347,8 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
             final ExportGraphicsDialog tempRef = this;
 
             progressDialog = new ProgressDialogX(frame,
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                    exportGraphicsDialogParent.getNormalIcon(),
+                    exportGraphicsDialogParent.getWaitingIcon(),
                     true);
             progressDialog.setIndeterminate(true);
             progressDialog.setTitle("Saving Figure. Please Wait...");
@@ -413,7 +412,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
     /**
      * Set the correct file filter based on the format selected.
      *
-     * @param chooser the fiel chooser to set the filter for
+     * @param chooser the file chooser to set the filter for
      */
     private void addFileFilter(JFileChooser chooser) {
 

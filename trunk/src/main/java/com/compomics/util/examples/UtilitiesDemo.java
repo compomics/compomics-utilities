@@ -2883,7 +2883,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * Export the spectra to a PDF file. To export to a different format see the
      * hints in the code. Supported formats are found in the ImageType enum. To
-     * export other compoents change the input to the exportComponent method.
+     * export other components change the input to the exportComponent method.
      *
      * @param evt
      */

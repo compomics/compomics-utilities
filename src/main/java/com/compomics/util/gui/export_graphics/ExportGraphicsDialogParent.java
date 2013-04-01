@@ -1,6 +1,8 @@
 
 package com.compomics.util.gui.export_graphics;
 
+import java.awt.Image;
+
 /**
  * A simple interface that classes wanting to use the ExportGraphicsDialog have 
  * to implement. Basically to make it possible to send the path to the selected 
@@ -24,4 +26,18 @@ public interface ExportGraphicsDialogParent {
      * @return the default folder used for the export
      */
     public String getDefaultExportFolder();
+    
+    /**
+     * Returns the normal icon.
+     * 
+     * @return the normal icon
+     */
+    public Image getNormalIcon();
+    
+    /**
+     * Returns the waiting icon.
+     * 
+     * @return the waiting icon
+     */
+    public Image getWaitingIcon();
 }

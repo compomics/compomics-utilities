@@ -2350,6 +2350,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         return allTableColumns;
     }
 
+    public Image getNormalIcon() {
+        return normalIcon;
+    }
+
+    public Image getWaitingIcon() {
+        return waitingIcon;
+    }
+
     /**
      * A filter that filters the table based on if the data point is selected in
      * the plot or not.

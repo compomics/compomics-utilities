@@ -994,13 +994,13 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
         XYPlot plot = chart.getXYPlot();
 
         if (currentVennDiagramType == VennDiagramType.ONE_WAY) {
-            plot.getRangeAxis().setRange(0.85, 1.25);
+            plot.getRangeAxis().setRange(0.86, 1.24);
             plot.getDomainAxis().setRange(0.85, 1.25);
         } else if (currentVennDiagramType == VennDiagramType.TWO_WAY) {
-            plot.getRangeAxis().setRange(0.85, 1.25);
+            plot.getRangeAxis().setRange(0.86, 1.24);
             plot.getDomainAxis().setRange(0.85, 1.25);
         } else if (currentVennDiagramType == VennDiagramType.THREE_WAY) {
-            plot.getRangeAxis().setRange(0.85, 1.25);
+            plot.getRangeAxis().setRange(0.86, 1.24);
             plot.getDomainAxis().setRange(0.85, 1.25);
         } else {
             plot.getRangeAxis().setRange(-0.04, 0.6);

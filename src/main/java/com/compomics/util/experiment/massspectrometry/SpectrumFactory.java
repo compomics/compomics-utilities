@@ -505,7 +505,7 @@ public class SpectrumFactory {
                 throw new IOException("Mgf file not found: \'" + name + "\'.");
             }
             if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
-                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found.");
+               throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found.");
             }
             try {
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);

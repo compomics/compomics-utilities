@@ -295,7 +295,7 @@ public class HelpDialog extends javax.swing.JDialog {
         textJEditorPane = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("PeptideShaker - Help");
+        setTitle("Help");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -307,7 +307,7 @@ public class HelpDialog extends javax.swing.JDialog {
         });
 
         textJEditorPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        textJEditorPane.setContentType("text/html");
+        textJEditorPane.setContentType("text/html"); // NOI18N
         textJEditorPane.setEditable(false);
         textJEditorPane.setMinimumSize(new java.awt.Dimension(10, 10));
         textJEditorPane.setPreferredSize(new java.awt.Dimension(10, 10));

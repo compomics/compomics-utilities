@@ -107,14 +107,12 @@ public class ProteinTree {
             HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(sequence.length());
 
             for (int i = 0; i < sequence.length() - initialTagSize; i++) {
+                
                 if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1) + "", sequence.charAt(i) + "")) {
                     char[] tagValue = new char[initialTagSize];
                     for (int j = 0; j < initialTagSize; j++) {
                         char aa = sequence.charAt(i + j);
                         tagValue[j] = aa;
-                    }
-                    for (int j = 0; j < initialTagSize - 1; j++) {
-                        tagValue[j] = sequence.charAt(i + j);
                     }
                     String tag = new String(tagValue);
                     ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
@@ -278,7 +276,7 @@ public class ProteinTree {
 
         for (int startIndex : seeds) {
             int endIndex = startIndex + peptideLength;
-            if (endIndex < proteinSequence.length()) {
+            if (endIndex <= proteinSequence.length()) {
                 String subSequence = proteinSequence.substring(startIndex, endIndex);
                 if (subSequence.equals(peptideSequence)) {
                     results.add(startIndex);
@@ -357,6 +355,7 @@ public class ProteinTree {
          * @throws InterruptedException
          */
         public void splitNode() throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+                
             if (accessions.size() > maxNodeSize) {
                 subtree = new HashMap<Character, Node>();
                 for (String accession : accessions.keySet()) {

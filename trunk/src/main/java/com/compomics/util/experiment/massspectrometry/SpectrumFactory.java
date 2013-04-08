@@ -183,27 +183,37 @@ public class SpectrumFactory {
         if (fileName.toLowerCase().endsWith(".mgf")) {
 
             File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
-            MgfIndex mgfIndex;
+            MgfIndex mgfIndex = null;
 
-            if (!indexFile.exists()) {
+            if (indexFile.exists()) {
+                try {
+                    MgfIndex tempIndex = getIndex(indexFile);
+                    Long indexLastModified = tempIndex.getLastModified();
+
+                    if (indexLastModified != null) {
+                        long fileLastModified = spectrumFile.lastModified();
+
+                        if (indexLastModified == fileLastModified) {
+                            mgfIndex = tempIndex;
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (mgfIndex == null) {
                 mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
                 try {
                     writeIndex(mgfIndex, spectrumFile.getParentFile());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else {
-                try {
-                    mgfIndex = getIndex(indexFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
-                    try {
-                        writeIndex(mgfIndex, spectrumFile.getParentFile());
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
+            }
+
+            if (mgfIndex == null) {
+                throw new IllegalArgumentException("An error occurred while indexing " + spectrumFile.getAbsolutePath());
             }
 
             mgfFilesMap.put(fileName, new BufferedRandomAccessFile(spectrumFile, "r", 1024 * 100));
@@ -505,7 +515,7 @@ public class SpectrumFactory {
                 throw new IOException("Mgf file not found: \'" + name + "\'.");
             }
             if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
-               throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found.");
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found.");
             }
             try {
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);

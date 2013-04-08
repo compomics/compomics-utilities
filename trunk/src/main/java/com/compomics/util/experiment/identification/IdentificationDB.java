@@ -317,6 +317,7 @@ public class IdentificationDB implements Serializable {
     /**
      * Returns the desired spectrum match.
      *
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @param key the psm key
      * @return the spectrum match
      * @throws SQLException exception thrown whenever an error occurred while
@@ -326,9 +327,9 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public SpectrumMatch getSpectrumMatch(String key) throws SQLException, IOException, ClassNotFoundException {
+    public SpectrumMatch getSpectrumMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getSpectrumMatchTable(key);
-        return (SpectrumMatch) objectsDB.retrieveObject(tableName, key);
+        return (SpectrumMatch) objectsDB.retrieveObject(tableName, key, useDB);
     }
 
     /**
@@ -354,6 +355,7 @@ public class IdentificationDB implements Serializable {
      * Returns the desired peptide match.
      *
      * @param key the peptide key
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the peptide match
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -362,8 +364,8 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public PeptideMatch getPeptideMatch(String key) throws SQLException, IOException, ClassNotFoundException {
-        return (PeptideMatch) objectsDB.retrieveObject(peptideTableName, key);
+    public PeptideMatch getPeptideMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+        return (PeptideMatch) objectsDB.retrieveObject(peptideTableName, key, useDB);
     }
 
     /**
@@ -383,6 +385,7 @@ public class IdentificationDB implements Serializable {
      * Returns the desired protein match.
      *
      * @param key the protein key
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the protein match
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -391,8 +394,8 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public ProteinMatch getProteinMatch(String key) throws SQLException, IOException, ClassNotFoundException {
-        return (ProteinMatch) objectsDB.retrieveObject(proteinTableName, key);
+    public ProteinMatch getProteinMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+        return (ProteinMatch) objectsDB.retrieveObject(proteinTableName, key, useDB);
     }
 
     /**
@@ -708,6 +711,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param key the psm key
      * @param urParameter the match parameter
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the spectrum match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -716,9 +720,9 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getSpectrumParameterTable(key, urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
 
     /**
@@ -745,6 +749,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the peptide match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -753,9 +758,9 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getPeptideParameterTable(urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
 
     /**
@@ -782,6 +787,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param key the protein key
      * @param urParameter the match parameter
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the protein match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -790,9 +796,9 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getProteinParameterTable(urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
 
     /**
@@ -818,6 +824,7 @@ public class IdentificationDB implements Serializable {
      * Returns the desired match parameter.
      *
      * @param key the match key
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @param urParameter the match parameter
      * @return the match match
      * @deprecated use match specific mapping instead
@@ -828,9 +835,9 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getMatchPArameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getMatchPArameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getParameterTable(urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
 
     /**

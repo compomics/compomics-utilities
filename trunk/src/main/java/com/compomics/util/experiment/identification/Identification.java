@@ -203,7 +203,7 @@ public abstract class Identification extends ExperimentObject {
         if (!isDB) {
             return urParameters.get(matchKey).get(ExperimentObject.getParameterKey(urParameter));
         } else {
-            return identificationDB.getMatchPArameter(matchKey, urParameter);
+            return identificationDB.getMatchPArameter(matchKey, urParameter, true);
         }
     }
 
@@ -423,8 +423,26 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+        return getSpectrumMatchParameter(key, urParameter, true);
+    }
+
+    /**
+     * Returns the desired spectrum match parameter.
+     *
+     * @param key the psm key
+     * @param urParameter the match parameter
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @return the spectrum match parameter
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     */
+    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getSpectrumMatchParameter(key, urParameter);
+            return identificationDB.getSpectrumMatchParameter(key, urParameter, useDB);
         } else {
             return getMatchParameter(key, urParameter);
         }
@@ -462,8 +480,26 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+        return getPeptideMatchParameter(key, urParameter, true);
+    }
+
+    /**
+     * Returns the desired peptide match parameter.
+     *
+     * @param key the peptide key
+     * @param urParameter the match parameter
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @return the peptide match parameter
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     */
+    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getPeptideMatchParameter(key, urParameter);
+            return identificationDB.getPeptideMatchParameter(key, urParameter, useDB);
         } else {
             return getMatchParameter(key, urParameter);
         }
@@ -501,8 +537,26 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+        return getProteinMatchParameter(key, urParameter, true);
+    }
+
+    /**
+     * Returns the desired protein match parameter.
+     *
+     * @param key the protein key
+     * @param urParameter the match parameter
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @return the protein match parameter
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     */
+    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getProteinMatchParameter(key, urParameter);
+            return identificationDB.getProteinMatchParameter(key, urParameter, useDB);
         } else {
             return getMatchParameter(key, urParameter);
         }
@@ -849,8 +903,27 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+        return getSpectrumMatch(spectrumKey, true);
+    }
+
+    /**
+     * Returns a spectrum match.
+     *
+     * @param spectrumKey the key of the match
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     */
+    public SpectrumMatch getSpectrumMatch(String spectrumKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getSpectrumMatch(spectrumKey);
+            return identificationDB.getSpectrumMatch(spectrumKey, useDB);
         } else {
             return (SpectrumMatch) getMatch(spectrumKey);
         }
@@ -871,8 +944,27 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+        return getPeptideMatch(peptideKey, true);
+    }
+
+    /**
+     * Returns a peptide match.
+     *
+     * @param peptideKey the key of the match
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     */
+    public PeptideMatch getPeptideMatch(String peptideKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getPeptideMatch(peptideKey);
+            return identificationDB.getPeptideMatch(peptideKey, useDB);
         } else {
             return (PeptideMatch) getMatch(peptideKey);
         }
@@ -893,8 +985,27 @@ public abstract class Identification extends ExperimentObject {
      * occurred while casting the database input in the desired match class
      */
     public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+        return getProteinMatch(proteinKey, true);
+    }
+
+    /**
+     * Returns a protein match.
+     *
+     * @param proteinKey the key of the match
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @return the desired match
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while retrieving the match
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     */
+    public ProteinMatch getProteinMatch(String proteinKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         if (isDB) {
-            return identificationDB.getProteinMatch(proteinKey);
+            return identificationDB.getProteinMatch(proteinKey, useDB);
         } else {
             return (ProteinMatch) getMatch(proteinKey);
         }
@@ -974,7 +1085,7 @@ public abstract class Identification extends ExperimentObject {
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
         if (spectrumIdentificationMap.containsKey(spectrumFile) && spectrumIdentificationMap.get(spectrumFile).contains(spectrumKey)) {
-            SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey);
+            SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey, true);
             if (oldMatch == null) {
                 throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
             }
@@ -1045,7 +1156,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
 
-        SpectrumMatch othermatch, spectrumMatch = getSpectrumMatch(spectrumMatchKey); // @TODO: batch selection??
+        SpectrumMatch othermatch, spectrumMatch = getSpectrumMatch(spectrumMatchKey);
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
@@ -1054,7 +1165,7 @@ public abstract class Identification extends ExperimentObject {
         PeptideMatch peptideMatch;
 
         if (peptideIdentification.contains(peptideKey)) {
-            peptideMatch = getPeptideMatch(peptideKey); // @TODO: batch selection??
+            peptideMatch = getPeptideMatch(peptideKey);
             if (peptideMatch == null) {
                 throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
             }
@@ -1062,7 +1173,7 @@ public abstract class Identification extends ExperimentObject {
             loadSpectrumMatches(peptideMatch.getSpectrumMatches(), null);
 
             for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
-                othermatch = identificationDB.getSpectrumMatch(otherMatchKey);
+                othermatch = getSpectrumMatch(otherMatchKey); 
                 if (othermatch == null) {
                     throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
                 }

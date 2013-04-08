@@ -302,7 +302,7 @@ public class QuantificationDB implements Serializable {
      */
     public PsmQuantification getSpectrumMatch(String key) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getSpectrumMatchTable(key);
-        return (PsmQuantification) objectsDB.retrieveObject(tableName, key);
+        return (PsmQuantification) objectsDB.retrieveObject(tableName, key, true);
     }
 
     /**
@@ -341,7 +341,7 @@ public class QuantificationDB implements Serializable {
      * occurred while casting the database input in the desired match class
      */
     public PeptideQuantification getPeptideMatch(String key) throws SQLException, IOException, ClassNotFoundException {
-        return (PeptideQuantification) objectsDB.retrieveObject(peptideTableName, key);
+        return (PeptideQuantification) objectsDB.retrieveObject(peptideTableName, key, true);
     }
 
     /**
@@ -374,7 +374,7 @@ public class QuantificationDB implements Serializable {
      * occurred while casting the database input in the desired match class
      */
     public ProteinQuantification getProteinMatch(String key) throws SQLException, IOException, ClassNotFoundException {
-        return (ProteinQuantification) objectsDB.retrieveObject(proteinTableName, key);
+        return (ProteinQuantification) objectsDB.retrieveObject(proteinTableName, key, true);
     }
 
     /**
@@ -409,7 +409,7 @@ public class QuantificationDB implements Serializable {
      */
     public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getSpectrumParameterTable(key, urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, true);
     }
 
     /**
@@ -446,7 +446,7 @@ public class QuantificationDB implements Serializable {
      */
     public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getPeptideParameterTable(urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, true);
     }
 
     /**
@@ -483,7 +483,7 @@ public class QuantificationDB implements Serializable {
      */
     public UrParameter getProteinMatchPArameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
         String tableName = getProteinParameterTable(urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key);
+        return (UrParameter) objectsDB.retrieveObject(tableName, key, true);
     }
 
     /**

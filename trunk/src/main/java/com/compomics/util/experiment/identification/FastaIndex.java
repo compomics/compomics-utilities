@@ -19,6 +19,10 @@ public class FastaIndex extends ExperimentObject {
      */
     private String fileName;
     /**
+     * The last time the indexed file was modified
+     */
+    private Long lastModified;
+    /**
      * Boolean indicating whether the database contains decoy sequences.
      */
     private boolean isDecoy;
@@ -34,12 +38,14 @@ public class FastaIndex extends ExperimentObject {
      * @param fileName  The FASTA file name
      * @param isDecoy   If the FASTA file contains decoys or nor
      * @param nTarget   Number of target sequences found in the database
+     * @param lastModified a long indicating the last time the indexed file was modified
      */
-    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean isDecoy, int nTarget) {
+    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean isDecoy, int nTarget, long lastModified) {
         this.indexes = indexes;
         this.fileName = fileName;
         this.isDecoy = isDecoy;
         this.nTarget = nTarget;
+        this.lastModified = lastModified;
     }
 
     /**
@@ -86,5 +92,13 @@ public class FastaIndex extends ExperimentObject {
      */
     public int getNTarget() {
         return nTarget;
+    }
+    
+    /**
+     * Returns when the file was last modified. Null if not set or for utilities versions older than 3.11.30.
+     * @return a long indicating when the file was last modified
+     */
+    public Long getLastModified() {
+        return lastModified;
     }
 }

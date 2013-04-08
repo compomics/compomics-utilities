@@ -53,7 +53,7 @@ public class IdentificationDBTest {
             ProteinMatch testProteinMatch = new ProteinMatch(proteinKey);
             idDB.addProteinMatch(testProteinMatch);
 
-            testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey);
+            testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
             Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
             ArrayList<String> proteins = new ArrayList<String>();
@@ -61,19 +61,19 @@ public class IdentificationDBTest {
             testSpectrumMatch.getFirstHit(Advocate.PEPTIDE_SHAKER).getPeptide().setParentProteins(proteins);
             idDB.updateMatch(testSpectrumMatch);
 
-            testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey);
+            testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
             Assert.assertTrue(testSpectrumMatch.getFirstHit(Advocate.PEPTIDE_SHAKER).getPeptide().getParentProteins().get(0).equals(proteinKey));
 
-            testPeptideMatch = idDB.getPeptideMatch(peptideKey);
+            testPeptideMatch = idDB.getPeptideMatch(peptideKey, true);
             Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));
 
-            testProteinMatch = idDB.getProteinMatch(proteinKey);
+            testProteinMatch = idDB.getProteinMatch(proteinKey, true);
             Assert.assertTrue(testProteinMatch.getKey().equals(proteinKey));
 
             double testScore = 12.3;
             MascotScore testParameter = new MascotScore(testScore);
             idDB.addSpectrumMatchParameter(spectrumKey, testParameter);
-            testParameter = (MascotScore) idDB.getSpectrumMatchParameter(spectrumKey, testParameter);
+            testParameter = (MascotScore) idDB.getSpectrumMatchParameter(spectrumKey, testParameter, true);
             Assert.assertTrue(testParameter.getScore() == testScore);
 
             idDB.close();

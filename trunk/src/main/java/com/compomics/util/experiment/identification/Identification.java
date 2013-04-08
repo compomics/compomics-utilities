@@ -1010,6 +1010,53 @@ public abstract class Identification extends ExperimentObject {
             return (ProteinMatch) getMatch(proteinKey);
         }
     }
+    
+    /**
+     * Indicates whether the protein, peptide and spectrum matches corresponding to a protein match key are loaded in the cache
+     * Note, only one peptide and one spectrum matches are tested
+     * 
+     * @param proteinKey the key of the protein match
+     * @return true if everything is loaded in memory
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
+    public boolean proteinDetailsInCache(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+        ProteinMatch proteinMatch = getProteinMatch(proteinKey, false);
+        if (proteinMatch != null) {
+            PeptideMatch peptideMatch = getPeptideMatch(proteinMatch.getPeptideMatches().get(0), false);
+            if (peptideMatch != null) {
+                SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
+                if (spectrumMatch != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Indicates whether the peptide and spectrum matches corresponding to a peptide match key are loaded in the cache
+     * Note, only one one spectrum match is tested
+     * 
+     * @param peptideKey the peptide key
+     * @return true if everything is loaded in the cache
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
+    public boolean peptideDetailsInCache(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+            PeptideMatch peptideMatch = getPeptideMatch(peptideKey, false);
+            if (peptideMatch != null) {
+                SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
+                if (spectrumMatch != null) {
+                    return true;
+                }
+            }
+        return false;
+    }
 
     /**
      * Returns a list of the keys of all encountered proteins.

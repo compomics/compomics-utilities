@@ -14,9 +14,9 @@ import java.util.HashMap;
 public class Node {
 
     /**
-     * The index, ie depth in the tree, of the node.
+     * The depth of the node in the tree.
      */
-    private int index;
+    private int depth;
     /**
      * List of accessions contained in this node.
      */
@@ -26,6 +26,10 @@ public class Node {
      */
     private HashMap<Character, Node> subtree = null;
     /**
+     * In case of an indexed tree, the index of the sub nodes
+     */
+    private HashMap<Character, Long> subNodesIndexes = null;
+    /**
      * Instance of the sequence factory.
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -33,10 +37,31 @@ public class Node {
     /**
      * Constructor.
      *
-     * @param index the depth of the node
+     * @param depth the depth of the node
      */
-    public Node(int index) {
-        this.index = index;
+    public Node(int depth) {
+        this.depth = depth;
+    }
+    
+    /**
+     * Constructor
+     * 
+     * @param depth the depth of the node
+     * @param subNodesIndexes map of the subnode indexes
+     */
+    public Node(HashMap<Character, Long> subNodesIndexes, int depth) {
+        this.depth = depth;
+        this.subNodesIndexes = subNodesIndexes;
+    }
+    
+    /**
+     * Constructor
+     * @param depth the depth of the node
+     * @param accessions the accessions of the node
+     */
+    public Node(int depth, HashMap<String, ArrayList<Integer>> accessions) {
+        this.depth = depth;
+        this.accessions = accessions;
     }
 
     /**
@@ -47,10 +72,9 @@ public class Node {
      * @return the protein mapping for the given peptide sequence
      * @throws IOException
      * @throws InterruptedException
-     * @throws ClassNotFoundException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
-        if (index == peptideSequence.length()) {
+        if (depth == peptideSequence.length()) {
             return getAllMappings();
         } else if (accessions != null) {
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>(accessions.size());
@@ -62,7 +86,7 @@ public class Node {
             }
             return result;
         } else {
-            char aa = peptideSequence.charAt(index);
+            char aa = peptideSequence.charAt(depth);
             Node node = subtree.get(aa);
             if (node != null) {
                 return node.getProteinMapping(peptideSequence);
@@ -80,17 +104,16 @@ public class Node {
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
-     * @throws ClassNotFoundException  
      */
     public void splitNode(int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         if (accessions.size() > maxNodeSize) {
             subtree = new HashMap<Character, Node>();
             for (String accession : accessions.keySet()) {
-                HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), index);
+                HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
                 for (char aa : indexes.keySet()) {
                     if (!subtree.containsKey(aa)) {
-                        subtree.put(aa, new Node(index + 1));
+                        subtree.put(aa, new Node(depth + 1));
                     }
                     Node node = subtree.get(aa);
                     node.addAccession(accession, indexes.get(aa));
@@ -112,6 +135,27 @@ public class Node {
      */
     public void addAccession(String accession, ArrayList<Integer> indexes) {
         accessions.put(accession, indexes);
+    }
+    
+    /**
+     * Returns the subNodesIndexes attribute
+     * @return 
+     */
+    public HashMap<Character, Long> getSubNodesIndexes() {
+        return subNodesIndexes;
+    }
+
+    /**
+     * Returns the accessions attribute
+     *
+     * @return
+     */
+    public HashMap<String, ArrayList<Integer>> getAccessions() {
+        return accessions;
+    }
+    
+    public int getDepth() {
+        return depth;
     }
 
     /**

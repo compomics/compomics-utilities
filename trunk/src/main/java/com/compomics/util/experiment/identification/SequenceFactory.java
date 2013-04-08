@@ -394,10 +394,12 @@ public class SequenceFactory {
                         long fileLastModified = currentFastaFile.lastModified();
                         if (indexLastModified == fileLastModified) {
                             return tempFastaIndex;
+                        } else {
+                            System.err.println("Reindexing " + currentFastaFile.getName() + "(changes in the file detected)");
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.err.println("Reindexing " + currentFastaFile.getName() + "(" + e.getLocalizedMessage() + ")");
                 }
             }
         }
@@ -512,9 +514,9 @@ public class SequenceFactory {
         }
 
         bufferedRandomAccessFile.close();
-        
+
         long lastModified = fastaFile.lastModified();
-        
+
         return new FastaIndex(indexes, fastaFile.getName(), decoy, nTarget, lastModified);
     }
 
@@ -783,5 +785,14 @@ public class SequenceFactory {
      */
     public static void setTargetDecoyFileNameTag(String targetDecoyFileNameTag) {
         SequenceFactory.targetDecoyFileNameTag = targetDecoyFileNameTag;
+    }
+
+    /**
+     * Returns the name of the loaded fasta file
+     *
+     * @return
+     */
+    public String getFileName() {
+        return fastaIndex.getFileName();
     }
 }

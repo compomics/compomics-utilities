@@ -395,7 +395,7 @@ public class ObjectsDB implements Serializable {
      * object is not found when deserializing it.
      */
     public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
-
+        
         Object object = null; 
 
         if (objectsCache != null) {

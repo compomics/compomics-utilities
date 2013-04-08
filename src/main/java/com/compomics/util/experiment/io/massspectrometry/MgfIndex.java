@@ -26,6 +26,10 @@ public class MgfIndex extends ExperimentObject {
      */
     private String fileName;
     /**
+     * The last time the indexed file was modified
+     */
+    private Long lastModified;
+    /**
      * The maximum RT found in the spectra.
      */
     private Double maxRT;
@@ -52,8 +56,9 @@ public class MgfIndex extends ExperimentObject {
      * @param minRT the minimum retention tome
      * @param maxMz the maximum m/z value
      * @param maxIntensity the maximum precursor intensity
+     * @param lastModified a long indicating the last time the indexed file was modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.indexMap = indexMap;
         this.fileName = fileName;
@@ -61,6 +66,7 @@ public class MgfIndex extends ExperimentObject {
         this.minRT = minRT;
         this.maxMz = maxMz;
         this.maxIntensity = maxIntensity;
+        this.lastModified = lastModified;
     }
 
     /**
@@ -182,5 +188,12 @@ public class MgfIndex extends ExperimentObject {
      */
     public int getNSpectra() {
         return indexMap.size();
+    }
+    /**
+     * Returns when the file was last modified. Null if not set or for utilities versions older than 3.11.30.
+     * @return a long indicating when the file was last modified
+     */
+    public Long getLastModified() {
+        return lastModified;
     }
 }

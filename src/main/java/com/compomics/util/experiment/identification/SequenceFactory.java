@@ -389,7 +389,13 @@ public class SequenceFactory {
             if (indexFile.exists()) {
                 try {
                     tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
-                    return tempFastaIndex;
+                    Long indexLastModified = tempFastaIndex.getLastModified();
+                    if (indexLastModified != null) {
+                        long fileLastModified = currentFastaFile.lastModified();
+                        if (indexLastModified == fileLastModified) {
+                            return tempFastaIndex;
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -506,8 +512,10 @@ public class SequenceFactory {
         }
 
         bufferedRandomAccessFile.close();
-
-        return new FastaIndex(indexes, fastaFile.getName(), decoy, nTarget);
+        
+        long lastModified = fastaFile.lastModified();
+        
+        return new FastaIndex(indexes, fastaFile.getName(), decoy, nTarget, lastModified);
     }
 
     /**
@@ -697,7 +705,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 

@@ -288,7 +288,9 @@ public class MgfReader {
             minRT = 0;
         }
 
-        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity);
+        long lastModified = mgfFile.lastModified();
+
+        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, lastModified);
     }
 
     /**
@@ -359,7 +361,10 @@ public class MgfReader {
                         if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
 
                             writeBufferedRandomAccessFile.close();
-                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity));
+
+                            long lastModified = testFile.lastModified();
+
+                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, lastModified));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -445,17 +450,21 @@ public class MgfReader {
                         spectrumTitles.add(title);
                     }
                 }
-                writeBufferedRandomAccessFile.writeBytes(line + "\n");
+                writeBufferedRandomAccessFile.writeBytes(line + System.getProperty("line.separator"));
             }
 
-            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity));
+            writeBufferedRandomAccessFile.close();
+
+            long lastModified = testFile.lastModified();
+
+            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, lastModified));
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressDialogIndeterminate(true);
             }
 
             readBufferedRandomAccessFile.close();
-            writeBufferedRandomAccessFile.close();
+
             return mgfIndexes;
 
         } else {
@@ -620,7 +629,8 @@ public class MgfReader {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the mgf file (@TODO get this from the random     access file?)
+     * @param fileName The name of the mgf file (
+     * @TODO get this from the random access file?)
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -684,9 +694,9 @@ public class MgfReader {
                     // ignore exception, RT will not be parsed
                 }
             } else if (line.equals("END IONS")) {
-                
+
                 // @TODO: would perhaps be faster to return as soon as a peak is read?
-                
+
                 if (rt1 != -1 && rt2 != -1) {
                     return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                 }

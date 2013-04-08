@@ -385,6 +385,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the name of the table
      * @param objectKey the object key
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the object stored in the table.
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -393,7 +394,7 @@ public class ObjectsDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public Object retrieveObject(String tableName, String objectKey) throws SQLException, IOException, ClassNotFoundException {
+    public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
 
         Object object = null; 
 
@@ -401,7 +402,7 @@ public class ObjectsDB implements Serializable {
             object = objectsCache.getObject(dbName, tableName, objectKey);
         }
 
-        if (object != null) {
+        if (!useDB || object != null) {
             return object;
         }
         if (debugInteractions) {

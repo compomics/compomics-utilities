@@ -395,14 +395,18 @@ public class SequenceFactory {
                         if (indexLastModified == fileLastModified) {
                             return tempFastaIndex;
                         } else {
-                            System.err.println("Reindexing " + currentFastaFile.getName() + "(changes in the file detected)");
+                            System.err.println("Reindexing: " + currentFastaFile.getName() + ". (changes in the file detected)");
                         }
                     }
+                } catch (InvalidClassException e) {
+                    System.out.println("Needs updating!!");
                 } catch (Exception e) {
-                    System.err.println("Reindexing " + currentFastaFile.getName() + "(" + e.getLocalizedMessage() + ")");
+                    System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Error: " + e.getLocalizedMessage() + ")");
                 }
             }
         }
+        
+        System.out.println("Reindexing.");
         tempFastaIndex = createFastaIndex(currentFastaFile, waitingHandler);
 
         if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
@@ -788,9 +792,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the name of the loaded fasta file
+     * Returns the name of the loaded FASTA file.
      *
-     * @return
+     * @return the name of the loaded FASTA file
      */
     public String getFileName() {
         return fastaIndex.getFileName();

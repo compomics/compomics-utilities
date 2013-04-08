@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
 import com.compomics.util.experiment.identification.SequenceFactory;
@@ -12,9 +8,9 @@ import java.util.HashMap;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
- * This factory provides nodes to protein trees from indexed text files
+ * This factory provides nodes to protein trees from indexed text files.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class NodeFactory {
 
@@ -27,7 +23,7 @@ public class NodeFactory {
      */
     private static NodeFactory instance = null;
     /**
-     * The folder containing the indexed files
+     * The folder containing the indexed files.
      */
     private File folder;
     /**
@@ -35,16 +31,16 @@ public class NodeFactory {
      */
     private BufferedRandomAccessFile currentRandomAccessFile = null;
     /**
-     * The separator used to separate line contents
+     * The separator used to separate line contents.
      */
     public final static String separator = "\t";
     /**
-     * The line separator
+     * The line separator.
      */
     private final String lineSeparator = System.getProperty("line.separator");
 
     /**
-     * Constructor
+     * Constructor.
      */
     private NodeFactory() {
     }
@@ -52,6 +48,7 @@ public class NodeFactory {
     /**
      * Static method returning the instance of the factory.
      *
+     * @param folder the folder
      * @return the instance of the factory
      */
     public static NodeFactory getInstance(File folder) {
@@ -63,7 +60,7 @@ public class NodeFactory {
     }
 
     /**
-     * The folder containing the index files
+     * The folder containing the index files.
      *
      * @param folder
      */
@@ -72,7 +69,7 @@ public class NodeFactory {
     }
 
     /**
-     * Initiates the factory on the sequence factory
+     * Initiates the factory on the sequence factory.
      *
      * @throws IOException
      */
@@ -84,10 +81,11 @@ public class NodeFactory {
     }
 
     /**
-     * Saves a node
+     * Saves a node.
      *
      * @param node
      * @return the index of the node
+     * @throws IOException  
      */
     public long saveNode(Node node) throws IOException {
         long nodeIndex = currentRandomAccessFile.length();
@@ -120,6 +118,7 @@ public class NodeFactory {
      *
      * @param index the index of the node
      * @return the node indexed by the given long. Null if not found
+     * @throws IOException  
      */
     public Node getNode(long index) throws IOException {
         currentRandomAccessFile.seek(index);
@@ -160,7 +159,7 @@ public class NodeFactory {
     }
 
     /**
-     * Returns the destination file where to read/write the nodes
+     * Returns the destination file where to read/write the nodes.
      *
      * @return the destination file where to read/write the nodes
      */

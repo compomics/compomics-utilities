@@ -26,7 +26,7 @@ public class Node {
      */
     private HashMap<Character, Node> subtree = null;
     /**
-     * In case of an indexed tree, the index of the sub nodes
+     * In case of an indexed tree, the index of the sub nodes.
      */
     private HashMap<Character, Long> subNodesIndexes = null;
     /**
@@ -42,10 +42,10 @@ public class Node {
     public Node(int depth) {
         this.depth = depth;
     }
-    
+
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param depth the depth of the node
      * @param subNodesIndexes map of the subnode indexes
      */
@@ -53,9 +53,10 @@ public class Node {
         this.depth = depth;
         this.subNodesIndexes = subNodesIndexes;
     }
-    
+
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param depth the depth of the node
      * @param accessions the accessions of the node
      */
@@ -72,6 +73,7 @@ public class Node {
      * @return the protein mapping for the given peptide sequence
      * @throws IOException
      * @throws InterruptedException
+     * @throws ClassNotFoundException  
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
         if (depth == peptideSequence.length()) {
@@ -104,6 +106,7 @@ public class Node {
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
+     * @throws ClassNotFoundException  
      */
     public void splitNode(int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
@@ -136,24 +139,30 @@ public class Node {
     public void addAccession(String accession, ArrayList<Integer> indexes) {
         accessions.put(accession, indexes);
     }
-    
+
     /**
-     * Returns the subNodesIndexes attribute
-     * @return 
+     * Returns the subNodesIndexes attribute.
+     *
+     * @return the subNodesIndexes attribute
      */
     public HashMap<Character, Long> getSubNodesIndexes() {
         return subNodesIndexes;
     }
 
     /**
-     * Returns the accessions attribute
+     * Returns the accessions attribute.
      *
-     * @return
+     * @return the accessions attribute
      */
     public HashMap<String, ArrayList<Integer>> getAccessions() {
         return accessions;
     }
-    
+
+    /**
+     * Returns the depth.
+     * 
+     * @return the depth
+     */
     public int getDepth() {
         return depth;
     }
@@ -199,7 +208,6 @@ public class Node {
      * Matches a peptide sequence in a protein sequence based on a seedlist.
      * Example: sequence TESTEIST seeds: 0, 3, 7 peptideSequence: TEI result: 3
      *
-     *
      * @param accession the accession of the protein
      * @param seeds the indexes where to start looking for
      * @param peptideSequence the peptide sequence to look for
@@ -208,7 +216,7 @@ public class Node {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence) 
+    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
@@ -239,7 +247,7 @@ public class Node {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset) 
+    private HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
@@ -275,7 +283,7 @@ public class Node {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, int offset, char expectedChar) 
+    private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, int offset, char expectedChar)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = sequenceFactory.getProtein(accession).getSequence();

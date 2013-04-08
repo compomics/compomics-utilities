@@ -8,9 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -21,7 +19,7 @@ import java.util.HashMap;
 public class ProteinTree {
 
     /**
-     * The folder where index are stored in index mode
+     * The folder where index are stored in index mode.
      */
     private File indexFolder = null;
     /**
@@ -45,7 +43,7 @@ public class ProteinTree {
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
     /**
-     * indicates whether a debug file with speed metrics shall be created
+     * Indicates whether a debug file with speed metrics shall be created.
      */
     private boolean debugSpeed = true;
     /**
@@ -109,7 +107,8 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler) 
+            throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         this.initialTagSize = initialTagSize;
         this.maxNodeSize = maxNodeSize;
@@ -248,7 +247,7 @@ public class ProteinTree {
     }
 
     /**
-     * Closes all connections to files
+     * Closes all connections to files.
      */
     public void close() {
         if (debugSpeed) {

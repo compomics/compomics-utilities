@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 /**
  * This class contains the indexes of an mgf file after indexing mapped with the
- * title of the spectrum
+ * title of the spectrum.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -18,7 +18,7 @@ public class MgfIndex extends ExperimentObject {
      */
     private HashMap<String, Long> indexMap;
     /**
-     * List of all spectra
+     * List of all spectra.
      */
     private ArrayList<String> spectrumTitles = null;
     /**
@@ -26,7 +26,7 @@ public class MgfIndex extends ExperimentObject {
      */
     private String fileName;
     /**
-     * The last time the indexed file was modified
+     * The last time the indexed file was modified.
      */
     private Long lastModified;
     /**
@@ -56,7 +56,8 @@ public class MgfIndex extends ExperimentObject {
      * @param minRT the minimum retention tome
      * @param maxMz the maximum m/z value
      * @param maxIntensity the maximum precursor intensity
-     * @param lastModified a long indicating the last time the indexed file was modified
+     * @param lastModified a long indicating the last time the indexed file was
+     * modified
      */
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, long lastModified) {
         this.spectrumTitles = spectrumTitles;
@@ -78,18 +79,22 @@ public class MgfIndex extends ExperimentObject {
     public Long getIndex(String spectrumTitle) {
         return indexMap.get(spectrumTitle);
     }
-    
+
     /**
-     * Returns a boolean indicating whether the spectrum title is implemented in this index
+     * Returns a boolean indicating whether the spectrum title is implemented in
+     * this index.
+     *
      * @param spectrumTitle the spectrum title
-     * @return a boolean indicating whether the spectrum title is implemented in this index
+     * @return a boolean indicating whether the spectrum title is implemented in
+     * this index
      */
     public boolean containsSpectrum(String spectrumTitle) {
         return indexMap.containsKey(spectrumTitle);
     }
 
     /**
-     * Returns an ordered list of all spectrum titles
+     * Returns an ordered list of all spectrum titles.
+     *
      * @return an ordered list of all spectrum titles
      */
     public ArrayList<String> getSpectrumTitles() {
@@ -144,7 +149,7 @@ public class MgfIndex extends ExperimentObject {
     public void setMaxMz(Double maxMz) {
         this.maxMz = maxMz;
     }
-    
+
     /**
      * Returns the maximum precursor intensity in this file.
      *
@@ -189,8 +194,11 @@ public class MgfIndex extends ExperimentObject {
     public int getNSpectra() {
         return indexMap.size();
     }
+
     /**
-     * Returns when the file was last modified. Null if not set or for utilities versions older than 3.11.30.
+     * Returns when the file was last modified. Null if not set or for utilities
+     * versions older than 3.11.30.
+     *
      * @return a long indicating when the file was last modified
      */
     public Long getLastModified() {

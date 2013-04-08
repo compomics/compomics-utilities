@@ -196,12 +196,12 @@ public class SpectrumFactory {
                         if (indexLastModified == fileLastModified) {
                             mgfIndex = tempIndex;
                         } else {
-                            System.err.println("Reindexing " + fileName + "(changes in the file detected)");
+                            System.err.println("Reindexing: " + fileName + ". (changes in the file detected)");
                         }
 
                     }
                 } catch (Exception e) {
-                            System.err.println("Reindexing " + fileName + "(" + e.getLocalizedMessage() +")");
+                    System.err.println("Reindexing: " + fileName + ". (Error: " + e.getLocalizedMessage() + ")");
                 }
             }
 

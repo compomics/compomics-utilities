@@ -431,7 +431,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the psm key
      * @param urParameter the match parameter
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the spectrum match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -488,7 +489,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the peptide match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -545,7 +547,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the protein key
      * @param urParameter the match parameter
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the protein match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -910,7 +913,8 @@ public abstract class Identification extends ExperimentObject {
      * Returns a spectrum match.
      *
      * @param spectrumKey the key of the match
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the desired match
      * @throws IllegalArgumentException exception thrown whenever an error
      * occurred while retrieving the match
@@ -951,7 +955,8 @@ public abstract class Identification extends ExperimentObject {
      * Returns a peptide match.
      *
      * @param peptideKey the key of the match
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the desired match
      * @throws IllegalArgumentException exception thrown whenever an error
      * occurred while retrieving the match
@@ -992,7 +997,8 @@ public abstract class Identification extends ExperimentObject {
      * Returns a protein match.
      *
      * @param proteinKey the key of the match
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the desired match
      * @throws IllegalArgumentException exception thrown whenever an error
      * occurred while retrieving the match
@@ -1010,17 +1016,18 @@ public abstract class Identification extends ExperimentObject {
             return (ProteinMatch) getMatch(proteinKey);
         }
     }
-    
+
     /**
-     * Indicates whether the protein, peptide and spectrum matches corresponding to a protein match key are loaded in the cache
-     * Note, only one peptide and one spectrum matches are tested
-     * 
+     * Indicates whether the protein, peptide and spectrum matches corresponding
+     * to a protein match key are loaded in the cache. Note, only one peptide and
+     * one spectrum match is tested.
+     *
      * @param proteinKey the key of the protein match
      * @return true if everything is loaded in memory
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public boolean proteinDetailsInCache(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
         ProteinMatch proteinMatch = getProteinMatch(proteinKey, false);
@@ -1035,26 +1042,27 @@ public abstract class Identification extends ExperimentObject {
         }
         return false;
     }
-    
+
     /**
-     * Indicates whether the peptide and spectrum matches corresponding to a peptide match key are loaded in the cache
-     * Note, only one one spectrum match is tested
-     * 
+     * Indicates whether the peptide and spectrum matches corresponding to a
+     * peptide match key are loaded in the cache. Note, only one one spectrum
+     * match is tested.
+     *
      * @param peptideKey the peptide key
      * @return true if everything is loaded in the cache
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public boolean peptideDetailsInCache(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
-            PeptideMatch peptideMatch = getPeptideMatch(peptideKey, false);
-            if (peptideMatch != null) {
-                SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
-                if (spectrumMatch != null) {
-                    return true;
-                }
+        PeptideMatch peptideMatch = getPeptideMatch(peptideKey, false);
+        if (peptideMatch != null) {
+            SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
+            if (spectrumMatch != null) {
+                return true;
             }
+        }
         return false;
     }
 
@@ -1220,7 +1228,7 @@ public abstract class Identification extends ExperimentObject {
             loadSpectrumMatches(peptideMatch.getSpectrumMatches(), null);
 
             for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
-                othermatch = getSpectrumMatch(otherMatchKey); 
+                othermatch = getSpectrumMatch(otherMatchKey);
                 if (othermatch == null) {
                     throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
                 }

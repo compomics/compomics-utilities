@@ -1,5 +1,6 @@
 package com.compomics.util.gui.filehandling;
 
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,27 +8,28 @@ import javax.swing.JFrame;
 
 /**
  * A simple dialog for selecting between different files.
- * @TODO make it with string and not files.
- * @TODO allow editing the list
  *
  * @author Marc Vaudel
  */
 public class FileSelectionDialog extends javax.swing.JDialog {
 
+    // @TODO: make the list with strings and not files.
+    // @TODO: allow editing of the list
     /**
      * A map of the parameter files indexed by their name.
      */
     private HashMap<String, File> fileMap = new HashMap<String, File>();
     /**
-     * boolean indicating whether the user pushed the cancel button
+     * Boolean indicating whether the user pushed the cancel button.
      */
     private boolean canceled = false;
 
     /**
-     * Creates new FileSelection dialog.
+     * Creates a new FileSelection dialog.
      *
      * @param parent the parent frame
      * @param files the list of files
+     * @param text the help text to display
      */
     public FileSelectionDialog(JFrame parent, ArrayList<File> files, String text) {
         super(parent, true);
@@ -38,8 +40,9 @@ public class FileSelectionDialog extends javax.swing.JDialog {
             fileMap.put(files.get(i).getName(), files.get(i));
         }
         fileList.setListData(fileNames);
+        fileList.setSelectedIndex(0);
         setLocationRelativeTo(parent);
-        txtLabel.setText(text);
+        helpLabel.setText(text);
         this.setVisible(true);
     }
 
@@ -52,8 +55,8 @@ public class FileSelectionDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        helpLabel = new javax.swing.JLabel();
+        fileListScrollPane = new javax.swing.JScrollPane();
         fileList = new javax.swing.JList();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
@@ -61,8 +64,8 @@ public class FileSelectionDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SearchGUI Parameters");
 
-        txtLabel.setFont(txtLabel.getFont().deriveFont((txtLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        txtLabel.setText("Please select the desired file.");
+        helpLabel.setFont(helpLabel.getFont().deriveFont((helpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        helpLabel.setText("Please select the desired file.");
 
         fileList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -70,7 +73,12 @@ public class FileSelectionDialog extends javax.swing.JDialog {
             public Object getElementAt(int i) { return strings[i]; }
         });
         fileList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(fileList);
+        fileList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fileListMouseClicked(evt);
+            }
+        });
+        fileListScrollPane.setViewportView(fileList);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -95,12 +103,12 @@ public class FileSelectionDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(txtLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(helpLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE))
+                    .addComponent(fileListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -110,12 +118,12 @@ public class FileSelectionDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fileListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton)
-                    .addComponent(txtLabel))
+                    .addComponent(helpLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -140,16 +148,27 @@ public class FileSelectionDialog extends javax.swing.JDialog {
         canceled = true;
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    /**
+     * Select the file on double click and close the dialog.
+     *
+     * @param evt
+     */
+    private void fileListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileListMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && fileList.getSelectedValue() != null) {
+            okButtonActionPerformed(null);
+        }
+    }//GEN-LAST:event_fileListMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JList fileList;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane fileListScrollPane;
+    private javax.swing.JLabel helpLabel;
     private javax.swing.JButton okButton;
-    private javax.swing.JLabel txtLabel;
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Returns the file selected by the user
+     * Returns the file selected by the user.
      *
      * @return the file selected by the user
      */
@@ -159,7 +178,7 @@ public class FileSelectionDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Indicates whether the user pushed on cancel
+     * Indicates whether the user pushed on cancel.
      *
      * @return a boolean indicating whether the user pushed on cancel
      */

@@ -62,7 +62,7 @@ public class NodeFactory {
 
     /**
      * Static method returning the instance of the factory. Note: the
-     * serialization folder should have been already set
+     * serialization folder should have been already set.
      *
      * @return the instance of the factory
      */
@@ -74,7 +74,7 @@ public class NodeFactory {
     }
 
     /**
-     * The folder containing the index files
+     * The folder containing the index files.
      *
      * @param folder
      */
@@ -107,7 +107,7 @@ public class NodeFactory {
      *
      * @param node
      * @return the index of the node
-     * @throws IOException  
+     * @throws IOException
      */
     public long saveNode(Node node) throws IOException {
         long nodeIndex = currentRandomAccessFile.length();
@@ -140,7 +140,7 @@ public class NodeFactory {
      *
      * @param index the index of the node
      * @return the node indexed by the given long. Null if not found
-     * @throws IOException  
+     * @throws IOException
      */
     public Node getNode(long index) throws IOException {
         currentRandomAccessFile.seek(index);
@@ -193,10 +193,11 @@ public class NodeFactory {
     private File getDestinationFile() {
         return new File(folder, sequenceFactory.getFileName() + ".cpi");
     }
-    
+
     /**
-     * Closes the factory, closes all connection and deletes the file
-     * @throws IOException 
+     * Closes the factory, closes all connection and deletes the file.
+     *
+     * @throws IOException
      */
     public void close() throws IOException {
         if (currentRandomAccessFile != null) {

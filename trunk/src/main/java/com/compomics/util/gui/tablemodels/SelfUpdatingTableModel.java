@@ -1,40 +1,36 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.tablemodels;
 
 import javax.swing.table.DefaultTableModel;
 
 /**
- * These table models include a self updating function
+ * These table models include a self updating function.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
     /**
-     * The start index of the rows being loaded
+     * The start index of the rows being loaded.
      */
     private int rowStartLoading = -1;
     /**
-     * The end index of the rows being loaded
+     * The end index of the rows being loaded.
      */
     private int rowEndLoading = -1;
     /**
-     * The number of rows loaded at a time
+     * The number of rows loaded at a time.
      */
     private static int batchSize = 100;
     /**
-     * if false the table will not update automatically
+     * If false, the table will not update automatically.
      */
     private boolean selfUpdating = true;
     /**
-     * boolean indicating whether an update was scheduled
+     * boolean indicating whether an update was scheduled.
      */
     private boolean updateScheduled = false;
     /**
-     * The last loading runnable
+     * The last loading runnable.
      */
     private LoadingRunnable lastLoadingRunnable = null;
 
@@ -51,7 +47,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
     /**
      * This method is called whenever an exception is encountered in a separate
-     * thread
+     * thread.
      *
      * @param e the exception encountered
      */
@@ -62,6 +58,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * data will be loaded in a separate thread and the table updated later on.
      *
      * @param row the row number
+     * @throws InterruptedException
      */
     protected void dataMissingAtRow(int row) throws InterruptedException {
 
@@ -109,16 +106,16 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Indicates whether the table is in self update mode
+     * Indicates whether the table is in self update mode.
      *
-     * @return
+     * @return true if the table is in self update mode
      */
     public boolean isSelfUpdating() {
         return selfUpdating;
     }
 
     /**
-     * Sets whether the table is in self update mode
+     * Sets whether the table is in self update mode.
      *
      * @param selfUpdating if false the table will not automatically update
      */
@@ -127,16 +124,16 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Runnable used for the loading and its interuption
+     * Runnable used for the loading and its interruption.
      */
     private class LoadingRunnable implements Runnable {
 
         /**
-         * boolean indicating whether the thread shall be interrupted
+         * Boolean indicating whether the thread shall be interrupted.
          */
         private boolean interrupted = false;
         /**
-         * boolean indicating whether the thread shall be interrupted
+         * Boolean indicating whether the thread shall be interrupted.
          */
         private boolean finished = false;
 
@@ -151,16 +148,16 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         }
 
         /**
-         * Cancels the thread
+         * Cancels the thread.
          */
         public void cancel() {
             interrupted = true;
         }
 
         /**
-         * Idincates whether the run is finished
+         * Indicates whether the run is finished.
          *
-         * @return
+         * @return true if the thread is finished.
          */
         public boolean isFinished() {
             return finished;

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * A node of the protein tree.
@@ -75,9 +76,9 @@ public class Node {
      * @throws InterruptedException
      * @throws ClassNotFoundException  
      */
-    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence, NodeFactory nodeFactory) throws IOException, InterruptedException, ClassNotFoundException {
         if (depth == peptideSequence.length()) {
-            return getAllMappings();
+            return getAllMappings(nodeFactory);
         } else if (accessions != null) {
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>(accessions.size());
             for (String accession : accessions.keySet()) {
@@ -89,9 +90,17 @@ public class Node {
             return result;
         } else {
             char aa = peptideSequence.charAt(depth);
-            Node node = subtree.get(aa);
+            Node node = null;
+            if (subtree != null) {
+                   node = subtree.get(aa);
+            } else {
+                Long nodeIndex = subNodesIndexes.get(aa);
+                if (nodeIndex != null) {
+                    node = nodeFactory.getNode(nodeIndex);
+                }
+            }
             if (node != null) {
-                return node.getProteinMapping(peptideSequence);
+                return node.getProteinMapping(peptideSequence, nodeFactory);
             } else {
                 return new HashMap<String, ArrayList<Integer>>();
             }
@@ -103,14 +112,17 @@ public class Node {
      * and does the same for every sub node.
      *
      * @param maxNodeSize the maximal node size allowed when splitting
+     * @param nodeFactory the node factory, can be null
+     * @return returns true if the node was actually splitted and thus needs to be saved in indexed mode
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException  
      */
-    public void splitNode(int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    public boolean splitNode(int maxNodeSize, NodeFactory nodeFactory) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         if (accessions.size() > maxNodeSize) {
+            
             subtree = new HashMap<Character, Node>();
             for (String accession : accessions.keySet()) {
                 HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
@@ -123,10 +135,24 @@ public class Node {
                 }
             }
             accessions = null;
-            for (Node node : subtree.values()) {
-                node.splitNode(maxNodeSize);
+            
+            if (nodeFactory != null) {
+                subNodesIndexes = new HashMap<Character, Long>();
             }
+            for (char aa : subtree.keySet()) {
+                Node node = subtree.get(aa);
+                node.splitNode(maxNodeSize, nodeFactory);
+                if (nodeFactory != null) {
+                    long nodeIndex = nodeFactory.saveNode(node);
+                    subNodesIndexes.put(aa, nodeIndex);
+                }
+            }
+            if (nodeFactory != null) {
+                subtree = null;
+            }
+            return true;
         }
+        return false;
     }
 
     /**
@@ -163,6 +189,10 @@ public class Node {
      * 
      * @return the depth
      */
+    /**
+     * Returns the depth of the node in the tree
+     * @return 
+     */
     public int getDepth() {
         return depth;
     }
@@ -170,15 +200,29 @@ public class Node {
     /**
      * Returns all the protein mapping of the node.
      *
+     * @param nodeFactory the node factory, can be null
      * @return all the protein mappings of the node
      */
-    public HashMap<String, ArrayList<Integer>> getAllMappings() {
+    public HashMap<String, ArrayList<Integer>> getAllMappings(NodeFactory nodeFactory) throws IOException {
         if (accessions != null) {
             return accessions;
         } else {
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>();
-            for (Node node : subtree.values()) {
-                HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings();
+            Set<Character> aas;
+            if (subtree != null) {
+                aas = subtree.keySet();
+            } else {
+                aas = subNodesIndexes.keySet();
+            }
+            for (char aa : aas) {
+                Node node;
+                if (subtree != null) {
+                    node = subtree.get(aa);
+                } else {
+                    long nodeIndex = subNodesIndexes.get(aa);
+                    node = nodeFactory.getNode(nodeIndex);
+                }
+                HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings(nodeFactory);
                 for (String accession : subResult.keySet()) {
                     ArrayList<Integer> indexes = result.get(accession);
                     if (indexes == null) {

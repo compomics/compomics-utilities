@@ -46,9 +46,10 @@ public class NodeFactory {
     }
 
     /**
-     * Static method returning the instance of the factory.
+     * Static method returning the instance of the factory and setting the
+     * serialization folder.
      *
-     * @param folder the folder
+     * @param folder the serialization folder
      * @return the instance of the factory
      */
     public static NodeFactory getInstance(File folder) {
@@ -60,7 +61,20 @@ public class NodeFactory {
     }
 
     /**
-     * The folder containing the index files.
+     * Static method returning the instance of the factory. Note: the
+     * serialization folder should have been already set
+     *
+     * @return the instance of the factory
+     */
+    public static NodeFactory getInstance() {
+        if (instance == null) {
+            instance = new NodeFactory();
+        }
+        return instance;
+    }
+
+    /**
+     * The folder containing the index files
      *
      * @param folder
      */
@@ -77,7 +91,15 @@ public class NodeFactory {
         if (currentRandomAccessFile != null) {
             currentRandomAccessFile.close();
         }
-        currentRandomAccessFile = new BufferedRandomAccessFile(getDestinationFile(), "w", 1024 * 100);
+        File destinationFile = getDestinationFile();
+        if (destinationFile.exists()) {
+            try {
+                destinationFile.delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        currentRandomAccessFile = new BufferedRandomAccessFile(getDestinationFile(), "rw", 1024 * 100);
     }
 
     /**
@@ -97,7 +119,7 @@ public class NodeFactory {
             for (String accession : accessions.keySet()) {
                 currentRandomAccessFile.writeBytes(accession + separator);
                 for (int index : accessions.get(accession)) {
-                    currentRandomAccessFile.writeBytes(separator + index);
+                    currentRandomAccessFile.writeBytes(index + separator);
                 }
             }
             currentRandomAccessFile.writeBytes(lineSeparator);
@@ -125,7 +147,7 @@ public class NodeFactory {
         String line = currentRandomAccessFile.getNextLine();
         String component = line.substring(1, line.indexOf(separator));
         int depth = new Integer(component);
-        component = line.substring(line.indexOf(separator));
+        component = line.substring(line.indexOf(separator) + 1);
         if (component.equals("accessions")) {
             HashMap<String, ArrayList<Integer>> accessions = new HashMap<String, ArrayList<Integer>>();
             line = currentRandomAccessFile.getNextLine();
@@ -133,26 +155,31 @@ public class NodeFactory {
             ArrayList<Integer> indices = new ArrayList<Integer>();
             String accession = "";
             for (String part : split) {
-                try {
-                    int aa = new Integer(part);
-                    indices.add(aa);
-                } catch (Exception e) {
-                    if (!accession.equals("")) {
-                        accessions.put(accession, indices);
-                        indices = new ArrayList<Integer>();
+                if (!part.equals("")) {
+                    try {
+                        int aa = new Integer(part);
+                        indices.add(aa);
+                    } catch (Exception e) {
+                        if (!accession.equals("")) {
+                            accessions.put(accession, indices);
+                            indices = new ArrayList<Integer>();
+                        }
+                        accession = part;
                     }
-                    accession = part;
                 }
             }
+            accessions.put(accession, indices);
             return new Node(depth, accessions);
         } else {
             HashMap<Character, Long> subNodesIndexes = new HashMap<Character, Long>();
             line = currentRandomAccessFile.getNextLine();
             String[] split = line.split(separator);
             for (String part : split) {
-                char aa = part.charAt(0);
-                long nodeIndex = new Long(part.substring(1));
-                subNodesIndexes.put(aa, nodeIndex);
+                if (!part.equals("")) {
+                    char aa = part.charAt(0);
+                    long nodeIndex = new Long(part.substring(1));
+                    subNodesIndexes.put(aa, nodeIndex);
+                }
             }
             return new Node(subNodesIndexes, depth);
         }
@@ -165,5 +192,19 @@ public class NodeFactory {
      */
     private File getDestinationFile() {
         return new File(folder, sequenceFactory.getFileName() + ".cpi");
+    }
+    
+    /**
+     * Closes the factory, closes all connection and deletes the file
+     * @throws IOException 
+     */
+    public void close() throws IOException {
+        if (currentRandomAccessFile != null) {
+            currentRandomAccessFile.close();
+        }
+        File destinationFile = getDestinationFile();
+        if (destinationFile.exists()) {
+            destinationFile.delete();
+        }
     }
 }

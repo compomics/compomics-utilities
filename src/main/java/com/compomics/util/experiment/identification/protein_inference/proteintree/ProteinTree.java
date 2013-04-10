@@ -19,10 +19,6 @@ import java.util.HashMap;
 public class ProteinTree {
 
     /**
-     * The folder where index are stored in index mode.
-     */
-    private File indexFolder = null;
-    /**
      * The maximal size allowed for a node.
      */
     private int maxNodeSize;
@@ -43,6 +39,10 @@ public class ProteinTree {
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
     /**
+     * indexed version of the tree
+     */
+    private HashMap<String, Long> indexedTree = new HashMap<String, Long>();
+    /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
     private boolean debugSpeed = true;
@@ -50,6 +50,10 @@ public class ProteinTree {
      * The writer used to send the output to a debug file.
      */
     private BufferedWriter debugSpeedWriter = null;
+    /**
+     * The node factory when operating in indexed mode
+     */
+    private NodeFactory nodeFactory = null;
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
@@ -59,7 +63,9 @@ public class ProteinTree {
      */
     public ProteinTree(File indexFolder) {
 
-        this.indexFolder = indexFolder;
+        if (indexFolder != null) {
+            nodeFactory = NodeFactory.getInstance(indexFolder);
+        }
 
         if (debugSpeed) {
             try {
@@ -107,12 +113,16 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler) 
+    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         this.initialTagSize = initialTagSize;
         this.maxNodeSize = maxNodeSize;
         tree.clear();
+        
+        if (nodeFactory != null) {
+            nodeFactory.initiateFactory();
+        }
 
         HashMap<String, Boolean> splittingProgress = new HashMap<String, Boolean>();
         int progressTagSize = Math.min(2, initialTagSize);
@@ -154,12 +164,25 @@ public class ProteinTree {
             }
 
             for (String tag : tagToIndexesMap.keySet()) {
-                Node node = tree.get(tag);
-                if (node == null) {
-                    node = new Node(initialTagSize);
-                    tree.put(tag, node);
+                if (nodeFactory == null) {
+                    Node node = tree.get(tag);
+                    if (node == null) {
+                        node = new Node(initialTagSize);
+                        tree.put(tag, node);
+                    }
+                    node.addAccession(accession, tagToIndexesMap.get(tag));
+                } else {
+                    Long nodeIndex = indexedTree.get(tag);
+                    Node node;
+                    if (nodeIndex != null) {
+                        node = nodeFactory.getNode(nodeIndex);
+                    } else {
+                        node = new Node(initialTagSize);
+                    }
+                    node.addAccession(accession, tagToIndexesMap.get(tag));
+                    nodeIndex = nodeFactory.saveNode(node);
+                    indexedTree.put(tag, nodeIndex);
                 }
-                node.addAccession(accession, tagToIndexesMap.get(tag));
             }
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressValue();
@@ -172,8 +195,23 @@ public class ProteinTree {
         long time1 = System.currentTimeMillis();
 
         for (String tag : tree.keySet()) {
-            Node node = tree.get(tag);
-            node.splitNode(maxNodeSize);
+            Node node;
+            if (nodeFactory == null) {
+                node = tree.get(tag);
+            } else {
+                Long nodeIndex = indexedTree.get(tag);
+                if (nodeIndex != null) {
+                    node = nodeFactory.getNode(nodeIndex);
+                } else {
+                    throw new IllegalArgumentException("Node corresponding to tag " + tag + " not found.");
+                }
+            }
+            boolean changed = node.splitNode(maxNodeSize, nodeFactory);
+            if (nodeFactory != null && changed) {
+                long nodeIndex = nodeFactory.saveNode(node);
+                indexedTree.put(tag, nodeIndex);
+            }
+
             if (waitingHandler != null) {
                 String subTag;
                 if (initialTagSize > progressTagSize) {
@@ -232,7 +270,7 @@ public class ProteinTree {
         Node node = tree.get(tag);
 
         if (node != null) {
-            HashMap<String, ArrayList<Integer>> result = node.getProteinMapping(peptideSequence);
+            HashMap<String, ArrayList<Integer>> result = node.getProteinMapping(peptideSequence, nodeFactory);
             if (debugSpeed) {
                 long time1 = System.currentTimeMillis();
                 long queryTime = time1 - time0;
@@ -254,6 +292,13 @@ public class ProteinTree {
             try {
                 debugSpeedWriter.flush();
                 debugSpeedWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (nodeFactory != null) {
+            try {
+                nodeFactory.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

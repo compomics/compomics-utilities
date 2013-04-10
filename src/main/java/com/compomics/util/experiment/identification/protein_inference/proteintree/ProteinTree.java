@@ -39,7 +39,7 @@ public class ProteinTree {
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
     /**
-     * indexed version of the tree
+     * Indexed version of the tree.
      */
     private HashMap<String, Long> indexedTree = new HashMap<String, Long>();
     /**
@@ -51,7 +51,7 @@ public class ProteinTree {
      */
     private BufferedWriter debugSpeedWriter = null;
     /**
-     * The node factory when operating in indexed mode
+     * The node factory when operating in indexed mode.
      */
     private NodeFactory nodeFactory = null;
 
@@ -119,7 +119,7 @@ public class ProteinTree {
         this.initialTagSize = initialTagSize;
         this.maxNodeSize = maxNodeSize;
         tree.clear();
-        
+
         if (nodeFactory != null) {
             nodeFactory.initiateFactory();
         }

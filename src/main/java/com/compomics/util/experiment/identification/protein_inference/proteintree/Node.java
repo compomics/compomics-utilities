@@ -74,7 +74,7 @@ public class Node {
      * @return the protein mapping for the given peptide sequence
      * @throws IOException
      * @throws InterruptedException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence, NodeFactory nodeFactory) throws IOException, InterruptedException, ClassNotFoundException {
         if (depth == peptideSequence.length()) {
@@ -92,7 +92,7 @@ public class Node {
             char aa = peptideSequence.charAt(depth);
             Node node = null;
             if (subtree != null) {
-                   node = subtree.get(aa);
+                node = subtree.get(aa);
             } else {
                 Long nodeIndex = subNodesIndexes.get(aa);
                 if (nodeIndex != null) {
@@ -113,16 +113,17 @@ public class Node {
      *
      * @param maxNodeSize the maximal node size allowed when splitting
      * @param nodeFactory the node factory, can be null
-     * @return returns true if the node was actually splitted and thus needs to be saved in indexed mode
+     * @return returns true if the node was actually splitted and thus needs to
+     * be saved in indexed mode
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public boolean splitNode(int maxNodeSize, NodeFactory nodeFactory) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         if (accessions.size() > maxNodeSize) {
-            
+
             subtree = new HashMap<Character, Node>();
             for (String accession : accessions.keySet()) {
                 HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
@@ -135,7 +136,7 @@ public class Node {
                 }
             }
             accessions = null;
-            
+
             if (nodeFactory != null) {
                 subNodesIndexes = new HashMap<Character, Long>();
             }
@@ -185,13 +186,9 @@ public class Node {
     }
 
     /**
-     * Returns the depth.
-     * 
-     * @return the depth
-     */
-    /**
-     * Returns the depth of the node in the tree
-     * @return 
+     * Returns the depth of the node in the tree.
+     *
+     * @return  the depth of the node in the tree
      */
     public int getDepth() {
         return depth;

@@ -201,7 +201,7 @@ public class SpectrumFactory {
 
                     }
                 } catch (Exception e) {
-                    System.err.println("Reindexing: " + fileName + ". (Error: " + e.getLocalizedMessage() + ")");
+                    System.err.println("Reindexing: " + fileName + ". (Reason: " + e.getLocalizedMessage() + ")");
                 }
             }
 

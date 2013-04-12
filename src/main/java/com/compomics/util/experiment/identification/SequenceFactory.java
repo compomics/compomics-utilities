@@ -401,7 +401,7 @@ public class SequenceFactory {
                 } catch (InvalidClassException e) {
                     System.out.println("Needs updating!!");
                 } catch (Exception e) {
-                    System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Error: " + e.getLocalizedMessage() + ")");
+                    System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Reason: " + e.getLocalizedMessage() + ")");
                 }
             }
         }

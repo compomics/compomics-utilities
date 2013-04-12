@@ -126,15 +126,22 @@ public class CommandLineUtils {
     }
 
     /**
-     * Returns a list of file names for inputs of comma separated files.
+     * Splits the input of comma separated command line input and returns the
+     * results as an arraylist.
      *
      * @param cliInput the CLI input
-     * @return a list of file names
+     * @return an arraylist containing the results, empty list if empty string
      */
     public static ArrayList<String> splitInput(String cliInput) {
         ArrayList<String> results = new ArrayList<String>();
-        for (String file : cliInput.split(SEPARATOR)) {
-            results.add(file.trim());
+
+        // empty input, return the empty list
+        if (cliInput.trim().length() == 0) {
+            return results;
+        }
+
+        for (String tempInput : cliInput.split(SEPARATOR)) {
+            results.add(tempInput.trim());
         }
         return results;
     }

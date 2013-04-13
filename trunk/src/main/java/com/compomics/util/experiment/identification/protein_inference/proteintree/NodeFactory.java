@@ -38,6 +38,18 @@ public class NodeFactory {
      * The line separator.
      */
     private final String lineSeparator = System.getProperty("line.separator");
+    /**
+     * Boolean indicating whether the factory is in debug mode
+     */
+    private boolean debug = true;
+    /**
+     * Line counter, for debug use only
+     */
+    private int debugLineCpt = 0;
+    /**
+     * Line to index map, for debug use only
+     */
+    private HashMap<Long, Integer> debugLineMap = new HashMap<Long, Integer>();
 
     /**
      * Constructor.
@@ -109,20 +121,27 @@ public class NodeFactory {
      * @return the index of the node
      * @throws IOException
      */
-    public long saveNode(Node node) throws IOException {
+    public long saveNode(Node node, String tag) throws IOException {
         long nodeIndex = currentRandomAccessFile.length();
+        if (debug) {
+            debugLineMap.put(nodeIndex, debugLineCpt);
+        }
         currentRandomAccessFile.seek(nodeIndex);
         currentRandomAccessFile.writeBytes(">" + node.getDepth() + separator);
         if (node.getAccessions() != null) {
             currentRandomAccessFile.writeBytes("accessions" + lineSeparator);
             HashMap<String, ArrayList<Integer>> accessions = node.getAccessions();
             for (String accession : accessions.keySet()) {
-                currentRandomAccessFile.writeBytes(accession + separator);
+                currentRandomAccessFile.writeBytes(tag + accession + separator);
                 for (int index : accessions.get(accession)) {
                     currentRandomAccessFile.writeBytes(index + separator);
                 }
             }
             currentRandomAccessFile.writeBytes(lineSeparator);
+            if (debug) {
+//                System.out.println("Wrote tag " + tag + " at line " + debugLineCpt + ".");
+                debugLineCpt += 3;
+            }
         } else {
             currentRandomAccessFile.writeBytes("indices" + lineSeparator);
             HashMap<Character, Long> subNodesIndexes = node.getSubNodesIndexes();
@@ -142,9 +161,20 @@ public class NodeFactory {
      * @return the node indexed by the given long. Null if not found
      * @throws IOException
      */
-    public Node getNode(long index) throws IOException {
+    public Node getNode(long index, String tag) throws IOException {
         currentRandomAccessFile.seek(index);
         String line = currentRandomAccessFile.getNextLine();
+        if (debug) {
+                System.out.println(tag + " at line " + debugLineMap.get(index));
+            }
+        if (line == null) {
+            currentRandomAccessFile.seek(currentRandomAccessFile.length());
+            currentRandomAccessFile.seek(index);
+            line = currentRandomAccessFile.getNextLine();
+        }
+        if (line == null) {
+            throw new IllegalArgumentException("Node at index " + index + " not found.");
+        }
         String component = line.substring(1, line.indexOf(separator));
         int depth = new Integer(component);
         component = line.substring(line.indexOf(separator) + 1);
@@ -195,7 +225,7 @@ public class NodeFactory {
     }
 
     /**
-     * Closes the factory, closes all connection and deletes the file.
+     * Closes the factory, closes all connection and deletes the file
      *
      * @throws IOException
      */

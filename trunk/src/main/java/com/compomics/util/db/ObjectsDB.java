@@ -5,6 +5,7 @@ import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -47,6 +48,26 @@ public class ObjectsDB implements Serializable {
      * The debug folder.
      */
     private File debugFolder;
+    /**
+     * A boolean indicating whether the database is being queried
+     */
+    private boolean busy = false;
+    /**
+     * The name of the table currently updating in the queue
+     */
+    private String tableQueueUpdating = "";
+    /**
+     * A queue of entire tables to load
+     */
+    private ArrayList<String> tableQueue = new ArrayList<String>();
+    /**
+     * A queue of table components to load
+     */
+    private HashMap<String, ArrayList<String>> contentQueue = new HashMap<String, ArrayList<String>>();
+    /**
+     * A queue of tables of content to load
+     */
+    private ArrayList<String> contentTableQueue = new ArrayList<String>();
     /**
      * Debug, if true will output a table containing statistics on the speed of
      * the objects I/O.
@@ -271,52 +292,72 @@ public class ObjectsDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        if (debugInteractions) {
-            System.out.println("getting table objects, table:" + tableName);
-        }
-        ResultSet results;
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+        if (!busy && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
 
-            // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
-            Statement rowCountStatement = dbConnection.createStatement();
-            results = rowCountStatement.executeQuery("select count(*) from " + tableName);
-            results.next();
-            Integer numberOfRows = results.getInt(1);
-
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(numberOfRows);
-        }
-        Statement stmt = dbConnection.createStatement();
-        results = stmt.executeQuery("select * from " + tableName);
-
-        while (results.next()) {
-
+            if (debugInteractions) {
+                System.out.println("getting table objects, table:" + tableName);
+            }
+            ResultSet results;
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
-                if (waitingHandler.isRunCanceled()) {
-                    break;
+                waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+
+                // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
+                Statement rowCountStatement = dbConnection.createStatement();
+                results = rowCountStatement.executeQuery("select count(*) from " + tableName);
+                results.next();
+                Integer numberOfRows = results.getInt(1);
+
+                waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+                waitingHandler.setSecondaryProgressValue(0);
+                waitingHandler.setMaxSecondaryProgressValue(numberOfRows);
+            }
+
+            busy = true;
+
+            Statement stmt = dbConnection.createStatement();
+            results = stmt.executeQuery("select * from " + tableName);
+
+            while (results.next()) {
+
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressValue();
+                    if (waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                }
+                String key = results.getString(1);
+
+                if (!objectsCache.inCache(dbName, tableName, key)) {
+                    Blob tempBlob = results.getBlob(2);
+                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+
+                    ObjectInputStream in = new ObjectInputStream(bis);
+                    Object object = in.readObject();
+                    in.close();
+
+                    objectsCache.addObject(dbName, tableName, key, object, false);
                 }
             }
-            String key = results.getString(1);
 
-            if (!objectsCache.inCache(dbName, tableName, key)) {
-                Blob tempBlob = results.getBlob(2);
-                BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+            results.close();
+            stmt.close();
 
-                ObjectInputStream in = new ObjectInputStream(bis);
-                Object object = in.readObject();
-                in.close();
+            busy = false;
+            tableQueue.remove(tableName);
 
-                objectsCache.addObject(dbName, tableName, key, object, false);
+        } else {
+
+            if (!tableQueue.contains(tableName)) {
+                tableQueue.add(tableName);
             }
-        }
 
-        results.close();
-        stmt.close();
+            wait(11);
+            //@TODO: would be nice to check that the db is working properly here. ie check the connection and so on
+
+            loadObjects(tableName, waitingHandler);
+        }
     }
 
     /**
@@ -332,49 +373,91 @@ public class ObjectsDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        if (debugInteractions) {
-            System.out.println("getting " + keys.size() + " objects, table:" + tableName);
-        }
 
-        ArrayList<String> toLoad = new ArrayList<String>();
-        for (String key : keys) {
-            if (!objectsCache.inCache(dbName, tableName, key)) {
-                toLoad.add(key);
+        if (!busy && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
+
+            if (debugInteractions) {
+                System.out.println("getting " + keys.size() + " objects, table:" + tableName);
             }
-        }
-        if (!toLoad.isEmpty()) {
 
-            Statement stmt = dbConnection.createStatement();
-            ResultSet results = stmt.executeQuery("select * from " + tableName); // @TODO: is it faster to query only the toLoad objects?
-
-            int found = 0;
-
-            while (results.next() && found < toLoad.size()) {
-                String key = results.getString(1);
-                if (toLoad.contains(key)) {
-                    found++;
-                    Blob tempBlob = results.getBlob(2);
-                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-
-                    ObjectInputStream in = new ObjectInputStream(bis);
-                    Object object = in.readObject();
-                    in.close();
-                    bis.close();
-
-                    objectsCache.addObject(dbName, tableName, key, object, false);
-                    if (waitingHandler != null) {
-                        waitingHandler.increaseSecondaryProgressValue();
+            boolean concurrentAccess = tableQueueUpdating.equals(tableName);
+            ArrayList<String> queue = new ArrayList<String>();
+            if (!concurrentAccess && contentQueue.get(tableName) != null) {
+                queue = contentQueue.get(tableName);
+                contentTableQueue.remove(tableName);
+                contentQueue.remove(tableName);
+            }
+            if (!keys.equals(queue)) {
+                for (String key : keys) {
+                    if (!queue.contains(key)) {
+                        queue.add(key);
                     }
                 }
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                    break;
+            }
+            ArrayList<String> toLoad = new ArrayList<String>();
+            for (String key : queue) {
+                    if (!objectsCache.inCache(dbName, tableName, key)) {
+                        toLoad.add(key);
+                    }
+            }
+            if (!toLoad.isEmpty()) {
+
+                busy = true;
+
+                Statement stmt = dbConnection.createStatement();
+                ResultSet results = stmt.executeQuery("select * from " + tableName); // @TODO: is it faster to query only the toLoad objects?
+
+                int found = 0;
+
+                while (results.next() && found < toLoad.size()) {
+                    String key = results.getString(1);
+                    if (toLoad.contains(key)) {
+                        found++;
+                        Blob tempBlob = results.getBlob(2);
+                        BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+
+                        ObjectInputStream in = new ObjectInputStream(bis);
+                        Object object = in.readObject();
+                        in.close();
+                        bis.close();
+
+                        objectsCache.addObject(dbName, tableName, key, object, false);
+                        if (waitingHandler != null) {
+                            waitingHandler.increaseSecondaryProgressValue();
+                        }
+                    }
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                }
+
+                results.close();
+                stmt.close();
+
+                busy = false;
+
+            }
+        } else {
+
+            tableQueueUpdating = tableName;
+            if (!contentTableQueue.contains(tableName)) {
+                contentTableQueue.add(tableName);
+                contentQueue.put(tableName, keys);
+            } else if (keys.equals(contentQueue.get(tableName))) {
+                wait(7);
+                //@TODO: would be nice to check that the db is working properly here. ie check the connection and so on
+                loadObjects(tableName, keys, waitingHandler);
+            } else {
+                ArrayList<String> queue = contentQueue.get(tableName);
+                for (String newItem : keys) {
+                    if (!queue.contains(newItem)) {
+                        queue.add(newItem);
+                    }
                 }
             }
-
-            results.close();
-            stmt.close();
+            tableQueueUpdating = "";
         }
     }
 
@@ -385,7 +468,8 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the name of the table
      * @param objectKey the object key
-     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
      * @return the object stored in the table.
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -395,8 +479,8 @@ public class ObjectsDB implements Serializable {
      * object is not found when deserializing it.
      */
     public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
-        
-        Object object = null; 
+
+        Object object = null;
 
         if (objectsCache != null) {
             object = objectsCache.getObject(dbName, tableName, objectKey);
@@ -408,7 +492,7 @@ public class ObjectsDB implements Serializable {
         if (debugInteractions) {
             System.out.println("Retrieving object, table:" + tableName + ", key: " + objectKey);
         }
-        
+
         if (dbConnection == null) {
             return object;
         }

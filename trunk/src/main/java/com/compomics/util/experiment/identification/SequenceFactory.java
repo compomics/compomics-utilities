@@ -670,7 +670,7 @@ public class SequenceFactory {
      * @param sequence the protein sequence
      * @return the reversed protein sequence
      */
-    private String reverseSequence(String sequence) {
+    public String reverseSequence(String sequence) {
         return new StringBuilder(sequence).reverse().toString();
     }
 

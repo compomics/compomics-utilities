@@ -96,7 +96,7 @@ public class Node {
             } else {
                 Long nodeIndex = subNodesIndexes.get(aa);
                 if (nodeIndex != null) {
-                    node = nodeFactory.getNode(nodeIndex);
+                    node = nodeFactory.getNode(nodeIndex, "");
                 }
             }
             if (node != null) {
@@ -144,7 +144,7 @@ public class Node {
                 Node node = subtree.get(aa);
                 node.splitNode(maxNodeSize, nodeFactory);
                 if (nodeFactory != null) {
-                    long nodeIndex = nodeFactory.saveNode(node);
+                    long nodeIndex = nodeFactory.saveNode(node, "");
                     subNodesIndexes.put(aa, nodeIndex);
                 }
             }
@@ -174,6 +174,22 @@ public class Node {
      */
     public HashMap<Character, Long> getSubNodesIndexes() {
         return subNodesIndexes;
+    }
+    
+    /**
+     * Returns the size of the node in accession*tag
+     * @return the size of the node
+     */
+    public long getSize() {
+        if (accessions != null) {
+            return accessions.size();
+        } else {
+            long result = 0;
+            for (Node node : subtree.values()) {
+                result += node.getSize();
+            }
+            return result;
+        }
     }
 
     /**
@@ -217,7 +233,7 @@ public class Node {
                     node = subtree.get(aa);
                 } else {
                     long nodeIndex = subNodesIndexes.get(aa);
-                    node = nodeFactory.getNode(nodeIndex);
+                    node = nodeFactory.getNode(nodeIndex, "");
                 }
                 HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings(nodeFactory);
                 for (String accession : subResult.keySet()) {

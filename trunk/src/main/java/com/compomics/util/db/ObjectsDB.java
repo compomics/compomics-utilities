@@ -5,7 +5,6 @@ import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -49,23 +48,23 @@ public class ObjectsDB implements Serializable {
      */
     private File debugFolder;
     /**
-     * A boolean indicating whether the database is being queried
+     * A boolean indicating whether the database is being queried.
      */
     private boolean busy = false;
     /**
-     * The name of the table currently updating in the queue
+     * The name of the table currently updating in the queue.
      */
     private String tableQueueUpdating = "";
     /**
-     * A queue of entire tables to load
+     * A queue of entire tables to load.
      */
     private ArrayList<String> tableQueue = new ArrayList<String>();
     /**
-     * A queue of table components to load
+     * A queue of table components to load.
      */
     private HashMap<String, ArrayList<String>> contentQueue = new HashMap<String, ArrayList<String>>();
     /**
-     * A queue of tables of content to load
+     * A queue of tables of content to load.
      */
     private ArrayList<String> contentTableQueue = new ArrayList<String>();
     /**
@@ -291,6 +290,7 @@ public class ObjectsDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws InterruptedException  
      */
     public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -372,6 +372,7 @@ public class ObjectsDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws InterruptedException  
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -398,9 +399,9 @@ public class ObjectsDB implements Serializable {
             }
             ArrayList<String> toLoad = new ArrayList<String>();
             for (String key : queue) {
-                    if (!objectsCache.inCache(dbName, tableName, key)) {
-                        toLoad.add(key);
-                    }
+                if (!objectsCache.inCache(dbName, tableName, key)) {
+                    toLoad.add(key);
+                }
             }
             if (!toLoad.isEmpty()) {
 

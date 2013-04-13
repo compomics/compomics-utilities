@@ -27,9 +27,13 @@ public class ProteinTree {
      */
     private int initialTagSize;
     /**
-     * The maximal cache size in number of peptides.
+     * The maximal cache size in accession*node.
      */
-    private int cacheSize;
+    private long cacheSize;
+    /**
+     * Approximate number of accession*node one can store in a GB of memory
+     */
+    private static final long cacheScale = 7000000;
     /**
      * Instance of the sequence factory.
      */
@@ -39,7 +43,15 @@ public class ProteinTree {
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
     /**
-     * Indexed version of the tree.
+     * List of the nodes in tree
+     */
+    private ArrayList<String> tagsInTree = new ArrayList<String>();
+    /**
+     * The size of the tree in memory in accession*node.
+     */
+    private long treeSize = 0;
+    /**
+     * indexed version of the tree
      */
     private HashMap<String, Long> indexedTree = new HashMap<String, Long>();
     /**
@@ -60,11 +72,13 @@ public class ProteinTree {
      *
      * @param indexFolder the folder where to store the database tree. If null
      * the tree will be kept in memory
+     * @param memoryAllocation the number of GB available for the tree in memory
      */
-    public ProteinTree(File indexFolder) {
+    public ProteinTree(File indexFolder, int memoryAllocation) {
 
         if (indexFolder != null) {
             nodeFactory = NodeFactory.getInstance(indexFolder);
+            cacheSize = memoryAllocation * cacheScale;
         }
 
         if (debugSpeed) {
@@ -139,6 +153,8 @@ public class ProteinTree {
         }
 
         long time0 = System.currentTimeMillis();
+        long nodeSaved = 0;
+        long nodeRead = 0;
 
         for (String accession : sequenceFactory.getAccessions()) {
 
@@ -164,26 +180,28 @@ public class ProteinTree {
             }
 
             for (String tag : tagToIndexesMap.keySet()) {
-                if (nodeFactory == null) {
-                    Node node = tree.get(tag);
-                    if (node == null) {
-                        node = new Node(initialTagSize);
-                        tree.put(tag, node);
-                    }
-                    node.addAccession(accession, tagToIndexesMap.get(tag));
-                } else {
-                    Long nodeIndex = indexedTree.get(tag);
-                    Node node;
-                    if (nodeIndex != null) {
-                        node = nodeFactory.getNode(nodeIndex);
-                    } else {
-                        node = new Node(initialTagSize);
-                    }
-                    node.addAccession(accession, tagToIndexesMap.get(tag));
-                    nodeIndex = nodeFactory.saveNode(node);
-                    indexedTree.put(tag, nodeIndex);
+                Node node = getNode(tag, nodeRead);
+                if (node == null) {
+                    node = new Node(initialTagSize);
                 }
+                tree.put(tag, node);
+                node.addAccession(accession, tagToIndexesMap.get(tag));
+                treeSize++;
+                tagsInTree.remove(tag);
+                tagsInTree.add(tag);
             }
+
+            while (nodeFactory != null && treeSize >= cacheSize && !tagsInTree.isEmpty()) {
+                String tag = tagsInTree.get(0);
+                Node node = tree.get(tag);
+                treeSize -= node.getSize();
+                long nodeIndex = nodeFactory.saveNode(node, tag);
+                indexedTree.put(tag, nodeIndex);
+                tree.remove(tag);
+                tagsInTree.remove(0);
+                nodeSaved++;
+            }
+
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressValue();
                 if (waitingHandler.isRunCanceled()) {
@@ -192,23 +210,16 @@ public class ProteinTree {
             }
         }
 
+        long debug = treeSize;
+        debug = nodeSaved;
+        debug = nodeRead;
         long time1 = System.currentTimeMillis();
 
         for (String tag : tree.keySet()) {
-            Node node;
-            if (nodeFactory == null) {
-                node = tree.get(tag);
-            } else {
-                Long nodeIndex = indexedTree.get(tag);
-                if (nodeIndex != null) {
-                    node = nodeFactory.getNode(nodeIndex);
-                } else {
-                    throw new IllegalArgumentException("Node corresponding to tag " + tag + " not found.");
-                }
-            }
+            Node node = tree.get(tag);
             boolean changed = node.splitNode(maxNodeSize, nodeFactory);
             if (nodeFactory != null && changed) {
-                long nodeIndex = nodeFactory.saveNode(node);
+                long nodeIndex = nodeFactory.saveNode(node, "");
                 indexedTree.put(tag, nodeIndex);
             }
 
@@ -245,6 +256,28 @@ public class ProteinTree {
             debugSpeedWriter.newLine();
             debugSpeedWriter.flush();
         }
+    }
+
+    /**
+     * Returns the node corresponding to a tag by looking first in the tree and
+     * then in the factory
+     *
+     * @param tag the tag of interest
+     * @return the corresponding node, null if not found
+     * @throws IOException
+     */
+    private Node getNode(String tag, long nodeOpened) throws IOException {
+        Node node = tree.get(tag);
+        if (node == null) {
+            if (nodeFactory != null) {
+                Long nodeIndex = indexedTree.get(tag);
+                if (nodeIndex != null) {
+                        node = nodeFactory.getNode(nodeIndex, tag);
+                    nodeOpened++;
+                }
+            }
+        }
+        return node;
     }
 
     /**

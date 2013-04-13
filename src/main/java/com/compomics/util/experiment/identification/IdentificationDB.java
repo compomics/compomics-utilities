@@ -446,7 +446,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         objectsDB.loadObjects(tableName, waitingHandler);
     }
@@ -465,7 +465,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
@@ -488,7 +488,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
@@ -510,7 +510,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
         objectsDB.loadObjects(tableName, waitingHandler);
     }
@@ -529,7 +529,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
@@ -550,7 +550,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         objectsDB.loadObjects(proteinTableName, waitingHandler);
     }
     
@@ -567,7 +567,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
@@ -587,7 +587,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
         objectsDB.loadObjects(peptideTableName, waitingHandler);
     }
 
@@ -604,7 +604,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getSpectrumMatchTable(testKey);
         objectsDB.loadObjects(tableName, waitingHandler);
@@ -622,7 +622,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
@@ -661,7 +661,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getSpectrumParameterTable(testKey, urParameter);
         objectsDB.loadObjects(tableName, waitingHandler);
@@ -681,7 +681,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
      */
-    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException {
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);

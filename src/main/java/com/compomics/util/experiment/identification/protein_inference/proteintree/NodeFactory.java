@@ -39,15 +39,15 @@ public class NodeFactory {
      */
     private final String lineSeparator = System.getProperty("line.separator");
     /**
-     * Boolean indicating whether the factory is in debug mode
+     * Boolean indicating whether the factory is in debug mode.
      */
     private boolean debug = true;
     /**
-     * Line counter, for debug use only
+     * Line counter, for debug use only.
      */
     private int debugLineCpt = 0;
     /**
-     * Line to index map, for debug use only
+     * Line to index map, for debug use only.
      */
     private HashMap<Long, Integer> debugLineMap = new HashMap<Long, Integer>();
 
@@ -165,8 +165,8 @@ public class NodeFactory {
         currentRandomAccessFile.seek(index);
         String line = currentRandomAccessFile.getNextLine();
         if (debug) {
-                System.out.println(tag + " at line " + debugLineMap.get(index));
-            }
+            System.out.println(tag + " at line " + debugLineMap.get(index));
+        }
         if (line == null) {
             currentRandomAccessFile.seek(currentRandomAccessFile.length());
             currentRandomAccessFile.seek(index);
@@ -225,7 +225,7 @@ public class NodeFactory {
     }
 
     /**
-     * Closes the factory, closes all connection and deletes the file
+     * Closes the factory, closes all connection and deletes the file.
      *
      * @throws IOException
      */

@@ -31,7 +31,7 @@ public class ProteinTree {
      */
     private long cacheSize;
     /**
-     * Approximate number of accession*node one can store in a GB of memory
+     * Approximate number of accession*node one can store in a GB of memory.
      */
     private static final long cacheScale = 7000000;
     /**
@@ -43,7 +43,7 @@ public class ProteinTree {
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
     /**
-     * List of the nodes in tree
+     * List of the nodes in tree.
      */
     private ArrayList<String> tagsInTree = new ArrayList<String>();
     /**
@@ -51,7 +51,7 @@ public class ProteinTree {
      */
     private long treeSize = 0;
     /**
-     * indexed version of the tree
+     * Indexed version of the tree.
      */
     private HashMap<String, Long> indexedTree = new HashMap<String, Long>();
     /**
@@ -260,7 +260,7 @@ public class ProteinTree {
 
     /**
      * Returns the node corresponding to a tag by looking first in the tree and
-     * then in the factory
+     * then in the factory.
      *
      * @param tag the tag of interest
      * @return the corresponding node, null if not found

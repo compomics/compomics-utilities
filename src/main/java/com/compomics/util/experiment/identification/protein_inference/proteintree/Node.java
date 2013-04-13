@@ -175,9 +175,10 @@ public class Node {
     public HashMap<Character, Long> getSubNodesIndexes() {
         return subNodesIndexes;
     }
-    
+
     /**
-     * Returns the size of the node in accession*tag
+     * Returns the size of the node in accession*tag.
+     *
      * @return the size of the node
      */
     public long getSize() {
@@ -204,7 +205,7 @@ public class Node {
     /**
      * Returns the depth of the node in the tree.
      *
-     * @return  the depth of the node in the tree
+     * @return the depth of the node in the tree
      */
     public int getDepth() {
         return depth;

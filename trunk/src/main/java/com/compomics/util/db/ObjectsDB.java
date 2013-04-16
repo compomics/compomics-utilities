@@ -376,7 +376,6 @@ public class ObjectsDB implements Serializable {
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-
         if (!busy && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
 
             if (debugInteractions) {

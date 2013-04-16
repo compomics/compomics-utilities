@@ -680,6 +680,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws InterruptedException  
      */
     public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -709,7 +710,7 @@ public class IdentificationDB implements Serializable {
     /**
      * Returns the desired spectrum match parameter.
      *
-     * @param key the psm key
+     * @param key the PSM key
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @return the spectrum match parameter
@@ -728,7 +729,7 @@ public class IdentificationDB implements Serializable {
     /**
      * Adds a spectrum match parameter to the database.
      *
-     * @param key the psm key
+     * @param key the PSM key
      * @param urParameter the match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database

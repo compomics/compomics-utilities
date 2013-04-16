@@ -331,7 +331,7 @@ public class Protein extends ExperimentObject {
     public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme) throws IOException {
 
         // get the surrounding amino acids
-        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 2);
+        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 1);
 
         String firstAA = peptideSequence.charAt(0) + "";
         String lastAA = peptideSequence.charAt(peptideSequence.length() - 1) + "";
@@ -341,7 +341,9 @@ public class Protein extends ExperimentObject {
 
             String before = surroundingAminoAcids.get(index)[0];
             String after = surroundingAminoAcids.get(index)[1];
-            if (enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)) {
+            if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after) 
+                    || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)
+                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) {
                 return true;
             }
         }
@@ -366,7 +368,6 @@ public class Protein extends ExperimentObject {
         HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();
 
         for (int startIndex : startIndexes) {
-
 
             result.put(startIndex, new String[2]);
             String subsequence = "";

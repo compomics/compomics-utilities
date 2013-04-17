@@ -1,11 +1,8 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagFactory;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -71,8 +68,8 @@ public class ProteinTree {
      */
     private NodeFactory nodeFactory = null;
     /**
-     * Convenience mapping of the length of the proteins in case of revesed
-     * sequences
+     * Convenience mapping of the length of the proteins in case of reversed
+     * sequences.
      */
     private HashMap<String, Integer> proteinLengthMap = new HashMap<String, Integer>();
 
@@ -233,7 +230,7 @@ public class ProteinTree {
 
     /**
      * Loads the tags found in the given proteins in the tree and saves the end
-     * nodes in the NodeFactory if not null
+     * nodes in the NodeFactory if not null.
      *
      * @param tags the tags of interest
      * @param accessions the accessions of the proteins of interest
@@ -249,7 +246,8 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler, Enzyme enzyme, boolean clearNodes, boolean saveLength) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    private void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
+            Enzyme enzyme, boolean clearNodes, boolean saveLength) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         for (String accession : accessions) {
 
@@ -314,12 +312,12 @@ public class ProteinTree {
 
     /**
      * Returns all the positions of the given tags on the given sequence in a
-     * map: tag -> list of indexes in the sequence
+     * map: tag -> list of indexes in the sequence.
      *
      * @param sequence the sequence of interest
      * @param tags the tags of interest
      * @param enzyme the enzyme restriction
-     * @return
+     * @return all the positions of the given tags
      */
     private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) {
         HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());

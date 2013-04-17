@@ -160,8 +160,8 @@ public class SequenceFactory {
             String targetAccession = getDefaultTargetAccession(accession);
             Protein targetProtein = getProtein(targetAccession, reindex);
             return new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
-        } 
-        
+        }
+
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null) {
@@ -565,11 +565,15 @@ public class SequenceFactory {
     public boolean concatenatedTargetDecoy() {
         return fastaIndex.isDecoy();
     }
-    
+
     /**
-     * Indicates whether the decoy sequences are reversed versions of the target and the decoy accessions built based on the sequence factory methods.
-     * See getDefaultDecoyAccession(String targetAccession)
-     * @return
+     * Indicates whether the decoy sequences are reversed versions of the target
+     * and the decoy accessions built based on the sequence factory methods. See
+     * getDefaultDecoyAccession(String targetAccession).
+     *
+     * @return true if the the decoy sequences are reversed versions of the
+     * target and the decoy accessions built based on the sequence factory
+     * method
      */
     public boolean isDefaultReversed() {
         return fastaIndex.isDefaultReversed();
@@ -785,7 +789,7 @@ public class SequenceFactory {
             // Don't really see where we would need that...
             return computeMolecularWeight(getDefaultTargetAccession(accession));
         }
-        
+
         // see if we've already calculated the weight of this protein
         if (molecularWeights.containsKey(accession)) {
             return molecularWeights.get(accession);
@@ -826,15 +830,16 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the default suffix for a decoy accession
-     * @return 
+     * Returns the default suffix for a decoy accession.
+     *
+     * @return the default suffix for a decoy accession
      */
     public static String getDefaultDecoyAccessionSuffix() {
         return "_" + decoyFlags[0];
     }
-    
+
     /**
-     * Returns the default decoy accession for a target accession
+     * Returns the default decoy accession for a target accession.
      *
      * @param targetAccession the target accession
      * @return the default decoy accession
@@ -844,7 +849,7 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the default description for a decoy protein
+     * Returns the default description for a decoy protein.
      *
      * @param targetDescription the description of a target protein
      * @return the default description of the decoy protein
@@ -856,7 +861,7 @@ public class SequenceFactory {
     /**
      * Returns the default target accession of a given decoy protein. Note:
      * works only for the accessions constructed according to
-     * getDefaultDecoyAccession(String targetAccession)
+     * getDefaultDecoyAccession(String targetAccession).
      *
      * @param decoyAccession the decoy accession
      * @return the target accession

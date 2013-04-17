@@ -174,6 +174,7 @@ public class Util {
      * Note that the last selected folder value is not updated during this
      * method, and the code calling this method therefore has to take care of
      * this if wanted.
+     *
      * @TODO a version for folder selection would be useful as well :)
      *
      * @param parent the parent dialog or frame
@@ -196,7 +197,6 @@ public class Util {
         fileChooser.setMultiSelectionEnabled(false);
 
         javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-
             @Override
             public boolean accept(File myFile) {
                 return myFile.getName().toLowerCase().endsWith(fileEnding) || myFile.isDirectory();
@@ -427,12 +427,14 @@ public class Util {
         }
         return true;
     }
-    
+
     /**
-     * Returns at which indexes a small string can be found in a big string
+     * Returns at which indexes a small string can be found in a big string.
+     *
      * @param bigString the big string
      * @param smallString the small string
-     * @return a list of the indexes where the small string can be found in the big string
+     * @return a list of the indexes where the small string can be found in the
+     * big string
      */
     public static ArrayList<Integer> getIndexes(String bigString, String smallString) {
         Pattern pattern = Pattern.compile(smallString);

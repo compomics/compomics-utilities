@@ -27,7 +27,8 @@ public class FastaIndex extends ExperimentObject {
      */
     private boolean isDecoy;
     /**
-     * In case decoy hits are found, check whether these are reversed versions of the target with default accession suffix
+     * In case decoy hits are found, check whether these are reversed versions
+     * of the target with default accession suffix.
      */
     private boolean isDefaultReversed;
     /**
@@ -41,6 +42,7 @@ public class FastaIndex extends ExperimentObject {
      * @param indexes The indexes of the inspected FASTA file
      * @param fileName The FASTA file name
      * @param isDecoy If the FASTA file contains decoys or nor
+     * @param isReversed is this a reversed index
      * @param nTarget Number of target sequences found in the database
      * @param lastModified a long indicating the last time the indexed file was
      * modified
@@ -92,11 +94,14 @@ public class FastaIndex extends ExperimentObject {
     public boolean isDecoy() {
         return isDecoy;
     }
-    
+
     /**
-     * Indicates whether the decoy sequences are reversed versions of the target and the decoy accessions built based on the sequence factory methods.
-     * See getDefaultDecoyAccession(String targetAccession) in SequenceFactory
-     * @return
+     * Indicates whether the decoy sequences are reversed versions of the target
+     * and the decoy accessions built based on the sequence factory methods. See
+     * getDefaultDecoyAccession(String targetAccession) in SequenceFactory.
+     *
+     * @return true if the decoy sequences are reversed versions of the target
+     * and the decoy accessions built based on the sequence factory methods
      */
     public boolean isDefaultReversed() {
         return isDefaultReversed;

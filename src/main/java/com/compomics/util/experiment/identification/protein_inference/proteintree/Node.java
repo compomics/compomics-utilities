@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * A node of the protein tree.
@@ -31,7 +30,7 @@ public class Node {
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
-     * The index of the node when saved
+     * The index of the node when saved.
      */
     private Long index = null;
 
@@ -161,32 +160,36 @@ public class Node {
     public HashMap<String, ArrayList<Integer>> getAccessions() {
         return accessions;
     }
-    
+
     /**
      * Returns the subtree. Null if end of the tree.
-     * @return 
+     *
+     * @return the subtree
      */
     public HashMap<Character, Node> getSubtree() {
         return subtree;
     }
-    
+
     /**
-     * Clears the accessions of this node
+     * Clears the accessions of this node.
      */
     public void clearAccessions() {
         accessions.clear();
     }
-    
+
     /**
-     * Indicates whether the node is empty
-     * @return 
+     * Indicates whether the node is empty.
+     *
+     * @return whether the node is empty
      */
     public boolean isEmpty() {
         return subtree == null && accessions.isEmpty();
     }
-    
+
     /**
-     * Loads the content of the node from the node factory
+     * Loads the content of the node from the node factory.
+     *
+     * @throws IOException
      */
     public void loadAccessions() throws IOException {
         NodeFactory nodeFactory = NodeFactory.getInstance();
@@ -206,6 +209,7 @@ public class Node {
      * Returns all the protein mapping of the node.
      *
      * @return all the protein mappings of the node
+     * @throws IOException
      */
     public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
         if (isEmpty()) {
@@ -342,16 +346,16 @@ public class Node {
     /**
      * Returns the index of the node when saved. Null if not set.
      *
-     * @return
+     * @return the index of the node when save
      */
     public Long getIndex() {
         return index;
     }
 
     /**
-     * Sets the index of the node when saved
+     * Sets the index of the node when saved.
      *
-     * @param index
+     * @param index the index of the node when save
      */
     public void setIndex(Long index) {
         this.index = index;

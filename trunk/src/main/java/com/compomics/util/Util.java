@@ -7,6 +7,8 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -424,5 +426,25 @@ public class Util {
             }
         }
         return true;
+    }
+    
+    /**
+     * Returns at which indexes a small string can be found in a big string
+     * @param bigString the big string
+     * @param smallString the small string
+     * @return a list of the indexes where the small string can be found in the big string
+     */
+    public static ArrayList<Integer> getIndexes(String bigString, String smallString) {
+        Pattern pattern = Pattern.compile(smallString);
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        Matcher matcher = pattern.matcher(bigString);
+        matcher.matches();
+        int index = 0;
+        while (matcher.find(index)) {
+            index = matcher.start();
+            index++;
+            result.add(index);
+        }
+        return result;
     }
 }

@@ -341,9 +341,9 @@ public class Protein extends ExperimentObject {
 
             String before = surroundingAminoAcids.get(index)[0];
             String after = surroundingAminoAcids.get(index)[1];
-            if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after) 
-                    || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)
-                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) {
+            if (before.length() == 0
+                    || after.length() == 0
+                    || enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)) {
                 return true;
             }
         }

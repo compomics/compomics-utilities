@@ -43,7 +43,8 @@ public class SequenceFactory {
      */
     private File currentFastaFile = null;
     /**
-     * Number of proteins to keep in cache, 1 by default.
+     * Number of proteins to keep in cache, 1 by default. For my good old
+     * uniprot swissprot human, 20,000 sequences take ~300MB of memory.
      */
     private int nCache = 1;
     /**
@@ -155,6 +156,12 @@ public class SequenceFactory {
      */
     private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
+        if (isDefaultReversed() && isDecoy(accession)) {
+            String targetAccession = getDefaultTargetAccession(accession);
+            Protein targetProtein = getProtein(targetAccession, reindex);
+            return new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
+        } 
+        
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null) {
@@ -399,13 +406,13 @@ public class SequenceFactory {
                         }
                     }
                 } catch (InvalidClassException e) {
-                    System.out.println("Needs updating!!");
+                    System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Reason: " + e.getLocalizedMessage() + ")");
                 } catch (Exception e) {
                     System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Reason: " + e.getLocalizedMessage() + ")");
                 }
             }
         }
-        
+
         System.out.println("Reindexing.");
         tempFastaIndex = createFastaIndex(currentFastaFile, waitingHandler);
 
@@ -474,7 +481,8 @@ public class SequenceFactory {
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String line;
-        boolean decoy = false;
+        boolean decoy = false,
+                defaultReversed = false;
         int nTarget = 0;
         long index = bufferedRandomAccessFile.getFilePointer();
 
@@ -500,6 +508,9 @@ public class SequenceFactory {
                     nTarget++;
                 } else if (!decoy) {
                     decoy = true;
+                    if (accession.endsWith(getDefaultDecoyAccessionSuffix())) {
+                        defaultReversed = true;
+                    }
                 }
 
                 if (waitingHandler != null) {
@@ -521,7 +532,7 @@ public class SequenceFactory {
 
         long lastModified = fastaFile.lastModified();
 
-        return new FastaIndex(indexes, fastaFile.getName(), decoy, nTarget, lastModified);
+        return new FastaIndex(indexes, fastaFile.getName(), decoy, defaultReversed, nTarget, lastModified);
     }
 
     /**
@@ -553,6 +564,15 @@ public class SequenceFactory {
      */
     public boolean concatenatedTargetDecoy() {
         return fastaIndex.isDecoy();
+    }
+    
+    /**
+     * Indicates whether the decoy sequences are reversed versions of the target and the decoy accessions built based on the sequence factory methods.
+     * See getDefaultDecoyAccession(String targetAccession)
+     * @return
+     */
+    public boolean isDefaultReversed() {
+        return fastaIndex.isDefaultReversed();
     }
 
     /**
@@ -614,10 +634,10 @@ public class SequenceFactory {
             Protein currentProtein = getProtein(accession);
             Header currentHeader = getHeader(accession);
 
-            String decoyAccession = currentProtein.getAccession() + "_" + decoyFlags[0];
+            String decoyAccession = getDefaultDecoyAccession(currentProtein.getAccession());
             Header decoyHeader = Header.parseFromFASTA(currentHeader.toString());
             decoyHeader.setAccession(decoyAccession);
-            decoyHeader.setDescription(decoyHeader.getDescription() + "-" + decoyFlags[0]);
+            decoyHeader.setDescription(getDefaultDecoyDescription(decoyHeader.getDescription()));
 
             String decoySequence = reverseSequence(currentProtein.getSequence());
 
@@ -670,7 +690,7 @@ public class SequenceFactory {
      * @param sequence the protein sequence
      * @return the reversed protein sequence
      */
-    public String reverseSequence(String sequence) {
+    public static String reverseSequence(String sequence) {
         return new StringBuilder(sequence).reverse().toString();
     }
 
@@ -761,6 +781,11 @@ public class SequenceFactory {
      */
     public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
+        if (isDefaultReversed() && isDecoy(accession)) {
+            // Don't really see where we would need that...
+            return computeMolecularWeight(getDefaultTargetAccession(accession));
+        }
+        
         // see if we've already calculated the weight of this protein
         if (molecularWeights.containsKey(accession)) {
             return molecularWeights.get(accession);
@@ -798,5 +823,45 @@ public class SequenceFactory {
      */
     public String getFileName() {
         return fastaIndex.getFileName();
+    }
+
+    /**
+     * Returns the default suffix for a decoy accession
+     * @return 
+     */
+    public static String getDefaultDecoyAccessionSuffix() {
+        return "_" + decoyFlags[0];
+    }
+    
+    /**
+     * Returns the default decoy accession for a target accession
+     *
+     * @param targetAccession the target accession
+     * @return the default decoy accession
+     */
+    public static String getDefaultDecoyAccession(String targetAccession) {
+        return targetAccession + getDefaultDecoyAccessionSuffix();
+    }
+
+    /**
+     * Returns the default description for a decoy protein
+     *
+     * @param targetDescription the description of a target protein
+     * @return the default description of the decoy protein
+     */
+    public static String getDefaultDecoyDescription(String targetDescription) {
+        return targetDescription + "-" + decoyFlags[0];
+    }
+
+    /**
+     * Returns the default target accession of a given decoy protein. Note:
+     * works only for the accessions constructed according to
+     * getDefaultDecoyAccession(String targetAccession)
+     *
+     * @param decoyAccession the decoy accession
+     * @return the target accession
+     */
+    public static String getDefaultTargetAccession(String decoyAccession) {
+        return decoyAccession.substring(0, decoyAccession.length() - getDefaultDecoyAccessionSuffix().length());
     }
 }

@@ -27,13 +27,13 @@ public class Node {
      */
     private HashMap<Character, Node> subtree = null;
     /**
-     * In case of an indexed tree, the index of the sub nodes.
-     */
-    private HashMap<Character, Long> subNodesIndexes = null;
-    /**
      * Instance of the sequence factory.
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+    /**
+     * The index of the node when saved
+     */
+    private Long index = null;
 
     /**
      * Constructor.
@@ -42,17 +42,6 @@ public class Node {
      */
     public Node(int depth) {
         this.depth = depth;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param depth the depth of the node
-     * @param subNodesIndexes map of the subnode indexes
-     */
-    public Node(HashMap<Character, Long> subNodesIndexes, int depth) {
-        this.depth = depth;
-        this.subNodesIndexes = subNodesIndexes;
     }
 
     /**
@@ -76,9 +65,12 @@ public class Node {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence, NodeFactory nodeFactory) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
+        if (isEmpty()) {
+            loadAccessions();
+        }
         if (depth == peptideSequence.length()) {
-            return getAllMappings(nodeFactory);
+            return getAllMappings();
         } else if (accessions != null) {
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>(accessions.size());
             for (String accession : accessions.keySet()) {
@@ -90,17 +82,9 @@ public class Node {
             return result;
         } else {
             char aa = peptideSequence.charAt(depth);
-            Node node = null;
-            if (subtree != null) {
-                node = subtree.get(aa);
-            } else {
-                Long nodeIndex = subNodesIndexes.get(aa);
-                if (nodeIndex != null) {
-                    node = nodeFactory.getNode(nodeIndex, "");
-                }
-            }
+            Node node = subtree.get(aa);
             if (node != null) {
-                return node.getProteinMapping(peptideSequence, nodeFactory);
+                return node.getProteinMapping(peptideSequence);
             } else {
                 return new HashMap<String, ArrayList<Integer>>();
             }
@@ -112,7 +96,6 @@ public class Node {
      * and does the same for every sub node.
      *
      * @param maxNodeSize the maximal node size allowed when splitting
-     * @param nodeFactory the node factory, can be null
      * @return returns true if the node was actually splitted and thus needs to
      * be saved in indexed mode
      * @throws IOException
@@ -120,7 +103,7 @@ public class Node {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public boolean splitNode(int maxNodeSize, NodeFactory nodeFactory) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    public boolean splitNode(int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         if (accessions.size() > maxNodeSize) {
 
@@ -137,20 +120,6 @@ public class Node {
             }
             accessions = null;
 
-            if (nodeFactory != null) {
-                subNodesIndexes = new HashMap<Character, Long>();
-            }
-            for (char aa : subtree.keySet()) {
-                Node node = subtree.get(aa);
-                node.splitNode(maxNodeSize, nodeFactory);
-                if (nodeFactory != null) {
-                    long nodeIndex = nodeFactory.saveNode(node, "");
-                    subNodesIndexes.put(aa, nodeIndex);
-                }
-            }
-            if (nodeFactory != null) {
-                subtree = null;
-            }
             return true;
         }
         return false;
@@ -165,15 +134,6 @@ public class Node {
      */
     public void addAccession(String accession, ArrayList<Integer> indexes) {
         accessions.put(accession, indexes);
-    }
-
-    /**
-     * Returns the subNodesIndexes attribute.
-     *
-     * @return the subNodesIndexes attribute
-     */
-    public HashMap<Character, Long> getSubNodesIndexes() {
-        return subNodesIndexes;
     }
 
     /**
@@ -201,6 +161,37 @@ public class Node {
     public HashMap<String, ArrayList<Integer>> getAccessions() {
         return accessions;
     }
+    
+    /**
+     * Returns the subtree. Null if end of the tree.
+     * @return 
+     */
+    public HashMap<Character, Node> getSubtree() {
+        return subtree;
+    }
+    
+    /**
+     * Clears the accessions of this node
+     */
+    public void clearAccessions() {
+        accessions.clear();
+    }
+    
+    /**
+     * Indicates whether the node is empty
+     * @return 
+     */
+    public boolean isEmpty() {
+        return subtree == null && accessions.isEmpty();
+    }
+    
+    /**
+     * Loads the content of the node from the node factory
+     */
+    public void loadAccessions() throws IOException {
+        NodeFactory nodeFactory = NodeFactory.getInstance();
+        accessions = nodeFactory.getAccessions(index);
+    }
 
     /**
      * Returns the depth of the node in the tree.
@@ -214,29 +205,18 @@ public class Node {
     /**
      * Returns all the protein mapping of the node.
      *
-     * @param nodeFactory the node factory, can be null
      * @return all the protein mappings of the node
      */
-    public HashMap<String, ArrayList<Integer>> getAllMappings(NodeFactory nodeFactory) throws IOException {
+    public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
+        if (isEmpty()) {
+            loadAccessions();
+        }
         if (accessions != null) {
             return accessions;
         } else {
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>();
-            Set<Character> aas;
-            if (subtree != null) {
-                aas = subtree.keySet();
-            } else {
-                aas = subNodesIndexes.keySet();
-            }
-            for (char aa : aas) {
-                Node node;
-                if (subtree != null) {
-                    node = subtree.get(aa);
-                } else {
-                    long nodeIndex = subNodesIndexes.get(aa);
-                    node = nodeFactory.getNode(nodeIndex, "");
-                }
-                HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings(nodeFactory);
+            for (Node node : subtree.values()) {
+                HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings();
                 for (String accession : subResult.keySet()) {
                     ArrayList<Integer> indexes = result.get(accession);
                     if (indexes == null) {
@@ -357,5 +337,23 @@ public class Node {
         }
 
         return results;
+    }
+
+    /**
+     * Returns the index of the node when saved. Null if not set.
+     *
+     * @return
+     */
+    public Long getIndex() {
+        return index;
+    }
+
+    /**
+     * Sets the index of the node when saved
+     *
+     * @param index
+     */
+    public void setIndex(Long index) {
+        this.index = index;
     }
 }

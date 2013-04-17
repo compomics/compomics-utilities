@@ -27,6 +27,10 @@ public class FastaIndex extends ExperimentObject {
      */
     private boolean isDecoy;
     /**
+     * In case decoy hits are found, check whether these are reversed versions of the target with default accession suffix
+     */
+    private boolean isDefaultReversed;
+    /**
      * Number of target sequences found in the database.
      */
     private int nTarget;
@@ -41,10 +45,11 @@ public class FastaIndex extends ExperimentObject {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean isDecoy, int nTarget, long lastModified) {
+    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean isDecoy, boolean isReversed, int nTarget, long lastModified) {
         this.indexes = indexes;
         this.fileName = fileName;
         this.isDecoy = isDecoy;
+        this.isDefaultReversed = isReversed;
         this.nTarget = nTarget;
         this.lastModified = lastModified;
     }
@@ -86,6 +91,15 @@ public class FastaIndex extends ExperimentObject {
      */
     public boolean isDecoy() {
         return isDecoy;
+    }
+    
+    /**
+     * Indicates whether the decoy sequences are reversed versions of the target and the decoy accessions built based on the sequence factory methods.
+     * See getDefaultDecoyAccession(String targetAccession) in SequenceFactory
+     * @return
+     */
+    public boolean isDefaultReversed() {
+        return isDefaultReversed;
     }
 
     /**

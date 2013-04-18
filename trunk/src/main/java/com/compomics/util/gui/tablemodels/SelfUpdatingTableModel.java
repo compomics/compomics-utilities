@@ -48,6 +48,15 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     protected abstract int loadDataForRows(int start, int end, boolean interrupted);
 
     /**
+     * Loads the data for a column
+     *
+     * @param column the column number
+     * @param waitingHandler a waiting handler used to display progress to the
+     * user or interrupt the process
+     */
+    protected abstract void loadDataForColumn(int column, WaitingHandler waitingHandler);
+
+    /**
      * This method is called whenever an exception is encountered in a separate
      * thread.
      *
@@ -156,41 +165,13 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     public synchronized void loadColumnsContent(ArrayList<Integer> columns, String waitingContent, WaitingHandler waitingHandler) throws InterruptedException {
 
         setSelfUpdating(false);
-
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressValue(columns.size() * getRowCount());
             waitingHandler.setSecondaryProgressValue(0);
         }
-        int tempo = 50;
-        for (int row = 0; row < getRowCount(); row++) {
-            boolean newLine = true;
-            for (int column : columns) {
-                Object cellContent = getValueAt(row, column);
-                boolean firstAttempt = true;
-                while (cellContent instanceof String && cellContent.equals(waitingContent)) {
-                    wait(tempo);
-                    cellContent = getValueAt(row, column);
-                    if (waitingHandler.isRunCanceled()) {
-                        setSelfUpdating(true);
-                        return;
-                    }
-                    if (newLine) {
-                        if (firstAttempt) {
-                            tempo = Math.max(20, tempo - tempo / 2);
-                            firstAttempt = false;
-                        } else {
-                            tempo = Math.min(1000, tempo + tempo / 2);
-                        }
-                    }
-                }
-                if (newLine) {
-                    newLine = false;
-                }
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressValue();
-                }
-            }
+        for (int column : columns) {
+            loadDataForColumn(column, waitingHandler);
         }
 
         setSelfUpdating(true);

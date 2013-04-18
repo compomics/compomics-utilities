@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
@@ -135,7 +136,8 @@ public class SearchParameters implements Serializable {
      */
     private Boolean estimateCharge = true;
     /**
-     * Indicates whether the precursor mass shall be corrected (DeNovoGUI setting).
+     * Indicates whether the precursor mass shall be corrected (DeNovoGUI
+     * setting).
      */
     private Boolean correctPrecursorMass = true;
     /**
@@ -652,7 +654,13 @@ public class SearchParameters implements Serializable {
      * @throws ClassNotFoundException
      */
     public static SearchParameters getIdentificationParameters(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
-        return (SearchParameters) SerializationUtils.readObject(file);
+        SearchParameters result = (SearchParameters) SerializationUtils.readObject(file);
+        // compatibility check
+        ModificationProfile modificationProfile = result.getModificationProfile();
+        if (!modificationProfile.hasOMSSAIndexes()) {
+            PTMFactory.getInstance().setSearchedOMSSAIndexes(modificationProfile);
+        }
+        return result;
     }
 
     /**
@@ -667,7 +675,7 @@ public class SearchParameters implements Serializable {
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SerializationUtils.writeObject(identificationParameters, file);
     }
-    
+
     /**
      * Saves the identification parameters as a human readable text file.
      *
@@ -683,9 +691,9 @@ public class SearchParameters implements Serializable {
         bw.close();
         fw.close();
     }
-    
+
     public String toString() {
-        
+
         StringBuilder output = new StringBuilder();
 
         // Write the file header.
@@ -696,19 +704,19 @@ public class SearchParameters implements Serializable {
         output.append("# ------------------------------------------------------------------");
         output.append(System.getProperty("line.separator"));
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("DATABASE_FILE=");
         if (fastaFile != null) {
             output.append(fastaFile.getAbsolutePath());
         }
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("ENZYME=");
         if (enzyme != null) {
             output.append(enzyme.getName());
         }
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("FIXED_MODIFICATIONS=");
         if (utilitiesModificationProfile != null) {
             ArrayList<String> fixedPtms = utilitiesModificationProfile.getFixedModifications();
@@ -719,11 +727,11 @@ public class SearchParameters implements Serializable {
                     first = false;
                 } else {
                     output.append("//" + ptm);
-                } 
+                }
             }
         }
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("VARIABLE_MODIFICATIONS=");
         if (utilitiesModificationProfile != null) {
             ArrayList<String> fixedPtms = utilitiesModificationProfile.getVariableModifications();
@@ -734,19 +742,19 @@ public class SearchParameters implements Serializable {
                     first = false;
                 } else {
                     output.append("//" + ptm);
-                } 
+                }
             }
         }
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("MAX_MISSED_CLEAVAGES=");
         output.append(nMissedCleavages);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("PRECURSOR_MASS_TOLERANCE=");
         output.append(precursorTolerance);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("PRECURSOR_MASS_TOLERANCE_UNIT=");
         if (currentPrecursorAccuracyType == currentPrecursorAccuracyType.PPM) {
             output.append("ppm");
@@ -774,7 +782,7 @@ public class SearchParameters implements Serializable {
             output.append("z");
         }
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("FRAGMENT_ION_TYPE_2=");
         if (rewindIon == PeptideFragmentIon.A_ION) {
             output.append("a");
@@ -794,15 +802,15 @@ public class SearchParameters implements Serializable {
         output.append("PRECURSOR_CHARGE_LOWER_BOUND=");
         output.append(minChargeSearched);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("PRECURSOR_CHARGE_UPPER_BOUND=");
         output.append(maxChargeSearched);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("EVALUE_CUTOFF=");
         output.append(maxEValue);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("MAXIMUM_HITLIST_LENGTH=");
         output.append(hitListLength);
         output.append(System.getProperty("line.separator"));
@@ -810,7 +818,7 @@ public class SearchParameters implements Serializable {
         output.append("OMSSA_PRECURSOR_ELIMINATION=");
         output.append(removePrecursor);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("OMSSA_PRECURSOR_SCALING=");
         output.append(scalePrecursor);
         output.append(System.getProperty("line.separator"));
@@ -818,7 +826,7 @@ public class SearchParameters implements Serializable {
         output.append("OMSSA_MINIMAL_PEPTIDE_SIZE=");
         output.append(minPeptideLength);
         output.append(System.getProperty("line.separator"));
-        
+
         output.append("OMSSA_MAXIMAL_PEPTIDE_SIZE=");
         output.append(maxPeptideLength);
         output.append(System.getProperty("line.separator"));
@@ -952,7 +960,7 @@ public class SearchParameters implements Serializable {
                 || (this.getFractionMolecularWeightRanges() == null && otherSearchParameters.getFractionMolecularWeightRanges() != null)) {
             return false;
         }
-        
+
         // de novo sequencing parameters
         if (!this.getFragmentationModel().equalsIgnoreCase(otherSearchParameters.getFragmentationModel())) {
             return false;

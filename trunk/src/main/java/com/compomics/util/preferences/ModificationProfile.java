@@ -287,6 +287,14 @@ public class ModificationProfile implements Serializable {
     public String getModification(int omssaIndex) {
         return omssaIndexes.get(omssaIndex);
     }
+    
+    /**
+     * Indicates whether the modification profile has omssa indexes. 
+     * @return true if an omssa indexes map is set
+     */
+    public boolean hasOMSSAIndexes() {
+        return omssaIndexes == null || omssaIndexes.isEmpty();
+    }
 
     /**
      * Returns the OMSSA index of a given modification, null if not found.

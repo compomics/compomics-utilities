@@ -131,7 +131,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      *
      * @param column index of the column of interest
      * @param waitingContent the waiting content of this table
-     * @return
+     * @return indicates whether the given column needs an update
      */
     public boolean needsUpdate(int column, String waitingContent) {
         for (int row = getRowCount() - 1; row >= 0; row--) {
@@ -144,12 +144,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Loads the content of a column without updating the table
+     * Loads the content of a column without updating the table.
      *
-     * @param column the column of interest
+     * @param columns the column of interest
      * @param waitingContent the content of a cell indicating that loading is
      * not completed
-     * @param waitingHandlera waiting handler for display of the progress or
+     * @param waitingHandler waiting handler for display of the progress or
      * loading interruption (can be null)
      * @throws InterruptedException
      */
@@ -176,12 +176,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                         return;
                     }
                     if (newLine) {
-                    if (firstAttempt) {
-                        tempo = Math.max(20, tempo - tempo / 2);
-                        firstAttempt = false;
-                    } else {
-                        tempo = Math.min(1000, tempo + tempo / 2);
-                    }
+                        if (firstAttempt) {
+                            tempo = Math.max(20, tempo - tempo / 2);
+                            firstAttempt = false;
+                        } else {
+                            tempo = Math.min(1000, tempo + tempo / 2);
+                        }
                     }
                 }
                 if (newLine) {
@@ -192,6 +192,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                 }
             }
         }
+
         setSelfUpdating(true);
     }
 

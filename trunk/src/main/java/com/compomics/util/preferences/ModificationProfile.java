@@ -289,8 +289,9 @@ public class ModificationProfile implements Serializable {
     }
     
     /**
-     * Indicates whether the modification profile has omssa indexes. 
-     * @return true if an omssa indexes map is set
+     * Indicates whether the modification profile has OMSSA indexes. 
+     * 
+     * @return true if an OMSSA indexes map is set
      */
     public boolean hasOMSSAIndexes() {
         return omssaIndexes == null || omssaIndexes.isEmpty();

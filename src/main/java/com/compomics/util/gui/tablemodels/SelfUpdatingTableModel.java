@@ -106,7 +106,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             new Thread(new Runnable() {
                 public synchronized void run() {
                     try {
-                        fireTableDataChanged();
+                        if (selfUpdating) {
+                            fireTableDataChanged();
+                        } 
                     } catch (Exception e) {
                         catchException(e);
                     }
@@ -164,7 +166,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     public synchronized void loadColumnsContent(ArrayList<Integer> columns, String waitingContent, WaitingHandler waitingHandler) throws InterruptedException {
 
-        setSelfUpdating(false);
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressValue(columns.size() * getRowCount());
@@ -174,7 +175,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             loadDataForColumn(column, waitingHandler);
         }
 
-        setSelfUpdating(true);
     }
 
     /**

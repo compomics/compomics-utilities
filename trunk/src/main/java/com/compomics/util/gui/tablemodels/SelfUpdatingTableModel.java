@@ -1,5 +1,7 @@
 package com.compomics.util.gui.tablemodels;
 
+import com.compomics.util.gui.waiting.WaitingHandler;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -121,6 +123,76 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     public void setSelfUpdating(boolean selfUpdating) {
         this.selfUpdating = selfUpdating;
+    }
+
+    /**
+     * Indicates whether the given column needs an update, i.e. whether a cell
+     * contains waitingContent.
+     *
+     * @param column index of the column of interest
+     * @param waitingContent the waiting content of this table
+     * @return
+     */
+    public boolean needsUpdate(int column, String waitingContent) {
+        for (int row = getRowCount() - 1; row >= 0; row--) {
+            Object cellContent = getValueAt(row, column);
+            if (cellContent instanceof String && cellContent.equals(waitingContent)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Loads the content of a column without updating the table
+     *
+     * @param column the column of interest
+     * @param waitingContent the content of a cell indicating that loading is
+     * not completed
+     * @param waitingHandlera waiting handler for display of the progress or
+     * loading interruption (can be null)
+     * @throws InterruptedException
+     */
+    public synchronized void loadColumnsContent(ArrayList<Integer> columns, String waitingContent, WaitingHandler waitingHandler) throws InterruptedException {
+
+        setSelfUpdating(false);
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressValue(columns.size() * getRowCount());
+            waitingHandler.setSecondaryProgressValue(0);
+        }
+        int tempo = 50;
+        for (int row = 0; row < getRowCount(); row++) {
+            boolean newLine = true;
+            for (int column : columns) {
+                Object cellContent = getValueAt(row, column);
+                boolean firstAttempt = true;
+                while (cellContent instanceof String && cellContent.equals(waitingContent)) {
+                    wait(tempo);
+                    cellContent = getValueAt(row, column);
+                    if (waitingHandler.isRunCanceled()) {
+                        setSelfUpdating(true);
+                        return;
+                    }
+                    if (newLine) {
+                    if (firstAttempt) {
+                        tempo = Math.max(20, tempo - tempo / 2);
+                        firstAttempt = false;
+                    } else {
+                        tempo = Math.min(1000, tempo + tempo / 2);
+                    }
+                    }
+                }
+                if (newLine) {
+                    newLine = false;
+                }
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressValue();
+                }
+            }
+        }
+        setSelfUpdating(true);
     }
 
     /**

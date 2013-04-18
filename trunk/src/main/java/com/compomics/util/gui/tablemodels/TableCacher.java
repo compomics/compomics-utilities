@@ -19,7 +19,7 @@ import javax.swing.RowSorter;
  * @author Marc
  */
 public class TableCacher {
-    
+
     /**
      * Back-up of the ordering keys for self updating tables
      */
@@ -29,21 +29,32 @@ public class TableCacher {
      */
     private ExceptionHandler exceptionHandler;
     /**
+     * boolean indicating that the cacher is caching data
+     */
+    private boolean caching = false;
+
+    /**
      * Constructor
      */
     public TableCacher(ExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
     }
+
     /**
-     * updates the ordering in a self updating table. If data is missing a progress bar will appear during the loading
+     * updates the ordering in a self updating table. If data is missing a
+     * progress bar will appear during the loading
+     *
      * @param table the table to reorder
      * @param tableName a string designing this table
-     * @param loadingMessage the message displayed in a cell when data is missing
-     * @param progressDialog a dialog allowing display of progress and interruption of the process
+     * @param loadingMessage the message displayed in a cell when data is
+     * missing
+     * @param progressDialog a dialog allowing display of progress and
+     * interruption of the process
      */
     public void cacheForSorting(JTable table, String tableName, String loadingMessage, ProgressDialogX progressDialog) {
 
         final SelfUpdatingTableModel tableModel = (SelfUpdatingTableModel) table.getModel();
+        tableModel.setSelfUpdating(false);
         final RowSorter rowSorter = table.getRowSorter();
         final List<? extends RowSorter.SortKey> newKeys = rowSorter.getSortKeys();
         final String finalTableName = tableName;
@@ -59,6 +70,8 @@ public class TableCacher {
         }
 
         if (!columnsToUpdate.isEmpty()) {
+
+            caching = true;
 
             final ArrayList<Integer> finalColumnsToUpdate = columnsToUpdate;
             rowSorter.setSortKeys(orderingKeys.get(tableName));
@@ -80,14 +93,28 @@ public class TableCacher {
                     try {
                         tableModel.loadColumnsContent(finalColumnsToUpdate, finalLoadingMessage, finalProgressDialog);
                         orderingKeys.put(finalTableName, newKeys);
-                        rowSorter.setSortKeys(newKeys);
                     } catch (Exception ex) {
                         exceptionHandler.catchException(ex);
+                        return;
                     } finally {
-                        finalProgressDialog.dispose();
+                        finalProgressDialog.setRunFinished();
+                        tableModel.setSelfUpdating(true);
+                        caching = false;
                     }
+                    rowSorter.setSortKeys(newKeys);
                 }
             }.start();
+        } else {
+            tableModel.setSelfUpdating(true);
         }
+    }
+
+    /**
+     * indicates whether the cacher is caching data
+     *
+     * @return
+     */
+    public boolean isCaching() {
+        return caching;
     }
 }

@@ -16,8 +16,8 @@ import java.util.*;
 import java.util.ArrayList;
 
 /**
- * This class presents a JPanel that will hold and display a
- * mass spectrum in centroid or profile mode, or a chromatogram.
+ * This class presents a JPanel that will hold and display a mass spectrum in
+ * centroid or profile mode, or a chromatogram.
  *
  * @author Lennart Martens
  * @author Harald Barsnes
@@ -29,7 +29,7 @@ public abstract class GraphicsPanel extends JPanel {
      */
     private float peakWidth = 1.0f;
     /**
-     * The width used for the bcakground peaks.
+     * The width used for the background peaks.
      */
     private float backgroundPeakWidth = 1.0f;
     /**
@@ -37,18 +37,18 @@ public abstract class GraphicsPanel extends JPanel {
      */
     private boolean subscriptAnnotationNumbers = true;
     /**
-     * The color to use for the non-annotated peaks when only the annotated 
+     * The color to use for the non-annotated peaks when only the annotated
      * peaks are to be shown.
      */
     private Color peakWaterMarkColor = new Color(100, 100, 100, 50);
     /**
-     * If true the x-axis will be drawn using the scientific annotation.
-     * The pattern i set in the "scientificPattern" field.
+     * If true the x-axis will be drawn using the scientific annotation. The
+     * pattern i set in the "scientificPattern" field.
      */
     private boolean scientificXAxis = false;
     /**
-     * If true the y-axis will be drawn using the scientific annotation.
-     * The pattern i set in the "scientificPattern" field.
+     * If true the y-axis will be drawn using the scientific annotation. The
+     * pattern i set in the "scientificPattern" field.
      */
     private boolean scientificYAxis = false;
     /**
@@ -56,20 +56,21 @@ public abstract class GraphicsPanel extends JPanel {
      */
     private String scientificPattern = "##0.#####E0";
     /**
-     * A hashmap of the current x-axis reference areas. Key is the name of
-     * the reference area.
+     * A hashmap of the current x-axis reference areas. Key is the name of the
+     * reference area.
      */
     private HashMap<String, ReferenceArea> referenceAreasXAxis = new HashMap<String, ReferenceArea>();
     /**
-     * A hashmap of the current y-axis reference areas. Key is the name of
-     * the reference area.
+     * A hashmap of the current y-axis reference areas. Key is the name of the
+     * reference area.
      */
     private HashMap<String, ReferenceArea> referenceAreasYAxis = new HashMap<String, ReferenceArea>();
     /**
-     * If set to true, the y-axis is removed, the y- and x-axis tags are removed, 
-     * and any annotations are hidden. All to make the graphics panel look better
-     * in a smaller version, e.g., when put into a table cell. When turning
-     * miniature mode one it is also recommended to reduce the max padding.
+     * If set to true, the y-axis is removed, the y- and x-axis tags are
+     * removed, and any annotations are hidden. All to make the graphics panel
+     * look better in a smaller version, e.g., when put into a table cell. When
+     * turning miniature mode one it is also recommended to reduce the max
+     * padding.
      *
      * Note that miniature and reduced max padding is set automatically by the
      * GraphicsPanelTableCellRenderer.
@@ -91,8 +92,12 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected static int dataSetCounter = 0;
     /**
-     * This status indicates that no annotation will be displayed,
-     * but the user will have a fully functional interface (point clicking, selecting,
+     * The number of mirrored datasets currently displayed in the panel.
+     */
+    protected static int dataSetCounterMirroredSpectra = 0;
+    /**
+     * This status indicates that no annotation will be displayed, but the user
+     * will have a fully functional interface (point clicking, selecting,
      * sequencing etc.)
      */
     public static final int INTERACTIVE_STATUS = 0;
@@ -102,13 +107,12 @@ public abstract class GraphicsPanel extends JPanel {
      */
     public static final int ANNOTATED_STATUS = 1;
     /**
-     * This HashMap instance holds all the known mass deltas (if any).
-     * The keys are the Doubles with the massdelta, the values are the
-     * descriptions.
+     * This HashMap instance holds all the known mass deltas (if any). The keys
+     * are the Doubles with the massdelta, the values are the descriptions.
      */
     protected static HashMap<Double, String> iKnownMassDeltas = null;
     /**
-     * If true, pairs of delta mass annotations are used when doing de novo 
+     * If true, pairs of delta mass annotations are used when doing de novo
      * sequencing. If false, only single delta masses are annotated.
      */
     private boolean useMassDeltaCombinations = true;
@@ -136,9 +140,9 @@ public abstract class GraphicsPanel extends JPanel {
         }
     }
     /**
-     * The size of the window to use when searcing for matches in the known masses
-     * list when the user hovers over a second data point after clicking a previous
-     * data point.
+     * The size of the window to use when searching for matches in the known
+     * masses list when the user hovers over a second data point after clicking
+     * a previous data point.
      */
     protected double deltaMassWindow = 0.2;
     /**
@@ -156,13 +160,25 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected Color iFilenameColor = null;
     /**
-     * Colors in which the data points and peaks are rendered. Indexed by dataset.
+     * Colors in which the data points and peaks are rendered. Indexed by
+     * dataset.
      */
     protected ArrayList<Color> iDataPointAndLineColor = new ArrayList<Color>();
     /**
-     * Colors in which the chromatogram polyline is rendered. Indexed by dataset.
+     * Colors in which the data points and peaks are rendered for the mirrored
+     * spectra. Indexed by dataset.
+     */
+    protected ArrayList<Color> iDataPointAndLineColorMirroredSpectra = new ArrayList<Color>();
+    /**
+     * Colors in which the chromatogram polyline is rendered. Indexed by
+     * dataset.
      */
     protected ArrayList<Color> iAreaUnderCurveColor = new ArrayList<Color>();
+    /**
+     * Colors in which the chromatogram polyline is rendered for the mirrored
+     * spectra. Indexed by dataset.
+     */
+    protected ArrayList<Color> iAreaUnderCurveColorMirroredSpectra = new ArrayList<Color>();
     /**
      * Size for the point on a polygon.
      */
@@ -172,26 +188,32 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected String iFilename = null;
     /**
+     * The spectrum or chromatogram filename for the mirrored spectrum or
+     * chromatogram.
+     */
+    protected String iFilenameMirrorredSpectrum = null;
+    /**
      * The list of SpectrumPanelListeners.
      */
     protected ArrayList iSpecPanelListeners = new ArrayList();
     /**
-     * The deviation (both left and right) allowed for point highlighting detection.
+     * The deviation (both left and right) allowed for point highlighting
+     * detection.
      */
     protected int iPointDetectionTolerance = 5;
     /**
-     * When the mouse is dragged, this represents the
-     * X-coordinate of the starting location.
+     * When the mouse is dragged, this represents the X-coordinate of the
+     * starting location.
      */
     protected int iStartXLoc = 0;
     /**
-     * When the mouse is dragged, this represents the
-     * Y-coordinate of the starting location.
+     * When the mouse is dragged, this represents the Y-coordinate of the
+     * starting location.
      */
     protected int iStartYLoc = 0;
     /**
-     * When the mouse is dragged, this represents the
-     * X-coordinate of the ending location.
+     * When the mouse is dragged, this represents the X-coordinate of the ending
+     * location.
      */
     protected int iEndXLoc = 0;
     /**
@@ -227,8 +249,8 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int iXPadding = 0;
     /**
-     * Effective distance from the panel top border
-     * to 5 pixels above the top of the highest point (or y-tick mark).
+     * Effective distance from the panel top border to 5 pixels above the top of
+     * the highest point (or y-tick mark).
      */
     protected int iTopPadding = 0;
     /**
@@ -252,32 +274,43 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int padding = 20;
     /**
-     * The current padding (distance between the axes and the border of the panel).
+     * The current padding (distance between the axes and the border of the
+     * panel).
      */
     protected int currentPadding = 20;
     /**
-     * The maximum padding (distance between the axes and the border of the panel).
-     * Increase if font size on the y-axis becomes too small.
+     * The maximum padding (distance between the axes and the border of the
+     * panel). Increase if font size on the y-axis becomes too small.
      */
     protected int maxPadding = 50;
     /**
-     * The boolean is set to 'true' if the file name is to be shown in the panel.
+     * The boolean is set to 'true' if the file name is to be shown in the
+     * panel.
      */
     protected boolean showFileName = true;
     /**
-     * The boolean is set to 'true' if the precursor details is to be shown in the panel.
+     * The boolean is set to 'true' if the precursor details is to be shown in
+     * the panel.
      */
     protected boolean showPrecursorDetails = true;
     /**
-     * The boolean is set to 'true' if the resolution is to be shown in the panel.
+     * The boolean is set to 'true' if the resolution is to be shown in the
+     * panel.
      */
     protected boolean showResolution = true;
     /**
-     * All the x-axis data points. Indexed by dataset (one double[] per dataset). 
-     * First dataset is the first double[], second dataset is the second double[] 
-     * etc.Should at all times be sorted from high to low.
+     * All the x-axis data points. Indexed by dataset (one double[] per
+     * dataset). First dataset is the first double[], second dataset is the
+     * second double[] etc.Should at all times be sorted from high to low.
      */
     protected ArrayList<double[]> iXAxisData = null;
+    /**
+     * All the x-axis data points for the mirrored spectrum. Indexed by dataset
+     * (one double[] per dataset). First dataset is the first double[], second
+     * dataset is the second double[] etc.Should at all times be sorted from
+     * high to low.
+     */
+    protected ArrayList<double[]> iXAxisDataMirroredSpectrum = null;
     /**
      * The minimum x-axis value to display.
      */
@@ -291,43 +324,71 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected double iYAxisMin = 0.0;
     /**
-     * The maximum  y-axis value to display.
+     * The maximum y-axis value to display.
      */
     protected double iYAxisMax = 0.0;
     /**
-     * The procentual non-inclusive, minimal y-axis value (compared to the highest
-     * point in the spectrum) a point should have before being eligible for annotation.
-     * Default is '0.0'.
+     * The procentual non-inclusive, minimal y-axis value (compared to the
+     * highest point in the spectrum) a point should have before being eligible
+     * for annotation. Default is '0.0'.
      */
     protected double iAnnotationYAxisThreshold = 0.0;
     /**
-     * All the y-axis values. Indexed by dataset (one double[] per dataset). First
-     * dataset is the first double[], second dataset is the second double[] etc.
-     * Y-axis valuea are related to the x-axis values by the table index. So the first
-     * y-axis value of the first dataset is the value for the first x-axis value in
-     * the first dataset etc.
+     * All the y-axis values. Indexed by dataset (one double[] per dataset).
+     * First dataset is the first double[], second dataset is the second
+     * double[] etc. Y-axis values are related to the x-axis values by the table
+     * index. So the first y-axis value of the first dataset is the value for
+     * the first x-axis value in the first dataset etc.
      */
     protected ArrayList<double[]> iYAxisData = null;
+    /**
+     * All the y-axis values for the mirrored spectra. Indexed by dataset (one
+     * double[] per dataset). First dataset is the first double[], second
+     * dataset is the second double[] etc. Y-axis values are related to the
+     * x-axis values by the table index. So the first y-axis value of the first
+     * dataset is the value for the first x-axis value in the first dataset etc.
+     */
+    protected ArrayList<double[]> iYAxisDataMirroredSpectrum = null;
     /**
      * This variable holds the precursor M/Z.
      */
     protected double iPrecursorMZ = 0.0;
     /**
+     * This variable holds the precursor M/Z for the mirrored spectrum.
+     */
+    protected double iPrecursorMZMirroredSpectrum = 0.0;
+    /**
      * This String holds the charge for the precursor.
      */
     protected String iPrecursorCharge = null;
     /**
-     * This array will hold the x-coordinates in pixels for
-     * all the x-axis values. Link is through index. Again
-     * indexed by dataset (one double[] per dataset).
+     * This String holds the charge for the precursor for the mirrored spectrum.
+     */
+    protected String iPrecursorChargeMirorredSpectrum = null;
+    /**
+     * This array will hold the x-coordinates in pixels for all the x-axis
+     * values. Link is through index. Again indexed by dataset (one double[] per
+     * dataset).
      */
     protected ArrayList<int[]> iXAxisDataInPixels = null;
     /**
-     * This array will hold the y-coordinates in pixels for
-     * all the y-axis values. Link is through index. Again
-     * indexed by dataset (one double[] per dataset).
+     * This array will hold the y-coordinates in pixels for all the y-axis
+     * values. Link is through index. Again indexed by dataset (one double[] per
+     * dataset).
      */
     protected ArrayList<int[]> iYAxisDataInPixels = null;
+    /**
+     * This array will hold the x-coordinates in pixels for all the x-axis
+     * values of the mirrored spectrum. Link is through index. Again indexed by
+     * dataset (one double[] per dataset).
+     */
+    protected ArrayList<int[]> iXAxisDataInPixelsMirroredSpectrum = null;
+    /**
+     * This array will hold the y-coordinates in pixels for all the y-axis
+     * values of the mirrored spectrum. Link is through index. Again indexed by
+     * dataset (one double[] per dataset).
+     */
+    protected ArrayList<int[]> iYAxisDataInPixelsMirroredSpectrum = null;
     /**
      * Boolean that will be 'true' when a point needs highlighting.
      */
@@ -357,11 +418,13 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected Vector iClickedList = new Vector(15, 5);
     /**
-     * The Vector that holds the dataset indices of all points clicked up to now.
+     * The Vector that holds the dataset indices of all points clicked up to
+     * now.
      */
     protected Vector iClickedListDatasetIndices = new Vector(15, 5);
     /**
-     * The Vector that holds a set of stored points from a previously established list.
+     * The Vector that holds a set of stored points from a previously
+     * established list.
      */
     protected Vector iStoredSequence = new Vector(15, 5);
     /**
@@ -382,8 +445,8 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int iDrawStyle = -1;
     /**
-     * This variable holds the dot radius;
-     * only used when drawing style is DOTS style.
+     * This variable holds the dot radius; only used when drawing style is DOTS
+     * style.
      */
     protected int iDotRadius = 2;
     /**
@@ -400,19 +463,20 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int iMSLevel = 0;
     /**
-     * If false, only the annotated peaks will be shown. Note that this setting 
+     * If false, only the annotated peaks will be shown. Note that this setting
      * is ignored in profile mode!
      */
     protected boolean showAllPeaks = true;
     /**
-     * If true, the automatic y-axis zoom excludes the background peaks. False 
+     * If true, the automatic y-axis zoom excludes the background peaks. False
      * includes all peaks in the zoom.
      */
     protected boolean yAxisZoomExcludesBackgroundPeaks = false;
 
     /**
-     * Returns true if the numbers in the peak annotations are to be subscripted.
-     * 
+     * Returns true if the numbers in the peak annotations are to be
+     * subscripted.
+     *
      * @return true if the numbers in the peak annotations are to be subscripted
      */
     public boolean isSubscriptAnnotationNumbers() {
@@ -421,17 +485,18 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Set if the numbers in the peak annotations are to be subscripted.
-     * 
-     * @param subscriptAnnotationNumbers set if the numbers in the peak annotations are to be subscripted
+     *
+     * @param subscriptAnnotationNumbers set if the numbers in the peak
+     * annotations are to be subscripted
      */
     public void setSubscriptAnnotationNumbers(boolean subscriptAnnotationNumbers) {
         this.subscriptAnnotationNumbers = subscriptAnnotationNumbers;
     }
 
     /**
-     * Returns true if the automatic y-axis zoom excludes background peaks. False 
-     * if includes all peaks.
-     * 
+     * Returns true if the automatic y-axis zoom excludes background peaks.
+     * False if includes all peaks.
+     *
      * @return true if the automatic y-axis zoom only excludes background peaks
      */
     public boolean yAxisZoomOnlyExcludesBackgroundPeaks() {
@@ -440,7 +505,7 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Set if the automatic y-axis zoom only considers the anotated peaks.
-     * 
+     *
      * @param yAxisZoomExcludesBackgroundPeaks
      */
     public void setYAxisZoomExcludesBackgroundPeaks(boolean yAxisZoomExcludesBackgroundPeaks) {
@@ -448,9 +513,9 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * If true, pairs of delta mass annotations are used when doing de novo 
+     * If true, pairs of delta mass annotations are used when doing de novo
      * sequencing. If false, only single delta masses are annotated.
-     * 
+     *
      * @return the useMassDeltaCombinations
      */
     public boolean useMassDeltaCombinations() {
@@ -458,9 +523,9 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * If true, pairs of delta mass annotations are used when doing de novo 
+     * If true, pairs of delta mass annotations are used when doing de novo
      * sequencing. If false, only single delta masses are annotated.
-     * 
+     *
      * @param useMassDeltaCombinations the useMassDeltaCombinations to set
      */
     public void setUseMassDeltaCombinations(boolean useMassDeltaCombinations) {
@@ -468,17 +533,17 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns true of the precuror details are to be shown.
-     * 
-     * @return true of the precuror details are to be show
+     * Returns true of the precursor details are to be shown.
+     *
+     * @return true of the precursor details are to be show
      */
     public boolean showPrecursorDetails() {
         return showPrecursorDetails;
     }
 
     /**
-     * Set wheter the precursor details are to be shown.
-     * 
+     * Set whether the precursor details are to be shown.
+     *
      * @param showPrecursorDetails the showPrecursorDetails to set
      */
     public void setShowPrecursorDetails(boolean showPrecursorDetails) {
@@ -487,7 +552,7 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Returns true if the resolution is to be shown.
-     * 
+     *
      * @return true of the resolution is to be shown
      */
     public boolean showResolution() {
@@ -495,8 +560,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Set wheter the resolution is to be shown.
-     * 
+     * Set whether the resolution is to be shown.
+     *
      * @param showResolution the showResolution to set
      */
     public void setShowResolution(boolean showResolution) {
@@ -511,7 +576,6 @@ public abstract class GraphicsPanel extends JPanel {
         profileSpectrum, centroidSpectrum, chromatogram,
         isotopicDistributionCentroid, isotopicDistributionProfile
     }
-    
     /**
      * Sets the current GraphicsPanel type, default to centroid spectrum.
      */
@@ -529,25 +593,26 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * Set to true of all y data values can be assumed to be positive.
      *
-     * @param yDataIsPositive true of all y data values can be assumed to be positive
+     * @param yDataIsPositive true of all y data values can be assumed to be
+     * positive
      */
     public void setYDataIsPositive(boolean yDataIsPositive) {
         this.yDataIsPositive = yDataIsPositive;
     }
 
     /**
-     * Returns true if the graphics panel is to be drawn in a minature form.
+     * Returns true if the graphics panel is to be drawn in a miniature form.
      *
-     * @return true if the graphics panel is to be drawn in a minature form
+     * @return true if the graphics panel is to be drawn in a miniature form
      */
     public boolean isMiniature() {
         return miniature;
     }
 
     /**
-     * Set if the graphics panel is to be drawn in a minature form.
+     * Set if the graphics panel is to be drawn in a miniature form.
      *
-     * @param miniature if the spectrum is to be drawn in a minature form
+     * @param miniature if the spectrum is to be drawn in a miniature form
      */
     public void setMiniature(boolean miniature) {
         this.miniature = miniature;
@@ -572,10 +637,10 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Get the size of the window to use when searching for matches in the known masses
-     * list when the user hovers over a second data point after clicking a previous
-     * data point.
-     * 
+     * Get the size of the window to use when searching for matches in the known
+     * masses list when the user hovers over a second data point after clicking
+     * a previous data point.
+     *
      * @return the size of the delta mass window
      */
     public double getDeltaMassWindow() {
@@ -583,10 +648,10 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Set the size of the window to use when searching for matches in the known masses
-     * list when the user hovers over a second data point after clicking a previous
-     * data point.
-     * 
+     * Set the size of the window to use when searching for matches in the known
+     * masses list when the user hovers over a second data point after clicking
+     * a previous data point.
+     *
      * @param deltaMassWindow the new size of the delta mass window
      */
     public void setDeltaMassWindow(double deltaMassWindow) {
@@ -594,9 +659,9 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Get all the known mass deltas (if any). The keys are the Doubles with the 
+     * Get all the known mass deltas (if any). The keys are the Doubles with the
      * massdelta, the values are the descriptions.
-     * 
+     *
      * @return HashMap of the known mass deltas
      */
     public static HashMap<Double, String> getKnownMassDeltas() {
@@ -604,9 +669,9 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Set all the known mass deltas (if any). The keys are the Doubles with the 
+     * Set all the known mass deltas (if any). The keys are the Doubles with the
      * massdelta, the values are the descriptions.
-     * 
+     *
      * @param aiKnownMassDeltas the HasMap of the known mass deltas
      */
     public static void setKnownMassDeltas(HashMap<Double, String> aiKnownMassDeltas) {
@@ -659,7 +724,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Set the max padding (distance between the axes and the border of the panel).
+     * Set the max padding (distance between the axes and the border of the
+     * panel).
      *
      * @param aMaxPadding the new max padding
      */
@@ -668,58 +734,59 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns the max padding (distance between the axes and the border of the panel).
+     * Returns the max padding (distance between the axes and the border of the
+     * panel).
      *
      * @return the max padding
      */
     public int getMaxPadding() {
         return maxPadding;
     }
-    
+
     /**
      * Returns the current width of the peaks.
-     * 
+     *
      * @return the peak width
      */
     public float getPeakWidth() {
         return peakWidth;
     }
-    
+
     /**
      * Set the peak width.
-     * 
+     *
      * @param peakWidth the new peak width
      */
     public void setPeakWidth(float peakWidth) {
         this.peakWidth = peakWidth;
     }
-    
+
     /**
      * Returns the current width of the background peaks.
-     * 
+     *
      * @return the peak width
      */
     public float getBackgroundPeakWidth() {
         return backgroundPeakWidth;
     }
-    
+
     /**
      * Set the backgroundPeakWidth peak width.
-     * 
+     *
      * @param backgroundPeakWidth the new backgroundPeakWidth peak width
      */
     public void setBackgroundPeakWidth(float backgroundPeakWidth) {
         this.backgroundPeakWidth = backgroundPeakWidth;
     }
-    
+
     /**
-     * This method sets all the annotations on this instance. Passing a 'null' value for
-     * the Vector will result in simply removing all annotations. Do note that this method
-     * will attempt to remove duplicate annotations on a point by deleting any annotation
-     * for which the combination of annotation label and annotation x-axis value has been
-     * seen before!
+     * This method sets all the annotations on this instance. Passing a 'null'
+     * value for the Vector will result in simply removing all annotations. Do
+     * note that this method will attempt to remove duplicate annotations on a
+     * point by deleting any annotation for which the combination of annotation
+     * label and annotation x-axis value has been seen before!
      *
-     * @param aAnnotations  Vector with SpectrumAnnotation instances.
+     * @param aAnnotations Vector with SpectrumAnnotation instances.
      */
     public void setAnnotations(Vector aAnnotations) {
         this.iAnnotations = new Vector(50, 25);
@@ -740,43 +807,44 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method allows the caller to set the procentual minimal, non-inclusive y-axis value
-     * threshold (compared to the highest point in the spectrum or chromatogram) a point must
-     * pass before being eligible for annotation.
+     * This method allows the caller to set the procentual minimal,
+     * non-inclusive y-axis value threshold (compared to the highest point in
+     * the spectrum or chromatogram) a point must pass before being eligible for
+     * annotation.
      *
-     * @param aThreshold    double with the procentual y-axis value (as compared to the highest point
-     *                      in the spectrum or chromatogram) cutoff threshold for annotation.
+     * @param aThreshold double with the procentual y-axis value (as compared to
+     * the highest point in the spectrum or chromatogram) cutoff threshold for
+     * annotation.
      */
     public void setAnnotationYAxisThreshold(double aThreshold) {
         this.iAnnotationYAxisThreshold = (aThreshold / 100) * iYAxisMax;
     }
 
     /**
-     * This method sets the display color for the filename on the panel.
-     * Can be 'null' for default coloring.
+     * This method sets the display color for the filename on the panel. Can be
+     * 'null' for default coloring.
      *
-     * @param aFilenameColor    Color to render the filename in on the panel.
-     *                                  Can be 'null' for default coloring.
+     * @param aFilenameColor Color to render the filename in on the panel. Can
+     * be 'null' for default coloring.
      */
     public void setFilenameColor(Color aFilenameColor) {
         iFilenameColor = aFilenameColor;
     }
 
     /**
-     * Invoked by Swing to draw components.
-     * Applications should not invoke <code>paint</code> directly,
-     * but should instead use the <code>repaint</code> method to
-     * schedule the component for redrawing.
+     * Invoked by Swing to draw components. Applications should not invoke
+     * <code>paint</code> directly, but should instead use the
+     * <code>repaint</code> method to schedule the component for redrawing.
      * <p/>
-     * This method actually delegates the work of painting to three
-     * protected methods: <code>paintComponent</code>,
-     * <code>paintBorder</code>,
-     * and <code>paintChildren</code>.  They're called in the order
-     * listed to ensure that children appear on top of component itself.
-     * Generally speaking, the component and its children should not
-     * paint in the insets area allocated to the border. Subclasses can
-     * just override this method, as always.  A subclass that just
-     * wants to specialize the UI (look and feel) delegate's
+     * This method actually delegates the work of painting to three protected
+     * methods:
+     * <code>paintComponent</code>,
+     * <code>paintBorder</code>, and
+     * <code>paintChildren</code>. They're called in the order listed to ensure
+     * that children appear on top of component itself. Generally speaking, the
+     * component and its children should not paint in the insets area allocated
+     * to the border. Subclasses can just override this method, as always. A
+     * subclass that just wants to specialize the UI (look and feel) delegate's
      * <code>paint</code> method should just override
      * <code>paintComponent</code>.
      *
@@ -815,6 +883,9 @@ public abstract class GraphicsPanel extends JPanel {
                 drawFilledPolygon(g);
             } else {
                 drawPeaks(g);
+                if (dataSetCounterMirroredSpectra > 0) {
+                    drawMirroredPeaks(g);
+                }
             }
             if (iClicked && iHighLight && iClickedIndex != iHighLightIndex) {
                 // Now we should calculate the distance based on the real values and
@@ -840,7 +911,7 @@ public abstract class GraphicsPanel extends JPanel {
                     int firstDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i)).intValue();
 
                     int second, secondDataSetIndex;
-                    
+
                     if ((i + 1) == liClickedSize) {
                         second = iClickedIndex;
                         secondDataSetIndex = iClickedDataSetIndex;
@@ -848,7 +919,7 @@ public abstract class GraphicsPanel extends JPanel {
                         second = ((Integer) iClickedList.get(i + 1)).intValue();
                         secondDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i + 1)).intValue();
                     }
-                    
+
                     this.drawMeasurementLine(first, firstDataSetIndex, second, secondDataSetIndex, g, Color.LIGHT_GRAY, 0);
                 }
             }
@@ -891,10 +962,10 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Draws the x-axis reference areas if any.
-     * 
-     * @param g             Graphics object to draw on.
-     * @param drawOnTop     if true the areas to be drawn on top of the data are drawn,
-     *                      if false the areas that are to be drawn behind the data are drawn
+     *
+     * @param g Graphics object to draw on.
+     * @param drawOnTop if true the areas to be drawn on top of the data are
+     * drawn, if false the areas that are to be drawn behind the data are drawn
      */
     protected void drawXAxisReferenceAreas(Graphics g, boolean drawOnTop) {
 
@@ -939,7 +1010,7 @@ public abstract class GraphicsPanel extends JPanel {
                 if ((tempDouble - end) >= 0.5) {
                     end++;
                 }
-                
+
                 // Vertical position of the bar with the position of the highest point + a margin.
                 int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2));
                 int areaHeight = this.getHeight() - currentPadding - y;
@@ -956,10 +1027,10 @@ public abstract class GraphicsPanel extends JPanel {
 
                 xTemp[3] = start + iXPadding;
                 yTemp[3] = this.getHeight() - currentPadding;
-                
+
                 // draw the polygon
                 g2d.fillPolygon(xTemp, yTemp, xTemp.length);
-                
+
                 // draw the thin line around the polygon
                 g2d.setComposite(originalComposite);
                 g2d.setColor(currentReferenceArea.getBorderColor());
@@ -980,7 +1051,7 @@ public abstract class GraphicsPanel extends JPanel {
                     } else {
                         g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), oldFont.getSize()));
                     }
-                    
+
                     // insert the label
                     String label = currentReferenceArea.getLabel();
                     int width = g.getFontMetrics().stringWidth(label);
@@ -999,9 +1070,9 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * Draws the y-axis reference areas if any.
      *
-     * @param g             Graphics object to draw on.
-     * @param drawOnTop     if true the areas to be drawn on top of the data are drawn,
-     *                      if false the areas that are to be drawn behind the data are drawn
+     * @param g Graphics object to draw on.
+     * @param drawOnTop if true the areas to be drawn on top of the data are
+     * drawn, if false the areas that are to be drawn behind the data are drawn
      */
     protected void drawYAxisReferenceAreas(Graphics g, boolean drawOnTop) {
 
@@ -1046,7 +1117,7 @@ public abstract class GraphicsPanel extends JPanel {
                 if ((tempDouble - end) >= 0.5) {
                     end++;
                 }
-                
+
                 int areaLength = this.getWidth() - currentPadding;
                 int xMax = (int) (areaLength * currentReferenceArea.getPercentLength());
 
@@ -1061,7 +1132,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                 xTemp[3] = xMax;
                 yTemp[3] = this.getHeight() - start - currentPadding;
-                
+
                 g2d.fillPolygon(xTemp, yTemp, xTemp.length);
 
 
@@ -1100,7 +1171,7 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * This method reports on the largest x-axis value in the point collection
-     * accross all datasets.
+     * across all datasets.
      *
      * @return double with the largest x-axis value in the point collection.
      */
@@ -1137,9 +1208,9 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method registers the specified SpectrumPanelListener with this instance
-     * and notifies it of all future events. The Listeners will be notified in
-     * order of addition (first addition is notified first).
+     * This method registers the specified SpectrumPanelListener with this
+     * instance and notifies it of all future events. The Listeners will be
+     * notified in order of addition (first addition is notified first).
      *
      * @param aListener SpectrumPanelListener to register on this instance.
      */
@@ -1152,7 +1223,6 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected void addListeners() {
         this.addMouseListener(new MouseAdapter() {
-
             /**
              * Invoked when a mouse button has been released on a component.
              */
@@ -1268,16 +1338,15 @@ public abstract class GraphicsPanel extends JPanel {
         });
 
         this.addMouseMotionListener(new MouseMotionAdapter() {
-
             /**
              * Invoked when a mouse button is pressed on a component and then
-             * dragged.  Mouse drag events will continue to be delivered to
-             * the component where they first originated until the mouse button is
+             * dragged. Mouse drag events will continue to be delivered to the
+             * component where they first originated until the mouse button is
              * released (regardless of whether the mouse position is within the
              * bounds of the component).
              */
             public void mouseDragged(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) { 
+                if (SwingUtilities.isLeftMouseButton(e)) {
                     iDragged = true;
                     iDragXLoc = e.getX();
                     repaint();
@@ -1285,8 +1354,8 @@ public abstract class GraphicsPanel extends JPanel {
             }
 
             /**
-             * Invoked when the mouse button has been moved on a component
-             * (with no buttons no down).
+             * Invoked when the mouse button has been moved on a component (with
+             * no buttons no down).
              */
             public void mouseMoved(MouseEvent e) {
                 if (iXAxisData != null && iXAxisDataInPixels != null) {
@@ -1324,8 +1393,10 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * This method rescales the x-axis while notifying the observers.
      *
-     * @param aMinXAxisValue  double with the new minimum x-axis value to display.
-     * @param aMaxXAxisValue  double with the new maximum x-axis value to display.
+     * @param aMinXAxisValue double with the new minimum x-axis value to
+     * display.
+     * @param aMaxXAxisValue double with the new maximum x-axis value to
+     * display.
      */
     public void rescale(double aMinXAxisValue, double aMaxXAxisValue) {
         this.rescale(aMinXAxisValue, aMaxXAxisValue, true);
@@ -1341,8 +1412,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Removes the x-axis reference area with the given identifier. Does nothing if no
-     * reference with the given identifier is found.
+     * Removes the x-axis reference area with the given identifier. Does nothing
+     * if no reference with the given identifier is found.
      *
      * @param identifier the identifier of the reference to remove
      */
@@ -1358,8 +1429,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns all the x-axis references areas as a hashmap, with the labels
-     * as the keys.
+     * Returns all the x-axis references areas as a hashmap, with the labels as
+     * the keys.
      *
      * @return hashmap of all reference areas
      */
@@ -1377,8 +1448,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Removes the y-axis reference area with the given identifier. Does nothing if no
-     * reference with the given identifier is found.
+     * Removes the y-axis reference area with the given identifier. Does nothing
+     * if no reference with the given identifier is found.
      *
      * @param identifier the identifier of the reference to remove
      */
@@ -1394,8 +1465,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns all the y-axis references areas as a hashmap, with the labels
-     * as the keys.
+     * Returns all the y-axis references areas as a hashmap, with the labels as
+     * the keys.
      *
      * @return hashmap of all reference areas
      */
@@ -1404,8 +1475,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Sets the color of data points and line for the dataset with the
-     * given dataset index. Index starts at 0.
+     * Sets the color of data points and line for the dataset with the given
+     * dataset index. Index starts at 0.
      *
      * @param aColor the color to use
      * @param index the index of the dataset
@@ -1417,9 +1488,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Sets the color of the area under the curve for chromatograms and
-     * profile spectra for the dataset with the given dataset index. 
-     * Index starts at 0.
+     * Sets the color of the area under the curve for chromatograms and profile
+     * spectra for the dataset with the given dataset index. Index starts at 0.
      *
      * @param aColor the color to use
      * @param index the index of the dataset
@@ -1431,8 +1501,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns the list of colors used for the datasets. Index on dataset. 
-     * Index starts at 0.
+     * Returns the list of colors used for the datasets. Index on dataset. Index
+     * starts at 0.
      *
      * @return the the list of colors used for the datasets
      */
@@ -1441,19 +1511,22 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method rescales the x-axis, allowing the caller to specify whether the
-     * observers need be notified.
+     * This method rescales the x-axis, allowing the caller to specify whether
+     * the observers need be notified.
      *
-     * @param aMinXAxisValue    double with the new minimum x-axis value to display.
-     * @param aMaxXAxisValue    double with the new maximum x-axis value to display.
-     * @param aNotifyListeners  boolean to indicate whether the observers should be notified.
+     * @param aMinXAxisValue double with the new minimum x-axis value to
+     * display.
+     * @param aMaxXAxisValue double with the new maximum x-axis value to
+     * display.
+     * @param aNotifyListeners boolean to indicate whether the observers should
+     * be notified.
      */
     public void rescale(double aMinXAxisValue, double aMaxXAxisValue, boolean aNotifyListeners) {
 
         xAxisZoomRangeLowerValue = aMinXAxisValue;
         xAxisZoomRangeUpperValue = aMaxXAxisValue;
 
-        // Calculate the new max y-axis value.
+        // Calculate the new max x-axis value.
         double maxInt = 1.0;
 
         for (int j = 0; j < iXAxisData.size(); j++) {
@@ -1465,16 +1538,44 @@ public abstract class GraphicsPanel extends JPanel {
                     break;
                 } else {
                     if (iYAxisData.get(j)[i] > maxInt) {
-                        
+
                         boolean annotatedPeak = false;
-                        
+
                         // exclude background peaks?
                         if (yAxisZoomExcludesBackgroundPeaks) {
                             annotatedPeak = isPeakAnnotated(iXAxisData.get(j)[i]);
                         }
-                        
+
                         if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
                             maxInt = iYAxisData.get(j)[i];
+                        }
+                    }
+                }
+            }
+        }
+
+        if (dataSetCounterMirroredSpectra > 0) {
+            for (int j = 0; j < iXAxisDataMirroredSpectrum.size(); j++) {
+                for (int i = 0; i < iXAxisDataMirroredSpectrum.get(j).length; i++) {
+                    double lMass = iXAxisDataMirroredSpectrum.get(j)[i];
+                    if (lMass < aMinXAxisValue) {
+                        continue;
+                    } else if (lMass > aMaxXAxisValue) {
+                        break;
+                    } else {
+                        if (iYAxisDataMirroredSpectrum.get(j)[i] > maxInt) {
+
+//                            boolean annotatedPeak = false;
+//
+//                            // exclude background peaks?
+//                            if (yAxisZoomExcludesBackgroundPeaks) {
+//                                annotatedPeak = isPeakAnnotated(iXAxisDataMirroredSpectrum.get(j)[i]);
+//                            }
+
+                            //if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
+                            if (!yAxisZoomExcludesBackgroundPeaks || showAllPeaks) {
+                                maxInt = iYAxisDataMirroredSpectrum.get(j)[i];
+                            }
                         }
                     }
                 }
@@ -1499,6 +1600,11 @@ public abstract class GraphicsPanel extends JPanel {
         //logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
 
         iYAxisMax = maxInt + (maxInt / 10);
+
+//        if (dataSetCounterMirroredSpectra > 0) {
+//            iYAxisMin = -iYAxisMax;
+//        }
+
         int liSize = iSpecPanelListeners.size();
         RescalingEvent re = new RescalingEvent(this, aMinXAxisValue, aMaxXAxisValue);
         if (aNotifyListeners) {
@@ -1512,10 +1618,11 @@ public abstract class GraphicsPanel extends JPanel {
      * This method reads the x and y values from the specified arrays and stores
      * these internally for drawing. The x-axis values are sorted in this step.
      *
-     * @param aXAxisData            double[] with the x-axis values.
-     * @param aYAxisData            double[] with the corresponding y-axis values.
-     * @param dataPointAndLineColor the color to use for the data points and line
-     * @param areaUnderCurveColor   the color to use for the area under the curve
+     * @param aXAxisData double[] with the x-axis values.
+     * @param aYAxisData double[] with the corresponding y-axis values.
+     * @param dataPointAndLineColor the color to use for the data points and
+     * line
+     * @param areaUnderCurveColor the color to use for the area under the curve
      */
     protected void processXAndYData(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
@@ -1571,16 +1678,81 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method draws the axes and their labels on the specified Graphics object,
-     * taking into account the padding.
+     * This method reads the x and y values from the specified arrays and stores
+     * these internally for drawing. The x-axis values are sorted in this step.
      *
-     * @param g         Graphics object to draw on.
-     * @param aXMin     double with the minimal x value.
-     * @param aXMax     double with the maximum x value.
-     * @param aXScale   int with the scale to display for the X-axis labels (as used in BigDecimal's setScale).
-     * @param aYMin     double with the minimal y value.
-     * @param aYMax     double with the maximum y value.
-     * @return          int[] with the length of the X axis and Y axis respectively.
+     * @param aXAxisData double[] with the x-axis values.
+     * @param aYAxisData double[] with the corresponding y-axis values.
+     * @param dataPointAndLineColor the color to use for the data points and
+     * line
+     * @param areaUnderCurveColor the color to use for the area under the curve
+     */
+    protected void processMirroredXAndYData(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+
+        // create the dataset array lists
+        // if first mirrored dataset, create the dataset array lists
+        if (dataSetCounterMirroredSpectra == 0) {
+            iXAxisDataMirroredSpectrum = new ArrayList<double[]>();
+            iYAxisDataMirroredSpectrum = new ArrayList<double[]>();
+        }
+
+        // set the data colors
+        iDataPointAndLineColorMirroredSpectra.add(dataPointAndLineColor);
+        iAreaUnderCurveColorMirroredSpectra.add(areaUnderCurveColor);
+
+        HashMap peaks = new HashMap(aXAxisData.length);
+
+        // add the peaks to the dataset
+        for (int i = 0; i < aXAxisData.length; i++) {
+            peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));
+        }
+
+        // add the new dataset
+        iXAxisDataMirroredSpectrum.add(new double[peaks.size()]);
+        iYAxisDataMirroredSpectrum.add(new double[peaks.size()]);
+
+
+        // Maximum y-axis value.
+        double maxYAxisValue = 0.0;
+
+        // TreeSets are sorted.
+        TreeSet masses = new TreeSet(peaks.keySet());
+        Iterator iter = masses.iterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            Double key = (Double) iter.next();
+            double xValue = key.doubleValue();
+            double yValue = ((Double) peaks.get(key)).doubleValue();
+            if (yValue > maxYAxisValue) {
+                maxYAxisValue = yValue;
+            }
+            iXAxisDataMirroredSpectrum.get(dataSetCounterMirroredSpectra)[count] = xValue;
+            iYAxisDataMirroredSpectrum.get(dataSetCounterMirroredSpectra)[count] = yValue;
+            count++;
+        }
+
+        // rescale the added dataset
+        if (iXAxisStartAtZero) {
+            this.rescale(0.0, getMaxXAxisValue());
+        } else {
+            this.rescale(getMinXAxisValue(), getMaxXAxisValue());
+        }
+
+        dataSetCounterMirroredSpectra++;
+    }
+
+    /**
+     * This method draws the axes and their labels on the specified Graphics
+     * object, taking into account the padding.
+     *
+     * @param g Graphics object to draw on.
+     * @param aXMin double with the minimal x value.
+     * @param aXMax double with the maximum x value.
+     * @param aXScale int with the scale to display for the X-axis labels (as
+     * used in BigDecimal's setScale).
+     * @param aYMin double with the minimal y value.
+     * @param aYMax double with the maximum y value.
+     * @return int[] with the length of the X axis and Y axis respectively.
      */
     protected int[] drawAxes(Graphics g, double aXMin, double aXMax, int aXScale, double aYMin, double aYMax) {
 
@@ -1605,42 +1777,47 @@ public abstract class GraphicsPanel extends JPanel {
         // X-axis.
         int xAxis = (this.getWidth() - (2 * currentPadding));
 
+        int xAxisYLocation = this.getHeight() - currentPadding;
+
+        if (dataSetCounterMirroredSpectra > 0) {
+            xAxisYLocation = (this.getHeight() - currentPadding) / 2;
+        }
+
         // hide any data going slightly below the y-axis
         if (yDataIsPositive) {
             Color currentColor = g.getColor();
             g.setColor(this.getBackground());
 
             if (miniature) {
-                g.fillRect(currentPadding, this.getHeight() - currentPadding, this.getWidth() - currentPadding - 2, 2);
+                g.fillRect(currentPadding, xAxisYLocation, this.getWidth() - currentPadding - 2, 2);
             } else {
-                g.fillRect(currentPadding, this.getHeight() - currentPadding, this.getWidth() - currentPadding - 2, 20);
+                g.fillRect(currentPadding, xAxisYLocation, this.getWidth() - currentPadding - 2, 20);
             }
 
             g.setColor(currentColor);
         }
 
-        g.drawLine(currentPadding, this.getHeight() - currentPadding, this.getWidth() - currentPadding, this.getHeight() - currentPadding);
+        g.drawLine(currentPadding, xAxisYLocation, this.getWidth() - currentPadding, xAxisYLocation);
 
         if (!miniature) {
 
             // Arrowhead on X-axis.
             g.fillPolygon(new int[]{this.getWidth() - currentPadding - 3, this.getWidth() - currentPadding - 3, this.getWidth() - currentPadding + 2},
-                    new int[]{this.getHeight() - currentPadding + 5, this.getHeight() - currentPadding - 5, this.getHeight() - currentPadding}, 3);
+                    new int[]{xAxisYLocation + 5, xAxisYLocation - 5, xAxisYLocation}, 3);
 
             // X-axis label
             if (iXAxisLabel.equalsIgnoreCase("m/z")) {
-                g.drawString(iXAxisLabel, this.getWidth() - (currentPadding - (padding / 2)), this.getHeight() - currentPadding + 4);
+                g.drawString(iXAxisLabel, this.getWidth() - (currentPadding - (padding / 2)), xAxisYLocation + 4);
             } else {
-                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), this.getHeight() - (currentPadding / 2));
+                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), xAxisYLocation - (currentPadding / 2)); // @TODO: check this!
             }
-
 
             // Y-axis.
             g.drawLine(currentPadding, this.getHeight() - currentPadding, currentPadding, currentPadding / 2);
         }
 
         iXPadding = currentPadding;
-        int yAxis = this.getHeight() - currentPadding - (currentPadding / 2);
+        int yAxis = xAxisYLocation - (currentPadding / 2);
 
         if (!miniature) {
 
@@ -1674,12 +1851,13 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * This method draws tags on the X axis.
      *
-     * @param aMin          double with the minimum value for the axis.
-     * @param aMax          double with the maximum value for the axis.
-     * @param aXScale       int with the scale to display for the X-axis labels (as used in BigDecimal's setScale).
-     * @param g             Graphics object to draw on.
-     * @param aXAxisWidth   int with the axis width in pixels.
-     * @param aPadding      int with the amount of padding to take into account.
+     * @param aMin double with the minimum value for the axis.
+     * @param aMax double with the maximum value for the axis.
+     * @param aXScale int with the scale to display for the X-axis labels (as
+     * used in BigDecimal's setScale).
+     * @param g Graphics object to draw on.
+     * @param aXAxisWidth int with the axis width in pixels.
+     * @param aPadding int with the amount of padding to take into account.
      */
     protected void drawXTags(Graphics g, int aMin, int aMax, int aXScale, int aXAxisWidth, int aPadding) {
 
@@ -1787,6 +1965,12 @@ public abstract class GraphicsPanel extends JPanel {
                 numberFormat = new DecimalFormat(scientificPattern);
             }
 
+            int xAxisYLocation = this.getHeight();
+
+            if (dataSetCounterMirroredSpectra > 0) {
+                xAxisYLocation = (this.getHeight() + currentPadding) / 2;
+            }
+
             // add the tags and values
             if (delta > 1) {
 
@@ -1799,11 +1983,19 @@ public abstract class GraphicsPanel extends JPanel {
                         int xLoc = (int) (aPadding + (i * scaleUnitXTags));
 
                         if (xLoc < (aPadding + aXAxisWidth)) {
-                            g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                            g.drawLine(xLoc, xAxisYLocation - aPadding, xLoc, xAxisYLocation - aPadding + 3);
                             int labelAsInt = aMin + i;
                             String label = numberFormat.format(labelAsInt);
                             int labelWidth = fm.stringWidth(label);
-                            g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+
+                            boolean drawValue = true;
+                            if (labelAsInt == 0 && dataSetCounterMirroredSpectra > 0) {
+                                drawValue = false;
+                            }
+                            if (drawValue) {
+                                g.drawString(label, xLoc - (labelWidth / 2), xAxisYLocation - aPadding + labelHeight);
+                            }
+
                             lTagValue = i;
                             break;
                         }
@@ -1814,11 +2006,17 @@ public abstract class GraphicsPanel extends JPanel {
                 while (lTagValue < aMax) {
                     int xLoc = (int) (aPadding + (lTagValue * scaleUnitXTags));
                     if (xLoc < (aPadding + aXAxisWidth)) {
-                        g.drawLine(xLoc, this.getHeight() - aPadding, xLoc, this.getHeight() - aPadding + 3);
+                        g.drawLine(xLoc, xAxisYLocation - aPadding, xLoc, xAxisYLocation - aPadding + 3);
                         long labelAsInt = aMin + lTagValue;
                         String label = numberFormat.format(labelAsInt);
                         int labelWidth = fm.stringWidth(label);
-                        g.drawString(label, xLoc - (labelWidth / 2), this.getHeight() - aPadding + labelHeight);
+                        boolean drawValue = true;
+                        if (labelAsInt == 0 && dataSetCounterMirroredSpectra > 0) {
+                            drawValue = false;
+                        }
+                        if (drawValue) {
+                            g.drawString(label, xLoc - (labelWidth / 2), xAxisYLocation - aPadding + labelHeight);
+                        }
                     }
                     lTagValue = lTagValue + distanceBetweenTags;
                 }
@@ -1867,11 +2065,11 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * This method draws tags on the Y axis.
      *
-     * @param aMin          double with the minimum value for the axis.
-     * @param aMax          double with the maximum value for the axis.
-     * @param g             Graphics object to draw on.
-     * @param aYAxisHeight  int with the axis height in pixels.
-     * @param aPadding      int with the amount of padding to take into account.
+     * @param aMin double with the minimum value for the axis.
+     * @param aMax double with the maximum value for the axis.
+     * @param g Graphics object to draw on.
+     * @param aYAxisHeight int with the axis height in pixels.
+     * @param aPadding int with the amount of padding to take into account.
      */
     protected void drawYTags(Graphics g, int aMin, int aMax, int aYAxisHeight, int aPadding) {
 
@@ -1892,7 +2090,7 @@ public abstract class GraphicsPanel extends JPanel {
             // find the scale unit for the x tags
             double scaleUnitYTags = aYAxisHeight / delta;
 
-            // ind the optimal distance to use between the tags
+            // find the optimal distance to use between the tags
             int distanceBetweenTags = findOptimalTagDistance(numberTimes, delta);
 
             // set up the number formatting
@@ -1927,15 +2125,41 @@ public abstract class GraphicsPanel extends JPanel {
                 g.setFont(new Font(oldFont.getName(), oldFont.getStyle(), 1));
             }
 
+            int height = this.getHeight();
+
+            if (dataSetCounterMirroredSpectra > 0) {
+                height = this.getHeight() - (((this.getHeight() - currentPadding)) / 2);
+            }
+
             long lTagValue = 0;
             while (lTagValue < aMax) {
                 int yLoc = (int) (aPadding + (lTagValue * scaleUnitYTags));
-                g.drawLine(aPadding, this.getHeight() - yLoc, aPadding - 3, this.getHeight() - yLoc);
+                g.drawLine(aPadding, height - yLoc, aPadding - 3, height - yLoc);
                 long labelAsInt = aMin + lTagValue;
                 String label = numberFormat.format(labelAsInt);
                 int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
-                g.drawString(label, aPadding - labelWidth, this.getHeight() - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
+                g.drawString(label, aPadding - labelWidth, height - yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
                 lTagValue = lTagValue + distanceBetweenTags;
+            }
+
+            if (dataSetCounterMirroredSpectra > 0) {
+
+                height = (this.getHeight() - currentPadding * 3) / 2;
+
+                lTagValue = 0;
+                while (lTagValue < aMax) {
+                    int yLoc = (int) (aPadding + (lTagValue * scaleUnitYTags));
+                    long labelAsInt = aMin + lTagValue;
+
+                    if (labelAsInt != 0) {
+                        g.drawLine(aPadding, height + yLoc, aPadding - 3, height + yLoc);
+                        String label = numberFormat.format(labelAsInt);
+                        int labelWidth = g.getFontMetrics().stringWidth(label) + 5;
+                        g.drawString(label, aPadding - labelWidth, height + yLoc + (g.getFontMetrics().getAscent() / 2) - 1);
+                    }
+
+                    lTagValue = lTagValue + distanceBetweenTags;
+                }
             }
 
             // restore original font
@@ -1945,13 +2169,13 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Try to find the optimal distance between the tags. The most detailed
-     * option is always used, i.e., the option containing the most tags
-     * within the current boundaries. Note always returns a round number,
-     * e.g., 1, 5, 10, 25, 50, etc.
+     * option is always used, i.e., the option containing the most tags within
+     * the current boundaries. Note always returns a round number, e.g., 1, 5,
+     * 10, 25, 50, etc.
      *
-     * @param maxNumberOfTags   the maxium number of tags there is room for
-     * @param delta             the difference between the max and the min value
-     * @return                  the optimal distance between the tags
+     * @param maxNumberOfTags the maxium number of tags there is room for
+     * @param delta the difference between the max and the min value
+     * @return the optimal distance between the tags
      */
     private int findOptimalTagDistance(int maxNumberOfTags, double delta) {
 
@@ -1996,7 +2220,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method will draw a highlighting triangle + x-value on top of the marked point.
+     * This method will draw a highlighting triangle + x-value on top of the
+     * marked point.
      *
      * @param aIndex int with the index of the point to highlight.
      * @param dataSetIndex the index of the dataset
@@ -2007,7 +2232,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method will draw a highlighting triangle + x-value on top of the clicked marked point.
+     * This method will draw a highlighting triangle + x-value on top of the
+     * clicked marked point.
      *
      * @param aIndex int with the index of the clicked point to highlight.
      * @param dataSetIndex the index of the dataset
@@ -2021,38 +2247,39 @@ public abstract class GraphicsPanel extends JPanel {
      * This method will highlight the specified point in the specified color by
      * drawing a floating triangle + x-value above it.
      *
-     * @param aIndex                int with the index.
-     * @param dataSetIndex          the index of the dataset
-     * @param g Graphics            object to draw on
-     * @param aColor                Color to draw the highlighting in.
-     * @param aComment              String with an optional comment. Can be 'null' in which case
-     *                              it will be omitted.
-     * @param aPixelsSpacer         int that gives the vertical spacer in pixels for the highlighting.
-     * @param aShowArrow            boolean that indicates whether a downward-pointing arrow and dotted line
-     *                              should be drawn over the point.
-     * @param aAnnotationCounter    the number of annotation of the given peak 
+     * @param aIndex int with the index.
+     * @param dataSetIndex the index of the dataset
+     * @param g Graphics object to draw on
+     * @param aColor Color to draw the highlighting in.
+     * @param aComment String with an optional comment. Can be 'null' in which
+     * case it will be omitted.
+     * @param aPixelsSpacer int that gives the vertical spacer in pixels for the
+     * highlighting.
+     * @param aShowArrow boolean that indicates whether a downward-pointing
+     * arrow and dotted line should be drawn over the point.
+     * @param aAnnotationCounter the number of annotation of the given peak
      */
     protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow, int aAnnotationCounter) {
 
         int x = iXAxisDataInPixels.get(dataSetIndex)[aIndex];
         int y;
-        
+
         if (aPixelsSpacer < 0) {
             y = iTopPadding;
         } else {
             y = iYAxisDataInPixels.get(dataSetIndex)[aIndex] - aPixelsSpacer;
-            
+
             // special case for when top peak is annotated with multiple annotations
-            if (y < 0) {   
-                y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 4);
+            if (y < 0) {
+                y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4);
             }
         }
-        
+
         // Correct for absurd heights.
         if (y < iTopPadding / 3) {
-            y = (iTopPadding / 3) - (aAnnotationCounter - 3)*(g.getFontMetrics().getAscent() + 4);
+            y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4);
         }
-        
+
         // Temporarily change the color
         Color originalColor = g.getColor();
         g.setColor(aColor);
@@ -2065,17 +2292,17 @@ public abstract class GraphicsPanel extends JPanel {
                     3);
             arrowSpacer = 13;
         }
-        
+
         // Now the x-value.
         // If there is any, print the comment instead of the x-value.
         if (aComment != null && !aComment.trim().equals("")) {
             aComment = aComment.trim();
-            
+
             if (subscriptAnnotationNumbers) {
                 int commentXStart = x - g.getFontMetrics().stringWidth(aComment) / 2;
                 Font oldFont = g.getFont();
 
-                for (int i=0; i<aComment.length(); i++) {
+                for (int i = 0; i < aComment.length(); i++) {
 
                     int tempX = commentXStart + g.getFontMetrics().stringWidth(aComment.substring(0, i));
 
@@ -2112,7 +2339,8 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method draws a line, measuring the distance between two points in real mass units.
+     * This method draws a line, measuring the distance between two points in
+     * real mass units.
      *
      * @param aFirstIndex int with the first point index to draw from.
      * @param aFirstDatasetIndex the dataset index of the first data point
@@ -2120,8 +2348,8 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aSecondDatasetIndex the dataset index of the second data point
      * @param g Graphics object on which to draw.
      * @param aColor Color object with the color for all the drawing.
-     * @param aExtraPadding int with an optional amount of extra padding (lower on the graph
-     *                      if positive, higher on the graph if negative)
+     * @param aExtraPadding int with an optional amount of extra padding (lower
+     * on the graph if positive, higher on the graph if negative)
      */
     protected void drawMeasurementLine(int aFirstIndex, int aFirstDatasetIndex, int aSecondIndex, int aSecondDatasetIndex, Graphics g, Color aColor, int aExtraPadding) {
 
@@ -2152,7 +2380,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         int deNovoTagWidth = g.getFontMetrics().stringWidth(deNovoTag);
         int deltaMassWidth = g.getFontMetrics().stringWidth(deltaMass);
-        
+
         // Vertical position of the bar with the position of the highest point + a margin.
         int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2)) + aExtraPadding;
 
@@ -2166,11 +2394,11 @@ public abstract class GraphicsPanel extends JPanel {
         // Drop a dotted line down to the peaks.
         dropDottedLine(aFirstIndex, aFirstDatasetIndex, y - 3, g);
         dropDottedLine(aSecondIndex, aSecondDatasetIndex, y - 3, g);
-        
+
         // Draw the de novo tag.
         int xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (deNovoTagWidth / 2);
         g.drawString(deNovoTag, xPosText, y - 5);
-        
+
         // Draw the mass.
         xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (deltaMassWidth / 2);
         g.drawString(deltaMass, xPosText, y + 15);
@@ -2183,10 +2411,12 @@ public abstract class GraphicsPanel extends JPanel {
      * This method drops a dotted line from the specified total height to the
      * top of the indicated point.
      *
-     * @param aPeakIndex    int with the index of the point to draw the dotted line for.
+     * @param aPeakIndex int with the index of the point to draw the dotted line
+     * for.
      * @param aDatasetIndex the index of the dataset
-     * @param aTotalHeight  int with the height (in pixels) to drop the dotted line from.
-     * @param g Graphics    object to draw the dotted line on.
+     * @param aTotalHeight int with the height (in pixels) to drop the dotted
+     * line from.
+     * @param g Graphics object to draw the dotted line on.
      */
     protected void dropDottedLine(int aPeakIndex, int aDatasetIndex, int aTotalHeight, Graphics g) {
 
@@ -2204,19 +2434,19 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method attempts to find a list of known mass deltas,
-     * corresponding with the specified x value in the given window.
+     * This method attempts to find a list of known mass deltas, corresponding
+     * with the specified x value in the given window.
      *
-     * @param aDelta    the delta mass to search for
-     * @param aWindow   the window used for the search
-     * @return String   with the description of the matching mass delta
-     *                  or empty String if none was found.
+     * @param aDelta the delta mass to search for
+     * @param aWindow the window used for the search
+     * @return String with the description of the matching mass delta or empty
+     * String if none was found.
      */
     protected String findDeltaMassMatches(double aDelta, double aWindow) {
-        
+
         StringBuilder result = new StringBuilder("");
         boolean appended = false;
-        
+
         if (iKnownMassDeltas != null) {
             Iterator iter = iKnownMassDeltas.keySet().iterator();
             while (iter.hasNext()) {
@@ -2230,10 +2460,10 @@ public abstract class GraphicsPanel extends JPanel {
                     result.append(iKnownMassDeltas.get(mass));
                 }
             }
-            
+
             // add combinations of two mass deltas
             if (useMassDeltaCombinations) {
-                
+
                 // look for combinations of two mass deltas
                 Iterator iter1 = iKnownMassDeltas.keySet().iterator();
                 ArrayList<String> addedMassDeltas = new ArrayList<String>();
@@ -2249,18 +2479,18 @@ public abstract class GraphicsPanel extends JPanel {
                         Double mass = mass1 + mass2;
 
                         if (Math.abs(mass.doubleValue() - aDelta) < aWindow) {
-                            
+
                             if (!addedMassDeltas.contains(iKnownMassDeltas.get(mass2) + "" + iKnownMassDeltas.get(mass1))) {
-                                
+
                                 if (appended) {
                                     result.append(" ");
                                 } else {
                                     appended = true;
                                 }
-                                
+
                                 result.append(iKnownMassDeltas.get(mass1) + "" + iKnownMassDeltas.get(mass2));
                                 addedMassDeltas.add(iKnownMassDeltas.get(mass1) + "" + iKnownMassDeltas.get(mass2));
-                            }  
+                            }
                         }
                     }
                 }
@@ -2271,14 +2501,14 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method attempts to find the specified SpectrumAnnotation in
-     * the current peak list and if so, annotates it correspondingly on the screen.
+     * This method attempts to find the specified SpectrumAnnotation in the
+     * current peak list and if so, annotates it correspondingly on the screen.
      *
-     * @param aSA               SpectrumAnnotation with the annotation to find.
-     * @param g                 Graphics instance to annotate on.
-     * @param aAlreadyAnnotated HashMap with the index of a point as key, and the number
-     *                          of times it has been annotated as value (or 'null' if not
-     *                          yet annotated).
+     * @param aSA SpectrumAnnotation with the annotation to find.
+     * @param g Graphics instance to annotate on.
+     * @param aAlreadyAnnotated HashMap with the index of a point as key, and
+     * the number of times it has been annotated as value (or 'null' if not yet
+     * annotated).
      */
     protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap<String, Integer> aAlreadyAnnotated) {
 
@@ -2337,8 +2567,123 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method draws all of the peaks for all datasets in the current
-     * x-axis range on the panel.
+     * This method draws all of the peaks for all datasets in the current x-axis
+     * range on the panel.
+     *
+     * @param g Graphics object to draw on.
+     */
+    protected void drawMirroredPeaks(Graphics g) {
+
+        // @TODO: should be merged with the drawPeaks method
+
+        Color originalColor = g.getColor();
+
+        // Init an array that holds pixel coordinates for each peak.
+        iXAxisDataInPixelsMirroredSpectrum = new ArrayList<int[]>();
+        iYAxisDataInPixelsMirroredSpectrum = new ArrayList<int[]>();
+
+        // cycle the datasets
+        for (int j = 0; j < iXAxisDataMirroredSpectrum.size(); j++) {
+
+            // set the color
+            g.setColor(iDataPointAndLineColorMirroredSpectra.get(j));
+
+            iXAxisDataInPixelsMirroredSpectrum.add(new int[iXAxisDataMirroredSpectrum.get(j).length]);
+            iYAxisDataInPixelsMirroredSpectrum.add(new int[iYAxisDataMirroredSpectrum.get(j).length]);
+
+            // cycle the peaks for the dataset
+            for (int i = 0; i < iXAxisDataMirroredSpectrum.get(j).length; i++) {
+
+                double lXAxisValue = iXAxisDataMirroredSpectrum.get(j)[i];
+
+                // Only draw those x values within the ('low x value', 'high x value') window.
+                if (lXAxisValue < iXAxisMin) {
+                    continue;
+                } else if (lXAxisValue > iXAxisMax) {
+                    break;
+                } else {
+
+                    // is the peak annotated?
+                    boolean annotatedPeak = true;
+
+                    if (!showAllPeaks) {
+                        annotatedPeak = isPeakAnnotated(lXAxisValue);
+                    }
+
+                    double lYAxisValue = iYAxisDataMirroredSpectrum.get(j)[i];
+
+                    // Calculate pixel coordinates for x and y values.
+                    // X value first.
+                    double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
+                    int temp = (int) tempDouble;
+
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+
+                    int xAxisPxl = temp + iXPadding;
+
+                    if (annotatedPeak || showAllPeaks) {
+                        iXAxisDataInPixelsMirroredSpectrum.get(j)[i] = xAxisPxl;
+                    }
+
+                    // Now intensity.
+                    tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
+                    temp = (int) tempDouble;
+
+                    if ((tempDouble - temp) >= 0.5) {
+                        temp++;
+                    }
+
+                    int xAxisYLocation = (this.getHeight() + currentPadding) / 2;
+                    int yValuePxl = xAxisYLocation + (temp - iXPadding);
+
+                    if (annotatedPeak || showAllPeaks) {
+                        iYAxisDataInPixelsMirroredSpectrum.get(j)[i] = yValuePxl;
+                    }
+
+                    // store the current peak color
+                    Color currentColor = g.getColor();
+
+                    // set the width of the peaks
+                    Graphics2D g2 = (Graphics2D) g;
+                    Stroke tempStroke = g2.getStroke();
+
+                    // change the peak color if the peak is to be drawn in the background
+                    if (!annotatedPeak && !showAllPeaks) {
+                        g.setColor(peakWaterMarkColor);
+                        BasicStroke stroke = new BasicStroke(backgroundPeakWidth);
+                        g2.setStroke(stroke);
+                    } else {
+                        BasicStroke stroke = new BasicStroke(peakWidth);
+                        g2.setStroke(stroke);
+                    }
+
+                    // draw the peak
+                    if (iDrawStyle == LINES) {
+                        // Draw the line.
+                        g2.draw(new Line2D.Double(xAxisPxl, xAxisYLocation - iXPadding, xAxisPxl, yValuePxl));
+                    } else if (iDrawStyle == DOTS) {
+                        // Draw the dot.
+                        g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
+                    }
+
+                    // reset the width of lines to the previous width
+                    g2.setStroke(tempStroke);
+
+                    g.setColor(currentColor);
+                }
+            }
+        }
+
+        // Change the color back to its original setting.
+        g.setColor(originalColor);
+
+    }
+
+    /**
+     * This method draws all of the peaks for all datasets in the current x-axis
+     * range on the panel.
      *
      * @param g Graphics object to draw on.
      */
@@ -2373,7 +2718,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                     // is the peak annotated?
                     boolean annotatedPeak = true;
-                    
+
                     if (!showAllPeaks) {
                         annotatedPeak = isPeakAnnotated(lXAxisValue);
                     }
@@ -2384,11 +2729,11 @@ public abstract class GraphicsPanel extends JPanel {
                     // X value first.
                     double tempDouble = (lXAxisValue - iXAxisMin) / iXScaleUnit;
                     int temp = (int) tempDouble;
-                    
+
                     if ((tempDouble - temp) >= 0.5) {
                         temp++;
                     }
-                    
+
                     int xAxisPxl = temp + iXPadding;
 
                     if (annotatedPeak || showAllPeaks) {
@@ -2398,12 +2743,18 @@ public abstract class GraphicsPanel extends JPanel {
                     // Now intensity.
                     tempDouble = (lYAxisValue - iYAxisMin) / iYScaleUnit;
                     temp = (int) tempDouble;
-                    
+
                     if ((tempDouble - temp) >= 0.5) {
                         temp++;
                     }
-                    
-                    int yValuePxl = this.getHeight() - (temp + iXPadding);
+
+                    int xAxisYLocation = this.getHeight();
+
+                    if (dataSetCounterMirroredSpectra > 0) {
+                        xAxisYLocation = (this.getHeight() + currentPadding) / 2;
+                    }
+
+                    int yValuePxl = xAxisYLocation - (temp + iXPadding);
 
                     if (annotatedPeak || showAllPeaks) {
                         iYAxisDataInPixels.get(j)[i] = yValuePxl;
@@ -2411,7 +2762,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                     // store the current peak color
                     Color currentColor = g.getColor();
-                                     
+
                     // set the width of the peaks
                     Graphics2D g2 = (Graphics2D) g;
                     Stroke tempStroke = g2.getStroke();
@@ -2425,11 +2776,11 @@ public abstract class GraphicsPanel extends JPanel {
                         BasicStroke stroke = new BasicStroke(peakWidth);
                         g2.setStroke(stroke);
                     }
-                    
+
                     // draw the peak
                     if (iDrawStyle == LINES) {
                         // Draw the line.
-                        g2.draw(new Line2D.Double(xAxisPxl, this.getHeight() - iXPadding, xAxisPxl, yValuePxl));
+                        g2.draw(new Line2D.Double(xAxisPxl, xAxisYLocation - iXPadding, xAxisPxl, yValuePxl));
                     } else if (iDrawStyle == DOTS) {
                         // Draw the dot.
                         g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
@@ -2437,7 +2788,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                     // reset the width of lines to the previous width
                     g2.setStroke(tempStroke);
-                    
+
                     g.setColor(currentColor);
                 }
             }
@@ -2565,7 +2916,8 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * Helper method for setting the opacity.
      *
-     * @param alpha the opacity value, 0 means completely see-through, 1 means opaque.
+     * @param alpha the opacity value, 0 means completely see-through, 1 means
+     * opaque.
      * @return an AlphaComposite object
      */
     private AlphaComposite makeComposite(float alpha) {
@@ -2577,7 +2929,8 @@ public abstract class GraphicsPanel extends JPanel {
      * Set if the x-axis tags are to be drawn using scientific annotation. The
      * default is false. The default pattern is "##0.#####E0".
      *
-     * @param scientificXAxis if the x-axis tags is to be drawn using scientific annotation
+     * @param scientificXAxis if the x-axis tags is to be drawn using scientific
+     * annotation
      */
     public void setScientificXAxis(boolean scientificXAxis) {
         this.scientificXAxis = scientificXAxis;
@@ -2588,7 +2941,7 @@ public abstract class GraphicsPanel extends JPanel {
      * default is false. For pattern details see java.text.DecimalFormat. The
      * default pattern is "##0.#####E0".
      *
-     * @param pattern            the number format pattern to use
+     * @param pattern the number format pattern to use
      */
     public void setScientificXAxis(String pattern) {
         this.scientificXAxis = true;
@@ -2599,7 +2952,8 @@ public abstract class GraphicsPanel extends JPanel {
      * Set if the y-axis tags are to be drawn using scientific annotation. The
      * default is false. The default pattern is "##0.#####E0".
      *
-     * @param scientificYAxis if the y-axis tags is to be drawn using scientific annotation
+     * @param scientificYAxis if the y-axis tags is to be drawn using scientific
+     * annotation
      */
     public void setScientificYAxis(boolean scientificYAxis) {
         this.scientificYAxis = scientificYAxis;
@@ -2610,16 +2964,16 @@ public abstract class GraphicsPanel extends JPanel {
      * default is false. For pattern details see java.text.DecimalFormat. The
      * default pattern is "##0.#####E0".
      *
-     * @param pattern            the number format pattern to use
+     * @param pattern the number format pattern to use
      */
     public void setScientificYAxis(String pattern) {
         this.scientificYAxis = true;
         this.scientificPattern = pattern;
     }
-    
+
     /**
      * Get the peak water mark color.
-     * 
+     *
      * @return the peak water mark color
      */
     public Color getPeakWaterMarkColor() {
@@ -2628,24 +2982,25 @@ public abstract class GraphicsPanel extends JPanel {
 
     /**
      * Set the peak water mark color.
-     * 
+     *
      * @param peakWaterMarkColor the color to set
      */
     public void setPeakWaterMarkColor(Color peakWaterMarkColor) {
         this.peakWaterMarkColor = peakWaterMarkColor;
     }
-    
+
     /**
-     * Returns true of the given x-axis value is annotated with at least one 
+     * Returns true of the given x-axis value is annotated with at least one
      * annotation.
-     * 
-     * @param xAxisValue    the x-axis value
-     * @return              true of the given x-axis value is annotated with at least one annotation
+     *
+     * @param xAxisValue the x-axis value
+     * @return true of the given x-axis value is annotated with at least one
+     * annotation
      */
     private boolean isPeakAnnotated(double xAxisValue) {
-        
+
         boolean annotatedPeak = false;
-        
+
         for (int m = 0; m < iAnnotations.size() && !annotatedPeak; m++) {
             Object o = iAnnotations.get(m);
             if (o instanceof SpectrumAnnotation) {
@@ -2657,10 +3012,10 @@ public abstract class GraphicsPanel extends JPanel {
 
                 if (Math.abs(delta) <= error) {
                     annotatedPeak = true;
-                }  
+                }
             }
         }
-        
+
         return annotatedPeak;
     }
 }

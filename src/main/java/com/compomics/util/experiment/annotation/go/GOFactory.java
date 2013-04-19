@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.annotation.go;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
@@ -13,9 +9,9 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * The GOFactory annotates identification results based on Ensembl Gene Ontology
- * terms
+ * terms.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class GOFactory {
 
@@ -50,20 +46,27 @@ public class GOFactory {
      */
     public final static String separator = "\t";
     /**
-     * Map of all the indexes where a protein can be found Accession -> indexes
+     * Map of all the indexes where a protein can be found Accession -> indexes.
      */
     private HashMap<String, ArrayList<Long>> proteinIndexes = new HashMap<String, ArrayList<Long>>();
     /**
-     * Map of all the indexes where a go term can be found go term -> indexes
+     * Map of all the indexes where a go term can be found go term -> indexes.
      */
     private HashMap<String, ArrayList<Long>> termIndexes = new HashMap<String, ArrayList<Long>>();
 
+    /**
+     * Initialize the factory.
+     * 
+     * @param file the Ensembl file
+     * @param waitingHandler the waiting handler
+     * @throws IOException 
+     */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
+        
         if (bufferedRandomAccessFile != null) {
             bufferedRandomAccessFile.close();
         }
         bufferedRandomAccessFile = new BufferedRandomAccessFile(file, "r", 1024 * 100);
-
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -131,10 +134,10 @@ public class GOFactory {
     }
 
     /**
-     * Returns the protein accessions linked to a GO term
+     * Returns the protein accessions linked to a GO term.
      *
      * @param goTerm the go term
-     * @return a list of accessions, an emtpy list if none found
+     * @return a list of accessions, an empty list if none found
      * @throws IOException
      */
     public ArrayList<String> getAccessions(String goTerm) throws IOException {
@@ -155,7 +158,7 @@ public class GOFactory {
     }
 
     /**
-     * Returns the description of a GO term
+     * Returns the description of a GO term.
      *
      * @param goTerm the go term of interest
      * @return the first description found, null if not found
@@ -177,7 +180,7 @@ public class GOFactory {
     }
 
     /**
-     * Closes connections
+     * Closes connections.
      *
      * @throws IOException
      */

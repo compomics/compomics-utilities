@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.tablemodels;
 
 import com.compomics.util.general.ExceptionHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,35 +9,37 @@ import javax.swing.JTable;
 import javax.swing.RowSorter;
 
 /**
- * A Table cacher caches data before operation on tables
+ * A Table cacher caches data before operation on tables.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class TableCacher {
 
     /**
-     * Back-up of the ordering keys for self updating tables
+     * Back-up of the ordering keys for self updating tables.
      */
     private HashMap<String, List<? extends RowSorter.SortKey>> orderingKeys = new HashMap<String, List<? extends RowSorter.SortKey>>();
     /**
-     * An exception handler used to catch the exceptions
+     * An exception handler used to catch the exceptions.
      */
     private ExceptionHandler exceptionHandler;
     /**
-     * boolean indicating that the cacher is caching data
+     * Boolean indicating that the cacher is caching data.
      */
     private boolean caching = false;
 
     /**
-     * Constructor
+     * Constructor.
+     * 
+     * @param exceptionHandler the exception handler
      */
     public TableCacher(ExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
     }
 
     /**
-     * updates the ordering in a self updating table. If data is missing a
-     * progress bar will appear during the loading
+     * Updates the ordering in a self updating table. If data is missing a
+     * progress bar will appear during the loading.
      *
      * @param table the table to reorder
      * @param tableName a string designing this table
@@ -110,9 +107,9 @@ public class TableCacher {
     }
 
     /**
-     * indicates whether the cacher is caching data
+     * Indicates whether the cacher is caching data.
      *
-     * @return
+     * @return true if the cache is being used
      */
     public boolean isCaching() {
         return caching;

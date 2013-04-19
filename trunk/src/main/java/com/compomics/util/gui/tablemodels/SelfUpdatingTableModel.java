@@ -48,7 +48,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     protected abstract int loadDataForRows(int start, int end, boolean interrupted);
 
     /**
-     * Loads the data for a column
+     * Loads the data for a column.
      *
      * @param column the column number
      * @param waitingHandler a waiting handler used to display progress to the

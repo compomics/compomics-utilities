@@ -379,8 +379,7 @@ public class SpectrumPanel extends GraphicsPanel {
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
         dataSetCounter = 0;
-        processXAndYData(aXAxisData, aYAxisData,
-                aSpectrumPeakColor, aSpectrumProfileModeLineColor);
+        processXAndYData(aXAxisData, aYAxisData, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
         iPrecursorMZ = aPrecursorMZ;
         iPrecursorCharge = aPrecursorCharge;
         iFilename = aFileName;
@@ -398,6 +397,40 @@ public class SpectrumPanel extends GraphicsPanel {
 
         this.addListeners();
     }
+    
+    /**
+     * Add a mirrored spectrum (or chromatogram).
+     * 
+     * @param aXAxisData
+     * @param aYAxisData
+     * @param aPrecursorMZ
+     * @param aPrecursorCharge
+     * @param aFileName
+     * @param aProfileMode
+     * @param aSpectrumPeakColor
+     * @param aSpectrumProfileModeLineColor  
+     */
+    public void addMirroredSpectrum(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName, boolean aProfileMode, 
+            Color aSpectrumPeakColor, Color aSpectrumProfileModeLineColor) {
+        
+        iPrecursorMZMirroredSpectrum = aPrecursorMZ;
+        iPrecursorChargeMirorredSpectrum = aPrecursorCharge;
+        iFilenameMirrorredSpectrum = aFileName;
+        
+        processMirroredXAndYData(aXAxisData, aYAxisData, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
+
+        if (aProfileMode) {
+            this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
+        } else {
+            this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
+        }
+        
+        this.showFileName = false;
+        this.showPrecursorDetails = false;
+        this.showResolution = false;
+        yAxisZoomExcludesBackgroundPeaks = false;
+        yDataIsPositive = false;
+    }
 
     /**
      * Adds an additional spectrum dataset to be displayed in the same Spectrum
@@ -412,6 +445,25 @@ public class SpectrumPanel extends GraphicsPanel {
     public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
 
         processXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColor);
+
+        this.showFileName = false;
+        this.showPrecursorDetails = false;
+        this.showResolution = false;
+    }
+    
+    /**
+     * Adds an additional mirrored spectrum dataset to be displayed in the same Spectrum
+     * Panel. Remember to use different colors for the different datasets.
+     *
+     * @param aXAxisData double[] with all the x-axis values.
+     * @param aYAxisData double[] with all the y-axis values
+     * @param dataPointAndLineColor the color to use for the data points and
+     * lines
+     * @param areaUnderCurveColor the color to use for the area under the curve
+     */
+    public void addAdditionalMirroredDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+
+        processMirroredXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColor);
 
         this.showFileName = false;
         this.showPrecursorDetails = false;

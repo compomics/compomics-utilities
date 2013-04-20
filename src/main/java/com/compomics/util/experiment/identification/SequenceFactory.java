@@ -201,13 +201,20 @@ public class SequenceFactory {
      * @param index the index where to look at
      * @param nTries the number of tries already made
      * @return the header indexed by the given index
+     * @throws InterruptedException
+     * @throws IOException
+     * @throws IllegalArgumentException 
      */
-    private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException {
+    private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException, IllegalArgumentException {
 
         try {
             currentRandomAccessFile.seek(index);
             String line, sequence = "";
             Header currentHeader = currentHeaderMap.get(accession);
+
+            if (currentHeader == null) {
+                throw new IllegalArgumentException("Protein \'" + accession + "\' not found!");
+            }
 
             while ((line = currentRandomAccessFile.readLine()) != null) {
                 line = line.trim();

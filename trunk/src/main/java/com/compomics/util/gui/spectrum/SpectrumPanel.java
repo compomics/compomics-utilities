@@ -57,7 +57,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * place in this step as well.
      */
     public SpectrumPanel(SpectrumFile aSpecFile) {
-        this(aSpecFile, LINES, true);
+        this(aSpecFile, DrawingStyle.LINES, true);
     }
 
     /**
@@ -71,7 +71,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * events should be caught and dealt with.
      */
     public SpectrumPanel(SpectrumFile aSpecFile, boolean aEnableInteraction) {
-        this(aSpecFile, LINES, aEnableInteraction);
+        this(aSpecFile, DrawingStyle.LINES, aEnableInteraction);
     }
 
     /**
@@ -82,12 +82,11 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpecFile SpectrumFile with the information about masses and
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
-     * @param aDrawStyle int with the drawing style to use. It should be one of
-     * the constants defined on this class.
+     * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction) {
+    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, null);
     }
 
@@ -99,14 +98,13 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpecFile SpectrumFile with the information about masses and
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
-     * @param aDrawStyle int with the drawing style to use. It should be one of
-     * the constants defined on this class.
+     * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
      * spectrumfilename on the panel can be 'null' for default coloring.
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor) {
+    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true, true);
     }
 
@@ -118,8 +116,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpecFile SpectrumFile with the information about masses and
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
-     * @param aDrawStyle int with the drawing style to use. It should be one of
-     * the constants defined on this class.
+     * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
@@ -128,7 +125,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
+    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
             int aMaxPadding, boolean aShowFileName) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, true, true);
     }
@@ -141,8 +138,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpecFile SpectrumFile with the information about masses and
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
-     * @param aDrawStyle int with the drawing style to use. It should be one of
-     * the constants defined on this class.
+     * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
@@ -155,7 +151,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowResolution boolean that specifies if the resolution should be
      * shown in the panel
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
+    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
             int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, aShowPrecursorDetails, aShowResolution, 0);
     }
@@ -168,8 +164,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpecFile SpectrumFile with the information about masses and
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
-     * @param aDrawStyle int with the drawing style to use. It should be one of
-     * the constants defined on this class.
+     * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
@@ -183,7 +178,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * shown in the panel
      * @param aMSLevel int with the ms level for the spectrum
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
+    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
             int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
         this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, aShowPrecursorDetails, aShowResolution, aMSLevel, false);
     }
@@ -196,8 +191,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpecFile SpectrumFile with the information about masses and
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
-     * @param aDrawStyle int with the drawing style to use. It should be one of
-     * the constants defined on this class.
+     * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
@@ -215,11 +209,11 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aProfileMode boolean if set to true the spectrum will be drawn in
      * profile mode
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, int aDrawStyle, boolean aEnableInteraction,
+    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction,
             Color aSpectrumFilenameColor, int aMaxPadding,
             boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution,
             int aMSLevel, boolean aProfileMode) {
-        this.iDrawStyle = aDrawStyle;
+        this.iCurrentDrawStyle = aDrawStyle;
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
@@ -374,7 +368,7 @@ public class SpectrumPanel extends GraphicsPanel {
             String aFileName, int aMaxPadding, boolean aShowFileName,
             boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel,
             boolean aProfileMode) {
-        this.iDrawStyle = LINES;
+        this.iCurrentDrawStyle = DrawingStyle.LINES;
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);

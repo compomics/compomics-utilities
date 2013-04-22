@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.annotation.go;
 
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
@@ -55,14 +56,15 @@ public class GOFactory {
     private HashMap<String, ArrayList<Long>> termIndexes = new HashMap<String, ArrayList<Long>>();
 
     /**
-     * Initialize the factory.
-     * 
-     * @param file the Ensembl file
-     * @param waitingHandler the waiting handler
-     * @throws IOException 
+     * Initializes the factory on the given file
+     *
+     * @param file the file containing the GO mapping
+     * @param waitingHandler a waiting handler allowing display of the progress
+     * and cancelation of the process
+     * @throws IOException
      */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
-        
+
         if (bufferedRandomAccessFile != null) {
             bufferedRandomAccessFile.close();
         }
@@ -99,6 +101,7 @@ public class GOFactory {
                 }
                 indexes.add(index);
             }
+            index = bufferedRandomAccessFile.getFilePointer();
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
@@ -134,7 +137,27 @@ public class GOFactory {
     }
 
     /**
-     * Returns the protein accessions linked to a GO term.
+     * Returns a list of non redundant go terms corresponding to a protein match
+     *
+     * @param matchKey the key of the protein match
+     * @return
+     * @throws IOException
+     */
+    public ArrayList<String> getProteinMatchTerms(String matchKey) throws IOException {
+        String[] accessions = ProteinMatch.getAccessions(matchKey);
+        ArrayList<String> goTerms = new ArrayList<String>();
+        for (String accession : accessions) {
+            for (String goTerm : getGoTerms(accession)) {
+                if (!goTerms.contains(goTerm)) {
+                    goTerms.add(goTerm);
+                }
+            }
+        }
+        return goTerms;
+    }
+
+    /**
+     * Returns the protein accessions linked to a GO term
      *
      * @param goTerm the go term
      * @return a list of accessions, an empty list if none found
@@ -174,13 +197,77 @@ public class GOFactory {
             if (splittedLine.length != 3 || !splittedLine[1].equals(goTerm)) {
                 throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO term " + goTerm + ".");
             }
-            return splittedLine[3];
+            return splittedLine[2];
         }
         return null;
     }
 
     /**
-     * Closes connections.
+     * Returns the total number of proteins in this mapping
+     *
+     * @return
+     */
+    public int getNumberOfProteins() {
+        return proteinIndexes.size();
+    }
+
+    /**
+     * Returns the total number of GO terms in this mapping
+     *
+     * @return
+     */
+    public int getNumberOfTerms() {
+        return termIndexes.size();
+    }
+
+    /**
+     * Returns the total number of accessions mapping to a given GO term
+     *
+     * @param goTerm the GO term of interest
+     * @return
+     */
+    public int getNProteinsForTerm(String goTerm) {
+        ArrayList<Long> indexes = termIndexes.get(goTerm);
+        if (indexes == null) {
+            return 0;
+        }
+        return indexes.size();
+    }
+
+    /**
+     * Returns the total number of GO termps mapping to a given protein
+     *
+     * @param accession the accession of the protein
+     * @return
+     */
+    public int getNTermsForProtein(String accession) {
+        ArrayList<Long> indexes = termIndexes.get(accession);
+        if (indexes == null) {
+            return 0;
+        }
+        return indexes.size();
+    }
+
+    /**
+     * Returns a non redundant list of all the proteins mapped
+     *
+     * @return
+     */
+    public ArrayList<String> getProteinMapped() {
+        return new ArrayList<String>(proteinIndexes.keySet());
+    }
+
+    /**
+     * Returns a non redundant list of all the GO terms mapped
+     *
+     * @return
+     */
+    public ArrayList<String> getTermedMapped() {
+        return new ArrayList<String>(termIndexes.keySet());
+    }
+
+    /**
+     * Closes connections
      *
      * @throws IOException
      */

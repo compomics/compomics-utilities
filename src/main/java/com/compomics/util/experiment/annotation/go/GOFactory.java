@@ -278,7 +278,7 @@ public class GOFactory {
     }
     
     /**
-     * Clears the mappings
+     * Clears the mappings.
      */
     public void clearFactory() {
         proteinIndexes.clear();

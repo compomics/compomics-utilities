@@ -965,10 +965,10 @@ public class SearchParameters implements Serializable {
         if (!this.getFragmentationModel().equalsIgnoreCase(otherSearchParameters.getFragmentationModel())) {
             return false;
         }
-        if (!this.isCorrectPrecursorMass().booleanValue() != otherSearchParameters.isCorrectPrecursorMass()) {
+        if (this.isCorrectPrecursorMass().booleanValue() != otherSearchParameters.isCorrectPrecursorMass()) {
             return false;
         }
-        if (!this.getDiscardLowQualitySpectra().booleanValue() != otherSearchParameters.getDiscardLowQualitySpectra()) {
+        if (this.getDiscardLowQualitySpectra().booleanValue() != otherSearchParameters.getDiscardLowQualitySpectra()) {
             return false;
         }
 

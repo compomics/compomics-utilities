@@ -68,6 +68,7 @@ public class GOFactory {
         if (bufferedRandomAccessFile != null) {
             bufferedRandomAccessFile.close();
         }
+
         bufferedRandomAccessFile = new BufferedRandomAccessFile(file, "r", 1024 * 100);
 
         if (waitingHandler != null) {
@@ -137,7 +138,8 @@ public class GOFactory {
     }
 
     /**
-     * Returns a list of non redundant go terms corresponding to a protein match.
+     * Returns a list of non redundant go terms corresponding to a protein
+     * match.
      *
      * @param matchKey the key of the protein match
      * @return a list of non redundant go terms corresponding to a protein match
@@ -276,7 +278,7 @@ public class GOFactory {
             bufferedRandomAccessFile.close();
         }
     }
-    
+
     /**
      * Clears the mappings.
      */

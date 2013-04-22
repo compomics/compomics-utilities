@@ -60,7 +60,7 @@ public class GOFactory {
      *
      * @param file the file containing the GO mapping
      * @param waitingHandler a waiting handler allowing display of the progress
-     * and cancelation of the process
+     * and canceling of the process.
      * @throws IOException
      */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
@@ -137,10 +137,10 @@ public class GOFactory {
     }
 
     /**
-     * Returns a list of non redundant go terms corresponding to a protein match
+     * Returns a list of non redundant go terms corresponding to a protein match.
      *
      * @param matchKey the key of the protein match
-     * @return
+     * @return a list of non redundant go terms corresponding to a protein match
      * @throws IOException
      */
     public ArrayList<String> getProteinMatchTerms(String matchKey) throws IOException {
@@ -157,7 +157,7 @@ public class GOFactory {
     }
 
     /**
-     * Returns the protein accessions linked to a GO term
+     * Returns the protein accessions linked to a GO term.
      *
      * @param goTerm the go term
      * @return a list of accessions, an empty list if none found
@@ -203,28 +203,28 @@ public class GOFactory {
     }
 
     /**
-     * Returns the total number of proteins in this mapping
+     * Returns the total number of proteins in this mapping.
      *
-     * @return
+     * @return the total number of proteins in this mapping
      */
     public int getNumberOfProteins() {
         return proteinIndexes.size();
     }
 
     /**
-     * Returns the total number of GO terms in this mapping
+     * Returns the total number of GO terms in this mapping.
      *
-     * @return
+     * @return the total number of GO terms in this mapping
      */
     public int getNumberOfTerms() {
         return termIndexes.size();
     }
 
     /**
-     * Returns the total number of accessions mapping to a given GO term
+     * Returns the total number of accessions mapping to a given GO term.
      *
      * @param goTerm the GO term of interest
-     * @return
+     * @return the total number of accessions mapping to a given GO term
      */
     public int getNProteinsForTerm(String goTerm) {
         ArrayList<Long> indexes = termIndexes.get(goTerm);
@@ -235,10 +235,10 @@ public class GOFactory {
     }
 
     /**
-     * Returns the total number of GO termps mapping to a given protein
+     * Returns the total number of GO terms mapping to a given protein.
      *
      * @param accession the accession of the protein
-     * @return
+     * @return the total number of GO terms mapping to a given protein
      */
     public int getNTermsForProtein(String accession) {
         ArrayList<Long> indexes = termIndexes.get(accession);
@@ -249,25 +249,25 @@ public class GOFactory {
     }
 
     /**
-     * Returns a non redundant list of all the proteins mapped
+     * Returns a non redundant list of all the proteins mapped.
      *
-     * @return
+     * @return a non redundant list of all the proteins mapped
      */
     public ArrayList<String> getProteinMapped() {
         return new ArrayList<String>(proteinIndexes.keySet());
     }
 
     /**
-     * Returns a non redundant list of all the GO terms mapped
+     * Returns a non redundant list of all the GO terms mapped.
      *
-     * @return
+     * @return a non redundant list of all the GO terms mapped
      */
     public ArrayList<String> getTermedMapped() {
         return new ArrayList<String>(termIndexes.keySet());
     }
 
     /**
-     * Closes connections
+     * Closes connections.
      *
      * @throws IOException
      */

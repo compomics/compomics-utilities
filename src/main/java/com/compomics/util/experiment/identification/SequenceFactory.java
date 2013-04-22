@@ -212,10 +212,6 @@ public class SequenceFactory {
             String line, sequence = "";
             Header currentHeader = currentHeaderMap.get(accession);
 
-            if (currentHeader == null) {
-                throw new IllegalArgumentException("Protein \'" + accession + "\' not found!");
-            }
-
             while ((line = currentRandomAccessFile.readLine()) != null) {
                 line = line.trim();
 

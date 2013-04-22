@@ -174,7 +174,7 @@ public class GOFactory {
                 if (splittedLine.length != 3 || !splittedLine[1].equals(goTerm)) {
                     throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO term " + goTerm + ".");
                 }
-                result.add(splittedLine[1]);
+                result.add(splittedLine[0]);
             }
         }
         return result;
@@ -262,7 +262,7 @@ public class GOFactory {
      *
      * @return a non redundant list of all the GO terms mapped
      */
-    public ArrayList<String> getTermedMapped() {
+    public ArrayList<String> getTermsMapped() {
         return new ArrayList<String>(termIndexes.keySet());
     }
 

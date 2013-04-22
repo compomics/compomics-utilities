@@ -90,27 +90,27 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * The number of datasets currently displayed in the panel.
      */
-    protected static int dataSetCounter = 0;
+    protected int dataSetCounter = 0;
     /**
      * The number of mirrored datasets currently displayed in the panel.
      */
-    protected static int dataSetCounterMirroredSpectra = 0;
+    protected int dataSetCounterMirroredSpectra = 0;
     /**
      * This status indicates that no annotation will be displayed, but the user
      * will have a fully functional interface (point clicking, selecting,
      * sequencing etc.)
      */
-    public static final int INTERACTIVE_STATUS = 0;
+    public final int INTERACTIVE_STATUS = 0;
     /**
      * This status indicates that annotation (if present) will be displayed,
      * while limiting the user to zooming in/out.
      */
-    public static final int ANNOTATED_STATUS = 1;
+    public final int ANNOTATED_STATUS = 1;
     /**
      * This HashMap instance holds all the known mass deltas (if any). The keys
      * are the Doubles with the massdelta, the values are the descriptions.
      */
-    protected static HashMap<Double, String> iKnownMassDeltas = null;
+    protected static HashMap<Double, String> iKnownMassDeltas = null; // @TODO: should not be static!
     /**
      * If true, pairs of delta mass annotations are used when doing de novo
      * sequencing. If false, only single delta masses are annotated.
@@ -441,22 +441,29 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int iMinDrag = 15;
     /**
-     * This variable holds the drawing style.
+     * This variable holds the current drawing style.
      */
-    protected int iDrawStyle = -1;
+    protected DrawingStyle iCurrentDrawStyle = DrawingStyle.LINES;
     /**
      * This variable holds the dot radius; only used when drawing style is DOTS
      * style.
      */
     protected int iDotRadius = 2;
+
     /**
-     * Drawstyle which draws lines connecting the X-axis with the measurement.
+     * An enumerator of the possible GraphicsPanel types.
      */
-    protected static final int LINES = 0;
-    /**
-     * Drawstyle which draws a dot at the measurement height.
-     */
-    protected static final int DOTS = 1;
+    public enum DrawingStyle {
+
+        /**
+         * Draw lines connecting the X-axis with the measurement
+         */
+        LINES,
+        /**
+         * Draw a dot at the measurement height.
+         */
+        DOTS
+    }
     /**
      * The ms level of the current spectrum. O is assumed to mean no ms level
      * given.
@@ -2660,10 +2667,10 @@ public abstract class GraphicsPanel extends JPanel {
                     }
 
                     // draw the peak
-                    if (iDrawStyle == LINES) {
+                    if (iCurrentDrawStyle == DrawingStyle.LINES) {
                         // Draw the line.
                         g2.draw(new Line2D.Double(xAxisPxl, xAxisYLocation - iXPadding, xAxisPxl, yValuePxl));
-                    } else if (iDrawStyle == DOTS) {
+                    } else if (iCurrentDrawStyle == DrawingStyle.DOTS) {
                         // Draw the dot.
                         g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
                     }
@@ -2778,10 +2785,10 @@ public abstract class GraphicsPanel extends JPanel {
                     }
 
                     // draw the peak
-                    if (iDrawStyle == LINES) {
+                    if (iCurrentDrawStyle == DrawingStyle.LINES) {
                         // Draw the line.
                         g2.draw(new Line2D.Double(xAxisPxl, xAxisYLocation - iXPadding, xAxisPxl, yValuePxl));
-                    } else if (iDrawStyle == DOTS) {
+                    } else if (iCurrentDrawStyle == DrawingStyle.DOTS) {
                         // Draw the dot.
                         g.fillOval(xAxisPxl - iDotRadius, yValuePxl - iDotRadius, iDotRadius * 2, iDotRadius * 2);
                     }

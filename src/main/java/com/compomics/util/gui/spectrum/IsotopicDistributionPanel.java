@@ -95,7 +95,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
         // graphical user interface settings
         this.iXAxisStartAtZero = false;
         rescaleWithLeftSidePadding();
-        this.iDrawStyle = this.LINES;
+        this.iCurrentDrawStyle = DrawingStyle.LINES;
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
         this.iYAxisLabel = "Int (%)";
@@ -107,7 +107,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
     /**
      * Calculates the isotopic distribution of the peptide.
      *
-     * @param validatedPeptideSequence  the peptide to calcualte the isotopic distribution for
+     * @param validatedPeptideSequence  the peptide to calculate the isotopic distribution for
      * @param peptideCharge             the charge of the peptide
      * @param labelDifference           the number of neutrons to add due to the label
      * @return                          the isotopic distribution as a spectrum

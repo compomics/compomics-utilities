@@ -276,4 +276,12 @@ public class GOFactory {
             bufferedRandomAccessFile.close();
         }
     }
+    
+    /**
+     * Clears the mappings
+     */
+    public void clearFactory() {
+        proteinIndexes.clear();
+        termIndexes.clear();
+    }
 }

@@ -30,7 +30,7 @@ public class TableCacher {
 
     /**
      * Constructor.
-     * 
+     *
      * @param exceptionHandler the exception handler
      */
     public TableCacher(ExceptionHandler exceptionHandler) {
@@ -52,6 +52,7 @@ public class TableCacher {
 
         final SelfUpdatingTableModel tableModel = (SelfUpdatingTableModel) table.getModel();
         tableModel.setSelfUpdating(false);
+        final JTable finalTable = table;
         final RowSorter rowSorter = table.getRowSorter();
         final List<? extends RowSorter.SortKey> newKeys = rowSorter.getSortKeys();
         final String finalTableName = tableName;
@@ -83,21 +84,35 @@ public class TableCacher {
                 }
             }, "ProgressDialog").start();
 
-
             new Thread("SortThread") {
                 @Override
                 public void run() {
                     try {
                         tableModel.loadColumnsContent(finalColumnsToUpdate, finalLoadingMessage, finalProgressDialog);
-                        orderingKeys.put(finalTableName, newKeys);
+
+                        if (!finalProgressDialog.isRunCanceled()) {
+                            orderingKeys.put(finalTableName, newKeys);
+                        } else {
+                            finalTable.getTableHeader().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                            finalProgressDialog.setRunFinished();
+                            tableModel.setSelfUpdating(true);
+                            caching = false;
+                            return;
+                        }
+
                     } catch (Exception ex) {
-                        exceptionHandler.catchException(ex);
-                        return;
-                    } finally {
+                        finalTable.getTableHeader().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                         finalProgressDialog.setRunFinished();
                         tableModel.setSelfUpdating(true);
                         caching = false;
+                        exceptionHandler.catchException(ex);
+                        return;
                     }
+
+                    finalTable.getTableHeader().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    finalProgressDialog.setRunFinished();
+                    tableModel.setSelfUpdating(true);
+                    caching = false;
                     rowSorter.setSortKeys(newKeys);
                 }
             }.start();

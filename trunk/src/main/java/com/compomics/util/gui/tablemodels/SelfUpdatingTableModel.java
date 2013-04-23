@@ -165,7 +165,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * @throws InterruptedException
      */
     public synchronized void loadColumnsContent(ArrayList<Integer> columns, String waitingContent, WaitingHandler waitingHandler) throws InterruptedException {
-
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressValue(columns.size() * getRowCount());
@@ -174,7 +173,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         for (int column : columns) {
             loadDataForColumn(column, waitingHandler);
         }
-
     }
 
     /**

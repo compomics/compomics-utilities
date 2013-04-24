@@ -75,12 +75,30 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
 
         unitCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
-        omssaEvalueTxt.setText(idFilter.getOmssaMaxEvalue() + "");
-        xtandemEvalueTxt.setText(idFilter.getXtandemMaxEvalue() + "");
-        mascotEvalueTxt.setText(idFilter.getMascotMaxEvalue() + "");
-        nAAminTxt.setText(idFilter.getMinPepLength() + "");
-        nAAmaxTxt.setText(idFilter.getMaxPepLength() + "");
-        precDevTxt.setText(idFilter.getMaxMzDeviation() + "");
+        double value = idFilter.getOmssaMaxEvalue();
+        if (value > 0) {
+            omssaEvalueTxt.setText("");
+        }
+        value = idFilter.getXtandemMaxEvalue();
+        if (value > 0) {
+            xtandemEvalueTxt.setText(idFilter.getXtandemMaxEvalue() + "");
+        }
+        value = idFilter.getMascotMaxEvalue();
+        if (value > 0) {
+            mascotEvalueTxt.setText(idFilter.getMascotMaxEvalue() + "");
+        }
+        value = idFilter.getMinPepLength();
+        if (value > 0) {
+            nAAminTxt.setText(idFilter.getMinPepLength() + "");
+        }
+        value = idFilter.getMaxPepLength();
+        if (value > 0) {
+            nAAmaxTxt.setText(idFilter.getMaxPepLength() + "");
+        }
+        value = idFilter.getMaxMzDeviation();
+        if (value > 0) {
+            precDevTxt.setText(idFilter.getMaxMzDeviation() + "");
+        }
         ptmsCheck.setSelected(idFilter.removeUnknownPTMs());
 
         if (idFilter.isIsPpm()) {
@@ -106,42 +124,60 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      */
     private boolean validateInput() {
         try {
-            new Double(omssaEvalueTxt.getText());
+            String input = omssaEvalueTxt.getText();
+            if (!input.equals("")) {
+                new Double(input);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for OMSSA maximal e-value.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            new Double(mascotEvalueTxt.getText());
+            String input = mascotEvalueTxt.getText();
+            if (!input.equals("")) {
+                new Double(input);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for Mascot maximal e-value.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            new Double(xtandemEvalueTxt.getText());
+            String input = xtandemEvalueTxt.getText();
+            if (!input.equals("")) {
+                new Double(input);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for X!Tandem maximal e-value.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            new Integer(nAAminTxt.getText());
+            String input = nAAminTxt.getText();
+            if (!input.equals("")) {
+                new Integer(input);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the minimal peptide length.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            new Integer(nAAmaxTxt.getText());
+            String input = nAAmaxTxt.getText();
+            if (!input.equals("")) {
+                new Integer(input);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the maximal peptide length.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            new Double(precDevTxt.getText());
+            String input = precDevTxt.getText();
+            if (!input.equals("")) {
+                new Double(input);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the precursor maximal deviation.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -386,13 +422,43 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (editable) {
             if (validateInput()) {
+                int nAAmin = -1;
+                String input = nAAminTxt.getText();
+                if (!input.equals("")) {
+                    nAAmin = new Integer(input);
+                }
+                int nAAmax = -1;
+                input = nAAmaxTxt.getText();
+                if (!input.equals("")) {
+                    nAAmax = new Integer(input);
+                }
+                double mascotEvalue = -1;
+                input = mascotEvalueTxt.getText();
+                if (!input.equals("")) {
+                    mascotEvalue = new Double(input);
+                }
+                double omssaEvalue = -1;
+                input = omssaEvalueTxt.getText();
+                if (!input.equals("")) {
+                    omssaEvalue = new Double(input);
+                }
+                double xTandemEvalue = -1;
+                input = xtandemEvalueTxt.getText();
+                if (!input.equals("")) {
+                    xTandemEvalue = new Double(input);
+                }
+                double precDev = -1;
+                input = precDevTxt.getText();
+                if (!input.equals("")) {
+                    precDev = new Double(input);
+                }
                 importSettingsDialogParent.setIdFilter(new IdFilter(
-                        new Integer(nAAminTxt.getText()),
-                        new Integer(nAAmaxTxt.getText()),
-                        new Double(mascotEvalueTxt.getText()),
-                        new Double(omssaEvalueTxt.getText()),
-                        new Double(xtandemEvalueTxt.getText()),
-                        new Double(precDevTxt.getText()),
+                        nAAmin,
+                        nAAmax,
+                        mascotEvalue,
+                        omssaEvalue,
+                        xTandemEvalue,
+                        precDev,
                         unitCmb.getSelectedIndex() == 0,
                         ptmsCheck.isSelected()));
 

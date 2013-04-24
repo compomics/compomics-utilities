@@ -87,12 +87,12 @@ public class IonMatch extends ExperimentObject {
      */
     public double getRelativeError(boolean subtractIsotope) {
         if (charge != null && charge.value != 0) {
-            double theoreticMass = ion.getTheoreticMass();
+            double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+            double measuredMz = peak.mz;
             if (subtractIsotope) {
-                theoreticMass -= getIsotopeNumber() * ElementaryElement.neutron.getMass();
+                measuredMz -= getIsotopeNumber() * ElementaryElement.neutron.getMass() / charge.value;
             }
-            double theoreticMz = (theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
-            return ((peak.mz - theoreticMz) / theoreticMz) * 1000000;
+            return ((measuredMz - theoreticMz) / theoreticMz) * 1000000;
         } else {
             return Double.MAX_VALUE;
         }

@@ -24,8 +24,8 @@ public class IdFilter implements Serializable {
 
     /**
      * Serial number for backward compatibility.
-     */
-    //static final long serialVersionUID = -6656074270981104708L; // @TODO: should be added calculated and added
+     */    
+    static final long serialVersionUID = 8416219001106063781L;
     /**
      * The minimal peptide length allowed.
      */
@@ -65,12 +65,12 @@ public class IdFilter implements Serializable {
      * Constructor with default settings.
      */
     public IdFilter() {
-        minPepLength = 6;
-        maxPepLength = 30;
-        mascotMaxEvalue = 100;
-        omssaMaxEvalue = 100;
-        xtandemMaxEvalue = 100;
-        maxMassDeviation = 10;
+        minPepLength = -1;
+        maxPepLength = -1;
+        mascotMaxEvalue = -1;
+        omssaMaxEvalue = -1;
+        xtandemMaxEvalue = -1;
+        maxMassDeviation = -1;
         isPpm = true;
         unknownPtm = true;
     }
@@ -78,12 +78,12 @@ public class IdFilter implements Serializable {
     /**
      * Constructor for an Identification filter.
      *
-     * @param minPepLength The minimal peptide length allowed
-     * @param maxPepLength The maximal peptide length allowed
-     * @param mascotMaxEvalue The maximal Mascot e-value allowed
-     * @param omssaMaxEvalue The maximal OMSSA e-value allowed
-     * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed
-     * @param maxMzDeviation The maximal m/z deviation allowed
+     * @param minPepLength The minimal peptide length allowed (0 or less for disabled)
+     * @param maxPepLength The maximal peptide length allowed (0 or less for disabled)
+     * @param mascotMaxEvalue The maximal Mascot e-value allowed (0 or less for disabled)
+     * @param omssaMaxEvalue The maximal OMSSA e-value allowed (0 or less for disabled)
+     * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed (0 or less for disabled)
+     * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for disabled)
      * @param isPpm Boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
      * @param unknownPTM Shall peptides presenting unknownPTMs be ignored
@@ -110,16 +110,17 @@ public class IdFilter implements Serializable {
 
         int pepLength = assumption.getPeptide().getSequence().length();
 
-        if ((pepLength > maxPepLength && maxPepLength != 0) || pepLength < minPepLength) {
+        if (maxPepLength > 0 && pepLength > maxPepLength
+                || minPepLength > 0 && pepLength < minPepLength) {
             return false;
         }
 
         int searchEngine = assumption.getAdvocate();
         double eValue = assumption.getScore();
 
-        if (searchEngine == Advocate.MASCOT && eValue > mascotMaxEvalue
-                || searchEngine == Advocate.OMSSA && eValue > omssaMaxEvalue
-                || searchEngine == Advocate.XTANDEM && eValue > xtandemMaxEvalue) {
+        if (searchEngine == Advocate.MASCOT && mascotMaxEvalue > 0 && eValue > mascotMaxEvalue
+                || searchEngine == Advocate.OMSSA && omssaMaxEvalue > 0 && eValue > omssaMaxEvalue
+                || searchEngine == Advocate.XTANDEM && xtandemMaxEvalue > 0 && eValue > xtandemMaxEvalue) {
             return false;
         }
         return true;
@@ -221,7 +222,7 @@ public class IdFilter implements Serializable {
 
         Precursor precursor = spectrumFactory.getPrecursor(spectrumKey);
 
-        if (Math.abs(assumption.getDeltaMass(precursor.getMz(), isPpm)) > maxMassDeviation && maxMassDeviation > 0) {
+        if (maxMassDeviation > 0 && Math.abs(assumption.getDeltaMass(precursor.getMz(), isPpm)) > maxMassDeviation) {
             return false;
         }
 

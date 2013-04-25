@@ -407,11 +407,11 @@ public class ObjectsDB implements Serializable {
                 busy = true;
 
                 Statement stmt = dbConnection.createStatement();
-                ResultSet results = stmt.executeQuery("select * from " + tableName); // @TODO: is it faster to query only the toLoad objects?
+                ResultSet results = stmt.executeQuery("select * from " + tableName);
 
                 int found = 0;
 
-                while (results.next() && found < toLoad.size()) {
+                while (!dbConnection.isClosed() && results.next() && found < toLoad.size()) {
                     String key = results.getString(1);
                     if (toLoad.contains(key)) {
                         found++;
@@ -437,7 +437,6 @@ public class ObjectsDB implements Serializable {
                 stmt.close();
 
                 busy = false;
-
             }
         } else {
 

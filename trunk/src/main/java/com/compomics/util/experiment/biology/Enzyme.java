@@ -227,6 +227,23 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
+     * Returns the number of missed cleavages in an amino acid sequence
+     * @param sequence the amino acid sequence as a string
+     * @return 
+     */
+    public int getNmissedCleavages(String sequence) {
+        int result = 0;
+        if (sequence.length() > 1) {
+            for (int i = 0; i < sequence.length() - 1; i++) {
+                if (isCleavageSite(String.valueOf(sequence.charAt(i)), String.valueOf(sequence.charAt(i + 1)))) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Digests a protein sequence in a list of expected peptide sequences.
      *
      * @param sequence the protein sequence

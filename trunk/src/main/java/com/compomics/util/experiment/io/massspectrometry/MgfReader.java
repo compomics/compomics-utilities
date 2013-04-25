@@ -177,6 +177,7 @@ public class MgfReader {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
+        HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         long beginIndex = 0, currentIndex = 0;
         String title = null;
@@ -214,6 +215,15 @@ public class MgfReader {
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
                     e.printStackTrace();
+                }
+                Integer nDuplicates = duplicateTitles.get(title);
+                if (nDuplicates != null || spectrumTitles.contains(title)) {
+                    if (nDuplicates == null) {
+                        nDuplicates = 0;
+                        System.err.println("Warning: spectrum title " + title + " is used for different spectra in " + mgfFile.getName() + ".");
+                    }
+                    duplicateTitles.put(title, ++nDuplicates);
+                    title += "_" + nDuplicates;
                 }
                 spectrumTitles.add(title);
                 indexes.put(title, currentIndex);

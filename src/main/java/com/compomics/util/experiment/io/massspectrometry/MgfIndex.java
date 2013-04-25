@@ -192,7 +192,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the number of imported spectra
      */
     public int getNSpectra() {
-        return indexMap.size();
+        return spectrumTitles.size();
     }
 
     /**

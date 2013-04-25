@@ -1,12 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.annotation.gene;
 
-import com.compomics.util.experiment.annotation.go.GOFactory;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
 import java.io.File;
@@ -17,9 +11,9 @@ import java.util.HashMap;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
- * The gene factory provides gene information for protein accessions
+ * The gene factory provides gene information for protein accessions.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class GeneFactory {
 
@@ -106,19 +100,20 @@ public class GeneFactory {
     }
 
     /**
-     * Returns a list of the mapped genes indexed by their Ensembl Gene ID
+     * Returns a list of the mapped genes indexed by their Ensembl Gene ID.
      *
-     * @return
+     * @return a list of the mapped genes
      */
     public ArrayList<String> getMappedGenes() {
         return new ArrayList<String>(geneIdIndexes.keySet());
     }
 
     /**
-     * Returns the name of a gene, null if not found
+     * Returns the name of a gene, null if not found.
+     *
      * @param geneID the Ensembl ID of the gene of interest
-     * @return
-     * @throws IOException 
+     * @return the name of a gene
+     * @throws IOException
      */
     public String getGeneName(String geneID) throws IOException {
         Long index = geneIdIndexes.get(geneID);
@@ -135,10 +130,11 @@ public class GeneFactory {
     }
 
     /**
-     * Returns the chromosome where a gene can be located, null if not found
+     * Returns the chromosome where a gene can be located, null if not found.
+     *
      * @param geneID the Ensembl ID of the gene of interest
-     * @return
-     * @throws IOException 
+     * @return the chromosome where a gene can be located
+     * @throws IOException
      */
     public String getChromosome(String geneID) throws IOException {
         Long index = geneIdIndexes.get(geneID);
@@ -153,10 +149,12 @@ public class GeneFactory {
         }
         return null;
     }
-    
+
     /**
-     * Returns the gene gene attached to a protein. Note, for now this is implemented only for uniprot sequences. The sequences must be imported in the SequenceFactory.
-     * 
+     * Returns the gene gene attached to a protein. Note, for now this is
+     * implemented only for UniProt sequences. The sequences must be imported in
+     * the SequenceFactory.
+     *
      * @param proteinAccession the accession of the protein of interest
      * @return the ID of the gene, null if not found
      * @throws IOException

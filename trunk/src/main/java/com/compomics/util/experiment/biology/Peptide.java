@@ -164,18 +164,7 @@ public class Peptide extends ExperimentObject {
      * @return the amount of missed cleavages
      */
     public int getNMissedCleavages(Enzyme enzyme) {
-        int mc = 0;
-        for (int aa = 0; aa < sequence.length() - 1; aa++) {
-            if (enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))
-                    && !enzyme.getRestrictionAfter().contains(sequence.charAt(aa + 1))) {
-                mc++;
-            }
-            if (enzyme.getAminoAcidAfter().contains(sequence.charAt(aa + 1))
-                    && !enzyme.getAminoAcidBefore().contains(sequence.charAt(aa))) {
-                mc++;
-            }
-        }
-        return mc;
+        return enzyme.getNmissedCleavages(sequence);
     }
 
     /**

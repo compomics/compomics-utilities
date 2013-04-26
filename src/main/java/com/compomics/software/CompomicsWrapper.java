@@ -72,7 +72,8 @@ public class CompomicsWrapper {
      *
      * @param toolName
      * @param jarFile the jar file to execute
-     * @param splashName the splash name, for example peptide-shaker-splash.png
+     * @param splashName the splash name, for example peptide-shaker-splash.png,
+     * can be null
      * @param mainClass the main class to execute, for example
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      * @param args the arguments to pass to the tool (ignored if null)
@@ -154,7 +155,8 @@ public class CompomicsWrapper {
      *
      * @throws java.lang.Exception
      * @param jarFile the jar file to execute
-     * @param splashName the splash name, for example peptide-shaker-splash.png
+     * @param splashName the splash name, for example peptide-shaker-splash.png,
+     * can be null
      * @param mainClass the main class to execute, for example
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      * @param args the arguments to pass to the tool (ignored if null)
@@ -174,15 +176,19 @@ public class CompomicsWrapper {
         String javaHome = getJavaHome(confFolder, bw);
 
         // get the splash 
-        String splashPath = confFolder.getAbsolutePath() + File.separator + splashName;
+        String splashPath = null;
 
-        // set the correct slashes for the splash path
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
-            splashPath = splashPath.replace("/", "\\");
+        if (splashName != null) {
+            splashPath = confFolder.getAbsolutePath() + File.separator + splashName;
 
-            // remove the initial '\' at the start of the line 
-            if (splashPath.startsWith("\\") && !splashPath.startsWith("\\\\")) {
-                splashPath = splashPath.substring(1);
+            // set the correct slashes for the splash path
+            if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
+                splashPath = splashPath.replace("/", "\\");
+
+                // remove the initial '\' at the start of the line 
+                if (splashPath.startsWith("\\") && !splashPath.startsWith("\\\\")) {
+                    splashPath = splashPath.substring(1);
+                }
             }
         }
 
@@ -214,7 +220,11 @@ public class CompomicsWrapper {
         // create the command line
         ArrayList process_name_array = new ArrayList();
         process_name_array.add(javaHome);
-        process_name_array.add("-splash:" + quote + splashPath + quote);
+
+        // splash screen
+        if (splashName != null) {
+            process_name_array.add("-splash:" + quote + splashPath + quote);
+        }
 
         // get the java options
         ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);

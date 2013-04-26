@@ -227,9 +227,10 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Returns the number of missed cleavages in an amino acid sequence
-     * @param sequence the amino acid sequence as a string
-     * @return 
+     * Returns the number of missed cleavages in an amino acid sequence.
+     *
+     * @param sequence the amino acid sequence as a string.
+     * @return the number of missed cleavages
      */
     public int getNmissedCleavages(String sequence) {
         int result = 0;

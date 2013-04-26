@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
@@ -159,12 +161,6 @@ public class CompomicsWrapper {
      */
     private void launch(File jarFile, String splashName, String mainClass, String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
-        String temp = "", cmdLine;
-        String arguments = "";
-        if (args != null) {
-            arguments = CommandLineUtils.concatenate(args);
-        }
-
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
         if (!confFolder.exists()) {
             String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
@@ -172,13 +168,6 @@ public class CompomicsWrapper {
         }
         if (!confFolder.exists()) {
             throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
-        }
-
-        // get the java options
-        ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);
-        String options = "";
-        for (String currentOption : optionsAsList) {
-            options += currentOption + " ";
         }
 
         // check if the user has set a non-standard Java home location
@@ -222,48 +211,79 @@ public class CompomicsWrapper {
             jarFilePath = URLDecoder.decode(jarFile.getAbsolutePath(), "UTF-8");
         }
 
-        // create the complete command line
-        cmdLine = javaHome + " -splash:" + quote + splashPath + quote + " " + options + " -cp "
-                + quote + jarFilePath + quote + uniprotProxyClassPath
-                + " " + mainClass + " " + arguments;
+        // create the command line
+        ArrayList process_name_array = new ArrayList();
+        process_name_array.add(javaHome);
+        process_name_array.add("-splash:" + quote + splashPath + quote);
+
+        // get the java options
+        ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);
+        for (String currentOption : optionsAsList) {
+            process_name_array.add(currentOption);
+        }
+
+        process_name_array.add("-cp");
+
+        // get the class path
+        String classPath = quote + jarFilePath;
+        if (uniprotProxyClassPath.trim().length() > 0) {
+            classPath += uniprotProxyClassPath;
+        }
+        classPath += quote;
+        process_name_array.add(classPath);
+
+        process_name_array.add(mainClass);
+
+        if (args != null) {
+            process_name_array.addAll(Arrays.asList(args));
+        }
+
+        process_name_array.trimToSize();
 
         if (useStartUpLog) {
-            System.out.println(System.getProperty("line.separator") + cmdLine + System.getProperty("line.separator") + System.getProperty("line.separator"));
-            bw.write(System.getProperty("line.separator") + "Command line: " + cmdLine + System.getProperty("line.separator") + System.getProperty("line.separator"));
+
+            // print the command to the log file
+            System.out.println(System.getProperty("line.separator") + System.getProperty("line.separator") + "Command line: ");
+            bw.write(System.getProperty("line.separator") + "Command line: " + System.getProperty("line.separator"));
+
+            for (int i = 0; i < process_name_array.size(); i++) {
+                System.out.print(process_name_array.get(i) + " ");
+                bw.write(process_name_array.get(i) + " ");
+            }
+
+            bw.write(System.getProperty("line.separator"));
+            System.out.println(System.getProperty("line.separator"));
         }
+
+        ProcessBuilder pb = new ProcessBuilder(process_name_array);
+        pb.directory(jarFile.getParentFile());
 
         // try to run the command line
         try {
-            Process p = Runtime.getRuntime().exec(cmdLine);
-
-            InputStream stderr = p.getErrorStream();
-            InputStreamReader isr = new InputStreamReader(stderr);
-            BufferedReader br = new BufferedReader(isr);
-
-            String line = br.readLine();
+            Process p = pb.start();
 
             boolean error = false;
+            String temp = "";
+            Scanner scan = new Scanner(p.getErrorStream());
 
-            while (line != null) {
+            // get input from scanner and check for errors
+            while (scan.hasNext()) {
+
+                String tempOutput = scan.next() + " ";
 
                 if (useStartUpLog) {
-                    System.out.println(line);
-                    bw.write(line + System.getProperty("line.separator"));
+                    System.out.print(tempOutput);
+                    bw.write(tempOutput);
                 }
 
-                temp += line + System.getProperty("line.separator");
-                line = br.readLine();
+                temp += tempOutput;
                 error = true;
             }
-
-            br.close();
-            isr.close();
-            stderr.close();
 
             int exitVal = p.waitFor();
 
             if (useStartUpLog) {
-                System.out.println("Process exitValue: " + exitVal);
+                System.out.println("Process exitValue: " + exitVal + System.getProperty("line.separator"));
                 bw.write("Process exitValue: " + exitVal + System.getProperty("line.separator"));
             }
 
@@ -323,7 +343,15 @@ public class CompomicsWrapper {
                 }
             }
         } catch (Throwable t) {
+
+            if (useStartUpLog) {
+                bw.write(t.getMessage());
+                bw.flush();
+                bw.close();
+            }
+
             t.printStackTrace();
+
             System.exit(0);
         }
     }

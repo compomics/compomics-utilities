@@ -290,7 +290,7 @@ public class ObjectsDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -372,7 +372,7 @@ public class ObjectsDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -411,7 +411,7 @@ public class ObjectsDB implements Serializable {
 
                 int found = 0;
 
-                while (!dbConnection.isClosed() && results.next() && found < toLoad.size()) {
+                while (results.next() && found < toLoad.size()) {
                     String key = results.getString(1);
                     if (toLoad.contains(key)) {
                         found++;

@@ -499,7 +499,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
         new HelpDialog(this, getClass().getResource("/helpFiles/FilterSettings.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Import Filters - Help", 500, 10);
+                "Import Filters - Help", 500, 10); // @TODO: reduce height??
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

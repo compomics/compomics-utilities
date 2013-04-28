@@ -104,9 +104,13 @@ public class SearchParameters implements Serializable {
      */
     private Double maxEValue = 100.0;
     /**
-     * The maximal hitlist length (OMSSA and TagDB setting. TagDB max is 20).
+     * The maximal hit list length (OMSSA setting only).
      */
     private Integer hitListLength = 25;
+    /**
+     * The maximal hit list length for PepNovo+.
+     */
+    private Integer hitListLengthDeNovo = 10; // max is 20
     /**
      * The minimal charge to be considered for multiple fragment charges for
      * OMSSA.
@@ -132,7 +136,7 @@ public class SearchParameters implements Serializable {
     private Boolean scalePrecursor = true;
     /**
      * Indicates whether the precursor charge estimation option (OMSSA and
-     * TagDB).
+     * DeNovoGUI).
      */
     private Boolean estimateCharge = true;
     /**
@@ -527,6 +531,24 @@ public class SearchParameters implements Serializable {
     }
 
     /**
+     * Returns the length of the hit list for PepNovo+.
+     *
+     * @return the length of the hit list for OMSSA
+     */
+    public Integer getHitListLengthDeNovo() {
+        return hitListLengthDeNovo;
+    }
+
+    /**
+     * Sets the length of the hit list for PepNovo.
+     *
+     * @param hitListLengthDeNovo the length of the hit list for PepNovo
+     */
+    public void setHitListLengthDeNovo(Integer hitListLengthDeNovo) {
+        this.hitListLengthDeNovo = hitListLengthDeNovo;
+    }
+
+    /**
      * Returns the minimal precursor charge to account for multiply charged
      * fragments in OMSSA.
      *
@@ -854,6 +876,9 @@ public class SearchParameters implements Serializable {
         output.append(System.getProperty("line.separator"));
         output.append("GENERATE_QUERY=");
         output.append(generateQuery);
+        output.append(System.getProperty("line.separator"));
+        output.append("HIT_LIST_LENGTH=");
+        output.append(hitListLengthDeNovo);
         output.append(System.getProperty("line.separator"));
 
         return output.toString();

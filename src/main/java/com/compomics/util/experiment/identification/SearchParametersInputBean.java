@@ -225,6 +225,46 @@ public class SearchParametersInputBean {
                     searchParameters.setEstimateCharge(false);
                 }
             }
+            if (aLine.hasOption(SearchParametersCLIParams.ESTIMATE_CHARGE_DE_NOVO.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.ESTIMATE_CHARGE_DE_NOVO.id);
+                Integer option = new Integer(arg);
+                if (option == 1) {
+                    searchParameters.setEstimateCharge(true);
+                } else {
+                    searchParameters.setEstimateCharge(false);
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.CORRECT_PRECURSOR_MASS.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.CORRECT_PRECURSOR_MASS.id);
+                Integer option = new Integer(arg);
+                if (option == 1) {
+                    searchParameters.correctPrecursorMass(true);
+                } else {
+                    searchParameters.correctPrecursorMass(false);
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.DISCARD_SPECTRA.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.DISCARD_SPECTRA.id);
+                Integer option = new Integer(arg);
+                if (option == 1) {
+                    searchParameters.setDiscardLowQualitySpectra(true);
+                } else {
+                    searchParameters.setDiscardLowQualitySpectra(false);
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.GENERATE_BLAST.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.GENERATE_BLAST.id);
+                Integer option = new Integer(arg);
+                if (option == 1) {
+                    searchParameters.setGenerateQuery(true);
+                } else {
+                    searchParameters.setGenerateQuery(false);
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.FRAGMENTATION_MODEL.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.FRAGMENTATION_MODEL.id);
+                searchParameters.setFragmentationModel(arg);
+            }
 
             ModificationProfile modificationProfile = new ModificationProfile();
             if (aLine.hasOption(SearchParametersCLIParams.FIXED_MODS.id)) {
@@ -693,6 +733,57 @@ public class SearchParametersInputBean {
                     new Integer(arg);
                 } catch (Exception e) {
                     System.out.println(System.getProperty("line.separator") + "An error occurred while reading the estimate charge option:"
+                            + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.ESTIMATE_CHARGE_DE_NOVO.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.ESTIMATE_CHARGE_DE_NOVO.id);
+                try {
+                    new Integer(arg);
+                } catch (Exception e) {
+                    System.out.println(System.getProperty("line.separator") + "An error occurred while reading the estimate charge option:"
+                            + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.CORRECT_PRECURSOR_MASS.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.CORRECT_PRECURSOR_MASS.id);
+                try {
+                    new Integer(arg);
+                } catch (Exception e) {
+                    System.out.println(System.getProperty("line.separator") + "An error occurred while reading the correct precursor mass option:"
+                            + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.DISCARD_SPECTRA.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.DISCARD_SPECTRA.id);
+                try {
+                    new Integer(arg);
+                } catch (Exception e) {
+                    System.out.println(System.getProperty("line.separator") + "An error occurred while reading the discard precursor option:"
+                            + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.FRAGMENTATION_MODEL.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.FRAGMENTATION_MODEL.id);
+                if (!arg.equalsIgnoreCase("CID_IT_TRYP")) { // @TODO: support more models??
+                    System.out.println(System.getProperty("line.separator") + "Fragmentation model not supported." + System.getProperty("line.separator"));
+                    return false;
+                }
+            }
+            if (aLine.hasOption(SearchParametersCLIParams.GENERATE_BLAST.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.GENERATE_BLAST.id);
+                try {
+                    new Integer(arg);
+                } catch (Exception e) {
+                    System.out.println(System.getProperty("line.separator") + "An error occurred while reading the generate BLAST query option:"
                             + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
                     e.printStackTrace();
                     return false;

@@ -370,24 +370,30 @@ public class UtilitiesUserPreferences implements Serializable {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void saveUserPreferences(UtilitiesUserPreferences userPreferences) throws FileNotFoundException, IOException {
+    public static void saveUserPreferences(UtilitiesUserPreferences userPreferences) {
 
-        File file = new File(USER_PREFERENCES_FILE);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdir();
+        try {
+            File file = new File(USER_PREFERENCES_FILE);
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdir();
+            }
+            SerializationUtils.writeObject(userPreferences, file);
+        } catch (Exception e) {
+            System.err.println("An error occurred while saving " + USER_PREFERENCES_FILE + " (see below).");
+            e.printStackTrace();
         }
-        SerializationUtils.writeObject(userPreferences, file);
     }
 
     /**
-     * Convenience method retrieving the user preferences.
+     * Retries the user preferences. If an error is encountered, preferences are
+     * set back to default.
      *
      * @return returns the utilities user preferences
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static UtilitiesUserPreferences loadUserPreferences() throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static UtilitiesUserPreferences loadUserPreferences() {
         UtilitiesUserPreferences userPreferences;
         File file = new File(UtilitiesUserPreferences.USER_PREFERENCES_FILE);
 
@@ -395,7 +401,14 @@ public class UtilitiesUserPreferences implements Serializable {
             userPreferences = new UtilitiesUserPreferences();
             UtilitiesUserPreferences.saveUserPreferences(userPreferences);
         } else {
-            userPreferences = (UtilitiesUserPreferences) SerializationUtils.readObject(file);
+            try {
+                userPreferences = (UtilitiesUserPreferences) SerializationUtils.readObject(file);
+            } catch (Exception e) {
+                System.err.println("An error occurred while loading " + UtilitiesUserPreferences.USER_PREFERENCES_FILE + " (see below). Preferences set back to default.");
+                e.printStackTrace();
+                userPreferences = new UtilitiesUserPreferences();
+                UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+            }
         }
 
         return userPreferences;

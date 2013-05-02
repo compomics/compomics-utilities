@@ -2,6 +2,7 @@ package com.compomics.util.gui.tablemodels;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.util.ArrayList;
+import javax.swing.RowSorter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -12,11 +13,11 @@ import javax.swing.table.DefaultTableModel;
 public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
     /**
-     * The start index of the rows being loaded.
+     * The view start index of the rows being loaded.
      */
     private int rowStartLoading = -1;
     /**
-     * The end index of the rows being loaded.
+     * The view end index of the rows being loaded.
      */
     private int rowEndLoading = -1;
     /**
@@ -35,17 +36,21 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * The last loading runnable.
      */
     private LoadingRunnable lastLoadingRunnable = null;
+    /**
+     * The row sorter used for the given table. The sorter is used to preload
+     * the data, ignored if null.
+     */
+    private RowSorter sorter = null;
 
     /**
      * Loads the data needed for rows between start and end (inclusively).
      *
-     * @param start the number of the first row to load
-     * @param end the number of the last row to load
+     * @param rows the rows model indexes to load as a list. Shall not be empty or null.
      * @param interrupted a boolean indicating whether the loading shall be
      * stopped
      * @return the last updated row
      */
-    protected abstract int loadDataForRows(int start, int end, boolean interrupted);
+    protected abstract int loadDataForRows(ArrayList<Integer> rows, boolean interrupted);
 
     /**
      * Loads the data for a column.
@@ -73,6 +78,10 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     protected void dataMissingAtRow(int row) throws InterruptedException {
 
+        if (sorter != null) {
+            row = sorter.convertRowIndexToView(row);
+        }
+        
         int anticipatedStart = (int) (row + 0.9 * batchSize);
 
         if (lastLoadingRunnable == null || lastLoadingRunnable.isFinished()
@@ -108,7 +117,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                     try {
                         if (selfUpdating) {
                             fireTableDataChanged();
-                        } 
+                        }
                     } catch (Exception e) {
                         catchException(e);
                     }
@@ -176,6 +185,16 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
+     * Sets the row sorter used for the table. The sorter will be used to
+     * preload data
+     *
+     * @param sorter the row sorter used for the table
+     */
+    public void setRowSorter(RowSorter sorter) {
+        this.sorter = sorter;
+    }
+
+    /**
      * Runnable used for the loading and its interruption.
      */
     private class LoadingRunnable implements Runnable {
@@ -192,7 +211,20 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         @Override
         public synchronized void run() {
             try {
-                rowEndLoading = loadDataForRows(rowStartLoading, rowEndLoading, interrupted);
+                ArrayList<Integer> indexes = new ArrayList<Integer>(batchSize);
+                for (int row = rowStartLoading; row <= rowEndLoading; row++) {
+                    if (sorter == null) {
+                        indexes.add(row);
+                    } else {
+                        indexes.add(sorter.convertRowIndexToModel(row));
+                    }
+                }
+                if (!indexes.isEmpty() && !interrupted) {
+                    rowEndLoading = loadDataForRows(indexes, interrupted);
+                    if (sorter != null) {
+                        rowEndLoading = sorter.convertRowIndexToView(rowEndLoading);
+                    }
+                }
             } catch (Exception e) {
                 catchException(e);
             }

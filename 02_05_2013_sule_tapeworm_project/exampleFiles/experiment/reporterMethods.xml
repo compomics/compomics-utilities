@@ -1,0 +1,270 @@
+<xml>
+	<reporterMethod>
+		<name> iTRAQ 4Plex </name>
+		<reporterIonList>
+			<reporterIon>
+				<name> iTRAQ 114 </name>
+				<id> 114 </id>
+				<mass> 114.1106 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 115 </name>
+				<id> 115 </id>
+				<mass> 115.1077 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 116 </name>
+				<id> 116 </id>
+				<mass> 116.1110 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 117 </name>
+				<id> 117 </id>
+				<mass> 117.1144 </mass>
+			</reporterIon>
+		</reporterIonList>
+		<correctionFactorList>
+			<correctionFactor>
+				<ionId> 114 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 1.0 </minus1>
+				<plus1> 5.9 </plus1>
+				<plus2> 0.2 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 115 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 2.0 </minus1>
+				<plus1> 5.6 </plus1>
+				<plus2> 0.1 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 116 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 3.0 </minus1>
+				<plus1> 4.5 </plus1>
+				<plus2> 0.1 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 117 </ionId>
+				<minus2> 0.1 </minus2>
+				<minus1> 4.0 </minus1>
+				<plus1> 3.5 </plus1>
+				<plus2> 0.1 </plus2>
+			</correctionFactor>	
+		</correctionFactorList>
+	</reporterMethod>
+	<reporterMethod>
+		<name> iTRAQ 8Plex </name>
+		<reporterIonList>
+			<reporterIon>
+				<name> iTRAQ 113 </name>
+				<id> 113 </id>
+				<mass> 113.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 114 </name>
+				<id> 114 </id>
+				<mass> 114.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 115 </name>
+				<id> 115 </id>
+				<mass> 115.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 116 </name>
+				<id> 116 </id>
+				<mass> 116.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 117 </name>
+				<id> 117 </id>
+				<mass> 117.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 118 </name>
+				<id> 118 </id>
+				<mass> 118.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 119 </name>
+				<id> 119 </id>
+				<mass> 119.1 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> iTRAQ 121 </name>
+				<id> 121 </id>
+				<mass> 121.1 </mass>
+			</reporterIon>
+		</reporterIonList>
+		<correctionFactorList>
+			<correctionFactor>
+				<ionId> 113 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 6.89 </plus1>
+				<plus2> 0.22 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 114 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.94 </minus1>
+				<plus1> 5.90 </plus1>
+				<plus2> 0.16 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 115 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 1.88 </minus1>
+				<plus1> 4.90 </plus1>
+				<plus2> 0.10 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 116 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 2.82 </minus1>
+				<plus1> 3.90 </plus1>
+				<plus2> 0.07 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 117 </ionId>
+				<minus2> 0.06 </minus2>
+				<minus1> 3.77 </minus1>
+				<plus1> 2.88 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 118 </ionId>
+				<minus2> 0.09 </minus2>
+				<minus1> 4.71 </minus1>
+				<plus1> 1.88 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 119 </ionId>
+				<minus2> 0.14 </minus2>
+				<minus1> 5.66 </minus1>
+				<plus1> 0.87 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 121 </ionId>
+				<minus2> 0.27 </minus2>
+				<minus1> 7.44 </minus1>
+				<plus1> 0.18 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+		</correctionFactorList>
+	</reporterMethod>
+	<reporterMethod>
+		<name> TMT6 </name>
+		<reporterIonList>
+			<reporterIon>
+				<name> TMT0 </name>
+				<id> 126 </id>
+				<mass> 126 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> TMT1 </name>
+				<id> 127 </id>
+				<mass> 127 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> TMT2 </name>
+				<id> 128 </id>
+				<mass> 128 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> TMT3 </name>
+				<id> 129 </id>
+				<mass> 129 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> TMT4 </name>
+				<id> 130 </id>
+				<mass> 130 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> TMT5 </name>
+				<id> 131 </id>
+				<mass> 131 </mass>
+			</reporterIon>
+		</reporterIonList>
+		<correctionFactorList>
+			<correctionFactor>
+				<ionId> 126 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 127 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 128 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 129 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 130 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 131 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+		</correctionFactorList>
+	</reporterMethod>
+	<reporterMethod>
+		<name> TMT2 </name>
+		<reporterIonList>
+			<reporterIon>
+				<name> TMT0 </name>
+				<id> 126 </id>
+				<mass> 126 </mass>
+			</reporterIon>
+			<reporterIon>
+				<name> TMT1 </name>
+				<id> 127 </id>
+				<mass> 127 </mass>
+			</reporterIon>
+		</reporterIonList>
+		<correctionFactorList>
+			<correctionFactor>
+				<ionId> 126 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+			<correctionFactor>
+				<ionId> 127 </ionId>
+				<minus2> 0.0 </minus2>
+				<minus1> 0.0 </minus1>
+				<plus1> 0.0 </plus1>
+				<plus2> 0.0 </plus2>
+			</correctionFactor>	
+		</correctionFactorList>
+	</reporterMethod>
+</xml>

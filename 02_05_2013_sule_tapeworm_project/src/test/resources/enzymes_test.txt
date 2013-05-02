@@ -1,0 +1,56 @@
+
+
+
+Title:Trypsin
+Cleavage:KR
+Restrict:P
+Cterm
+
+
+*
+
+Title:Trypsin/P
+Cleavage:KR
+Cterm
+
+*
+Title:TrypChymo
+Cleavage:FYWLKR
+Restrict:P
+Cterm
+*
+TiTle:PepsinA
+Cleavage:FL
+Cterm
+*
+Title:None
+CleAvage   :      none
+RestriCT: none
+Nterm
+*
+
+*
+
+Title:something not correct.
+
+*
+
+Title:dualTrypCathep
+CleAvage   :  DXR
+RestrIct: P
+Cterm
+*
+Title:DuAlTrypCathep2
+CleaVage:DKXRW
+Nterm
+*
+
+Title:ReGeXTrypCathep
+CleaVage:[KR]
+RestriCt: P
+Cterm
+*
+Title:regexTrypCathep2
+CleaVage:P+R
+Nterm
+*

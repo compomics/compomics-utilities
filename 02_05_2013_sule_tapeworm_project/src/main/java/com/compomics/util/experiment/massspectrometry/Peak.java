@@ -62,4 +62,57 @@ public class Peak extends ExperimentObject {
     public boolean isSameAs(Peak aPeak) {
         return mz == aPeak.mz && intensity == aPeak.intensity;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mz) ^ (Double.doubleToLongBits(this.mz) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.rt) ^ (Double.doubleToLongBits(this.rt) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.intensity) ^ (Double.doubleToLongBits(this.intensity) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Peak other = (Peak) obj;
+        if (Double.doubleToLongBits(this.mz) != Double.doubleToLongBits(other.mz)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.rt) != Double.doubleToLongBits(other.rt)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.intensity) != Double.doubleToLongBits(other.intensity)) {
+            return false;
+        }
+        return true;
+    }
+
+    public double getMz() {
+        return mz;
+    }
+
+    public void setMz(double mz) {
+        this.mz = mz;
+    }
+
+    public double getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(double intensity) {
+        this.intensity = intensity;
+    }
+   
+    public int compareTo(Peak p) {
+        return Double.compare(this.getIntensity(), p.getIntensity());
+    }
+    
+    
+    
 }

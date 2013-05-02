@@ -26,6 +26,13 @@ public class MSnSpectrum extends Spectrum {
     public MSnSpectrum() {
     }
 
+    public void setPrecursor(Precursor precursor) {
+        this.precursor = precursor;
+    }
+
+    
+    
+    
     /**
      * Minimal constructor for the spectrum. The peak list is not loaded in
      * order to reduce memory consumption.

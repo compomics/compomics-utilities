@@ -1562,7 +1562,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         if (dataSetCounterMirroredSpectra > 0) {
-            for (int j = 0; j < iXAxisDataMirroredSpectrum.size(); j++) {
+           for (int j = 0; j < iXAxisDataMirroredSpectrum.size(); j++) {
                 for (int i = 0; i < iXAxisDataMirroredSpectrum.get(j).length; i++) {
                     double lMass = iXAxisDataMirroredSpectrum.get(j)[i];
                     if (lMass < aMinXAxisValue) {

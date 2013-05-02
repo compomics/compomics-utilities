@@ -38,7 +38,7 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * The color used for the peaks. Default to red.
      */
-    private Color aSpectrumPeakColor = Color.RED;
+    private Color aSpectrumPeakColor = Color.BLUE;
     /**
      * The color used for the profile mode spectra. Defaults to pink.
      */
@@ -59,6 +59,15 @@ public class SpectrumPanel extends GraphicsPanel {
     public SpectrumPanel(SpectrumFile aSpecFile) {
         this(aSpecFile, DrawingStyle.LINES, true);
     }
+
+    public void setaSpectrumPeakColor(Color aSpectrumPeakColor) {
+        this.aSpectrumPeakColor = aSpectrumPeakColor;
+    }
+
+    public void setaSpectrumProfileModeLineColor(Color aSpectrumProfileModeLineColor) {
+        this.aSpectrumProfileModeLineColor = aSpectrumProfileModeLineColor;
+    }
+      
 
     /**
      * This constructor creates a SpectrumPanel based on the spectrum
@@ -422,8 +431,8 @@ public class SpectrumPanel extends GraphicsPanel {
         this.showFileName = false;
         this.showPrecursorDetails = false;
         this.showResolution = false;
-        yAxisZoomExcludesBackgroundPeaks = false;
-        yDataIsPositive = false;
+        this.yAxisZoomExcludesBackgroundPeaks = false;
+        this.yDataIsPositive = false;
     }
 
     /**

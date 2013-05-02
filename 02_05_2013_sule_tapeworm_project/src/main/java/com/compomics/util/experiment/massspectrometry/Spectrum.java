@@ -34,6 +34,8 @@ public abstract class Spectrum extends ExperimentObject {
      * Peak list.
      */
     protected HashMap<Double, Peak> peakList;
+    
+    protected ArrayList<Peak> peaks;
     /**
      * Scan number or range.
      */
@@ -139,6 +141,10 @@ public abstract class Spectrum extends ExperimentObject {
      * @param aPeak the peak to add
      */
     public void addPeak(Peak aPeak) {
+        if(peakList==null){
+            peakList = new HashMap<Double, Peak>();
+            peakList.put(aPeak.mz, aPeak);
+        }
         this.peakList.put(aPeak.mz, aPeak);
     }
 
@@ -187,6 +193,18 @@ public abstract class Spectrum extends ExperimentObject {
         return peakList.values();
     }
 
+    public void setPeaks(ArrayList<Peak> peaks) {
+       // this.peaks.clear();
+        this.peakList.clear();
+        
+        for (Peak p : peaks) {
+            double mz = p.mz;
+           // this.peaks.add(p);
+            peakList.put(mz, p);
+        }
+    }
+
+
     /**
      * Sets the peak list.
      *
@@ -213,6 +231,12 @@ public abstract class Spectrum extends ExperimentObject {
     public void setScanStartTime(double scanStartTime) {
         this.scanStartTime = scanStartTime;
     }
+
+    public void setSpectrumTitle(String spectrumTitle) {
+        this.spectrumTitle = spectrumTitle;
+    }
+    
+    
 
     /**
      * This method will remove the peak list in order to reduce memory

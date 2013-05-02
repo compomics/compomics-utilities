@@ -158,8 +158,12 @@ public class SequenceFactory {
 
         if (isDefaultReversed() && isDecoy(accession)) {
             String targetAccession = getDefaultTargetAccession(accession);
-            Protein targetProtein = getProtein(targetAccession, reindex);
-            return new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
+            try {
+                Protein targetProtein = getProtein(targetAccession, reindex);
+                return new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
+            } catch (Exception e) {
+                // Back to old school mode
+            }
         }
 
         Protein currentProtein = currentProteinMap.get(accession);
@@ -203,7 +207,7 @@ public class SequenceFactory {
      * @return the header indexed by the given index
      * @throws InterruptedException
      * @throws IOException
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException
      */
     private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException, IllegalArgumentException {
 
@@ -790,7 +794,11 @@ public class SequenceFactory {
 
         if (isDefaultReversed() && isDecoy(accession)) {
             // Don't really see where we would need that...
-            return computeMolecularWeight(getDefaultTargetAccession(accession));
+            try {
+                return computeMolecularWeight(getDefaultTargetAccession(accession));
+            } catch (Exception e) {
+                // back to standard mode
+            }
         }
 
         // see if we've already calculated the weight of this protein

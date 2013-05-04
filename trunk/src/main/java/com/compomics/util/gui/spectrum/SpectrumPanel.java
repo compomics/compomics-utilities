@@ -38,11 +38,11 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * The color used for the peaks. Default to red.
      */
-    private Color aSpectrumPeakColor = Color.RED;
+    private Color spectrumPeakColor = Color.RED;
     /**
      * The color used for the profile mode spectra. Defaults to pink.
      */
-    private Color aSpectrumProfileModeLineColor = Color.PINK;
+    private Color spectrumProfileModeLineColor = Color.PINK;
     /**
      * Color map for the ion annotation.
      */
@@ -219,7 +219,7 @@ public class SpectrumPanel extends GraphicsPanel {
         this.setBackground(Color.WHITE);
         if (aSpecFile != null) {
             dataSetCounter = 0;
-            this.processSpectrumFile(aSpecFile, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
+            this.processSpectrumFile(aSpecFile, spectrumPeakColor, spectrumProfileModeLineColor);
         }
         if (aEnableInteraction) {
             this.addListeners();
@@ -240,8 +240,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the
-     * spectrumpannels.
+     * This constructor will be used to annotate matched ions on the spectrum
+     * panels.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values.
@@ -255,8 +255,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the
-     * spectrumpannels.
+     * This constructor will be used to annotate matched ions on the spectrum
+     * panels.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values.
@@ -273,8 +273,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the
-     * spectrumpannels.
+     * This constructor will be used to annotate matched ions on the spectrum
+     * panels.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values.
@@ -292,8 +292,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the
-     * spectrumpannels.
+     * This constructor will be used to annotate matched ions on the spectrum
+     * panels.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values.
@@ -317,8 +317,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the
-     * spectrumpannels.
+     * This constructor will be used to annotate matched ions on the spectrum
+     * panels.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values.
@@ -344,8 +344,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
     /**
      * This constructor creates a SpectrumPanel based on the passed parameters.
-     * This constructor will be used to annotate matched ions on the
-     * spectrumpannels.
+     * This constructor will be used to annotate matched ions on the spectrum
+     * panels.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values.
@@ -373,7 +373,7 @@ public class SpectrumPanel extends GraphicsPanel {
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
         dataSetCounter = 0;
-        processXAndYData(aXAxisData, aYAxisData, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
+        processXAndYData(aXAxisData, aYAxisData, spectrumPeakColor, spectrumProfileModeLineColor);
         iPrecursorMZ = aPrecursorMZ;
         iPrecursorCharge = aPrecursorCharge;
         iFilename = aFileName;
@@ -391,10 +391,10 @@ public class SpectrumPanel extends GraphicsPanel {
 
         this.addListeners();
     }
-    
+
     /**
      * Add a mirrored spectrum (or chromatogram).
-     * 
+     *
      * @param aXAxisData
      * @param aYAxisData
      * @param aPrecursorMZ
@@ -402,15 +402,15 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aFileName
      * @param aProfileMode
      * @param aSpectrumPeakColor
-     * @param aSpectrumProfileModeLineColor  
+     * @param aSpectrumProfileModeLineColor
      */
-    public void addMirroredSpectrum(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName, boolean aProfileMode, 
+    public void addMirroredSpectrum(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName, boolean aProfileMode,
             Color aSpectrumPeakColor, Color aSpectrumProfileModeLineColor) {
-        
+
         iPrecursorMZMirroredSpectrum = aPrecursorMZ;
         iPrecursorChargeMirorredSpectrum = aPrecursorCharge;
         iFilenameMirrorredSpectrum = aFileName;
-        
+
         processMirroredXAndYData(aXAxisData, aYAxisData, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
 
         if (aProfileMode) {
@@ -418,12 +418,12 @@ public class SpectrumPanel extends GraphicsPanel {
         } else {
             this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
         }
-        
+
         this.showFileName = false;
         this.showPrecursorDetails = false;
         this.showResolution = false;
-        yAxisZoomExcludesBackgroundPeaks = false;
-        yDataIsPositive = false;
+        this.yAxisZoomExcludesBackgroundPeaks = false;
+        this.yDataIsPositive = false;
     }
 
     /**
@@ -444,10 +444,11 @@ public class SpectrumPanel extends GraphicsPanel {
         this.showPrecursorDetails = false;
         this.showResolution = false;
     }
-    
+
     /**
-     * Adds an additional mirrored spectrum dataset to be displayed in the same Spectrum
-     * Panel. Remember to use different colors for the different datasets.
+     * Adds an additional mirrored spectrum dataset to be displayed in the same
+     * Spectrum Panel. Remember to use different colors for the different
+     * datasets.
      *
      * @param aXAxisData double[] with all the x-axis values.
      * @param aYAxisData double[] with all the y-axis values
@@ -478,6 +479,28 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
+     * Set the default spectrum peak color. (Note that this only has an impact
+     * on the first spectrum added. For additional spectra or mirrored spectra
+     * set the color in the given constructor.)
+     *
+     * @param aSpectrumPeakColor the color to set
+     */
+    public void setSpectrumPeakColor(Color aSpectrumPeakColor) {
+        this.spectrumPeakColor = aSpectrumPeakColor;
+    }
+
+    /**
+     * Set the default spectrum profile mode color. (Note that this only has an
+     * impact on the first spectrum added. For additional spectra or mirrored
+     * spectra set the color in the given constructor.)
+     *
+     * @param aSpectrumProfileModeLineColor the color to set
+     */
+    public void setSpectrumProfileModeLineColor(Color aSpectrumProfileModeLineColor) {
+        this.spectrumProfileModeLineColor = aSpectrumProfileModeLineColor;
+    }
+
+    /**
      * If true only the annotated peaks will be drawn. The default value is
      * false, and result in all peaks being drawn. Note that this setting is
      * ignored when in profile mode!
@@ -497,7 +520,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * place in this step as well.
      */
     public void setSpectrumFile(SpectrumFile aSpecFile) {
-        this.processSpectrumFile(aSpecFile, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
+        this.processSpectrumFile(aSpecFile, spectrumPeakColor, spectrumProfileModeLineColor);
     }
 
     /**
@@ -1148,7 +1171,7 @@ public class SpectrumPanel extends GraphicsPanel {
                 }
             }
         }
-        
+
         ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes();
 
         // add reverse ion de novo tags (x, y or c)
@@ -1158,13 +1181,13 @@ public class SpectrumPanel extends GraphicsPanel {
 
             for (int i = 1; i < reverseIons.length; i++) {
                 if (reverseIons[i] != null && reverseIons[i - 1] != null) {
-                    
+
                     String mod = "";
-                    
+
                     if (modifiedIndexes.contains(currentPeptide.getSequence().length() - i)) {
                         mod = "*";
                     }
-                    
+
                     addReferenceAreaXAxis(new ReferenceArea(
                             "r" + i,
                             currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
@@ -1180,13 +1203,13 @@ public class SpectrumPanel extends GraphicsPanel {
 
             for (int i = 1; i < forwardIons.length; i++) {
                 if (forwardIons[i] != null && forwardIons[i - 1] != null) {
-                    
+
                     String mod = "";
-                    
-                    if (modifiedIndexes.contains(i+1)) {
+
+                    if (modifiedIndexes.contains(i + 1)) {
                         mod = "*";
                     }
-                    
+
                     addReferenceAreaXAxis(new ReferenceArea(
                             "f" + i,
                             currentPeptide.getSequence().substring(i, i + 1) + mod,

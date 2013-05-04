@@ -5,10 +5,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 /**
  * This class represents a peak.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 9:00:58 AM
+ * @author Marc Vaudel
  */
 public class Peak extends ExperimentObject {
 
@@ -61,5 +58,85 @@ public class Peak extends ExperimentObject {
      */
     public boolean isSameAs(Peak aPeak) {
         return mz == aPeak.mz && intensity == aPeak.intensity;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mz) ^ (Double.doubleToLongBits(this.mz) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.rt) ^ (Double.doubleToLongBits(this.rt) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.intensity) ^ (Double.doubleToLongBits(this.intensity) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Peak other = (Peak) obj;
+        if (Double.doubleToLongBits(this.mz) != Double.doubleToLongBits(other.mz)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.rt) != Double.doubleToLongBits(other.rt)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.intensity) != Double.doubleToLongBits(other.intensity)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns the mz.
+     *
+     * @return the mz
+     */
+    public double getMz() {
+        return mz;
+    }
+
+    /**
+     * Set the mz.
+     *
+     * @param mz the value to set
+     */
+    public void setMz(double mz) {
+        this.mz = mz;
+    }
+
+    /**
+     * Returns the intensity.
+     *
+     * @return the intensity
+     */
+    public double getIntensity() {
+        return intensity;
+    }
+
+    /**
+     * Set the intensity.
+     *
+     * @param intensity the intensity to set
+     */
+    public void setIntensity(double intensity) {
+        this.intensity = intensity;
+    }
+
+    /**
+     * Compare two peaks in regards to their intensity.
+     *
+     * @param p the peak to compare against
+     * @return 0 if numerically equal; a value less than 0 if the intensity of
+     * this peak is numerically less than the intensity of the peak we are
+     * comparing against; and a value greater than 0 if the intensity of this
+     * peak is numerically greater than the intensity of the peak we are
+     * comparing against.
+     */
+    public int compareTo(Peak p) {
+        return Double.compare(this.getIntensity(), p.getIntensity());
     }
 }

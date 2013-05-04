@@ -225,7 +225,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     /**
      * This method makes it impossible to close the dialog. Used when the method
-     * monitored by the progres bar can not be stopped.
+     * monitored by the progress bar can not be stopped.
      *
      * @deprecated replace by setUnstoppable
      */
@@ -235,7 +235,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     /**
      * Set this to true of the process the progress bar is used for is not
-     * possible to stop, or not possble to stop nicely. If the user still tries
+     * possible to stop, or not possible to stop nicely. If the user still tries
      * to close the progress bar the a warning message is first shown were the
      * user has to confirm that he/she still wants to close the progress bar.
      *

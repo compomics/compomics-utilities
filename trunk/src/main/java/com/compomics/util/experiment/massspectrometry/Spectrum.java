@@ -39,7 +39,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     protected String scanNumber;
     /**
-     * The timepoint when the spectrum was recorded (scan start time in mzML
+     * The time point when the spectrum was recorded (scan start time in mzML
      * files).
      */
     protected double scanStartTime;
@@ -78,6 +78,15 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public static String getSpectrumTitle(String spectrumKey) {
         return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 5).trim();
+    }
+
+    /**
+     * Set the spectrum title.
+     *
+     * @param spectrumTitle the title to set
+     */
+    public void setSpectrumTitle(String spectrumTitle) {
+        this.spectrumTitle = spectrumTitle;
     }
 
     /**
@@ -139,7 +148,29 @@ public abstract class Spectrum extends ExperimentObject {
      * @param aPeak the peak to add
      */
     public void addPeak(Peak aPeak) {
+        if (peakList == null) {
+            peakList = new HashMap<Double, Peak>();
+        }
         this.peakList.put(aPeak.mz, aPeak);
+    }
+
+    /**
+     * Set the peaks.
+     *
+     * @param peaks the peaks to set
+     */
+    public void setPeaks(ArrayList<Peak> peaks) {
+
+        if (peakList != null) {
+            this.peakList.clear();
+        } else {
+            peakList = new HashMap<Double, Peak>();
+        }
+
+        for (Peak p : peaks) {
+            double mz = p.mz;
+            peakList.put(mz, p);
+        }
     }
 
     /**
@@ -208,7 +239,7 @@ public abstract class Spectrum extends ExperimentObject {
     /**
      * Sets the scan start time.
      *
-     * @param scanStartTime the timepoint when the spectrum was recorded
+     * @param scanStartTime the time point when the spectrum was recorded
      */
     public void setScanStartTime(double scanStartTime) {
         this.scanStartTime = scanStartTime;
@@ -263,8 +294,8 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the m/z and intensity values as an array in increasing order sorted
-     * on m/z value.
+     * Returns the m/z and intensity values as an array in increasing order
+     * sorted on m/z value.
      *
      * @return the m/z and intensity values as an array
      */

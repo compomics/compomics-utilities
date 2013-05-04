@@ -31,7 +31,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The corresponding peptide match keys.
      */
-    private ArrayList<String> peptideMatches = new ArrayList<String>();
+    private ArrayList<String> peptideMatches = new ArrayList<String>(); // @TODO: should be renamed to peptideKeys as it does not contain the actual peptide matches
     /**
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
@@ -114,20 +114,20 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Getter for the peptide matches.
+     * Getter for the peptide keys.
      *
-     * @return subordinated peptide matches
+     * @return subordinated peptide keys
      */
-    public ArrayList<String> getPeptideMatches() {
+    public ArrayList<String> getPeptideMatches() { // @TODO: should be renamed to getPeptideKeys
         return peptideMatches;
     }
 
     /**
-     * Add a subordinated peptide match.
+     * Add a subordinated peptide key.
      *
-     * @param peptideMatchKey a peptide match
+     * @param peptideMatchKey a peptide key
      */
-    public void addPeptideMatch(String peptideMatchKey) {
+    public void addPeptideMatch(String peptideMatchKey) { // @TODO: should be renamed to addPeptideKey
         if (!peptideMatches.contains(peptideMatchKey)) {
             peptideMatches.add(peptideMatchKey);
         }

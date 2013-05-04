@@ -67,7 +67,7 @@ public class MSnSpectrum extends Spectrum {
      * @param spectrumTitle spectrum title
      * @param peakMap set of peaks
      * @param fileName file name
-     * @param scanStartTime The timepoint when the spectrum was recorded
+     * @param scanStartTime The time point when the spectrum was recorded
      */
     public MSnSpectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName, double scanStartTime) {
         this.level = level;
@@ -85,6 +85,15 @@ public class MSnSpectrum extends Spectrum {
      */
     public Precursor getPrecursor() {
         return precursor;
+    }
+
+    /**
+     * Set the precursor.
+     *
+     * @param precursor the precursor to set
+     */
+    public void setPrecursor(Precursor precursor) {
+        this.precursor = precursor;
     }
 
     /**
@@ -112,7 +121,7 @@ public class MSnSpectrum extends Spectrum {
                 }
                 result += charge.toString();
             }
-        result += System.getProperty("line.separator");
+            result += System.getProperty("line.separator");
         }
         if (scanNumber != null && !scanNumber.equals("")) {
             result += "SCANS=" + scanNumber + System.getProperty("line.separator");

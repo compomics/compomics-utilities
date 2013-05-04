@@ -1369,7 +1369,7 @@ public abstract class GraphicsPanel extends JPanel {
                     int x = e.getX();
                     int y = e.getY();
 
-                    // this variable is used make sure that the most intense peak within range is highlighted
+                    // this variable is used to make sure that the most intense peak within range is highlighted
                     int highestPeakInRange = 0;
 
                     for (int j = 0; j < iXAxisDataInPixels.size(); j++) {
@@ -2283,7 +2283,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         // Correct for absurd heights.
-        if (y < iTopPadding / 3) {
+        if (y < iTopPadding / 3 && dataSetCounterMirroredSpectra == 0) {
             y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4);
         }
 
@@ -2570,6 +2570,9 @@ public abstract class GraphicsPanel extends JPanel {
                 }
                 this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow, aAlreadyAnnotated.get(key));
             }
+
+            // check if we have mirrored spectra to annotate
+            // @TODO: implement me!
         }
     }
 

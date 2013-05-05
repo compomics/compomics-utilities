@@ -3,11 +3,12 @@ package com.compomics.util.gui;
 import com.compomics.util.experiment.annotation.gene.GeneFactory;
 import com.compomics.util.experiment.annotation.go.GOFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import javax.swing.JPanel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
  * This dialog displays the gene details associated to a protein match.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GeneDetailsDialog extends javax.swing.JDialog {
 
@@ -37,10 +39,10 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Creates a new GeneDetailsDialog.
-     * 
-     * @param parent
-     * @param proteinMatchKey
-     * @throws IOException 
+     *
+     * @param parent the parent frame
+     * @param proteinMatchKey the protein match key
+     * @throws IOException
      */
     public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey) throws IOException {
         super(parent, true);
@@ -48,7 +50,8 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         proteinAccessions = new ArrayList<String>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
         goTerms = goFactory.getProteinMatchTerms(proteinMatchKey);
         Collections.sort(goTerms);
-
+        setUpGUI();
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
 
@@ -75,10 +78,12 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gene Details");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Gene Details"));
+        detailsPanel.setOpaque(false);
 
         ensemlbIdLabel.setText("Ensembl Gene ID");
 
@@ -104,22 +109,22 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
             .addGroup(detailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(goTableScrollPane)
+                    .addComponent(goTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE)
+                    .addGroup(detailsPanelLayout.createSequentialGroup()
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ensemlbIdLabel)
+                            .addComponent(geneNameLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(geneIdTxt)
+                            .addComponent(geneNameTxt)))
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addComponent(goAnnotationLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
-                        .addComponent(ensemlbIdLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(geneIdTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(geneNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(geneNameTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                    .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addComponent(chromosomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(chromosomeNameTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)))
+                        .addGap(37, 37, 37)
+                        .addComponent(chromosomeNameTxt)))
                 .addContainerGap())
         );
         detailsPanelLayout.setVerticalGroup(
@@ -128,19 +133,28 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ensemlbIdLabel)
-                    .addComponent(geneIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(geneIdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(geneNameLabel)
-                    .addComponent(geneNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(geneNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chromosomeLabel)
                     .addComponent(chromosomeNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(goAnnotationLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(goTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(goTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -159,10 +173,10 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(okButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -173,11 +187,20 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Close the dialog.
+     *
+     * @param evt
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JLabel chromosomeLabel;
@@ -195,59 +218,91 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Set up the GUI.
-     * 
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException 
      */
-    private void setUpGUI() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
-        String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
-        ArrayList<String> geneIds = new ArrayList<String>();
-        for (String accession : proteinAccessions) {
-            if (title.equals("")) {
-                title += "Gene details for ";
-            } else {
-                title += ", ";
-            }
-            title += accession;
+    private void setUpGUI() {
 
-            String geneID = geneFactory.getGeneId(accession);
-            if (geneID != null && !geneIds.contains(geneID)) {
-                geneIds.add(geneID);
-            }
-        }
+        goTable.getColumn(" ").setMaxWidth(50);
+        goTable.getColumn(" ").setMinWidth(50);
 
-        ArrayList<String> chromosomes = new ArrayList<String>();
-        for (String geneId : geneIds) {
-            if (!geneIdsTxt.equals("")) {
-                geneId += ", ";
-                geneNamesTxt += ", ";
+        goTable.getTableHeader().setReorderingAllowed(false);
+
+        // correct the color for the upper right corner
+        JPanel proteinCorner = new JPanel();
+        proteinCorner.setBackground(goTable.getTableHeader().getBackground());
+        goTableScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, proteinCorner);
+
+        // make sure that the scroll panes are see-through
+        goTableScrollPane.getViewport().setOpaque(false);
+
+        try {
+            String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
+            ArrayList<String> geneNames = new ArrayList<String>();
+            for (String accession : proteinAccessions) {
+                if (title.equals("")) {
+                    title += "Gene details for ";
+                } else {
+                    title += ", ";
+                }
+                title += accession;
+
+                String geneName = geneFactory.getGeneNameForUniProtProtein(accession);
+                geneNames.add(geneName);
             }
-            geneIdsTxt += geneId;
-            geneNamesTxt += geneFactory.getGeneName(geneId);
-            String chromosome = geneFactory.getChromosome(geneId);
-            if (chromosome != null && !chromosomes.contains(chromosome)) {
+
+            ArrayList<String> chromosomes = new ArrayList<String>();
+            for (String geneName : geneNames) {
+                if (!geneIdsTxt.equals("")) {
+                    geneIdsTxt += ", ";
+                    geneNamesTxt += ", ";
+                }
+
+                String ensemblId = geneFactory.getGeneEnsemblId(geneName);
+
+                if (ensemblId == null) {
+                    geneIdsTxt += "unknown";
+                } else {
+                    geneIdsTxt += geneFactory.getGeneEnsemblId(geneName);
+                }
+
+                if (geneName == null) {
+                    geneNamesTxt += "unknown";
+                } else {
+                    geneNamesTxt += geneName;
+                }
+
+                String chromosome = geneFactory.getChromosomeFromGeneName(geneName);
                 chromosomes.add(chromosome);
             }
-        }
 
-        for (String chromosome : chromosomes) {
-            if (!chromosomeTxt.equals("")) {
-                chromosomeTxt += ", ";
+            for (String chromosome : chromosomes) {
+                if (!chromosomeTxt.equals("")) {
+                    chromosomeTxt += ", ";
+                }
+                if (chromosome == null) {
+                    chromosomeTxt += "unknown";
+                } else {
+                    chromosomeTxt += chromosome;
+                }
             }
-            chromosomeTxt += chromosome;
-        }
 
-        ((TitledBorder) detailsPanel.getBorder()).setTitle(title);
-        geneIdTxt.setText(geneIdsTxt);
-        geneNameTxt.setText(geneNamesTxt);
-        chromosomeNameTxt.setText(chromosomeTxt);
+            ((TitledBorder) detailsPanel.getBorder()).setTitle(title);
+            geneIdTxt.setText(geneIdsTxt);
+            geneNameTxt.setText(geneNamesTxt);
+            chromosomeNameTxt.setText(chromosomeTxt);
+
+        } catch (ClassNotFoundException e) { // @TODO: better error handling
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Table model for the GO enrichment.
+     * Table model for the GO annotation.
      */
     private class GOTableModel extends DefaultTableModel {
 
@@ -269,7 +324,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
             switch (column) {
                 case 0:
-                    return "";
+                    return " ";
                 case 1:
                     return "Accession";
                 case 2:

@@ -51,9 +51,13 @@ public class GeneFactory {
      * Map of the index where a gene can be found Ensembl gene ID -> index.
      */
     private HashMap<String, Long> geneIdIndexes = new HashMap<String, Long>();
+    /**
+     * Map of the index where a gene can be found gene name -> index.
+     */
+    private HashMap<String, Long> geneNameIndexes = new HashMap<String, Long>();
 
     /**
-     * Initializes the factory on the given file. If gene Ids are duplicate only
+     * Initializes the factory on the given file. If gene IDs are duplicate only
      * the last one will be retained.
      *
      * @param file the file containing the mapping
@@ -85,9 +89,29 @@ public class GeneFactory {
             String[] splittedLine = line.split(separator);
 
             if (splittedLine.length == 3 && !splittedLine[0].equals("") && !splittedLine[1].equals("")) {
-                String accession = splittedLine[0];
-                geneIdIndexes.put(accession, index);
+
+                // check if the chromosome mapping is actually a chromosome
+                boolean realChromosome = false;
+                String chromosome = splittedLine[2];
+                try {
+                    Integer.parseInt(splittedLine[2]); // @TODO: is this a suitable test for all species..?
+                    realChromosome = true;
+                } catch (NumberFormatException e) {
+                    // see if it is X or Y
+                    if (chromosome.equalsIgnoreCase("X") || chromosome.equalsIgnoreCase("Y")
+                            || chromosome.equalsIgnoreCase("Z") || chromosome.equalsIgnoreCase("W")) { // @TODO: is this a suitable test for all species..?
+                        realChromosome = true;
+                    }
+                }
+
+                if (realChromosome) {
+                    String accession = splittedLine[0];
+                    String geneName = splittedLine[1];
+                    geneIdIndexes.put(accession, index);
+                    geneNameIndexes.put(geneName, index);
+                }
             }
+
             index = geneMappingFile.getFilePointer();
 
             if (waitingHandler != null) {
@@ -109,10 +133,19 @@ public class GeneFactory {
     }
 
     /**
+     * Returns a list of the mapped genes indexed by their gene names.
+     *
+     * @return a list of the mapped genes
+     */
+    public ArrayList<String> getMappedGeneNames() {
+        return new ArrayList<String>(geneNameIndexes.keySet());
+    }
+
+    /**
      * Returns the name of a gene, null if not found.
      *
      * @param geneID the Ensembl ID of the gene of interest
-     * @return the name of a gene
+     * @return the name of the gene
      * @throws IOException
      */
     public String getGeneName(String geneID) throws IOException {
@@ -130,13 +163,34 @@ public class GeneFactory {
     }
 
     /**
+     * Returns the Ensembl ID of a gene, null if not found.
+     *
+     * @param geneName the gene name of the gene of interest
+     * @return the Ensembl ID of the gene
+     * @throws IOException
+     */
+    public String getGeneEnsemblId(String geneName) throws IOException {
+        Long index = geneNameIndexes.get(geneName);
+        if (index != null) {
+            geneMappingFile.seek(index);
+            String line = geneMappingFile.getNextLine();
+            String[] splittedLine = line.split(separator);
+            if (splittedLine.length != 3 || !splittedLine[1].equals(geneName)) {
+                throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to gene name " + geneName + ".");
+            }
+            return splittedLine[0];
+        }
+        return null;
+    }
+
+    /**
      * Returns the chromosome where a gene can be located, null if not found.
      *
      * @param geneID the Ensembl ID of the gene of interest
-     * @return the chromosome where a gene can be located
+     * @return the chromosome where the gene can be located
      * @throws IOException
      */
-    public String getChromosome(String geneID) throws IOException {
+    public String getChromosomeFromGeneId(String geneID) throws IOException {
         Long index = geneIdIndexes.get(geneID);
         if (index != null) {
             geneMappingFile.seek(index);
@@ -151,19 +205,40 @@ public class GeneFactory {
     }
 
     /**
-     * Returns the gene gene attached to a protein. Note, for now this is
+     * Returns the chromosome where a gene can be located, null if not found.
+     *
+     * @param geneName the gene name of the gene of interest
+     * @return the chromosome where the gene can be located
+     * @throws IOException
+     */
+    public String getChromosomeFromGeneName(String geneName) throws IOException {
+        Long index = geneNameIndexes.get(geneName);
+        if (index != null) {
+            geneMappingFile.seek(index);
+            String line = geneMappingFile.getNextLine();
+            String[] splittedLine = line.split(separator);
+            if (splittedLine.length != 3 || !splittedLine[1].equals(geneName)) {
+                throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to gene name " + geneName + ".");
+            }
+            return splittedLine[2];
+        }
+        return null;
+    }
+
+    /**
+     * Returns the gene name attached to a protein. Note, for now this is
      * implemented only for UniProt sequences. The sequences must be imported in
      * the SequenceFactory.
      *
      * @param proteinAccession the accession of the protein of interest
-     * @return the ID of the gene, null if not found
+     * @return the name of the gene, null if not found
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
      * @throws ClassNotFoundException RE
      */
-    public String getGeneId(String proteinAccession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public String getGeneNameForUniProtProtein(String proteinAccession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         Header header = SequenceFactory.getInstance().getHeader(proteinAccession);
         return header.getGeneName();
     }

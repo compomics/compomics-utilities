@@ -367,8 +367,6 @@ public class UtilitiesUserPreferences implements Serializable {
      * Convenience method saving the user preferences.
      *
      * @param userPreferences
-     * @throws FileNotFoundException
-     * @throws IOException
      */
     public static void saveUserPreferences(UtilitiesUserPreferences userPreferences) {
 
@@ -389,9 +387,6 @@ public class UtilitiesUserPreferences implements Serializable {
      * set back to default.
      *
      * @return returns the utilities user preferences
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public static UtilitiesUserPreferences loadUserPreferences() {
         UtilitiesUserPreferences userPreferences;

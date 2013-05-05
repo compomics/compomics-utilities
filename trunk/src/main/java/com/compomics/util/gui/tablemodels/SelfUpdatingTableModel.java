@@ -3,6 +3,7 @@ package com.compomics.util.gui.tablemodels;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.util.ArrayList;
 import javax.swing.RowSorter;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -40,9 +41,10 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * The row sorter used for the given table. The sorter is used to preload
      * the data, ignored if null.
      */
-    private RowSorter sorter = null;
+    public RowSorter sorter = null;
     /**
-     * A boolean indicating that the table shall be updated only when all data is loaded
+     * A boolean indicating that the table shall be updated only when all data
+     * is loaded.
      */
     private boolean updateWhenComplete = false;
 
@@ -122,7 +124,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                     try {
                         if (selfUpdating
                                 && (!updateWhenComplete || lastLoadingRunnable.isFinished())) {
-                            fireTableDataChanged();
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fireTableDataChanged();
+                                }
+                            });
                         }
                     } catch (Exception e) {
                         catchException(e);
@@ -199,10 +206,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     public void setRowSorter(RowSorter sorter) {
         this.sorter = sorter;
     }
-    
+
     /**
-     * Sets whether the table content shall be updated only once the loading is complete
-     * @param updateWhenComplete 
+     * Sets whether the table content shall be updated only once the loading is
+     * complete.
+     *
+     * @param updateWhenComplete
      */
     public void setUpdateWhenComplete(boolean updateWhenComplete) {
         this.updateWhenComplete = updateWhenComplete;

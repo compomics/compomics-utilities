@@ -129,5 +129,4 @@ public class TableCacher {
     public boolean isCaching() {
         return caching;
     }
-    
 }

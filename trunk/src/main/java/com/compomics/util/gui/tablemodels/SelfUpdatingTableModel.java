@@ -45,7 +45,8 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     /**
      * Loads the data needed for rows between start and end (inclusively).
      *
-     * @param rows the rows model indexes to load as a list. Shall not be empty or null.
+     * @param rows the rows model indexes to load as a list. Shall not be empty
+     * or null.
      * @param interrupted a boolean indicating whether the loading shall be
      * stopped
      * @return the last updated row
@@ -81,7 +82,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         if (sorter != null) {
             row = sorter.convertRowIndexToView(row);
         }
-        
+
         int anticipatedStart = (int) (row + 0.9 * batchSize);
 
         if (lastLoadingRunnable == null || lastLoadingRunnable.isFinished()
@@ -186,7 +187,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
     /**
      * Sets the row sorter used for the table. The sorter will be used to
-     * preload data
+     * preload data.
      *
      * @param sorter the row sorter used for the table
      */

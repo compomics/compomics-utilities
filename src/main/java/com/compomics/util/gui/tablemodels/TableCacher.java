@@ -109,7 +109,6 @@ public class TableCacher {
                         return;
                     }
 
-                    tableModel.setRowSorter(rowSorter);
                     finalTable.getTableHeader().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                     finalProgressDialog.setRunFinished();
                     tableModel.setSelfUpdating(true);
@@ -130,4 +129,5 @@ public class TableCacher {
     public boolean isCaching() {
         return caching;
     }
+    
 }

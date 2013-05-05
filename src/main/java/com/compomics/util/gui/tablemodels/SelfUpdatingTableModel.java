@@ -41,6 +41,10 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * the data, ignored if null.
      */
     private RowSorter sorter = null;
+    /**
+     * A boolean indicating that the table shall be updated only when all data is loaded
+     */
+    private boolean updateWhenComplete = false;
 
     /**
      * Loads the data needed for rows between start and end (inclusively).
@@ -116,7 +120,8 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             new Thread(new Runnable() {
                 public synchronized void run() {
                     try {
-                        if (selfUpdating) {
+                        if (selfUpdating
+                                && (!updateWhenComplete || lastLoadingRunnable.isFinished())) {
                             fireTableDataChanged();
                         }
                     } catch (Exception e) {
@@ -193,6 +198,14 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     public void setRowSorter(RowSorter sorter) {
         this.sorter = sorter;
+    }
+    
+    /**
+     * Sets whether the table content shall be updated only once the loading is complete
+     * @param updateWhenComplete 
+     */
+    public void setUpdateWhenComplete(boolean updateWhenComplete) {
+        this.updateWhenComplete = updateWhenComplete;
     }
 
     /**

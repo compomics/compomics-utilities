@@ -21,6 +21,10 @@ public class GeneFactory {
      * The instance of the factory.
      */
     private static GeneFactory instance = null;
+    /**
+     * Gene name to chromosome number mapping.
+     */
+    private HashMap<String, String> geneNameToChromosome = new HashMap<String, String>();
 
     /**
      * Constructor.
@@ -109,6 +113,8 @@ public class GeneFactory {
                     String geneName = splittedLine[1];
                     geneIdIndexes.put(accession, index);
                     geneNameIndexes.put(geneName, index);
+
+                    geneNameToChromosome.put(geneName, chromosome);
                 }
             }
 
@@ -121,6 +127,16 @@ public class GeneFactory {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the chromosome for a given gene.
+     *
+     * @param geneName the gene name
+     * @return the chromosome for a given gene
+     */
+    public String getChromosomeForGeneName(String geneName) {
+        return geneNameToChromosome.get(geneName);
     }
 
     /**

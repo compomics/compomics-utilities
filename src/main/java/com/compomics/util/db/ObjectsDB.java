@@ -398,7 +398,7 @@ public class ObjectsDB implements Serializable {
             }
             ArrayList<String> toLoad = new ArrayList<String>();
             for (String key : queue) {
-                if (!objectsCache.inCache(dbName, tableName, key)) {
+                if (objectsCache != null && !objectsCache.inCache(dbName, tableName, key)) {
                     toLoad.add(key);
                 }
             }

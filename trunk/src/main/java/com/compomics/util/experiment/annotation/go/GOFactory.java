@@ -65,6 +65,9 @@ public class GOFactory {
      */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
 
+        // remove the old data
+        clearFactory();
+
         if (bufferedRandomAccessFile != null) {
             bufferedRandomAccessFile.close();
         }
@@ -273,7 +276,7 @@ public class GOFactory {
      *
      * @throws IOException
      */
-    public void close() throws IOException {
+    public void closeFiles() throws IOException {
         if (bufferedRandomAccessFile != null) {
             bufferedRandomAccessFile.close();
         }

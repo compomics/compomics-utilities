@@ -270,7 +270,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
                     geneNamesTxt += geneName;
                 }
 
-                String chromosome = geneFactory.getChromosomeFromGeneName(geneName);
+                String chromosome = geneFactory.getChromosomeForGeneName(geneName);
                 chromosomes.add(chromosome);
             }
 

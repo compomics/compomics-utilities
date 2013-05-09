@@ -71,6 +71,9 @@ public class GeneFactory {
      */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
 
+        // remove the told data
+        clearFactory();
+
         if (geneMappingFile != null) {
             geneMappingFile.close();
         }
@@ -260,11 +263,11 @@ public class GeneFactory {
     }
 
     /**
-     * Closes connections.
+     * Closes files.
      *
      * @throws IOException
      */
-    public void close() throws IOException {
+    public void closeFiles() throws IOException {
         if (geneMappingFile != null) {
             geneMappingFile.close();
         }

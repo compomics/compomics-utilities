@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 /**
  * These table models include a self updating function. Due to instability of
- * the jtable with this model, it comprises a simple row sorter. Use it at your
+ * the JTable with this model, it comprises a simple row sorter. Use it at your
  * own risks and feel free to debug.
  *
  * @author Marc Vaudel
@@ -45,11 +43,11 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     private LoadingRunnable lastLoadingRunnable = null;
     /**
-     * List of view indexes
+     * List of view indexes.
      */
     private ArrayList<Integer> viewIndexes = null;
     /**
-     * indicates which column was last changed
+     * Indicates which column was last changed.
      */
     private int lastColumnSorted = 0;
 
@@ -174,7 +172,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Initiates the sorter to the current order of the table
+     * Initiates the sorter to the current order of the table.
      */
     public void initiateSorter() {
         int nRows = getRowCount();
@@ -185,7 +183,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Returns the view index of the given row
+     * Returns the view index of the given row.
      *
      * @param row the row of interest
      * @return the corresponding view index
@@ -206,7 +204,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Returns the row number of the given view index
+     * Returns the row number of the given view index.
      *
      * @param viewIndex view index row of interest
      * @return the corresponding row
@@ -245,13 +243,16 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
             final int finalColumn = column;
             final ProgressDialogX finalProgressDialog = progressDialog;
+            finalProgressDialog.resetSecondaryProgressBar();
+            finalProgressDialog.setTitle("Sorting. Please Wait...");
+            finalProgressDialog.setIndeterminate(false);
+            finalProgressDialog.setMaxProgressValue(getRowCount());
+            finalProgressDialog.setValue(0);
+
             new Thread(new Runnable() {
                 public void run() {
                     try {
                         if (finalProgressDialog != null) {
-                            finalProgressDialog.setIndeterminate(false);
-                            finalProgressDialog.setMaxProgressValue(getRowCount());
-                            finalProgressDialog.setValue(0);
                             finalProgressDialog.setVisible(true);
                         }
                     } catch (IndexOutOfBoundsException e) {
@@ -263,19 +264,18 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             new Thread("SortThread") {
                 @Override
                 public void run() {
+
                     try {
-
                         setSelfUpdating(false);
-
                         loadDataForColumn(finalColumn, finalProgressDialog);
-                        
+
                         initiateSorter();
                         lastColumnSorted = 0;
 
                         HashMap<Comparable, ArrayList<Integer>> valueToRowMap = new HashMap<Comparable, ArrayList<Integer>>();
-                        boolean comparable = false,
-                                string = false;
-                        for (int row = 0; row < getRowCount(); row++) {
+                        boolean comparable = false, string = false;
+
+                        for (int row = 0; row < getRowCount() && (finalProgressDialog != null && !finalProgressDialog.isRunCanceled()); row++) {
                             Object tableValue = getValueAt(row, finalColumn);
                             Comparable key;
                             if (tableValue instanceof Comparable) {
@@ -293,10 +293,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                             rows.add(row);
                             if (finalProgressDialog != null) {
                                 finalProgressDialog.increaseProgressValue();
-                                if (finalProgressDialog.isRunCanceled()) {
-                                    return;
-                                }
                             }
+                        }
+
+                        if (finalProgressDialog != null && finalProgressDialog.isRunCanceled()) {
+                            finalProgressDialog.setRunFinished();
+                            return;
                         }
 
                         ArrayList<Comparable> keys = new ArrayList<Comparable>(valueToRowMap.keySet());
@@ -308,10 +310,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                             keys = stringValues;
                         }
 
-
                         if (finalProgressDialog == null || !finalProgressDialog.isRunCanceled()) {
                             viewIndexes = new ArrayList<Integer>();
-                            Collections.sort(keys);
+                            Collections.sort(keys, Collections.reverseOrder());
                             for (Comparable key : keys) {
                                 viewIndexes.addAll(valueToRowMap.get(key));
                             }
@@ -333,7 +334,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     }
 
     /**
-     * Convenience method adding a roe sorter listener to the given JTable
+     * Convenience method adding a row sorter listener to the given JTable.
      *
      * @param jTable
      * @param progressDialog progress dialog used to display progress or cancel
@@ -350,8 +351,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                 model.sort(column, progressDialogX);
             }
         });
-
-
     }
 
     /**

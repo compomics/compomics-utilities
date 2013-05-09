@@ -292,6 +292,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                             }
                             rows.add(row);
                             if (finalProgressDialog != null) {
+                                if (finalProgressDialog.isRunCanceled()) {
+                                    break;
+                                }
                                 finalProgressDialog.increaseProgressValue();
                             }
                         }

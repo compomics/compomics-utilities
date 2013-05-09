@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.export_graphics.ExportGraphicsDialog;
 import com.compomics.util.gui.export_graphics.ExportGraphicsDialogParent;
+import com.compomics.util.gui.tablemodels.SelfUpdatingTableModel;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -65,7 +66,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     /**
      * The table model.
      */
-    private TableModel tabelModel;
+    private TableModel tableModel;
     /**
      * The chart panel.
      */
@@ -204,7 +205,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         super(dialogParent, modal);
         initComponents();
         this.dialogParent = dialogParent;
-        this.tabelModel = table.getModel();
+        this.tableModel = table.getModel();
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
 
@@ -245,15 +246,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         Vector<String> colummnNamesExtended = new Vector<String>();
         colummnNamesExtended.add(0, "[user defined]");
 
-        int columnCount = tabelModel.getColumnCount();
+        int columnCount = tableModel.getColumnCount();
 
         for (int i = 0; i < columnCount; i++) {
-            if (tabelModel.getColumnName(i).trim().length() == 0) {
+            if (tableModel.getColumnName(i).trim().length() == 0) {
                 colummnNames.add("(column " + (i + 1) + ")");
                 colummnNamesExtended.add("(column " + (i + 1) + ")");
             } else {
-                colummnNames.add(tabelModel.getColumnName(i));
-                colummnNamesExtended.add(tabelModel.getColumnName(i));
+                colummnNames.add(tableModel.getColumnName(i));
+                colummnNamesExtended.add(tableModel.getColumnName(i));
             }
         }
 
@@ -262,7 +263,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         colorsComboBox.setModel(new DefaultComboBoxModel(colummnNames));
         bubbleSizeComboBox.setModel(new DefaultComboBoxModel(colummnNamesExtended));
 
-        selectedValuesTable.setModel(tabelModel);
+        selectedValuesTable.setModel(tableModel);
 
         allTableColumns = new ArrayList<TableColumn>();
         visibleColumns = new HashMap<Integer, Boolean>();
@@ -274,7 +275,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
         selectedValuesScrollPane.getViewport().setOpaque(false);
         selectedValuesTable.getTableHeader().setReorderingAllowed(false);
-        selectedValuesTable.setAutoCreateRowSorter(true);
+        if (tableModel instanceof SelfUpdatingTableModel) {
+            SelfUpdatingTableModel.addSortListener(selectedValuesTable, new ProgressDialogX(dialogParent,
+                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                    true));
+        } else {
+            selectedValuesTable.setAutoCreateRowSorter(true);
+        }
 
         Iterator<Integer> iterator = cellRenderers.keySet().iterator();
 
@@ -1610,6 +1618,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     // apply the data filters
                     filterData();
 
+
+                    boolean selfUpdating = true;
+
+                    if (tableModel instanceof SelfUpdatingTableModel) {
+                        SelfUpdatingTableModel selfUpdatingTableModel = (SelfUpdatingTableModel) tableModel;
+                        selfUpdating = selfUpdatingTableModel.isSelfUpdating();
+                        selfUpdatingTableModel.setSelfUpdating(false);
+                    }
+
                     if (histogramRadioButton.isSelected() || densityPlotRadioButton.isSelected()) {
 
                         ((TitledBorder) xyPlotPanel.getBorder()).setTitle(xAxisName);
@@ -1617,28 +1634,28 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         xyPlotPanel.repaint();
 
                         progressDialog.setIndeterminate(false);
-                        progressDialog.setMaxProgressValue(tabelModel.getRowCount());
+                        progressDialog.setMaxProgressValue(tableModel.getRowCount());
                         progressDialog.setValue(0);
 
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
-                        double[] values = new double[tabelModel.getRowCount()];
+                        double[] values = new double[tableModel.getRowCount()];
 
-                        for (int index = 0; index < tabelModel.getRowCount(); index++) {
+                        for (int index = 0; index < tableModel.getRowCount(); index++) {
                             progressDialog.increaseProgressValue();
 
                             if (rowsAfterDataFiltering.contains(index)) {
 
                                 // @TODO: support more data types!!
 
-                                if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
-                                    values[index] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
-                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
-                                    values[index] = ((Integer) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
-                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
-                                    values[index] = ((Double) tabelModel.getValueAt(index, xAxisIndex)).doubleValue();
-                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
-                                        values[index] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                if (tableModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+                                    values[index] = ((XYDataPoint) tableModel.getValueAt(index, xAxisIndex)).getX();
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+                                    values[index] = ((Integer) tableModel.getValueAt(index, xAxisIndex)).doubleValue();
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Double) {
+                                    values[index] = ((Double) tableModel.getValueAt(index, xAxisIndex)).doubleValue();
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+                                        values[index] = ((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
                                 }
 
@@ -1740,53 +1757,53 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         double maxColorValue = Double.MIN_VALUE;
 
                         progressDialog.setIndeterminate(false);
-                        progressDialog.setMaxProgressValue(tabelModel.getRowCount() * 2);
+                        progressDialog.setMaxProgressValue(tableModel.getRowCount() * 2);
                         progressDialog.setValue(0);
 
-                        for (int i = 0; i < tabelModel.getRowCount(); i++) {
+                        for (int i = 0; i < tableModel.getRowCount(); i++) {
 
                             progressDialog.increaseProgressValue();
 
                             if (rowsAfterDataFiltering.contains(i)) {
 
                                 ArrayList<Integer> tempArray;
-                                if (!datasets.containsKey(tabelModel.getValueAt(i, colorIndex).toString())) {
+                                if (!datasets.containsKey(tableModel.getValueAt(i, colorIndex).toString())) {
                                     tempArray = new ArrayList<Integer>();
-                                    datasetNames.add(tabelModel.getValueAt(i, colorIndex).toString());
+                                    datasetNames.add(tableModel.getValueAt(i, colorIndex).toString());
                                 } else {
-                                    tempArray = datasets.get(tabelModel.getValueAt(i, colorIndex).toString());
+                                    tempArray = datasets.get(tableModel.getValueAt(i, colorIndex).toString());
                                 }
                                 tempArray.add(i);
-                                datasets.put(tabelModel.getValueAt(i, colorIndex).toString(), tempArray);
+                                datasets.put(tableModel.getValueAt(i, colorIndex).toString(), tempArray);
 
                                 // get the min and max values for the color column
-                                if (tabelModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
-                                    double tempColorValue = ((XYDataPoint) tabelModel.getValueAt(i, colorIndex)).getX();
+                                if (tableModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
+                                    double tempColorValue = ((XYDataPoint) tableModel.getValueAt(i, colorIndex)).getX();
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
                                     }
-                                } else if (tabelModel.getValueAt(i, colorIndex) instanceof Integer) {
-                                    int tempColorValue = (Integer) tabelModel.getValueAt(i, colorIndex);
+                                } else if (tableModel.getValueAt(i, colorIndex) instanceof Integer) {
+                                    int tempColorValue = (Integer) tableModel.getValueAt(i, colorIndex);
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
                                     }
-                                } else if (tabelModel.getValueAt(i, colorIndex) instanceof Double) {
-                                    double tempColorValue = (Double) tabelModel.getValueAt(i, colorIndex);
+                                } else if (tableModel.getValueAt(i, colorIndex) instanceof Double) {
+                                    double tempColorValue = (Double) tableModel.getValueAt(i, colorIndex);
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
                                     }
-                                } else if (tabelModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
-                                        double tempColorValue = ((StartIndexes) tabelModel.getValueAt(i, colorIndex)).getIndexes().get(0);
+                                } else if (tableModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tableModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
+                                        double tempColorValue = ((StartIndexes) tableModel.getValueAt(i, colorIndex)).getIndexes().get(0);
                                         if (tempColorValue > maxColorValue) {
                                             maxColorValue = tempColorValue;
                                         }
@@ -1804,7 +1821,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         HashMap<Integer, Color> datasetColors = new HashMap<Integer, Color>();
 
                         progressDialog.setIndeterminate(false);
-                        progressDialog.setMaxProgressValue(tabelModel.getRowCount());
+                        progressDialog.setMaxProgressValue(tableModel.getRowCount());
                         progressDialog.setValue(0);
 
                         int datasetCounter = 0;
@@ -1830,27 +1847,27 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                                 // @TODO: support more data types!!
 
-                                if (tabelModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
-                                    tempDataXYZ[0][counter] = ((XYDataPoint) tabelModel.getValueAt(index, xAxisIndex)).getX();
-                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Integer) {
-                                    tempDataXYZ[0][counter] = (Integer) tabelModel.getValueAt(index, xAxisIndex);
-                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof Double) {
-                                    tempDataXYZ[0][counter] = (Double) tabelModel.getValueAt(index, xAxisIndex);
-                                } else if (tabelModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
-                                        tempDataXYZ[0][counter] = ((StartIndexes) tabelModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
+                                if (tableModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+                                    tempDataXYZ[0][counter] = ((XYDataPoint) tableModel.getValueAt(index, xAxisIndex)).getX();
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+                                    tempDataXYZ[0][counter] = (Integer) tableModel.getValueAt(index, xAxisIndex);
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Double) {
+                                    tempDataXYZ[0][counter] = (Double) tableModel.getValueAt(index, xAxisIndex);
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+                                        tempDataXYZ[0][counter] = ((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
                                 }
 
-                                if (tabelModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
-                                    tempDataXYZ[1][counter] = ((XYDataPoint) tabelModel.getValueAt(index, yAxisIndex)).getX();
-                                } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Integer) {
-                                    tempDataXYZ[1][counter] = (Integer) tabelModel.getValueAt(index, yAxisIndex);
-                                } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof Double) {
-                                    tempDataXYZ[1][counter] = (Double) tabelModel.getValueAt(index, yAxisIndex);
-                                } else if (tabelModel.getValueAt(index, yAxisIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().size() > 0) {
-                                        tempDataXYZ[1][counter] = ((StartIndexes) tabelModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
+                                if (tableModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
+                                    tempDataXYZ[1][counter] = ((XYDataPoint) tableModel.getValueAt(index, yAxisIndex)).getX();
+                                } else if (tableModel.getValueAt(index, yAxisIndex) instanceof Integer) {
+                                    tempDataXYZ[1][counter] = (Integer) tableModel.getValueAt(index, yAxisIndex);
+                                } else if (tableModel.getValueAt(index, yAxisIndex) instanceof Double) {
+                                    tempDataXYZ[1][counter] = (Double) tableModel.getValueAt(index, yAxisIndex);
+                                } else if (tableModel.getValueAt(index, yAxisIndex) instanceof StartIndexes) {
+                                    if (((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().size() > 0) {
+                                        tempDataXYZ[1][counter] = ((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
                                     }
                                 }
 
@@ -1868,15 +1885,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 if (bubbleSizeIndex == 0) {
                                     tempDataXYZ[2][counter] = bubbleSize;
                                 } else {
-                                    if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof XYDataPoint) {
-                                        tempDataXYZ[2][counter] = ((XYDataPoint) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getX();
-                                    } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Integer) {
-                                        tempDataXYZ[2][counter] = ((Integer) tabelModel.getValueAt(index, bubbleSizeIndex - 1));
-                                    } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Double) {
-                                        tempDataXYZ[2][counter] = ((Double) tabelModel.getValueAt(index, bubbleSizeIndex - 1));
-                                    } else if (tabelModel.getValueAt(index, bubbleSizeIndex - 1) instanceof StartIndexes) {
-                                        if (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().size() > 0) {
-                                            tempDataXYZ[2][counter] = (((StartIndexes) tabelModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0));
+                                    if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof XYDataPoint) {
+                                        tempDataXYZ[2][counter] = ((XYDataPoint) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getX();
+                                    } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Integer) {
+                                        tempDataXYZ[2][counter] = ((Integer) tableModel.getValueAt(index, bubbleSizeIndex - 1));
+                                    } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Double) {
+                                        tempDataXYZ[2][counter] = ((Double) tableModel.getValueAt(index, bubbleSizeIndex - 1));
+                                    } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof StartIndexes) {
+                                        if (((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().size() > 0) {
+                                            tempDataXYZ[2][counter] = (((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0));
                                         } else {
                                             tempDataXYZ[2][counter] = 0;
                                         }
@@ -1902,7 +1919,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             // set the datasetcolor
                             int tableRowIndex = datasets.get(dataset).get(0);
 
-                            Object tempObject = tabelModel.getValueAt(tableRowIndex, colorIndex);
+                            Object tempObject = tableModel.getValueAt(tableRowIndex, colorIndex);
 
                             // get the color to use if using gradient color coding
                             if (tempObject instanceof Integer) {
@@ -2191,6 +2208,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 super.mouseReleased(e);
                             }
                         });
+                    }
+
+                    if (tableModel instanceof SelfUpdatingTableModel) {
+                        ((SelfUpdatingTableModel) tableModel).setSelfUpdating(selfUpdating);
                     }
 
                     isPlotting = false;
@@ -2574,14 +2595,21 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
         rowsAfterDataFiltering = new ArrayList<Integer>();
 
-        boolean filterError = false;
+        boolean filterError = false,
+                selfUpdating = true;
 
-        for (int i = 0; i < tabelModel.getRowCount(); i++) {
+        if (tableModel instanceof SelfUpdatingTableModel) {
+            SelfUpdatingTableModel selfUpdatingTableModel = (SelfUpdatingTableModel) tableModel;
+            selfUpdating = selfUpdatingTableModel.isSelfUpdating();
+            selfUpdatingTableModel.setSelfUpdating(false);
+        }
+
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
 
             boolean include = true;
 
-            for (int j = 0; j < tabelModel.getColumnCount(); j++) {
-                String filter = filters.get(tabelModel.getColumnName(j));
+            for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                String filter = filters.get(tableModel.getColumnName(j));
 
                 if (filter != null) {
 
@@ -2589,7 +2617,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                     if (filter.startsWith(">")) {
 
-                        if (tabelModel.getValueAt(i, j) instanceof String) {
+                        if (tableModel.getValueAt(i, j) instanceof String) {
                             // not supported
                             filterError = true;
                         } else {
@@ -2597,16 +2625,16 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             try {
                                 double value = Double.valueOf(filter.substring(1));
 
-                                if (tabelModel.getValueAt(i, j) instanceof Integer) {
-                                    if ((Integer) tabelModel.getValueAt(i, j) <= value) {
+                                if (tableModel.getValueAt(i, j) instanceof Integer) {
+                                    if ((Integer) tableModel.getValueAt(i, j) <= value) {
                                         include = false;
                                     }
-                                } else if (tabelModel.getValueAt(i, j) instanceof Double) {
-                                    if ((Double) tabelModel.getValueAt(i, j) <= value) {
+                                } else if (tableModel.getValueAt(i, j) instanceof Double) {
+                                    if ((Double) tableModel.getValueAt(i, j) <= value) {
                                         include = false;
                                     }
-                                } else if (tabelModel.getValueAt(i, j) instanceof XYDataPoint) {
-                                    if (((XYDataPoint) tabelModel.getValueAt(i, j)).getX() <= value) {
+                                } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
+                                    if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() <= value) {
                                         include = false;
                                     }
                                 }
@@ -2616,7 +2644,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         }
                     } else if (filter.startsWith("<")) {
 
-                        if (tabelModel.getValueAt(i, j) instanceof String) {
+                        if (tableModel.getValueAt(i, j) instanceof String) {
                             // not supported
                             filterError = true;
                         } else {
@@ -2624,16 +2652,16 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             try {
                                 double value = Double.valueOf(filter.substring(1));
 
-                                if (tabelModel.getValueAt(i, j) instanceof Integer) {
-                                    if ((Integer) tabelModel.getValueAt(i, j) >= value) {
+                                if (tableModel.getValueAt(i, j) instanceof Integer) {
+                                    if ((Integer) tableModel.getValueAt(i, j) >= value) {
                                         include = false;
                                     }
-                                } else if (tabelModel.getValueAt(i, j) instanceof Double) {
-                                    if ((Double) tabelModel.getValueAt(i, j) >= value) {
+                                } else if (tableModel.getValueAt(i, j) instanceof Double) {
+                                    if ((Double) tableModel.getValueAt(i, j) >= value) {
                                         include = false;
                                     }
-                                } else if (tabelModel.getValueAt(i, j) instanceof XYDataPoint) {
-                                    if (((XYDataPoint) tabelModel.getValueAt(i, j)).getX() >= value) {
+                                } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
+                                    if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() >= value) {
                                         include = false;
                                     }
                                 }
@@ -2643,11 +2671,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         }
                     } else if (filter.startsWith("=")) {
 
-                        if (tabelModel.getValueAt(i, j) instanceof String) {
+                        if (tableModel.getValueAt(i, j) instanceof String) {
 
                             String pattern = filter.substring(1); // @TODO: support patterns
 
-                            if (!((String) tabelModel.getValueAt(i, j)).equalsIgnoreCase(pattern)) {
+                            if (!((String) tableModel.getValueAt(i, j)).equalsIgnoreCase(pattern)) {
                                 include = false;
                             }
 
@@ -2656,16 +2684,16 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             try {
                                 double value = Double.valueOf(filter.substring(1));
 
-                                if (tabelModel.getValueAt(i, j) instanceof Integer) {
-                                    if (((Integer) tabelModel.getValueAt(i, j)).intValue() != value) {
+                                if (tableModel.getValueAt(i, j) instanceof Integer) {
+                                    if (((Integer) tableModel.getValueAt(i, j)).intValue() != value) {
                                         include = false;
                                     }
-                                } else if (tabelModel.getValueAt(i, j) instanceof Double) {
-                                    if (((Double) tabelModel.getValueAt(i, j)).doubleValue() != value) {
+                                } else if (tableModel.getValueAt(i, j) instanceof Double) {
+                                    if (((Double) tableModel.getValueAt(i, j)).doubleValue() != value) {
                                         include = false;
                                     }
-                                } else if (tabelModel.getValueAt(i, j) instanceof XYDataPoint) {
-                                    if (((XYDataPoint) tabelModel.getValueAt(i, j)).getX() != value) {
+                                } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
+                                    if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() != value) {
                                         include = false;
                                     }
                                 }
@@ -2680,6 +2708,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
             if (include) {
                 rowsAfterDataFiltering.add(i);
             }
+        }
+
+        if (tableModel instanceof SelfUpdatingTableModel) {
+            ((SelfUpdatingTableModel) tableModel).setSelfUpdating(selfUpdating);
         }
 
         if (filterError) {

@@ -2,12 +2,18 @@ package com.compomics.util.gui.tablemodels;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 
 /**
  * These table models include a self updating function. Due to instability of
@@ -15,6 +21,7 @@ import javax.swing.table.JTableHeader;
  * own risks and feel free to debug.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
@@ -50,6 +57,14 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * Indicates which column was last changed.
      */
     private int lastColumnSorted = 0;
+    /**
+     * If true the current sorting is ascending.
+     */
+    private boolean sortAscending = true;
+    /**
+     * If true the table has not yet been sorted.
+     */
+    private boolean unsorted = true;
 
     /**
      * Loads the data needed for objects at rows of the given view indexes. Use
@@ -237,10 +252,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             if (viewIndexes == null || viewIndexes.size() != getRowCount()) {
                 initiateSorter();
             }
+            sortAscending = false;
             Collections.reverse(viewIndexes);
             fireTableDataChanged();
         } else {
 
+            sortAscending = true;
             final int finalColumn = column;
             final ProgressDialogX finalProgressDialog = progressDialog;
             finalProgressDialog.resetSecondaryProgressBar();
@@ -292,9 +309,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                             }
                             rows.add(row);
                             if (finalProgressDialog != null) {
-                                if (finalProgressDialog.isRunCanceled()) {
-                                    break;
-                                }
                                 finalProgressDialog.increaseProgressValue();
                             }
                         }
@@ -315,7 +329,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
                         if (finalProgressDialog == null || !finalProgressDialog.isRunCanceled()) {
                             viewIndexes = new ArrayList<Integer>();
-                            Collections.sort(keys, Collections.reverseOrder());
+                            Collections.sort(keys);
                             for (Comparable key : keys) {
                                 viewIndexes.addAll(valueToRowMap.get(key));
                             }
@@ -347,13 +361,53 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         final JTableHeader proteinTableHeader = jTable.getTableHeader();
         final JTable finalTable = jTable;
         final ProgressDialogX progressDialogX = progressDialog;
+
         proteinTableHeader.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int column = proteinTableHeader.getColumnModel().getColumnIndexAtX(evt.getX());
                 SelfUpdatingTableModel model = (SelfUpdatingTableModel) finalTable.getModel();
                 model.sort(column, progressDialogX);
+                model.unsorted = false;
             }
         });
+
+        // set the arrows indicating the current sort order
+        final TableCellRenderer r = finalTable.getTableHeader().getDefaultRenderer();
+        TableCellRenderer wrapper = new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component comp = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (comp instanceof JLabel) {
+                    JLabel label = (JLabel) comp;
+                    label.setIcon(getSortIcon(table, column));
+                    label.setHorizontalTextPosition(SwingConstants.LEFT);
+                    // @TODO: aling text to the left and the icon to the right...
+
+                    finalTable.getTableHeader().revalidate();
+                    finalTable.getTableHeader().repaint();
+
+                }
+                return comp;
+            }
+
+            /**
+             * Implements the logic to choose the appropriate icon.
+             */
+            private Icon getSortIcon(JTable table, int column) {
+                if (table.getModel() instanceof SelfUpdatingTableModel && ((SelfUpdatingTableModel) table.getModel()).lastColumnSorted == column
+                        && !((SelfUpdatingTableModel) table.getModel()).unsorted) {
+                    if (((SelfUpdatingTableModel) table.getModel()).sortAscending == false) {
+                        return UIManager.getIcon("Table.ascendingSortIcon");
+                    } else {
+                        return UIManager.getIcon("Table.descendingSortIcon");
+                    }
+                } else {
+                    return null;
+                }
+            }
+        };
+
+        finalTable.getTableHeader().setDefaultRenderer(wrapper);
     }
 
     /**

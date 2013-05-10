@@ -25,24 +25,6 @@ public class GeneFactory {
      * Gene name to chromosome number mapping.
      */
     private HashMap<String, String> geneNameToChromosome = new HashMap<String, String>();
-
-    /**
-     * Constructor.
-     */
-    private GeneFactory() {
-    }
-
-    /**
-     * Static method returning the instance of the factory.
-     *
-     * @return the instance of the factory
-     */
-    public static GeneFactory getInstance() {
-        if (instance == null) {
-            instance = new GeneFactory();
-        }
-        return instance;
-    }
     /**
      * Random access file of the selected gene mapping file.
      */
@@ -59,6 +41,28 @@ public class GeneFactory {
      * Map of the index where a gene can be found gene name -> index.
      */
     private HashMap<String, Long> geneNameIndexes = new HashMap<String, Long>();
+    /**
+     * Boolean indicating if the mapping file is currently open.
+     */
+    private boolean mappingFileOpen = false;
+
+    /**
+     * Static method returning the instance of the factory.
+     *
+     * @return the instance of the factory
+     */
+    public static GeneFactory getInstance() {
+        if (instance == null) {
+            instance = new GeneFactory();
+        }
+        return instance;
+    }
+
+    /**
+     * Constructor.
+     */
+    private GeneFactory() {
+    }
 
     /**
      * Initializes the factory on the given file. If gene IDs are duplicate only
@@ -79,6 +83,7 @@ public class GeneFactory {
         }
 
         geneMappingFile = new BufferedRandomAccessFile(file, "r", 1024 * 100);
+        mappingFileOpen = true;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -270,6 +275,7 @@ public class GeneFactory {
     public void closeFiles() throws IOException {
         if (geneMappingFile != null) {
             geneMappingFile.close();
+            mappingFileOpen = false;
         }
     }
 
@@ -278,5 +284,15 @@ public class GeneFactory {
      */
     public void clearFactory() {
         geneIdIndexes.clear();
+        geneNameToChromosome.clear();
+    }
+
+    /**
+     * Returns true of the mapping file is currently open.
+     * 
+     * @return true of the mapping file is currently open
+     */
+    public boolean isMappingFileOpen() {
+        return mappingFileOpen;
     }
 }

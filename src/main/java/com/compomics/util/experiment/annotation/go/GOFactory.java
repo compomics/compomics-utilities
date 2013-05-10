@@ -20,24 +20,6 @@ public class GOFactory {
      * The instance of the factory.
      */
     private static GOFactory instance = null;
-
-    /**
-     * Constructor.
-     */
-    private GOFactory() {
-    }
-
-    /**
-     * Static method returning the instance of the factory.
-     *
-     * @return the instance of the factory
-     */
-    public static GOFactory getInstance() {
-        if (instance == null) {
-            instance = new GOFactory();
-        }
-        return instance;
-    }
     /**
      * Random access file of the selected file.
      */
@@ -61,6 +43,28 @@ public class GOFactory {
      * indexes.
      */
     private HashMap<String, ArrayList<Long>> termNameIndexes = new HashMap<String, ArrayList<Long>>();
+    /**
+     * Boolean indicating if the mapping file is currently open.
+     */
+    private boolean mappingFileOpen = false;
+
+    /**
+     * Static method returning the instance of the factory.
+     *
+     * @return the instance of the factory
+     */
+    public static GOFactory getInstance() {
+        if (instance == null) {
+            instance = new GOFactory();
+        }
+        return instance;
+    }
+
+    /**
+     * Constructor.
+     */
+    private GOFactory() {
+    }
 
     /**
      * Initializes the factory on the given file
@@ -80,6 +84,7 @@ public class GOFactory {
         }
 
         bufferedRandomAccessFile = new BufferedRandomAccessFile(file, "r", 1024 * 100);
+        mappingFileOpen = true;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
@@ -181,7 +186,7 @@ public class GOFactory {
         }
         return goAccessions;
     }
-    
+
     /**
      * Returns a list of non redundant GO term descriptions corresponding to a
      * protein match.
@@ -357,6 +362,7 @@ public class GOFactory {
     public void closeFiles() throws IOException {
         if (bufferedRandomAccessFile != null) {
             bufferedRandomAccessFile.close();
+            mappingFileOpen = false;
         }
     }
 
@@ -367,5 +373,14 @@ public class GOFactory {
         proteinIndexes.clear();
         termIndexes.clear();
         termNameIndexes.clear();
+    }
+
+    /**
+     * Returns true of the mapping file is currently open.
+     *
+     * @return true of the mapping file is currently open
+     */
+    public boolean isMappingFileOpen() {
+        return mappingFileOpen;
     }
 }

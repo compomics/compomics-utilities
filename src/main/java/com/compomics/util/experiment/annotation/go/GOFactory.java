@@ -47,13 +47,20 @@ public class GOFactory {
      */
     public final static String separator = "\t";
     /**
-     * Map of all the indexes where a protein can be found Accession -> indexes.
+     * Map of all the indexes where a protein can be found: accession ->
+     * indexes.
      */
     private HashMap<String, ArrayList<Long>> proteinIndexes = new HashMap<String, ArrayList<Long>>();
     /**
-     * Map of all the indexes where a go term can be found go term -> indexes.
+     * Map of all the indexes where a GO accession number can be found: GO
+     * accession number -> indexes.
      */
     private HashMap<String, ArrayList<Long>> termIndexes = new HashMap<String, ArrayList<Long>>();
+    /**
+     * Map of all the indexes where a GO term can be found: GO term name ->
+     * indexes.
+     */
+    private HashMap<String, ArrayList<Long>> termNameIndexes = new HashMap<String, ArrayList<Long>>();
 
     /**
      * Initializes the factory on the given file
@@ -90,6 +97,7 @@ public class GOFactory {
             String[] splittedLine = line.split(separator);
 
             if (splittedLine.length == 3 && !splittedLine[0].equals("") && !splittedLine[1].equals("")) {
+
                 String accession = splittedLine[0];
                 ArrayList<Long> indexes = proteinIndexes.get(accession);
                 if (indexes == null) {
@@ -97,14 +105,24 @@ public class GOFactory {
                     proteinIndexes.put(accession, indexes);
                 }
                 indexes.add(index);
-                String goTerm = splittedLine[1];
-                indexes = termIndexes.get(goTerm);
+
+                String goTermId = splittedLine[1];
+                indexes = termIndexes.get(goTermId);
                 if (indexes == null) {
                     indexes = new ArrayList<Long>();
-                    termIndexes.put(goTerm, indexes);
+                    termIndexes.put(goTermId, indexes);
+                }
+                indexes.add(index);
+
+                String goTerm = splittedLine[2].toLowerCase();
+                indexes = termNameIndexes.get(goTerm);
+                if (indexes == null) {
+                    indexes = new ArrayList<Long>();
+                    termNameIndexes.put(goTerm, indexes);
                 }
                 indexes.add(index);
             }
+
             index = bufferedRandomAccessFile.getFilePointer();
 
             if (waitingHandler != null) {
@@ -117,22 +135,24 @@ public class GOFactory {
     }
 
     /**
-     * Returns the go terms linked to a given accession.
+     * Returns the GO accession numbers linked to a given protein accession
+     * number.
      *
-     * @param accession the accession of the protein of interest
-     * @return a list of go terms, an empty list if no mapping is found
+     * @param proteinAccession the accession number of the protein of interest
+     * @return a list of GO accession numbers, an empty list if no mapping is
+     * found
      * @throws IOException
      */
-    public ArrayList<String> getGoTerms(String accession) throws IOException {
+    public ArrayList<String> getGoAccessions(String proteinAccession) throws IOException {
         ArrayList<String> result = new ArrayList<String>();
-        ArrayList<Long> indexes = proteinIndexes.get(accession);
+        ArrayList<Long> indexes = proteinIndexes.get(proteinAccession);
         if (indexes != null) {
             for (long index : indexes) {
                 bufferedRandomAccessFile.seek(index);
                 String line = bufferedRandomAccessFile.getNextLine();
                 String[] splittedLine = line.split(separator);
-                if (splittedLine.length != 3 || !splittedLine[0].equals(accession)) {
-                    throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to accession " + accession + ".");
+                if (splittedLine.length != 3 || !splittedLine[0].equals(proteinAccession)) {
+                    throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to accession " + proteinAccession + ".");
                 }
                 result.add(splittedLine[1]);
             }
@@ -141,43 +161,67 @@ public class GOFactory {
     }
 
     /**
-     * Returns a list of non redundant go terms corresponding to a protein
-     * match.
+     * Returns a list of non redundant GO accession numbers corresponding to a
+     * protein match.
      *
      * @param matchKey the key of the protein match
-     * @return a list of non redundant go terms corresponding to a protein match
+     * @return a list of non redundant GO accession numbers corresponding to a
+     * protein match
      * @throws IOException
      */
-    public ArrayList<String> getProteinMatchTerms(String matchKey) throws IOException {
+    public ArrayList<String> getProteinGoAccessions(String matchKey) throws IOException {
         String[] accessions = ProteinMatch.getAccessions(matchKey);
-        ArrayList<String> goTerms = new ArrayList<String>();
+        ArrayList<String> goAccessions = new ArrayList<String>();
         for (String accession : accessions) {
-            for (String goTerm : getGoTerms(accession)) {
-                if (!goTerms.contains(goTerm)) {
-                    goTerms.add(goTerm);
+            for (String goTerm : getGoAccessions(accession)) {
+                if (!goAccessions.contains(goTerm)) {
+                    goAccessions.add(goTerm);
                 }
             }
         }
-        return goTerms;
+        return goAccessions;
+    }
+    
+    /**
+     * Returns a list of non redundant GO term descriptions corresponding to a
+     * protein match.
+     *
+     * @param matchKey the key of the protein match
+     * @return a list of non redundant GO term descriptions corresponding to a
+     * protein match
+     * @throws IOException
+     */
+    public ArrayList<String> getProteinGoDescriptions(String matchKey) throws IOException {
+        String[] accessions = ProteinMatch.getAccessions(matchKey);
+        ArrayList<String> goDescriptions = new ArrayList<String>();
+        for (String accession : accessions) {
+            for (String goAccession : getGoAccessions(accession)) {
+                String goDescription = getTermDescription(goAccession).toLowerCase();
+                if (!goDescriptions.contains(goDescription)) {
+                    goDescriptions.add(goDescription);
+                }
+            }
+        }
+        return goDescriptions;
     }
 
     /**
-     * Returns the protein accessions linked to a GO term.
+     * Returns the protein accessions linked to a GO accession number.
      *
-     * @param goTerm the go term
-     * @return a list of accessions, an empty list if none found
+     * @param goAccession the GO accession number
+     * @return a list of GO accessions numbers, an empty list if none found
      * @throws IOException
      */
-    public ArrayList<String> getAccessions(String goTerm) throws IOException {
+    public ArrayList<String> getAccessions(String goAccession) throws IOException {
         ArrayList<String> result = new ArrayList<String>();
-        ArrayList<Long> indexes = termIndexes.get(goTerm);
+        ArrayList<Long> indexes = termIndexes.get(goAccession);
         if (indexes != null) {
             for (long index : indexes) {
                 bufferedRandomAccessFile.seek(index);
                 String line = bufferedRandomAccessFile.getNextLine();
                 String[] splittedLine = line.split(separator);
-                if (splittedLine.length != 3 || !splittedLine[1].equals(goTerm)) {
-                    throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO term " + goTerm + ".");
+                if (splittedLine.length != 3 || !splittedLine[1].equals(goAccession)) {
+                    throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO accession " + goAccession + ".");
                 }
                 result.add(splittedLine[0]);
             }
@@ -188,21 +232,44 @@ public class GOFactory {
     /**
      * Returns the description of a GO term.
      *
-     * @param goTerm the go term of interest
+     * @param goAccession the accession number of the GO term of interest
      * @return the first description found, null if not found
      * @throws IOException
      */
-    public String getTermDescription(String goTerm) throws IOException {
-        ArrayList<Long> indexes = termIndexes.get(goTerm);
+    public String getTermDescription(String goAccession) throws IOException {
+        ArrayList<Long> indexes = termIndexes.get(goAccession);
         if (indexes != null && !indexes.isEmpty()) {
             long index = indexes.get(0);
             bufferedRandomAccessFile.seek(index);
             String line = bufferedRandomAccessFile.getNextLine();
             String[] splittedLine = line.split(separator);
-            if (splittedLine.length != 3 || !splittedLine[1].equals(goTerm)) {
-                throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO term " + goTerm + ".");
+            if (splittedLine.length != 3 || !splittedLine[1].equals(goAccession)) {
+                throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO accession " + goAccession + ".");
             }
             return splittedLine[2];
+        }
+        return null;
+    }
+
+    /**
+     * Returns the accession number of a GO term.
+     *
+     * @param goTerm the description of the GO term of interest
+     * @return the first GO accession number found, null if not found
+     * @throws IOException
+     */
+    public String getTermAccession(String goTerm) throws IOException {
+        goTerm = goTerm.toLowerCase();
+        ArrayList<Long> indexes = termNameIndexes.get(goTerm);
+        if (indexes != null && !indexes.isEmpty()) {
+            long index = indexes.get(0);
+            bufferedRandomAccessFile.seek(index);
+            String line = bufferedRandomAccessFile.getNextLine();
+            String[] splittedLine = line.split(separator);
+            if (splittedLine.length != 3 || !splittedLine[2].equalsIgnoreCase(goTerm)) {
+                throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to GO term " + goTerm + ".");
+            }
+            return splittedLine[1];
         }
         return null;
     }
@@ -226,13 +293,15 @@ public class GOFactory {
     }
 
     /**
-     * Returns the total number of accessions mapping to a given GO term.
+     * Returns the total number of protein accessions mapping to a given GO
+     * term.
      *
-     * @param goTerm the GO term of interest
-     * @return the total number of accessions mapping to a given GO term
+     * @param goAccession the GO accession number of interest
+     * @return the total number of proteins mapping to a given GO accession
+     * number
      */
-    public int getNProteinsForTerm(String goTerm) {
-        ArrayList<Long> indexes = termIndexes.get(goTerm);
+    public int getNProteinsForTerm(String goAccession) {
+        ArrayList<Long> indexes = termIndexes.get(goAccession);
         if (indexes == null) {
             return 0;
         }
@@ -263,12 +332,21 @@ public class GOFactory {
     }
 
     /**
-     * Returns a non redundant list of all the GO terms mapped.
+     * Returns a non redundant list of all the GO accession numbers mapped.
      *
-     * @return a non redundant list of all the GO terms mapped
+     * @return a non redundant list of all the GO accession numbers mapped
      */
     public ArrayList<String> getTermsMapped() {
         return new ArrayList<String>(termIndexes.keySet());
+    }
+
+    /**
+     * Returns a non redundant list of all the GO term descriptions mapped.
+     *
+     * @return a non redundant list of all the GO term descriptions mapped
+     */
+    public ArrayList<String> getTermNamesMapped() {
+        return new ArrayList<String>(termNameIndexes.keySet());
     }
 
     /**
@@ -288,5 +366,6 @@ public class GOFactory {
     public void clearFactory() {
         proteinIndexes.clear();
         termIndexes.clear();
+        termNameIndexes.clear();
     }
 }

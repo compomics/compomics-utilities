@@ -88,13 +88,13 @@
                           <Component id="goTableScrollPane" pref="707" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="ensemlbIdLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="geneNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ensemlbIdLabel" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="geneNameLabel" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="geneIdTxt" max="32767" attributes="0"/>
                                   <Component id="geneNameTxt" max="32767" attributes="0"/>
+                                  <Component id="geneIdTxt" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -102,8 +102,8 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="chromosomeLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                              <Component id="chromosomeLabel" min="-2" pref="110" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="chromosomeNameTxt" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -193,6 +193,11 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="goTableMouseReleased"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="goTableMouseExited"/>
+                    <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="goTableMouseMoved"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

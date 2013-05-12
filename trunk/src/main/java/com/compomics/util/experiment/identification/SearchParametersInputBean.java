@@ -116,6 +116,7 @@ public class SearchParametersInputBean {
         if (aLine.hasOption(SearchParametersCLIParams.SEARCH_PARAMETERS.id)) {
             String fileTxt = aLine.getOptionValue(SearchParametersCLIParams.SEARCH_PARAMETERS.id);
             searchParameters = SearchParameters.getIdentificationParameters(new File(fileTxt));
+            ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
         } else {
             searchParameters = new SearchParameters();
             if (aLine.hasOption(SearchParametersCLIParams.PPM.id)) {
@@ -283,8 +284,8 @@ public class SearchParametersInputBean {
                     modificationProfile.addVariableModification(modification);
                 }
             }
-            ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
             searchParameters.setModificationProfile(modificationProfile);
+            ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
         }
 
         // see which search engines to use
@@ -506,7 +507,7 @@ public class SearchParametersInputBean {
             }
         }
 
-        if (currentToolType == ToolType.SearchGUI) {
+        if (currentToolType == ToolType.SearchGUI && !aLine.hasOption(SearchParametersCLIParams.SEARCH_PARAMETERS.id)) {
             if (!aLine.hasOption(SearchParametersCLIParams.DB.id) || aLine.getOptionValue(SearchParametersCLIParams.DB.id).toString().equals("")) {
                 System.out.println("\nFasta file not specified.\n");
                 return false;

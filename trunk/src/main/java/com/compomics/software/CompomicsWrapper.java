@@ -179,7 +179,7 @@ public class CompomicsWrapper {
         String splashPath = null;
 
         if (splashName != null) {
-            splashPath = confFolder.getAbsolutePath() + File.separator + splashName;
+            splashPath = "resources/conf" + File.separator + splashName;
 
             // set the correct slashes for the splash path
             if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
@@ -223,7 +223,7 @@ public class CompomicsWrapper {
 
         // splash screen
         if (splashName != null) {
-            process_name_array.add("-splash:" + quote + splashPath + quote);
+            process_name_array.add("-splash:" + splashPath);
         }
 
         // get the java options

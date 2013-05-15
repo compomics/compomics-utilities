@@ -284,6 +284,7 @@ public class GeneFactory {
      */
     public void clearFactory() {
         geneIdIndexes.clear();
+        geneNameIndexes.clear();
         geneNameToChromosome.clear();
     }
 

@@ -25,7 +25,7 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion iTRAQ 113.
      */
-    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113.1075 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113.1075 - ElementaryIon.proton.getTheoreticMass()); // @TODO: why minus the mass of a proton?? 
     /**
      * Standard reporter ion iTRAQ 114.
      */

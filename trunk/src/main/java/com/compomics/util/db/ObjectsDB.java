@@ -6,6 +6,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.sql.rowset.serial.SerialBlob;
 
 /**
  * A database which can easily be used to store objects.
@@ -82,6 +83,10 @@ public class ObjectsDB implements Serializable {
      * System.out stream.
      */
     private boolean debugInteractions = false;
+    /**
+     * If true, SQLite is used as the database, if false Derby is used.
+     */
+    private boolean useSQLite = false;
 
     /**
      * Constructor.
@@ -330,7 +335,16 @@ public class ObjectsDB implements Serializable {
                 String key = results.getString(1);
 
                 if (!objectsCache.inCache(dbName, tableName, key)) {
-                    Blob tempBlob = results.getBlob(2);
+
+                    Blob tempBlob;
+
+                    if (useSQLite) {
+                        byte[] bytes = results.getBytes(2);
+                        tempBlob = new SerialBlob(bytes);
+                    } else {
+                        tempBlob = results.getBlob(2);
+                    }
+
                     BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
                     ObjectInputStream in = new ObjectInputStream(bis);
@@ -415,7 +429,15 @@ public class ObjectsDB implements Serializable {
                     String key = results.getString(1);
                     if (toLoad.contains(key)) {
                         found++;
-                        Blob tempBlob = results.getBlob(2);
+                        Blob tempBlob;
+
+                        if (useSQLite) {
+                            byte[] bytes = results.getBytes(2);
+                            tempBlob = new SerialBlob(bytes);
+                        } else {
+                            tempBlob = results.getBlob(2);
+                        }
+
                         BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
                         ObjectInputStream in = new ObjectInputStream(bis);
@@ -503,7 +525,15 @@ public class ObjectsDB implements Serializable {
 
         if (results.next()) {
 
-            Blob tempBlob = results.getBlob(1);
+            Blob tempBlob;
+
+            if (useSQLite) {
+                byte[] bytes = results.getBytes(1);
+                tempBlob = new SerialBlob(bytes);
+            } else {
+                tempBlob = results.getBlob(1);
+            }
+
             BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
             ObjectInputStream in = new ObjectInputStream(bis);
@@ -577,7 +607,7 @@ public class ObjectsDB implements Serializable {
             System.out.println("checking db content, table:" + tableName + ", key: " + objectKey);
         }
         Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'"); // derby
+        ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'");
 
         boolean result = results.next();
         results.close();
@@ -701,14 +731,18 @@ public class ObjectsDB implements Serializable {
             dbConnection.close(); // possible sql exception that should be handled better: Cannot close a connection while a transaction is still active...
         }
 
-        try {
-            // we also need to shut down derby completely to release the file lock in the database folder
-            DriverManager.getConnection("jdbc:derby:;shutdown=true;deregister=false");
-        } catch (SQLException e) {
-            if (e.getMessage().indexOf("Derby system shutdown") == -1) {
-                e.printStackTrace();
-            } else {
-                // ignore, normal derby shut down always results in an exception thrown
+        if (useSQLite) {
+            // @TODO: do we need to do anything here??
+        } else {
+            try {
+                // we also need to shut down derby completely to release the file lock in the database folder
+                DriverManager.getConnection("jdbc:derby:;shutdown=true;deregister=false");
+            } catch (SQLException e) {
+                if (e.getMessage().indexOf("Derby system shutdown") == -1) {
+                    e.printStackTrace();
+                } else {
+                    // ignore, normal derby shut down always results in an exception thrown
+                }
             }
         }
 
@@ -763,8 +797,22 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        String url = "jdbc:derby:" + path + ";create=true";
-        dbConnection = DriverManager.getConnection(url); // @TODO: Another instance of Derby may have already booted the database. We need to check this first?
+        if (useSQLite) {
+            try {
+                Class.forName("org.sqlite.JDBC");
+                dbConnection = DriverManager.getConnection("jdbc:sqlite:" + path); // @TODO: another instance of SQLite may have already booted the database. We need to check this first?
+            } catch (SQLException e) {
+                // try using Derby instead
+                String url = "jdbc:derby:" + path + ";create=true";
+                dbConnection = DriverManager.getConnection(url); // @TODO: another instance of Derby may have already booted the database. We need to check this first?
+                useSQLite = false;
+            } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            String url = "jdbc:derby:" + path + ";create=true";
+            dbConnection = DriverManager.getConnection(url); // @TODO: another instance of Derby may have already booted the database. We need to check this first?
+        }
 
         this.objectsCache = objectsCache;
 

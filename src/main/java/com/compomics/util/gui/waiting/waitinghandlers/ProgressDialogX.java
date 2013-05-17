@@ -476,7 +476,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     @Override
     public void setWaitingText(String text) {
-        // ignore, not implemented for this waiting handler
+        setTitle(text);
     }
 
     @Override

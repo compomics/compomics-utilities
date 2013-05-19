@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,10 +23,12 @@ import java.util.Vector;
  *
  * @author Harald Barsnes
  */
-public class GenePreferences {
+public class GenePreferences implements Serializable {
 
-    // @TODO: move to utilities
-    // @TODO: remove the GUI references?
+    /**
+     * The serial number for serialization compatibility.
+     */
+    //static final long serialVersionUID = 3298905131097982664L; // @TODO: add real value!!
     /**
      * The folder where gene mapping related info is stored.
      */
@@ -34,6 +37,14 @@ public class GenePreferences {
      * The species separator used in the species comboboxes.
      */
     public final String SPECIES_SEPARATOR = "------------------------------------------------------------";
+    /**
+     * The text to use to tell the user to please select a species in the list.
+     */
+    public final String SELECT_SPECIES_TAG = "-- Select Species --";
+    /**
+     * The text to use for no species selected.
+     */
+    public final String NO_SPECIES_TAG = "-- (no selection) --";
     /**
      * The suffix to use for files containing gene mappings.
      */
@@ -45,7 +56,7 @@ public class GenePreferences {
     /**
      * The current species. Used for the gene mappings.
      */
-    private String currentSpecies = "Homo sapiens";
+    private String currentSpecies = null;
     /**
      * The GO domain map. e.g., key: GO term: GO:0007568, element:
      * biological_process.
@@ -484,7 +495,7 @@ public class GenePreferences {
 
                 String line = br.readLine();
 
-                species.add("-- Select Species --");
+                species.add(SELECT_SPECIES_TAG);
                 species.add(SPECIES_SEPARATOR);
 
                 while (line != null) {
@@ -503,6 +514,9 @@ public class GenePreferences {
 
                     line = br.readLine();
                 }
+
+                species.add(SPECIES_SEPARATOR);
+                species.add(NO_SPECIES_TAG);
 
                 br.close();
                 r.close();

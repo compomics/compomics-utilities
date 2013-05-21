@@ -220,7 +220,7 @@ public class MgfReader {
                 if (nDuplicates != null || spectrumTitles.contains(title)) {
                     if (nDuplicates == null) {
                         nDuplicates = 0;
-                        System.err.println("Warning: spectrum title " + title + " is used for different spectra in " + mgfFile.getName() + ".");
+                        System.err.println("Warning: spectrum title " + title + " is not unique in " + mgfFile.getName() + ".");
                     }
                     duplicateTitles.put(title, ++nDuplicates);
                     title += "_" + nDuplicates;
@@ -285,6 +285,7 @@ public class MgfReader {
                     indexes.put(title, beginIndex);
                     spectrumTitles.add(title);
                 }
+                title = null;
             }
         }
 
@@ -301,6 +302,158 @@ public class MgfReader {
         long lastModified = mgfFile.lastModified();
 
         return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, lastModified);
+    }
+
+    /**
+     * Validates the spectrum titles, i.e., check for duplicate titles.
+     *
+     * @param mgfFile the MGF file to validate
+     * @param waitingHandler a waitingHandler showing the progress
+     * @return the first duplicate spectrum title, or null of no duplicate
+     * spectrum titles
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
+     */
+    public static String validateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+
+        String firstDuplicateSpectrumHeader = null;
+        boolean duplicateSpectrumTitles = false;
+        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        String title = null;
+        int cpt = 0;
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressValue(100);
+            waitingHandler.setSecondaryProgressValue(0);
+        }
+
+        long progressUnit = bufferedRandomAccessFile.length() / 100;
+
+        String line;
+
+        while ((line = bufferedRandomAccessFile.getNextLine()) != null && !duplicateSpectrumTitles) {
+
+            line = line.trim();
+
+            if (line.equals("BEGIN IONS")) {
+                cpt++;
+                if (waitingHandler != null) {
+                    if (waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                    waitingHandler.setSecondaryProgressValue((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
+                }
+            } else if (line.startsWith("TITLE")) {
+                title = line.substring(line.indexOf('=') + 1).trim();
+                try {
+                    title = URLDecoder.decode(title, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
+                    e.printStackTrace();
+                }
+                if (spectrumTitles.contains(title)) {
+                    firstDuplicateSpectrumHeader = title;
+                    System.out.println("Error: Duplicate spectrum title: " + title + " in file " + mgfFile.getAbsolutePath() + "! Please check your MGF file...");
+                    duplicateSpectrumTitles = true;
+                }
+                spectrumTitles.add(title);
+            } else if (line.equals("END IONS")) {
+                if (title == null) {
+                    title = cpt + "";
+                    spectrumTitles.add(title);
+                }
+                title = null;
+            }
+        }
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+        }
+
+        bufferedRandomAccessFile.close();
+
+        return firstDuplicateSpectrumHeader;
+    }
+
+    /**
+     * Fix duplicate spectrum titles. Adds (2), (3) etc, behind the duplicate
+     * spectrum titles.
+     *
+     * @param mgfFile the MGF file to validate
+     * @param waitingHandler a waitingHandler showing the progress
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
+     * @throws UnsupportedEncodingException if the decoding of a spectrum title
+     * fails
+     */
+    public static void fixDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+
+        // @TODO: use the waitingHandler??
+
+        ArrayList<String> spectrumTitles = new ArrayList<String>();
+
+        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+
+        FileWriter fw = new FileWriter(tempSpectrumFile);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        FileReader fr = new FileReader(mgfFile);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line = br.readLine();
+
+        while (line != null) {
+
+            if (line.startsWith("TITLE")) {
+
+                String title = line.substring(line.indexOf('=') + 1).trim();
+
+                try {
+                    title = URLDecoder.decode(title, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
+                }
+
+                int counter = 2;
+                while (spectrumTitles.contains(title)) {
+                    title = title + " (" + counter++ + ")";
+                }
+
+                spectrumTitles.add(title);
+                bw.write("TITLE=" + title + System.getProperty("line.separator"));
+            } else {
+                bw.write(line + System.getProperty("line.separator"));
+            }
+
+            line = br.readLine();
+        }
+
+        br.close();
+        fr.close();
+
+        bw.close();
+        fw.close();
+
+        // replace the old file
+        String orignalFilePath = mgfFile.getAbsolutePath();
+        boolean fileDeleted = mgfFile.delete();
+
+        if (!fileDeleted) {
+            throw new IOException("Failed to delete the original spectrum file.");
+        }
+
+        boolean fileRenamed = tempSpectrumFile.renameTo(new File(orignalFilePath));
+
+        if (!fileRenamed) {
+            throw new IOException("Failed to replace the original spectrum file.");
+        }
     }
 
     /**
@@ -459,6 +612,7 @@ public class MgfReader {
                         indexes.put(title, beginIndex);
                         spectrumTitles.add(title);
                     }
+                    title = null;
                 }
                 writeBufferedRandomAccessFile.writeBytes(line + System.getProperty("line.separator"));
             }

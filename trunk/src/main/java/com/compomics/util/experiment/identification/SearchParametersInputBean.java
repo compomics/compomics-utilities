@@ -82,6 +82,11 @@ public class SearchParametersInputBean {
      * Number of spectra allowed in the split file.
      */
     private int mgfNSpectra = 25000;
+    /**
+     * Fix duplicate spectrum titles by adding (2), (3), etc, behind the titles
+     * of the duplicated titles.
+     */
+    private boolean fixDuplicateSpectrumTitles = false;
 
     /**
      * Takes all the arguments from a command line.
@@ -323,6 +328,17 @@ public class SearchParametersInputBean {
                 omssaOutputAsOmx = false;
             }
         }
+
+        // check if duplicate spectrum titles should be automatically corrected
+        if (aLine.hasOption(SearchParametersCLIParams.FIX_DUPLICATE_TITLES.id)) {
+            String arg = aLine.getOptionValue(SearchParametersCLIParams.FIX_DUPLICATE_TITLES.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                fixDuplicateSpectrumTitles = true;
+            } else {
+                fixDuplicateSpectrumTitles = false;
+            }
+        }
     }
 
     /**
@@ -466,6 +482,25 @@ public class SearchParametersInputBean {
      */
     public int getMgfNSpectra() {
         return mgfNSpectra;
+    }
+
+    /**
+     * Returns true if duplicate spectrum titles are to be corrected
+     * automatically.
+     *
+     * @return the fixDuplicateSpectrumTitles
+     */
+    public boolean fixDuplicateSpectrumTitles() {
+        return fixDuplicateSpectrumTitles;
+    }
+
+    /**
+     * Set if duplicate spectrum titles are to be corrected automatically.
+     *
+     * @param fixDuplicateSpectrumTitles the fixDuplicateSpectrumTitles to set
+     */
+    public void setFixDuplicateSpectrumTitles(boolean fixDuplicateSpectrumTitles) {
+        this.fixDuplicateSpectrumTitles = fixDuplicateSpectrumTitles;
     }
 
     /**

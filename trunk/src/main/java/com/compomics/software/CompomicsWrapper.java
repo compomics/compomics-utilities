@@ -80,7 +80,7 @@ public class CompomicsWrapper {
      * @param args the arguments to pass to the tool (ignored if null)
      */
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args) {
-        File folder = new File(jarFile.getParentFile(), "statup.log");
+        File folder = new File(jarFile.getParentFile(), "startup.log");
         try {
             try {
                 userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -147,11 +147,10 @@ public class CompomicsWrapper {
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 ex.printStackTrace();
-
                 JOptionPane.showMessageDialog(null,
                         "Failed to start " + toolName + ":" + System.getProperty("line.separator")
-                        + e.getMessage(),
-                        toolName + " - Startup Failed\n could not write to statup.log file", JOptionPane.ERROR_MESSAGE);
+                        + e.getMessage() + "\nCould not write to statup.log file",
+                        toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -183,8 +182,10 @@ public class CompomicsWrapper {
     private void launch(File jarFile, String splashName, String mainClass, String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
+
         // check if the user has set a non-standard Java home location
         String javaHome = getJavaHome(confFolder, bw);
+
         // get the splash 
         String splashPath = null;
         if (splashName != null) {
@@ -200,8 +201,10 @@ public class CompomicsWrapper {
                 }
             }
         }
+
         String uniprotProxyClassPath = "";
         String quote = CommandLineUtils.getQuoteType();
+
         // add the classpath for the uniprot proxy file
         if (proxySettingsFound) {
             uniprotProxyClassPath = confFolder.getAbsolutePath() + File.separator + "proxy";
@@ -218,49 +221,51 @@ public class CompomicsWrapper {
 
             uniprotProxyClassPath = ";" + quote + uniprotProxyClassPath + quote;
         }
+
         String jarFilePath = jarFile.getAbsolutePath();
 
         if (!new File(jarFilePath).exists()) {
             jarFilePath = URLDecoder.decode(jarFile.getAbsolutePath(), "UTF-8");
         }
+
         // create the command line
         ArrayList process_name_array = new ArrayList();
 
         process_name_array.add(javaHome);
+
         // splash screen
-        if (splashName
-                != null) {
+        if (splashName != null) {
             process_name_array.add("-splash:" + splashPath);
         }
+
         // get the java options
         ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);
         for (String currentOption : optionsAsList) {
             process_name_array.add(currentOption);
         }
 
-        process_name_array.add(
-                "-cp");
+        process_name_array.add("-cp");
 
         // get the class path
         String classPath = quote + jarFilePath;
 
-        if (uniprotProxyClassPath.trim()
-                .length() > 0) {
+        if (uniprotProxyClassPath.trim().length() > 0) {
             classPath += uniprotProxyClassPath;
         }
         classPath += quote;
-
         process_name_array.add(classPath);
 
+        // add the main class
         process_name_array.add(mainClass);
-        if (args
-                != null) {
+
+        // add arguments, if any
+        if (args != null) {
             process_name_array.addAll(Arrays.asList(args));
         }
 
         process_name_array.trimToSize();
-        if (useStartUpLog) {
 
+        if (useStartUpLog) {
             // print the command to the log file
             System.out.println(System.getProperty("line.separator") + System.getProperty("line.separator") + "Command line: ");
             bw.write(System.getProperty("line.separator") + "Command line: " + System.getProperty("line.separator"));
@@ -273,6 +278,7 @@ public class CompomicsWrapper {
             bw.write(System.getProperty("line.separator"));
             System.out.println(System.getProperty("line.separator"));
         }
+
         ProcessBuilder pb = new ProcessBuilder(process_name_array);
 
         pb.directory(jarFile.getParentFile());
@@ -829,10 +835,18 @@ public class CompomicsWrapper {
         return javaHomeAndOptions;
     }
 
+    /**
+     * Copy the default JavaOptions file to the given location.
+     *
+     * @param folder the folder to copy the file to
+     * @throws IOException
+     */
     private void copyDefaultJavaOptionsFile(File folder) throws IOException {
+
         File destination = new File(folder.getAbsolutePath() + "/JavaOptions.txt");
         InputStream resStreamIn = getClass().getClassLoader().getResourceAsStream("DefaultJavaOptions.txt");
         OutputStream resStreamOut = new FileOutputStream(destination);
+
         try {
             int readBytes;
             byte[] buffer = new byte[1024];

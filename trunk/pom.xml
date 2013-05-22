@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.13.23</version>
+    <version>3.13.24</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -233,7 +233,7 @@
                 </executions>
             </plugin>
 
-             <!-- Create javadoc on build -->
+            <!-- Create javadoc on build -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -263,14 +263,18 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
         </plugins>
     </build>
 
 
     <!-- Repositories -->
     <repositories>
-         <!-- UGent Genesis Maven 2 repository -->
+        <!-- UGent Genesis Maven 2 repository -->
         <repository>
             <id>genesis-maven2-repository</id>
             <name>Genesis maven2 repository</name>
@@ -319,7 +323,7 @@
             <type>jar</type>
         </dependency>
 
-       <!-- This project depends on the commons-math JAR file-->
+        <!-- This project depends on the commons-math JAR file-->
         <dependency>
             <groupId>commons-math</groupId>
             <artifactId>commons-math</artifactId>

@@ -2,6 +2,7 @@ package com.compomics.software;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
+import com.compomics.util.io.StreamGobbler;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.*;
 import java.net.URLDecoder;
@@ -10,8 +11,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.output.NullOutputStream;
 
 /**
  * A general wrapper for compomics tools. All tools shall contain a
@@ -79,7 +80,7 @@ public class CompomicsWrapper {
      * @param args the arguments to pass to the tool (ignored if null)
      */
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args) {
-
+        File folder = new File(jarFile.getParentFile(), "statup.log");
         try {
             try {
                 userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -88,13 +89,21 @@ public class CompomicsWrapper {
             }
 
             if (useStartUpLog) {
-                File folder = new File(jarFile.getParentFile(), "resources/conf");
+                folder = new File(jarFile.getParentFile(), "resources/conf");
                 if (!folder.exists()) {
                     String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
                     folder = new File(path, "resources/conf");
                 }
                 if (!folder.exists()) {
-                    throw new FileNotFoundException(folder.getAbsolutePath() + " not found!");
+                    if (folder.mkdirs()) {
+                        copyDefaultJavaOptionsFile(folder);
+                    } else {
+                        throw new FileNotFoundException(folder.getAbsolutePath() + " not found!");
+                    }
+                } else {
+                    if (!new File(folder.getAbsolutePath(), "JavaOptions.txt").exists()) {
+                        copyDefaultJavaOptionsFile(folder);
+                    }
                 }
                 File debugOutput = new File(folder, "startup.log");
                 bw = new BufferedWriter(new FileWriter(debugOutput));
@@ -129,11 +138,21 @@ public class CompomicsWrapper {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                bw = new BufferedWriter(new FileWriter(folder));
+                bw.write(e.getMessage());
+                JOptionPane.showMessageDialog(null,
+                        "Failed to start " + toolName + ":" + System.getProperty("line.separator")
+                        + e.getMessage(),
+                        toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
 
-            JOptionPane.showMessageDialog(null,
-                    "Failed to start " + toolName + ":" + System.getProperty("line.separator")
-                    + e.getMessage(),
-                    toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "Failed to start " + toolName + ":" + System.getProperty("line.separator")
+                        + e.getMessage(),
+                        toolName + " - Startup Failed\n could not write to statup.log file", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -164,20 +183,10 @@ public class CompomicsWrapper {
     private void launch(File jarFile, String splashName, String mainClass, String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
-        if (!confFolder.exists()) {
-            String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
-            confFolder = new File(path, "resources/conf");
-        }
-        if (!confFolder.exists()) {
-            throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
-        }
-
         // check if the user has set a non-standard Java home location
         String javaHome = getJavaHome(confFolder, bw);
-
         // get the splash 
         String splashPath = null;
-
         if (splashName != null) {
             splashPath = "resources/conf" + File.separator + splashName;
 
@@ -191,10 +200,8 @@ public class CompomicsWrapper {
                 }
             }
         }
-
         String uniprotProxyClassPath = "";
         String quote = CommandLineUtils.getQuoteType();
-
         // add the classpath for the uniprot proxy file
         if (proxySettingsFound) {
             uniprotProxyClassPath = confFolder.getAbsolutePath() + File.separator + "proxy";
@@ -211,45 +218,47 @@ public class CompomicsWrapper {
 
             uniprotProxyClassPath = ";" + quote + uniprotProxyClassPath + quote;
         }
-
         String jarFilePath = jarFile.getAbsolutePath();
+
         if (!new File(jarFilePath).exists()) {
             jarFilePath = URLDecoder.decode(jarFile.getAbsolutePath(), "UTF-8");
         }
-
         // create the command line
         ArrayList process_name_array = new ArrayList();
-        process_name_array.add(javaHome);
 
+        process_name_array.add(javaHome);
         // splash screen
-        if (splashName != null) {
+        if (splashName
+                != null) {
             process_name_array.add("-splash:" + splashPath);
         }
-
         // get the java options
         ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);
         for (String currentOption : optionsAsList) {
             process_name_array.add(currentOption);
         }
 
-        process_name_array.add("-cp");
+        process_name_array.add(
+                "-cp");
 
         // get the class path
         String classPath = quote + jarFilePath;
-        if (uniprotProxyClassPath.trim().length() > 0) {
+
+        if (uniprotProxyClassPath.trim()
+                .length() > 0) {
             classPath += uniprotProxyClassPath;
         }
         classPath += quote;
+
         process_name_array.add(classPath);
 
         process_name_array.add(mainClass);
-
-        if (args != null) {
+        if (args
+                != null) {
             process_name_array.addAll(Arrays.asList(args));
         }
 
         process_name_array.trimToSize();
-
         if (useStartUpLog) {
 
             // print the command to the log file
@@ -264,41 +273,42 @@ public class CompomicsWrapper {
             bw.write(System.getProperty("line.separator"));
             System.out.println(System.getProperty("line.separator"));
         }
-
         ProcessBuilder pb = new ProcessBuilder(process_name_array);
+
         pb.directory(jarFile.getParentFile());
 
         // try to run the command line
         try {
             Process p = pb.start();
 
-            boolean error = false;
+            int error;
             String temp = "";
-            Scanner scan = new Scanner(p.getErrorStream());
+            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), "ERROR", bw);
+            //Scanner errorScanner = new Scanner(p.getErrorStream());
+            StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream(), "INPUT", new BufferedWriter(new OutputStreamWriter(new NullOutputStream())));
+            errorGobbler.start();
+            inputGobbler.start();
 
             // get input from scanner and check for errors
-            while (scan.hasNext()) {
-
-                String tempOutput = scan.next() + " ";
-
-                if (useStartUpLog) {
-                    System.out.print(tempOutput);
-                    bw.write(tempOutput);
-                }
-
-                temp += tempOutput;
-                error = true;
-            }
-
-            int exitVal = p.waitFor();
+            /**
+             * while (errorScanner.hasNext()) {
+             *
+             * String tempOutput = errorScanner.next() + " ";
+             *
+             * if (useStartUpLog) { System.out.print(tempOutput);
+             * bw.write(tempOutput); }
+             *
+             * temp += tempOutput; error = true; }
+             */
+            error = p.waitFor();
 
             if (useStartUpLog) {
-                System.out.println("Process exitValue: " + exitVal + System.getProperty("line.separator"));
-                bw.write("Process exitValue: " + exitVal + System.getProperty("line.separator"));
+                System.out.println("Process exitValue: " + error + System.getProperty("line.separator"));
+                bw.write("Process exitValue: " + error + System.getProperty("line.separator"));
             }
 
             // an error occured
-            if (error) {
+            if (error != 0) {
 
                 firstTry = false;
                 temp = temp.toLowerCase();
@@ -817,5 +827,21 @@ public class CompomicsWrapper {
         }
 
         return javaHomeAndOptions;
+    }
+
+    private void copyDefaultJavaOptionsFile(File folder) throws IOException {
+        File destination = new File(folder.getAbsolutePath() + "/JavaOptions.txt");
+        InputStream resStreamIn = getClass().getClassLoader().getResourceAsStream("DefaultJavaOptions.txt");
+        OutputStream resStreamOut = new FileOutputStream(destination);
+        try {
+            int readBytes;
+            byte[] buffer = new byte[1024];
+            while ((readBytes = resStreamIn.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+        } finally {
+            resStreamIn.close();
+            resStreamOut.close();
+        }
     }
 }

@@ -403,7 +403,11 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
         // change the icon back to the default version
         if (normalIcon != null) {
-            waitingHandlerParentFrame.setIconImage(normalIcon);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    waitingHandlerParentFrame.setIconImage(normalIcon);
+                }
+            });
         }
 
         finished = true;

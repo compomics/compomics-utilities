@@ -10,6 +10,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -65,6 +66,10 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * If true the table has not yet been sorted.
      */
     private boolean unsorted = true;
+    /**
+     * A progress dialog.
+     */
+    private ProgressDialogX progressDialog;
 
     /**
      * Loads the data needed for objects at rows of the given view indexes. Use
@@ -234,7 +239,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         }
         if (viewIndex < 0 || viewIndex >= nRows) {
             nRows--;
-            throw new IllegalArgumentException("View index " + viewIndex + " must be between 0 and " + nRows);
+            throw new IllegalArgumentException("View index " + viewIndex + " must be between 0 and " + nRows + ".");
         }
         return viewIndexes.indexOf(viewIndex);
     }
@@ -242,122 +247,156 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     /**
      * Sorts the table according to a given column using the built in sorter.
      *
-     * @param column the column of interest
-     * @param progressDialog a progress dialog used to display the progress and
+     * @param aProgressDialog a progress dialog used to display the progress and
      * interrupt the process
      */
-    public void sort(int column, ProgressDialogX progressDialog) {
+    public void resetSorting(ProgressDialogX aProgressDialog) {
+        
+        if (!unsorted) {
+            sortColumn(lastColumnSorted, aProgressDialog);
+
+            if (!sortAscending) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Collections.reverse(viewIndexes);
+                        fireTableDataChanged();
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Sorts the table according to a given column using the built in sorter.
+     *
+     * @param column the column of interest
+     * @param aProgressDialog a progress dialog used to display the progress and
+     * interrupt the process
+     */
+    public void sort(int column, ProgressDialogX aProgressDialog) {
 
         if (column == lastColumnSorted) {
             if (viewIndexes == null || viewIndexes.size() != getRowCount()) {
                 initiateSorter();
             }
-            sortAscending = false;
             Collections.reverse(viewIndexes);
             fireTableDataChanged();
         } else {
-
-            sortAscending = true;
-            final int finalColumn = column;
-            final ProgressDialogX finalProgressDialog = progressDialog;
-            finalProgressDialog.resetSecondaryProgressBar();
-            finalProgressDialog.setTitle("Sorting. Please Wait...");
-            finalProgressDialog.setIndeterminate(false);
-            finalProgressDialog.setMaxProgressValue(getRowCount());
-            finalProgressDialog.setValue(0);
-
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        if (finalProgressDialog != null) {
-                            finalProgressDialog.setVisible(true);
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        // ignore
-                    }
-                }
-            }, "ProgressDialog").start();
-
-            new Thread("SortThread") {
-                @Override
-                public void run() {
-
-                    try {
-                        setSelfUpdating(false);
-                        loadDataForColumn(finalColumn, finalProgressDialog);
-
-                        initiateSorter();
-                        lastColumnSorted = 0;
-
-                        HashMap<Comparable, ArrayList<Integer>> valueToRowMap = new HashMap<Comparable, ArrayList<Integer>>();
-                        boolean comparable = false, string = false;
-
-                        for (int row = 0; row < getRowCount() && (finalProgressDialog != null && !finalProgressDialog.isRunCanceled()); row++) {
-                            Object tableValue = getValueAt(row, finalColumn);
-                            Comparable key;
-                            if (tableValue instanceof Comparable) {
-                                key = (Comparable) tableValue;
-                                comparable = true;
-                            } else {
-                                key = tableValue.toString();
-                                string = true;
-                            }
-                            ArrayList<Integer> rows = valueToRowMap.get(key);
-                            if (rows == null) {
-                                rows = new ArrayList<Integer>();
-                                valueToRowMap.put(key, rows);
-                            }
-                            rows.add(row);
-                            if (finalProgressDialog != null) {
-                                finalProgressDialog.increaseProgressValue();
-                            }
-                        }
-
-                        if (finalProgressDialog != null && finalProgressDialog.isRunCanceled()) {
-                            finalProgressDialog.setRunFinished();
-                            return;
-                        }
-
-                        ArrayList<Comparable> keys = new ArrayList<Comparable>(valueToRowMap.keySet());
-                        if (string && comparable) {
-                            ArrayList<Comparable> stringValues = new ArrayList<Comparable>();
-                            for (Comparable value : keys) {
-                                stringValues.add(value.toString());
-                            }
-                            keys = stringValues;
-                        }
-
-                        if (finalProgressDialog == null || !finalProgressDialog.isRunCanceled()) {
-                            viewIndexes = new ArrayList<Integer>();
-                            Collections.sort(keys);
-                            for (Comparable key : keys) {
-                                viewIndexes.addAll(valueToRowMap.get(key));
-                            }
-                            lastColumnSorted = finalColumn;
-                        }
-
-                    } catch (Exception ex) {
-                        catchException(ex);
-                    } finally {
-                        setSelfUpdating(true);
-                    }
-                    if (finalProgressDialog != null) {
-                        finalProgressDialog.setRunFinished();
-                    }
-                    fireTableDataChanged();
-                }
-            }.start();
+            sortColumn(column, aProgressDialog);
         }
+
+        sortAscending = !sortAscending;
+    }
+
+    /**
+     * Sort the given columns in ascending order.
+     *
+     * @param column the column to sort on
+     * @param aProgressDialog a progress dialog
+     */
+    private void sortColumn(int column, ProgressDialogX aProgressDialog) {
+
+        final int finalColumn = column;
+        this.progressDialog = aProgressDialog;
+        progressDialog.resetSecondaryProgressBar();
+        progressDialog.setTitle("Sorting. Please Wait...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setMaxProgressValue(getRowCount());
+        progressDialog.setValue(0);
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    if (progressDialog != null) {
+                        progressDialog.setVisible(true);
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
+            }
+        }, "ProgressDialog").start();
+
+        new Thread("SortThread") {
+            @Override
+            public void run() {
+
+                try {
+                    setSelfUpdating(false);
+                    loadDataForColumn(finalColumn, progressDialog);
+
+                    initiateSorter();
+                    lastColumnSorted = 0;
+
+                    HashMap<Comparable, ArrayList<Integer>> valueToRowMap = new HashMap<Comparable, ArrayList<Integer>>();
+                    boolean comparable = false, string = false;
+
+                    for (int row = 0; row < getRowCount() && (progressDialog != null && !progressDialog.isRunCanceled()); row++) {
+                        Object tableValue = getValueAt(row, finalColumn);
+                        Comparable key;
+                        if (tableValue instanceof Comparable) {
+                            key = (Comparable) tableValue;
+                            comparable = true;
+                        } else {
+                            key = tableValue.toString();
+                            string = true;
+                        }
+                        ArrayList<Integer> rows = valueToRowMap.get(key);
+                        if (rows == null) {
+                            rows = new ArrayList<Integer>();
+                            valueToRowMap.put(key, rows);
+                        }
+                        rows.add(row);
+                        if (progressDialog != null) {
+                            progressDialog.increaseProgressValue();
+                        }
+                    }
+
+                    if (progressDialog != null && progressDialog.isRunCanceled()) {
+                        progressDialog.setRunFinished();
+                        return;
+                    }
+
+                    ArrayList<Comparable> keys = new ArrayList<Comparable>(valueToRowMap.keySet());
+                    if (string && comparable) {
+                        ArrayList<Comparable> stringValues = new ArrayList<Comparable>();
+                        for (Comparable value : keys) {
+                            stringValues.add(value.toString());
+                        }
+                        keys = stringValues;
+                    }
+
+                    if (progressDialog == null || !progressDialog.isRunCanceled()) {
+                        viewIndexes = new ArrayList<Integer>();
+                        Collections.sort(keys);
+                        for (Comparable key : keys) {
+                            viewIndexes.addAll(valueToRowMap.get(key));
+                        }
+                        lastColumnSorted = finalColumn;
+                    }
+
+                } catch (Exception ex) {
+                    catchException(ex);
+                } finally {
+                    setSelfUpdating(true);
+                }
+                if (progressDialog != null) {
+                    progressDialog.setRunFinished();
+                }
+                fireTableDataChanged();
+            }
+        }.start();
     }
 
     /**
      * Convenience method adding a row sorter listener to the given JTable.
      *
-     * @param jTable
+     * @param jTable the table to add the resetSorting listener to
      * @param progressDialog progress dialog used to display progress or cancel
      * while sorting. Can be null.
      */
     public static void addSortListener(JTable jTable, ProgressDialogX progressDialog) {
+
         final JTableHeader proteinTableHeader = jTable.getTableHeader();
         final JTable finalTable = jTable;
         final ProgressDialogX progressDialogX = progressDialog;
@@ -371,7 +410,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
             }
         });
 
-        // set the arrows indicating the current sort order
+        // set the arrows indicating the current resetSorting order
         final TableCellRenderer r = finalTable.getTableHeader().getDefaultRenderer();
         TableCellRenderer wrapper = new TableCellRenderer() {
             @Override
@@ -380,12 +419,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                 if (comp instanceof JLabel) {
                     JLabel label = (JLabel) comp;
                     label.setIcon(getSortIcon(table, column));
-                    label.setHorizontalTextPosition(SwingConstants.LEFT);
-                    // @TODO: aling text to the left and the icon to the right...
-
+                    label.setHorizontalTextPosition(SwingConstants.LEFT); // @TODO: align text to the left and the icon to the right...
                     finalTable.getTableHeader().revalidate();
                     finalTable.getTableHeader().repaint();
-
                 }
                 return comp;
             }
@@ -394,12 +430,13 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
              * Implements the logic to choose the appropriate icon.
              */
             private Icon getSortIcon(JTable table, int column) {
-                if (table.getModel() instanceof SelfUpdatingTableModel && ((SelfUpdatingTableModel) table.getModel()).lastColumnSorted == column
+                if (table.getModel() instanceof SelfUpdatingTableModel
+                        && ((SelfUpdatingTableModel) table.getModel()).lastColumnSorted == column
                         && !((SelfUpdatingTableModel) table.getModel()).unsorted) {
                     if (((SelfUpdatingTableModel) table.getModel()).sortAscending == false) {
-                        return UIManager.getIcon("Table.ascendingSortIcon");
-                    } else {
                         return UIManager.getIcon("Table.descendingSortIcon");
+                    } else {
+                        return UIManager.getIcon("Table.ascendingSortIcon");
                     }
                 } else {
                     return null;

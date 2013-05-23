@@ -8,11 +8,10 @@ import java.io.InputStreamReader;
 
 /**
  * A stream gobbler.
- * 
+ *
  * @author Davy Maddelein
  */
 public class StreamGobbler implements Runnable {
-
 
     /**
      * The input stream.
@@ -26,11 +25,14 @@ public class StreamGobbler implements Runnable {
      * The buffered writer.
      */
     private BufferedWriter bw;
+    /**
+     * The string builder.
+     */
     private StringBuilder builder = new StringBuilder();
 
     /**
      * Constructor.
-     * 
+     *
      * @param is the input stream
      * @param type the stream type
      * @param bw the buffered writer
@@ -56,6 +58,12 @@ public class StreamGobbler implements Runnable {
         }
 
     }
+
+    /**
+     * Returns the messages.
+     * 
+     * @return the messages
+     */
     public String getMessages() {
         return builder.toString();
     }

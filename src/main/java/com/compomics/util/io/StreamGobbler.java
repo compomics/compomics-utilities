@@ -11,7 +11,8 @@ import java.io.InputStreamReader;
  * 
  * @author Davy Maddelein
  */
-public class StreamGobbler extends Thread {
+public class StreamGobbler implements Runnable {
+
 
     /**
      * The input stream.
@@ -25,6 +26,7 @@ public class StreamGobbler extends Thread {
      * The buffered writer.
      */
     private BufferedWriter bw;
+    private StringBuilder builder = new StringBuilder();
 
     /**
      * Constructor.
@@ -47,9 +49,14 @@ public class StreamGobbler extends Thread {
             String line = null;
             while ((line = br.readLine()) != null) {
                 bw.write(type + ": " + line);
+                builder.append(line);
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+
+    }
+    public String getMessages() {
+        return builder.toString();
     }
 }

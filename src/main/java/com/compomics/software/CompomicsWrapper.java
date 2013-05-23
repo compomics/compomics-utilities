@@ -290,22 +290,10 @@ public class CompomicsWrapper {
             int error;
             String temp = "";
             StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), "ERROR", bw);
-            //Scanner errorScanner = new Scanner(p.getErrorStream());
             StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream(), "INPUT", new BufferedWriter(new OutputStreamWriter(new NullOutputStream())));
-            errorGobbler.start();
-            inputGobbler.start();
+            errorGobbler.run();
+            inputGobbler.run();
 
-            // get input from scanner and check for errors
-            /**
-             * while (errorScanner.hasNext()) {
-             *
-             * String tempOutput = errorScanner.next() + " ";
-             *
-             * if (useStartUpLog) { System.out.print(tempOutput);
-             * bw.write(tempOutput); }
-             *
-             * temp += tempOutput; error = true; }
-             */
             error = p.waitFor();
 
             if (useStartUpLog) {
@@ -317,7 +305,7 @@ public class CompomicsWrapper {
             if (error != 0) {
 
                 firstTry = false;
-                temp = temp.toLowerCase();
+                temp = errorGobbler.getMessages().toLowerCase();
 
                 // if needed, try re-launching with reduced memory settings
                 if (temp.contains("could not create the java virtual machine")) {

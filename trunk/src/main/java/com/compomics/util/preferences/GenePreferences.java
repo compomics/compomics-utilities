@@ -28,7 +28,7 @@ public class GenePreferences implements Serializable {
     /**
      * The serial number for serialization compatibility.
      */
-    //static final long serialVersionUID = 3298905131097982664L; // @TODO: add real value!!
+    static final long serialVersionUID = -1286840382594446279L;
     /**
      * The folder where gene mapping related info is stored.
      */
@@ -80,6 +80,30 @@ public class GenePreferences implements Serializable {
      * Create a new GenePreferences object.
      */
     public GenePreferences() {
+    }
+
+    /**
+     * Return the protein evidence type as text.
+     *
+     * @param type the type of evidence
+     * @return the protein evidence type as text
+     */
+    public static String getProteinEvidencAsString(Integer type) {
+
+        switch (type) {
+            case 1:
+                return "Protein";
+            case 2:
+                return "Transcript";
+            case 3:
+                return "Homology";
+            case 4:
+                return "Predicted";
+            case 5:
+                return "Uncertain";
+            default:
+                return null;
+        }
     }
 
     /**

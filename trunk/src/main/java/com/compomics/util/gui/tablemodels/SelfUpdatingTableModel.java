@@ -61,7 +61,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     /**
      * If true the current sorting is ascending.
      */
-    private boolean sortAscending = true;
+    private boolean sortAscending = false;
     /**
      * If true the table has not yet been sorted.
      */
@@ -251,7 +251,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * interrupt the process
      */
     public void resetSorting(ProgressDialogX aProgressDialog) {
-        
+
         if (!unsorted) {
             sortColumn(lastColumnSorted, aProgressDialog);
 
@@ -276,6 +276,8 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     public void sort(int column, ProgressDialogX aProgressDialog) {
 
+        sortAscending = !sortAscending;
+
         if (column == lastColumnSorted) {
             if (viewIndexes == null || viewIndexes.size() != getRowCount()) {
                 initiateSorter();
@@ -285,8 +287,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         } else {
             sortColumn(column, aProgressDialog);
         }
-
-        sortAscending = !sortAscending;
     }
 
     /**

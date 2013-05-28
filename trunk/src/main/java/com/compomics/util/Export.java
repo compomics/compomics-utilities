@@ -22,7 +22,7 @@ import org.w3c.dom.svg.SVGDocument;
 /**
  * Includes export to figure formats for Components and JFreeCharts.
  *
- * @author  Harald Barsnes
+ * @author Harald Barsnes
  */
 public class Export {
 
@@ -67,8 +67,8 @@ public class Export {
     }
 
     /**
-     * Draws the selected component (assumed to be a Component) into the provided
-     * SVGGraphics2D object.
+     * Draws the selected component (assumed to be a Component) into the
+     * provided SVGGraphics2D object.
      *
      * @param component
      * @param bounds

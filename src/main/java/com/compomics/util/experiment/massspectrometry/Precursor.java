@@ -4,7 +4,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 
 /**
- * This class modilizes the precursor.
+ * This class models a precursor.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes

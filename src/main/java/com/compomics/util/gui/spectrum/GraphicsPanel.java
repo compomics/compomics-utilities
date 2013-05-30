@@ -2010,7 +2010,7 @@ public abstract class GraphicsPanel extends JPanel {
                 }
 
                 // now we can mark the rest of the units
-                while (lTagValue < aMax) {
+                while (lTagValue < aMax && distanceBetweenTags > 0) {
                     int xLoc = (int) (aPadding + (lTagValue * scaleUnitXTags));
                     if (xLoc < (aPadding + aXAxisWidth)) {
                         g.drawLine(xLoc, xAxisYLocation - aPadding, xLoc, xAxisYLocation - aPadding + 3);
@@ -2025,7 +2025,7 @@ public abstract class GraphicsPanel extends JPanel {
                             g.drawString(label, xLoc - (labelWidth / 2), xAxisYLocation - aPadding + labelHeight);
                         }
                     }
-                    lTagValue = lTagValue + distanceBetweenTags;
+                    lTagValue += distanceBetweenTags;
                 }
 
             } else {

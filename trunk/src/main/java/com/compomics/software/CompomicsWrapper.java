@@ -489,7 +489,7 @@ public class CompomicsWrapper {
      * "peptide-shaker"
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
-        checkForNewVersion(currentVersion, toolName, googleCodeToolName, true, "");
+        checkForNewVersion(currentVersion, toolName, googleCodeToolName, true, "", ".zip");
     }
 
     /**
@@ -503,14 +503,15 @@ public class CompomicsWrapper {
      * download page is opened, false only opens the download page
      * @param zipFileTag the zip file tag, e.g., SearchGUI-1.10.4_windows.zip
      * has the tag "_windows"
+     * @param zipFileType the zip file type, e.g., ".zip" or ".tar.gz" 
      */
-    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading, String zipFileTag) {
+    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading, String zipFileTag, String zipFileType) {
 
         try {
             boolean deprecatedOrDeleted = false;
             URL downloadPage = new URL(
                     "http://code.google.com/p/" + googleCodeToolName + "/downloads/detail?name=" + toolName + "-"
-                    + currentVersion + zipFileTag + ".zip");
+                    + currentVersion + zipFileTag + zipFileType);
 
             if ((java.net.HttpURLConnection) downloadPage.openConnection() != null) {
 

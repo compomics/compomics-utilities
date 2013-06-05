@@ -186,6 +186,25 @@ public class IdFilter implements Serializable {
             }
         }
 
+
+        // below is my attempt at fixing the issue with too many peptide being kicked out
+
+//        //ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+//
+//        for (String modName : modMatches.keySet()) {
+//            //for (ModificationMatch modMatch : modificationMatches) {
+//                try {
+//                    ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modName));
+//                    if (possiblePositions.size() < modMatches.get(modName).size()) {
+//                        return false;
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return false;
+//                }
+//            //}
+//        }
+
         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
 
         for (String modName : modMatches.keySet()) {

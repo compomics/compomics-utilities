@@ -488,8 +488,7 @@ public class SequenceFactory {
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String line;
-        boolean decoy = false,
-                defaultReversed = false;
+        boolean decoy = false, defaultReversed = false;
         int nTarget = 0;
         long index = bufferedRandomAccessFile.getFilePointer();
 

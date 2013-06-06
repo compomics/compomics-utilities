@@ -323,7 +323,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 okButton.setEnabled(false);
             }
         }
-
     }//GEN-LAST:event_speciesJComboBoxActionPerformed
 
     /**

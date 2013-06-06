@@ -65,8 +65,8 @@ public class IdFilter implements Serializable {
      * Constructor with default settings.
      */
     public IdFilter() {
-        minPepLength = -1;
-        maxPepLength = -1;
+        minPepLength = 4;
+        maxPepLength = 40;
         mascotMaxEvalue = -1;
         omssaMaxEvalue = -1;
         xtandemMaxEvalue = -1;

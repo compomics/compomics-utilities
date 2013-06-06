@@ -24,7 +24,7 @@ public class IdFilter implements Serializable {
 
     /**
      * Serial number for backward compatibility.
-     */    
+     */
     static final long serialVersionUID = 8416219001106063781L;
     /**
      * The minimal peptide length allowed.
@@ -78,12 +78,18 @@ public class IdFilter implements Serializable {
     /**
      * Constructor for an Identification filter.
      *
-     * @param minPepLength The minimal peptide length allowed (0 or less for disabled)
-     * @param maxPepLength The maximal peptide length allowed (0 or less for disabled)
-     * @param mascotMaxEvalue The maximal Mascot e-value allowed (0 or less for disabled)
-     * @param omssaMaxEvalue The maximal OMSSA e-value allowed (0 or less for disabled)
-     * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed (0 or less for disabled)
-     * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for disabled)
+     * @param minPepLength The minimal peptide length allowed (0 or less for
+     * disabled)
+     * @param maxPepLength The maximal peptide length allowed (0 or less for
+     * disabled)
+     * @param mascotMaxEvalue The maximal Mascot e-value allowed (0 or less for
+     * disabled)
+     * @param omssaMaxEvalue The maximal OMSSA e-value allowed (0 or less for
+     * disabled)
+     * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed (0 or less
+     * for disabled)
+     * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for
+     * disabled)
      * @param isPpm Boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
      * @param unknownPTM Shall peptides presenting unknownPTMs be ignored
@@ -171,7 +177,7 @@ public class IdFilter implements Serializable {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
-        // check if there are more ptms than ptm sites
+        // get the variable ptms and the number of times they occur
         HashMap<String, ArrayList<ModificationMatch>> modMatches = new HashMap<String, ArrayList<ModificationMatch>>();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             if (modMatch.isVariable()) {
@@ -186,38 +192,16 @@ public class IdFilter implements Serializable {
             }
         }
 
-
-        // below is my attempt at fixing the issue with too many peptide being kicked out
-
-//        //ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-//
-//        for (String modName : modMatches.keySet()) {
-//            //for (ModificationMatch modMatch : modificationMatches) {
-//                try {
-//                    ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modName));
-//                    if (possiblePositions.size() < modMatches.get(modName).size()) {
-//                        return false;
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-//            //}
-//        }
-
-        ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-
+        // check if there are more ptms than ptm sites
         for (String modName : modMatches.keySet()) {
-            for (ModificationMatch modMatch : modificationMatches) {
-                try {
-                    ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modMatch.getTheoreticPtm()));
-                    if (possiblePositions.size() < modMatches.get(modName).size()) {
-                        return false;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modName));
+                if (possiblePositions.size() < modMatches.get(modName).size()) {
                     return false;
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
         }
 

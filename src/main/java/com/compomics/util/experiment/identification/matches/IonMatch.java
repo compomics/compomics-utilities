@@ -59,7 +59,8 @@ public class IonMatch extends ExperimentObject {
     /**
      * Get the absolute matching error in Da.
      *
-     * @param subtractIsotope indicates whether the isotope number shall be subtracted
+     * @param subtractIsotope indicates whether the isotope number shall be
+     * subtracted
      * @return the absolute matching error
      */
     public double getAbsoluteError(boolean subtractIsotope) {
@@ -82,7 +83,8 @@ public class IonMatch extends ExperimentObject {
     /**
      * Get the relative m/z matching error in ppm.
      *
-     * @param subtractIsotope indicates whether the isotope number shall be subtracted
+     * @param subtractIsotope indicates whether the isotope number shall be
+     * subtracted
      * @return the relative matching error
      */
     public double getRelativeError(boolean subtractIsotope) {
@@ -126,6 +128,8 @@ public class IonMatch extends ExperimentObject {
      *
      * @param isPpm a boolean indicating whether the error should be retrieved
      * in ppm (true) or in Dalton (false)
+     * @param subtractIsotope indicates whether the isotope number shall be
+     * subtracted
      * @return the match m/z error
      */
     public double getError(boolean isPpm, boolean subtractIsotope) {

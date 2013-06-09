@@ -1,6 +1,7 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.DummyFrame;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.awt.Frame;
 import java.awt.Image;
@@ -583,6 +584,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (runFinished || runCanceled) {
+
+            // remove the dummy frame parent as well
+            if (waitingHandlerParent instanceof DummyFrame) {
+                ((DummyFrame) waitingHandlerParent).dispose();
+            }
+
             this.dispose();
         } else {
             setRunCanceled();

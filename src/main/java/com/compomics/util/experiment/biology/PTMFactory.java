@@ -1276,4 +1276,170 @@ public class PTMFactory implements Serializable {
             return new Color(r, g, b);
         }
     }
+
+    /**
+     * Tries to convert a PRIDE PTM to utilities PTM name, and add it to the
+     * modification profile. Unknown PTMs are added to the unknown PTMs
+     * arraylist.
+     *
+     * @param pridePtmName the PRIDE PTM name
+     * @param modProfile the modification profile to add the PTMs to
+     * @param unknownPtms the list of unknown PTMS, updated during this method
+     * @param isFixed if true, the PTM will be added as a fixed modification
+     * @return a pride parameters report as a string (for use in PRIDE Reshake)
+     */
+    public String convertPridePtm(String pridePtmName, ModificationProfile modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
+
+        // @TODO: add more mappings
+
+        String prideParametersReport = "";
+
+        // special cases for when multiple ptms are needed
+        if (pridePtmName.equalsIgnoreCase("iTRAQ4plex")) {
+
+            modProfile.addFixedModification(getPTM("itraq114 on k"));
+            prideParametersReport += "<br>" + "itraq114 on k" + " (assumed fixed)";
+            modProfile.addFixedModification(getPTM("itraq114 on nterm"));
+            prideParametersReport += "<br>" + "itraq114 on nterm" + " (assumed fixed)";
+
+            modProfile.addVariableModification(getPTM("itraq114 on y"));
+            prideParametersReport += "<br>" + "itraq114 on y" + " (assumed variable)";
+
+        } else if (pridePtmName.equalsIgnoreCase("iTRAQ8plex")) {
+
+            modProfile.addFixedModification(getPTM("itraq8plex:13c(6)15n(2) on k"));
+            prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on k" + " (assumed fixed)";
+            modProfile.addFixedModification(getPTM("itraq8plex:13c(6)15n(2) on nterm"));
+            prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on nterm" + " (assumed fixed)";
+
+            modProfile.addVariableModification(getPTM("itraq8plex:13c(6)15n(2) on y"));
+            prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on y" + " (assumed variable)";
+
+        } else if (pridePtmName.equalsIgnoreCase("TMT6plex")) {
+
+            modProfile.addFixedModification(getPTM("tmt 6-plex on k"));
+            prideParametersReport += "<br>" + "tmt 6-plex on k" + " (assumed fixed)";
+            modProfile.addFixedModification(getPTM("tmt 6-plex on n-term peptide"));
+            prideParametersReport += "<br>" + "tmt 6-plex on n-term peptide" + " (assumed fixed)";
+
+        } else if (pridePtmName.equalsIgnoreCase("Phosphorylation")) {
+
+            modProfile.addVariableModification(getPTM("phosphorylation of s"));
+            prideParametersReport += "<br>" + "phosphorylation of s" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("phosphorylation of t"));
+            prideParametersReport += "<br>" + "phosphorylation of t" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("phosphorylation of y"));
+            prideParametersReport += "<br>" + "phosphorylation of y" + " (assumed variable)";
+
+        } else if (pridePtmName.equalsIgnoreCase("Palmitoylation")) {
+
+            modProfile.addVariableModification(getPTM("palmitoylation of c"));
+            prideParametersReport += "<br>" + "palmitoylation of c" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("palmitoylation of k"));
+            prideParametersReport += "<br>" + "palmitoylation of k" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("palmitoylation of s"));
+            prideParametersReport += "<br>" + "palmitoylation of s" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("palmitoylation of t"));
+            prideParametersReport += "<br>" + "palmitoylation of t" + " (assumed variable)";
+
+        } else if (pridePtmName.equalsIgnoreCase("Formylation")) {
+
+            modProfile.addVariableModification(getPTM("formylation of k"));
+            prideParametersReport += "<br>" + "formylation of k" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("formylation of peptide n-term"));
+            prideParametersReport += "<br>" + "formylation of peptide n-term" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("formylation of protein c-term"));
+            prideParametersReport += "<br>" + "formylation of protein c-term" + " (assumed variable)";
+
+        } else if (pridePtmName.equalsIgnoreCase("Carbamylation")) {
+
+            modProfile.addVariableModification(getPTM("carbamylation of k"));
+            prideParametersReport += "<br>" + "carbamylation of k" + " (assumed variable)";
+            modProfile.addVariableModification(getPTM("carbamylation of n-term peptide"));
+            prideParametersReport += "<br>" + "carbamylation of n-term peptide" + " (assumed variable)";
+
+        } else {
+
+            // single ptm mapping
+
+            String utilitiesPtmName = convertPridePtmToUtilitiesPtm(pridePtmName);
+
+            if (utilitiesPtmName != null) {
+                if (!modProfile.contains(utilitiesPtmName)) {
+                    if (isFixed) {
+                        modProfile.addFixedModification(getPTM(utilitiesPtmName));
+                        prideParametersReport += "<br>" + utilitiesPtmName + " (assumed fixed)";
+                    } else {
+                        modProfile.addVariableModification(getPTM(utilitiesPtmName));
+                        prideParametersReport += "<br>" + utilitiesPtmName + " (assumed variable)";
+                    }
+                }
+            } else {
+                if (!unknownPtms.contains(pridePtmName)) {
+                    unknownPtms.add(pridePtmName);
+                }
+            }
+        }
+
+        return prideParametersReport;
+    }
+
+    /**
+     * Tries to convert a PRIDE PTM name to utilities PTM name.
+     *
+     * @param pridePtmName the PRIDE PTM name
+     * @return the utilities PTM name, or null if there is no mapping
+     */
+    private String convertPridePtmToUtilitiesPtm(String pridePtmName) {
+
+        if (pridePtmName.equalsIgnoreCase("Carbamidomethyl")) {
+            return "carbamidomethyl c";
+        } else if (pridePtmName.equalsIgnoreCase("Oxidation")) {
+            return "oxidation of m";
+        } else if (pridePtmName.equalsIgnoreCase("Acetylation")) {
+            return "acetylation of k";
+        } else if (pridePtmName.equalsIgnoreCase("Amidation")) {
+            return "amidation of peptide c-term";
+        } else if (pridePtmName.equalsIgnoreCase("Carboxymethyl")) {
+            return "carboxymethyl c";
+        } else if (pridePtmName.equalsIgnoreCase("Farnesylation")) {
+            return "farnesylation of c";
+        } else if (pridePtmName.equalsIgnoreCase("Geranyl-geranyl")) {
+            return "geranyl-geranyl";
+        } else if (pridePtmName.equalsIgnoreCase("Guanidination")) {
+            return "guanidination of k";
+        } else if (pridePtmName.equalsIgnoreCase("Homoserine")) {
+            return "homoserine";
+        } else if (pridePtmName.equalsIgnoreCase("Homoserine lactone")) {
+            return "homoserine lactone";
+        } else if (pridePtmName.equalsIgnoreCase("ICAT-C")) {
+            return "icat light";
+        } else if (pridePtmName.equalsIgnoreCase("ICAT-C:13C(9)")) {
+            return "icat heavy";
+        } else if (pridePtmName.equalsIgnoreCase("Lipoyl")) {
+            return "lipoyl k";
+        } else if (pridePtmName.equalsIgnoreCase("Methylthio")) {
+            return "beta-methylthiolation of d (duplicate of 13)";
+        } else if (pridePtmName.equalsIgnoreCase("NIPCAM(C)")) {
+            return "nipcam";
+        } else if (pridePtmName.equalsIgnoreCase("Phosphopantetheine")) {
+            return "phosphopantetheine s";
+        } else if (pridePtmName.equalsIgnoreCase("Propionamide(C)")) {
+            return "propionamide c";
+        } else if (pridePtmName.equalsIgnoreCase("Pyridylethyl")) {
+            return "s-pyridylethylation of c";
+        } else if (pridePtmName.equalsIgnoreCase("Pyridylethyl")) {
+            return "s-pyridylethylation of c";
+        } else if (pridePtmName.equalsIgnoreCase("Sulfo")) {
+            return "sulfation of y"; // not completely sure about this one...
+        } else if (pridePtmName.equalsIgnoreCase("Dehydratation")) {
+            return "dehydro of s and t";
+        } else if (pridePtmName.equalsIgnoreCase("Deamination")) {
+            return "deamidation of n and q"; // not that this does not separate between deamidation on only n and deamidation on n and q
+        } else if (pridePtmName.equalsIgnoreCase("Dioxidation")) {
+            return "sulphone of m";
+        } else {
+            return null;
+        }
+    }
 }

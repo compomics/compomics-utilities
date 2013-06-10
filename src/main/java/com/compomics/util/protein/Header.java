@@ -78,7 +78,7 @@ public class Header implements Cloneable, Serializable {
      * this is only an internally consistent naming scheme included to be able
      * to later separate the databases. For example when linking to the online
      * version of the database. The links themselves are not included as these
-     * might change outside the control of the compomics-utilties library.
+     * might change outside the control of the compomics-utilities library.
      */
     public enum DatabaseType {
 
@@ -99,6 +99,19 @@ public class Header implements Cloneable, Serializable {
      * abbreviated header String.
      */
     private String iDescription = null;
+    /**
+     * A short protein description, removing all but the protein description
+     * itself. For example: "GRP78_HUMAN 78 kDa glucose-regulated protein
+     * OS=Homo sapiens GN=HSPA5 PE=1 SV=2" becomes "78 kDa glucose-regulated
+     * protein".
+     */
+    private String iDescriptionShort = null;
+    /**
+     * Protein name, the protein name extracted from the protein description.
+     * For example: "GRP78_HUMAN 78 kDa glucose-regulated protein OS=Homo
+     * sapiens GN=HSPA5 PE=1 SV=2" returns "GRP78_HUMAN".
+     */
+    private String iDescriptionProteinName = null;
     /**
      * The name of the gene the protein comes from. Note that this is only
      * available for UniProt-based databases.
@@ -810,10 +823,10 @@ public class Header implements Cloneable, Serializable {
                     } else {
                         //try >nonsense|accession|description
                         if (aFASTAHeader.lastIndexOf("|") >= 0) {
-                            String end = aFASTAHeader.substring(aFASTAHeader.indexOf("|")+1);
+                            String end = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
                             if (end.indexOf("|") >= 0) {
                                 result.iAccession = end.substring(0, end.indexOf("|"));
-                                result.iDescription = end.substring(end.indexOf("|")+1);
+                                result.iDescription = end.substring(end.indexOf("|") + 1);
                             }
                         }
 
@@ -901,6 +914,22 @@ public class Header implements Cloneable, Serializable {
         iDescription = aDescription;
     }
 
+    public String getDescriptionShort() {
+        return iDescriptionShort;
+    }
+
+    public void setDescriptionShort(String aDescriptionShort) {
+        iDescriptionShort = aDescriptionShort;
+    }
+
+    public String getDescriptionProteinName() {
+        return iDescriptionProteinName;
+    }
+
+    public void setDescriptionProteinName(String aDescriptionProteinName) {
+        iDescriptionProteinName = aDescriptionProteinName;
+    }
+
     public String getGeneName() {
         return iGeneName;
     }
@@ -940,7 +969,24 @@ public class Header implements Cloneable, Serializable {
     public void setRest(String aRest) {
         iRest = aRest;
     }
-    
+
+    /**
+     * Returns a simplified protein description for a UniProt header. For
+     * example "GRP78_HUMAN 78 kDa glucose-regulated protein OS=Homo sapiens
+     * GN=HSPA5 PE=1 SV=2" becomes "78 kDa glucose-regulated protein
+     * [GRP78_HUMAN]". For non UniProt headers the normal protein description is
+     * returned.
+     *
+     * @return a simplified protein description for a UniProt header
+     */
+    public String getSimpleProteinDescription() {
+        if (databaseType == DatabaseType.UniProt) {
+            return iDescriptionShort + " (" + iDescriptionProteinName + ")";
+        } else {
+            return iDescription;
+        }
+    }
+
     /**
      * This method returns an abbreviated version of the Header, suitable for
      * inclusion in FASTA formatted files. <br /> The abbreviated header is
@@ -1023,7 +1069,7 @@ public class Header implements Cloneable, Serializable {
     public String toString() {
         return toString("");
     }
-    
+
     /**
      * This method reports on the entire header, with the given decoy tag added.
      *
@@ -1047,7 +1093,7 @@ public class Header implements Cloneable, Serializable {
         }
 
         result += decoyTag;
-        
+
         return result;
     }
 
@@ -1275,6 +1321,7 @@ public class Header implements Cloneable, Serializable {
      * @param header the header to parse.
      */
     private static void parseUniProtDescription(Header header) {
+
         // try to get the gene name from the description
         if (header.iDescription.indexOf(" GN=") != -1) {
             int geneStartIndex = header.iDescription.indexOf(" GN=") + 4;
@@ -1317,8 +1364,10 @@ public class Header implements Cloneable, Serializable {
 
             header.iTaxonomy = header.iDescription.substring(taxonomyStartIndex, taxonomyEndIndex);
 
-            // now we could also shorten the protein description
-            // header.iDescription = header.iDescription.substring(0, taxonomyStartIndex - 1); // @TODO: if implemented we also have to update the tests
+            // now we can also shorten the protein description
+            String tempShortHeader = header.iDescription.substring(0, taxonomyStartIndex - 3);
+            header.iDescriptionShort = tempShortHeader.substring(tempShortHeader.indexOf(" ") + 1).trim();
+            header.iDescriptionProteinName = tempShortHeader.substring(0, tempShortHeader.indexOf(" "));
         }
     }
 }

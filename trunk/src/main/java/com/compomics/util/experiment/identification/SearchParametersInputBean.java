@@ -87,6 +87,10 @@ public class SearchParametersInputBean {
      * of the duplicated titles.
      */
     private boolean fixDuplicateSpectrumTitles = false;
+    /**
+     * Number of threads to use. Defaults to the number of cores available.
+     */
+    private int nThreads = Runtime.getRuntime().availableProcessors();
 
     /**
      * Takes all the arguments from a command line.
@@ -339,6 +343,12 @@ public class SearchParametersInputBean {
                 fixDuplicateSpectrumTitles = false;
             }
         }
+
+        // get the number of threads
+        if (aLine.hasOption(SearchParametersCLIParams.THREADS.id)) {
+            String arg = aLine.getOptionValue(SearchParametersCLIParams.THREADS.id);
+            nThreads = new Integer(arg);
+        }
     }
 
     /**
@@ -501,6 +511,15 @@ public class SearchParametersInputBean {
      */
     public void setFixDuplicateSpectrumTitles(boolean fixDuplicateSpectrumTitles) {
         this.fixDuplicateSpectrumTitles = fixDuplicateSpectrumTitles;
+    }
+
+    /**
+     * Returns the number of threads to use.
+     *
+     * @return the number of threads to use
+     */
+    public int getNThreads() {
+        return nThreads;
     }
 
     /**

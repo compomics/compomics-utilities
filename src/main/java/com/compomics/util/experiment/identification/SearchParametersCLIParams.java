@@ -27,6 +27,7 @@ public enum SearchParametersCLIParams {
     ENZYME("enzyme", "Enzyme, default is 'Trypsin'. The available enzymes are listed in the GUI. (Names are case sensitive.)", false),
     FIXED_MODS("fixed_mods", "The fixed modifications as a comma separated list. (Modifications are configured in the GUI.)", false),
     VARIABLE_MODS("variable_mods", "The variable modifications as a comma separated list. (Modifications are configured in the GUI.)", false),
+    THREADS("threads", "The number of threads to use for the processing. Default is the number of cores available.", false),
     
     //////////////////////////////////
     // SearchGUI specific options

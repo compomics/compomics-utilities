@@ -534,6 +534,46 @@ public class SpectrumAnnotator {
 
         return result;
     }
+    
+    /**
+     * Returns the ion matches corresponding to fragment ions indexed by amino acid number in the sequence. 1 is first amino-acid.
+     * @param iontypes The expected ions to look for
+     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * first position in the sequence (first aa is 1). let null if neutral
+     * losses should not be considered.
+     * @param charges List of expected charges
+     * @param precursorCharge the precursor charge
+     * @param spectrum The spectrum to match
+     * @param peptide The peptide of interest
+     * @param intensityLimit The intensity limit to use
+     * @param mzTolerance The m/z tolerance to use
+     * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
+     * in Da
+     * @return 
+     */
+    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
+            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm) {
+        HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
+            ArrayList<IonMatch> matches = getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm);
+        for (IonMatch ionMatch : matches) {
+            Ion ion = ionMatch.ion;
+            int number;
+            if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION) {
+                if (ion.getSubType() == PeptideFragmentIon.A_ION
+                        || ion.getSubType() == PeptideFragmentIon.B_ION
+                        || ion.getSubType() == PeptideFragmentIon.C_ION) {
+                    number = ((PeptideFragmentIon) ion).getNumber();
+                } else {
+                    number = peptide.getSequence().length() + 1 - ((PeptideFragmentIon) ion).getNumber();
+                }
+                if (!matchesMap.containsKey(number)) {
+                    matchesMap.put(number, new ArrayList<IonMatch>());
+                }
+                matchesMap.get(number).add(ionMatch);
+            }
+        }
+        return matchesMap;
+    }
 
     /**
      * Returns the expected ions in a map indexed by the possible charges.

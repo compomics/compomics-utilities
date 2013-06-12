@@ -334,4 +334,28 @@ public class PTM extends ExperimentObject {
     public boolean isStandardSearch() {
         return pattern.length() == 1;
     }
+
+    /**
+     * Returns true if the PTM is an n-term PTM.
+     * 
+     * @return true if the PTM is an n-term PTM
+     */
+    public boolean isNTerm() {
+        return type == PTM.MODN
+                || type == PTM.MODNAA
+                || type == PTM.MODNP
+                || type == PTM.MODNPAA;
+    }
+    
+    /**
+     * Returns true if the PTM is a c-term PTM.
+     * 
+     * @return true if the PTM is a c-term PTM
+     */
+    public boolean isCTerm() {
+        return type == PTM.MODC
+                || type == PTM.MODCAA
+                || type == PTM.MODCP
+                || type == PTM.MODCPAA;
+    }
 }

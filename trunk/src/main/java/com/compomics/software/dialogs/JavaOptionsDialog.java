@@ -3,6 +3,7 @@ package com.compomics.software.dialogs;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -118,6 +119,11 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
         memoryLimitLabel.setText("Memory Limit:");
 
         memoryTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        memoryTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                memoryTxtKeyReleased(evt);
+            }
+        });
 
         mbLabel.setText("MB");
 
@@ -301,6 +307,19 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
                 "Java Options - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_javaOptionsHelpJButtonActionPerformed
+
+    /**
+     * Execute the OK button if the user clicks the Enter key.
+     * 
+     * @param evt 
+     */
+    private void memoryTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_memoryTxtKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER 
+                && memoryTxt.getText().length() > 0) {
+            okButtonActionPerformed(null);
+        }
+    }//GEN-LAST:event_memoryTxtKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;

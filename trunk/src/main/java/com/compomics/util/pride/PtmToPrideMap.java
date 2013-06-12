@@ -62,7 +62,7 @@ public class PtmToPrideMap implements Serializable {
         if (ptmName.equalsIgnoreCase("methylation of K")) {
             return new CvTerm("MOD", "MOD:01681", "Methylation", "14.015650");
         } else if (ptmName.equalsIgnoreCase("oxidation of M")) {
-            return new CvTerm("MOD", "MOD:01047", "Oxidation", "15.994915");
+            return new CvTerm("MOD", "MOD:00425", "Oxidation", "15.994915");
         } else if (ptmName.equalsIgnoreCase("carboxymethyl C")) {
             return new CvTerm("MOD", "MOD:01328", "Carboxymethyl", "58.005479");
         } else if (ptmName.equalsIgnoreCase("carbamidomethyl C")) {
@@ -180,7 +180,7 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("hydroxylation of D")) {
             return new CvTerm("MOD", "MOD:00036", "hydroxylation of D", "15.994915");
         } else if (ptmName.equalsIgnoreCase("hydroxylation of K")) {
-            return new CvTerm("MOD", "MOD:01047", "hydroxylation of K", "15.994915");
+            return new CvTerm("MOD", "MOD:00425", "hydroxylation of K", "15.994915");
         } else if (ptmName.equalsIgnoreCase("hydroxylation of N")) {
             return new CvTerm("MOD", "MOD:01688", "hydroxylation of N", "15.994915");
         } else if (ptmName.equalsIgnoreCase("hydroxylation of P")) {
@@ -238,9 +238,9 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("di-O18 on peptide n-term")) {
             return new CvTerm("MOD", "MOD:00546", "O18 Labeling (2)", "4.00849");
         } else if (ptmName.equalsIgnoreCase("oxidation of H")) {
-            return new CvTerm("MOD", "MOD:01047", "Oxidation", "15.994915");
+            return new CvTerm("MOD", "MOD:00425", "Oxidation", "15.994915");
         } else if (ptmName.equalsIgnoreCase("oxidation of W")) {
-            return new CvTerm("MOD", "MOD:01047", "Oxidation", "15.994915");
+            return new CvTerm("MOD", "MOD:00425", "Oxidation", "15.994915");
         } else if (ptmName.equalsIgnoreCase("phosphopantetheine S")) {
             return new CvTerm("MOD", "MOD:00159", "Phosphopantetheine", "340.085794");
         } else if (ptmName.equalsIgnoreCase("palmitoylation of C")) {
@@ -386,9 +386,9 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("phosphorylation of H")) {
             return new CvTerm("MOD", "MOD:00696", "phosphorylated residue", "79.966331");
         } else if (ptmName.equalsIgnoreCase("oxidation of C")) {
-            return new CvTerm("MOD", "MOD:01047", "Oxidation", "15.994915");
+            return new CvTerm("MOD", "MOD:00425", "Oxidation", "15.994915");
         } else if (ptmName.equalsIgnoreCase("oxidation of Y (duplicate of 64)")) {
-            return new CvTerm("MOD", "MOD:01047", "Oxidation", "15.994915");
+            return new CvTerm("MOD", "MOD:00425", "Oxidation", "15.994915");
         } else if (ptmName.equalsIgnoreCase("Uniblue A on K")) {
             return new CvTerm("MOD", "MOD:01659", "Uniblue A", "484.039891");
         } else if (ptmName.equalsIgnoreCase("deamidation of N")) {

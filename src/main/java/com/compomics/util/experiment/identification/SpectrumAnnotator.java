@@ -294,7 +294,7 @@ public class SpectrumAnnotator {
 
     /**
      * Returns the possible neutral losses expected by default for a given
-     * peptide. /!\ this method will work only if the ptm found in the peptide
+     * peptide. /!\ this method will work only if the PTM found in the peptide
      * are in the PTMFactory.
      *
      * @param peptide the peptide of interest
@@ -302,6 +302,8 @@ public class SpectrumAnnotator {
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public static NeutralLossesMap getDefaultLosses(Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -534,9 +536,11 @@ public class SpectrumAnnotator {
 
         return result;
     }
-    
+
     /**
-     * Returns the ion matches corresponding to fragment ions indexed by amino acid number in the sequence. 1 is first amino-acid.
+     * Returns the ion matches corresponding to fragment ions indexed by amino
+     * acid number in the sequence. 1 is first amino-acid.
+     *
      * @param iontypes The expected ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->
      * first position in the sequence (first aa is 1). let null if neutral
@@ -549,12 +553,15 @@ public class SpectrumAnnotator {
      * @param mzTolerance The m/z tolerance to use
      * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
      * in Da
-     * @return 
+     * @return the ion matches corresponding to fragment ions indexed by amino
+     * acid number in the sequence
      */
     public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm) {
+
         HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
-            ArrayList<IonMatch> matches = getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm);
+        ArrayList<IonMatch> matches = getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm);
+
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
             int number;

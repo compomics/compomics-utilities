@@ -19,28 +19,22 @@ public class SerializationUtils {
      * writing the file
      */
     public static void writeObject(Object object, File destinationFile) throws IOException {
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        ObjectOutputStream oos = null;
+
+        FileOutputStream fos = new FileOutputStream(destinationFile);
         try {
-            fos = new FileOutputStream(destinationFile);
-            bos = new BufferedOutputStream(fos);
-            oos = new ObjectOutputStream(bos);
-            oos.writeObject(object);
-            oos.close();
-            bos.close();
-            fos.close();
-        } catch (IOException e) {
-            if (oos != null) {
-                oos.close();
-            }
-            if (bos != null) {
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                try {
+                    oos.writeObject(object);
+                } finally {
+                    oos.close();
+                }
+            } finally {
                 bos.close();
             }
-            if (fos != null) {
-                fos.close();
-            }
-            throw e;
+        } finally {
+            fos.close();
         }
     }
 
@@ -55,40 +49,22 @@ public class SerializationUtils {
      * is found
      */
     public static Object readObject(File serializedFile) throws IOException, ClassNotFoundException {
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        ObjectInputStream in = null;
+        FileInputStream fis = new FileInputStream(serializedFile);
         try {
-            fis = new FileInputStream(serializedFile);
-            bis = new BufferedInputStream(fis);
-            in = new ObjectInputStream(bis);
-            Object object = in.readObject();
-            in.close();
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            try {
+                ObjectInputStream in = new ObjectInputStream(bis);
+                try {
+                    Object object = in.readObject();
+                    return object;
+                } finally {
+                    in.close();
+                }
+            } finally {
+                bis.close();
+            }
+        } finally {
             fis.close();
-            bis.close();
-            return object;
-        } catch (IOException e) {
-            if (in != null) {
-                in.close();
-            }
-            if (fis != null) {
-                fis.close();
-            }
-            if (bis != null) {
-                bis.close();
-            }
-            throw e;
-        } catch (ClassNotFoundException e) {
-            if (in != null) {
-                in.close();
-            }
-            if (fis != null) {
-                fis.close();
-            }
-            if (bis != null) {
-                bis.close();
-            }
-            throw e;
         }
     }
 }

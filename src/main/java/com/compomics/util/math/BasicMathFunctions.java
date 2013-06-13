@@ -67,6 +67,9 @@ public class BasicMathFunctions {
     public static double median(ArrayList<Double> input) {
         Collections.sort(input);
         int length = input.size();
+        if (length == 0) {
+            throw new IllegalArgumentException("Attempting to estimate the median of an empty list.");
+        }
         if (length == 1) {
             return input.get(0);
         }

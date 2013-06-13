@@ -2,7 +2,9 @@ package com.compomics.util.io;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.*;
+import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -77,6 +79,77 @@ public class TarUtils {
                 origin.close();
                 fi.close();
             }
+        }
+    }
+
+    /**
+     * Extracts files from a tar
+     *
+     * @param tarFile the tar file
+     * @param waitingHandler a waiting handler displaying progress and allowing
+     * canceling the process
+     *
+     * @throws FileNotFoundException
+     * @throws ArchiveException
+     * @throws IOException
+     */
+    public static void extractFile(File tarFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
+
+        final int BUFFER = 2048;
+        byte data[] = new byte[BUFFER];
+        FileInputStream fi = new FileInputStream(tarFile);
+        try {
+            BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
+            try {
+                ArchiveInputStream tarInput = new ArchiveStreamFactory().createArchiveInputStream(bis);
+                try {
+                    long fileLength = tarFile.length();
+
+                    ArchiveEntry archiveEntry;
+
+                    while ((archiveEntry = tarInput.getNextEntry()) != null) {
+                        File destinationFile = new File(archiveEntry.getName());
+                        File destinationFolder = destinationFile.getParentFile();
+
+                        if (destinationFolder.exists() || destinationFolder.mkdirs()) {
+                            FileOutputStream fos = new FileOutputStream(destinationFile);
+                            try {
+                                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                                try {
+                                    int count;
+
+                                    while ((count = tarInput.read(data, 0, BUFFER)) != -1) {
+                                        bos.write(data, 0, count);
+                                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                            break;
+                                        }
+                                    }
+                                } finally {
+                                    bos.close();
+                                }
+                            } finally {
+                                fos.close();
+                            }
+                            if (waitingHandler != null) {
+                                int progress = (int) (100 * tarInput.getBytesRead() / fileLength);
+                                waitingHandler.setSecondaryProgressValue(progress);
+                            }
+                        } else {
+                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() + " does not exist and could not be created. Verify that you have the right to write in this directory.");
+                        }
+                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                            break;
+                        }
+                    }
+
+                } finally {
+                    tarInput.close();
+                }
+            } finally {
+                bis.close();
+            }
+        } finally {
+            fi.close();
         }
     }
 }

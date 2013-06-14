@@ -8,34 +8,36 @@ import java.util.HashMap;
 
 /**
  * This class models the quantification of a protein.
- * @TODO: make it quantification method independent
- * User: Marc
- * Date: Sep 1, 2010
- * Time: 3:31:25 PM
+ *
+ * @author Marc Vaudel
  */
 public class ProteinQuantification extends QuantificationMatch {
 
-    /**
-     * The identification protein match key
-     */
-    private String proteinKey;
+    // @TODO: make it quantification method independent
 
     /**
-     * The peptide quantification corresponding
+     * The identification protein match key.
+     */
+    private String proteinKey;
+    /**
+     * The peptide quantification corresponding.
      */
     private ArrayList<String> peptideQuantification = new ArrayList<String>();
 
     /**
-     * Constructor for the protein quantification
-     * @param proteinKey              the identified protein match key
+     * Constructor for the protein quantification.
+     *
+     * @param proteinKey the identified protein match key
      */
     public ProteinQuantification(String proteinKey) {
         this.proteinKey = proteinKey;
     }
+
     /**
-     * Constructor for the protein quantification
-     * @param proteinKey              the identified protein match key
-     * @param peptideQuantification     the corresponding peptide quantification
+     * Constructor for the protein quantification.
+     *
+     * @param proteinKey the identified protein match key
+     * @param peptideQuantification the corresponding peptide quantification
      */
     public ProteinQuantification(String proteinKey, ArrayList<String> peptideQuantification) {
         this.proteinKey = proteinKey;
@@ -43,10 +45,11 @@ public class ProteinQuantification extends QuantificationMatch {
     }
 
     /**
-     * Constructor for the protein quantification
-     * @param proteinKey              the identified protein match key
-     * @param proteinRatios             the estimated protein ratios
-     * @param peptideQuantification     the corresponding peptide quantification
+     * Constructor for the protein quantification.
+     *
+     * @param proteinKey the identified protein match key
+     * @param proteinRatios the estimated protein ratios
+     * @param peptideQuantification the corresponding peptide quantification
      */
     public ProteinQuantification(String proteinKey, ArrayList<String> peptideQuantification, HashMap<Integer, Ratio> proteinRatios) {
         this.proteinKey = proteinKey;
@@ -55,7 +58,8 @@ public class ProteinQuantification extends QuantificationMatch {
     }
 
     /**
-     * Getter for the corresponding peptide quantification
+     * Getter for the corresponding peptide quantification.
+     *
      * @return list of peptide quantification
      */
     public ArrayList<String> getPeptideQuantification() {
@@ -63,7 +67,8 @@ public class ProteinQuantification extends QuantificationMatch {
     }
 
     /**
-     * Adds a new peptide quantification in the protein quantification
+     * Adds a new peptide quantification in the protein quantification.
+     *
      * @param newPeptideQuantification the new peptide quantification
      */
     public void addPeptideQuantification(String newPeptideQuantification) {

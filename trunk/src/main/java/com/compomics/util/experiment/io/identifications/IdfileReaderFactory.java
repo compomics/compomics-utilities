@@ -107,9 +107,7 @@ public class IdfileReaderFactory {
     /**
      * This method returns the proper identification file reader depending on
      * the format of the provided file. It is very important to close the file
-     * reader after creation. //
-     *
-     * @TODO: create parsers using waiting handlers and indexed files.
+     * reader after creation.
      *
      * @param aFile the file to parse
      * @param waitingHandler a waiting handler to display the results. Can be
@@ -120,6 +118,9 @@ public class IdfileReaderFactory {
      * @throws IOException
      */
     public IdfileReader getFileReader(File aFile, WaitingHandler waitingHandler) throws SAXException, FileNotFoundException, IOException {
+
+        // @TODO: create parsers using waiting handlers and indexed files.
+
         // The return value, defaulting to null.
         IdfileReader result = null;
 

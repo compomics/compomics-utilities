@@ -123,7 +123,7 @@ public interface WaitingHandler {
      * @return true if the run is canceled
      */
     public boolean isRunCanceled();
-    
+
     /**
      * Returns true if the run is finished.
      *
@@ -170,16 +170,19 @@ public interface WaitingHandler {
      * @param messageType
      */
     public void displayHtmlMessage(JEditorPane messagePane, String title, int messageType);
+
     /**
-     * Indicates whether this waiting handler supports reports
-     * @return a boolean indicating whether this waiting handler supports reports
+     * Indicates whether this waiting handler supports reports.
+     *
+     * @return a boolean indicating whether this waiting handler supports
+     * reports
      */
     public boolean isReport();
+
     /**
      * Sets the text describing what is currently waited for.
      *
      * @param text a text describing what is currently waited for
      */
     public void setWaitingText(String text);
-    
 }

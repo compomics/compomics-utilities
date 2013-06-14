@@ -7,37 +7,39 @@ import java.util.HashMap;
 
 /**
  * This class models the quantification of a spectrum.
- * @TODO: make it quantification method independent
- * 
+ *
  * @author Marc Vaudel
  */
 public class PsmQuantification extends QuantificationMatch {
 
+    // @TODO: make it quantification method independent
+
     /**
-     * The corresponding spectrum key
+     * The corresponding spectrum key.
      */
     private String spectrumKey;
     /**
-     * The key of the spectrum match
+     * The key of the spectrum match.
      */
     private String spectrumMatchKey;
     /**
-     * The matches of the reporter ions
+     * The matches of the reporter ions.
      */
     private HashMap<Integer, IonMatch> reporterMatches = new HashMap<Integer, IonMatch>();
     /**
-     * The deisotoped intensities
+     * The deisotoped intensities.
      */
     private HashMap<Integer, Double> deisotopedIntensities = new HashMap<Integer, Double>();
     /**
-     * The reference intensity taken to estimate the ratios
+     * The reference intensity taken to estimate the ratios.
      */
     private double referenceIntensity;
 
     /**
-     * Constructor for a spectrumQuantification
+     * Constructor for a spectrumQuantification.
+     *
      * @param spectrumKey the corresponding spectrum key
-     * @param spectrumMatchKey  the corresponding spectrum match key
+     * @param spectrumMatchKey the corresponding spectrum match key
      */
     public PsmQuantification(String spectrumKey, String spectrumMatchKey) {
         this.spectrumKey = spectrumKey;
@@ -45,9 +47,10 @@ public class PsmQuantification extends QuantificationMatch {
     }
 
     /**
-     * Method to add a match between a peak and a reporter ion
-     * @param reporterIndex     static index of the reporter ion
-     * @param match             The corresponding ion match
+     * Method to add a match between a peak and a reporter ion.
+     *
+     * @param reporterIndex static index of the reporter ion
+     * @param match The corresponding ion match
      */
     public void addIonMatch(int reporterIndex, IonMatch match) {
         reporterMatches.put(reporterIndex, match);
@@ -59,7 +62,8 @@ public class PsmQuantification extends QuantificationMatch {
     }
 
     /**
-     * Getter for the key of the spectrum match
+     * Getter for the key of the spectrum match.
+     *
      * @return the key of the spectrum match
      */
     public String getSpectrumMatchKey() {
@@ -67,7 +71,8 @@ public class PsmQuantification extends QuantificationMatch {
     }
 
     /**
-     * Getter for the reporter matches
+     * Getter for the reporter matches.
+     *
      * @return matches between reporters and peaks
      */
     public HashMap<Integer, IonMatch> getReporterMatches() {
@@ -75,15 +80,17 @@ public class PsmQuantification extends QuantificationMatch {
     }
 
     /**
-     * returns the deisotoped intensities
-     * @return the deisotoped intensities 
+     * returns the deisotoped intensities.
+     *
+     * @return the deisotoped intensities
      */
     public HashMap<Integer, Double> getDeisotopedIntensities() {
         return deisotopedIntensities;
     }
 
     /**
-     * Sets the deisotoped intensities
+     * Sets the deisotoped intensities.
+     *
      * @param deisotopedIntensities the deisotoped intensities
      */
     public void setDeisotopedIntensities(HashMap<Integer, Double> deisotopedIntensities) {
@@ -91,7 +98,8 @@ public class PsmQuantification extends QuantificationMatch {
     }
 
     /**
-     * Returns the reference intensity used to estimate the ratios
+     * Returns the reference intensity used to estimate the ratios.
+     *
      * @return the reference intensity used to estimate the ratios
      */
     public double getReferenceIntensity() {
@@ -99,8 +107,10 @@ public class PsmQuantification extends QuantificationMatch {
     }
 
     /**
-     * Sets the reference intensity used to estimate the ratios
-     * @param referenceIntensity the reference intensity used to estimate the ratios
+     * Sets the reference intensity used to estimate the ratios.
+     *
+     * @param referenceIntensity the reference intensity used to estimate the
+     * ratios
      */
     public void setReferenceIntensity(double referenceIntensity) {
         this.referenceIntensity = referenceIntensity;

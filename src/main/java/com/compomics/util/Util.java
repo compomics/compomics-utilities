@@ -175,8 +175,6 @@ public class Util {
      * method, and the code calling this method therefore has to take care of
      * this if wanted.
      *
-     * @TODO a version for folder selection would be useful as well :)
-     *
      * @param parent the parent dialog or frame
      * @param aFileEnding the file type, e.g., .txt
      * @param aFileFormatDescription the file format description, e.g., (Mascot
@@ -244,6 +242,78 @@ public class Util {
             } else {
                 return newFile;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the folder selected by the user, or null if no folder was
+     * selected. Note that the last selected folder value is not updated during
+     * this method, and the code calling this method therefore has to take care
+     * of this if wanted.
+     *
+     * @param parent the parent dialog or frame
+     * @param aDialogTitle the title for the dialog
+     * @param lastSelectedFolder the last selected folder
+     * @param aFolderDescription the folder description, e.g., CPS Folder
+     * @param approveButtonText the text on the approve button
+     * @param openDialog if true the folder has to exist, if false the user will
+     * be asked if he/she wants to create the folder is missing
+     * @return the file selected by the user, or null if no file was selected
+     */
+    public static File getUserSelectedFolder(Component parent, String aDialogTitle, String lastSelectedFolder, String aFolderDescription, String approveButtonText, boolean openDialog) {
+
+        final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
+        final String folderDescription = aFolderDescription;
+
+        fileChooser.setDialogTitle(aDialogTitle);
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File myFile) {
+                return myFile.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return folderDescription;
+            }
+        };
+
+        fileChooser.setFileFilter(filter);
+
+        int returnVal = fileChooser.showDialog(parent, approveButtonText);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            File selectedFolder = fileChooser.getSelectedFile();
+
+            if (!selectedFolder.exists()) {
+                if (openDialog) {
+                    JOptionPane.showMessageDialog(parent, "The folder \'" + selectedFolder.getAbsolutePath() + "\' does not exist.\n"
+                            + "Please choose an existing folder.", "Folder Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                } else {
+                    int value = JOptionPane.showConfirmDialog(parent, "The folder \'" + selectedFolder.getAbsolutePath() + "\' does not exist.\n"
+                            + "Do you want to create it?", "Create Folder?", JOptionPane.YES_NO_OPTION);
+                    if (value == JOptionPane.NO_OPTION) {
+                        return null;
+                    } else { // yes option selected
+                        boolean success = selectedFolder.mkdir();
+
+                        if (!success) {
+                            JOptionPane.showMessageDialog(parent, "Failed to create the folder. Please create it manually and then select it.",
+                                    "File Error", JOptionPane.INFORMATION_MESSAGE);
+                            return null;
+                        }
+                    }
+                }
+            }
+
+            return selectedFolder;
         }
 
         return null;

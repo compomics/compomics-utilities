@@ -83,7 +83,7 @@ public class TarUtils {
     }
 
     /**
-     * Extracts files from a tar
+     * Extracts files from a tar.
      *
      * @param tarFile the tar file
      * @param waitingHandler a waiting handler displaying progress and allowing

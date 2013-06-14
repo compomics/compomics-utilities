@@ -155,4 +155,8 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public void setIndeterminate(boolean indeterminate) {
         // not used in command line
     }
+
+    public boolean isReport() {
+        return true;
+    }
 }

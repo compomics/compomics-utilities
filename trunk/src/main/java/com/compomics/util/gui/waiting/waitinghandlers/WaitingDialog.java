@@ -1164,4 +1164,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             waitingHandlerParent.setIconImage(waitingIcon);
         }
     }
+
+    public boolean isReport() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void appendReportOrWaitingMessage(String report, boolean includeDate, boolean addNewLine) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

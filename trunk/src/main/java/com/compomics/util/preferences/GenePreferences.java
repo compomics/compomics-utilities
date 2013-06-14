@@ -38,23 +38,23 @@ public class GenePreferences implements Serializable {
     /**
      * The species separator used in the species comboboxes.
      */
-    public final String SPECIES_SEPARATOR = "------------------------------------------------------------";
+    public final static String SPECIES_SEPARATOR = "------------------------------------------------------------";
     /**
      * The text to use to tell the user to please select a species in the list.
      */
-    public final String SELECT_SPECIES_TAG = "-- Select Species --";
+    public final static String SELECT_SPECIES_TAG = "-- Select Species --";
     /**
      * The text to use for no species selected.
      */
-    public final String NO_SPECIES_TAG = "-- (no selection) --";
+    public final static String NO_SPECIES_TAG = "-- (no selection) --";
     /**
      * The suffix to use for files containing gene mappings.
      */
-    public final String GENE_MAPPING_FILE_SUFFIX = "_gene_mappings";
+    public final static String GENE_MAPPING_FILE_SUFFIX = "_gene_mappings";
     /**
      * The suffix to use for files containing GO mappings.
      */
-    public final String GO_MAPPING_FILE_SUFFIX = "_go_mappings";
+    public final static String GO_MAPPING_FILE_SUFFIX = "_go_mappings";
     /**
      * The current species. Used for the gene mappings.
      */

@@ -13,10 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * This factory imports reporter methods details from an xml file.
+ * This factory imports reporter methods details from an XMl file.
  *
  * @author Marc Vaudel
- *
  */
 public class ReporterMethodFactory extends ExperimentObject {
 
@@ -70,22 +69,22 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * @TODO: JavaDoc missing.
+     * Save to file.
      *
-     * @param aFile
+     * @param aFile the file to save to
      */
     public void saveFile(File aFile) {
-        // @TODO: save
+        // @TODO: implement save
     }
 
     /**
-     * Imports the methods from an xml file
+     * Imports the methods from an XML file.
      *
-     * @param aFile the xml file
+     * @param aFile the XML file
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws XmlPullParserException exception thrown whenever an error
-     * occurred while parsing the xml file
+     * occurred while parsing the XML file
      */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
         methods = new ArrayList();
@@ -114,11 +113,11 @@ public class ReporterMethodFactory extends ExperimentObject {
     /**
      * Parses a bloc describing a reporter method.
      *
-     * @param parser the xml parser
+     * @param parser the XML parser
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws XmlPullParserException exception thrown whenever an error
-     * occurred while parsing the xml file
+     * occurred while parsing the XML file
      */
     private ReporterMethod parseMethod(XmlPullParser parser) throws XmlPullParserException, IOException {
 
@@ -156,14 +155,14 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * Parses an xml bloc describing a reporter ion.
+     * Parses an XML bloc describing a reporter ion.
      *
-     * @param parser the xml parser
-     * @return the reporter ion described by the pointed xml bloc
+     * @param parser the XML parser
+     * @return the reporter ion described by the pointed XML bloc
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws XmlPullParserException exception thrown whenever an error
-     * occurred while parsing the xml file
+     * occurred while parsing the XML file
      */
     private ReporterIon parseIon(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();
@@ -184,15 +183,15 @@ public class ReporterMethodFactory extends ExperimentObject {
     }
 
     /**
-     * Parses an xml bloc representing a correction factor.
+     * Parses an XML bloc representing a correction factor.
      *
-     * @param parser the xml parser
-     * @return the correction factor described in the xml bloc pointed by the
+     * @param parser the XML parser
+     * @return the correction factor described in the XML bloc pointed by the
      * parser
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws XmlPullParserException exception thrown whenever an error
-     * occurred while parsing the xml file
+     * occurred while parsing the XML file
      */
     private CorrectionFactor parseCorrectionFactor(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type = parser.next();

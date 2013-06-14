@@ -642,8 +642,7 @@ public class MgfReader {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the MGF file (
-     * @TODO get this from the random access file?)
+     * @param fileName The name of the MGF file
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -651,6 +650,8 @@ public class MgfReader {
      * not of a compatible format
      */
     public static MSnSpectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+
+        // @TODO get fileName from the random access file?
 
         bufferedRandomAccessFile.seek(index);
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
@@ -793,8 +794,7 @@ public class MgfReader {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the mgf file (
-     * @TODO get this from the random access file?)
+     * @param fileName The name of the mgf file
      * @return The next spectrum encountered
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
@@ -803,6 +803,8 @@ public class MgfReader {
      */
     public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 
+        // @TODO: get fileName from the random access file?
+        
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;

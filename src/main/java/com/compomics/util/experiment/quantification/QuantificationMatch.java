@@ -1,35 +1,39 @@
 package com.compomics.util.experiment.quantification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.quantification.Ratio;
 import java.util.HashMap;
 
 /**
  * Abstract class for a quantification match.
- * @TODO: make it quantification method independent
  *
  * @author Marc Vaudel
  */
 public abstract class QuantificationMatch extends ExperimentObject {
 
+    // @TODO: make it quantification method independent
+
     /**
      * The type of match.
      */
     public enum MatchType {
+
         Protein,
         Peptide,
         Spectrum,
         Ion,
         PTM
     }
+
     /**
      * Returns the key of a match.
      *
      * @return the key of a match
      */
     public abstract String getKey();
+
     /**
-     * Returns the type of a match
+     * Returns the type of a match.
+     *
      * @return the type of a match
      */
     public abstract MatchType getType();

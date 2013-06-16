@@ -499,31 +499,38 @@ public class ObjectsCache {
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
 
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue(loadedObjectsKeys.size() + 1); // @TODO: something wrong with the counter here? saving seems to be stuck at 100% for quite a while 
+            waitingHandler.setMaxSecondaryProgressValue((loadedObjectsKeys.size() * 2) + 1);
             waitingHandler.setSecondaryProgressDialogIndeterminate(false);
             waitingHandler.setSecondaryProgressValue(0);
         }
 
         // add the objects to the database
         for (String dbName : loadedObjectsMap.keySet()) {
+
             ObjectsDB objectsDB = databases.get(dbName);
+
             if (objectsDB == null) {
                 throw new IllegalStateException("Database " + dbName + " not loaded in cache");
             }
             for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
+
                 HashMap<String, Object> objectsToStore = new HashMap<String, Object>();
                 HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
+
                 for (String objectKey : data.keySet()) {
                     CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
                     if (entry.isModified()) {
                         objectsToStore.put(objectKey, entry.getObject());
-                    } else if (waitingHandler != null) {
+                    }
+
+                    if (waitingHandler != null) {
                         waitingHandler.increaseSecondaryProgressValue();
                         if (waitingHandler.isRunCanceled()) {
                             return;
                         }
                     }
                 }
+
                 objectsDB.insertObjects(tableName, objectsToStore, waitingHandler); // @TODO: can the objectsToStore map become too big? should we set a max size before inserting?
             }
         }

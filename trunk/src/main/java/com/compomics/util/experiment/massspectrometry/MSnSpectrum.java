@@ -154,7 +154,7 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * Writes the spectrum in the mgf format using the given writer
+     * Writes the spectrum in the mgf format using the given writer.
      *
      * @param writer1 a buffered writer where the spectrum will be written
      * @param additionalTags additional tags which will be added after the BEGIN

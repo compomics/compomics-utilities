@@ -420,7 +420,7 @@ public class SequenceFactory {
             }
         }
 
-        System.out.println("Reindexing.");
+        System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
         tempFastaIndex = createFastaIndex(currentFastaFile, waitingHandler);
 
         if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {

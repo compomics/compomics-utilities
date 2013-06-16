@@ -150,7 +150,27 @@ public class MSnSpectrum extends Spectrum {
      * @throws IOException
      */
     public void writeMgf(BufferedWriter writer1) throws IOException {
+        writeMgf(writer1, null);
+    }
+
+    /**
+     * Writes the spectrum in the mgf format using the given writer
+     *
+     * @param writer1 a buffered writer where the spectrum will be written
+     * @param additionalTags additional tags which will be added after the BEGIN
+     * IONS tag in alphabetic order
+     * @throws IOException
+     */
+    public void writeMgf(BufferedWriter writer1, HashMap<String, String> additionalTags) throws IOException {
         writer1.write("BEGIN IONS" + System.getProperty("line.separator"));
+        if (additionalTags != null) {
+            ArrayList<String> additionalTagsKeys = new ArrayList<String>(additionalTags.keySet());
+            Collections.sort(additionalTagsKeys);
+            for (String tag : additionalTagsKeys) {
+                writer1.write(tag + "=" + additionalTags.get(tag));
+                writer1.newLine();
+            }
+        }
         writer1.write("TITLE=" + spectrumTitle + System.getProperty("line.separator"));
         writer1.write("PEPMASS=" + precursor.getMz() + "\t" + precursor.getIntensity() + System.getProperty("line.separator"));
         if (precursor.hasRTWindow()) {

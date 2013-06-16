@@ -154,7 +154,7 @@ public class ObjectsDB implements Serializable {
         Statement stmt = dbConnection.createStatement();
 
         stmt.execute("CREATE table " + tableName + " ("
-                + "NAME VARCHAR(32672)," // note: 32672 is the max length for a varchar, not that we should need it...
+                + "NAME VARCHAR(32672) PRIMARY KEY," // note: 32672 is the max length for a varchar, not that we should need it...
                 + "MATCH_BLOB blob"
                 + ")");
 
@@ -209,7 +209,7 @@ public class ObjectsDB implements Serializable {
             System.out.println("Preparing table insertion:" + tableName);
         }
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-        PreparedStatement updateStatement = dbConnection.prepareStatement("update " + tableName + " set MATCH_BLOB=? where NAME=?");
+        PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
         dbConnection.setAutoCommit(false);
         ArrayList<String> tableContent = tableContent(tableName);
         int rowCounter = 0;

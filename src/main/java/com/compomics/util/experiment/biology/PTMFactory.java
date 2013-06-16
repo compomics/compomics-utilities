@@ -1169,7 +1169,7 @@ public class PTMFactory implements Serializable {
             return "deam";
         }
         if (modificationName.contains("itraq")) {
-            return "itraq";
+            return "iTRAQ";
         }
         if (modificationName.contains("icat")) {
             return "icat";

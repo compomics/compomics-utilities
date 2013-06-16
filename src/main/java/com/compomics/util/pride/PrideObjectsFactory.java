@@ -177,6 +177,14 @@ public class PrideObjectsFactory {
 
             try {
                 ptmToPrideMap = (PtmToPrideMap) loadObject(ptmMapFile);
+
+                // corrupt file, reset the mappings
+                if (ptmToPrideMap == null) {
+                    ptmMapFile.delete();
+                    ptmToPrideMap = new PtmToPrideMap();
+                    setPtmToPrideMap(ptmToPrideMap);
+                }
+
             } catch (InvalidClassException e) {
                 ptmMapFile.delete();
                 ptmToPrideMap = new PtmToPrideMap();
@@ -355,9 +363,9 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Sets a new ptm to PRIDE map.
+     * Sets a new PTM to PRIDE map.
      *
-     * @param ptmToPrideMap a new ptm to pride map
+     * @param ptmToPrideMap a new PTM to pride map
      * @throws FileNotFoundException
      * @throws IOException
      */

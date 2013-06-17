@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -35,18 +36,6 @@ public class GenePreferences implements Serializable {
      * The folder where gene mapping related info is stored.
      */
     public static final String GENE_MAPPING_FOLDER = System.getProperty("user.home") + "/.compomics/gene_mappings/";
-    /**
-     * The species separator used in the species comboboxes.
-     */
-    public final static String SPECIES_SEPARATOR = "------------------------------------------------------------";
-    /**
-     * The text to use to tell the user to please select a species in the list.
-     */
-    public final static String SELECT_SPECIES_TAG = "-- Select Species --";
-    /**
-     * The text to use for no species selected.
-     */
-    public final static String NO_SPECIES_TAG = "-- (no selection) --";
     /**
      * The suffix to use for files containing gene mappings.
      */
@@ -76,12 +65,39 @@ public class GenePreferences implements Serializable {
     /**
      * The list of species.
      */
-    private Vector<String> species;
+    private ArrayList<String> species;
 
     /**
      * Create a new GenePreferences object.
      */
     public GenePreferences() {
+    }
+
+    /**
+     * Creates new gene preferences based on a GenePreferences object
+     *
+     * @param genePreferences
+     */
+    public GenePreferences(GenePreferences genePreferences) {
+        if (genePreferences.getGoDomainMap() != null) {
+            goDomainMap = new HashMap<String, String>();
+            goDomainMap.putAll(genePreferences.getGoDomainMap());
+        }
+        if (genePreferences.getSpeciesMap() != null) {
+            speciesMap = new HashMap<String, String>();
+            speciesMap.putAll(genePreferences.getSpeciesMap());
+        }
+        if (genePreferences.getEnsemblVersionsMap() != null) {
+            ensemblVersionsMap = new HashMap<String, String>();
+            ensemblVersionsMap.putAll(genePreferences.getEnsemblVersionsMap());
+        }
+        if (genePreferences.getSpecies() != null) {
+            species = new ArrayList<String>();
+            species.addAll(genePreferences.getSpecies());
+        }
+        if (genePreferences.getCurrentSpecies() != null) {
+            currentSpecies = genePreferences.getCurrentSpecies();
+        }
     }
 
     /**
@@ -138,59 +154,69 @@ public class GenePreferences implements Serializable {
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(requestXml);
-            wr.flush();
+            try {
+                wr.write(requestXml);
+                wr.flush();
 
-            if (!waitingHandler.isRunCanceled()) {
+                if (!waitingHandler.isRunCanceled()) {
 
-                // Get the response
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-                waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait...");
+                    waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait...");
 
-                int counter = 0;
+                    int counter = 0;
 
-                File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GO_MAPPING_FILE_SUFFIX);
-                boolean fileCreated = tempFile.createNewFile();
+                    File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GO_MAPPING_FILE_SUFFIX);
+                    boolean fileCreated = tempFile.createNewFile();
 
-                if (fileCreated) {
+                    if (fileCreated) {
 
-                    FileWriter w = new FileWriter(tempFile);
-                    BufferedWriter bw = new BufferedWriter(w);
+                        // Get the response
+                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        try {
+                            FileWriter w = new FileWriter(tempFile);
+                            try {
+                                BufferedWriter bw = new BufferedWriter(w);
 
-                    String rowLine = br.readLine();
+                                try {
+                                    String rowLine = br.readLine();
 
-                    if (rowLine != null && rowLine.startsWith("Query ERROR")) {
-                        throw new IllegalArgumentException("Query error: " + rowLine);
-                    } else {
-                        while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                            waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
-                            bw.write(rowLine + System.getProperty("line.separator"));
-                            rowLine = br.readLine();
+                                    if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+                                        throw new IllegalArgumentException("Query error: " + rowLine);
+                                    } else {
+                                        while (rowLine != null && !waitingHandler.isRunCanceled()) {
+                                            waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                            bw.write(rowLine + System.getProperty("line.separator"));
+                                            rowLine = br.readLine();
+                                        }
+                                    }
+
+                                } finally {
+                                    bw.close();
+                                }
+                            } finally {
+                                w.close();
+                            }
+                        } finally {
+                            br.close();
                         }
+
+                        if (!waitingHandler.isRunCanceled()) {
+                            updateEnsemblVersion(selectedSpecies, "Ensembl " + ensemblVersion);
+                        }
+                    } else {
+                        waitingHandler.setRunCanceled();
+                        throw new IllegalArgumentException("The mapping file could not be created.");
                     }
 
-                    bw.close();
-                    w.close();
-                    wr.close();
-                    br.close();
+                    return !waitingHandler.isRunCanceled();
 
-                    if (!waitingHandler.isRunCanceled()) {
-                        updateEnsemblVersion(selectedSpecies, "Ensembl " + ensemblVersion);
-                    }
                 } else {
-                    waitingHandler.setRunCanceled();
-                    throw new IllegalArgumentException("The mapping file could not be created.");
+                    return false;
                 }
-
-                return !waitingHandler.isRunCanceled();
-
-            } else {
+            } finally {
                 wr.close();
-                return false;
             }
         }
-
         return false;
     }
 
@@ -224,52 +250,64 @@ public class GenePreferences implements Serializable {
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(requestXml);
-            wr.flush();
+            try {
 
-            if (!waitingHandler.isRunCanceled()) {
+                wr.write(requestXml);
+                wr.flush();
 
-                // Get the response
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                if (!waitingHandler.isRunCanceled()) {
 
-                waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait...");
 
-                int counter = 0;
+                    waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait...");
 
-                File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GENE_MAPPING_FILE_SUFFIX);
-                boolean fileCreated = tempFile.createNewFile();
+                    int counter = 0;
 
-                if (fileCreated) {
+                    File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GENE_MAPPING_FILE_SUFFIX);
+                    boolean fileCreated = tempFile.createNewFile();
 
-                    FileWriter w = new FileWriter(tempFile);
-                    BufferedWriter bw = new BufferedWriter(w);
+                    if (fileCreated) {
 
-                    String rowLine = br.readLine();
+                        // Get the response
+                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        try {
+                            FileWriter w = new FileWriter(tempFile);
+                            try {
+                                BufferedWriter bw = new BufferedWriter(w);
+                                try {
 
-                    if (rowLine != null && rowLine.startsWith("Query ERROR")) {
-                        throw new IllegalArgumentException("Query error on line: " + rowLine);
-                    } else {
-                        while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                            waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
-                            bw.write(rowLine + System.getProperty("line.separator"));
-                            rowLine = br.readLine();
+                                    String rowLine = br.readLine();
+
+                                    if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+                                        throw new IllegalArgumentException("Query error on line: " + rowLine);
+                                    } else {
+                                        while (rowLine != null && !waitingHandler.isRunCanceled()) {
+                                            waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                            bw.write(rowLine + System.getProperty("line.separator"));
+                                            rowLine = br.readLine();
+                                        }
+                                    }
+
+                                } finally {
+                                    bw.close();
+                                }
+                            } finally {
+                                w.close();
+                            }
+                        } finally {
+                            br.close();
                         }
+
+                    } else {
+                        waitingHandler.setRunCanceled();
+                        throw new IllegalArgumentException("The mapping file could not be created.");
                     }
 
-                    bw.close();
-                    w.close();
-                    wr.close();
-                    br.close();
-
+                    return !waitingHandler.isRunCanceled();
                 } else {
-                    waitingHandler.setRunCanceled();
-                    throw new IllegalArgumentException("The mapping file could not be created.");
+                    return false;
                 }
-
-                return !waitingHandler.isRunCanceled();
-            } else {
+            } finally {
                 wr.close();
-                return false;
             }
         }
 
@@ -362,50 +400,54 @@ public class GenePreferences implements Serializable {
             } else {
                 // file exists, just update the human ensembl version
 
+                String line;
                 // read the "new" human Ensembl versions number
                 Integer humanEnsemblVersionNew = null;
                 FileReader r = new FileReader(aEnsemblVersionsFile);
-                BufferedReader br = new BufferedReader(r);
-
-                String line = br.readLine();
-
-                if (line != null) {
-                    StringTokenizer tok = new StringTokenizer(line);
-                    tok.nextToken(); // species
-                    tok.nextToken(); // ensembl
-                    humanEnsemblVersionNew = new Integer(tok.nextToken());
+                try {
+                    BufferedReader br = new BufferedReader(r);
+                    try {
+                        if ((line = br.readLine()) != null) {
+                            StringTokenizer tok = new StringTokenizer(line);
+                            tok.nextToken(); // species
+                            tok.nextToken(); // ensembl
+                            humanEnsemblVersionNew = new Integer(tok.nextToken());
+                        }
+                    } finally {
+                        br.close();
+                    }
+                } finally {
+                    r.close();
                 }
-
-                br.close();
-                r.close();
 
 
                 if (humanEnsemblVersionNew != null) {
 
                     // find the old human Ensembl versions number
                     r = new FileReader(ensemblVersionsFile);
-                    br = new BufferedReader(r);
+                    try {
+                        BufferedReader br = new BufferedReader(r);
+                        try {
+                            while ((line = br.readLine()) != null && !updateHumanEnsembl) {
 
-                    line = br.readLine();
+                                StringTokenizer tok = new StringTokenizer(line);
+                                String tempSpecies = tok.nextToken(); // species
+                                tok.nextToken(); // ensembl
+                                Integer humanEnsemblVersionOld = new Integer(tok.nextToken());
 
-                    while (line != null && !updateHumanEnsembl) {
-
-                        StringTokenizer tok = new StringTokenizer(line);
-                        String tempSpecies = tok.nextToken(); // species
-                        tok.nextToken(); // ensembl
-                        Integer humanEnsemblVersionOld = new Integer(tok.nextToken());
-
-                        if (tempSpecies.equalsIgnoreCase("hsapiens_gene_ensembl")) {
-                            if (humanEnsemblVersionOld < humanEnsemblVersionNew) {
-                                updateHumanEnsembl = true;
+                                if (tempSpecies.equalsIgnoreCase("hsapiens_gene_ensembl")) {
+                                    if (humanEnsemblVersionOld < humanEnsemblVersionNew) {
+                                        updateHumanEnsembl = true;
+                                    }
+                                }
                             }
+
+                        } finally {
+                            br.close();
                         }
-
-                        line = br.readLine();
+                    } finally {
+                        r.close();
                     }
-
-                    br.close();
-                    r.close();
 
                     // load the previous ensembl version numbers
                     loadEnsemblSpeciesVersions(ensemblVersionsFile);
@@ -496,7 +538,7 @@ public class GenePreferences implements Serializable {
             }
 
             goDomainMap = new HashMap<String, String>();
-            species = new Vector<String>();
+            species = new ArrayList<String>();
             speciesMap = new HashMap<String, String>();
             ensemblVersionsMap = new HashMap<String, String>();
 
@@ -507,18 +549,23 @@ public class GenePreferences implements Serializable {
 
                 // read the GO domains
                 FileReader r = new FileReader(goDomainsFile);
-                BufferedReader br = new BufferedReader(r);
+                try {
+                    BufferedReader br = new BufferedReader(r);
+                    try {
 
-                String line = br.readLine();
+                        String line;
 
-                while (line != null) {
-                    String[] elements = line.split("\\t");
-                    goDomainMap.put(elements[0], elements[1]);
-                    line = br.readLine();
+                        while ((line = br.readLine()) != null) {
+                            String[] elements = line.split("\\t");
+                            goDomainMap.put(elements[0], elements[1]);
+                        }
+
+                    } finally {
+                        br.close();
+                    }
+                } finally {
+                    r.close();
                 }
-
-                br.close();
-                r.close();
             }
 
             if (ensemblVersionsFile.exists()) {
@@ -535,35 +582,25 @@ public class GenePreferences implements Serializable {
 
                 // read the species list
                 FileReader r = new FileReader(speciesFile);
-                BufferedReader br = new BufferedReader(r);
+                try {
+                    BufferedReader br = new BufferedReader(r);
+                    try {
 
-                String line = br.readLine();
+                        String line;
 
-                species.add(SELECT_SPECIES_TAG);
-                species.add(SPECIES_SEPARATOR);
+                        while ((line = br.readLine()) != null) {
+                            String[] elements = line.split("\\t");
+                            String currentSpecies = elements[0].trim();
+                            speciesMap.put(currentSpecies, elements[1].trim());
+                            species.add(currentSpecies);
+                        }
 
-                while (line != null) {
-                    String[] elements = line.split("\\t");
-                    speciesMap.put(elements[0].trim(), elements[1].trim());
-
-                    if (species.size() == 5) {
-                        species.add(SPECIES_SEPARATOR);
+                    } finally {
+                        br.close();
                     }
-
-                    if (ensemblVersionsMap.containsKey(elements[1].trim())) {
-                        species.add(elements[0].trim() + " [" + ensemblVersionsMap.get(elements[1].trim()) + "]");
-                    } else {
-                        species.add(elements[0].trim() + " [N/A]");
-                    }
-
-                    line = br.readLine();
+                } finally {
+                    r.close();
                 }
-
-                species.add(SPECIES_SEPARATOR);
-                species.add(NO_SPECIES_TAG);
-
-                br.close();
-                r.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -592,6 +629,17 @@ public class GenePreferences implements Serializable {
     }
 
     /**
+     * Returns the ensembl database name corresponding to a species name
+     * according to the speciesMap. Null if not found.
+     *
+     * @param speciesName the species name as available in the species list
+     * @return the ensembl database name
+     */
+    public String getEnsemblDatabaseName(String speciesName) {
+        return speciesMap.get(speciesName);
+    }
+
+    /**
      * Returns the Ensembl versions map.
      *
      * @return the ensemblVersionsMap
@@ -601,11 +649,37 @@ public class GenePreferences implements Serializable {
     }
 
     /**
+     * Returns the ensembl version corresponding to the given ensembl database
+     * according to the ensemblVersionsMap. Null if not found.
+     *
+     * @param ensemblDatabase the ensembl database
+     * @return the ensembl version
+     */
+    public String getEnsemblVersion(String ensemblDatabase) {
+        return ensemblVersionsMap.get(ensemblDatabase);
+    }
+
+    /**
+     * Resturns the ensembl version for the given species name. Null if not
+     * found.
+     *
+     * @param speciesName the species name as available in the species list
+     * @return the ensembl version
+     */
+    public String getEnsemblSpeciesVersion(String speciesName) {
+        String ensemblDB = getEnsemblDatabaseName(speciesName);
+        if (ensemblDB != null) {
+            return getEnsemblVersion(ensemblDB);
+        }
+        return null;
+    }
+
+    /**
      * Return the species list. NB: also contains species separators.
      *
      * @return the species
      */
-    public Vector<String> getSpecies() {
+    public ArrayList<String> getSpecies() {
         return species;
     }
 
@@ -620,49 +694,60 @@ public class GenePreferences implements Serializable {
     public void updateEnsemblVersion(String selectedSpecies, String ensemblVersion) throws IOException {
 
         FileWriter w = new FileWriter(new File(getGeneMappingFolder(), "ensembl_versions"));
-        BufferedWriter bw = new BufferedWriter(w);
+        try {
+            BufferedWriter bw = new BufferedWriter(w);
+            try {
 
-        if (ensemblVersionsMap == null) {
-            ensemblVersionsMap = new HashMap<String, String>();
+                if (ensemblVersionsMap == null) {
+                    ensemblVersionsMap = new HashMap<String, String>();
+                }
+
+                ensemblVersionsMap.put(selectedSpecies, ensemblVersion);
+
+                Iterator<String> iterator = ensemblVersionsMap.keySet().iterator();
+
+                while (iterator.hasNext()) {
+                    String key = iterator.next();
+                    bw.write(key + "\t" + ensemblVersionsMap.get(key) + System.getProperty("line.separator"));
+                }
+
+            } finally {
+                bw.close();
+            }
+        } finally {
+            w.close();
         }
-
-        ensemblVersionsMap.put(selectedSpecies, ensemblVersion);
-
-        Iterator<String> iterator = ensemblVersionsMap.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            bw.write(key + "\t" + ensemblVersionsMap.get(key) + System.getProperty("line.separator"));
-        }
-
-        bw.close();
-        w.close();
     }
 
     /**
      * Loads the given Ensembl species file.
-     * 
+     *
      * @param ensemblVersionsFile the Ensembl species file to load
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     public void loadEnsemblSpeciesVersions(File ensemblVersionsFile) throws FileNotFoundException, IOException {
 
         // load the existing ensembl version numbers
         FileReader r = new FileReader(ensemblVersionsFile);
-        BufferedReader br = new BufferedReader(r);
-        
-        ensemblVersionsMap = new HashMap<String, String>();
+        try {
+            BufferedReader br = new BufferedReader(r);
+            try {
 
-        String line = br.readLine();
+                ensemblVersionsMap = new HashMap<String, String>();
+                String line = br.readLine();
 
-        while (line != null) {
-            String[] elements = line.split("\\t");
-            ensemblVersionsMap.put(elements[0], elements[1]);
-            line = br.readLine();
+                while (line != null) {
+                    String[] elements = line.split("\\t");
+                    ensemblVersionsMap.put(elements[0], elements[1]);
+                    line = br.readLine();
+                }
+
+            } finally {
+                br.close();
+            }
+        } finally {
+            r.close();
         }
-
-        br.close();
-        r.close();
     }
 }

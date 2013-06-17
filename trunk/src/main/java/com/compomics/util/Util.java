@@ -158,6 +158,19 @@ public class Util {
         String fileName = getFileName(file.getAbsolutePath());
         return fileName.substring(fileName.lastIndexOf("."));
     }
+    
+    /**
+     * Appends a suffix to a file name before the file extension.
+     * 
+     * @param fileName the file name
+     * @param suffix the suffix to add
+     * @return the file name with suffix
+     */
+    public static String appendSuffix(String fileName, String suffix) {
+        String tempName = fileName.substring(0, fileName.lastIndexOf("."));
+        String extension = fileName.substring(fileName.lastIndexOf("."));
+        return tempName + suffix + extension;
+    }
 
     /**
      * Removes the extension from a file name or path.

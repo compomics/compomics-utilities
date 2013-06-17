@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -80,9 +79,11 @@ public class SpeciesDialog extends javax.swing.JDialog {
     /**
      * Creates a new SpeciesDialog.
      *
-     * @param parentFrame
-     * @param speciesDialogParent
+     * @param parentFrame the parent frame
+     * @param genePreferences the gene preferences
      * @param modal
+     * @param waitingImage
+     * @param normalImage
      */
     public SpeciesDialog(JFrame parentFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentFrame, modal);
@@ -99,10 +100,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
     /**
      * Creates a new SpeciesDialog.
      *
-     * @param parentDialog
-     * @param mainFrame
-     * @param speciesDialogParent
+     * @param parentDialog the parent dialog
+     * @param mainFrame the parent of the parent dialog
+     * @param genePreferences the gene preferences
      * @param modal
+     * @param waitingImage
+     * @param normalImage
      */
     public SpeciesDialog(JDialog parentDialog, JFrame mainFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentDialog, modal);
@@ -145,14 +148,18 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * Returns the list to display in the combo box based on the available
      * species.
      *
-     * @return
+     * @return the list to display in the combo box
      */
     private String[] getComboBoxContent() {
+
         ArrayList<String> availableSpecies = genePreferences.getSpecies();
+
         if (availableSpecies != null && !availableSpecies.isEmpty()) {
+
             String[] content = new String[availableSpecies.size() + 5];
             content[0] = SELECT_SPECIES_TAG;
             content[1] = SPECIES_SEPARATOR;
+
             for (int i = 0; i < availableSpecies.size(); i++) {
                 int cpt = i + 2;
                 if (i == separatorPosition) {
@@ -180,9 +187,9 @@ public class SpeciesDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the species selected in the  species JComboBox.
-     * 
-     * @return 
+     * Returns the species selected in the species JComboBox.
+     *
+     * @return the species selected
      */
     private String getSelectedSpecies() {
         int selection = speciesJComboBox.getSelectedIndex();
@@ -370,14 +377,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void speciesJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speciesJComboBoxActionPerformed
-
         String selectedSpecies = (String) speciesJComboBox.getSelectedItem();
         boolean separatorSelection = selectedSpecies.equals(SPECIES_SEPARATOR) || selectedSpecies.equals(SELECT_SPECIES_TAG);
         okButton.setEnabled(!separatorSelection);
         boolean speciesSelected = !separatorSelection && !selectedSpecies.equals(NO_SPECIES_TAG);
         downloadButton.setEnabled(speciesSelected);
         updateButton.setEnabled(speciesSelected);
-
     }//GEN-LAST:event_speciesJComboBoxActionPerformed
 
     /**
@@ -481,8 +486,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
 
         // delete the old mappings file
-                    String selectedSpecies = getSelectedSpecies();
-                    String selectedDb = genePreferences.getEnsemblDatabaseName(selectedSpecies);
+        String selectedSpecies = getSelectedSpecies();
+        String selectedDb = genePreferences.getEnsemblDatabaseName(selectedSpecies);
 
         goFactory.clearFactory();
         geneFactory.clearFactory();
@@ -601,15 +606,15 @@ public class SpeciesDialog extends javax.swing.JDialog {
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
-            
+
             if (genePreferences.getEnsemblSpeciesVersion(selectedSpecies) == null) {
                 int option = JOptionPane.showConfirmDialog(this,
-                            "The gene and GO annotations are not downloaded for the selected species.\n"
-                            + "Download now?", "Gene Annotation Missing", JOptionPane.YES_NO_CANCEL_OPTION);
+                        "The gene and GO annotations are not downloaded for the selected species.\n"
+                        + "Download now?", "Gene Annotation Missing", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                    if (option == JOptionPane.YES_OPTION) {
-                        downloadButtonActionPerformed(null);
-                    }
+                if (option == JOptionPane.YES_OPTION) {
+                    downloadButtonActionPerformed(null);
+                }
             } else {
                 genePreferences.setCurrentSpecies(selectedSpecies);
                 dispose();

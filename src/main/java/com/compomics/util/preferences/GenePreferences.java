@@ -67,7 +67,8 @@ public class GenePreferences implements Serializable {
      */
     private ArrayList<String> availableSpecies;
     /**
-     * Old vector of species
+     * Old vector of species.
+     *
      * @deprecated
      */
     private Vector<String> species;
@@ -79,7 +80,7 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Creates new gene preferences based on a GenePreferences object
+     * Creates new gene preferences based on a GenePreferences object.
      *
      * @param genePreferences
      */

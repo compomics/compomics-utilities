@@ -10,6 +10,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -111,7 +112,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="peptideLengthRangeLabel" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="nAAmaxTxt" pref="69" max="32767" attributes="2"/>
+                              <Component id="nAAmaxTxt" pref="74" max="32767" attributes="2"/>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                               <Component id="unitCmb" alignment="1" min="-2" pref="69" max="-2" attributes="2"/>

@@ -1,5 +1,9 @@
 package com.compomics.util.pride;
 
+import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.preferences.ModificationProfile;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -422,5 +426,32 @@ public class PtmToPrideMap implements Serializable {
         }
 
         return null;
+    }
+
+    /**
+     * Loads the PRIDE to PTM map from the user folder or creates a new one if
+     * the file is not present. Loads a default mapping if a PTM is not present.
+     *
+     * @return the PRIDE to PTM map
+     */
+    public static PtmToPrideMap loadPtmToPrideMap(SearchParameters searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException {
+            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
+            PtmToPrideMap ptmToPrideMap = prideObjectsFactory.getPtmToPrideMap();
+            boolean changes = false;
+            ModificationProfile modificationProfile = searchParameters.getModificationProfile();
+            for (String psPtm : modificationProfile.getAllModifications()) {
+                if (ptmToPrideMap.getCVTerm(psPtm) == null) {
+                    CvTerm defaultCVTerm = PtmToPrideMap.getDefaultCVTerm(psPtm);
+                    if (defaultCVTerm != null) {
+                        ptmToPrideMap.putCVTerm(psPtm, defaultCVTerm);
+                        changes = true;
+                        break;
+                    }
+                }
+            }
+            if (changes) {
+                prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
+            }
+            return ptmToPrideMap;
     }
 }

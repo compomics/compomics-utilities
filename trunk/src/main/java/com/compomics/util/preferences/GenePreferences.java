@@ -65,7 +65,12 @@ public class GenePreferences implements Serializable {
     /**
      * The list of species.
      */
-    private ArrayList<String> species;
+    private ArrayList<String> availableSpecies;
+    /**
+     * Old vector of species
+     * @deprecated
+     */
+    private Vector<String> species;
 
     /**
      * Create a new GenePreferences object.
@@ -92,8 +97,8 @@ public class GenePreferences implements Serializable {
             ensemblVersionsMap.putAll(genePreferences.getEnsemblVersionsMap());
         }
         if (genePreferences.getSpecies() != null) {
-            species = new ArrayList<String>();
-            species.addAll(genePreferences.getSpecies());
+            availableSpecies = new ArrayList<String>();
+            availableSpecies.addAll(genePreferences.getSpecies());
         }
         if (genePreferences.getCurrentSpecies() != null) {
             currentSpecies = genePreferences.getCurrentSpecies();
@@ -538,7 +543,7 @@ public class GenePreferences implements Serializable {
             }
 
             goDomainMap = new HashMap<String, String>();
-            species = new ArrayList<String>();
+            availableSpecies = new ArrayList<String>();
             speciesMap = new HashMap<String, String>();
             ensemblVersionsMap = new HashMap<String, String>();
 
@@ -592,7 +597,7 @@ public class GenePreferences implements Serializable {
                             String[] elements = line.split("\\t");
                             String currentSpecies = elements[0].trim();
                             speciesMap.put(currentSpecies, elements[1].trim());
-                            species.add(currentSpecies);
+                            availableSpecies.add(currentSpecies);
                         }
 
                     } finally {
@@ -680,7 +685,11 @@ public class GenePreferences implements Serializable {
      * @return the species
      */
     public ArrayList<String> getSpecies() {
-        return species;
+        if (availableSpecies == null && species != null) {
+            availableSpecies = new ArrayList<String>();
+            availableSpecies.addAll(species);
+        }
+        return availableSpecies;
     }
 
     /**

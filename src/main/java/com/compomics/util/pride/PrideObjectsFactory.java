@@ -372,7 +372,7 @@ public class PrideObjectsFactory {
      */
     public void setPtmToPrideMap(PtmToPrideMap ptmToPrideMap) throws FileNotFoundException, IOException {
         if (ptmToPrideMap == null) {
-            throw new IllegalArgumentException("Attempting to overwrite the PTM to Pride mapping with a null object.");
+            throw new IllegalArgumentException("Attempting to overwrite the PTM to PRIDE mapping with a null object.");
         }
         PrideObjectsFactory.ptmToPrideMap = ptmToPrideMap;
         File aFile = new File(prideFolder, PtmToPrideMap.fileName);
@@ -472,9 +472,9 @@ public class PrideObjectsFactory {
     }
 
     /**
-     * Returns the utilities ptm to pride map.
+     * Returns the utilities PTM to pride map.
      *
-     * @return the utilities ptm to pride map
+     * @return the utilities PTM to pride map
      */
     public PtmToPrideMap getPtmToPrideMap() {
         return ptmToPrideMap;
@@ -496,9 +496,5 @@ public class PrideObjectsFactory {
      */
     public HashMap<String, Sample> getSamples() {
         return samples;
-    }
-
-    private Exception IllegalArgumentException(String attempting_to_overwrite_the_PTM_to_Pride_) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

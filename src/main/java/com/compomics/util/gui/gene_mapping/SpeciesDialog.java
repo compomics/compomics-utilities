@@ -606,7 +606,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
-
             if (genePreferences.getEnsemblSpeciesVersion(selectedSpecies) == null) {
                 int option = JOptionPane.showConfirmDialog(this,
                         "The gene and GO annotations are not downloaded for the selected species.\n"
@@ -614,12 +613,14 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
                 if (option == JOptionPane.YES_OPTION) {
                     downloadButtonActionPerformed(null);
+                } else {
+                    genePreferences.setCurrentSpecies(selectedSpecies);
+                    dispose();
                 }
             } else {
                 genePreferences.setCurrentSpecies(selectedSpecies);
                 dispose();
             }
-
         } else {
             dispose();
         }

@@ -1,5 +1,6 @@
 package com.compomics.util.pride;
 
+import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.pride.prideobjects.*;
 import java.io.*;
 import java.util.HashMap;
@@ -370,15 +371,12 @@ public class PrideObjectsFactory {
      * @throws IOException
      */
     public void setPtmToPrideMap(PtmToPrideMap ptmToPrideMap) throws FileNotFoundException, IOException {
+        if (ptmToPrideMap == null) {
+            throw new IllegalArgumentException("Attempting to overwrite the PTM to Pride mapping with a null object.");
+        }
         PrideObjectsFactory.ptmToPrideMap = ptmToPrideMap;
         File aFile = new File(prideFolder, PtmToPrideMap.fileName);
-        FileOutputStream fos = new FileOutputStream(aFile);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(ptmToPrideMap);
-        oos.close();
-        bos.close();
-        fos.close();
+        SerializationUtils.writeObject(ptmToPrideMap, aFile);
     }
 
     /**
@@ -498,5 +496,9 @@ public class PrideObjectsFactory {
      */
     public HashMap<String, Sample> getSamples() {
         return samples;
+    }
+
+    private Exception IllegalArgumentException(String attempting_to_overwrite_the_PTM_to_Pride_) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

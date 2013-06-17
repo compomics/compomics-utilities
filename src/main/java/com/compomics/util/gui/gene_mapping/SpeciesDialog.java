@@ -5,12 +5,16 @@ import com.compomics.util.experiment.annotation.go.GOFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.preferences.GenePreferences;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -25,10 +29,6 @@ import javax.swing.SwingConstants;
 public class SpeciesDialog extends javax.swing.JDialog {
 
     /**
-     * The main GUI.
-     */
-    private SpeciesDialogParent speciesDialogParent;
-    /**
      * The GO factory.
      */
     private GOFactory goFactory = GOFactory.getInstance();
@@ -41,11 +41,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     private ProgressDialogX progressDialog;
     /**
-     * If true, the GO mappings are updated when selecting an item in the drop
-     * down menu. (Needed when automatically changing the selected value.)
-     */
-    private boolean loadMappings = false;
-    /**
      * The frame parent, if any.
      */
     private JFrame frameParent = null;
@@ -53,6 +48,34 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * The dialog parent, if any.
      */
     private JDialog dialogParent = null;
+    /**
+     * The species separator used in the species comboboxes.
+     */
+    public final static String SPECIES_SEPARATOR = "------------------------------------------------------------";
+    /**
+     * The text to use to tell the user to please select a species in the list.
+     */
+    public final static String SELECT_SPECIES_TAG = "-- Select Species --";
+    /**
+     * The text to use for no species selected.
+     */
+    public final static String NO_SPECIES_TAG = "-- (no selection) --";
+    /**
+     * Position of the species separator (first species is 0)
+     */
+    private int separatorPosition = 3;
+    /**
+     * The icon to display when waiting
+     */
+    private Image waitingImage = null;
+    /**
+     * The icon to display when processing is finished
+     */
+    private Image normalImage = null;
+    /**
+     * The gene preferences
+     */
+    private GenePreferences genePreferences;
 
     /**
      * Creates a new SpeciesDialog.
@@ -61,11 +84,13 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param speciesDialogParent
      * @param modal
      */
-    public SpeciesDialog(JFrame parentFrame, SpeciesDialogParent speciesDialogParent, boolean modal) {
+    public SpeciesDialog(JFrame parentFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentFrame, modal);
         frameParent = parentFrame;
-        this.speciesDialogParent = speciesDialogParent;
+        this.genePreferences = genePreferences;
         initComponents();
+        this.waitingImage = waitingImage;
+        this.normalImage = normalImage;
         setUpGUI();
         setLocationRelativeTo(frameParent);
         setVisible(true);
@@ -79,12 +104,14 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param speciesDialogParent
      * @param modal
      */
-    public SpeciesDialog(JDialog parentDialog, JFrame mainFrame, SpeciesDialogParent speciesDialogParent, boolean modal) {
+    public SpeciesDialog(JDialog parentDialog, JFrame mainFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentDialog, modal);
         dialogParent = parentDialog;
         frameParent = mainFrame;
-        this.speciesDialogParent = speciesDialogParent;
+        this.genePreferences = genePreferences;
         initComponents();
+        this.waitingImage = waitingImage;
+        this.normalImage = normalImage;
         setUpGUI();
         setLocationRelativeTo(parentDialog);
         setVisible(true);
@@ -95,29 +122,80 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     private void setUpGUI() {
         speciesJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-        speciesJComboBox.setModel(new DefaultComboBoxModel(speciesDialogParent.getGenePreferences().getSpecies()));
-
-        loadMappings = false;
+        String[] speciesCmbContent = getComboBoxContent();
+        speciesJComboBox.setModel(new DefaultComboBoxModel(speciesCmbContent));
 
         // select the current species
-        if (speciesDialogParent.getGenePreferences().getCurrentSpecies() != null) {
-            boolean speciesFound = false;
-            for (int i = 0; i < speciesJComboBox.getItemCount() && !speciesFound; i++) {
-                String temp = (String) speciesJComboBox.getModel().getElementAt(i);
-                if (temp.contains(speciesDialogParent.getGenePreferences().getCurrentSpecies())) {
-                    speciesFound = true;
+        String selectedSpecies = genePreferences.getCurrentSpecies();
+        if (selectedSpecies != null) {
+            for (int i = 0; i < speciesCmbContent.length; i++) {
+                String content = speciesCmbContent[i];
+                if (content.contains(selectedSpecies)) {
                     speciesJComboBox.setSelectedIndex(i);
+                    boolean dbVersion = content.contains("N/A");
+                    updateButton.setEnabled(dbVersion);
+                    downloadButton.setEnabled(!dbVersion);
+                    break;
                 }
             }
         }
+    }
 
-        loadMappings = true;
-
-        if (((String) speciesJComboBox.getSelectedItem()).lastIndexOf("N/A") != -1) {
-            updateButton.setEnabled(false);
+    /**
+     * Returns the list to display in the combo box based on the available
+     * species.
+     *
+     * @return
+     */
+    private String[] getComboBoxContent() {
+        ArrayList<String> availableSpecies = genePreferences.getSpecies();
+        if (availableSpecies != null && !availableSpecies.isEmpty()) {
+            String[] content = new String[availableSpecies.size() + 5];
+            content[0] = SELECT_SPECIES_TAG;
+            content[1] = SPECIES_SEPARATOR;
+            for (int i = 0; i < availableSpecies.size(); i++) {
+                int cpt = i + 2;
+                if (i == separatorPosition) {
+                    content[cpt] = SPECIES_SEPARATOR;
+                } else {
+                    if (i > separatorPosition) {
+                        cpt++;
+                    }
+                    String currentSpecies = availableSpecies.get(i);
+                    String ensemblVersion = genePreferences.getEnsemblSpeciesVersion(currentSpecies);
+                    if (ensemblVersion == null) {
+                        ensemblVersion = "N/A";
+                    }
+                    content[cpt] = currentSpecies + " [" + ensemblVersion + "]";
+                }
+            }
+            content[availableSpecies.size() + 3] = SPECIES_SEPARATOR;
+            content[availableSpecies.size() + 4] = NO_SPECIES_TAG;
+            return content;
         } else {
-            downloadButton.setEnabled(false);
+            String[] content = new String[1];
+            content[0] = NO_SPECIES_TAG;
+            return content;
         }
+    }
+
+    /**
+     * Returns the species selected in the  species JComboBox.
+     * 
+     * @return 
+     */
+    private String getSelectedSpecies() {
+        int selection = speciesJComboBox.getSelectedIndex();
+        if (selection > 1
+                && selection != separatorPosition + 2
+                && selection < genePreferences.getSpecies().size() + 3) {
+            int index = selection - 2;
+            if (index > separatorPosition) {
+                index++;
+            }
+            return genePreferences.getSpecies().get(index);
+        }
+        return null;
     }
 
     /**
@@ -241,29 +319,35 @@ public class SpeciesDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(unknownSpeciesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(ensemblVersionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(unknownSpeciesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ensemblVersionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(unknownSpeciesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ensemblVersionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(okButton)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -287,42 +371,13 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     private void speciesJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speciesJComboBoxActionPerformed
 
-        okButton.setEnabled(true);
+        String selectedSpecies = (String) speciesJComboBox.getSelectedItem();
+        boolean separatorSelection = selectedSpecies.equals(SPECIES_SEPARATOR) || selectedSpecies.equals(SELECT_SPECIES_TAG);
+        okButton.setEnabled(!separatorSelection);
+        boolean speciesSelected = !separatorSelection && !selectedSpecies.equals(NO_SPECIES_TAG);
+        downloadButton.setEnabled(speciesSelected);
+        updateButton.setEnabled(speciesSelected);
 
-        if (loadMappings) {
-
-            String selectedSpecies = (String) speciesJComboBox.getSelectedItem();
-            clearOldResults();
-            speciesDialogParent.clearGeneMappings();
-
-            if (!selectedSpecies.equalsIgnoreCase(speciesDialogParent.getGenePreferences().SPECIES_SEPARATOR)
-                    && !selectedSpecies.equalsIgnoreCase(speciesDialogParent.getGenePreferences().SELECT_SPECIES_TAG)) {
-
-                if (selectedSpecies.equalsIgnoreCase(speciesDialogParent.getGenePreferences().NO_SPECIES_TAG)) {
-                    downloadButton.setEnabled(false);
-                    updateButton.setEnabled(false);
-
-                    speciesDialogParent.getGenePreferences().setCurrentSpecies(null);
-                    speciesDialogParent.clearGeneMappings();
-                } else {
-                    if (selectedSpecies.lastIndexOf("N/A") != -1) {
-                        updateButton.setEnabled(false);
-                        downloadButton.setEnabled(true);
-                    } else {
-                        updateButton.setEnabled(true);
-                        downloadButton.setEnabled(false);
-                    }
-
-                    selectedSpecies = selectedSpecies.substring(0, selectedSpecies.indexOf("[") - 1);
-                    speciesDialogParent.getGenePreferences().setCurrentSpecies(selectedSpecies);
-                    speciesDialogParent.updateGeneMappings(selectedSpecies);
-                }
-            } else {
-                downloadButton.setEnabled(false);
-                updateButton.setEnabled(false);
-                okButton.setEnabled(false);
-            }
-        }
     }//GEN-LAST:event_speciesJComboBoxActionPerformed
 
     /**
@@ -334,13 +389,13 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
         if (dialogParent == null) {
             progressDialog = new ProgressDialogX(frameParent,
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                    normalImage,
+                    waitingImage,
                     true);
         } else {
             progressDialog = new ProgressDialogX(dialogParent, frameParent,
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                    Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                    normalImage,
+                    waitingImage,
                     true);
         }
 
@@ -381,26 +436,25 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
                     in.close();
 
-                    String selectedSpecies = (String) speciesJComboBox.getSelectedItem();
-                    selectedSpecies = selectedSpecies.substring(0, selectedSpecies.indexOf("[") - 1);
-                    selectedSpecies = speciesDialogParent.getGenePreferences().getSpeciesMap().get(selectedSpecies);
+                    String selectedSpecies = getSelectedSpecies();
+                    String selectedDb = genePreferences.getEnsemblDatabaseName(selectedSpecies);
 
                     boolean geneMappingsDownloaded = false;
                     boolean goMappingsDownloadeded = false;
 
                     if (!progressDialog.isRunCanceled()) {
-                        goMappingsDownloadeded = speciesDialogParent.getGenePreferences().downloadGoMappings(selectedSpecies, ensemblVersion, progressDialog);
+                        genePreferences.downloadGoMappings(selectedDb, ensemblVersion, progressDialog);
                     }
                     if (goMappingsDownloadeded && !progressDialog.isRunCanceled()) {
-                        geneMappingsDownloaded = speciesDialogParent.getGenePreferences().downloadGeneMappings(selectedSpecies, progressDialog);
+                        genePreferences.downloadGeneMappings(selectedDb, progressDialog);
                     }
 
                     progressDialog.setRunFinished();
 
                     if (geneMappingsDownloaded && goMappingsDownloadeded) {
                         JOptionPane.showMessageDialog(finalRef, "Gene mappings downloaded.\nRe-select species to use.", "Gene Mappings", JOptionPane.INFORMATION_MESSAGE);
-                        speciesDialogParent.getGenePreferences().loadSpeciesAndGoDomains();
-                        speciesJComboBox.setModel(new DefaultComboBoxModel(speciesDialogParent.getGenePreferences().getSpecies()));
+                        genePreferences.loadSpeciesAndGoDomains();
+                        speciesJComboBox.setModel(new DefaultComboBoxModel(getComboBoxContent()));
                         speciesJComboBox.setSelectedIndex(0);
                     }
 
@@ -427,9 +481,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
 
         // delete the old mappings file
-        String selectedSpecies = (String) speciesJComboBox.getSelectedItem();
-        selectedSpecies = selectedSpecies.substring(0, selectedSpecies.indexOf("[") - 1);
-        selectedSpecies = speciesDialogParent.getGenePreferences().getSpeciesMap().get(selectedSpecies);
+                    String selectedSpecies = getSelectedSpecies();
+                    String selectedDb = genePreferences.getEnsemblDatabaseName(selectedSpecies);
 
         goFactory.clearFactory();
         geneFactory.clearFactory();
@@ -438,8 +491,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
             goFactory.closeFiles();
             geneFactory.closeFiles();
 
-            File tempSpeciesGoFile = new File(speciesDialogParent.getGenePreferences().getGeneMappingFolder(), selectedSpecies + speciesDialogParent.getGenePreferences().GO_MAPPING_FILE_SUFFIX);
-            File tempSpecieGenesFile = new File(speciesDialogParent.getGenePreferences().getGeneMappingFolder(), selectedSpecies + speciesDialogParent.getGenePreferences().GENE_MAPPING_FILE_SUFFIX);
+            File tempSpeciesGoFile = new File(genePreferences.getGeneMappingFolder(), selectedDb + GenePreferences.GO_MAPPING_FILE_SUFFIX);
+            File tempSpecieGenesFile = new File(genePreferences.getGeneMappingFolder(), selectedDb + GenePreferences.GENE_MAPPING_FILE_SUFFIX);
 
             boolean goFileDeleted = true;
             boolean geneFileDeleted = true;
@@ -545,31 +598,20 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
-        String selectedSpecies = (String) speciesJComboBox.getSelectedItem();
+        String selectedSpecies = getSelectedSpecies();
 
-        if (!selectedSpecies.equalsIgnoreCase(speciesDialogParent.getGenePreferences().SPECIES_SEPARATOR)
-                && !selectedSpecies.equalsIgnoreCase(speciesDialogParent.getGenePreferences().SELECT_SPECIES_TAG)) {
-
-            boolean closeDialog = true;
-
-            if (!selectedSpecies.equalsIgnoreCase(speciesDialogParent.getGenePreferences().NO_SPECIES_TAG)) {
-                String temp = selectedSpecies.substring(selectedSpecies.indexOf("["));
-
-                if (temp.lastIndexOf("N/A") != -1) {
-                    int option = JOptionPane.showConfirmDialog(this,
+        if (selectedSpecies != null) {
+            
+            if (genePreferences.getEnsemblSpeciesVersion(selectedSpecies) == null) {
+                int option = JOptionPane.showConfirmDialog(this,
                             "The gene and GO annotations are not downloaded for the selected species.\n"
                             + "Download now?", "Gene Annotation Missing", JOptionPane.YES_NO_CANCEL_OPTION);
 
                     if (option == JOptionPane.YES_OPTION) {
-                        closeDialog = false;
                         downloadButtonActionPerformed(null);
-                    } else if (option == JOptionPane.CANCEL_OPTION) {
-                        closeDialog = false;
                     }
-                }
-            }
-
-            if (closeDialog) {
+            } else {
+                genePreferences.setCurrentSpecies(selectedSpecies);
                 dispose();
             }
 
@@ -577,7 +619,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton downloadButton;

@@ -377,4 +377,20 @@ public class IdFilter implements Serializable {
     public void setXtandemMaxEvalue(double xtandemMaxEvalue) {
         this.xtandemMaxEvalue = xtandemMaxEvalue;
     }
+    
+    /**
+     * Indicates whether this filter is the same as another one
+     * @param anotherFilter another filter
+     * @return a boolean indicating that the filters have the same parameters
+     */
+    public boolean equals(IdFilter anotherFilter) {
+        return isPpm == anotherFilter.isPpm
+                && unknownPtm == anotherFilter.removeUnknownPTMs()
+                && minPepLength == anotherFilter.getMinPepLength()
+                && maxPepLength == anotherFilter.getMaxPepLength()
+                && mascotMaxEvalue == anotherFilter.getMascotMaxEvalue()
+                && omssaMaxEvalue == anotherFilter.getOmssaMaxEvalue()
+                && xtandemMaxEvalue == anotherFilter.getXtandemMaxEvalue()
+                && maxMassDeviation == anotherFilter.getMaxMzDeviation();
+    }
 }

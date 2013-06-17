@@ -16,19 +16,18 @@ import javax.swing.SwingConstants;
  * @author Harald Barsnes
  */
 public class ImportSettingsDialog extends javax.swing.JDialog {
-
-    /**
-     * The ImportSettingsDialogParent.
-     */
-    private ImportSettingsDialogParent importSettingsDialogParent;
     /**
      * If true the user can edit the settings.
      */
     private boolean editable;
     /**
-     * The identification filter.
+     * The identification filter set by the user. Null if cancel was pressed.
      */
-    private IdFilter idFilter;
+    private IdFilter userFilter = null;
+    /**
+     * The original filter
+     */
+    private IdFilter originalFilter;
 
     /**
      * Creates a new ImportSettingsDialog.
@@ -38,11 +37,10 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public ImportSettingsDialog(JFrame parent, ImportSettingsDialogParent importSettingsDialogParent, IdFilter idFilter, boolean editable) {
+    public ImportSettingsDialog(JFrame parent, IdFilter idFilter, boolean editable) {
         super(parent, true);
-        this.importSettingsDialogParent = importSettingsDialogParent;
-        this.idFilter = idFilter;
         this.editable = editable;
+        this.originalFilter = idFilter;
         setUpGui();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -56,11 +54,10 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public ImportSettingsDialog(JDialog parent, ImportSettingsDialogParent importSettingsDialogParent, IdFilter idFilter, boolean editable) {
+    public ImportSettingsDialog(JDialog parent, IdFilter idFilter, boolean editable) {
         super(parent, true);
-        this.importSettingsDialogParent = importSettingsDialogParent;
-        this.idFilter = idFilter;
         this.editable = editable;
+        this.originalFilter = idFilter;
         setUpGui();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -75,33 +72,33 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
 
         unitCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
-        double value = idFilter.getOmssaMaxEvalue();
+        double value = originalFilter.getOmssaMaxEvalue();
         if (value > 0) {
             omssaEvalueTxt.setText("");
         }
-        value = idFilter.getXtandemMaxEvalue();
+        value = originalFilter.getXtandemMaxEvalue();
         if (value > 0) {
-            xtandemEvalueTxt.setText(idFilter.getXtandemMaxEvalue() + "");
+            xtandemEvalueTxt.setText(originalFilter.getXtandemMaxEvalue() + "");
         }
-        value = idFilter.getMascotMaxEvalue();
+        value = originalFilter.getMascotMaxEvalue();
         if (value > 0) {
-            mascotEvalueTxt.setText(idFilter.getMascotMaxEvalue() + "");
+            mascotEvalueTxt.setText(originalFilter.getMascotMaxEvalue() + "");
         }
-        value = idFilter.getMinPepLength();
+        value = originalFilter.getMinPepLength();
         if (value > 0) {
-            nAAminTxt.setText(idFilter.getMinPepLength() + "");
+            nAAminTxt.setText(originalFilter.getMinPepLength() + "");
         }
-        value = idFilter.getMaxPepLength();
+        value = originalFilter.getMaxPepLength();
         if (value > 0) {
-            nAAmaxTxt.setText(idFilter.getMaxPepLength() + "");
+            nAAmaxTxt.setText(originalFilter.getMaxPepLength() + "");
         }
-        value = idFilter.getMaxMzDeviation();
+        value = originalFilter.getMaxMzDeviation();
         if (value > 0) {
-            precDevTxt.setText(idFilter.getMaxMzDeviation() + "");
+            precDevTxt.setText(originalFilter.getMaxMzDeviation() + "");
         }
-        ptmsCheck.setSelected(idFilter.removeUnknownPTMs());
+        ptmsCheck.setSelected(originalFilter.removeUnknownPTMs());
 
-        if (idFilter.isIsPpm()) {
+        if (originalFilter.isIsPpm()) {
             unitCmb.setSelectedIndex(0);
         } else {
             unitCmb.setSelectedIndex(1);
@@ -184,6 +181,14 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Returns the id filter as set by the user. Null if the user canceled the editing or did not make any change.
+     * @return 
+     */
+    public IdFilter getFilter() {
+        return userFilter;
     }
 
     /**
@@ -452,17 +457,22 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
                 if (!input.equals("")) {
                     precDev = new Double(input);
                 }
-                importSettingsDialogParent.setIdFilter(new IdFilter(
+                boolean ppm = unitCmb.getSelectedIndex() == 0;
+                boolean removePTM = ptmsCheck.isSelected();
+                
+                IdFilter tempFilter = new IdFilter(
                         nAAmin,
                         nAAmax,
                         mascotEvalue,
                         omssaEvalue,
                         xTandemEvalue,
                         precDev,
-                        unitCmb.getSelectedIndex() == 0,
-                        ptmsCheck.isSelected()));
-
-                importSettingsDialogParent.updateFilterSettingsField("User Defined");
+                        ppm,
+                        removePTM);
+                
+                if (!tempFilter.equals(originalFilter)) {
+                    userFilter = tempFilter;
+                }
 
                 dispose();
             }

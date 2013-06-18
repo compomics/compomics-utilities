@@ -204,13 +204,13 @@ public class CommandLineUtils {
         }
         return result;
     }
-    
+
     /**
      * Parses a list of integers from a command line option.
-     * 
+     *
      * @param aString the command line option
      * @param separator the separator used to separate the string
-     * @return 
+     * @return the list if integers
      */
     public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
         ArrayList<Integer> result = new ArrayList<Integer>();
@@ -219,13 +219,13 @@ public class CommandLineUtils {
         }
         return result;
     }
-    
+
     /**
      * Parses a list of doubles from a command line option.
-     * 
+     *
      * @param aString the command line option
      * @param separator the separator used to separate the string
-     * @return 
+     * @return the list if doubles
      */
     public static ArrayList<Double> getDoubleListFromString(String aString, String separator) {
         ArrayList<Double> result = new ArrayList<Double>();

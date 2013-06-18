@@ -1,6 +1,8 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.annotation.gene.GeneFactory;
+import com.compomics.util.experiment.annotation.go.GOFactory;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -759,5 +761,65 @@ public class GenePreferences implements Serializable {
         } finally {
             r.close();
         }
+    }
+
+    /**
+     * Imports the gene mapping.
+     *
+     * @param waitingHandler the waiting handler
+     * @return a boolean indicating whether the loading was successful
+     */
+    public boolean loadGeneMappings(String jarFilePath, WaitingHandler waitingHandler) {
+
+        //@TODO: we might want to split this method?
+
+        boolean success = true;
+        try {
+            createDefaultGeneMappingFiles(
+                    new File(jarFilePath, "resources/conf/gene_ontology/ensembl_versions"),
+                    new File(jarFilePath, "resources/conf/gene_ontology/go_domains"),
+                    new File(jarFilePath, "resources/conf/gene_ontology/species"),
+                    new File(jarFilePath, "resources/conf/gene_ontology/hsapiens_gene_ensembl_go_mappings"),
+                    new File(jarFilePath, "resources/conf/gene_ontology/hsapiens_gene_ensembl_gene_mappings"));
+            loadSpeciesAndGoDomains();
+        } catch (IOException e) {
+            if (waitingHandler.isReport()) {
+                waitingHandler.appendReport("An error occurred while attempting to create the gene preferences.", true, true);
+            }
+            e.printStackTrace();
+            success = false;
+        }
+
+        if (getCurrentSpecies() != null && getSpeciesMap() != null && new File(getGeneMappingFolder(),
+                getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GENE_MAPPING_FILE_SUFFIX).exists()) {
+            try {
+                GeneFactory geneFactory = GeneFactory.getInstance();
+                geneFactory.initialize(new File(getGeneMappingFolder(),
+                        getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GENE_MAPPING_FILE_SUFFIX), null);
+            } catch (Exception e) {
+                if (waitingHandler.isReport()) {
+                    waitingHandler.appendReport("Unable to load the gene mapping file.", true, true);
+                }
+                e.printStackTrace();
+                success = false;
+            }
+        }
+
+        if (getCurrentSpecies() != null && getSpeciesMap() != null && new File(getGeneMappingFolder(),
+                getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GO_MAPPING_FILE_SUFFIX).exists()) {
+            try {
+                GOFactory goFactory = GOFactory.getInstance();
+                goFactory.initialize(new File(getGeneMappingFolder(),
+                        getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GO_MAPPING_FILE_SUFFIX), null);
+            } catch (Exception e) {
+                if (waitingHandler.isReport()) {
+                    waitingHandler.appendReport("Unable to load the gene ontology mapping file.", true, true);
+                }
+                e.printStackTrace();
+                success = false;
+            }
+        }
+
+        return success;
     }
 }

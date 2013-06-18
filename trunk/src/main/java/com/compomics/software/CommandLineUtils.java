@@ -204,4 +204,34 @@ public class CommandLineUtils {
         }
         return result;
     }
+    
+    /**
+     * Parses a list of integers from a command line option.
+     * 
+     * @param aString the command line option
+     * @param separator the separator used to separate the string
+     * @return 
+     */
+    public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        for (String component : aString.split(separator)) {
+            result.add(new Integer(component.trim()));
+        }
+        return result;
+    }
+    
+    /**
+     * Parses a list of doubles from a command line option.
+     * 
+     * @param aString the command line option
+     * @param separator the separator used to separate the string
+     * @return 
+     */
+    public static ArrayList<Double> getDoubleListFromString(String aString, String separator) {
+        ArrayList<Double> result = new ArrayList<Double>();
+        for (String component : aString.split(separator)) {
+            result.add(new Double(component.trim()));
+        }
+        return result;
+    }
 }

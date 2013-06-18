@@ -97,34 +97,62 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * Returns the peak list as mgf bloc.
+     * Returns the peak list as an mgf bloc.
      *
-     * @return the peak list as mgf bloc
+     * @return the peak list as an mgf bloc
      */
     public String asMgf() {
-        String result = "BEGIN IONS" + System.getProperty("line.separator");
-        result += "TITLE=" + spectrumTitle + System.getProperty("line.separator");
-        result += "PEPMASS=" + precursor.getMz() + "\t" + precursor.getIntensity() + System.getProperty("line.separator");
-        if (precursor.hasRTWindow()) {
-            result += "RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + System.getProperty("line.separator");
-        } else if (precursor.getRt() != -1) {
-            result += "RTINSECONDS=" + precursor.getRt() + System.getProperty("line.separator");
+        return asMgf(new HashMap<String, String>());
+    }
+
+    /**
+     * Returns the peak list as an mgf bloc.
+     *
+     * @param additionalTags additional tags which will be added after the BEGIN
+     * IONS tag in alphabetic order
+     * @return the peak list as an mgf bloc
+     */
+    public String asMgf(HashMap<String, String> additionalTags) {
+
+        StringBuilder results = new StringBuilder();
+        
+        results.append("BEGIN IONS").append(System.getProperty("line.separator"));
+
+        if (additionalTags != null) {
+            ArrayList<String> additionalTagsKeys = new ArrayList<String>(additionalTags.keySet());
+            Collections.sort(additionalTagsKeys);
+            for (String tag : additionalTagsKeys) {
+                if (additionalTags.get(tag) != null) {
+                    results.append(tag).append("=").append(additionalTags.get(tag)).append(System.getProperty("line.separator"));
+                }
+            }
         }
+
+        results.append("TITLE=").append(spectrumTitle).append(System.getProperty("line.separator"));
+        results.append("PEPMASS=").append(precursor.getMz()).append("\t").append(precursor.getIntensity()).append(System.getProperty("line.separator"));
+
+        if (precursor.hasRTWindow()) {
+            results.append("RTINSECONDS=").append(precursor.getRtWindow()[0]).append("-").append(precursor.getRtWindow()[1]).append(System.getProperty("line.separator"));
+        } else if (precursor.getRt() != -1) {
+            results.append("RTINSECONDS=").append(precursor.getRt()).append(System.getProperty("line.separator"));
+        }
+
         if (!precursor.getPossibleCharges().isEmpty()) {
-            result += "CHARGE=";
+            results.append("CHARGE=");
             boolean first = true;
             for (Charge charge : precursor.getPossibleCharges()) {
                 if (first) {
                     first = false;
                 } else {
-                    result += " and ";
+                    results.append(" and ");
                 }
-                result += charge.toString();
+                results.append(charge.toString());
             }
-            result += System.getProperty("line.separator");
+            results.append(System.getProperty("line.separator"));
         }
+
         if (scanNumber != null && !scanNumber.equals("")) {
-            result += "SCANS=" + scanNumber + System.getProperty("line.separator");
+            results.append("SCANS=").append(scanNumber).append(System.getProperty("line.separator"));
         }
 
         // add the values to a tree map to get them sorted in mz    
@@ -135,16 +163,16 @@ public class MSnSpectrum extends Spectrum {
         }
 
         for (Map.Entry<Double, Double> entry : sortedPeakList.entrySet()) {
-            result += entry.getKey() + " " + entry.getValue() + System.getProperty("line.separator");
+            results.append(entry.getKey()).append(" ").append(entry.getValue()).append(System.getProperty("line.separator"));
         }
 
-        result += "END IONS" + System.getProperty("line.separator") + System.getProperty("line.separator");
+        results.append("END IONS").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
 
-        return result;
+        return results.toString();
     }
 
     /**
-     * Writes the spectrum in the mgf format using the given writer
+     * Writes the spectrum in the mgf format using the given writer.
      *
      * @param writer1 a buffered writer where the spectrum will be written
      * @throws IOException
@@ -156,45 +184,13 @@ public class MSnSpectrum extends Spectrum {
     /**
      * Writes the spectrum in the mgf format using the given writer.
      *
-     * @param writer1 a buffered writer where the spectrum will be written
+     * @param mgfWriter a buffered writer where the spectrum will be written
      * @param additionalTags additional tags which will be added after the BEGIN
      * IONS tag in alphabetic order
      * @throws IOException
      */
-    public void writeMgf(BufferedWriter writer1, HashMap<String, String> additionalTags) throws IOException {
-        writer1.write("BEGIN IONS" + System.getProperty("line.separator"));
-        if (additionalTags != null) {
-            ArrayList<String> additionalTagsKeys = new ArrayList<String>(additionalTags.keySet());
-            Collections.sort(additionalTagsKeys);
-            for (String tag : additionalTagsKeys) {
-                writer1.write(tag + "=" + additionalTags.get(tag));
-                writer1.newLine();
-            }
-        }
-        writer1.write("TITLE=" + spectrumTitle + System.getProperty("line.separator"));
-        writer1.write("PEPMASS=" + precursor.getMz() + "\t" + precursor.getIntensity() + System.getProperty("line.separator"));
-        if (precursor.hasRTWindow()) {
-            writer1.write("RTINSECONDS=" + precursor.getRtWindow()[0] + "-" + precursor.getRtWindow()[1] + System.getProperty("line.separator"));
-        } else if (precursor.getRt() != -1) {
-            writer1.write("RTINSECONDS=" + precursor.getRt() + System.getProperty("line.separator"));
-        }
-        writer1.write("CHARGE=");
-        boolean first = true;
-        for (Charge charge : precursor.getPossibleCharges()) {
-            if (first) {
-                first = false;
-            } else {
-                writer1.write(" and ");
-            }
-            writer1.write(charge.toString());
-        }
-        writer1.write(System.getProperty("line.separator"));
-
-        ArrayList<Double> mzArray = new ArrayList<Double>(peakList.keySet());
-        Collections.sort(mzArray);
-        for (Double mz : mzArray) {
-            writer1.write(mz + " " + peakList.get(mz).intensity + System.getProperty("line.separator"));
-        }
-        writer1.write("END IONS" + System.getProperty("line.separator") + System.getProperty("line.separator"));
+    public void writeMgf(BufferedWriter mgfWriter, HashMap<String, String> additionalTags) throws IOException {
+        String spectrumAsMgf = asMgf(additionalTags);
+        mgfWriter.write(spectrumAsMgf);
     }
 }

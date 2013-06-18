@@ -377,9 +377,10 @@ public class IdFilter implements Serializable {
     public void setXtandemMaxEvalue(double xtandemMaxEvalue) {
         this.xtandemMaxEvalue = xtandemMaxEvalue;
     }
-    
+
     /**
-     * Indicates whether this filter is the same as another one
+     * Indicates whether this filter is the same as another one.
+     *
      * @param anotherFilter another filter
      * @return a boolean indicating that the filters have the same parameters
      */

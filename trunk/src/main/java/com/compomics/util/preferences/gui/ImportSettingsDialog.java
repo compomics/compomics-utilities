@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
  * @author Harald Barsnes
  */
 public class ImportSettingsDialog extends javax.swing.JDialog {
+
     /**
      * If true the user can edit the settings.
      */
@@ -33,7 +34,6 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * Creates a new ImportSettingsDialog.
      *
      * @param parent the parent frame
-     * @param importSettingsDialogParent the ImportSettingsDialogParent
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
@@ -50,7 +50,6 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * Creates a new ImportSettingsDialog.
      *
      * @param parent the parent dialog
-     * @param importSettingsDialogParent the ImportSettingsDialogParent
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
@@ -182,10 +181,12 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
         }
         return true;
     }
-    
+
     /**
-     * Returns the id filter as set by the user. Null if the user canceled the editing or did not make any change.
-     * @return 
+     * Returns the id filter as set by the user. Null if the user canceled the
+     * editing or did not make any change.
+     *
+     * @return the id filter as set by the user
      */
     public IdFilter getFilter() {
         return userFilter;
@@ -459,7 +460,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
                 }
                 boolean ppm = unitCmb.getSelectedIndex() == 0;
                 boolean removePTM = ptmsCheck.isSelected();
-                
+
                 IdFilter tempFilter = new IdFilter(
                         nAAmin,
                         nAAmax,
@@ -469,7 +470,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
                         precDev,
                         ppm,
                         removePTM);
-                
+
                 if (!tempFilter.equals(originalFilter)) {
                     userFilter = tempFilter;
                 }

@@ -625,9 +625,8 @@ public class SequenceFactory {
     public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.resetSecondaryProgressBar();
             waitingHandler.setMaxSecondaryProgressValue(fastaIndex.getNTarget());
-            waitingHandler.setSecondaryProgressValue(0);
         }
 
         // first create the new target-decoy file
@@ -635,11 +634,13 @@ public class SequenceFactory {
 
         for (String accession : fastaIndex.getIndexes().keySet()) {
 
-            if (waitingHandler.isRunCanceled()) {
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 break;
             }
 
-            waitingHandler.increaseSecondaryProgressValue();
+            if (waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressValue();
+            }
 
             Protein currentProtein = getProtein(accession);
             Header currentHeader = getHeader(accession);
@@ -685,12 +686,19 @@ public class SequenceFactory {
             waitingHandler.setSecondaryProgressDialogIndeterminate(true);
         }
 
+        boolean indexFile = true;
 
-        if (waitingHandler.isRunCanceled()) {
-            destinationFile.delete();
-        } else {
+        if (waitingHandler != null) {
+            if (waitingHandler.isRunCanceled()) {
+                indexFile = false;
+            }
+        }
+
+        if (indexFile) {
             // now (re-)index the new target-decoy file
-            loadFastaFile(destinationFile, null);
+            loadFastaFile(destinationFile, waitingHandler);
+        } else {
+            destinationFile.delete();
         }
     }
 

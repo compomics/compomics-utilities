@@ -6,24 +6,29 @@ The aim of this page is to provide help with common Java related issues that one
 
 == Installing Java ==
 
+ * Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here]. (You only need the JRE version (and not the JDK version) to run CompOmics tools.)
 
 ----
 
-== Multiple Installations ==
+== Memory Issues ==
+
+ * *Memory Issues I* - Big datasets can require a lot of memory. If the software unexpectedly fails on a big project, and the software mentions that it ran out of memory, you should try to give the program more memory. This can be done by selecting `Java Options` on the `Edit` menu in most tools, or edit the file called JavaOptions.txt in the `resources\conf` folder. Set the memory limit in MB, e.g., `2500` for a maximum of appr. 2.5GB of memory. _Please note that on a 32-bit operating system you cannot increase this value beyond 2000M (and usually the maximum limit is lower than this)._
+
+ * *Memory Issues II* - Using more than 2GB of memory requires the installation of 64 bit Java. 64 bit Java is downloaded from the same place as the 32 bit version: [http://java.sun.com/javase/downloads/index.jsp Java]. _Note that 64 bit Java can only be used on 64 bit operating systems!_
 
 ----
-
 
 == 32 bit vs 64 bit ==
 
-----
+ * *Java 32 bit vs 64 bit* - If you have both 32 and 64 bit versions of Java installed the operating system can sometimes get confused about which version to use to run Java tools. For Windows platform the CompOmics tools try to default to the 64 bit version of Java if it is installed. You can however override this option by setting your own Java Home. This is done by creating a file called `JavaHome.txt` in the `resources\conf` folder of the tool, with the path to the bin folder of the Java version to use, e.g., `C:\Program Files\Java\jdk1.7.0_21\bin\`. If the folder does not exist (or it does not contain the required files), the default Java version will be used.
 
+----
 
 == Tool Does Not Start ==
 
- * *Does Not Start I* - Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run PeptideShaker.)
+ * *Does Not Start I* - Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run CompOmics tools.)
 
- * *Does Not Start II* - Have you unzipped the zip file? You need to unzip the file before double clicking the jar file. If you get the message "A Java Exception has occurred", you are most likely trying to run PeptideShaker from within the zip file. Unzip the file and try again.
+ * *Does Not Start II* - Have you unzipped the zip file? You need to unzip the file before double clicking the jar file. If you get the message "A Java Exception has occurred", you are most likely trying to run the tool from within the zip file. Unzip the file and try again.
 
  * *Does Not Start III* - Is the tool installed in a path containing special characters, i.e. `[`, `%`, æ, ø, å, etc? If so, move the whole folder to a different location or rename the folder(s) causing the problem and try again. (Note that on Linux most tools has to be run from paths not containing spaces).
 

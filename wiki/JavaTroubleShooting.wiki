@@ -30,7 +30,7 @@ The aim of this page is to provide help with common Java related issues that one
 
  * *Does Not Start II* - Have you unzipped the zip file? You need to unzip the file before double clicking the jar file. If you get the message "A Java Exception has occurred", you are most likely trying to run the tool from within the zip file. Unzip the file and try again.
 
- * *Does Not Start III* - Is the tool installed in a path containing special characters, i.e. `[`, `%`, æ, ø, å, etc? If so, move the whole folder to a different location or rename the folder(s) causing the problem and try again. (Note that on Linux most tools has to be run from paths not containing spaces).
+ * *Does Not Start III* - Is the tool installed in a path containing special characters, i.e. `[`, `%`, æ, ø, å, etc? If so, move the whole folder to a different location or rename the folder(s) causing the problem and try again. (Note that on Linux, most tools have to be run from paths not containing spaces).
 
  * *Does Not Start IV* - If the tool fails during start-up many of our tools generate a file called `startup.log` in the tool's `resources\conf` folder. Here you can find detailed information about why the program was not able to start.
 

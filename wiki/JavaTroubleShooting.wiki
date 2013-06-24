@@ -1,0 +1,32 @@
+#summary Help with Java related issues.
+
+= Java Troubleshooting =
+
+The aim of this page is to provide help with common Java related issues that one can encounter when using software from the CompOmics group. If you have a Java related question that is not answered below please let us know.
+
+== Installing Java ==
+
+
+----
+
+== Multiple Installations ==
+
+----
+
+
+== 32 bit vs 64 bit ==
+
+----
+
+
+== Tool Does Not Start ==
+
+ * *Does Not Start I* - Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run PeptideShaker.)
+
+ * *Does Not Start II* - Have you unzipped the zip file? You need to unzip the file before double clicking the jar file. If you get the message "A Java Exception has occurred", you are most likely trying to run PeptideShaker from within the zip file. Unzip the file and try again.
+
+ * *Does Not Start III* - Is the tool installed in a path containing special characters, i.e. `[`, `%`, æ, ø, å, etc? If so, move the whole folder to a different location or rename the folder(s) causing the problem and try again. (Note that on Linux most tools has to be run from paths not containing spaces).
+
+ * *Does Not Start IV* - If the tool fails during start-up many of our tools generate a ile called `startup.log` in the tool's `resources\conf` folder. Here you can find detailed information about why the program was not able to start.
+
+----

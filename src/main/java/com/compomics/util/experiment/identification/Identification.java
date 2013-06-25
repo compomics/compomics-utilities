@@ -1582,4 +1582,35 @@ public abstract class Identification extends ExperimentObject {
     public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
         return Util.removeForbiddenCharacters(experimentReference + "_" + sampleReference + "_" + replicateNumber + "_id");
     }
+    
+    /**
+     * Returns the keys of the protein matches where a peptide can be found.
+     * 
+     * @param peptide the peptide of interest
+     * @return 
+     */
+    public ArrayList<String> getProteinMatches(Peptide peptide) {
+        ArrayList<String> proteinMatches = new ArrayList<String>();
+        for (String accession : peptide.getParentProteins()) {
+            ArrayList<String> keys = proteinMap.get(accession);
+            if (keys != null) {
+                for (String key : keys) {
+                    if (!proteinMatches.contains(key)) {
+                        proteinMatches.add(key);
+                    }
+                }
+            }
+        }
+        return proteinMatches;
+    }
+    
+    /**
+     * Indicates whether a peptide is found in a single protein match.
+     * 
+     * @param peptide the peptide of interest
+     * @return 
+     */
+    public boolean isUnique(Peptide peptide) {
+        return getProteinMatches(peptide).size() == 1;
+    }
 }

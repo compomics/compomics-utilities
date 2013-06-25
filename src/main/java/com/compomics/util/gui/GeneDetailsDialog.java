@@ -6,6 +6,7 @@ import com.compomics.util.experiment.annotation.go.GOFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * @param proteinMatchKey the protein match key
      * @throws IOException
      */
-    public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey) throws IOException {
+    public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         super(parent, true);
         initComponents();
         proteinAccessions = new ArrayList<String>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
@@ -76,7 +77,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
     /**
      * Set up the GUI.
      */
-    private void setUpGUI() {
+    private void setUpGUI() throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         goTable.getColumn("Accession").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
 
@@ -104,71 +105,66 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         // make sure that the scroll panes are see-through
         goTableScrollPane.getViewport().setOpaque(false);
 
-        try {
-            String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
-            ArrayList<String> geneNames = new ArrayList<String>();
-            for (String accession : proteinAccessions) {
-                if (title.equals("")) {
-                    title += "Gene details for ";
-                } else {
-                    title += ", ";
-                }
-                title += accession;
+        String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
+        ArrayList<String> geneNames = new ArrayList<String>();
+        for (String accession : proteinAccessions) {
+            if (title.equals("")) {
+                title += "Gene details for ";
+            } else {
+                title += ", ";
+            }
+            title += accession;
 
-                String geneName = geneFactory.getGeneNameForUniProtProtein(accession);
-                geneNames.add(geneName);
+            String geneName = geneFactory.getGeneNameForUniProtProtein(accession);
+            geneNames.add(geneName);
+        }
+
+        ArrayList<String> chromosomes = new ArrayList<String>();
+        for (String geneName : geneNames) {
+            if (!geneIdsTxt.equals("")) {
+                geneIdsTxt += ", ";
+                geneNamesTxt += ", ";
             }
 
-            ArrayList<String> chromosomes = new ArrayList<String>();
-            for (String geneName : geneNames) {
-                if (!geneIdsTxt.equals("")) {
-                    geneIdsTxt += ", ";
-                    geneNamesTxt += ", ";
-                }
 
+            if (geneName == null) {
+                geneNamesTxt += "unknown";
+                    geneIdsTxt += "unknown";
+            } else {
                 String ensemblId = geneFactory.getGeneEnsemblId(geneName);
 
                 if (ensemblId == null) {
                     geneIdsTxt += "unknown";
                 } else {
-                    geneIdsTxt += geneFactory.getGeneEnsemblId(geneName);
+                    geneIdsTxt += ensemblId;
                 }
-
-                if (geneName == null) {
-                    geneNamesTxt += "unknown";
-                } else {
-                    geneNamesTxt += geneName;
-                }
-
-                String chromosome = geneFactory.getChromosomeForGeneName(geneName);
-                chromosomes.add(chromosome);
+                geneNamesTxt += geneName;
+            String chromosome = geneFactory.getChromosomeForGeneName(geneName);
+            chromosomes.add(chromosome);
             }
 
-            for (String chromosome : chromosomes) {
-                if (!chromosomeTxt.equals("")) {
-                    chromosomeTxt += ", ";
-                }
-                if (chromosome == null) {
-                    chromosomeTxt += "unknown";
-                } else {
-                    chromosomeTxt += chromosome;
-                }
-            }
-
-            ((TitledBorder) detailsPanel.getBorder()).setTitle(title);
-            geneIdTxt.setText(geneIdsTxt);
-            geneNameTxt.setText(geneNamesTxt);
-            chromosomeNameTxt.setText(chromosomeTxt);
-
-        } catch (ClassNotFoundException e) { // @TODO: better error handling
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
+
+        if (chromosomes.isEmpty()) {
+            chromosomeTxt = "unknown";
+        } else {
+        for (String chromosome : chromosomes) {
+            if (!chromosomeTxt.equals("")) {
+                chromosomeTxt += ", ";
+            }
+            if (chromosome == null) {
+                chromosomeTxt += "unknown";
+            } else {
+                chromosomeTxt += chromosome;
+            }
+        }
+        }
+
+        ((TitledBorder) detailsPanel.getBorder()).setTitle(title);
+        geneIdTxt.setText(geneIdsTxt);
+        geneNameTxt.setText(geneNamesTxt);
+        chromosomeNameTxt.setText(chromosomeTxt);
+
     }
 
     /**
@@ -458,8 +454,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
                     }
                 case 2:
                     try {
-                        String accession = goFactory.getTermAccession(goTermDescriptions.get(row));
-                        return goFactory.getTermDescription(accession);
+                        return goTermDescriptions.get(row);
                     } catch (Exception e) {
                         return "Error";
                     }

@@ -215,7 +215,12 @@ public class CommandLineUtils {
     public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         for (String component : aString.split(separator)) {
-            result.add(new Integer(component.trim()));
+            try {
+                Integer input = new Integer(component.trim());
+                result.add(input);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Cannot parse " + component.trim() + " into an integer from " + aString + " with separator '" + separator + "'.");
+            }
         }
         return result;
     }

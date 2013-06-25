@@ -1,6 +1,7 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.gui.waiting.WaitingHandler;
+import static com.compomics.util.gui.waiting.WaitingHandler.tab;
 
 import javax.swing.*;
 import java.util.Date;
@@ -130,10 +131,8 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void displayMessage(String message, String title, int messageType) {
-        System.out.print(tab + message);
-        System.out.print(System.getProperty("line.separator"));
-        System.out.print(tab + title);
-        System.out.print(System.getProperty("line.separator"));
+        System.out.println(tab + message);
+        System.out.println(tab + title);
     }
 
     @Override
@@ -143,7 +142,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void setWaitingText(String text) {
-        displayMessage("Waiting Message:", text, 1);
+        System.out.println(tab + text);
     }
 
     @Override

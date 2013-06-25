@@ -219,7 +219,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadSpectrumMatchParameters(fileName, urParameter, waitingHandler);
@@ -238,7 +238,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, waitingHandler);
@@ -256,7 +256,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadPeptideMatchParameters(urParameter, waitingHandler);
@@ -275,7 +275,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler);
@@ -293,7 +293,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadPeptideMatches(peptideKeys, waitingHandler);
@@ -311,7 +311,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadProteinMatchParameters(urParameter, waitingHandler);
@@ -330,7 +330,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadProteinMatchParameters(proteinKeys, urParameter, waitingHandler);
@@ -346,7 +346,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadProteinMatches(waitingHandler);
@@ -364,7 +364,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadProteinMatches(proteinKeys, waitingHandler);
@@ -380,7 +380,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadPeptideMatches(waitingHandler);
@@ -397,7 +397,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadSpectrumMatches(fileName, waitingHandler);
@@ -414,7 +414,7 @@ public abstract class Identification extends ExperimentObject {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler);
@@ -1030,8 +1030,8 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Indicates whether the protein, peptide and spectrum matches corresponding
-     * to a protein match key are loaded in the cache. Note, only one peptide and
-     * one spectrum match is tested.
+     * to a protein match key are loaded in the cache. Note, only one peptide
+     * and one spectrum match is tested.
      *
      * @param proteinKey the key of the protein match
      * @return true if everything is loaded in memory
@@ -1188,7 +1188,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void buildPeptidesAndProteins(WaitingHandler waitingHandler) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -1220,7 +1220,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException
-     * @throws InterruptedException  
+     * @throws InterruptedException
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -1582,12 +1582,12 @@ public abstract class Identification extends ExperimentObject {
     public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
         return Util.removeForbiddenCharacters(experimentReference + "_" + sampleReference + "_" + replicateNumber + "_id");
     }
-    
+
     /**
      * Returns the keys of the protein matches where a peptide can be found.
-     * 
+     *
      * @param peptide the peptide of interest
-     * @return 
+     * @return the keys of the protein matches
      */
     public ArrayList<String> getProteinMatches(Peptide peptide) {
         ArrayList<String> proteinMatches = new ArrayList<String>();
@@ -1603,12 +1603,12 @@ public abstract class Identification extends ExperimentObject {
         }
         return proteinMatches;
     }
-    
+
     /**
      * Indicates whether a peptide is found in a single protein match.
-     * 
+     *
      * @param peptide the peptide of interest
-     * @return 
+     * @return true if peptide is found in a single protein match
      */
     public boolean isUnique(Peptide peptide) {
         return getProteinMatches(peptide).size() == 1;

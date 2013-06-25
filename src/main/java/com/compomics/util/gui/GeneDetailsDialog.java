@@ -62,6 +62,9 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param proteinMatchKey the protein match key
      * @throws IOException
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
      */
     public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         super(parent, true);
@@ -120,16 +123,16 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         }
 
         ArrayList<String> chromosomes = new ArrayList<String>();
+
         for (String geneName : geneNames) {
             if (!geneIdsTxt.equals("")) {
                 geneIdsTxt += ", ";
                 geneNamesTxt += ", ";
             }
 
-
             if (geneName == null) {
                 geneNamesTxt += "unknown";
-                    geneIdsTxt += "unknown";
+                geneIdsTxt += "unknown";
             } else {
                 String ensemblId = geneFactory.getGeneEnsemblId(geneName);
 
@@ -139,8 +142,8 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
                     geneIdsTxt += ensemblId;
                 }
                 geneNamesTxt += geneName;
-            String chromosome = geneFactory.getChromosomeForGeneName(geneName);
-            chromosomes.add(chromosome);
+                String chromosome = geneFactory.getChromosomeForGeneName(geneName);
+                chromosomes.add(chromosome);
             }
 
         }
@@ -148,23 +151,22 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         if (chromosomes.isEmpty()) {
             chromosomeTxt = "unknown";
         } else {
-        for (String chromosome : chromosomes) {
-            if (!chromosomeTxt.equals("")) {
-                chromosomeTxt += ", ";
+            for (String chromosome : chromosomes) {
+                if (!chromosomeTxt.equals("")) {
+                    chromosomeTxt += ", ";
+                }
+                if (chromosome == null) {
+                    chromosomeTxt += "unknown";
+                } else {
+                    chromosomeTxt += chromosome;
+                }
             }
-            if (chromosome == null) {
-                chromosomeTxt += "unknown";
-            } else {
-                chromosomeTxt += chromosome;
-            }
-        }
         }
 
         ((TitledBorder) detailsPanel.getBorder()).setTitle(title);
         geneIdTxt.setText(geneIdsTxt);
         geneNameTxt.setText(geneNamesTxt);
         chromosomeNameTxt.setText(chromosomeTxt);
-
     }
 
     /**
@@ -340,11 +342,10 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         if (row != -1) {
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
 
-            if (evt == null || evt.getButton() == MouseEvent.BUTTON1) {
+            if (evt != null && evt.getButton() == MouseEvent.BUTTON1) {
 
                 // open protein link in web browser
-                if (column == goTable.getColumn("Accession").getModelIndex() && evt.getButton() == MouseEvent.BUTTON1
-                        && ((String) goTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
+                if (column == goTable.getColumn("Accession").getModelIndex() && ((String) goTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
 
                     String link = (String) goTable.getValueAt(row, column);
                     link = link.substring(link.indexOf("\"") + 1);

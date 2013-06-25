@@ -1,5 +1,7 @@
 package com.compomics.software;
 
+import com.compomics.util.CompareVersionNumbers;
+import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.io.StreamGobbler;
@@ -11,7 +13,11 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import org.apache.commons.io.output.NullOutputStream;
 
 /**
@@ -287,14 +293,12 @@ public class CompomicsWrapper {
         try {
             Process p = pb.start();
 
-            int error;
-            String temp = "";
             StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), "ERROR", bw);
             StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream(), "INPUT", new BufferedWriter(new OutputStreamWriter(new NullOutputStream())));
             errorGobbler.run();
             inputGobbler.run();
 
-            error = p.waitFor();
+            int error = p.waitFor();
 
             if (useStartUpLog) {
                 System.out.println("Process exitValue: " + error + System.getProperty("line.separator"));
@@ -305,17 +309,17 @@ public class CompomicsWrapper {
             if (error != 0) {
 
                 firstTry = false;
-                temp = errorGobbler.getMessages().toLowerCase();
+                String temp = errorGobbler.getMessages().toLowerCase();
 
                 // if needed, try re-launching with reduced memory settings
                 if (temp.contains("could not create the java virtual machine")) {
                     if (userPreferences.getMemoryPreference() > 3 * 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 1024);
-                        saveNewSettings(jarFile);
+                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args);
                     } else if (userPreferences.getMemoryPreference() > 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 512);
-                        saveNewSettings(jarFile);
+                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args);
                     } else {
                         if (useStartUpLog) {
@@ -368,18 +372,6 @@ public class CompomicsWrapper {
 
             System.exit(0);
         }
-    }
-
-    /**
-     * Saves the new memory settings.
-     */
-    private void saveNewSettings(File jarFile) throws FileNotFoundException, UnsupportedEncodingException {
-        try {
-            UtilitiesUserPreferences.saveUserPreferences(userPreferences);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        saveJavaOptions(jarFile);
     }
 
     /**
@@ -479,6 +471,43 @@ public class CompomicsWrapper {
     }
 
     /**
+     * Checks if the user is running Java 64 bit and shows a warning if not.
+     *
+     * @param toolName the name of the tool, e.g., "PeptideShaker"
+     */
+    public static void checkJavaVersion(String toolName) {
+
+        String arch = System.getProperty("os.arch");
+
+        if (arch.endsWith("x86")) {
+
+            // create an empty label to put the message in
+            JLabel label = new JLabel();
+
+            // html content 
+            JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
+                    + toolName + " works best with Java 64 bit.<br><br>"
+                    + "See <a href=\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\">Java Troubleshooting</a> for more details."
+                    + "</body></html>");
+
+            // handle link events 
+            ep.addHyperlinkListener(new HyperlinkListener() {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                        BareBonesBrowserLaunch.openURL(e.getURL().toString());
+                    }
+                }
+            });
+
+            ep.setBorder(null);
+            ep.setEditable(false);
+
+            JOptionPane.showMessageDialog(null, ep, "Java 64 Bit?", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    /**
      * Check if a newer version of the tool is available on GoogleCode, and
      * closes the tool if the user decided to upgrade. No zip file tag used (see
      * the other checkForNewVersion method).
@@ -503,7 +532,7 @@ public class CompomicsWrapper {
      * download page is opened, false only opens the download page
      * @param zipFileTag the zip file tag, e.g., SearchGUI-1.10.4_windows.zip
      * has the tag "_windows"
-     * @param zipFileType the zip file type, e.g., ".zip" or ".tar.gz" 
+     * @param zipFileType the zip file type, e.g., ".zip" or ".tar.gz"
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading, String zipFileTag, String zipFileType) {
 
@@ -618,13 +647,13 @@ public class CompomicsWrapper {
                             if (input) {
                                 try {
                                     userPreferences.setMemoryPreference(new Integer(currentOption));
-                                    saveNewSettings(jarFile);
+                                    UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                                     if (bw != null) {
                                         bw.write("New memory setting saved: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
                                     }
                                 } catch (Exception e) {
                                     javax.swing.JOptionPane.showMessageDialog(null,
-                                            "Could not parse the memory setting:" + currentOption
+                                            "Could not parse the memory setting: " + currentOption
                                             + ". The value was reset to" + userPreferences.getMemoryPreference() + ".",
                                             "Wrong memory settings", JOptionPane.WARNING_MESSAGE);
                                 }
@@ -753,8 +782,12 @@ public class CompomicsWrapper {
             bw.write("original java.home: " + javaHome + System.getProperty("line.separator"));
         }
 
+        // @TODO: should rather run java -version!!!
+
         // try to force the use of 64 bit Java if available
         if (usingStandardJavaHome && javaHome.lastIndexOf(" (x86)") != -1 && System.getProperty("os.name").lastIndexOf("Windows") != -1) {
+
+            // @TODO: add similar tests for Mac and Linux...
 
             // default java 32 bit windows home looks like this:    C:\Program Files (x86)\Java\jre6\bin\javaw.exe
             // default java 64 bit windows home looks like this:    C:\Program Files\Java\jre6\bin\javaw.exe
@@ -765,8 +798,65 @@ public class CompomicsWrapper {
                 bw.write("temp java.home: " + tempJavaHome + System.getProperty("line.separator"));
             }
 
+
+            // @TODO: replace this simple test and rather do the real test below instead. otherwise we would always default to an old 64 bit version of using an old 32 bit version initially...
+
+
             if (new File(tempJavaHome).exists()) {
                 javaHome = tempJavaHome;
+            } else {
+                // @TODO: code below needs more testing!!
+//                // try to find the newest 64 bit Java version
+//                File defaultJavaHome64Bit = new File("C:\\Program Files\\Java");
+//
+//                // check if the default java 64 bit folder exists
+//                if (defaultJavaHome64Bit.exists() && defaultJavaHome64Bit.listFiles().length > 0) {
+//
+//                    File[] javaFolders = defaultJavaHome64Bit.listFiles();
+//                    ArrayList<File> possibleJavaFolders = new ArrayList<File>();
+//
+//                    // find the valid java folders
+//                    for (File tempFile : javaFolders) {
+//                        if (tempFile.isDirectory() && (tempFile.getName().startsWith("jre") || tempFile.getName().startsWith("jdk"))) {
+//                            if (new File(tempFile, "bin/java.exe").exists()) {
+//                                possibleJavaFolders.add(tempFile);
+//                            }
+//                        }
+//                    }
+//
+//                    if (!possibleJavaFolders.isEmpty()) {
+//
+//                        File newestJavaFolder = possibleJavaFolders.get(0);
+//                        
+//                        
+//                        // @TODO: start the tool and get the version numbe from the command line
+//                        
+//                        String newestVersionNumber = newestJavaFolder.getName().substring(3, newestJavaFolder.getName().length());
+//                        CompareVersionNumbers versionComparator = new CompareVersionNumbers();
+//
+//                        // iterate the versions and find the most recent one
+//                        for (int i = 1; i < possibleJavaFolders.size(); i++) {
+//
+//                            File tempJavaFolder = possibleJavaFolders.get(i);
+//                            
+//                            // @TODO: start the tool and get the version numbe from the command line
+//                            
+//                            String tempVersionNumber = tempJavaFolder.getName().substring(3, tempJavaFolder.getName().length());
+//
+//                            if (versionComparator.compare(newestVersionNumber, tempVersionNumber) == 1) {
+//                                newestVersionNumber = tempVersionNumber;
+//                                newestJavaFolder = tempJavaFolder;
+//                            }
+//                        }
+//
+//                        javaHome = new File(newestJavaFolder, "bin").getAbsolutePath();
+//
+//                        // add an ending slash if not there
+//                        if (!javaHome.endsWith(File.separator)) {
+//                            javaHome += File.separator;
+//                        }
+//                    }
+//                }
             }
         }
 
@@ -810,16 +900,18 @@ public class CompomicsWrapper {
             throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
         }
         File debugOutput = new File(confFolder, "startup.log");
-        BufferedWriter bw = new BufferedWriter(new FileWriter(debugOutput));
-        String javaHome = wrapper.getJavaHome(confFolder, bw);
+        BufferedWriter bwr = new BufferedWriter(new FileWriter(debugOutput));
+        String javaHome = wrapper.getJavaHome(confFolder, bwr);
 
         javaHomeAndOptions.add(javaHome);
 
-        ArrayList<String> optionsAsList = wrapper.getJavaOptions(confFolder, new File(utilitiesUserPreferences.getPeptideShakerPath()), bw);
+        ArrayList<String> optionsAsList = wrapper.getJavaOptions(confFolder, new File(utilitiesUserPreferences.getPeptideShakerPath()), bwr);
 
         for (String tempOption : optionsAsList) {
             javaHomeAndOptions.add(tempOption);
         }
+
+        bwr.close();
 
         return javaHomeAndOptions;
     }

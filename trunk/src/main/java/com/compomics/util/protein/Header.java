@@ -12,6 +12,7 @@
  */
 package com.compomics.util.protein;
 
+import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.Serializable;
 import org.apache.log4j.Logger;
 
@@ -981,7 +982,16 @@ public class Header implements Cloneable, Serializable {
      */
     public String getSimpleProteinDescription() {
         if (databaseType == DatabaseType.UniProt) {
-            return iDescriptionShort + " (" + iDescriptionProteinName + ")";
+
+            // get the default simple header
+            String temp = iDescriptionShort + " (" + iDescriptionProteinName + ")";
+
+            // see if we need to add a decoy flag
+            if (SequenceFactory.isDecoy(iAccession)) {
+                temp = SequenceFactory.getDefaultDecoyDescription(temp);
+            }
+
+            return temp;
         } else {
             return iDescription;
         }

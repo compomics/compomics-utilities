@@ -1,5 +1,6 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
+import com.compomics.util.gui.waiting.WaitingActionListener;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.awt.Frame;
 import java.awt.Image;
@@ -50,6 +51,10 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * The waitingHandlerParent dialog.
      */
     private JDialog waitingHandlerParentDialog;
+    /**
+     * the waiting action listener
+     */
+    private WaitingActionListener waitingActionListener = null;
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
@@ -423,8 +428,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
         if (!finished) {
 
-            if (!doNothingOnClose && !unstoppable) {
+            if (!canceled && !doNothingOnClose && !unstoppable) {
                 canceled = true;
+                waitingActionListener.cancelPressed();
             }
 
             if (!canceled && unstoppable) {
@@ -437,6 +443,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
                 if (selection == JOptionPane.YES_OPTION) {
                     canceled = true;
+                    waitingActionListener.cancelPressed();
                 }
             }
         }
@@ -495,5 +502,14 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     @Override
     public boolean isReport() {
         return false;
+    }
+
+    /**
+     * Adds a waiting action listener.
+     *
+     * @param waitingActionListener
+     */
+    public void addWaitingActionListener(WaitingActionListener waitingActionListener) {
+        this.waitingActionListener = waitingActionListener;
     }
 }

@@ -2,6 +2,7 @@ package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.DummyFrame;
+import com.compomics.util.gui.waiting.WaitingActionListener;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import java.awt.Frame;
 import java.awt.Image;
@@ -90,6 +91,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * report.
      */
     private String toolVersion;
+    /**
+     * the waiting action listener
+     */
+    private WaitingActionListener waitingActionListener = null;
 
     /**
      * Creates a new WaitingDialog.
@@ -843,24 +848,30 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * Set the process as canceled.
      */
     public void setRunCanceled() {
-        runCanceled = true;
-        appendReportEndLine();
-        appendReport(processName + " Canceled!", true, true);
-        okButton.setText("OK");
-        progressBar.setIndeterminate(false);
-        progressBar.setValue(0);
-        progressBar.setStringPainted(true);
+        if (!runCanceled) {
+            runCanceled = true;
+            appendReportEndLine();
+            appendReport(processName + " Canceled!", true, true);
+            okButton.setText("OK");
+            progressBar.setIndeterminate(false);
+            progressBar.setValue(0);
+            progressBar.setStringPainted(true);
 
-        secondaryProgressBarSplitPane.setDividerLocation(0);
-        secondaryJProgressBar.setIndeterminate(false);
-        secondaryJProgressBar.setValue(0);
-        secondaryJProgressBar.setString(processName + " Canceled!");
+            secondaryProgressBarSplitPane.setDividerLocation(0);
+            secondaryJProgressBar.setIndeterminate(false);
+            secondaryJProgressBar.setValue(0);
+            secondaryJProgressBar.setString(processName + " Canceled!");
 
-        this.setTitle(processName + " - Canceled");
+            this.setTitle(processName + " - Canceled");
 
-        // change the icon back to the default version
-        if (normalIcon != null && waitingHandlerParent != null) {
-            waitingHandlerParent.setIconImage(normalIcon);
+            // change the icon back to the default version
+            if (normalIcon != null && waitingHandlerParent != null) {
+                waitingHandlerParent.setIconImage(normalIcon);
+            }
+
+            if (waitingActionListener != null) {
+                waitingActionListener.cancelPressed();
+            }
         }
     }
 
@@ -1168,5 +1179,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     @Override
     public boolean isReport() {
         return true;
+    }
+
+    /**
+     * Adds a waiting action listener.
+     *
+     * @param waitingActionListener
+     */
+    public void addWaitingActionListener(WaitingActionListener waitingActionListener) {
+        this.waitingActionListener = waitingActionListener;
     }
 }

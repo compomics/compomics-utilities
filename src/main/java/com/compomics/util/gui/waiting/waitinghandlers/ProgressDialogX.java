@@ -52,7 +52,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      */
     private JDialog waitingHandlerParentDialog;
     /**
-     * the waiting action listener
+     * The waiting action listener.
      */
     private WaitingActionListener waitingActionListener = null;
 

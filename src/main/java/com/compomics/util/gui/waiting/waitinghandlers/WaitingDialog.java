@@ -92,7 +92,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private String toolVersion;
     /**
-     * the waiting action listener
+     * The waiting action listener.
      */
     private WaitingActionListener waitingActionListener = null;
 

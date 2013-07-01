@@ -848,30 +848,31 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * Set the process as canceled.
      */
     public void setRunCanceled() {
+
         if (!runCanceled) {
             runCanceled = true;
+            if (waitingActionListener != null) {
+                waitingActionListener.cancelPressed();
+            }            
             appendReportEndLine();
             appendReport(processName + " Canceled!", true, true);
             okButton.setText("OK");
-            progressBar.setIndeterminate(false);
-            progressBar.setValue(0);
-            progressBar.setStringPainted(true);
+        }
 
-            secondaryProgressBarSplitPane.setDividerLocation(0);
-            secondaryJProgressBar.setIndeterminate(false);
-            secondaryJProgressBar.setValue(0);
-            secondaryJProgressBar.setString(processName + " Canceled!");
+        progressBar.setIndeterminate(false);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
 
-            this.setTitle(processName + " - Canceled");
+        secondaryProgressBarSplitPane.setDividerLocation(0);
+        secondaryJProgressBar.setIndeterminate(false);
+        secondaryJProgressBar.setValue(0);
+        secondaryJProgressBar.setString(processName + " Canceled!");
 
-            // change the icon back to the default version
-            if (normalIcon != null && waitingHandlerParent != null) {
-                waitingHandlerParent.setIconImage(normalIcon);
-            }
+        this.setTitle(processName + " - Canceled");
 
-            if (waitingActionListener != null) {
-                waitingActionListener.cancelPressed();
-            }
+        // change the icon back to the default version
+        if (normalIcon != null && waitingHandlerParent != null) {
+            waitingHandlerParent.setIconImage(normalIcon);
         }
     }
 

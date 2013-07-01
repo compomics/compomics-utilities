@@ -164,6 +164,16 @@ public abstract class Ion extends ExperimentObject {
     public double getTheoreticMass() {
         return theoreticMass;
     }
+    
+    /**
+     * Returns the theoretic m/z of an ion at a given charge state.
+     * 
+     * @param chargeValue the value of the carried charge
+     * @return the theoretic m/z.
+     */
+    public double getTheoreticMz(int chargeValue) {
+        return (theoreticMass + chargeValue * ElementaryIon.proton.theoreticMass) / chargeValue;
+    } 
 
     /**
      * Sets a new theoretic mass.

@@ -795,7 +795,7 @@ public class Peptide extends ExperimentObject {
         cTerm = cTerm.replaceAll("-", " ");
         return cTerm;
     }
-
+    
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
@@ -808,7 +808,7 @@ public class Peptide extends ExperimentObject {
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true the short names are used in the tags
-     * @return the modified sequence as an tagged string
+     * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 

@@ -430,7 +430,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
             if (!canceled && !doNothingOnClose && !unstoppable) {
                 canceled = true;
-                waitingActionListener.cancelPressed();
+                if (waitingActionListener != null) {
+                    waitingActionListener.cancelPressed();
+                }
             }
 
             if (!canceled && unstoppable) {
@@ -443,7 +445,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
                 if (selection == JOptionPane.YES_OPTION) {
                     canceled = true;
-                    waitingActionListener.cancelPressed();
+                    if (waitingActionListener != null) {
+                        waitingActionListener.cancelPressed();
+                    }
                 }
             }
         }

@@ -158,10 +158,10 @@ public class Util {
         String fileName = getFileName(file.getAbsolutePath());
         return fileName.substring(fileName.lastIndexOf("."));
     }
-    
+
     /**
      * Appends a suffix to a file name before the file extension.
-     * 
+     *
      * @param fileName the file name
      * @param suffix the suffix to add
      * @return the file name with suffix
@@ -199,6 +199,8 @@ public class Util {
      * @return the file selected by the user, or null if no file was selected
      */
     public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, boolean openDialog) {
+
+        // @TODO: should support multiple file endings, e.g., fasta and fast for example
 
         final String fileEnding = aFileEnding;
         final String fileFormatDescription = aFileFormatDescription;

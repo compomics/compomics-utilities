@@ -1187,7 +1187,7 @@ public abstract class GraphicsPanel extends JPanel {
         double maxValue = Double.MIN_VALUE;
 
         for (int i = 0; i < iXAxisData.size(); i++) {
-            if (iXAxisData.get(i)[iXAxisData.get(i).length - 1] > maxValue) {
+            if (iXAxisData.get(i).length > 0 && iXAxisData.get(i)[iXAxisData.get(i).length - 1] > maxValue) {
                 maxValue = iXAxisData.get(i)[iXAxisData.get(i).length - 1];
             }
         }

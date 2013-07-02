@@ -135,19 +135,19 @@ public class GenePreferences implements Serializable {
     /**
      * Download the GO mappings.
      *
+     * @param ensemblType the Ensembl type, e.g., default or plants_mart_18
      * @param selectedSpecies
      * @param ensemblVersion
      * @param waitingHandler
-     * @return true if the download was ok
      * @throws MalformedURLException
      * @throws IOException
      */
-    public boolean downloadGoMappings(String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public void downloadGoMappings(String ensemblType, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
-                + "<Query  virtualSchemaName = \"default\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.6\" >"
+                + "<Query  virtualSchemaName = \"" + ensemblType + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.6\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
                 + "<Attribute name = \"uniprot_swissprot_accession\" />"
                 + "<Attribute name = \"goslim_goa_accession\" />"
@@ -167,7 +167,6 @@ public class GenePreferences implements Serializable {
                 wr.flush();
 
                 if (!waitingHandler.isRunCanceled()) {
-
 
                     waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait...");
 
@@ -215,35 +214,29 @@ public class GenePreferences implements Serializable {
                         waitingHandler.setRunCanceled();
                         throw new IllegalArgumentException("The mapping file could not be created.");
                     }
-
-                    return !waitingHandler.isRunCanceled();
-
-                } else {
-                    return false;
                 }
             } finally {
                 wr.close();
             }
         }
-        return false;
     }
 
     /**
      * Download the gene mappings.
      *
+     * @param ensemblType the Ensembl type, e.g., default or plants_mart_18
      * @param selectedSpecies
      * @param waitingHandler
-     * @return true if the download was ok
      * @throws MalformedURLException
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public boolean downloadGeneMappings(String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
+    public void downloadGeneMappings(String ensemblType, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
-                + "<Query  virtualSchemaName = \"default\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.6\" >"
+                + "<Query  virtualSchemaName = \"" + ensemblType + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.6\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
                 + "<Attribute name = \"ensembl_gene_id\" />"
                 + "<Attribute name = \"external_gene_id\" />"
@@ -304,22 +297,15 @@ public class GenePreferences implements Serializable {
                         } finally {
                             br.close();
                         }
-
                     } else {
                         waitingHandler.setRunCanceled();
                         throw new IllegalArgumentException("The mapping file could not be created.");
                     }
-
-                    return !waitingHandler.isRunCanceled();
-                } else {
-                    return false;
                 }
             } finally {
                 wr.close();
             }
         }
-
-        return false;
     }
 
     /**
@@ -350,8 +336,8 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Insert the default gene mappings files. If the files already exists these
-     * will be kept and not overwritten.
+     * Insert the default gene mappings files. If newer versions of the mapping
+     * exists they will not be overwritten.
      *
      * @param aEnsemblVersionsFile
      * @param aGoDomainsFile
@@ -375,19 +361,17 @@ public class GenePreferences implements Serializable {
         File defaultSpeciesGoMappingsFile = new File(getGeneMappingFolder(), aDefaultSpeciesGoMappingsFile.getName());
         File defaultSpeciesGeneMappingFile = new File(getGeneMappingFolder(), aDefaultSpeciesGeneMappingFile.getName());
 
-        if (!speciesFile.exists()) {
-            try {
+        try {
+            if (!speciesFile.exists()) {
                 boolean fileCreated = speciesFile.createNewFile();
-
                 if (!fileCreated) {
                     throw new IllegalArgumentException("Could not create the species file!");
                 }
-
-                Util.copyFile(aSpeciesFile, speciesFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Could not create the species file!");
             }
+            Util.copyFile(aSpeciesFile, speciesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Could not create the species file!");
         }
 
         boolean updateHumanEnsembl = false;
@@ -471,19 +455,17 @@ public class GenePreferences implements Serializable {
             throw new IllegalArgumentException("Could not create or update the Ensembl versions file!");
         }
 
-        if (!goDomainsFile.exists()) {
-            try {
+        try {
+            if (!goDomainsFile.exists()) {
                 boolean fileCreated = goDomainsFile.createNewFile();
-
                 if (!fileCreated) {
                     throw new IllegalArgumentException("Could not create the GO domains file!");
                 }
-
-                Util.copyFile(aGoDomainsFile, goDomainsFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Could not create the GO domains file!");
             }
+            Util.copyFile(aGoDomainsFile, goDomainsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Could not create the GO domains file!");
         }
 
         if (updateHumanEnsembl) {
@@ -577,11 +559,9 @@ public class GenePreferences implements Serializable {
             }
 
             if (ensemblVersionsFile.exists()) {
-
                 // read the Ensembl versions
                 loadEnsemblSpeciesVersions(ensemblVersionsFile);
             }
-
 
             if (!speciesFile.exists()) {
                 throw new IllegalArgumentException("GO species file \"" + speciesFile.getName() + "\" not found!\n"
@@ -598,9 +578,9 @@ public class GenePreferences implements Serializable {
 
                         while ((line = br.readLine()) != null) {
                             String[] elements = line.split("\\t");
-                            String currentSpecies = elements[0].trim();
-                            speciesMap.put(currentSpecies, elements[1].trim());
-                            availableSpecies.add(currentSpecies);
+                            String tempSpecies = elements[0].trim();
+                            speciesMap.put(tempSpecies, elements[1].trim());
+                            availableSpecies.add(tempSpecies);
                         }
 
                     } finally {
@@ -766,6 +746,7 @@ public class GenePreferences implements Serializable {
     /**
      * Imports the gene mapping.
      *
+     * @param jarFilePath the jar file path
      * @param waitingHandler the waiting handler
      * @return a boolean indicating whether the loading was successful
      */

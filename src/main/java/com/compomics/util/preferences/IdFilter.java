@@ -144,7 +144,7 @@ public class IdFilter implements Serializable {
             boolean target = false;
             boolean decoy = false;
             for (String protein : peptide.getParentProteins()) {
-                if (SequenceFactory.isDecoy(protein)) {
+                if (SequenceFactory.getInstance().isDecoyAccession(protein)) {
                     decoy = true;
                 } else {
                     target = true;

@@ -14,6 +14,11 @@ import java.util.Collections;
 public abstract class Ion extends ExperimentObject {
 
     /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = -1505719074403886934L;
+
+    /**
      * An enumerator of the supported ion types.
      */
     public enum IonType {
@@ -59,7 +64,7 @@ public abstract class Ion extends ExperimentObject {
     /**
      * Returns the name of the ion. The name should be short enough to be
      * displayed on a spectrum.
-     * 
+     *
      * @return the name of the ion
      */
     public abstract String getName();
@@ -164,16 +169,16 @@ public abstract class Ion extends ExperimentObject {
     public double getTheoreticMass() {
         return theoreticMass;
     }
-    
+
     /**
      * Returns the theoretic m/z of an ion at a given charge state.
-     * 
+     *
      * @param chargeValue the value of the carried charge
      * @return the theoretic m/z.
      */
     public double getTheoreticMz(int chargeValue) {
         return (theoreticMass + chargeValue * ElementaryIon.proton.theoreticMass) / chargeValue;
-    } 
+    }
 
     /**
      * Sets a new theoretic mass.
@@ -211,7 +216,7 @@ public abstract class Ion extends ExperimentObject {
 
     /**
      * Returns the type of ion as string.
-     * 
+     *
      * @return the type of ion as string
      */
     public String getTypeAsString() {
@@ -220,7 +225,7 @@ public abstract class Ion extends ExperimentObject {
 
     /**
      * Returns the type of ion as string.
-     * 
+     *
      * @param type the type of ion as string
      * @return the type of ion as string
      */

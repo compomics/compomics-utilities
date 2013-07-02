@@ -148,8 +148,8 @@ public class ProteinMatch extends IdentificationMatch {
      * @return boolean indicating if the protein match is a decoy one
      */
     public boolean isDecoy() {
-        for (String protein : theoreticProtein) {
-            if (SequenceFactory.isDecoy(protein)) {
+        for (String accession : theoreticProtein) {
+            if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                 return true;
             }
         }
@@ -165,7 +165,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public static boolean isDecoy(String key) {
         for (String accession : getAccessions(key)) {
-            if (SequenceFactory.isDecoy(accession)) {
+            if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                 return true;
             }
         }

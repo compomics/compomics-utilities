@@ -132,24 +132,6 @@ public class PeptideMatch extends IdentificationMatch {
         return spectrumMatches.size();
     }
 
-    /**
-     * Inspects whether the peptide match is a decoy hit.
-     *
-     * @return true if the peptide match is a decoy hit
-     */
-    public boolean isDecoy() {
-        if (isDecoy == null) {
-            for (String protein : theoreticPeptide.getParentProteins()) {
-                if (!SequenceFactory.isDecoy(protein)) {
-                    isDecoy = false;
-                    return isDecoy;
-                }
-            }
-            isDecoy = true;
-        }
-        return isDecoy;
-    }
-
     @Override
     public MatchType getType() {
         return MatchType.Peptide;

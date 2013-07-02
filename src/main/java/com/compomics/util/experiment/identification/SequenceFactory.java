@@ -6,6 +6,7 @@ import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.protein.Header;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -156,7 +157,7 @@ public class SequenceFactory {
      */
     private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
-        if (isDefaultReversed() && isDecoy(accession)) {
+        if (isDefaultReversed() && isDecoyAccession(accession)) {
             String targetAccession = getDefaultTargetAccession(accession);
             try {
                 Protein targetProtein = getProtein(targetAccession, reindex);
@@ -232,7 +233,7 @@ public class SequenceFactory {
                 }
             }
 
-            return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoy(accession));
+            return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
 
         } catch (IOException e) {
             if (nTries <= 100) {
@@ -420,8 +421,24 @@ public class SequenceFactory {
             }
         }
 
+        // try to rescue user settings
+        String decoyTag = null;
+        String version = null;
+        Header.DatabaseType databaseType = null;
+            File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
+            if (indexFile.exists()) {
+                try {
+                    tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
+                    decoyTag = tempFastaIndex.getDecoyTag();
+                    version = tempFastaIndex.getVersion();
+                    databaseType = tempFastaIndex.getDatabaseType();
+                } catch (Exception e) {
+                    // Fail silently
+                }
+            }
+
         System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
-        tempFastaIndex = createFastaIndex(currentFastaFile, waitingHandler);
+        tempFastaIndex = createFastaIndex(indexFile, decoyTag, databaseType, version, waitingHandler);
 
         if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
             try {
@@ -431,6 +448,112 @@ public class SequenceFactory {
             }
         }
         return tempFastaIndex;
+    }
+
+    /**
+     * Static method to create a FASTA index for a FASTA file.
+     *
+     * @param fastaFile the FASTA file
+     * @param progressBar a progress bar showing the progress
+     * @param decoyTag the decoy tag. Will be inferred if null.
+     * @param databaseType the database type. Will be inferred if null.
+     * @param version the version. last modification of the file will be used if
+     * null.
+     *
+     * @return the corresponding FASTA index
+     *
+     * @throws FileNotFoundException exception thrown if the FASTA file was not
+     * found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing of the protein headers
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
+     */
+    private static FastaIndex createFastaIndex(File fastaFile, String decoyTag, Header.DatabaseType databaseType, String version, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
+
+        HashMap<String, Long> indexes = new HashMap<String, Long>();
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressValue(100);
+            waitingHandler.setSecondaryProgressValue(0);
+        }
+
+        long progressUnit = bufferedRandomAccessFile.length() / 100;
+
+        String line;
+        boolean decoy = false, defaultReversed = false, multipleType = false;
+        int nTarget = 0;
+        long index = bufferedRandomAccessFile.getFilePointer();
+        if (databaseType == null) {
+            databaseType = Header.DatabaseType.Unknown;
+        }
+
+        while ((line = bufferedRandomAccessFile.readLine()) != null) {
+            if (line.startsWith(">")) {
+                Header fastaHeader = Header.parseFromFASTA(line);
+                String accession = fastaHeader.getAccession();
+
+//                if (fastaHeader.getStartLocation() != -1) {
+//                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
+//                }
+
+                if (accession == null) {
+                    accession = fastaHeader.getRest();
+                }
+
+                if (indexes.containsKey(accession)) {
+                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
+                }
+
+                indexes.put(accession, index);
+                if (decoyTag == null) {
+                    decoyTag = getDecoyFlag(accession);
+                }
+                if (decoyTag == null || !isDecoy(accession, decoyTag)) {
+                    nTarget++;
+                    if (!multipleType) {
+                        if (databaseType == Header.DatabaseType.Unknown) {
+                            databaseType = fastaHeader.getDatabaseType();
+                        } else if (fastaHeader.getDatabaseType() != databaseType && databaseType != Header.DatabaseType.Generic_Header) {
+                            databaseType = Header.DatabaseType.Unknown;
+                            multipleType = true;
+                        }
+                    }
+                } else if (!decoy) {
+                    decoy = true;
+                    if (accession.endsWith(getDefaultDecoyAccessionSuffix())) {
+                        defaultReversed = true;
+                    }
+                }
+
+                if (waitingHandler != null) {
+                    waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
+                    if (waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                }
+            } else {
+                index = bufferedRandomAccessFile.getFilePointer();
+            }
+        }
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+        }
+
+        bufferedRandomAccessFile.close();
+
+        long lastModified = fastaFile.lastModified();
+
+        if (version == null) {
+            version = FastaIndex.getDefaultVersion(lastModified);
+        }
+
+        return new FastaIndex(indexes, line, decoy, defaultReversed, nTarget, lastModified, databaseType, decoyTag, version);
     }
 
     /**
@@ -460,102 +583,60 @@ public class SequenceFactory {
     }
 
     /**
-     * Static method to create a FASTA index for a FASTA file.
+     * Returns a boolean indicating whether a protein is decoy or not based on
+     * the protein accession and a given decoy flag.
      *
-     * @param fastaFile the FASTA file
-     * @param progressBar a progress bar showing the progress
-     * @return the corresponding FASTA index
-     * @throws FileNotFoundException exception thrown if the FASTA file was not
-     * found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
-     * parsing of the protein headers
-     * @throws IllegalArgumentException if non unique accession numbers are
-     * found
+     * @param proteinAccession The accession of the protein
+     * @param decoyFlag the decoy flag
+     * @return a boolean indicating whether the protein is Decoy.
      */
-    private static FastaIndex createFastaIndex(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
-
-        HashMap<String, Long> indexes = new HashMap<String, Long>();
-        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
-
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(100);
-            waitingHandler.setSecondaryProgressValue(0);
+    public static boolean isDecoy(String proteinAccession, String decoyFlag) {
+        String start = decoyFlag + ".*";
+        String end = ".*" + decoyFlag;
+        if (proteinAccession.matches(start) || proteinAccession.matches(end)) {
+            return true;
         }
-
-        long progressUnit = bufferedRandomAccessFile.length() / 100;
-
-        String line;
-        boolean decoy = false, defaultReversed = false;
-        int nTarget = 0;
-        long index = bufferedRandomAccessFile.getFilePointer();
-
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
-            if (line.startsWith(">")) {
-                Header fastaHeader = Header.parseFromFASTA(line);
-                String accession = fastaHeader.getAccession();
-
-//                if (fastaHeader.getStartLocation() != -1) {
-//                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
-//                }
-
-                if (accession == null) {
-                    accession = fastaHeader.getRest();
-                }
-
-                if (indexes.containsKey(accession)) {
-                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
-                }
-
-                indexes.put(accession, index);
-                if (!isDecoy(accession)) {
-                    nTarget++;
-                } else if (!decoy) {
-                    decoy = true;
-                    if (accession.endsWith(getDefaultDecoyAccessionSuffix())) {
-                        defaultReversed = true;
-                    }
-                }
-
-                if (waitingHandler != null) {
-                    waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                }
-            } else {
-                index = bufferedRandomAccessFile.getFilePointer();
-            }
-        }
-
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
-        }
-
-        bufferedRandomAccessFile.close();
-
-        long lastModified = fastaFile.lastModified();
-
-        return new FastaIndex(indexes, fastaFile.getName(), decoy, defaultReversed, nTarget, lastModified);
+        return false;
     }
 
     /**
-     * Returns a boolean indicating whether a protein is decoy or not based on
-     * the protein accession. Recognized flags for decoy proteins are listed as
-     * a static field.
+     * Returns the default tag matched in the sequence if any. Null else.
      *
-     * @param proteinAccession The accession of the protein
-     * @return a boolean indicating whether the protein is Decoy.
+     * @param proteinAccession the protein accession
+     *
+     * @return the decoy tag matched by this protein
+     */
+    public static String getDecoyFlag(String proteinAccession) {
+        for (String flag : decoyFlags) {
+            if (isDecoy(proteinAccession, flag)) {
+                return flag;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Indicates whether a protein is decoy in the selected loaded fasta file.
+     *
+     * @param proteinAccession the protein accession of interest.
+     * @return true if decoy
+     */
+    public boolean isDecoyAccession(String proteinAccession) {
+        return isDecoy(proteinAccession, fastaIndex.getDecoyTag());
+    }
+
+    /**
+     * Indicates whether a protein accession is decoy according to the standard
+     * decoy flags.
+     *
+     * @deprecated deprecated, use the isDecoy(proteinAccession, flag) with file
+     * dependent flag or isDecoyAccession(String proteinAccession) instead.
+     * @param proteinAccession the accession of interest
+     * @return true if decoy
      */
     public static boolean isDecoy(String proteinAccession) {
         for (String flag : decoyFlags) {
-
-            String start = flag + ".*"; // @TODO: perhaps this can be further optimized?
-            String end = ".*" + flag;
-
-            if (proteinAccession.matches(start) || proteinAccession.matches(end)) {
+            if (isDecoy(proteinAccession, flag)) {
                 return true;
             }
         }
@@ -764,7 +845,7 @@ public class SequenceFactory {
 
         for (String accession : accessions) {
 
-            if (!isDecoy(accession)) {
+            if (!isDecoyAccession(accession)) {
                 Protein protein = getProtein(accession);
                 for (String aa : protein.getSequence().split("")) {
                     Integer n = aaMap.get(aa);
@@ -799,7 +880,7 @@ public class SequenceFactory {
      */
     public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
-        if (isDefaultReversed() && isDecoy(accession)) {
+        if (isDefaultReversed() && isDecoyAccession(accession)) {
             // Don't really see where we would need that...
             try {
                 return computeMolecularWeight(getDefaultTargetAccession(accession));
@@ -887,4 +968,5 @@ public class SequenceFactory {
     public static String getDefaultTargetAccession(String decoyAccession) {
         return decoyAccession.substring(0, decoyAccession.length() - getDefaultDecoyAccessionSuffix().length());
     }
+    
 }

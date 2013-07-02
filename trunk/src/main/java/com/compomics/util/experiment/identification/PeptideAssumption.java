@@ -45,10 +45,6 @@ public class PeptideAssumption extends ExperimentObject {
      * the corresponding file.
      */
     private String file;
-    /**
-     * Is it a decoy identification?
-     */
-    private Boolean isDecoy = null;
 
     /**
      * Constructor for a peptide assumption.
@@ -195,24 +191,6 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public String getFile() {
         return file;
-    }
-
-    /**
-     * Is the identification decoy?
-     *
-     * @return a boolean indicating if the identification is a decoy one
-     */
-    public boolean isDecoy() {
-        if (isDecoy == null) {
-            for (String protein : peptide.getParentProteins()) {
-                if (SequenceFactory.isDecoy(protein)) {
-                    isDecoy = true;
-                    return isDecoy;
-                }
-            }
-            isDecoy = false;
-        }
-        return isDecoy;
     }
 
     /**

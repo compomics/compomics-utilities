@@ -1112,4 +1112,18 @@ public class Peptide extends ExperimentObject {
     public static AminoAcidPattern getSequenceAsPattern(String sequence) {
         return new AminoAcidPattern(sequence);
     }
+    
+    /**
+     * Indicates whether a peptide can be derived from a decoy protein.
+     * 
+     * @return whether a peptide can be derived from a decoy protein
+     */
+    public boolean isDecoy() {
+        for (String accession : parentProteins) {
+            if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

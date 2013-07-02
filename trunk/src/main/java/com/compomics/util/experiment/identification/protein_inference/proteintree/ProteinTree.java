@@ -147,7 +147,7 @@ public class ProteinTree {
         if (sequenceFactory.isDefaultReversed()) {
             accessions = new ArrayList<String>();
             for (String accession : sequenceFactory.getAccessions()) {
-                if (!SequenceFactory.isDecoy(accession)) {
+                if (!sequenceFactory.isDecoyAccession(accession)) {
                     accessions.add(accession);
                 }
             }

@@ -987,7 +987,7 @@ public class Header implements Cloneable, Serializable {
             String temp = iDescriptionShort + " (" + iDescriptionProteinName + ")";
 
             // see if we need to add a decoy flag
-            if (SequenceFactory.isDecoy(iAccession)) {
+            if (SequenceFactory.getInstance().isDecoyAccession(iAccession)) {
                 temp = SequenceFactory.getDefaultDecoyDescription(temp);
             }
 

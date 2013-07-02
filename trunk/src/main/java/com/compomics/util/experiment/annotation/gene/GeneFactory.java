@@ -3,9 +3,12 @@ package com.compomics.util.experiment.annotation.gene;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.gui.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -45,6 +48,11 @@ public class GeneFactory {
      * Boolean indicating if the mapping file is currently open.
      */
     private boolean mappingFileOpen = false;
+    /**
+     * The current Ensembl versions. Key is the Ensembl type, e.g., default or
+     * plans.
+     */
+    private HashMap<String, Integer> ensemblVersions = new HashMap<String, Integer>();
 
     /**
      * Static method returning the instance of the factory.
@@ -290,10 +298,60 @@ public class GeneFactory {
 
     /**
      * Returns true of the mapping file is currently open.
-     * 
+     *
      * @return true of the mapping file is currently open
      */
     public boolean isMappingFileOpen() {
         return mappingFileOpen;
+    }
+
+    /**
+     * Returns the current Ensembl version number. Null if not found.
+     *
+     * @param ensemblType the Ensembl type, e.g., ensembl or plants
+     * @return the current Ensembl version number
+     */
+    public Integer getCurrentEnsemblVersion(String ensemblType) {
+
+        if (ensemblVersions == null) {
+            ensemblVersions = new HashMap<String, Integer>();
+        }
+
+        if (!ensemblVersions.containsKey(ensemblType)) {
+
+            try {
+                // get the current Ensembl version
+                URL url = new URL("http://www.biomart.org/biomart/martservice?type=registry");
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+                String inputLine;
+                boolean ensemblVersionFound = false;
+                String ensemblVersionAsText = "?";
+
+                while ((inputLine = in.readLine()) != null && !ensemblVersionFound) {
+                    if (inputLine.indexOf("database=\"" + ensemblType + "_mart_") != -1) {
+                        ensemblVersionAsText = inputLine.substring(inputLine.indexOf("database=\"" + ensemblType + "_mart_") + ("database=\"" + ensemblType + "_mart_").length());
+                        ensemblVersionAsText = ensemblVersionAsText.substring(0, ensemblVersionAsText.indexOf("\""));
+                        ensemblVersionFound = true;
+                    }
+                }
+
+                in.close();
+
+                if (ensemblVersionFound) {
+                    try {
+                        Integer ensemblVersion = new Integer(ensemblVersionAsText);
+                        ensemblVersions.put(ensemblType, ensemblVersion);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return ensemblVersions.get(ensemblType);
     }
 }

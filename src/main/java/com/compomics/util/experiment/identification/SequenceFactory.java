@@ -423,6 +423,7 @@ public class SequenceFactory {
 
         // try to rescue user settings
         String decoyTag = null;
+        String name = null;
         String version = null;
         Header.DatabaseType databaseType = null;
             File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
@@ -432,13 +433,14 @@ public class SequenceFactory {
                     decoyTag = tempFastaIndex.getDecoyTag();
                     version = tempFastaIndex.getVersion();
                     databaseType = tempFastaIndex.getDatabaseType();
+                    name = tempFastaIndex.getName();
                 } catch (Exception e) {
                     // Fail silently
                 }
             }
 
         System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
-        tempFastaIndex = createFastaIndex(indexFile, decoyTag, databaseType, version, waitingHandler);
+        tempFastaIndex = createFastaIndex(currentFastaFile, name, decoyTag, databaseType, version, waitingHandler);
 
         if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
             try {
@@ -459,6 +461,7 @@ public class SequenceFactory {
      * @param databaseType the database type. Will be inferred if null.
      * @param version the version. last modification of the file will be used if
      * null.
+     * @param name the name of the database. Set to file name if null.
      *
      * @return the corresponding FASTA index
      *
@@ -471,7 +474,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private static FastaIndex createFastaIndex(File fastaFile, String decoyTag, Header.DatabaseType databaseType, String version, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
+    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, Header.DatabaseType databaseType, String version, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
@@ -552,8 +555,13 @@ public class SequenceFactory {
         if (version == null) {
             version = FastaIndex.getDefaultVersion(lastModified);
         }
+        
+        String fileName = fastaFile.getName();
+        if (name == null) {
+            name = fileName;
+        }
 
-        return new FastaIndex(indexes, line, decoy, defaultReversed, nTarget, lastModified, databaseType, decoyTag, version);
+        return new FastaIndex(indexes, fileName, name, decoy, defaultReversed, nTarget, lastModified, databaseType, decoyTag, version);
     }
 
     /**
@@ -650,7 +658,7 @@ public class SequenceFactory {
      * sequences
      */
     public boolean concatenatedTargetDecoy() {
-        return fastaIndex.isDecoy();
+        return fastaIndex.isConcatenatedTargetDecoy();
     }
 
     /**
@@ -969,4 +977,12 @@ public class SequenceFactory {
         return decoyAccession.substring(0, decoyAccession.length() - getDefaultDecoyAccessionSuffix().length());
     }
     
+    /**
+     * Returns the fasta index of the currently loaded file.
+     * 
+     * @return the fasta index of the currently loaded file
+     */
+    public FastaIndex getCurrentFastaIndex() {
+        return fastaIndex;
+    }
 }

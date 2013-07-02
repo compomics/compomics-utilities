@@ -21,6 +21,10 @@ public class FastaIndex extends ExperimentObject {
      */
     private String fileName;
     /**
+     * The name of the database
+     */
+    private String name;
+    /**
      * The last time the indexed file was modified.
      */
     private Long lastModified;
@@ -55,6 +59,7 @@ public class FastaIndex extends ExperimentObject {
      *
      * @param indexes The indexes of the inspected FASTA file
      * @param fileName The FASTA file name
+     * @param name the name of the database
      * @param concatenatedTargetDecoy If the FASTA file is a concatenated
      * target/decoy database
      * @param isDefaultReversed is this a default reversed database
@@ -65,10 +70,10 @@ public class FastaIndex extends ExperimentObject {
      * @param decoyTag the decoy tag
      * @param version the database version
      */
-    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean concatenatedTargetDecoy, boolean isDefaultReversed, 
-            int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
+    public FastaIndex(HashMap<String, Long> indexes, String fileName, String name, boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
         this.indexes = indexes;
         this.fileName = fileName;
+        this.name = name;
         this.concatenatedTargetDecoy = concatenatedTargetDecoy;
         this.isDefaultReversed = isDefaultReversed;
         this.nTarget = nTarget;
@@ -104,17 +109,6 @@ public class FastaIndex extends ExperimentObject {
      */
     public String getFileName() {
         return fileName;
-    }
-
-    /**
-     * Returns a boolean indicating whether the database ius a concatenated
-     * target/decoy database.
-     *
-     * @return a boolean indicating whether the database ius a concatenated
-     * target/decoy database
-     */
-    public boolean isDecoy() {
-        return concatenatedTargetDecoy;
     }
 
     /**
@@ -228,6 +222,22 @@ public class FastaIndex extends ExperimentObject {
      */
     public void setDecoyTag(String decoyTag) {
         this.decoyTag = decoyTag;
+    }
+
+    /**
+     * Returns the name of the database
+     * @return the name for the database
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets a new name for the database
+     * @param name a new name for the database
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

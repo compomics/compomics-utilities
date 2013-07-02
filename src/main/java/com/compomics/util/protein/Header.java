@@ -83,9 +83,9 @@ public class Header implements Cloneable, Serializable {
      */
     public enum DatabaseType {
 
-        UniProt, Unknown, NCBI, IPI, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, M_Tuberculosis,
-        Drosophile, SGD, Flybase, D_Melanogaster, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana,
-        Listeria, Generic_Header, Generic_Split_Header, GAFFA, UPS
+        UniProt, SGD, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, Drosophile, Flybase, NCBI, M_Tuberculosis, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis,
+        D_Melanogaster,
+        Listeria, GAFFA, UPS, Generic_Header, IPI, Generic_Split_Header, Unknown
     }
     /**
      * The foreign accession String is an accession String in another database
@@ -1322,6 +1322,75 @@ public class Header implements Cloneable, Serializable {
             logger.error(cnse.getMessage(), cnse);
         }
         return result;
+    }
+
+    /**
+     * Returns the implemented database types as an array of String.
+     *
+     * @return the implemented database types as an array of String
+     */
+    public static String[] getDatabaseTypesAsString() {
+        DatabaseType[] enumValues = DatabaseType.values();
+        String[] result = new String[enumValues.length];
+        for (int i = 0; i < enumValues.length; i++) {
+            result[i] = getDatabaseTypeAsString(enumValues[i]);
+        }
+        return result;
+    }
+
+    /**
+     * Convenience method returning the database name as a String.
+     *
+     * @TODO: use names end users are familiar to
+     *
+     * @param databaseType the database type
+     * @return the name
+     */
+    public static String getDatabaseTypeAsString(DatabaseType databaseType) {
+        switch (databaseType) {
+            case UniProt:
+                return "UniProtKB";
+            case Unknown:
+                return "Unknown";
+            case NCBI:
+                return "NCBI";
+            case IPI:
+                return "IPI (deprecated)";
+            case H_Invitation:
+                return "H_Invitation";
+            case Halobacterium:
+                return "Halobacterium";
+            case H_Influenza:
+                return "H_Influenza";
+            case C_Trachomatis:
+                return "C_Trachomatis";
+            case M_Tuberculosis:
+                return "M_Tuberculosis";
+            case Drosophile:
+                return "M_Tuberculosis";
+            case SGD:
+                return "SGD";
+            case Flybase:
+                return "Flybase";
+            case D_Melanogaster:
+                return "D_Melanogaster";
+            case Arabidopsis_thaliana_TAIR:
+                return "Arabidopsis thaliana TAIR";
+            case PSB_Arabidopsis_thaliana:
+                return "PSB Arabidopsis thaliana";
+            case Listeria:
+                return "Listeria";
+            case Generic_Header:
+                return "User Defined";
+            case Generic_Split_Header:
+                return "User Defined with splitters (no idea why this is actually here)";
+            case GAFFA:
+                return "GAFFA";
+            case UPS:
+                return "Universal Proteomic Standard";
+            default:
+                throw new IllegalArgumentException("Database type not implemented: " + databaseType + ".");
+        }
     }
 
     /**

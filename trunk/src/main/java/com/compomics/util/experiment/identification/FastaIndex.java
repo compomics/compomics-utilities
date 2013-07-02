@@ -21,7 +21,7 @@ public class FastaIndex extends ExperimentObject {
      */
     private String fileName;
     /**
-     * The name of the database
+     * The name of the database.
      */
     private String name;
     /**
@@ -225,7 +225,8 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the name of the database
+     * Returns the name of the database.
+     *
      * @return the name for the database
      */
     public String getName() {
@@ -233,7 +234,8 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Sets a new name for the database
+     * Sets a new name for the database.
+     *
      * @param name a new name for the database
      */
     public void setName(String name) {

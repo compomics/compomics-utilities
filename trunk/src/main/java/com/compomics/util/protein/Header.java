@@ -50,7 +50,7 @@ public class Header implements Cloneable, Serializable {
      */
     private String iID = null;
     /**
-     * The foreign ID is the ID of another database this entry is orignally
+     * The foreign ID is the ID of another database this entry is originally
      * from. Most notably used for SwissProt entries in NCBI. <br /> The foreign
      * ID String is an addendum to the accession String in the abbreviated
      * header String.
@@ -83,9 +83,9 @@ public class Header implements Cloneable, Serializable {
      */
     public enum DatabaseType {
 
-        UniProt, SGD, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, Drosophile, Flybase, NCBI, M_Tuberculosis, H_Invitation, Halobacterium, H_Influenza, C_Trachomatis,
-        D_Melanogaster,
-        Listeria, GAFFA, UPS, Generic_Header, IPI, Generic_Split_Header, Unknown
+        UniProt, SGD, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, Drosophile, Flybase, NCBI, M_Tuberculosis,
+        H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, D_Melanogaster, Listeria, GAFFA, UPS, Generic_Header,
+        IPI, Generic_Split_Header, Unknown
     }
     /**
      * The foreign accession String is an accession String in another database
@@ -1089,7 +1089,7 @@ public class Header implements Cloneable, Serializable {
     public String toString(String decoyTag) {
         String result;
 
-        if (databaseType == DatabaseType.Generic_Split_Header) { // @TODO: this special case is perhaps not needed?
+        if (databaseType == DatabaseType.Generic_Split_Header) {
             result = ">" + this.iID + decoyTag + "|" + this.iAccession + "|" + this.iDescription;
         } else {
             if (this.iID == null) {
@@ -1341,12 +1341,13 @@ public class Header implements Cloneable, Serializable {
     /**
      * Convenience method returning the database name as a String.
      *
-     * @TODO: use names end users are familiar to
-     *
      * @param databaseType the database type
      * @return the name
      */
     public static String getDatabaseTypeAsString(DatabaseType databaseType) {
+
+        // @TODO: use names end users are familiar with
+
         switch (databaseType) {
             case UniProt:
                 return "UniProtKB";
@@ -1383,7 +1384,7 @@ public class Header implements Cloneable, Serializable {
             case Generic_Header:
                 return "User Defined";
             case Generic_Split_Header:
-                return "User Defined with splitters (no idea why this is actually here)";
+                return "Generic Header";
             case GAFFA:
                 return "GAFFA";
             case UPS:

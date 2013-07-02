@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -35,19 +34,19 @@ public class FastaIndex extends ExperimentObject {
      */
     private int nTarget;
     /**
-     * The database type
+     * The database type.
      */
     private DatabaseType databaseType = DatabaseType.Unknown;
     /**
-     * The version of the database
+     * The version of the database.
      */
     private String version;
     /**
-     * Indicates whether the database is a concatenated target/decoy
+     * Indicates whether the database is a concatenated target/decoy.
      */
     private boolean concatenatedTargetDecoy;
     /**
-     * The tag used for decoy sequences
+     * The tag used for decoy sequences.
      */
     private String decoyTag;
 
@@ -62,8 +61,12 @@ public class FastaIndex extends ExperimentObject {
      * @param nTarget Number of target sequences found in the database
      * @param lastModified a long indicating the last time the indexed file was
      * modified
+     * @param databaseType the database type
+     * @param decoyTag the decoy tag
+     * @param version the database version
      */
-    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
+    public FastaIndex(HashMap<String, Long> indexes, String fileName, boolean concatenatedTargetDecoy, boolean isDefaultReversed, 
+            int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
         this.indexes = indexes;
         this.fileName = fileName;
         this.concatenatedTargetDecoy = concatenatedTargetDecoy;
@@ -164,7 +167,7 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Sets the database type
+     * Sets the database type.
      *
      * @param databaseType the database type
      */
@@ -200,7 +203,7 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Sets whether the database is a concatenated target/decoy database
+     * Sets whether the database is a concatenated target/decoy database.
      *
      * @param concatenatedTargetDecoy whether the database is a concatenated
      * target/decoy database
@@ -210,7 +213,7 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Retuns the decoy tag.
+     * Returns the decoy tag.
      *
      * @return sets the decoy tag
      */

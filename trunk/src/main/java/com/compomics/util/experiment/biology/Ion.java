@@ -14,7 +14,7 @@ import java.util.Collections;
 public abstract class Ion extends ExperimentObject {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -1505719074403886934L;
 

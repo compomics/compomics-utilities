@@ -19,7 +19,7 @@ public class FastaIndex extends ExperimentObject {
     /**
      * The FASTA file name.
      */
-    private String fileName;
+    private String fileName = null;
     /**
      * The name of the database.
      */

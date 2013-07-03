@@ -252,7 +252,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
         });
 
         ensemblCategoryJComboBox.setMaximumRowCount(20);
-        ensemblCategoryJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select Species Type ---", "Fungi", "Plants", "Protists", "Metazoa", "Vertebrates" }));
+        ensemblCategoryJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select Species Type ---", "Fungi (beta)", "Plants (beta)", "Protists (beta)", "Metazoa (beta)", "Vertebrates" }));
         ensemblCategoryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ensemblCategoryJComboBoxActionPerformed(evt);
@@ -670,10 +670,16 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
 
                     if (!progressDialog.isRunCanceled()) {
-                        genePreferences.downloadGoMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, geneFactory.getCurrentEnsemblVersion(getEnsemblType()).toString(), progressDialog);
+                        boolean goMappingsDownloaded = genePreferences.downloadGoMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, progressDialog);
+
+                        if (!goMappingsDownloaded) {
+                            JOptionPane.showMessageDialog(finalRef, "Gene ontology mappings not available.\n"
+                                    + "Downloading gene mappings only.", "Gene Ontology Mappings", JOptionPane.INFORMATION_MESSAGE);
+                        }
                     }
                     if (!progressDialog.isRunCanceled()) {
-                        genePreferences.downloadGeneMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, progressDialog);
+                        genePreferences.downloadGeneMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, 
+                                geneFactory.getCurrentEnsemblVersion(getEnsemblType()).toString(), progressDialog);
                     }
 
                     boolean canceled = progressDialog.isRunCanceled();

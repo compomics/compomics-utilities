@@ -152,12 +152,12 @@ public class GenePreferences implements Serializable {
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
      * @param selectedSpecies
-     * @param ensemblVersion
      * @param waitingHandler
+     * @return true of the downloading was OK
      * @throws MalformedURLException
      * @throws IOException
      */
-    public void downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public boolean downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -208,6 +208,9 @@ public class GenePreferences implements Serializable {
                                     String rowLine = br.readLine();
 
                                     if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+                                        if (rowLine.lastIndexOf("Attribute goslim_goa_accession NOT FOUND") != -1) {
+                                            return false;
+                                        }
                                         throw new IllegalArgumentException("Query error: " + rowLine);
                                     } else {
                                         while (rowLine != null && !waitingHandler.isRunCanceled()) {
@@ -226,10 +229,6 @@ public class GenePreferences implements Serializable {
                         } finally {
                             br.close();
                         }
-
-                        if (!waitingHandler.isRunCanceled()) {
-                            updateEnsemblVersion(selectedSpecies, "Ensembl " + ensemblVersion);
-                        }
                     } else {
                         waitingHandler.setRunCanceled();
                         throw new IllegalArgumentException("The mapping file could not be created.");
@@ -239,6 +238,8 @@ public class GenePreferences implements Serializable {
                 wr.close();
             }
         }
+
+        return true;
     }
 
     /**
@@ -248,12 +249,13 @@ public class GenePreferences implements Serializable {
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
      * @param selectedSpecies
+     * @param ensemblVersion
      * @param waitingHandler
      * @throws MalformedURLException
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
+    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -274,13 +276,13 @@ public class GenePreferences implements Serializable {
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
             try {
 
                 wr.write(requestXml);
                 wr.flush();
 
                 if (!waitingHandler.isRunCanceled()) {
-
 
                     waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait...");
 
@@ -320,6 +322,11 @@ public class GenePreferences implements Serializable {
                         } finally {
                             br.close();
                         }
+
+                        if (!waitingHandler.isRunCanceled()) {
+                            updateEnsemblVersion(selectedSpecies, "Ensembl " + ensemblVersion);
+                        }
+
                     } else {
                         waitingHandler.setRunCanceled();
                         throw new IllegalArgumentException("The mapping file could not be created.");

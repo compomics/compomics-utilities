@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -116,14 +117,16 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void setUpGUI() {
         ensemblCategoryJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         speciesJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-        String[] speciesCmbContent = getComboBoxContent();
-        speciesJComboBox.setModel(new DefaultComboBoxModel(speciesCmbContent));
+        if (genePreferences.getCurrentSpeciesType() != null) {
+            ensemblCategoryJComboBox.setSelectedItem(genePreferences.getCurrentSpeciesType());
+        }
+        updateSpeciesList();
 
         // select the current species
         String selectedSpecies = genePreferences.getCurrentSpecies();
         if (selectedSpecies != null) {
-            for (int i = 0; i < speciesCmbContent.length; i++) {
-                String content = speciesCmbContent[i];
+            for (int i = 0; i < speciesJComboBox.getItemCount(); i++) {
+                String content = (String) speciesJComboBox.getItemAt(i);
                 if (content.contains(selectedSpecies)) {
                     speciesJComboBox.setSelectedIndex(i);
                     boolean dbVersion = content.contains("N/A");
@@ -145,33 +148,49 @@ public class SpeciesDialog extends javax.swing.JDialog {
      *
      * @return the list to display in the combo box
      */
-    private String[] getComboBoxContent() {
+    private void updateSpeciesList() {
 
-        ArrayList<String> availableSpecies = genePreferences.getSpecies();
-        ArrayList<String> speciesList = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> availableSpecies = genePreferences.getAllSpecies();
+        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
+        speciesJComboBox.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() > 0);
 
-        if (availableSpecies != null && !availableSpecies.isEmpty()) {
+        if (ensemblCategoryJComboBox.getSelectedIndex() > 0) {
 
-            speciesList.add(SELECT_SPECIES_TAG);
+            ArrayList<String> currentSpeciesList = availableSpecies.get(currentEnsemblSpeciesType);
+            ArrayList<String> speciesList = new ArrayList<String>();
 
-            for (int i = 0; i < availableSpecies.size(); i++) {
-                String currentSpecies = availableSpecies.get(i);
-                String tempEnsemblVersion = genePreferences.getEnsemblSpeciesVersion(currentSpecies);
-                if (tempEnsemblVersion == null) {
-                    tempEnsemblVersion = "N/A";
+            if (currentSpeciesList != null && !currentSpeciesList.isEmpty()) {
+
+                speciesList.add(SELECT_SPECIES_TAG);
+
+                for (int i = 0; i < currentSpeciesList.size(); i++) {
+                    String currentSpecies = currentSpeciesList.get(i);
+                    String tempEnsemblVersion = genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, currentSpecies);
+                    if (tempEnsemblVersion == null) {
+                        tempEnsemblVersion = "N/A";
+                    }
+                    speciesList.add(currentSpecies + " [" + tempEnsemblVersion + "]");
                 }
-                speciesList.add(currentSpecies + " [" + tempEnsemblVersion + "]");
+
+                speciesList.add(NO_SPECIES_TAG);
+
+                String[] tempTable = new String[speciesList.size()];
+                speciesJComboBox.setModel(new DefaultComboBoxModel(speciesList.toArray(tempTable)));
+            } else {
+                String[] content = new String[1];
+                content[0] = NO_SPECIES_TAG;
+                speciesJComboBox.setModel(new DefaultComboBoxModel(content));
             }
 
-            speciesList.add(NO_SPECIES_TAG);
-
-            String[] tempTable = new String[speciesList.size()];
-            return speciesList.toArray(tempTable);
         } else {
             String[] content = new String[1];
-            content[0] = NO_SPECIES_TAG;
-            return content;
+            content[0] = SELECT_SPECIES_TAG;
+            speciesJComboBox.setModel(new DefaultComboBoxModel(content));
         }
+
+        updateMappingsButton.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() > 0
+                && speciesJComboBox.getSelectedIndex() > 0
+                && speciesJComboBox.getSelectedIndex() < speciesJComboBox.getItemCount() - 1);
     }
 
     /**
@@ -180,9 +199,10 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @return the species selected
      */
     private String getSelectedSpecies() {
+        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
         int selectedIndex = speciesJComboBox.getSelectedIndex();
         if (selectedIndex > 0 && selectedIndex < speciesJComboBox.getItemCount() - 1) {
-            return genePreferences.getSpecies().get(selectedIndex - 1);
+            return genePreferences.getAllSpecies().get(currentEnsemblSpeciesType).get(selectedIndex - 1);
         }
         return null;
     }
@@ -232,8 +252,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
         });
 
         ensemblCategoryJComboBox.setMaximumRowCount(20);
-        ensemblCategoryJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Fungi", "Plants", "Protists", "Metazoa", "Vertebrates" }));
-        ensemblCategoryJComboBox.setSelectedIndex(4);
+        ensemblCategoryJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select Species Type ---", "Fungi", "Plants", "Protists", "Metazoa", "Vertebrates" }));
         ensemblCategoryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ensemblCategoryJComboBoxActionPerformed(evt);
@@ -247,7 +266,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ensemblCategoryJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ensemblCategoryJComboBox, 0, 416, Short.MAX_VALUE)
                     .addComponent(speciesJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -314,7 +333,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                         .addComponent(unknownSpeciesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(ensemblVersionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 280, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -352,11 +371,13 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void speciesJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speciesJComboBoxActionPerformed
+
+        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
             updateMappingsButton.setEnabled(true);
-            if (genePreferences.getEnsemblSpeciesVersion(selectedSpecies) == null) {
+            if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null) {
                 updateMappingsButton.setText("Download");
             } else {
                 updateMappingsButton.setText("Update");
@@ -438,10 +459,11 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
+        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
-            if (genePreferences.getEnsemblSpeciesVersion(selectedSpecies) == null) {
+            if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null) {
                 int option = JOptionPane.showConfirmDialog(this,
                         "The gene and GO annotations are not downloaded for the selected species.\n"
                         + "Download now?", "Gene Annotation Missing", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -452,14 +474,17 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     downloadMappings();
                 } else {
                     genePreferences.setCurrentSpecies(selectedSpecies);
+                    genePreferences.setCurrentSpeciesType(currentEnsemblSpeciesType);
                     dispose();
                 }
             } else {
                 genePreferences.setCurrentSpecies(selectedSpecies);
+                genePreferences.setCurrentSpeciesType(currentEnsemblSpeciesType);
                 dispose();
             }
         } else {
             genePreferences.setCurrentSpecies(null);
+            genePreferences.setCurrentSpeciesType(null);
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
@@ -472,12 +497,37 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void updateMappingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateMappingsButtonActionPerformed
         if (geneFactory.getCurrentEnsemblVersion(getEnsemblType()) != null) {
             if (updateMappingsButton.getText().equalsIgnoreCase("Download")) {
+                clearOldMappings();
                 downloadMappings();
             } else { // update
 
-                // @TODO: first check if newer mappings are available
+                // check if newer mappings are available
+                Integer latestEnsemblVersion = geneFactory.getCurrentEnsemblVersion(getEnsemblType());
 
-                updateMappings();
+                String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
+                String selectedSpecies = getSelectedSpecies();
+                String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
+                String currentEnsemblVersionAsString = genePreferences.getEnsemblVersion(selectedDb);
+
+                if (currentEnsemblVersionAsString != null) {
+
+                    currentEnsemblVersionAsString = currentEnsemblVersionAsString.substring(currentEnsemblVersionAsString.indexOf(" ") + 1);
+                    Integer currentEnsemblVersion;
+
+                    try {
+                        currentEnsemblVersion = new Integer(currentEnsemblVersionAsString);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        currentEnsemblVersion = latestEnsemblVersion;
+                    }
+
+                    if (currentEnsemblVersion < latestEnsemblVersion) {
+                        clearOldMappings();
+                        downloadMappings();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Ensembl mappings are already up to date.", "Ensembl Mappings", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
             }
         } else {
             JOptionPane.showMessageDialog(this, "Ensembl mapping not available. Try again later.", "Ensembl Error", JOptionPane.INFORMATION_MESSAGE);
@@ -490,13 +540,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void ensemblCategoryJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ensemblCategoryJComboBoxActionPerformed
-
-        // TODO: update the species list to the selected Ensembl version
-
-        okButton.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() == 4);
-        speciesJComboBox.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() == 4);
-        updateMappingsButton.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() == 4);
-
+        updateSpeciesList();
     }//GEN-LAST:event_ensemblCategoryJComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
@@ -532,11 +576,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void updateMappings() {
+    private boolean clearOldMappings() {
 
         // delete the old mappings file
+        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
         String selectedSpecies = getSelectedSpecies();
-        String selectedDb = genePreferences.getEnsemblDatabaseName(selectedSpecies);
+        String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
 
         goFactory.clearFactory();
         geneFactory.clearFactory();
@@ -571,13 +616,15 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 }
             }
 
-            if (goFileDeleted && geneFileDeleted) {
-                downloadMappings();
-            }
+            return (goFileDeleted && geneFileDeleted);
+
+
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "An error occured when trying to update the mappings.", "File Error", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        return false;
     }
 
     /**
@@ -618,14 +665,15 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     // clear old data
                     clearOldResults();
 
+                    String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
                     String selectedSpecies = getSelectedSpecies();
-                    String selectedDb = genePreferences.getEnsemblDatabaseName(selectedSpecies);
+                    String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
 
                     if (!progressDialog.isRunCanceled()) {
-                        genePreferences.downloadGoMappings(getEnsemblDbName(), selectedDb, geneFactory.getCurrentEnsemblVersion(getEnsemblType()).toString(), progressDialog);
+                        genePreferences.downloadGoMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, geneFactory.getCurrentEnsemblVersion(getEnsemblType()).toString(), progressDialog);
                     }
                     if (!progressDialog.isRunCanceled()) {
-                        genePreferences.downloadGeneMappings(getEnsemblDbName(), selectedDb, progressDialog);
+                        genePreferences.downloadGeneMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, progressDialog);
                     }
 
                     boolean canceled = progressDialog.isRunCanceled();
@@ -634,7 +682,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     if (!canceled) {
                         int selectedIndex = speciesJComboBox.getSelectedIndex();
                         genePreferences.loadSpeciesAndGoDomains();
-                        speciesJComboBox.setModel(new DefaultComboBoxModel(getComboBoxContent()));
+                        updateSpeciesList();
                         JOptionPane.showMessageDialog(finalRef, "Gene mappings downloaded.", "Gene Mappings", JOptionPane.INFORMATION_MESSAGE);
                         speciesJComboBox.setSelectedIndex(selectedIndex);
                         speciesJComboBoxActionPerformed(null);
@@ -659,40 +707,40 @@ public class SpeciesDialog extends javax.swing.JDialog {
         int selectedIndex = ensemblCategoryJComboBox.getSelectedIndex();
 
         switch (selectedIndex) {
-            case 0:
-                return "fungi";
             case 1:
-                return "plants";
+                return "fungi";
             case 2:
-                return "protists";
+                return "plants";
             case 3:
-                return "metazoa";
+                return "protists";
             case 4:
+                return "metazoa";
+            case 5:
                 return "ensembl";
         }
 
         return "unknown"; // shouldn't be possible
     }
-    
+
     /**
      * Returns the name of the Ensembl database for BioMart queries.
-     * 
+     *
      * @return the name of the Ensembl database for BioMart queries
      */
-    private String getEnsemblDbName () {
-        
+    private String getEnsemblDbName() {
+
         int selectedIndex = ensemblCategoryJComboBox.getSelectedIndex();
 
         switch (selectedIndex) {
-            case 0:
-                return "fungi_mart_" + geneFactory.getCurrentEnsemblVersion("fungi");
             case 1:
-                return "plants_mart_" + geneFactory.getCurrentEnsemblVersion("plants");
+                return "fungi_mart_" + geneFactory.getCurrentEnsemblVersion("fungi");
             case 2:
-                return "protists_mart_" + geneFactory.getCurrentEnsemblVersion("protists");
+                return "plants_mart_" + geneFactory.getCurrentEnsemblVersion("plants");
             case 3:
-                return "metazoa_mart_" + geneFactory.getCurrentEnsemblVersion("\"metazoa");
+                return "protists_mart_" + geneFactory.getCurrentEnsemblVersion("protists");
             case 4:
+                return "metazoa_mart_" + geneFactory.getCurrentEnsemblVersion("metazoa");
+            case 5:
                 return "default";
         }
 

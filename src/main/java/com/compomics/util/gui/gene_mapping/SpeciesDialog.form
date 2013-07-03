@@ -53,7 +53,7 @@
                           <Component id="unknownSpeciesLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="ensemblVersionLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="280" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" pref="75" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
@@ -95,7 +95,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="ensemblCategoryJComboBox" max="32767" attributes="0"/>
+                          <Component id="ensemblCategoryJComboBox" pref="416" max="32767" attributes="0"/>
                           <Component id="speciesJComboBox" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -150,15 +150,15 @@
               <Properties>
                 <Property name="maximumRowCount" type="int" value="20"/>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="5">
-                    <StringItem index="0" value="Fungi"/>
-                    <StringItem index="1" value="Plants"/>
-                    <StringItem index="2" value="Protists"/>
-                    <StringItem index="3" value="Metazoa"/>
-                    <StringItem index="4" value="Vertebrates"/>
+                  <StringArray count="6">
+                    <StringItem index="0" value="-- Select Species Type ---"/>
+                    <StringItem index="1" value="Fungi"/>
+                    <StringItem index="2" value="Plants"/>
+                    <StringItem index="3" value="Protists"/>
+                    <StringItem index="4" value="Metazoa"/>
+                    <StringItem index="5" value="Vertebrates"/>
                   </StringArray>
                 </Property>
-                <Property name="selectedIndex" type="int" value="4"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ensemblCategoryJComboBoxActionPerformed"/>

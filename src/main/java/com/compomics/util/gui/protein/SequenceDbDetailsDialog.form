@@ -201,6 +201,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="dbNameTxt">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="typeCmb">
               <Properties>
@@ -224,6 +227,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="decoyFlagTxt">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="decoyTagLabel">
               <Properties>
@@ -236,6 +242,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="versionTxt">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lastModifiedLabel">
               <Properties>
@@ -318,7 +327,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="proteinYxtScrollPane" pref="203" max="32767" attributes="0"/>
+                      <Component id="proteinYxtScrollPane" pref="164" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="proteinLabel" alignment="3" min="-2" max="-2" attributes="0"/>

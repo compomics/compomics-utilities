@@ -51,6 +51,10 @@ public class GenePreferences implements Serializable {
      */
     private String currentSpecies = null;
     /**
+     * The current species type. Used for the gene mappings.
+     */
+    private String currentSpeciesType = null;
+    /**
      * The GO domain map. e.g., key: GO term: GO:0007568, element:
      * biological_process.
      */
@@ -58,16 +62,30 @@ public class GenePreferences implements Serializable {
     /**
      * The species map, key: latin name, element: ensembl database name, e.g.,
      * key: Homo sapiens, element: hsapiens_gene_ensembl.
+     *
+     * @deprecated use
      */
     private HashMap<String, String> speciesMap;
+    /**
+     * The species map. Main key: Ensembl type, e.g., Vertebrates or Plants.
+     * Next level: key: latin name, element: ensembl database name, e.g., key:
+     * Homo sapiens, element: hsapiens_gene_ensembl.
+     */
+    private HashMap<String, HashMap<String, String>> allSpeciesMap;
     /**
      * The Ensembl versions for the downloaded species.
      */
     private HashMap<String, String> ensemblVersionsMap;
     /**
      * The list of species.
+     *
+     * @deprecated use allSpecies instead
      */
     private ArrayList<String> availableSpecies;
+    /**
+     * Map of all the species.
+     */
+    private HashMap<String, ArrayList<String>> allSpecies;
     /**
      * Old vector of species.
      *
@@ -91,17 +109,12 @@ public class GenePreferences implements Serializable {
             goDomainMap = new HashMap<String, String>();
             goDomainMap.putAll(genePreferences.getGoDomainMap());
         }
-        if (genePreferences.getSpeciesMap() != null) {
-            speciesMap = new HashMap<String, String>();
-            speciesMap.putAll(genePreferences.getSpeciesMap());
-        }
         if (genePreferences.getEnsemblVersionsMap() != null) {
             ensemblVersionsMap = new HashMap<String, String>();
             ensemblVersionsMap.putAll(genePreferences.getEnsemblVersionsMap());
         }
-        if (genePreferences.getSpecies() != null) {
-            availableSpecies = new ArrayList<String>();
-            availableSpecies.addAll(genePreferences.getSpecies());
+        if (genePreferences.getSpecies() != null || genePreferences.getSpeciesMap() != null) {
+            allSpecies = getAllSpecies();
         }
         if (genePreferences.getCurrentSpecies() != null) {
             currentSpecies = genePreferences.getCurrentSpecies();
@@ -135,33 +148,40 @@ public class GenePreferences implements Serializable {
     /**
      * Download the GO mappings.
      *
-     * @param ensemblType the Ensembl type, e.g., default or plants_mart_18
+     * @param ensemblType the Ensembl type, e.g., default or plants
+     * @param ensemblSchemaName the Ensembl schema name, e.g., default or
+     * plants_mart_18
      * @param selectedSpecies
      * @param ensemblVersion
      * @param waitingHandler
      * @throws MalformedURLException
      * @throws IOException
      */
-    public void downloadGoMappings(String ensemblType, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public void downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
-                + "<Query  virtualSchemaName = \"" + ensemblType + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.6\" >"
+                + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
                 + "<Attribute name = \"uniprot_swissprot_accession\" />"
+                //+ "<Attribute name = \"uniprot_sptrembl\" />" // @TODO: not yet supported... how to handle old files?
                 + "<Attribute name = \"goslim_goa_accession\" />"
                 + "<Attribute name = \"goslim_goa_description\" />"
                 + "</Dataset>"
                 + "</Query>";
 
+        // @TODO: have to check if goslim_goa_accession and goslim_goa_description is available
+
         if (!waitingHandler.isRunCanceled()) {
 
             // Send data
-            URL url = new URL("http://www.biomart.org/biomart/martservice/result");
+            URL url = getEnsemblUrl(ensemblType);
+
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
             try {
                 wr.write(requestXml);
                 wr.flush();
@@ -224,19 +244,21 @@ public class GenePreferences implements Serializable {
     /**
      * Download the gene mappings.
      *
-     * @param ensemblType the Ensembl type, e.g., default or plants_mart_18
+     * @param ensemblType the Ensembl type, e.g., default or plants
+     * @param ensemblSchemaName the Ensembl schema name, e.g., default or
+     * plants_mart_18
      * @param selectedSpecies
      * @param waitingHandler
      * @throws MalformedURLException
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public void downloadGeneMappings(String ensemblType, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
+    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
-                + "<Query  virtualSchemaName = \"" + ensemblType + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.6\" >"
+                + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
                 + "<Attribute name = \"ensembl_gene_id\" />"
                 + "<Attribute name = \"external_gene_id\" />"
@@ -247,7 +269,8 @@ public class GenePreferences implements Serializable {
         if (!waitingHandler.isRunCanceled()) {
 
             // Send data
-            URL url = new URL("http://www.biomart.org/biomart/martservice/result");
+            URL url = getEnsemblUrl(ensemblType);
+
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -333,6 +356,24 @@ public class GenePreferences implements Serializable {
      */
     public void setCurrentSpecies(String currentSpecies) {
         this.currentSpecies = currentSpecies;
+    }
+
+    /**
+     * Returns the current species type.
+     *
+     * @return the currentSpeciesType
+     */
+    public String getCurrentSpeciesType() {
+        return currentSpeciesType;
+    }
+
+    /**
+     * Set the current species type.
+     *
+     * @param currentSpeciesType the currentSpeciesType to set
+     */
+    public void setCurrentSpeciesType(String currentSpeciesType) {
+        this.currentSpeciesType = currentSpeciesType;
     }
 
     /**
@@ -528,8 +569,8 @@ public class GenePreferences implements Serializable {
             }
 
             goDomainMap = new HashMap<String, String>();
-            availableSpecies = new ArrayList<String>();
-            speciesMap = new HashMap<String, String>();
+            allSpecies = new HashMap<String, ArrayList<String>>();
+            allSpeciesMap = new HashMap<String, HashMap<String, String>>();
             ensemblVersionsMap = new HashMap<String, String>();
 
             if (!goDomainsFile.exists()) {
@@ -564,7 +605,7 @@ public class GenePreferences implements Serializable {
             }
 
             if (!speciesFile.exists()) {
-                throw new IllegalArgumentException("GO species file \"" + speciesFile.getName() + "\" not found!\n"
+                throw new IllegalArgumentException("Species file \"" + speciesFile.getName() + "\" not found!\n"
                         + "GO Analysis Canceled.");
             } else {
 
@@ -574,13 +615,39 @@ public class GenePreferences implements Serializable {
                     BufferedReader br = new BufferedReader(r);
                     try {
 
-                        String line;
+                        String line = br.readLine();
+                        String currentSpeciesType = line.substring(1);
+                        ArrayList<String> tempSpeciesList = new ArrayList<String>();
 
                         while ((line = br.readLine()) != null) {
-                            String[] elements = line.split("\\t");
-                            String tempSpecies = elements[0].trim();
-                            speciesMap.put(tempSpecies, elements[1].trim());
-                            availableSpecies.add(tempSpecies);
+
+                            if (line.trim().length() > 0) {
+
+                                if (line.startsWith(">")) {
+                                    // add the species to the map
+                                    allSpecies.put(currentSpeciesType, tempSpeciesList);
+
+                                    // reset for the next species
+                                    currentSpeciesType = line.substring(1);
+                                    tempSpeciesList = new ArrayList<String>();
+                                } else {
+
+                                    String[] elements = line.split("\\t");
+                                    String tempSpecies = elements[0].trim();
+
+                                    if (!allSpeciesMap.containsKey(currentSpeciesType)) {
+                                        allSpeciesMap.put(currentSpeciesType, new HashMap<String, String>());
+                                    }
+
+                                    allSpeciesMap.get(currentSpeciesType).put(tempSpecies, elements[1].trim());
+                                    tempSpeciesList.add(tempSpecies);
+                                }
+                            }
+                        }
+
+                        // add the last species type
+                        if (!tempSpeciesList.isEmpty()) {
+                            allSpecies.put(currentSpeciesType, tempSpeciesList);
                         }
 
                     } finally {
@@ -611,9 +678,21 @@ public class GenePreferences implements Serializable {
      * e.g., key: Homo sapiens, element: hsapiens.
      *
      * @return the speciesMap
+     * @deprecated use getAllSpeciesMap instead
      */
     public HashMap<String, String> getSpeciesMap() {
         return speciesMap;
+    }
+
+    /**
+     * Returns the species map. Main key: Ensembl type, e.g., Vertebrates or
+     * Plants. Next level: key: latin name, element: ensembl database name,
+     * e.g., key: Homo sapiens, element: hsapiens_gene_ensembl.
+     *
+     * @return the speciesMap
+     */
+    public HashMap<String, HashMap<String, String>> getAllSpeciesMap() {
+        return allSpeciesMap;
     }
 
     /**
@@ -622,9 +701,22 @@ public class GenePreferences implements Serializable {
      *
      * @param speciesName the species name as available in the species list
      * @return the Ensembl database name
+     * @deprecated use the one with the Ensembl type parameter instead
      */
     public String getEnsemblDatabaseName(String speciesName) {
         return speciesMap.get(speciesName);
+    }
+
+    /**
+     * Returns the Ensembl database name corresponding to a species name
+     * according to the speciesMap. Null if not found.
+     *
+     * @param ensemblType the Ensembl type, e.g., Vertebrates or Plants
+     * @param speciesName the species name as available in the species list
+     * @return the Ensembl database name
+     */
+    public String getEnsemblDatabaseName(String ensemblType, String speciesName) {
+        return allSpeciesMap.get(ensemblType).get(speciesName);
     }
 
     /**
@@ -653,6 +745,8 @@ public class GenePreferences implements Serializable {
      *
      * @param speciesName the species name as available in the species list
      * @return the Ensembl version
+     * @deprecated use getEnsemblSpeciesVersion(String ensemblType, String
+     * speciesName) instead
      */
     public String getEnsemblSpeciesVersion(String speciesName) {
         String ensemblDB = getEnsemblDatabaseName(speciesName);
@@ -663,9 +757,26 @@ public class GenePreferences implements Serializable {
     }
 
     /**
+     * Returns the Ensembl version for the given species name. Null if not
+     * found.
+     *
+     * @param ensemblType the Ensembl type, e.g., Vertebrates or Plants
+     * @param speciesName the species name as available in the species list
+     * @return the Ensembl version
+     */
+    public String getEnsemblSpeciesVersion(String ensemblType, String speciesName) {
+        String ensemblDB = getEnsemblDatabaseName(ensemblType, speciesName);
+        if (ensemblDB != null) {
+            return getEnsemblVersion(ensemblDB);
+        }
+        return null;
+    }
+
+    /**
      * Return the species list. NB: also contains species separators.
      *
      * @return the species
+     * @deprecated use getAllSpecies instead
      */
     public ArrayList<String> getSpecies() {
         if (availableSpecies == null && species != null) {
@@ -673,6 +784,25 @@ public class GenePreferences implements Serializable {
             availableSpecies.addAll(species);
         }
         return availableSpecies;
+    }
+
+    /**
+     * Return the species lists.
+     *
+     * @return the species
+     */
+    public HashMap<String, ArrayList<String>> getAllSpecies() {
+        if (species != null) {
+            allSpecies = new HashMap<String, ArrayList<String>>();
+            ArrayList<String> temp = new ArrayList<String>();
+            temp.addAll(species);
+            allSpecies.put("Vertebrates", temp);
+        }
+        if (availableSpecies != null) {
+            allSpecies = new HashMap<String, ArrayList<String>>();
+            allSpecies.put("Vertebrates", availableSpecies);
+        }
+        return allSpecies;
     }
 
     /**
@@ -802,5 +932,26 @@ public class GenePreferences implements Serializable {
         }
 
         return success;
+    }
+
+    /**
+     * Returns the Ensembl URL for the given Ensembl (sub-)version.
+     *
+     * @param ensemblType the Ensembl type, e.g., fungi or plants
+     * @return the Ensembl URL
+     * @throws MalformedURLException
+     */
+    private URL getEnsemblUrl(String ensemblType) throws MalformedURLException {
+        if (ensemblType.equalsIgnoreCase("fungi")) {
+            return new URL("http://fungi.ensembl.org/biomart/martservice/result");
+        } else if (ensemblType.equalsIgnoreCase("plants")) {
+            return new URL("http://plants.ensembl.org/biomart/martservice/result");
+        } else if (ensemblType.equalsIgnoreCase("protists")) {
+            return new URL("http://protists.ensembl.org/biomart/martservice/result");
+        } else if (ensemblType.equalsIgnoreCase("metazoa")) {
+            return new URL("http://metazoa.ensembl.org/biomart/martservice/result");
+        } else {
+            return new URL("http://www.biomart.org/biomart/martservice/result");
+        }
     }
 }

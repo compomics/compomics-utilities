@@ -73,10 +73,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         this.normalImange = normalImange;
         setUpGUI();
         setLocationRelativeTo(parent);
-        setVisible(true);
-        if (sequenceFactory.getFileName() == null) {
-            selectDB();
-        }
     }
 
     /**
@@ -154,47 +150,62 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Allows the user to select a db and loads its information.
+     *
+     * @param userCanDispose if true, the dialog is closed if the user cancels
+     * the selection
+     * @return true if the selection was not canceled by the user or an error
+     * occurred
      */
-    private void selectDB() {
+    public boolean selectDB(boolean userCanDispose) {
 
-        File startLocation = new File(lastSelectedFolder);
+        if (sequenceFactory.getFileName() == null || !userCanDispose) {
 
-        JFileChooser fc = new JFileChooser(startLocation);
-        FileFilter filter = new FileFilter() {
-            @Override
-            public boolean accept(File myFile) {
-                return myFile.getName().toLowerCase().endsWith("fasta")
-                        || myFile.isDirectory();
-            }
+            File startLocation = new File(lastSelectedFolder);
 
-            @Override
-            public String getDescription() {
-                return "Supported formats: FASTA (.fasta)";
-            }
-        };
-
-        fc.setFileFilter(filter);
-        int result = fc.showOpenDialog(this);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            lastSelectedFolder = file.getParent();
-
-            if (file.getName().indexOf(" ") != -1) {
-                file = renameFastaFileName(file);
-                if (file == null) {
-                    return;
+            JFileChooser fc = new JFileChooser(startLocation);
+            FileFilter filter = new FileFilter() {
+                @Override
+                public boolean accept(File myFile) {
+                    return myFile.getName().toLowerCase().endsWith("fasta")
+                            || myFile.isDirectory();
                 }
+
+                @Override
+                public String getDescription() {
+                    return "Supported formats: FASTA (.fasta)";
+                }
+            };
+
+            fc.setFileFilter(filter);
+            int result = fc.showOpenDialog(this);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                lastSelectedFolder = file.getParent();
+
+                if (file.getName().indexOf(" ") != -1) {
+                    file = renameFastaFileName(file);
+                    if (file == null) {
+                        return false;
+                    }
+                }
+
+                try {
+                    sequenceFactory.clearFactory();
+                    loadFastaFile(file);
+                    return true;
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "An error occurred while clearing the sequence factory.",
+                            "Import error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                }
+            } else if (userCanDispose) {
+                dispose();
             }
 
-            try {
-                sequenceFactory.clearFactory();
-                loadFastaFile(file);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "An error occurred while clearing the sequence factory.",
-                        "Import error", JOptionPane.WARNING_MESSAGE);
-                e.printStackTrace();
-            }
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -321,7 +332,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * error occurred.
      *
      * @param file the FASTA file to rename
-     * @return the renamed FASTA file 
+     * @return the renamed FASTA file
      */
     public File renameFastaFileName(File file) {
         String tempName = file.getName();
@@ -454,6 +465,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         nameLabel.setText("Name");
 
+        dbNameTxt.setEditable(false);
+
         typeCmb.setModel(new DefaultComboBoxModel(Header.getDatabaseTypesAsString()));
         typeCmb.setPreferredSize(new java.awt.Dimension(200, 22));
 
@@ -462,9 +475,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         fileTxt.setEditable(false);
         fileTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
+        decoyFlagTxt.setEditable(false);
+
         decoyTagLabel.setText("Decoy Tag");
 
         versionLabel.setText("Version");
+
+        versionTxt.setEditable(false);
 
         lastModifiedLabel.setText("Modified");
 
@@ -604,7 +621,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(proteinLabel)
@@ -701,17 +718,17 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Open a file chooser to select a FASTA file.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        selectDB();
+        selectDB(false);
     }//GEN-LAST:event_browseButtonActionPerformed
 
     /**
      * Add decoys.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void decoyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoyButtonActionPerformed
 
@@ -752,8 +769,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Open the database help page.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void databaseHelpSettingsJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseClicked
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
@@ -763,8 +780,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Change the cursor to a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void databaseHelpSettingsJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -772,13 +789,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Change cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void databaseHelpSettingsJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_databaseHelpSettingsJLabelMouseExited
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner accessionsSpinner;
     private javax.swing.JPanel backgroundPanel;

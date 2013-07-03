@@ -6,7 +6,6 @@ import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.protein.Header;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -579,7 +578,7 @@ public class SequenceFactory {
     }
 
     /**
-     * Saves the index
+     * Saves the index.
      *
      * @throws IOException
      */

@@ -1,6 +1,7 @@
 package com.compomics.util.gui.protein;
 
 import com.compomics.util.Util;
+import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.FastaIndex;
 import com.compomics.util.experiment.identification.SequenceFactory;
@@ -62,7 +63,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param waitingImage
      * @param normalImange
      */
-    public SequenceDbDetailsDialog(Frame parent, String lastSelectedFolder, boolean dbEditable, Image waitingImage, Image normalImange) {
+    public SequenceDbDetailsDialog(Frame parent, String lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
         super(parent, true);
         initComponents();
         this.parentFrame = parent;
@@ -107,6 +108,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             if (!sequenceFactory.getAccessions().isEmpty()) {
                 accessionsSpinner.setEnabled(true);
                 accessionsSpinner.setModel(new SpinnerListModel(sequenceFactory.getAccessions()));
+                accessionsSpinner.setValue(sequenceFactory.getAccessions().get(0));
                 updateSequence();
             } else {
                 accessionsSpinner.setEnabled(false);
@@ -124,6 +126,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         try {
             Protein protein = sequenceFactory.getProtein(accession);
             proteinTxt.setText(sequenceFactory.getHeader(accession).toString() + System.lineSeparator() + protein.getSequence());
+            proteinTxt.setCaretPosition(0);
             String decoyFlag = decoyFlagTxt.getText().trim();
             if (!decoyFlag.equals("")) {
                 if (SequenceFactory.isDecoy(accession, decoyFlag)) {
@@ -192,7 +195,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                         "Import error", JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -279,7 +281,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Appends decoy sequences to the given target database file
+     * Appends decoy sequences to the given target database file.
      *
      * @param targetFile the target database file
      */
@@ -426,8 +428,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         proteinLabel = new javax.swing.JLabel();
         accessionsSpinner = new javax.swing.JSpinner();
         targetDecoyTxt = new javax.swing.JLabel();
+        databaseHelpSettingsJLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Database");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -445,7 +449,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             }
         });
 
-        databaseInformationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Information"));
+        databaseInformationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Details"));
         databaseInformationPanel.setOpaque(false);
 
         nameLabel.setText("Name");
@@ -496,41 +500,36 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(58, 58, 58)
+                        .addGap(53, 53, 53)
                         .addComponent(fileTxt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(decoyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
-                                        .addComponent(decoyTagLabel)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(decoyFlagTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                                        .addComponent(nameLabel)
-                                        .addGap(42, 42, 42)
-                                        .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(35, 35, 35)
-                                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(sizeLabel)
-                                    .addComponent(typeLabel))
-                                .addGap(34, 34, 34)
-                                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(sizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
                                 .addComponent(versionLabel)
                                 .addGap(34, 34, 34)
-                                .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
-                                .addComponent(lastModifiedLabel)
+                                .addComponent(versionTxt))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
+                                .addComponent(decoyTagLabel)
                                 .addGap(18, 18, 18)
-                                .addComponent(lastModifiedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(decoyFlagTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+                            .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                                .addComponent(nameLabel)
+                                .addGap(42, 42, 42)
+                                .addComponent(dbNameTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)))
+                        .addGap(35, 35, 35)
+                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sizeLabel)
+                            .addComponent(typeLabel)
+                            .addComponent(lastModifiedLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lastModifiedTxt)
+                            .addComponent(typeCmb, 0, 248, Short.MAX_VALUE)
+                            .addComponent(sizeTxt))))
                 .addContainerGap())
         );
         databaseInformationPanelLayout.setVerticalGroup(
@@ -568,14 +567,16 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         proteinTxt.setEditable(false);
         proteinTxt.setColumns(20);
+        proteinTxt.setLineWrap(true);
         proteinTxt.setRows(5);
+        proteinTxt.setWrapStyleWord(true);
         proteinYxtScrollPane.setViewportView(proteinTxt);
 
         proteinLabel.setText("Protein");
 
-        accessionsSpinner.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                accessionsSpinnerMouseClicked(evt);
+        accessionsSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                accessionsSpinnerStateChanged(evt);
             }
         });
 
@@ -588,11 +589,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(proteinYxtScrollPane)
+                    .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
                     .addGroup(previewPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(proteinLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(accessionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(accessionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(targetDecoyTxt)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -602,7 +604,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(proteinLabel)
@@ -610,6 +612,22 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     .addComponent(targetDecoyTxt))
                 .addContainerGap())
         );
+
+        databaseHelpSettingsJLabel.setForeground(new java.awt.Color(0, 0, 255));
+        databaseHelpSettingsJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        databaseHelpSettingsJLabel.setText("<html><u><i>Database?</i></u></html>");
+        databaseHelpSettingsJLabel.setToolTipText("Open Database Help");
+        databaseHelpSettingsJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                databaseHelpSettingsJLabelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                databaseHelpSettingsJLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                databaseHelpSettingsJLabelMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -619,7 +637,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(databaseHelpSettingsJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -640,7 +660,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(okButton))
+                    .addComponent(okButton)
+                    .addComponent(databaseHelpSettingsJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -657,15 +678,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Update the sequence.
-     *
-     * @param evt
-     */
-    private void accessionsSpinnerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accessionsSpinnerMouseClicked
-        updateSequence();
-    }//GEN-LAST:event_accessionsSpinnerMouseClicked
 
     /**
      * Saves changes and closes the dialog
@@ -728,11 +740,51 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         }.start();
 
     }//GEN-LAST:event_decoyButtonActionPerformed
+
+    /**
+     * Update the sequence.
+     *
+     * @param evt
+     */
+    private void accessionsSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_accessionsSpinnerStateChanged
+        updateSequence();
+    }//GEN-LAST:event_accessionsSpinnerStateChanged
+
+    /**
+     * Open the database help page.
+     * 
+     * @param evt 
+     */
+    private void databaseHelpSettingsJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseClicked
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://code.google.com/p/searchgui/wiki/DatabaseHelp");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_databaseHelpSettingsJLabelMouseClicked
+
+    /**
+     * Change the cursor to a hand cursor.
+     * 
+     * @param evt 
+     */
+    private void databaseHelpSettingsJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_databaseHelpSettingsJLabelMouseEntered
+
+    /**
+     * Change cursor back to the default cursor.
+     * 
+     * @param evt 
+     */
+    private void databaseHelpSettingsJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_databaseHelpSettingsJLabelMouseExited
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner accessionsSpinner;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel databaseHelpSettingsJLabel;
     private javax.swing.JPanel databaseInformationPanel;
     private javax.swing.JTextField dbNameTxt;
     private javax.swing.JButton decoyButton;

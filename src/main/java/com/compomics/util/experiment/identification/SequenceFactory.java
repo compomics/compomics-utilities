@@ -632,7 +632,7 @@ public class SequenceFactory {
     }
 
     /**
-     * Indicates whether a protein is decoy in the selected loaded fasta file.
+     * Indicates whether a protein is decoy in the selected loaded FASTA file.
      *
      * @param proteinAccession the protein accession of interest.
      * @return true if decoy

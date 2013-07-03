@@ -114,10 +114,10 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
-                              <Component id="fileTxt" max="32767" attributes="0"/>
+                              <Component id="jLabel1" min="-2" pref="75" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="fileTxt" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="browseButton" min="-2" pref="75" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="decoyButton" min="-2" pref="75" max="-2" attributes="0"/>
@@ -125,32 +125,32 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                                      <Component id="versionTxt" max="32767" attributes="0"/>
+                                      <Component id="versionLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="versionTxt" pref="280" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="decoyTagLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                      <Component id="decoyFlagTxt" pref="247" max="32767" attributes="0"/>
+                                      <Component id="decoyTagLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="decoyFlagTxt" pref="280" max="32767" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-                                      <Component id="dbNameTxt" pref="247" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="nameLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="dbNameTxt" pref="280" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="sizeLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="typeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lastModifiedLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="sizeLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Component id="typeLabel" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Component id="lastModifiedLabel" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lastModifiedTxt" max="32767" attributes="0"/>
-                                  <Component id="typeCmb" pref="248" max="32767" attributes="0"/>
-                                  <Component id="sizeTxt" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="typeCmb" pref="280" max="32767" attributes="0"/>
+                                  <Component id="lastModifiedTxt" pref="280" max="32767" attributes="0"/>
+                                  <Component id="sizeTxt" pref="280" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -308,7 +308,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="proteinYxtScrollPane" pref="657" max="32767" attributes="0"/>
+                          <Component id="proteinYxtScrollPane" pref="753" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Component id="proteinLabel" min="-2" max="-2" attributes="0"/>
@@ -327,7 +327,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="proteinYxtScrollPane" pref="164" max="32767" attributes="0"/>
+                      <Component id="proteinYxtScrollPane" pref="147" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="proteinLabel" alignment="3" min="-2" max="-2" attributes="0"/>

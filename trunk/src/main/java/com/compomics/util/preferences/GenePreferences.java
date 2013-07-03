@@ -874,7 +874,7 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Imports the gene mapping.
+     * Imports the gene mappings.
      *
      * @param jarFilePath the jar file path
      * @param waitingHandler the waiting handler
@@ -901,12 +901,12 @@ public class GenePreferences implements Serializable {
             success = false;
         }
 
-        if (getCurrentSpecies() != null && getSpeciesMap() != null && new File(getGeneMappingFolder(),
-                getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GENE_MAPPING_FILE_SUFFIX).exists()) {
+        if (getCurrentSpecies() != null && getCurrentSpeciesType() != null && getAllSpeciesMap() != null && new File(getGeneMappingFolder(),
+                getAllSpeciesMap().get(getCurrentSpeciesType()).get(getCurrentSpecies()) + GenePreferences.GENE_MAPPING_FILE_SUFFIX).exists()) {
             try {
                 GeneFactory geneFactory = GeneFactory.getInstance();
                 geneFactory.initialize(new File(getGeneMappingFolder(),
-                        getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GENE_MAPPING_FILE_SUFFIX), null);
+                        getAllSpeciesMap().get(getCurrentSpeciesType()).get(getCurrentSpecies()) + GenePreferences.GENE_MAPPING_FILE_SUFFIX), null);
             } catch (Exception e) {
                 if (waitingHandler.isReport()) {
                     waitingHandler.appendReport("Unable to load the gene mapping file.", true, true);
@@ -916,12 +916,12 @@ public class GenePreferences implements Serializable {
             }
         }
 
-        if (getCurrentSpecies() != null && getSpeciesMap() != null && new File(getGeneMappingFolder(),
-                getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GO_MAPPING_FILE_SUFFIX).exists()) {
+        if (getCurrentSpecies() != null && getCurrentSpeciesType() != null && getAllSpeciesMap() != null && new File(getGeneMappingFolder(),
+                getAllSpeciesMap().get(getCurrentSpeciesType()).get(getCurrentSpecies()) + GenePreferences.GO_MAPPING_FILE_SUFFIX).exists()) {
             try {
                 GOFactory goFactory = GOFactory.getInstance();
                 goFactory.initialize(new File(getGeneMappingFolder(),
-                        getSpeciesMap().get(getCurrentSpecies()) + GenePreferences.GO_MAPPING_FILE_SUFFIX), null);
+                        getAllSpeciesMap().get(getCurrentSpeciesType()).get(getCurrentSpecies()) + GenePreferences.GO_MAPPING_FILE_SUFFIX), null);
             } catch (Exception e) {
                 if (waitingHandler.isReport()) {
                     waitingHandler.appendReport("Unable to load the gene ontology mapping file.", true, true);

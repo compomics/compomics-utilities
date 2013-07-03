@@ -1,13 +1,26 @@
 package com.compomics.util.gui.protein;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.FastaIndex;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.protein.Header;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerListModel;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * This dialog displays information about a sequence database.
@@ -17,42 +30,91 @@ import javax.swing.SpinnerListModel;
 public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
+     * A simple progress dialog.
+     */
+    private static ProgressDialogX progressDialog;
+    /**
      * The sequence factory.
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+    /**
+     * The last selected folder
+     */
+    private String lastSelectedFolder = null;
+    /**
+     * boolean indicating whether the db can be changed
+     */
+    private boolean dbEditable = true;
+    /**
+     * The icon to display when waiting
+     */
+    private Image waitingImage;
+    /**
+     * The normal icon
+     */
+    private Image normalImange;
+    /**
+     * The parent frame
+     */
+    private Frame parentFrame;
 
     /**
      * Creates a new SequenceDbDetailsDialog.
-     * 
-     * @param parent 
+     *
+     * @param parent
      */
-    public SequenceDbDetailsDialog(java.awt.Frame parent) {
+    public SequenceDbDetailsDialog(Frame parent, String lastSelectedFolder, boolean dbEditable, Image waitingImage, Image normalImange) {
         super(parent, true);
         initComponents();
+        this.parentFrame = parent;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.dbEditable = dbEditable;
+        this.waitingImage = waitingImage;
+        this.normalImange = normalImange;
         setUpGUI();
         setLocationRelativeTo(parent);
         setVisible(true);
+        if (sequenceFactory.getFileName() == null) {
+            selectDB();
+        }
     }
 
     /**
      * Set up the GUI.
      */
     private void setUpGUI() {
-
-        fileNameTxt.setText(sequenceFactory.getFileName());
-
         FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
-        dbNameTxt.setText(fastaIndex.getName());
-        typeCmb.setSelectedItem(Header.getDatabaseTypeAsString(fastaIndex.getDatabaseType()));
-        versionTxt.setText(fastaIndex.getVersion());
-        lastModifiedTxt.setText(new Date(fastaIndex.getLastModified()).toString());
-        String nSequences = fastaIndex.getNSequences() + " sequences";
-        if (fastaIndex.isConcatenatedTargetDecoy()) {
-            nSequences += " (" + fastaIndex.getNTarget() + " target)";
+        if (fastaIndex != null) {
+            fileTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
+            dbNameTxt.setText(fastaIndex.getName());
+            typeCmb.setSelectedItem(Header.getDatabaseTypeAsString(fastaIndex.getDatabaseType()));
+            versionTxt.setText(fastaIndex.getVersion());
+            lastModifiedTxt.setText(new Date(fastaIndex.getLastModified()).toString());
+            String nSequences = fastaIndex.getNSequences() + " sequences";
+            if (fastaIndex.isConcatenatedTargetDecoy()) {
+                nSequences += " (" + fastaIndex.getNTarget() + " target)";
+            }
+            sizeTxt.setText(nSequences);
+            if (fastaIndex.isConcatenatedTargetDecoy()) {
+                decoyFlagTxt.setEnabled(true);
+                decoyFlagTxt.setText(fastaIndex.getDecoyTag());
+            } else {
+                decoyFlagTxt.setText("");
+                decoyFlagTxt.setEnabled(false);
+            }
+            decoyButton.setEnabled(!sequenceFactory.concatenatedTargetDecoy() && dbEditable);
+            browseButton.setEnabled(dbEditable);
+            decoyFlagTxt.setEditable(dbEditable);
+            if (!sequenceFactory.getAccessions().isEmpty()) {
+                accessionsSpinner.setEnabled(true);
+                accessionsSpinner.setModel(new SpinnerListModel(sequenceFactory.getAccessions()));
+                updateSequence();
+            } else {
+                accessionsSpinner.setEnabled(false);
+            }
+        } else {
+            typeCmb.setSelectedItem(Header.getDatabaseTypeAsString(Header.DatabaseType.Unknown));
         }
-        sizeTxt.setText(nSequences);
-        decoyFlagTxt.setText(fastaIndex.getDecoyTag());
-        updateSequence();
     }
 
     /**
@@ -64,15 +126,272 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             Protein protein = sequenceFactory.getProtein(accession);
             proteinTxt.setText(sequenceFactory.getHeader(accession).toString() + System.lineSeparator() + protein.getSequence());
             String decoyFlag = decoyFlagTxt.getText().trim();
-            if (SequenceFactory.isDecoy(accession, decoyFlag)) {
-                targetDecoyTxt.setText("(Decoy)");
+            if (!decoyFlag.equals("")) {
+                if (SequenceFactory.isDecoy(accession, decoyFlag)) {
+                    targetDecoyTxt.setText("(Decoy)");
+                } else {
+                    targetDecoyTxt.setText("(Target)");
+                }
             } else {
-                targetDecoyTxt.setText("(Target)");
+                targetDecoyTxt.setText("");
             }
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "An error occured while looking for protein " + accession + ".", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    /**
+     * Returns the last selected folder.
+     *
+     * @return the last selected folder
+     */
+    public String getLastSelectedFolder() {
+        return lastSelectedFolder;
+    }
+
+    /**
+     * Allows the user to select a db and loads its information
+     */
+    private void selectDB() {
+
+        File startLocation = new File(lastSelectedFolder);
+
+        JFileChooser fc = new JFileChooser(startLocation);
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File myFile) {
+                return myFile.getName().toLowerCase().endsWith("fasta")
+                        || myFile.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Supported formats: FASTA (.fasta)";
+            }
+        };
+
+        fc.setFileFilter(filter);
+        int result = fc.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            lastSelectedFolder = file.getParent();
+
+            if (file.getName().indexOf(" ") != -1) {
+                file = renameFastaFileName(file);
+                if (file == null) {
+                    return;
+                }
+            }
+
+            try {
+                sequenceFactory.clearFactory();
+                loadFastaFile(file);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "An error occurred while clearing the sequence factory.",
+                        "Import error", JOptionPane.WARNING_MESSAGE);
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    /**
+     * Loads the fasta file in the factory and updates the GUI.
+     *
+     * @param file the fasta file
+     */
+    private void loadFastaFile(File file) {
+
+        final File finalFile = file;
+
+        progressDialog = new ProgressDialogX(this, parentFrame,
+                normalImange,
+                waitingImage,
+                true);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Loading database. Please Wait...");
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    progressDialog.setVisible(true);
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
+            }
+        }, "ProgressDialog").start();
+
+        new Thread("importThread") {
+            public void run() {
+
+                try {
+                    progressDialog.setTitle("Importing Database. Please Wait...");
+                    progressDialog.setIndeterminate(false);
+                    sequenceFactory.loadFastaFile(finalFile, progressDialog);
+                } catch (IOException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                            new String[]{"FASTA Import Error.", "File " + finalFile.getAbsolutePath() + " not found."},
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                } catch (ClassNotFoundException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                            new String[]{"FASTA Import Error.", "File index of " + finalFile.getName() + " could not be imported. Please contact the developers."},
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                } catch (StringIndexOutOfBoundsException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                            e.getMessage(),
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                } catch (IllegalArgumentException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                            e.getMessage(),
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                }
+
+                if (!progressDialog.isRunCanceled() && !sequenceFactory.concatenatedTargetDecoy()) {
+                    int value = JOptionPane.showConfirmDialog(SequenceDbDetailsDialog.this,
+                            "The selected FASTA file does not seem to contain decoy sequences.\n"
+                            + "Add decoys?", "Add Decoy Sequences?", JOptionPane.YES_NO_OPTION);
+
+                    if (value == JOptionPane.NO_OPTION) {
+                        decoyFlagTxt.setEnabled(false);
+                    } else if (value == JOptionPane.YES_OPTION) {
+                        generateTargetDecoyDatabase(finalFile);
+                    }
+                }
+                if (!progressDialog.isRunCanceled()) {
+                    setUpGUI();
+                }
+                progressDialog.setRunFinished();
+            }
+        }.start();
+    }
+
+    /**
+     * Appends decoy sequences to the given target database file
+     *
+     * @param the target database file
+     */
+    public void generateTargetDecoyDatabase(File targetFile) {
+
+        String fastaInput = targetFile.getAbsolutePath();
+        String newFasta = fastaInput.substring(0, fastaInput.lastIndexOf("."));
+        newFasta += SequenceFactory.getTargetDecoyFileNameTag();
+        try {
+
+            File newFile = new File(newFasta);
+            progressDialog.setTitle("Appending Decoy Sequences. Please Wait...");
+            sequenceFactory.appendDecoySequences(newFile, progressDialog);
+            sequenceFactory.clearFactory();
+            progressDialog.setTitle("Getting database details. Please Wait...");
+            sequenceFactory.loadFastaFile(newFile, progressDialog);
+        } catch (OutOfMemoryError error) {
+            Runtime.getRuntime().gc();
+            JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                    "SearchGUI used up all the available memory and had to be stopped.\n"
+                    + "Memory boundaries are set in the Edit menu (Edit > Java Options).",
+                    "Out Of Memory Error",
+                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Ran out of memory!");
+            error.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                    new String[]{"FASTA Import Error.", "File " + fastaInput + " not found."},
+                    "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Copies the content of the FASTA file to a new file and replaces any white
+     * space in the file name with '_' instead. Returns the new file, null if an
+     * error occurred.
+     *
+     * @param file
+     */
+    public File renameFastaFileName(File file) {
+        String tempName = file.getName();
+        tempName = tempName.replaceAll(" ", "_");
+
+        File renamedFile = new File(file.getParentFile().getAbsolutePath() + File.separator + tempName);
+
+        boolean success = false;
+
+        try {
+            success = renamedFile.createNewFile();
+
+            if (success) {
+
+                Util.copyFile(file, renamedFile);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while renaming the file.",
+                    "Please Rename File", JOptionPane.WARNING_MESSAGE);
+            e.printStackTrace();
+            success = false;
+        }
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Your FASTA file name contained white space and has been renamed to:\n"
+                    + file.getParentFile().getAbsolutePath() + File.separator + tempName, "Renamed File", JOptionPane.WARNING_MESSAGE);
+            return renamedFile;
+        }
+        return null;
+    }
+
+    /**
+     * Saves the changes in the index file.
+     *
+     * @return true if saving was successful
+     */
+    private boolean saveChanges() {
+
+        boolean change = false;
+        FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
+
+        String name = dbNameTxt.getText().trim();
+        if (!name.equals(fastaIndex.getName())) {
+            fastaIndex.setName(name);
+            change = true;
+        }
+
+        String version = versionTxt.getText().trim();
+        if (!version.equals(fastaIndex.getVersion())) {
+            fastaIndex.setVersion(version);
+            change = true;
+        }
+
+        String decoyFlag = decoyFlagTxt.getText().trim();
+        if (!decoyFlag.equals(fastaIndex.getDecoyTag())) {
+            fastaIndex.setDecoyTag(decoyFlag);
+            change = true;
+        }
+
+        if (change) {
+            try {
+                sequenceFactory.saveIndex();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "An error occurred while attempting to save the database index file.", "Renamed File", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+
     }
 
     /**
@@ -92,7 +411,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         dbNameTxt = new javax.swing.JTextField();
         typeCmb = new javax.swing.JComboBox();
         typeLabel = new javax.swing.JLabel();
-        fileNameTxt = new javax.swing.JTextField();
+        fileTxt = new javax.swing.JTextField();
         decoyFlagTxt = new javax.swing.JTextField();
         decoyTagLabel = new javax.swing.JLabel();
         versionLabel = new javax.swing.JLabel();
@@ -101,6 +420,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         lastModifiedTxt = new javax.swing.JTextField();
         sizeLabel = new javax.swing.JLabel();
         sizeTxt = new javax.swing.JTextField();
+        decoyButton = new javax.swing.JButton();
+        browseButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         previewPanel = new javax.swing.JPanel();
         proteinYxtScrollPane = new javax.swing.JScrollPane();
         proteinTxt = new javax.swing.JTextArea();
@@ -136,8 +458,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         typeLabel.setText("Type");
 
-        fileNameTxt.setEditable(false);
-        fileNameTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fileTxt.setEditable(false);
+        fileTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         decoyTagLabel.setText("Decoy Tag");
 
@@ -151,6 +473,23 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         sizeTxt.setEditable(false);
 
+        decoyButton.setText("Decoy");
+        decoyButton.setPreferredSize(new java.awt.Dimension(75, 25));
+        decoyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decoyButtonActionPerformed(evt);
+            }
+        });
+
+        browseButton.setText("Browse");
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("File");
+
         javax.swing.GroupLayout databaseInformationPanelLayout = new javax.swing.GroupLayout(databaseInformationPanel);
         databaseInformationPanel.setLayout(databaseInformationPanelLayout);
         databaseInformationPanelLayout.setHorizontalGroup(
@@ -158,40 +497,54 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             .addGroup(databaseInformationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fileNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
-                                .addComponent(decoyTagLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(decoyFlagTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1)
+                        .addGap(58, 58, 58)
+                        .addComponent(fileTxt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(decoyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                                .addComponent(nameLabel)
-                                .addGap(42, 42, 42)
-                                .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(35, 35, 35)
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sizeLabel)
-                            .addComponent(typeLabel))
-                        .addGap(34, 34, 34)
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                        .addComponent(versionLabel)
-                        .addGap(34, 34, 34)
-                        .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(lastModifiedLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(lastModifiedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
+                                        .addComponent(decoyTagLabel)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(decoyFlagTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                                        .addComponent(nameLabel)
+                                        .addGap(42, 42, 42)
+                                        .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(35, 35, 35)
+                                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sizeLabel)
+                                    .addComponent(typeLabel))
+                                .addGap(34, 34, 34)
+                                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                                .addComponent(versionLabel)
+                                .addGap(34, 34, 34)
+                                .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(lastModifiedLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(lastModifiedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         databaseInformationPanelLayout.setVerticalGroup(
             databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databaseInformationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(fileNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fileTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(decoyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseButton)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
@@ -223,7 +576,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         proteinLabel.setText("Protein");
 
-        accessionsSpinner.setModel(new SpinnerListModel(sequenceFactory.getAccessions()));
         accessionsSpinner.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 accessionsSpinnerMouseClicked(evt);
@@ -253,7 +605,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(proteinLabel)
@@ -271,9 +623,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(databaseInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -311,39 +663,76 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Update the sequence.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void accessionsSpinnerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accessionsSpinnerMouseClicked
         updateSequence();
     }//GEN-LAST:event_accessionsSpinnerMouseClicked
 
     /**
-     * 
-     * 
-     * @param evt 
+     * Saves changes and closes the dialog
+     *
+     * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
+        if (saveChanges()) {
+            dispose();
+        }
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
      * Close the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        selectDB();
+    }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void decoyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoyButtonActionPerformed
+
+        progressDialog = new ProgressDialogX(this, parentFrame,
+                normalImange,
+                waitingImage,
+                true);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Creating Decoy. Please Wait...");
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    progressDialog.setVisible(true);
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
+            }
+        }, "ProgressDialog").start();
+
+        new Thread("DecoyThread") {
+            public void run() {
+                generateTargetDecoyDatabase(sequenceFactory.getCurrentFastaFile());
+                progressDialog.setRunFinished();
+            }
+        }.start();
+
+    }//GEN-LAST:event_decoyButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner accessionsSpinner;
     private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel databaseInformationPanel;
     private javax.swing.JTextField dbNameTxt;
+    private javax.swing.JButton decoyButton;
     private javax.swing.JTextField decoyFlagTxt;
     private javax.swing.JLabel decoyTagLabel;
-    private javax.swing.JTextField fileNameTxt;
+    private javax.swing.JTextField fileTxt;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lastModifiedLabel;
     private javax.swing.JTextField lastModifiedTxt;
     private javax.swing.JLabel nameLabel;

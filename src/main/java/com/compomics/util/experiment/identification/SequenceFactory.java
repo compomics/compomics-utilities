@@ -426,18 +426,18 @@ public class SequenceFactory {
         String name = null;
         String version = null;
         Header.DatabaseType databaseType = null;
-            File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
-            if (indexFile.exists()) {
-                try {
-                    tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
-                    decoyTag = tempFastaIndex.getDecoyTag();
-                    version = tempFastaIndex.getVersion();
-                    databaseType = tempFastaIndex.getDatabaseType();
-                    name = tempFastaIndex.getName();
-                } catch (Exception e) {
-                    // Fail silently
-                }
+        File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
+        if (indexFile.exists()) {
+            try {
+                tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
+                decoyTag = tempFastaIndex.getDecoyTag();
+                version = tempFastaIndex.getVersion();
+                databaseType = tempFastaIndex.getDatabaseType();
+                name = tempFastaIndex.getName();
+            } catch (Exception e) {
+                // Fail silently
             }
+        }
 
         System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
         tempFastaIndex = createFastaIndex(currentFastaFile, name, decoyTag, databaseType, version, waitingHandler);
@@ -555,7 +555,7 @@ public class SequenceFactory {
         if (version == null) {
             version = FastaIndex.getDefaultVersion(lastModified);
         }
-        
+
         String fileName = fastaFile.getName();
         if (name == null) {
             name = fileName;
@@ -576,6 +576,15 @@ public class SequenceFactory {
         // Serialize the file index as compomics utilities index
         File destinationFile = new File(directory, fastaIndex.getFileName() + ".cui");
         SerializationUtils.writeObject(fastaIndex, destinationFile);
+    }
+
+    /**
+     * Saves the index
+     *
+     * @throws IOException
+     */
+    public void saveIndex() throws IOException {
+        writeIndex(fastaIndex, currentFastaFile.getParentFile());
     }
 
     /**
@@ -802,12 +811,16 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the sequences present in the database.
+     * Returns the sequences present in the database. An empty list if no file is loaded.
      *
      * @return the sequences present in the database
      */
     public ArrayList<String> getAccessions() {
-        return new ArrayList<String>(fastaIndex.getIndexes().keySet());
+        if (fastaIndex != null) {
+            return new ArrayList<String>(fastaIndex.getIndexes().keySet());
+        } else {
+            return new ArrayList<String>();
+        }
     }
 
     /**
@@ -928,12 +941,24 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the name of the loaded FASTA file.
+     * Returns the name of the loaded FASTA file. Null if none loaded.
      *
      * @return the name of the loaded FASTA file
      */
     public String getFileName() {
+        if (fastaIndex == null) {
+            return null;
+        }
         return fastaIndex.getFileName();
+    }
+
+    /**
+     * Returns the currently loaded fasta file.
+     *
+     * @return the currently loaded fasta file
+     */
+    public File getCurrentFastaFile() {
+        return currentFastaFile;
     }
 
     /**
@@ -976,10 +1001,10 @@ public class SequenceFactory {
     public static String getDefaultTargetAccession(String decoyAccession) {
         return decoyAccession.substring(0, decoyAccession.length() - getDefaultDecoyAccessionSuffix().length());
     }
-    
+
     /**
      * Returns the fasta index of the currently loaded file.
-     * 
+     *
      * @return the fasta index of the currently loaded file
      */
     public FastaIndex getCurrentFastaIndex() {

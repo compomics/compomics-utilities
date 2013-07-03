@@ -607,7 +607,7 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Returns the species map. Key: latin name, element: ensembl database name,
+     * Returns the species map. Key: latin name, element: Ensembl database name,
      * e.g., key: Homo sapiens, element: hsapiens.
      *
      * @return the speciesMap
@@ -617,11 +617,11 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Returns the ensembl database name corresponding to a species name
+     * Returns the Ensembl database name corresponding to a species name
      * according to the speciesMap. Null if not found.
      *
      * @param speciesName the species name as available in the species list
-     * @return the ensembl database name
+     * @return the Ensembl database name
      */
     public String getEnsemblDatabaseName(String speciesName) {
         return speciesMap.get(speciesName);
@@ -637,22 +637,22 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Returns the ensembl version corresponding to the given ensembl database
+     * Returns the Ensembl version corresponding to the given Ensembl database
      * according to the ensemblVersionsMap. Null if not found.
      *
-     * @param ensemblDatabase the ensembl database
-     * @return the ensembl version
+     * @param ensemblDatabase the Ensembl database
+     * @return the Ensembl version
      */
     public String getEnsemblVersion(String ensemblDatabase) {
         return ensemblVersionsMap.get(ensemblDatabase);
     }
 
     /**
-     * Resturns the ensembl version for the given species name. Null if not
+     * Returns the Ensembl version for the given species name. Null if not
      * found.
      *
      * @param speciesName the species name as available in the species list
-     * @return the ensembl version
+     * @return the Ensembl version
      */
     public String getEnsemblSpeciesVersion(String speciesName) {
         String ensemblDB = getEnsemblDatabaseName(speciesName);

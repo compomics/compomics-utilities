@@ -8,12 +8,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.protein.Header;
 import java.awt.Frame;
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
@@ -38,23 +33,23 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
-     * The last selected folder
+     * The last selected folder.
      */
     private String lastSelectedFolder = null;
     /**
-     * boolean indicating whether the db can be changed
+     * boolean indicating whether the db can be changed.
      */
     private boolean dbEditable = true;
     /**
-     * The icon to display when waiting
+     * The icon to display when waiting.
      */
     private Image waitingImage;
     /**
-     * The normal icon
+     * The normal icon.
      */
     private Image normalImange;
     /**
-     * The parent frame
+     * The parent frame.
      */
     private Frame parentFrame;
 
@@ -62,6 +57,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Creates a new SequenceDbDetailsDialog.
      *
      * @param parent
+     * @param lastSelectedFolder
+     * @param dbEditable
+     * @param waitingImage
+     * @param normalImange
      */
     public SequenceDbDetailsDialog(Frame parent, String lastSelectedFolder, boolean dbEditable, Image waitingImage, Image normalImange) {
         super(parent, true);
@@ -151,7 +150,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Allows the user to select a db and loads its information
+     * Allows the user to select a db and loads its information.
      */
     private void selectDB() {
 
@@ -198,9 +197,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Loads the fasta file in the factory and updates the GUI.
+     * Loads the FASTA file in the factory and updates the GUI.
      *
-     * @param file the fasta file
+     * @param file the FASTA file
      */
     private void loadFastaFile(File file) {
 
@@ -211,7 +210,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 waitingImage,
                 true);
         progressDialog.setIndeterminate(true);
-        progressDialog.setTitle("Loading database. Please Wait...");
+        progressDialog.setTitle("Loading Database. Please Wait...");
 
         new Thread(new Runnable() {
             public void run() {
@@ -282,15 +281,15 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Appends decoy sequences to the given target database file
      *
-     * @param the target database file
+     * @param targetFile the target database file
      */
     public void generateTargetDecoyDatabase(File targetFile) {
 
         String fastaInput = targetFile.getAbsolutePath();
         String newFasta = fastaInput.substring(0, fastaInput.lastIndexOf("."));
         newFasta += SequenceFactory.getTargetDecoyFileNameTag();
-        try {
 
+        try {
             File newFile = new File(newFasta);
             progressDialog.setTitle("Appending Decoy Sequences. Please Wait...");
             sequenceFactory.appendDecoySequences(newFile, progressDialog);
@@ -312,7 +311,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -320,7 +318,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * space in the file name with '_' instead. Returns the new file, null if an
      * error occurred.
      *
-     * @param file
+     * @param file the FASTA file to rename
+     * @return the renamed FASTA file 
      */
     public File renameFastaFileName(File file) {
         String tempName = file.getName();
@@ -332,9 +331,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         try {
             success = renamedFile.createNewFile();
-
             if (success) {
-
                 Util.copyFile(file, renamedFile);
             }
         } catch (IOException e) {
@@ -690,10 +687,20 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Open a file chooser to select a FASTA file.
+     * 
+     * @param evt 
+     */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         selectDB();
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    /**
+     * Add decoys.
+     * 
+     * @param evt 
+     */
     private void decoyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoyButtonActionPerformed
 
         progressDialog = new ProgressDialogX(this, parentFrame,

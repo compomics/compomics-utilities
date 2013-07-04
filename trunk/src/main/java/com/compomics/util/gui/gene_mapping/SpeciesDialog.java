@@ -252,7 +252,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
         });
 
         ensemblCategoryJComboBox.setMaximumRowCount(20);
-        ensemblCategoryJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select Species Type ---", "Fungi (beta)", "Plants (beta)", "Protists (beta)", "Metazoa (beta)", "Vertebrates" }));
+        ensemblCategoryJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Select Species Type ---", "Fungi", "Plants", "Protists", "Metazoa", "Vertebrates" }));
         ensemblCategoryJComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ensemblCategoryJComboBoxActionPerformed(evt);

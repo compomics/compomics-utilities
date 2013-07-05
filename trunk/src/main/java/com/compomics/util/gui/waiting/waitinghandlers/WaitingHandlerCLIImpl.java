@@ -119,14 +119,9 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
         return false;
     }
 
-    /**
-     * Returns the secondary progress bar for updates from external processes.
-     *
-     * @return the secondary progress bar, can be null
-     */
     @Override
     public JProgressBar getSecondaryProgressBar() {
-        throw new UnsupportedOperationException("This waiting handler has no progress bar.");
+        return null;
     }
 
     @Override
@@ -147,7 +142,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public JProgressBar getPrimaryProgressBar() {
-        throw new UnsupportedOperationException("This waiting handler has no progress bar.");
+        return null;
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.DummyFrame;
-import com.compomics.util.gui.waiting.WaitingActionListener;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingActionListener;
+import com.compomics.util.waiting.WaitingHandler;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Point;
@@ -144,7 +144,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         setTitle(processName + " - Please Wait...");
 
-        setSecondaryProgressDialogIndeterminate(true);
+        setSecondaryProgressCounterIndeterminate(true);
 
         // update the layout in the layered pane
         resizeLayeredPanes();
@@ -196,14 +196,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param maxProgressValue the max value
      */
-    public void setMaxProgressValue(int maxProgressValue) {
+    public void setMaxPrimaryProgressCounter(int maxProgressValue) {
         progressBar.setMaximum(maxProgressValue);
     }
 
     /**
      * Increase the progress bar value by one "counter".
      */
-    public void increaseProgressValue() {
+    public void increasePrimaryProgressCounter() {
         progressBar.setValue(progressBar.getValue() + 1);
     }
 
@@ -212,7 +212,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param amount the amount to increase the value by
      */
-    public void increaseProgressValue(int amount) {
+    public void increasePrimaryProgressCounter(int amount) {
         progressBar.setValue(progressBar.getValue() + amount);
     }
 
@@ -222,7 +222,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param maxProgressValue the max value
      */
-    public void setMaxSecondaryProgressValue(int maxProgressValue) {
+    public void setMaxSecondaryProgressCounter(int maxProgressValue) {
         secondaryJProgressBar.setValue(0);
         secondaryJProgressBar.setMaximum(maxProgressValue);
     }
@@ -230,7 +230,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Reset the secondary progress bar value to 0.
      */
-    public void resetSecondaryProgressBar() {
+    public void resetSecondaryProgressCounter() {
         secondaryJProgressBar.setIndeterminate(false);
         secondaryJProgressBar.setStringPainted(true);
         secondaryJProgressBar.setValue(0);
@@ -239,7 +239,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Reset the primary progress bar value to 0.
      */
-    public void resetProgressBar() {
+    public void resetPrimaryProgressCounter() {
 
         // @TODO: perhaps this should be added to the waiting handler interface?
 
@@ -251,7 +251,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Increase the secondary progress bar value by one "counter".
      */
-    public void increaseSecondaryProgressValue() {
+    public void increaseSecondaryProgressCounter() {
         secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + 1);
     }
 
@@ -260,7 +260,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param value the progress value
      */
-    public void setSecondaryProgressValue(int value) {
+    public void setSecondaryProgressCounter(int value) {
         secondaryJProgressBar.setValue(value);
     }
 
@@ -269,7 +269,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param amount the amount to increase the value by
      */
-    public void increaseSecondaryProgressValue(int amount) {
+    public void increaseSecondaryProgressCounter(int amount) {
         secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + amount);
     }
 
@@ -278,7 +278,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param indeterminate if true, set to indeterminate
      */
-    public void setSecondaryProgressDialogIndeterminate(boolean indeterminate) {
+    public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
 
         // this split pane trick should not be needed, but if not used the look and feel of the
         // indeterminate progress bar changes when moving back and forth between the two...
@@ -382,7 +382,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         tipOfTheDayScrollPane.setOpaque(false);
 
         tipOfTheDayEditorPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240), 20));
-        tipOfTheDayEditorPane.setContentType("text/html");
+        tipOfTheDayEditorPane.setContentType("text/html"); // NOI18N
         tipOfTheDayEditorPane.setEditable(false);
         tipOfTheDayEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n<body style=\"background-color:#F0F0F0;\">\n    <p style=\"margin-top: 0\" align=\"justify\">\r\n     <b> \rTip of the Day!</b>\n     <br><br>\n     Did you know that. Did you know that. Did you know that. Did you know that. Did you know that. \n     Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    <br><br>\n    Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    </p>\r\n  </body>\r\n</html>\r\n");
         tipOfTheDayEditorPane.setOpaque(false);
@@ -526,7 +526,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
-        closeDialogWhenImportCompletesCheckBox.setText("Close this dialog when the process is completed.");
+        closeDialogWhenImportCompletesCheckBox.setText("Close this dialog when the process is complete.");
         closeDialogWhenImportCompletesCheckBox.setIconTextGap(10);
         closeDialogWhenImportCompletesCheckBox.setOpaque(false);
         closeDialogWhenImportCompletesCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -1072,27 +1072,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public void displayMessage(String message, String title, int messageType) {
-        JOptionPane.showMessageDialog(this, message, title, messageType);
-    }
-
-    @Override
-    public void displayHtmlMessage(JEditorPane messagePane, String title, int messageType) {
-        JOptionPane.showMessageDialog(this, messagePane, title, messageType);
-    }
-
-    @Override
     public void setWaitingText(String text) {
         setTitle(text);
     }
 
-    /**
-     * Returns true if the run is finished.
-     *
-     * @return true if the run is finished
-     */
+    @Override
     public boolean isRunFinished() {
-        // @TODO: perhaps this method should be added to the waiting handler interface?
         return runFinished;
     }
 
@@ -1137,12 +1122,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public JProgressBar getPrimaryProgressBar() {
-        return progressBar;
-    }
-
-    @Override
-    public void setIndeterminate(boolean indeterminate) {
+    public void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
         progressBar.setIndeterminate(indeterminate);
         progressBar.setStringPainted(!indeterminate);
     }
@@ -1166,8 +1146,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         runFinished = false;
         okButton.setText("Cancel");
-        //progressBar.setIndeterminate(true);
-        //secondaryJProgressBar.setIndeterminate(true);
+        //progressBar.setPrimaryProgressCounterIndeterminate(true);
+        //secondaryJProgressBar.setPrimaryProgressCounterIndeterminate(true);
 
         secondaryJProgressBar.setString(null);
 
@@ -1189,5 +1169,29 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public void addWaitingActionListener(WaitingActionListener waitingActionListener) {
         this.waitingActionListener = waitingActionListener;
+    }
+
+    public void setSecondaryProgressText(String text) {
+        secondaryJProgressBar.setString(text);
+    }
+
+    @Override
+    public int getPrimaryProgressCounter(){
+        return progressBar.getValue();
+    }
+
+    @Override
+    public int getMaxPrimaryProgressCounter(){
+        return progressBar.getMaximum();
+    }
+
+    @Override
+    public int getSecondaryProgressCounter(){
+        return secondaryJProgressBar.getValue();
+    }
+
+    @Override
+    public int getMaxSecondaryProgressCounter(){
+        return secondaryJProgressBar.getMaximum();
     }
 }

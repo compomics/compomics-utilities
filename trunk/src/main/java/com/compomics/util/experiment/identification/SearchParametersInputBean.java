@@ -71,9 +71,9 @@ public class SearchParametersInputBean {
      */
     private File xtandemLocation = null;
     /**
-     * The folder where PepNovo+ is installed.
+     * The PepNovo executable. Full path.
      */
-    private File pepNovoLocation = null;
+    private File pepNovoExecutable = null;
     /**
      * If an mgf file exceeds this limit, the user will be asked for a split.
      */
@@ -321,8 +321,8 @@ public class SearchParametersInputBean {
             xtandemLocation = new File(omssaFolder);
         }
         if (aLine.hasOption(SearchParametersCLIParams.PEP_NOVO_LOCATION.id)) {
-            String omssaFolder = aLine.getOptionValue(SearchParametersCLIParams.PEP_NOVO_LOCATION.id);
-            pepNovoLocation = new File(omssaFolder);
+            String pepNovoExecutable = aLine.getOptionValue(SearchParametersCLIParams.PEP_NOVO_LOCATION.id);
+            this.pepNovoExecutable = new File(pepNovoExecutable);
         }
 
         // check the omssa output format, omx or csv
@@ -459,21 +459,21 @@ public class SearchParametersInputBean {
     }
 
     /**
-     * Returns the PepNovo+ location.
+     * Returns the PepNovo+ executable. Null if not set.
      *
-     * @return the pepNovoLocation
+     * @return the PepNovo+ executable
      */
-    public File getPepNovoLocation() {
-        return pepNovoLocation;
+    public File getPepNovoExecutable() {
+        return pepNovoExecutable;
     }
 
     /**
-     * Set the PepNovo+ location.
+     * Set the PepNovo+ executable.
      *
-     * @param pepNovoLocation the pepNovoLocation to set
+     * @param pepNovoExecutable the pepNovoExecutable to set
      */
-    public void setPepNovoLocation(File pepNovoLocation) {
-        this.pepNovoLocation = pepNovoLocation;
+    public void setPepNovoExecutable(File pepNovoExecutable) {
+        this.pepNovoExecutable = pepNovoExecutable;
     }
 
     /**

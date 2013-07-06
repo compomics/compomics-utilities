@@ -1,9 +1,7 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
-import com.compomics.util.gui.waiting.WaitingHandler;
-import static com.compomics.util.gui.waiting.WaitingHandler.tab;
+import com.compomics.util.waiting.WaitingHandler;
 
-import javax.swing.*;
 import java.util.Date;
 
 /**
@@ -15,67 +13,87 @@ import java.util.Date;
 public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     /**
-     * A boolean indicating whether the run was canceled.
+     * Boolean indicating whether the process is finished.
      */
-    private boolean boolCanceled = false;
+    private boolean runFinished = false;
+    /**
+     * Boolean indicating whether the process is canceled.
+     */
+    private boolean runCanceled = false;
+    /**
+     * The primary progress counter. -1 if indeterminate.
+     */
+    private int primaryProgressCounter = 0;
+    /**
+     * The secondary progress counter. -1 if indeterminate.
+     */
+    private int secondaryProgressCounter = 0;
+    /**
+     * The primary max progress counter.
+     */
+    private int primaryMaxProgressCounter = 0;
+    /**
+     * The secondary max progress counter.
+     */
+    private int secondaryMaxProgressCounter = 0;
     /**
      * The report to append.
      */
     protected String iReport = "";
 
     @Override
-    public void setMaxProgressValue(int maxProgressValue) {
-        // not used in command line
+    public void setMaxPrimaryProgressCounter(int maxProgressValue) {
+        primaryMaxProgressCounter = maxProgressValue;
     }
 
     @Override
-    public void increaseProgressValue() {
-        // not used in command line
+    public void increasePrimaryProgressCounter() {
+        primaryProgressCounter++;
     }
 
     @Override
-    public void increaseProgressValue(int amount) {
-        // not used in command line
+    public void increasePrimaryProgressCounter(int amount) {
+        primaryProgressCounter += amount;
     }
 
     @Override
-    public void setMaxSecondaryProgressValue(int maxProgressValue) {
-        // not used in command line
+    public void setMaxSecondaryProgressCounter(int maxProgressValue) {
+        secondaryMaxProgressCounter = maxProgressValue;
     }
 
     @Override
-    public void resetSecondaryProgressBar() {
-        // not used in command line
+    public void resetSecondaryProgressCounter() {
+        secondaryProgressCounter = 0;
     }
 
     @Override
-    public void increaseSecondaryProgressValue() {
-        // not used in command line
+    public void increaseSecondaryProgressCounter() {
+        secondaryProgressCounter++;
     }
 
     @Override
-    public void setSecondaryProgressValue(int value) {
-        // not used in command line
+    public void setSecondaryProgressCounter(int value) {
+        secondaryProgressCounter = value;
     }
 
     @Override
-    public void increaseSecondaryProgressValue(int amount) {
-        // not used in command line
+    public void increaseSecondaryProgressCounter(int amount) {
+        secondaryProgressCounter += amount;
     }
 
     @Override
-    public void setSecondaryProgressDialogIndeterminate(boolean intermediate) {
-        // not used in command line
+    public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
+        secondaryProgressCounter = -1;
     }
 
     @Override
     public void setRunFinished() {
-        // not used in command line
+        runFinished = true;
     }
 
     @Override
     public void setRunCanceled() {
-        boolCanceled = true;
+        runCanceled = true;
     }
 
     @Override
@@ -110,47 +128,58 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public boolean isRunCanceled() {
-        return boolCanceled;
+        return runCanceled;
     }
 
     @Override
     public boolean isRunFinished() {
-        // not used in command line
-        return false;
-    }
-
-    @Override
-    public JProgressBar getSecondaryProgressBar() {
-        return null;
-    }
-
-    @Override
-    public void displayMessage(String message, String title, int messageType) {
-        System.out.println(tab + message);
-        System.out.println(tab + title);
-    }
-
-    @Override
-    public void displayHtmlMessage(JEditorPane messagePane, String title, int messageType) {
-        displayMessage(messagePane.getText(), title, messageType);
+        return runFinished;
     }
 
     @Override
     public void setWaitingText(String text) {
-        System.out.println(tab + text);
+        appendReport(text, true, true);
     }
 
     @Override
-    public JProgressBar getPrimaryProgressBar() {
-        return null;
+    public void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
+        if (indeterminate) {
+            primaryProgressCounter = -1;
+        }
     }
 
     @Override
-    public void setIndeterminate(boolean indeterminate) {
-        // not used in command line
-    }
-
     public boolean isReport() {
         return true;
+    }
+    
+    @Override
+    public void setSecondaryProgressText(String text) {
+        appendReport(text, true, true);
+    }
+
+    @Override
+    public void resetPrimaryProgressCounter() {
+        primaryProgressCounter = 0;
+    }
+    
+    @Override
+    public int getPrimaryProgressCounter(){
+        return primaryProgressCounter;
+    }
+
+    @Override
+    public int getMaxPrimaryProgressCounter(){
+        return primaryMaxProgressCounter;
+    }
+
+    @Override
+    public int getSecondaryProgressCounter(){
+        return secondaryProgressCounter;
+    }
+
+    @Override
+    public int getMaxSecondaryProgressCounter(){
+        return secondaryMaxProgressCounter;
     }
 }

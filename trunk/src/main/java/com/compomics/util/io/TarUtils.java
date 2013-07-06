@@ -1,6 +1,6 @@
 package com.compomics.util.io;
 
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -132,7 +132,7 @@ public class TarUtils {
                             }
                             if (waitingHandler != null) {
                                 int progress = (int) (100 * tarInput.getBytesRead() / fileLength);
-                                waitingHandler.setSecondaryProgressValue(progress);
+                                waitingHandler.setSecondaryProgressCounter(progress);
                             }
                         } else {
                             throw new IOException("Folder " + destinationFolder.getAbsolutePath() + " does not exist and could not be created. Verify that you have the right to write in this directory.");

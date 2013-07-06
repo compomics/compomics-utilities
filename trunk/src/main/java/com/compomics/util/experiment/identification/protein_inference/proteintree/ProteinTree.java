@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagFactory;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -177,10 +177,10 @@ public class ProteinTree {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             int totalProgress = (int) (nPassages * accessions.size() + tags.size());
-            waitingHandler.setMaxSecondaryProgressValue(totalProgress);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long time0 = System.currentTimeMillis();
@@ -284,7 +284,7 @@ public class ProteinTree {
                 if (waitingHandler.isRunCanceled()) {
                     return;
                 }
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
             }
 
         }
@@ -304,7 +304,7 @@ public class ProteinTree {
                 if (waitingHandler.isRunCanceled()) {
                     return;
                 }
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
             }
 
         }

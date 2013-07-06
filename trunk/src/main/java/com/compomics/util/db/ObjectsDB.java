@@ -1,7 +1,7 @@
 package com.compomics.util.db;
 
 import com.compomics.util.Util;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -261,7 +261,7 @@ public class ObjectsDB implements Serializable {
             bos.close();
 
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
@@ -306,7 +306,7 @@ public class ObjectsDB implements Serializable {
             }
             ResultSet results;
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
                 // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
                 Statement rowCountStatement = dbConnection.createStatement();
@@ -314,9 +314,9 @@ public class ObjectsDB implements Serializable {
                 results.next();
                 Integer numberOfRows = results.getInt(1);
 
-                waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-                waitingHandler.setSecondaryProgressValue(0);
-                waitingHandler.setMaxSecondaryProgressValue(numberOfRows);
+                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                waitingHandler.setSecondaryProgressCounter(0);
+                waitingHandler.setMaxSecondaryProgressCounter(numberOfRows);
             }
 
             busy = true;
@@ -327,7 +327,7 @@ public class ObjectsDB implements Serializable {
             while (results.next()) {
 
                 if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressValue();
+                    waitingHandler.increaseSecondaryProgressCounter();
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
@@ -447,7 +447,7 @@ public class ObjectsDB implements Serializable {
 
                         objectsCache.addObject(dbName, tableName, key, object, false);
                         if (waitingHandler != null) {
-                            waitingHandler.increaseSecondaryProgressValue();
+                            waitingHandler.increaseSecondaryProgressCounter();
                         }
                     }
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {

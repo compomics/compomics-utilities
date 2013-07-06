@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.annotation.gene;
 
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
 import java.io.BufferedReader;
 import java.io.File;
@@ -94,9 +94,9 @@ public class GeneFactory {
         mappingFileOpen = true;
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(100);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long progressUnit = geneMappingFile.length() / 100;
@@ -137,7 +137,7 @@ public class GeneFactory {
             index = geneMappingFile.getFilePointer();
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
+                waitingHandler.setSecondaryProgressCounter((int) (index / progressUnit));
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }

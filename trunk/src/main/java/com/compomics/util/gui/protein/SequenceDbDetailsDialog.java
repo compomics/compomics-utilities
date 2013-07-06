@@ -222,7 +222,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 normalImange,
                 waitingImage,
                 true);
-        progressDialog.setIndeterminate(true);
+        progressDialog.setPrimaryProgressCounterIndeterminate(true);
         progressDialog.setTitle("Loading Database. Please Wait...");
 
         new Thread(new Runnable() {
@@ -240,7 +240,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                 try {
                     progressDialog.setTitle("Importing Database. Please Wait...");
-                    progressDialog.setIndeterminate(false);
+                    progressDialog.setPrimaryProgressCounterIndeterminate(false);
                     sequenceFactory.loadFastaFile(finalFile, progressDialog);
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
@@ -549,6 +549,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                             .addComponent(sizeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))))
                 .addContainerGap())
         );
+
+        databaseInformationPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {decoyTagLabel, jLabel1, lastModifiedLabel, nameLabel, sizeLabel, typeLabel, versionLabel});
+
         databaseInformationPanelLayout.setVerticalGroup(
             databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databaseInformationPanelLayout.createSequentialGroup()
@@ -736,7 +739,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 normalImange,
                 waitingImage,
                 true);
-        progressDialog.setIndeterminate(true);
+        progressDialog.setPrimaryProgressCounterIndeterminate(true);
         progressDialog.setTitle("Creating Decoy. Please Wait...");
 
         new Thread(new Runnable() {

@@ -2,7 +2,7 @@ package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;

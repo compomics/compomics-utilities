@@ -11,7 +11,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.SQLException;
 
@@ -1192,15 +1192,15 @@ public abstract class Identification extends ExperimentObject {
      */
     public void buildPeptidesAndProteins(WaitingHandler waitingHandler) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(getSpectrumIdentificationSize());
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(getSpectrumIdentificationSize());
+            waitingHandler.setSecondaryProgressCounter(0);
         }
         for (String spectrumFile : spectrumIdentificationMap.keySet()) {
             for (String spectrumMatchKey : spectrumIdentificationMap.get(spectrumFile)) {
                 buildPeptidesAndProteins(spectrumMatchKey);
                 if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressValue();
+                    waitingHandler.increaseSecondaryProgressCounter();
                     if (waitingHandler.isRunCanceled()) {
                         return;
                     }
@@ -1491,8 +1491,8 @@ public abstract class Identification extends ExperimentObject {
             nParameters += map.size();
         }
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(files.length + nParameters);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(files.length + nParameters);
         }
 
         for (File file : files) {
@@ -1516,7 +1516,7 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
@@ -1535,7 +1535,7 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
             }
             if (waitingHandler.isRunCanceled()) {
                 break;
@@ -1543,7 +1543,7 @@ public abstract class Identification extends ExperimentObject {
         }
         urParameters.clear();
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         }
         Util.deleteDir(directory);
         ArrayList<String> oldProteinKeys = new ArrayList<String>(proteinIdentification);

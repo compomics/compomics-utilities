@@ -4,7 +4,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -185,9 +185,9 @@ public class MgfReader {
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(100);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long progressUnit = bufferedRandomAccessFile.length() / 100;
@@ -206,7 +206,7 @@ public class MgfReader {
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
-                    waitingHandler.setSecondaryProgressValue((int) (currentIndex / progressUnit));
+                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf('=') + 1).trim();
@@ -290,7 +290,7 @@ public class MgfReader {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         }
 
         bufferedRandomAccessFile.close();
@@ -326,9 +326,9 @@ public class MgfReader {
         int cpt = 0;
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(100);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long progressUnit = bufferedRandomAccessFile.length() / 100;
@@ -345,7 +345,7 @@ public class MgfReader {
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
-                    waitingHandler.setSecondaryProgressValue((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
+                    waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf('=') + 1).trim();
@@ -371,7 +371,7 @@ public class MgfReader {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         }
 
         bufferedRandomAccessFile.close();
@@ -487,9 +487,9 @@ public class MgfReader {
             long writeIndex = 0, beginIndex = 0;
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressValue(100);
-                waitingHandler.setSecondaryProgressValue(0);
+                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                waitingHandler.setMaxSecondaryProgressCounter(100);
+                waitingHandler.setSecondaryProgressCounter(0);
             }
 
             int fileCounter = 1, spectrumCounter = 0;
@@ -545,7 +545,7 @@ public class MgfReader {
                         if (waitingHandler.isRunCanceled()) {
                             break;
                         }
-                        waitingHandler.setSecondaryProgressValue((int) (readIndex / progressUnit));
+                        waitingHandler.setSecondaryProgressCounter((int) (readIndex / progressUnit));
                     }
 
                 } else if (line.startsWith("TITLE")) {
@@ -624,7 +624,7 @@ public class MgfReader {
             mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, lastModified));
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
             }
 
             readBufferedRandomAccessFile.close();

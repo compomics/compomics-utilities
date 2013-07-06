@@ -4,7 +4,7 @@
  * Date: 02-Aug-2009
  * Time: 14:20:25
  */
-package com.compomics.util.gui.waiting;
+package com.compomics.util.gui.waiting.waitinghandlers;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;

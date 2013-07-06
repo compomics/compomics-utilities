@@ -63,7 +63,7 @@ public enum SearchParametersCLIParams {
     DISCARD_SPECTRA("discard_spectra", "Discard low quality spectra, 1: true, 0: false, default is '1'.", false),
     FRAGMENTATION_MODEL("fragmentation_model", "The PepNovo+ fragmentation model. Default is 'CID_IT_TRYP'.", false),
     GENERATE_BLAST("generate_blast", "Generate a BLAST query, 1: true, 0: false, default is '0'.", false),
-    PEP_NOVO_LOCATION("pep_novo_folder", "The folder where PepNovo+ is installed, defaults to the version provided with DeNovoGUI.", false);
+    PEP_NOVO_LOCATION("pep_novo", "The PepNovo+ executable, defaults to the OS dependent versions included with DeNovoGUI.", false);
     
     /**
      * Short Id for the CLI parameter.

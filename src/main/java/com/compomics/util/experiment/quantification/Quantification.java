@@ -8,7 +8,7 @@ import com.compomics.util.experiment.quantification.matches.ProteinQuantificatio
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.quantification.matches.PeptideQuantification;
 import com.compomics.util.experiment.quantification.matches.PsmQuantification;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -236,8 +236,8 @@ public abstract class Quantification extends ExperimentObject {
     public void buildPeptidesAndProteinQuantifications(Identification identification, WaitingHandler waitingHandler) throws Exception {
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(identification.getProteinIdentification().size()
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(identification.getProteinIdentification().size()
                     + identification.getPeptideIdentification().size()
                     + identification.getSpectrumIdentificationSize());
         }
@@ -252,7 +252,7 @@ public abstract class Quantification extends ExperimentObject {
             tempProteinQuantification = new ProteinQuantification(proteinKey, proteinMatch.getPeptideMatches());
             addProteinQuantification(tempProteinQuantification);
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     return;
                 }
@@ -266,7 +266,7 @@ public abstract class Quantification extends ExperimentObject {
             tempPeptideQuantification = new PeptideQuantification(peptideKey, peptideMatch.getSpectrumMatches());
             addPeptideQuantification(tempPeptideQuantification);
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     return;
                 }
@@ -278,7 +278,7 @@ public abstract class Quantification extends ExperimentObject {
                     psmIDentificationToQuantification.put(psmKey, new ArrayList<String>());
                 }
                 if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressValue();
+                    waitingHandler.increaseSecondaryProgressCounter();
                     if (waitingHandler.isRunCanceled()) {
                         return;
                     }

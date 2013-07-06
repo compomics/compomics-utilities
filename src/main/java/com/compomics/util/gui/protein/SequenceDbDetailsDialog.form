@@ -114,7 +114,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel1" min="-2" pref="75" max="-2" attributes="0"/>
+                              <Component id="jLabel1" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="fileTxt" max="32767" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -125,26 +125,26 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="versionLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <Component id="versionLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="versionTxt" pref="280" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="decoyTagLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <Component id="decoyTagLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="decoyFlagTxt" pref="280" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="nameLabel" min="-2" pref="75" max="-2" attributes="0"/>
+                                      <Component id="nameLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="dbNameTxt" pref="280" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="sizeLabel" min="-2" pref="75" max="-2" attributes="0"/>
-                                  <Component id="typeLabel" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
-                                  <Component id="lastModifiedLabel" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Component id="sizeLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Component id="typeLabel" linkSize="2" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Component id="lastModifiedLabel" linkSize="2" alignment="0" min="-2" pref="75" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">

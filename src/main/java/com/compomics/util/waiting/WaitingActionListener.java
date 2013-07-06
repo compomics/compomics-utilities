@@ -1,4 +1,4 @@
-package com.compomics.util.gui.waiting;
+package com.compomics.util.waiting;
 
 /**
  * This class is used to pass actions while waiting like cancel.

@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.protein.Header;
 import java.io.*;
@@ -479,9 +479,9 @@ public class SequenceFactory {
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(100);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long progressUnit = bufferedRandomAccessFile.length() / 100;
@@ -533,7 +533,7 @@ public class SequenceFactory {
                 }
 
                 if (waitingHandler != null) {
-                    waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
+                    waitingHandler.setSecondaryProgressCounter((int) (index / progressUnit));
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
@@ -544,7 +544,7 @@ public class SequenceFactory {
         }
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         }
 
         bufferedRandomAccessFile.close();
@@ -722,8 +722,8 @@ public class SequenceFactory {
     public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressBar();
-            waitingHandler.setMaxSecondaryProgressValue(fastaIndex.getNTarget());
+            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setMaxSecondaryProgressCounter(fastaIndex.getNTarget());
         }
 
         // first create the new target-decoy file
@@ -736,7 +736,7 @@ public class SequenceFactory {
             }
 
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
             }
 
             Protein currentProtein = getProtein(accession);
@@ -780,7 +780,7 @@ public class SequenceFactory {
         bufferedWriter.close();
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(true);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         }
 
         boolean indexFile = true;

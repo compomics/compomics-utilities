@@ -10,7 +10,7 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         fileName = Util.getFileName(resFile);
 
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue(100);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
         }
         long currentIndex = 0;
         long progressUnit = bufferedRandomAccessFile.length() / 100;
@@ -87,7 +87,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 index.put(title, currentIndex);
                 newTitle = false;
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressValue((int) (currentIndex / progressUnit));
+                waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
             }
             }
         }

@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.annotation.go;
 
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,9 +87,9 @@ public class GOFactory {
         mappingFileOpen = true;
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressValue(100);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long progressUnit = bufferedRandomAccessFile.length() / 100;
@@ -131,7 +131,7 @@ public class GOFactory {
             index = bufferedRandomAccessFile.getFilePointer();
 
             if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressValue((int) (index / progressUnit));
+                waitingHandler.setSecondaryProgressCounter((int) (index / progressUnit));
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }

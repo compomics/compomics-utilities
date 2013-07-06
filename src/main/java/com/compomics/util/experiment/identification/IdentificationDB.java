@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -467,9 +467,9 @@ public class IdentificationDB implements Serializable {
      */
     public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(peptideKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(peptideKeys.size());
         }
         String tableName = getPeptideParameterTable(urParameter);
         objectsDB.loadObjects(tableName, peptideKeys, waitingHandler);
@@ -490,9 +490,9 @@ public class IdentificationDB implements Serializable {
      */
     public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(peptideKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(peptideKeys.size());
         }
         objectsDB.loadObjects(peptideTableName, peptideKeys, waitingHandler);
     }
@@ -531,9 +531,9 @@ public class IdentificationDB implements Serializable {
      */
     public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(proteinKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(proteinKeys.size());
         }
         String tableName = getProteinParameterTable(urParameter);
         objectsDB.loadObjects(tableName, proteinKeys, waitingHandler);
@@ -569,9 +569,9 @@ public class IdentificationDB implements Serializable {
      */
     public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(proteinKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(proteinKeys.size());
         }
         objectsDB.loadObjects(proteinTableName, proteinKeys, waitingHandler);
     }
@@ -624,9 +624,9 @@ public class IdentificationDB implements Serializable {
      */
     public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(2 * spectrumKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
         }
         HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
         for (String spectrumKey : spectrumKeys) {
@@ -636,7 +636,7 @@ public class IdentificationDB implements Serializable {
             }
             sortedKeys.get(tableName).add(spectrumKey);
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
@@ -684,9 +684,9 @@ public class IdentificationDB implements Serializable {
      */
     public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
-            waitingHandler.setMaxSecondaryProgressValue(2 * spectrumKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
         }
         HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
         for (String spectrumKey : spectrumKeys) {
@@ -696,7 +696,7 @@ public class IdentificationDB implements Serializable {
             }
             sortedKeys.get(tableName).add(spectrumKey);
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }

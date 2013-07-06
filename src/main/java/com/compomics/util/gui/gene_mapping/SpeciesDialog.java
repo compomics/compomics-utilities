@@ -647,7 +647,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     true);
         }
 
-        progressDialog.setIndeterminate(true);
+        progressDialog.setPrimaryProgressCounterIndeterminate(true);
         progressDialog.setTitle("Sending Request. Please Wait...");
         final SpeciesDialog finalRef = this;
 

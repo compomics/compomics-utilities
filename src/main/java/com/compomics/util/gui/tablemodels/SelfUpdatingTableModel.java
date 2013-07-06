@@ -1,6 +1,6 @@
 package com.compomics.util.gui.tablemodels;
 
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -299,10 +299,10 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
         final int finalColumn = column;
         this.progressDialog = aProgressDialog;
-        progressDialog.resetSecondaryProgressBar();
+        progressDialog.resetSecondaryProgressCounter();
         progressDialog.setTitle("Sorting. Please Wait...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMaxProgressValue(getRowCount());
+        progressDialog.setPrimaryProgressCounterIndeterminate(false);
+        progressDialog.setMaxPrimaryProgressCounter(getRowCount());
         progressDialog.setValue(0);
 
         new Thread(new Runnable() {
@@ -348,7 +348,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                         }
                         rows.add(row);
                         if (progressDialog != null) {
-                            progressDialog.increaseProgressValue();
+                            progressDialog.increasePrimaryProgressCounter();
                         }
                     }
 

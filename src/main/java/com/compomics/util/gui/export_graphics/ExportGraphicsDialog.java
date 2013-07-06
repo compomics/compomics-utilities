@@ -350,7 +350,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
                     exportGraphicsDialogParent.getNormalIcon(),
                     exportGraphicsDialogParent.getWaitingIcon(),
                     true);
-            progressDialog.setIndeterminate(true);
+            progressDialog.setPrimaryProgressCounterIndeterminate(true);
             progressDialog.setTitle("Saving Figure. Please Wait...");
 
             new Thread(new Runnable() {

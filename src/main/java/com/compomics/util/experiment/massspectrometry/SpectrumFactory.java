@@ -2,7 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfIndex;
 import com.compomics.util.experiment.io.massspectrometry.MgfReader;
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import java.io.*;
 import java.net.URLDecoder;

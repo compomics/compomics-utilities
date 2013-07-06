@@ -1,6 +1,6 @@
 package com.compomics.util.db;
 
-import com.compomics.util.gui.waiting.WaitingHandler;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -314,8 +314,8 @@ public class ObjectsCache {
      */
     public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue(2 * entryKeys.size());
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(2 * entryKeys.size());
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
         }
         // temporary map for batch saving
         HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
@@ -334,7 +334,7 @@ public class ObjectsCache {
                 }
                 toSave.get(dbName).get(tableName).put(objectKey, entry.getObject());
             } else if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressValue();
+                waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     return;
                 }
@@ -499,9 +499,9 @@ public class ObjectsCache {
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
 
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressValue((loadedObjectsKeys.size() * 2) + 1);
-            waitingHandler.setSecondaryProgressDialogIndeterminate(false);
-            waitingHandler.setSecondaryProgressValue(0);
+            waitingHandler.setMaxSecondaryProgressCounter((loadedObjectsKeys.size() * 2) + 1);
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         // add the objects to the database
@@ -524,7 +524,7 @@ public class ObjectsCache {
                     }
 
                     if (waitingHandler != null) {
-                        waitingHandler.increaseSecondaryProgressValue();
+                        waitingHandler.increaseSecondaryProgressCounter();
                         if (waitingHandler.isRunCanceled()) {
                             return;
                         }

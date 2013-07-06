@@ -1355,7 +1355,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     normalIcon,
                     waitingIcon,
                     true);
-            progressDialog.setIndeterminate(true);
+            progressDialog.setPrimaryProgressCounterIndeterminate(true);
             progressDialog.setTitle("Exporting Table. Please Wait...");
 
             new Thread(new Runnable() {
@@ -1591,7 +1591,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     normalIcon,
                     waitingIcon,
                     true);
-            progressDialog.setIndeterminate(true);
+            progressDialog.setPrimaryProgressCounterIndeterminate(true);
             progressDialog.setTitle("Loading Data. Please Wait...");
 
             new Thread(new Runnable() {
@@ -1634,15 +1634,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         xyPlotPanel.revalidate();
                         xyPlotPanel.repaint();
 
-                        progressDialog.setIndeterminate(false);
-                        progressDialog.setMaxProgressValue(tableModel.getRowCount());
+                        progressDialog.setPrimaryProgressCounterIndeterminate(false);
+                        progressDialog.setMaxPrimaryProgressCounter(tableModel.getRowCount());
                         progressDialog.setValue(0);
 
                         int xAxisIndex = xAxisComboBox.getSelectedIndex();
                         double[] values = new double[tableModel.getRowCount()];
 
                         for (int index = 0; index < tableModel.getRowCount(); index++) {
-                            progressDialog.increaseProgressValue();
+                            progressDialog.increasePrimaryProgressCounter();
 
                             if (rowsAfterDataFiltering.contains(index)) {
 
@@ -1757,13 +1757,13 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         double minColorValue = Double.MAX_VALUE;
                         double maxColorValue = Double.MIN_VALUE;
 
-                        progressDialog.setIndeterminate(false);
-                        progressDialog.setMaxProgressValue(tableModel.getRowCount() * 2);
+                        progressDialog.setPrimaryProgressCounterIndeterminate(false);
+                        progressDialog.setMaxPrimaryProgressCounter(tableModel.getRowCount() * 2);
                         progressDialog.setValue(0);
 
                         for (int i = 0; i < tableModel.getRowCount(); i++) {
 
-                            progressDialog.increaseProgressValue();
+                            progressDialog.increasePrimaryProgressCounter();
 
                             if (rowsAfterDataFiltering.contains(i)) {
 
@@ -1821,8 +1821,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         int bubbleSizeIndex = bubbleSizeComboBox.getSelectedIndex();
                         HashMap<Integer, Color> datasetColors = new HashMap<Integer, Color>();
 
-                        progressDialog.setIndeterminate(false);
-                        progressDialog.setMaxProgressValue(tableModel.getRowCount());
+                        progressDialog.setPrimaryProgressCounterIndeterminate(false);
+                        progressDialog.setMaxPrimaryProgressCounter(tableModel.getRowCount());
                         progressDialog.setValue(0);
 
                         int datasetCounter = 0;
@@ -1844,7 +1844,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                             for (Integer index : datasets.get(dataset)) {
 
-                                progressDialog.increaseProgressValue();
+                                progressDialog.increasePrimaryProgressCounter();
 
                                 // @TODO: support more data types!!
 
@@ -1944,7 +1944,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             datasetCounter++;
                         }
 
-                        progressDialog.setIndeterminate(true);
+                        progressDialog.setPrimaryProgressCounterIndeterminate(true);
 
 
                         // create the plot

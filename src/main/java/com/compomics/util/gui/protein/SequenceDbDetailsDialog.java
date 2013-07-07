@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.FastaIndex;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import java.awt.Frame;
 import java.awt.Image;
@@ -53,6 +54,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * The parent frame.
      */
     private Frame parentFrame;
+    /**
+     * The utilties user preferences
+     */
+    private UtilitiesUserPreferences utilitiesUserPreferences = null;
 
     /**
      * Creates a new SequenceDbDetailsDialog.
@@ -71,6 +76,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         this.dbEditable = dbEditable;
         this.waitingImage = waitingImage;
         this.normalImange = normalImange;
+        loadUserPreferences();
         setUpGUI();
         setLocationRelativeTo(parent);
     }
@@ -161,6 +167,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         if (sequenceFactory.getFileName() == null || !userCanDispose) {
 
             File startLocation = new File(lastSelectedFolder);
+            if (utilitiesUserPreferences.getDbFolder() != null && utilitiesUserPreferences.getDbFolder().exists()) {
+                startLocation = utilitiesUserPreferences.getDbFolder();
+            }
 
             JFileChooser fc = new JFileChooser(startLocation);
             FileFilter filter = new FileFilter() {
@@ -182,6 +191,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 lastSelectedFolder = file.getParent();
+                utilitiesUserPreferences.setDbFolder(file.getParentFile());
+
 
                 if (file.getName().indexOf(" ") != -1) {
                     file = renameFastaFileName(file);
@@ -402,6 +413,17 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         }
         return true;
 
+    }
+
+    /**
+     * Loads the user preferences.
+     */
+    public void loadUserPreferences() {
+        try {
+            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -706,6 +728,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (saveChanges()) {
+            if (utilitiesUserPreferences != null) {
+                UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+            }
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed

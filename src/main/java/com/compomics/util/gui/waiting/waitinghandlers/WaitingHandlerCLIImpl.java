@@ -8,7 +8,7 @@ import java.util.Date;
  * This class is an implementation of the WaitingHandler interface to be used
  * when operating through the Command Line Interface.
  *
- * @author Kenny Helsens
+ * @author Harald Barsnes
  */
 public class WaitingHandlerCLIImpl implements WaitingHandler {
 

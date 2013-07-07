@@ -88,11 +88,11 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private String localPrideFolder = "user.home";
     /**
-     * The user last used database folder
+     * The user last used database folder.
      */
     private File dbFolder = null;
     /**
-     * The user last used databases
+     * The user last used databases.
      */
     private ArrayList<File> favoriteDBs = null;
 
@@ -470,7 +470,7 @@ public class UtilitiesUserPreferences implements Serializable {
     }
     
     /**
-     * Removes the db files which do not exist anymore
+     * Removes the db files which do not exist anymore.
      */
     public void checkDbFiles() {
         ArrayList<File> checkedFiles = new ArrayList<File>();
@@ -485,7 +485,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Sets the last used databases.
      * 
-     * @param favoriteDBs the last used databases.
+     * @param dbFile the last used databases.
      */
     public void addFavoriteDB(File dbFile) {
         if (favoriteDBs == null) {

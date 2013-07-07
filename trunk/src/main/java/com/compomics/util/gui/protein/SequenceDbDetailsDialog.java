@@ -55,7 +55,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private Frame parentFrame;
     /**
-     * The utilties user preferences
+     * The utilities user preferences.
      */
     private UtilitiesUserPreferences utilitiesUserPreferences = null;
 

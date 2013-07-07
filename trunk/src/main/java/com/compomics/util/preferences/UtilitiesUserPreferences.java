@@ -3,6 +3,7 @@ package com.compomics.util.preferences;
 import com.compomics.util.io.SerializationUtils;
 import java.awt.Color;
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Utilities user preferences will be serialized in the user folder and provide
@@ -86,6 +87,14 @@ public class UtilitiesUserPreferences implements Serializable {
      * The local PRIDE projects folder.
      */
     private String localPrideFolder = "user.home";
+    /**
+     * The user last used database folder
+     */
+    private File dbFolder = null;
+    /**
+     * The user last used databases
+     */
+    private ArrayList<File> favoriteDBs = null;
 
     /**
      * Constructor
@@ -425,5 +434,63 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setLocalPrideFolder(String localPrideFolder) {
         this.localPrideFolder = localPrideFolder;
+    }
+
+    /**
+     * Returns the last used database folder. Null if not set.
+     * 
+     * @return the last used database folder
+     */
+    public File getDbFolder() {
+        return dbFolder;
+    }
+
+    /**
+     * Sets the last used database folder.
+     * 
+     * @param dbFolder the last used database folder
+     */
+    public void setDbFolder(File dbFolder) {
+        this.dbFolder = dbFolder;
+    }
+
+    /**
+     * Returns the last used databases. The most recent ones first.
+     * 
+     * @return the last used databases.
+     */
+    public ArrayList<File> getFavoriteDBs() {
+        if (favoriteDBs == null) {
+            // backward compatibility check
+            favoriteDBs = new ArrayList<File>();
+        } else {
+        checkDbFiles();
+        }
+        return favoriteDBs;
+    }
+    
+    /**
+     * Removes the db files which do not exist anymore
+     */
+    public void checkDbFiles() {
+        ArrayList<File> checkedFiles = new ArrayList<File>();
+        for (File dbFile : favoriteDBs) {
+            if (dbFile.exists()) {
+                checkedFiles.add(dbFile);
+            }
+        }
+        favoriteDBs = checkedFiles;
+    }
+
+    /**
+     * Sets the last used databases.
+     * 
+     * @param favoriteDBs the last used databases.
+     */
+    public void addFavoriteDB(File dbFile) {
+        if (favoriteDBs == null) {
+            favoriteDBs = new ArrayList<File>();
+        }
+        favoriteDBs.add(0, dbFile);
     }
 }

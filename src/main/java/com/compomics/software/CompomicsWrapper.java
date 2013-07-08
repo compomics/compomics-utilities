@@ -1,6 +1,5 @@
 package com.compomics.software;
 
-import com.compomics.util.CompareVersionNumbers;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.UtilitiesGUIDefaults;

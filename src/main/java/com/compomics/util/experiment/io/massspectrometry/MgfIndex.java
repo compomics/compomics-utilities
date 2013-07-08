@@ -46,7 +46,7 @@ public class MgfIndex extends ExperimentObject {
      */
     private Double maxIntensity;
     /**
-     * The maximal charge
+     * The maximal charge.
      */
     private Integer maxCharge;
 

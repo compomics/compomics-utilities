@@ -279,18 +279,38 @@ public class SpectrumFactory {
 
         double maxMz = 0;
 
-        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
-
-        while (keys.hasNext()) {
-
-            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
-
-            if (getMaxMz(tempFileName) > maxMz) {
-                maxMz = getMaxMz(tempFileName);
+        for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
+            if (maxMz > mgfIndex.getMaxMz()) {
+                maxMz = mgfIndex.getMaxMz();
             }
         }
 
         return maxMz;
+    }
+    
+    /**
+     * Returns the max precursor charge encountered for the given mgf file.
+     * 
+     * @param fileName the name of the mgf file
+     * @return the max precursor charge encountered
+     */
+    public Integer getMaxCharge(String fileName) {
+        return mgfIndexesMap.get(fileName).getMaxCharge();
+    }
+    
+    /**
+     * Returns the max precursor charge encountered among all loaded mgf files.
+     * 
+     * @return the max precursor charge encountered among all loaded mgf files
+     */
+    public Integer getMaxCharge() {
+        int maxCharge = 0;
+        for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
+            if (mgfIndex.getMaxCharge() > maxCharge) {
+                maxCharge = mgfIndex.getMaxCharge();
+            }
+        }
+        return maxCharge;
     }
 
     /**
@@ -312,14 +332,9 @@ public class SpectrumFactory {
 
         double maxIntensity = 0;
 
-        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
-
-        while (keys.hasNext()) {
-
-            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
-
-            if (getMaxIntensity(tempFileName) > maxIntensity) {
-                maxIntensity = getMaxIntensity(tempFileName);
+        for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
+            if (maxIntensity > mgfIndex.getMaxIntensity()) {
+                maxIntensity = mgfIndex.getMaxIntensity();
             }
         }
 
@@ -355,14 +370,9 @@ public class SpectrumFactory {
 
         double maxRT = 0;
 
-        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
-
-        while (keys.hasNext()) {
-
-            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
-
-            if (getMaxRT(tempFileName) > maxRT) {
-                maxRT = getMaxRT(tempFileName);
+        for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
+            if (maxRT > mgfIndex.getMaxRT()) {
+                maxRT = mgfIndex.getMaxRT();
             }
         }
 
@@ -378,14 +388,9 @@ public class SpectrumFactory {
 
         double minRT = Double.MAX_VALUE;
 
-        Iterator<String> keys = mgfIndexesMap.keySet().iterator();
-
-        while (keys.hasNext()) {
-
-            String tempFileName = mgfIndexesMap.get(keys.next()).getFileName();
-
-            if (getMinRT(tempFileName) < minRT) {
-                minRT = getMinRT(tempFileName);
+        for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
+            if (minRT < mgfIndex.getMinRT()) {
+                minRT = mgfIndex.getMinRT();
             }
         }
 

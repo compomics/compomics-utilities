@@ -183,6 +183,7 @@ public class MgfReader {
         String title = null;
         int cpt = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
+        int maxCharge = 0;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -227,6 +228,13 @@ public class MgfReader {
                 }
                 spectrumTitles.add(title);
                 indexes.put(title, currentIndex);
+            } else if (line.startsWith("CHARGE")) {
+                ArrayList<Charge> precursorCharges = parseCharges(line);
+                for (Charge charge : precursorCharges) {
+                    if (charge.value > maxCharge) {
+                        maxCharge = charge.value;
+                    }
+                }
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -301,7 +309,7 @@ public class MgfReader {
 
         long lastModified = mgfFile.lastModified();
 
-        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, lastModified);
+        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, lastModified);
     }
 
     /**
@@ -495,6 +503,7 @@ public class MgfReader {
             int fileCounter = 1, spectrumCounter = 0;
             long typicalSize = 0;
             double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
+            int maxCharge = 0;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -527,7 +536,7 @@ public class MgfReader {
 
                             long lastModified = testFile.lastModified();
 
-                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, lastModified));
+                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, lastModified));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -536,6 +545,7 @@ public class MgfReader {
                             spectrumCounter = 0;
                             maxRT = -1;
                             minRT = Double.MAX_VALUE;
+                            maxCharge = 0;
                             indexes = new HashMap<String, Long>();
                             spectrumTitles = new ArrayList<String>();
                         }
@@ -558,7 +568,14 @@ public class MgfReader {
                     }
                     spectrumTitles.add(title);
                     indexes.put(title, writeIndex);
-                } else if (line.startsWith("PEPMASS")) {
+                } else if (line.startsWith("CHARGE")) {
+                ArrayList<Charge> precursorCharges = parseCharges(line);
+                for (Charge charge : precursorCharges) {
+                    if (charge.value > maxCharge) {
+                        maxCharge = charge.value;
+                    }
+                }
+            } else if (line.startsWith("PEPMASS")) {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
                     double precursorMz = Double.parseDouble(values[0]);
@@ -621,7 +638,7 @@ public class MgfReader {
 
             long lastModified = testFile.lastModified();
 
-            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, lastModified));
+            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, lastModified));
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);

@@ -45,6 +45,10 @@ public class MgfIndex extends ExperimentObject {
      * The maximal precursor intensity of the file.
      */
     private Double maxIntensity;
+    /**
+     * The maximal charge
+     */
+    private Integer maxCharge;
 
     /**
      * Constructor.
@@ -59,7 +63,7 @@ public class MgfIndex extends ExperimentObject {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, long lastModified) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.indexMap = indexMap;
         this.fileName = fileName;
@@ -67,6 +71,7 @@ public class MgfIndex extends ExperimentObject {
         this.minRT = minRT;
         this.maxMz = maxMz;
         this.maxIntensity = maxIntensity;
+        this.maxCharge = maxCharge;
         this.lastModified = lastModified;
     }
 
@@ -139,6 +144,15 @@ public class MgfIndex extends ExperimentObject {
      */
     public Double getMaxMz() {
         return maxMz;
+    }
+    
+    /**
+     * Returns the maximal charge found in the mgf file.
+     * 
+     * @return the maximal charge found in the mgf file
+     */
+    public Integer getMaxCharge() {
+        return maxCharge;
     }
 
     /**

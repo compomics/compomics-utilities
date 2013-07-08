@@ -22,7 +22,7 @@ public class PeptideAssumptionDetails implements UrParameter {
     /**
      * The pep novo score.
      */
-    private double pepNovoScore;
+    private double rankScore;
 
     /**
      * Constructor.
@@ -71,17 +71,17 @@ public class PeptideAssumptionDetails implements UrParameter {
      *
      * @return the pep novo score
      */
-    public double getPepNovoScore() {
-        return pepNovoScore;
+    public double getRankScore() {
+        return rankScore;
     }
 
     /**
      * Sets the pep novo score.
      *
-     * @param pepNovoScore the pep novo score
+     * @param rankScore the pep novo rank score
      */
-    public void setPepNovoScore(double pepNovoScore) {
-        this.pepNovoScore = pepNovoScore;
+    public void setRankScore(double rankScore) {
+        this.rankScore = rankScore;
     }
 
     @Override

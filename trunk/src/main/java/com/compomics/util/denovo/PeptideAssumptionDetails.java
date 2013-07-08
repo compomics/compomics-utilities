@@ -20,7 +20,7 @@ public class PeptideAssumptionDetails implements UrParameter {
      */
     private double cTermGap;
     /**
-     * The pep novo score.
+     * The PepNovo rank score.
      */
     private double rankScore;
 
@@ -67,18 +67,18 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Returns the pep novo score.
+     * Returns the PepNovo rank score.
      *
-     * @return the pep novo score
+     * @return the PepNovo rank score
      */
     public double getRankScore() {
         return rankScore;
     }
 
     /**
-     * Sets the pep novo score.
+     * Sets the PepNovo rank score.
      *
-     * @param rankScore the pep novo rank score
+     * @param rankScore the PepNovo rank score
      */
     public void setRankScore(double rankScore) {
         this.rankScore = rankScore;

@@ -279,7 +279,7 @@ public class SpectrumFactory {
         double maxMz = 0;
 
         for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
-            if (maxMz > mgfIndex.getMaxMz()) {
+            if (maxMz < mgfIndex.getMaxMz()) {
                 maxMz = mgfIndex.getMaxMz();
             }
         }
@@ -332,7 +332,7 @@ public class SpectrumFactory {
         double maxIntensity = 0;
 
         for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
-            if (maxIntensity > mgfIndex.getMaxIntensity()) {
+            if (maxIntensity < mgfIndex.getMaxIntensity()) {
                 maxIntensity = mgfIndex.getMaxIntensity();
             }
         }
@@ -370,7 +370,7 @@ public class SpectrumFactory {
         double maxRT = 0;
 
         for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
-            if (maxRT > mgfIndex.getMaxRT()) {
+            if (maxRT < mgfIndex.getMaxRT()) {
                 maxRT = mgfIndex.getMaxRT();
             }
         }
@@ -388,7 +388,7 @@ public class SpectrumFactory {
         double minRT = Double.MAX_VALUE;
 
         for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
-            if (minRT < mgfIndex.getMinRT()) {
+            if (minRT > mgfIndex.getMinRT()) {
                 minRT = mgfIndex.getMinRT();
             }
         }

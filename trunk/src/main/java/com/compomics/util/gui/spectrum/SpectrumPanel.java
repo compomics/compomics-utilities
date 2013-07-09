@@ -1258,7 +1258,7 @@ public class SpectrumPanel extends GraphicsPanel {
                             "r" + i,
                             currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
                             reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, reverseIonAlphaLevel, false, true, annotationColor, true,
-                            Color.lightGray, 0.2f, forwardIonPercentHeight));
+                            Color.lightGray, 0.2f, reverseIonPercentHeight));
                 }
             }
         }
@@ -1281,7 +1281,7 @@ public class SpectrumPanel extends GraphicsPanel {
                             "f" + i,
                             currentPeptide.getSequence().substring(i, i + 1) + mod,
                             forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
-                            Color.lightGray, 0.2f, reverseIonPercentHeight));
+                            Color.lightGray, 0.2f, forwardIonPercentHeight));
                 }
             }
         }

@@ -286,20 +286,20 @@ public class SpectrumFactory {
 
         return maxMz;
     }
-    
+
     /**
      * Returns the max precursor charge encountered for the given mgf file.
-     * 
+     *
      * @param fileName the name of the mgf file
      * @return the max precursor charge encountered
      */
     public Integer getMaxCharge(String fileName) {
         return mgfIndexesMap.get(fileName).getMaxCharge();
     }
-    
+
     /**
      * Returns the max precursor charge encountered among all loaded mgf files.
-     * 
+     *
      * @return the max precursor charge encountered among all loaded mgf files
      */
     public Integer getMaxCharge() {
@@ -310,6 +310,31 @@ public class SpectrumFactory {
             }
         }
         return maxCharge;
+    }
+
+    /**
+     * Returns the max peak count encountered for the given mgf file.
+     *
+     * @param fileName the name of the mgf file
+     * @return the max peak count encountered
+     */
+    public Integer getMaxPeakCount(String fileName) {
+        return mgfIndexesMap.get(fileName).getMaxPeakCount();
+    }
+
+    /**
+     * Returns the max peak count encountered among all loaded mgf files.
+     *
+     * @return the max peak count encountered among all loaded mgf files
+     */
+    public Integer getMaxPeakCount() {
+        int maxPeakCount = 0;
+        for (MgfIndex mgfIndex : mgfIndexesMap.values()) {
+            if (mgfIndex.getMaxPeakCount() > maxPeakCount) {
+                maxPeakCount = mgfIndex.getMaxPeakCount();
+            }
+        }
+        return maxPeakCount;
     }
 
     /**

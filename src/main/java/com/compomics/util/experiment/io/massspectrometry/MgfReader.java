@@ -183,7 +183,7 @@ public class MgfReader {
         String title = null;
         int cpt = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
-        int maxCharge = 0;
+        int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -203,6 +203,7 @@ public class MgfReader {
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
                 beginIndex = currentIndex;
                 cpt++;
+                peakCount = 0;
                 if (waitingHandler != null) {
                     if (waitingHandler.isRunCanceled()) {
                         break;
@@ -294,6 +295,18 @@ public class MgfReader {
                     spectrumTitles.add(title);
                 }
                 title = null;
+                if (peakCount > maxPeakCount) {
+                    maxPeakCount = peakCount;
+                }
+            } else if (!line.equals("")) {
+                try {
+                    String values[] = line.split("\\s+");
+                    new Double(values[0]);
+                    new Double(values[1]);
+                    peakCount++; // @TODO: is there a better/faster way of doing this?
+                } catch (Exception e1) {
+                    // ignore comments and all other lines
+                }
             }
         }
 
@@ -309,7 +322,7 @@ public class MgfReader {
 
         long lastModified = mgfFile.lastModified();
 
-        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, lastModified);
+        return new MgfIndex(spectrumTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, lastModified);
     }
 
     /**
@@ -503,7 +516,7 @@ public class MgfReader {
             int fileCounter = 1, spectrumCounter = 0;
             long typicalSize = 0;
             double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
-            int maxCharge = 0;
+            int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -523,6 +536,7 @@ public class MgfReader {
                     spectrumCounter++;
                     writeIndex = writeBufferedRandomAccessFile.getFilePointer();
                     beginIndex = writeIndex;
+                    peakCount = 0;
 
                     long readIndex = readBufferedRandomAccessFile.getFilePointer();
 
@@ -536,7 +550,7 @@ public class MgfReader {
 
                             long lastModified = testFile.lastModified();
 
-                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, lastModified));
+                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, lastModified));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -546,6 +560,7 @@ public class MgfReader {
                             maxRT = -1;
                             minRT = Double.MAX_VALUE;
                             maxCharge = 0;
+                            maxPeakCount = 0;
                             indexes = new HashMap<String, Long>();
                             spectrumTitles = new ArrayList<String>();
                         }
@@ -569,13 +584,13 @@ public class MgfReader {
                     spectrumTitles.add(title);
                     indexes.put(title, writeIndex);
                 } else if (line.startsWith("CHARGE")) {
-                ArrayList<Charge> precursorCharges = parseCharges(line);
-                for (Charge charge : precursorCharges) {
-                    if (charge.value > maxCharge) {
-                        maxCharge = charge.value;
+                    ArrayList<Charge> precursorCharges = parseCharges(line);
+                    for (Charge charge : precursorCharges) {
+                        if (charge.value > maxCharge) {
+                            maxCharge = charge.value;
+                        }
                     }
-                }
-            } else if (line.startsWith("PEPMASS")) {
+                } else if (line.startsWith("PEPMASS")) {
                     String temp = line.substring(line.indexOf("=") + 1);
                     String[] values = temp.split("\\s");
                     double precursorMz = Double.parseDouble(values[0]);
@@ -630,7 +645,20 @@ public class MgfReader {
                         spectrumTitles.add(title);
                     }
                     title = null;
+                    if (peakCount > maxPeakCount) {
+                        maxPeakCount = peakCount;
+                    }
+                } else if (!line.equals("")) {
+                    try {
+                        String values[] = line.split("\\s+");
+                        new Double(values[0]);
+                        new Double(values[1]);
+                        peakCount++; // @TODO: is there a better/faster way of doing this?
+                    } catch (Exception e1) {
+                        // ignore comments and all other lines
+                    }
                 }
+
                 writeBufferedRandomAccessFile.writeBytes(line + System.getProperty("line.separator"));
             }
 
@@ -638,7 +666,7 @@ public class MgfReader {
 
             long lastModified = testFile.lastModified();
 
-            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, lastModified));
+            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, lastModified));
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);
@@ -821,7 +849,7 @@ public class MgfReader {
     public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 
         // @TODO: get fileName from the random access file?
-        
+
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;

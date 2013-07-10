@@ -49,6 +49,10 @@ public class MgfIndex extends ExperimentObject {
      * The maximal charge.
      */
     private Integer maxCharge;
+    /**
+     * The maximal peak count.
+     */
+    private Integer maxPeakCount;
 
     /**
      * Constructor.
@@ -60,10 +64,13 @@ public class MgfIndex extends ExperimentObject {
      * @param minRT the minimum retention tome
      * @param maxMz the maximum m/z value
      * @param maxIntensity the maximum precursor intensity
+     * @param maxCharge the maximum peak precursor charge
+     * @param maxPeakCount the maximum peak count
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, long lastModified) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
+            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.indexMap = indexMap;
         this.fileName = fileName;
@@ -72,6 +79,7 @@ public class MgfIndex extends ExperimentObject {
         this.maxMz = maxMz;
         this.maxIntensity = maxIntensity;
         this.maxCharge = maxCharge;
+        this.maxPeakCount = maxPeakCount;
         this.lastModified = lastModified;
     }
 
@@ -145,10 +153,19 @@ public class MgfIndex extends ExperimentObject {
     public Double getMaxMz() {
         return maxMz;
     }
-    
+
+    /**
+     * Sets the maximum charge in this file.
+     *
+     * @param maxCharge the maximum charge in this file
+     */
+    public void setMaxCharge(Integer maxCharge) {
+        this.maxCharge = maxCharge;
+    }
+
     /**
      * Returns the maximal charge found in the mgf file.
-     * 
+     *
      * @return the maximal charge found in the mgf file
      */
     public Integer getMaxCharge() {
@@ -198,6 +215,24 @@ public class MgfIndex extends ExperimentObject {
      */
     public void setMinRT(Double minRT) {
         this.minRT = minRT;
+    }
+
+    /**
+     * Returns the maximum peak count in this file.
+     *
+     * @return the maximum peak count in this file
+     */
+    public Integer getMaxPeakCount() {
+        return maxPeakCount;
+    }
+
+    /**
+     * Sets the maximum peak count in this file.
+     *
+     * @param maxPeakCount the maximum peak count in this file
+     */
+    public void setMaxPeakCount(Integer maxPeakCount) {
+        this.maxPeakCount = maxPeakCount;
     }
 
     /**

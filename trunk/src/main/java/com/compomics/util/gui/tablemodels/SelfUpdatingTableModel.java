@@ -57,7 +57,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     /**
      * Indicates which column was last changed.
      */
-    private int lastColumnSorted = 0;
+    private int lastColumnSorted = -1;
     /**
      * If true the current sorting is ascending.
      */
@@ -276,15 +276,18 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      */
     public void sort(int column, ProgressDialogX aProgressDialog) {
 
-        sortAscending = !sortAscending;
-
         if (column == lastColumnSorted) {
+
+            // initate sorter if needed
             if (viewIndexes == null || viewIndexes.size() != getRowCount()) {
                 initiateSorter();
             }
+
+            sortAscending = !sortAscending; // same column, change sorting order
             Collections.reverse(viewIndexes);
             fireTableDataChanged();
         } else {
+            sortAscending = true; // new column, sort acending 
             sortColumn(column, aProgressDialog);
         }
     }

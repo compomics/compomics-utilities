@@ -127,7 +127,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         String accession = accessionsSpinner.getValue().toString();
         try {
             Protein protein = sequenceFactory.getProtein(accession);
-            proteinTxt.setText(sequenceFactory.getHeader(accession).toString() + System.lineSeparator() + protein.getSequence());
+            proteinTxt.setText(sequenceFactory.getHeader(accession).toString() + System.getProperty("line.separator") + protein.getSequence());
             proteinTxt.setCaretPosition(0);
             String decoyFlag = decoyFlagTxt.getText().trim();
             if (!decoyFlag.equals("")) {
@@ -291,7 +291,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     if (value == JOptionPane.NO_OPTION) {
                         decoyFlagTxt.setEnabled(false);
                     } else if (value == JOptionPane.YES_OPTION) {
-                        generateTargetDecoyDatabase(finalFile);
+                        generateTargetDecoyDatabase(finalFile, progressDialog);
                     }
                 }
                 if (!progressDialog.isRunCanceled()) {
@@ -306,8 +306,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Appends decoy sequences to the given target database file.
      *
      * @param targetFile the target database file
+     * @param progressDialog the progress dialog 
      */
-    public void generateTargetDecoyDatabase(File targetFile) {
+    public void generateTargetDecoyDatabase(File targetFile, ProgressDialogX progressDialog) {
 
         String fastaInput = targetFile.getAbsolutePath();
         String newFasta = fastaInput.substring(0, fastaInput.lastIndexOf("."));
@@ -318,7 +319,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             progressDialog.setTitle("Appending Decoy Sequences. Please Wait...");
             sequenceFactory.appendDecoySequences(newFile, progressDialog);
             sequenceFactory.clearFactory();
-            progressDialog.setTitle("Getting database details. Please Wait...");
+            progressDialog.setTitle("Getting Database Details. Please Wait...");
             sequenceFactory.loadFastaFile(newFile, progressDialog);
         } catch (OutOfMemoryError error) {
             Runtime.getRuntime().gc();
@@ -779,7 +780,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         new Thread("DecoyThread") {
             public void run() {
-                generateTargetDecoyDatabase(sequenceFactory.getCurrentFastaFile());
+                generateTargetDecoyDatabase(sequenceFactory.getCurrentFastaFile(), progressDialog);
                 progressDialog.setRunFinished();
             }
         }.start();

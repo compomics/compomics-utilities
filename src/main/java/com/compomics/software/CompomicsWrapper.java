@@ -23,7 +23,9 @@ import javax.swing.event.HyperlinkListener;
  * resources/conf folder. In it a JavaOptions.txt and splash screen. Eventually
  * JavaHome.txt and proxy/uniprotjapi.properties.
  *
+ * @author Harald Barsnes
  * @author Marc Vaudel
+ * @author Davy Maddelein
  */
 public class CompomicsWrapper {
 
@@ -290,13 +292,12 @@ public class CompomicsWrapper {
         // try to run the command line
         try {
             Process p = pb.start();
-            int exitValue;
             StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream());
             StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream());
             errorGobbler.run();
             inputGobbler.run();
-            exitValue = p.waitFor();
-            
+            int exitValue = p.waitFor();
+
             errorGobbler.continueReading(false);
             inputGobbler.continueReading(false);
 

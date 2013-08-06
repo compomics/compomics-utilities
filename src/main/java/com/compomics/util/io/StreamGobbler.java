@@ -21,7 +21,7 @@ public class StreamGobbler implements Runnable {
      */
     private StringBuilder builder = new StringBuilder();
     /**
-     * should the gobbler terminate?
+     * Shall the gobbler continue reading?
      */
     private boolean continueReading = true;
 
@@ -39,7 +39,7 @@ public class StreamGobbler implements Runnable {
         try {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
-            String line = "";
+            String line;
             while (continueReading == true) {
                 if ((line = br.readLine()) != null) {
                     System.out.println(line);
@@ -60,6 +60,11 @@ public class StreamGobbler implements Runnable {
         return builder.toString();
     }
 
+    /**
+     * Returns true if the gobbler should continue reading.
+     * 
+     * @param continueReading true if the gobbler should continue reading
+     */
     public void continueReading(boolean continueReading) {
         this.continueReading = continueReading;
     }

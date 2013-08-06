@@ -292,15 +292,15 @@ public class CompomicsWrapper {
         // try to run the command line
         try {
             Process p = pb.start();
+            int exitValue;
             StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream());
-            StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream());
-            errorGobbler.run();
-            inputGobbler.run();
-            int exitValue = p.waitFor();
-
-            errorGobbler.continueReading(false);
-            inputGobbler.continueReading(false);
-
+            Thread errorThread = (new Thread(errorGobbler));
+            Thread inputThread = (new Thread(new StreamGobbler(p.getInputStream())));
+            errorThread.start();
+            inputThread.start();
+            errorThread.join();
+            inputThread.join();
+            exitValue = p.waitFor();
             if (useStartUpLog) {
                 System.out.println("Process exitValue: " + exitValue + System.getProperty("line.separator"));
                 bw.write("Process exitValue: " + exitValue + System.getProperty("line.separator"));

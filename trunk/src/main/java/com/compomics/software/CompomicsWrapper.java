@@ -17,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import org.apache.commons.io.output.NullOutputStream;
 
 /**
  * A general wrapper for compomics tools. All tools shall contain a
@@ -128,7 +127,7 @@ public class CompomicsWrapper {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
 
-                // perhaps not the optimal way of catching this error, but seems to work
+                // perhaps not the optimal way of catching this exitValue, but seems to work
                 JOptionPane.showMessageDialog(null,
                         "Seems like you are trying to start " + toolName + " from within a zip file!",
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
@@ -291,21 +290,23 @@ public class CompomicsWrapper {
         // try to run the command line
         try {
             Process p = pb.start();
-
-            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), "ERROR", bw);
-            StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream(), "INPUT", new BufferedWriter(new OutputStreamWriter(new NullOutputStream())));
+            int exitValue;
+            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream());
+            StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream());
             errorGobbler.run();
             inputGobbler.run();
-
-            int error = p.waitFor();
+            exitValue = p.waitFor();
+            
+            errorGobbler.continueReading(false);
+            inputGobbler.continueReading(false);
 
             if (useStartUpLog) {
-                System.out.println("Process exitValue: " + error + System.getProperty("line.separator"));
-                bw.write("Process exitValue: " + error + System.getProperty("line.separator"));
+                System.out.println("Process exitValue: " + exitValue + System.getProperty("line.separator"));
+                bw.write("Process exitValue: " + exitValue + System.getProperty("line.separator"));
             }
 
             // an error occured
-            if (error != 0) {
+            if (exitValue != 0) {
 
                 firstTry = false;
                 String temp = errorGobbler.getMessages().toLowerCase();
@@ -358,6 +359,8 @@ public class CompomicsWrapper {
 
                     System.exit(0);
                 }
+            } else {
+                System.exit(0);
             }
         } catch (Throwable t) {
 

@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.14.17</version>
+    <version>3.14.18</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -119,8 +119,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <showDeprecation>true</showDeprecation>
                     <debug>true</debug>
                 </configuration>
@@ -470,6 +470,12 @@
             <version>1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.jimmc</groupId>
+            <artifactId>jshortcut</artifactId>
+            <version>0.4-oberzalek</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 

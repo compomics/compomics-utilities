@@ -1127,7 +1127,7 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * Add reference areas annotating the de novo tags, using default percent
      * height of 0.9 for the forward ions and 1.0 for the reverse ions default
-     * alpha levels of 0.2.
+     * alpha levels of 0.2. Fixed PTMs are not annotated.
      *
      * @param currentPeptide the current peptide sequence
      * @param annotations the current fragment ion annotations
@@ -1148,12 +1148,12 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aReverseIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showReverseTags) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aReverseIon, aDeNovoCharge, showForwardTags, showReverseTags,
-                0.9, 1.0, 0.2f, 0.2f);
+                0.9, 1.0, 0.2f, 0.2f, true);
     }
 
     /**
      * Add reference areas annotating the de novo tags, using default alpha
-     * levels of 0.2.
+     * levels of 0.2. Fixed PTMs are not annotated.
      *
      * @param currentPeptide the current peptide sequence
      * @param annotations the current fragment ion annotations
@@ -1179,7 +1179,39 @@ public class SpectrumPanel extends GraphicsPanel {
             boolean showForwardTags, boolean showReverseTags,
             double forwardIonPercentHeight, double reverseIonPercentHeight) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aReverseIon, aDeNovoCharge, showForwardTags, showReverseTags,
-                forwardIonPercentHeight, reverseIonPercentHeight, 0.2f, 0.2f);
+                forwardIonPercentHeight, reverseIonPercentHeight, 0.2f, 0.2f, true);
+    }
+    
+    /**
+     * Add reference areas annotating the de novo tags, using default alpha
+     * levels of 0.2.
+     *
+     * @param currentPeptide the current peptide sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aReverseIon the reverse de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * displayed
+     * @param forwardIonPercentHeight the percent height of the forward ion
+     * annotation [0-1]
+     * @param reverseIonPercentHeight the percent height of the reverse ion
+     * annotation [0-1]
+     * @param excludeFixedPtms are fixed PTMs to be annotated? 
+     */
+    public void addAutomaticDeNovoSequencing(
+            Peptide currentPeptide, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aReverseIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showReverseTags,
+            double forwardIonPercentHeight, double reverseIonPercentHeight, boolean excludeFixedPtms) {
+        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aReverseIon, aDeNovoCharge, showForwardTags, showReverseTags,
+                forwardIonPercentHeight, reverseIonPercentHeight, 0.2f, 0.2f, excludeFixedPtms);
     }
 
     /**
@@ -1204,13 +1236,14 @@ public class SpectrumPanel extends GraphicsPanel {
      * annotation [0-1]
      * @param forwardIonAlphaLevel alpha level of the forward ions
      * @param reverseIonAlphaLevel alpha level of the reverse ions
+     * @param excludeFixedPtms are fixed PTMs to be annotated? 
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, ArrayList<IonMatch> annotations,
             int aForwardIon, int aReverseIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showReverseTags,
             double forwardIonPercentHeight, double reverseIonPercentHeight,
-            float forwardIonAlphaLevel, float reverseIonAlphaLevel) {
+            float forwardIonAlphaLevel, float reverseIonAlphaLevel, boolean excludeFixedPtms) {
 
         int forwardIon = aForwardIon;
         int reverseIon = aReverseIon;
@@ -1238,7 +1271,7 @@ public class SpectrumPanel extends GraphicsPanel {
             }
         }
 
-        ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes();
+        ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes(excludeFixedPtms);
 
         // add reverse ion de novo tags (x, y or c)
         if (showReverseTags) {

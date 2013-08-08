@@ -17,15 +17,16 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * Download the latest zip file from the repository.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class DownloadLatestZipFromRepo {
 
     /**
-     * downloads the latest deploy from the genesis maven repository of the
-     * artifact of the jarPath,starts it without arguments and removes the old
-     * jar if there was an update
+     * Downloads the latest deploy from the genesis maven repository of the
+     * artifact of the jarPath, starts it without arguments and removes the old
+     * jar if there was an update.
      *
      * @param jarPath the path to the jarfile
      * @throws IOException should there be problems with reading or writing
@@ -39,8 +40,8 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * downloads the latest deploy from the genesis maven repository of the
-     * artifact and starts it without arguments
+     * Downloads the latest deploy from the genesis maven repository of the
+     * artifact and starts it without arguments.
      *
      * @param jarPath the path to the jarfile
      * @param deleteOldFiles if the jar who starts the update should be deleted
@@ -57,12 +58,14 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * downloads the latest zip archive of the jar in the url from the genesis
-     * maven repo
+     * Downloads the latest zip archive of the jar in the url from the genesis
+     * maven repo.
      *
      * @param jarPath the path to the jarfile to update
      * @param deleteOldFiles if the original jar file should be deleted
      * @param args the args for the newly downloaded jar when it starts
+     * @param startDownloadedVersion if true, the downloaded version will be
+     * started when the download completes
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
@@ -74,8 +77,8 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * downloads the latest zip archive of the jar in the url from a given
-     * jarRepository
+     * Downloads the latest zip archive of the jar in the url from a given
+     * jarRepository.
      *
      * @param jarPath the path to the jarfile to update, cannot be {@code null}
      * @param deleteOldFiles if the original jar folder should be deleted,
@@ -94,8 +97,8 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * retrieves the latest version of a maven jar file from a maven repository,
-     * also checks if the environment is headless or not
+     * Retrieves the latest version of a maven jar file from a maven repository,
+     * also checks if the environment is headless or not.
      *
      * @param jarPath the URL of the location of the jar that needs to be
      * updated on the file system. cannot be {@code null}
@@ -124,7 +127,7 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * retrieves the latest version of a maven jar file from a maven repository
+     * Retrieves the latest version of a maven jar file from a maven repository.
      *
      * @param jarPath the URL of the location of the jar that needs to be
      * updated on the file system. cannot be {@code null}
@@ -149,12 +152,12 @@ public class DownloadLatestZipFromRepo {
         MavenJarFile oldMavenJarFile = new MavenJarFile(jarPath.toURI());
         if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
             MavenJarFile downloadedJarFile;
-            
+
             //TL;DR of the next three lines: make the url for the latest version location of a maven jar file
             String artifactInRepoLocation = new StringBuilder(jarRepository.toExternalForm()).append(oldMavenJarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(oldMavenJarFile.getArtifactId()).toString();
             String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(artifactInRepoLocation).append("/maven-metadata.xml").toString()));
             String latestArtifactLocation = new StringBuilder(artifactInRepoLocation).append("/").append(latestRemoteRelease).toString();
-            
+
             if (System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win")) {
                 downloadedJarFile = downloadAndUnzipJarForWindows(oldMavenJarFile, new URL(latestArtifactLocation), fileDAO, true);
                 //try{
@@ -194,7 +197,7 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * simple jar launch through a {@code ProcessBuilder}
+     * Simple jar launch through a {@code ProcessBuilder}.
      *
      * @param downloadedJarFile the downloaded jar file to start
      * @param args the args to give to the jar file
@@ -219,7 +222,7 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * aggregation method for downloading and unzipping for windows
+     * Aggregation method for downloading and unzipping for windows.
      *
      * @param mavenJarFile the maven jar file to download update for
      * @param jarRepository the url of the version specific location
@@ -251,7 +254,7 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * aggregation method for downloading and unzipping for linux/mac
+     * Aggregation method for downloading and unzipping for linux/mac.
      *
      * @param mavenJarFile the maven jar file to download update for
      * @param jarRepository the url of the version specific location
@@ -262,14 +265,13 @@ public class DownloadLatestZipFromRepo {
      * @throws XMLStreamException
      */
     private static MavenJarFile downloadAndUnzipJarForUnix(MavenJarFile oldMavenJarFile, URL jarRepository, FileDAO fileDAO) throws MalformedURLException, IOException, XMLStreamException {
-        MavenJarFile downloadedJarFile = null;
         URL archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", true);
         if (archiveURL == null) {
             archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", true);
         }
         File downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(oldMavenJarFile.getAbsoluteFilePath()), archiveURL.getFile());
         fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadFolder);
-        downloadedJarFile = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, oldMavenJarFile.getArtifactId());
+        MavenJarFile downloadedJarFile = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, oldMavenJarFile.getArtifactId());
         return downloadedJarFile;
     }
 }

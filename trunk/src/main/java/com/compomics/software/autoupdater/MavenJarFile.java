@@ -9,14 +9,27 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
+ * MavenJarFile.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class MavenJarFile extends JarFile {
 
-private Properties mavenProperties = new Properties();
-private String absoluteFilePath;
-    
+    /**
+     * The Maven properties.
+     */
+    private Properties mavenProperties = new Properties();
+    /**
+     * The absolute file path.
+     */
+    private String absoluteFilePath;
+
+    /**
+     * Create a new MavenJarFile object.
+     * 
+     * @param jarPath the path to the jar file
+     * @throws IOException 
+     */
     public MavenJarFile(URI jarPath) throws IOException {
         super(new File(jarPath));
         this.absoluteFilePath = new File(jarPath).getAbsolutePath();
@@ -30,23 +43,49 @@ private String absoluteFilePath;
             }
         }
     }
-    
-    public MavenJarFile(File aJarFile) throws IOException{
+
+    /**
+     * Create a new MavenJarFile object.
+     * 
+     * @param aJarFile the jar file
+     * @throws IOException 
+     */
+    public MavenJarFile(File aJarFile) throws IOException {
         this(aJarFile.toURI());
     }
-    
-    public String getArtifactId(){
+
+    /**
+     * Returns the artifact id.
+     * 
+     * @return the artifact id
+     */
+    public String getArtifactId() {
         return mavenProperties.getProperty("artifactId");
     }
-    
-    public String getGroupId(){
+
+    /**
+     * Returns the group id.
+     * 
+     * @return the group id
+     */
+    public String getGroupId() {
         return mavenProperties.getProperty("groupId");
     }
-    
-    public String getVersionNumber(){
+
+    /**
+     * Returns the version number.
+     * 
+     * @return the version number
+     */
+    public String getVersionNumber() {
         return mavenProperties.getProperty("version");
     }
 
+    /**
+     * Returns the absolute file path.
+     * 
+     * @return the absolute file path
+     */
     public String getAbsoluteFilePath() {
         return absoluteFilePath;
     }

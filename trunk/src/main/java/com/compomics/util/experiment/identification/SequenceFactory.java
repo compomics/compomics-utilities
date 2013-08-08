@@ -448,6 +448,7 @@ public class SequenceFactory {
                 e.printStackTrace();
             }
         }
+
         return tempFastaIndex;
     }
 
@@ -473,15 +474,15 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, Header.DatabaseType databaseType, String version, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
+    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, Header.DatabaseType databaseType, String version, 
+            WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.resetSecondaryProgressCounter();
             waitingHandler.setMaxSecondaryProgressCounter(100);
-            waitingHandler.setSecondaryProgressCounter(0);
         }
 
         long progressUnit = bufferedRandomAccessFile.length() / 100;

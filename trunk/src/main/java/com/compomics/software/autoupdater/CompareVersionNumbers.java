@@ -4,8 +4,9 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 /**
+ * Class for comparing tool version numbers.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class CompareVersionNumbers implements Comparator<String> {
 

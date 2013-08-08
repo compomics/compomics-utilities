@@ -20,34 +20,45 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
 
 /**
+ * FileDAO file access.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public abstract class FileDAO {
 
     /**
-     * creates a new Desktop Shortcut to the maven jar file, atm windows only
+     * Creates a new Desktop Shortcut to the maven jar file, atm windows only.
      *
      * @param file the maven jarfile to make a shortcut to
      * @param iconName the name of the icon file in the resources folder
      * @param deleteOldShortcut if previous shortcuts containing the maven jar
      * file artifact id should be removed
+     * @return true id the shortcut was created (?)
      * @throws IOException
      */
     public abstract boolean createDesktopShortcut(MavenJarFile file, String iconName, boolean deleteOldShortcut) throws IOException;
 
+    /**
+     * Add desktop shortcut.
+     *
+     * @param mavenJarFile the maven jar file
+     * @return true id the shortcut was created (?)
+     */
     public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile) {
         return addShortcutAtDeskTop(mavenJarFile, null);
     }
 
     /**
-     * adds a shortcut to the desktop, atm windows only
-     * 
+     * Adds a shortcut to the desktop. At the moment for Windows only.
+     *
      * @param mavenJarFile the {@code MavenJarFile} to create the shortcut for
-     * @param iconName the name of the icon in the resource folder of the {@code MavenJarFile} to link to
+     * @param iconName the name of the icon in the resource folder of the
+     * {@code MavenJarFile} to link to
      * @return true if the shortcut was created otherwise false
+     * @throws NullPointerException
+     * @throws RuntimeException
      */
-    public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile, String iconName) throws NullPointerException,RuntimeException {
+    public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile, String iconName) throws NullPointerException, RuntimeException {
 
         JShellLink link = new JShellLink();
         link.setFolder(JShellLink.getDirectory("desktop"));
@@ -61,20 +72,24 @@ public abstract class FileDAO {
     }
 
     /**
-     * try to find an at least somewhat sane location to download files to
-     * @param targetDownloadFolder first place to check if it is a possible download location
-     * @return the folder to download in (in best case scenario this is the passed parameter targetDownloadFolder)
+     * Try to find an at least somewhat sane location to download files to.
+     *
+     * @param targetDownloadFolder first place to check if it is a possible
+     * download location
+     * @return the folder to download in (in best case scenario this is the
+     * passed parameter targetDownloadFolder)
      * @throws IOException
      */
     public abstract File getLocationToDownloadOnDisk(String targetDownloadFolder) throws IOException;
 
-    //rewrite both downloadAndUnzipFiles to use apache commons compress library?
+    // @TODO: rewrite both downloadAndUnzipFiles to use apache commons compress library?
     /**
-     * unzips a zip archive
+     * Unzips a zip archive.
+     *
      * @param zip the zipfile to unzip
      * @param fileLocationOnDiskToDownloadTo the folder to unzip in
      * @return true if successful
-     * @throws IOException 
+     * @throws IOException
      */
     public boolean unzipFile(ZipFile zip, File fileLocationOnDiskToDownloadTo) throws IOException {
         FileOutputStream dest = null;
@@ -100,25 +115,27 @@ public abstract class FileDAO {
                     if (inStream != null) {
                         inStream.close();
                     }
-
                 }
             } else {
-                if(!destFile.exists()){
-                if (!destFile.mkdirs()) {
-                    throw new IOException("could not create folders to unzip file");
+                if (!destFile.exists()) {
+                    if (!destFile.mkdirs()) {
+                        throw new IOException("could not create folders to unzip file");
+                    }
                 }
-            }}
+            }
         }
         zip.close();
         return true;
     }
 
     /**
-     * untars and ungzips a .tar.gz file
-     * @param in a {@code GZIPInputStream} of the file that needs to be ungzipped and untarred
+     * Untars and ungzips a .tar.gz file.
+     *
+     * @param in a {@code GZIPInputStream} of the file that needs to be
+     * ungzipped and untarred
      * @param fileLocationOnDiskToDownloadTo the folder to ungzip and untar in
      * @return true if successful
-     * @throws IOException 
+     * @throws IOException
      */
     public boolean unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo) throws IOException {
 
@@ -142,11 +159,12 @@ public abstract class FileDAO {
     }
 
     /**
-     * untars a .tar
+     * Untars a .tar.
+     *
      * @param fileToUntar
      * @return true if successful
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     private boolean untar(File fileToUntar) throws FileNotFoundException, IOException {
         boolean fileUntarred = false;
@@ -188,11 +206,13 @@ public abstract class FileDAO {
     }
 
     /**
-     * fetches a maven built jar file from a folder for the given artifact id (e.g peptideshaker or ms-lims)
+     * Fetches a maven built jar file from a folder for the given artifact id
+     * (e.g peptideshaker or ms-lims).
+     *
      * @param folder the folder to look in
      * @param artifactId the artifactid in the properties of the (@code MavenJarFile) in the folder
      * @return the last found {@code MavenJarFile} with the given artifactid, can be null
-     * @throws IOException 
+     * @throws IOException
      */
     public MavenJarFile getMavenJarFileFromFolderWithArtifactId(File folder, String artifactId) throws IOException {
         MavenJarFile mainJarFile = null;
@@ -217,13 +237,14 @@ public abstract class FileDAO {
     }
 
     /**
-     * writes a stream to disk
+     * Writes a stream to disk.
+     *
      * @param in the stream to write to disk
      * @param name the name the file that will be created
      * @param outputLocationFolder the location to write to
      * @return the written file
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     public File writeStreamToDisk(InputStream in, String name, File outputLocationFolder) throws FileNotFoundException, IOException {
         if (!outputLocationFolder.exists()) {

@@ -1228,7 +1228,7 @@ public abstract class Identification extends ExperimentObject {
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
-        Peptide otherPeptide, peptide = spectrumMatch.getBestAssumption().getPeptide();
+        Peptide peptide = spectrumMatch.getBestAssumption().getPeptide();
         String peptideKey = peptide.getKey();
         PeptideMatch peptideMatch;
 
@@ -1245,7 +1245,7 @@ public abstract class Identification extends ExperimentObject {
                 if (othermatch == null) {
                     throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
                 }
-                otherPeptide = othermatch.getBestAssumption().getPeptide();
+                Peptide otherPeptide = othermatch.getBestAssumption().getPeptide();
                 for (String protein : otherPeptide.getParentProteins()) {
                     if (!peptide.getParentProteins().contains(protein)) {
                         peptide.getParentProteins().add(protein);
@@ -1288,12 +1288,42 @@ public abstract class Identification extends ExperimentObject {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
             if (!proteinMatch.getKey().equals(proteinKey)) {
 
-                // @TODO: if one is a subset of the other, is it possible to simply use the biggest set for both??
-                // @TODO: or would using peptide to protein remapping for all search engines solve the problem?? use ProteinTree?
+                // @TODO: would using peptide to protein remapping for all search engines solve the problem?? use ProteinTree?
 
-                throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
-                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
-                        + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
+                // the protein lists are different so find the biggest joined set and use that // @TODO: does this work..?
+                
+//                System.out.println("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + ". Fixed?");
+//                
+//                ArrayList<String> allProteinKeys = new ArrayList<String>();
+//
+//                // add all the peptide parent proteins
+//                for (String protein : peptide.getParentProteins()) {
+//                    if (!allProteinKeys.contains(protein)) {
+//                        allProteinKeys.add(protein);
+//                    }
+//                }
+//
+//                // add all the proteins from the existing protein match
+//                for (String protein : proteinMatch.getTheoreticProteinsAccessions()) {
+//                    if (!allProteinKeys.contains(protein)) {
+//                        allProteinKeys.add(protein);
+//                    }
+//                }
+//
+//                // sort the protein list
+//                Collections.sort(allProteinKeys);
+//
+//                // set the new mappings
+//                peptide.setParentProteins(allProteinKeys);
+//                proteinMatch = new ProteinMatch(peptide);
+//                proteinKey = ProteinMatch.getProteinMatchKey(peptide);
+//
+//                // last check to check that it's all ok (should no longer be needed)
+//                if (!proteinMatch.getKey().equals(proteinKey)) {
+                    throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
+                            + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
+                            + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
+//                }
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteins()) {

@@ -35,7 +35,7 @@ public class StreamGobbler implements Runnable {
         try {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
-            String line = "";
+            String line;
             if ((line = br.readLine()) != null) {
                 System.out.println(line);
                 builder.append(line);

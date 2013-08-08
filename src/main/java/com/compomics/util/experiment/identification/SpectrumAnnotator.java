@@ -88,6 +88,14 @@ public class SpectrumAnnotator {
      * m/z shift applied to all theoretic peaks.
      */
     private double massShift = 0;
+    /**
+     * N-terminal m/z shift applied to all forward ions.
+     */
+    private double massShiftNTerm = 0;
+    /**
+     * C-terminal m/z shift applied to all reverse ions.
+     */
+    private double massShiftCTerm = 0;
 
     /**
      * Constructor.
@@ -280,10 +288,14 @@ public class SpectrumAnnotator {
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
             peptideIons = fragmentFactory.getFragmentIons(peptide);
-            if (massShift != 0) {
+            if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
                 for (Ion ion : peptideIons) {
                     if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION) {
-                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
+                        if (ion.getSubType() == PeptideFragmentIon.A_ION || ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.C_ION) {
+                            ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                        } else if (ion.getSubType() == PeptideFragmentIon.X_ION || ion.getSubType() == PeptideFragmentIon.Y_ION || ion.getSubType() == PeptideFragmentIon.Z_ION) {
+                            ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                        }
                     }
                 }
             }
@@ -663,18 +675,83 @@ public class SpectrumAnnotator {
     }
 
     /**
-     * Sets an m/z shift on all ions. The previous mass shift will be removed.
+     * Returns the N-terminal m/z shift applied to all forward ions.
      *
-     * @param massShift the m/z shift to apply
+     * @return the N-terminal m/z shift applied to all forward ions
      */
-    public void setMassShift(double massShift) {
+    public double getMassShiftNTerm() {
+        return massShiftNTerm;
+    }
+
+    /**
+     * Returns the C-terminal m/z shift applied to all reverse ions.
+     *
+     * @return the C-terminal m/z shift applied to all reverse ions
+     */
+    public double getMassShiftCTerm() {
+        return massShiftNTerm;
+    }
+
+    /**
+     * Sets an m/z shift on all ions. The previous mass main shift will be
+     * removed.
+     *
+     * @param aMassShift the m/z shift to apply
+     */
+    public void setMassShift(double aMassShift) {
+        this.massShift = aMassShift;
+        updateMassShifts();
+    }
+
+    /**
+     * Sets the m/z shifts. The previous mass shifts will be removed.
+     *
+     * @param aMassShift the m/z shift to apply
+     * @param aMassShiftNTerm the n-terminal mass shift to apply to all forward
+     * ions
+     * @param aMassShiftCTerm the c-terminal mass shift to apply to all reverse
+     * ions
+     */
+    public void setMassShifts(double aMassShift, double aMassShiftNTerm, double aMassShiftCTerm) {
+        this.massShift = aMassShift;
+        this.massShiftNTerm = aMassShiftNTerm;
+        this.massShiftCTerm = aMassShiftCTerm;
+        updateMassShifts();
+    }
+
+    /**
+     * Sets the terminal m/z shifts.
+     *
+     * @param aMassShiftNTerm the n-terminal mass shift to apply to all forward
+     * ions
+     * @param aMassShiftCTerm the c-terminal mass shift to apply to all reverse
+     * ions
+     */
+    public void setTerminalMassShifts(double aMassShiftNTerm, double aMassShiftCTerm) {
+        this.massShiftNTerm = aMassShiftNTerm;
+        this.massShiftCTerm = aMassShiftCTerm;
+        updateMassShifts();
+    }
+
+    /**
+     * Updates the mass shifts.
+     */
+    private void updateMassShifts() {
+
         spectrumAnnotation.clear();
         unmatchedIons.clear();
-        for (Ion ion : peptideIons) {
-            if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION) {
-                ion.setTheoreticMass(ion.getTheoreticMass() + massShift);
+
+        if (peptideIons != null) {
+
+            for (Ion ion : peptideIons) {
+                if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION) {
+                    if (ion.getSubType() == PeptideFragmentIon.A_ION || ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.C_ION) {
+                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                    } else if (ion.getSubType() == PeptideFragmentIon.X_ION || ion.getSubType() == PeptideFragmentIon.Y_ION || ion.getSubType() == PeptideFragmentIon.Z_ION) {
+                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                    }
+                }
             }
         }
-        this.massShift = massShift;
     }
 }

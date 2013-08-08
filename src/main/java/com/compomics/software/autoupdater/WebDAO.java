@@ -26,7 +26,7 @@ public class WebDAO {
      * Fetches the latest maven deployed version from a maven built repository.
      *
      * @param remoteVersionXMLFileLocation
-     * @return
+     * @return the latest maven deployed version
      * @throws XMLStreamException
      * @throws IOException
      */

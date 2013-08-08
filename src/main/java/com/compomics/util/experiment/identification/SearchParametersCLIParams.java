@@ -57,7 +57,7 @@ public enum SearchParametersCLIParams {
     //////////////////////////////////
     // DeNovoGUI specific options
     //////////////////////////////////
-    HITLIST_LENGTH_DE_NOVO("de_novo_count", "The number of de novo solutions, default is '10'.", false),
+    HITLIST_LENGTH_DE_NOVO("de_novo_count", "The number of de novo solutions [0-2000], default is '10'.", false),
     ESTIMATE_CHARGE_DE_NOVO("estimate_charge", "Estimate the precursor charge, 1: true, 0: false, default is '1'.", false), // same as ESTIMATE_CHARGE, but different description
     CORRECT_PRECURSOR_MASS("correct_precursor", "Correct the precursor mass, 1: true, 0: false, default is '1'.", false),
     DISCARD_SPECTRA("discard_spectra", "Discard low quality spectra, 1: true, 0: false, default is '1'.", false),

@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 /**
- * This class can be used to retrieve elementary elements like a proton.
+ * This class can be used to retrieve elementary elements like a neutron.
  *
  * @author Marc Vaudel
  */
@@ -16,7 +16,7 @@ public class ElementaryElement {
      */
     private double theoreticMass;
     /**
-     * A proton.
+     * A neutron.
      */
     public static final ElementaryElement neutron = new ElementaryElement("Neutron", 1.00866491600);
 

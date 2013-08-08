@@ -3,20 +3,18 @@ package com.compomics.util.denovo;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
- * This class contains the de novo specific details of a spectrum match
+ * This class contains the de novo specific details of a spectrum match.
  *
  * @author Marc Vaudel
  */
 public class PeptideAssumptionDetails implements UrParameter {
 
     /**
-     * The mass gap from the N-terminal to the start of the resources novo
-     * sequence.
+     * The mass gap from the N-terminal to the start of the PepNovo sequence.
      */
     private double nTermGap;
     /**
-     * The mass gap from the C-terminal to the end of the resources novo
-     * sequence.
+     * The mass gap from the C-terminal to the end of the PepNovo sequence.
      */
     private double cTermGap;
     /**
@@ -31,38 +29,38 @@ public class PeptideAssumptionDetails implements UrParameter {
     }
 
     /**
-     * Returns the N-term Gap.
+     * Returns the N-term gap.
      *
-     * @return the N-term Gap
+     * @return the N-term gap
      */
-    public double getnTermGap() {
+    public double getNTermGap() {
         return nTermGap;
     }
 
     /**
-     * Sets the N-term Gap.
+     * Sets the N-term gap.
      *
-     * @param nTermGap the N-term Gap
+     * @param nTermGap the N-term gap
      */
-    public void setnTermGap(double nTermGap) {
+    public void setNTermGap(double nTermGap) {
         this.nTermGap = nTermGap;
     }
 
     /**
-     * Returns the C-term Gap.
+     * Returns the C-term gap.
      *
-     * @return the C-term Gap
+     * @return the C-term gap
      */
-    public double getcTermGap() {
+    public double getCTermGap() {
         return cTermGap;
     }
 
     /**
-     * Sets the C-term Gap.
+     * Sets the C-term gap.
      *
-     * @param cTermGap the C-term Gap
+     * @param cTermGap the C-term gap
      */
-    public void setcTermGap(double cTermGap) {
+    public void setCTermGap(double cTermGap) {
         this.cTermGap = cTermGap;
     }
 

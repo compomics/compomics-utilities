@@ -6,35 +6,35 @@ import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 
 /**
- * This class represents an elementary ion
+ * This class represents an elementary ion.
  *
- * @author marc
+ * @author Marc Vaudel
  */
 public class ElementaryIon extends Ion {
-    
+
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -1578136397635015592L;
     /**
-     * subtype int for a proton
+     * Subtype int for a proton.
      */
     public static final int PROTON = 0;
     /**
-     * A proton
+     * A proton.
      */
     public static final ElementaryIon proton = new ElementaryIon("Proton", 1.007276466812, PROTON);
     /**
-     * The name of the ion
+     * The name of the ion.
      */
     private String name;
     /**
-     * The subtype identifier
+     * The subtype identifier.
      */
     private int subType;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param name the name of the ion
      * @param theoreticMass the theoretic mass of the ion
@@ -73,7 +73,8 @@ public class ElementaryIon extends Ion {
     }
 
     /**
-     * Returns an arraylist of possible subtypes
+     * Returns an arraylist of possible subtypes.
+     *
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {

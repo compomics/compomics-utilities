@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.atoms;
 import com.compomics.util.experiment.biology.Atom;
 
 /**
- * Carbon
+ * Carbon.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Carbon extends Atom {
 
@@ -17,5 +17,4 @@ public class Carbon extends Atom {
         this.name = "Carbon";
         this.letter = "C";
     }
-
 }

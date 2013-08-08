@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 public abstract class FileDAO {
 
     /**
-     * creates a new Desktop Shortcut to the maven jar file
+     * creates a new Desktop Shortcut to the maven jar file, atm windows only
      *
      * @param file the maven jarfile to make a shortcut to
      * @param iconName the name of the icon file in the resources folder
@@ -40,7 +40,14 @@ public abstract class FileDAO {
         return addShortcutAtDeskTop(mavenJarFile, null);
     }
 
-    public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile, String iconName) {
+    /**
+     * adds a shortcut to the desktop, atm windows only
+     * 
+     * @param mavenJarFile the {@code MavenJarFile} to create the shortcut for
+     * @param iconName the name of the icon in the resource folder of the {@code MavenJarFile} to link to
+     * @return true if the shortcut was created otherwise false
+     */
+    public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile, String iconName) throws NullPointerException,RuntimeException {
 
         JShellLink link = new JShellLink();
         link.setFolder(JShellLink.getDirectory("desktop"));
@@ -54,18 +61,25 @@ public abstract class FileDAO {
     }
 
     /**
-     *
-     * @param targetDownloadFolder
-     * @return
+     * try to find an at least somewhat sane location to download files to
+     * @param targetDownloadFolder first place to check if it is a possible download location
+     * @return the folder to download in (in best case scenario this is the passed parameter targetDownloadFolder)
      * @throws IOException
      */
     public abstract File getLocationToDownloadOnDisk(String targetDownloadFolder) throws IOException;
 
     //rewrite both downloadAndUnzipFiles to use apache commons compress library?
-    public File unzipFile(ZipFile in, File fileLocationOnDiskToDownloadTo) throws IOException {
+    /**
+     * unzips a zip archive
+     * @param zip the zipfile to unzip
+     * @param fileLocationOnDiskToDownloadTo the folder to unzip in
+     * @return true if successful
+     * @throws IOException 
+     */
+    public boolean unzipFile(ZipFile zip, File fileLocationOnDiskToDownloadTo) throws IOException {
         FileOutputStream dest = null;
         InputStream inStream = null;
-        Enumeration<? extends ZipEntry> zipFileEnum = in.entries();
+        Enumeration<? extends ZipEntry> zipFileEnum = zip.entries();
         while (zipFileEnum.hasMoreElements()) {
             ZipEntry entry = zipFileEnum.nextElement();
             File destFile = new File(String.format("%s/%s", fileLocationOnDiskToDownloadTo, entry.getName()));
@@ -77,7 +91,7 @@ public abstract class FileDAO {
             if (!entry.isDirectory()) {
                 try {
                     dest = new FileOutputStream(destFile);
-                    inStream = in.getInputStream(entry);
+                    inStream = zip.getInputStream(entry);
                     IOUtils.copyLarge(inStream, dest);
                 } finally {
                     if (dest != null) {
@@ -95,11 +109,18 @@ public abstract class FileDAO {
                 }
             }}
         }
-        in.close();
-        return fileLocationOnDiskToDownloadTo;
+        zip.close();
+        return true;
     }
 
-    public File unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo) throws IOException {
+    /**
+     * untars and ungzips a .tar.gz file
+     * @param in a {@code GZIPInputStream} of the file that needs to be ungzipped and untarred
+     * @param fileLocationOnDiskToDownloadTo the folder to ungzip and untar in
+     * @return true if successful
+     * @throws IOException 
+     */
+    public boolean unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo) throws IOException {
 
         InputStreamReader isr = new InputStreamReader(in);
         int count;
@@ -117,9 +138,16 @@ public abstract class FileDAO {
         }
         isr.close();
         untar(fileLocationOnDiskToDownloadTo);
-        return fileLocationOnDiskToDownloadTo;
+        return true;
     }
 
+    /**
+     * untars a .tar
+     * @param fileToUntar
+     * @return true if successful
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     private boolean untar(File fileToUntar) throws FileNotFoundException, IOException {
         boolean fileUntarred = false;
         String untarLocation = fileToUntar.getAbsolutePath();
@@ -159,6 +187,13 @@ public abstract class FileDAO {
         return fileUntarred;
     }
 
+    /**
+     * fetches a maven built jar file from a folder for the given artifact id (e.g peptideshaker or ms-lims)
+     * @param folder the folder to look in
+     * @param artifactId the artifactid in the properties of the (@code MavenJarFile) in the folder
+     * @return the last found {@code MavenJarFile} with the given artifactid, can be null
+     * @throws IOException 
+     */
     public MavenJarFile getMavenJarFileFromFolderWithArtifactId(File folder, String artifactId) throws IOException {
         MavenJarFile mainJarFile = null;
         for (File aFile : folder.listFiles()) {
@@ -181,6 +216,15 @@ public abstract class FileDAO {
         return mainJarFile;
     }
 
+    /**
+     * writes a stream to disk
+     * @param in the stream to write to disk
+     * @param name the name the file that will be created
+     * @param outputLocationFolder the location to write to
+     * @return the written file
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public File writeStreamToDisk(InputStream in, String name, File outputLocationFolder) throws FileNotFoundException, IOException {
         if (!outputLocationFolder.exists()) {
             if (!outputLocationFolder.mkdirs()) {

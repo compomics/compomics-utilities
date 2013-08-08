@@ -18,6 +18,13 @@ public class WebDAO {
 
     private static final Locale LOCALE = new Locale("en");
 
+    /**
+     * fetches the latest maven deployed version from a maven built repository
+     * @param remoteVersionXMLFileLocation
+     * @return
+     * @throws XMLStreamException
+     * @throws IOException 
+     */
     public static String getLatestVersionNumberFromRemoteRepo(URL remoteVersionXMLFileLocation) throws XMLStreamException, IOException {
         BufferedReader remoteVersionsReader = new BufferedReader(new InputStreamReader(remoteVersionXMLFileLocation.openStream()));
         XMLInputFactory xmlParseFactory = XMLInputFactory.newInstance();
@@ -68,7 +75,8 @@ public class WebDAO {
 
     public static boolean newVersionReleased(MavenJarFile jarFile, URL jarRepository) throws IOException, XMLStreamException {
         boolean newVersion = false;
-        String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(jarRepository.toExternalForm()).append(jarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(jarFile.getArtifactId()).append("/maven-metadata.xml").toString()));
+        String versionRepoURLString = new StringBuilder(jarRepository.toExternalForm()).append(jarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(jarFile.getArtifactId()).append("/maven-metadata.xml").toString();
+        String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(versionRepoURLString));
         if (new CompareVersionNumbers().compare(jarFile.getVersionNumber(), latestRemoteRelease) == 1) {
             newVersion = true;
         }

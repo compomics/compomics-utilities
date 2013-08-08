@@ -72,7 +72,11 @@ public class CompomicsWrapper {
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass) {
         launchTool(toolName, jarFile, splashName, mainClass, null);
     }
-
+/**
+    public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args,boolean checkForUpdates){
+    
+    }
+   */ 
     /**
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.

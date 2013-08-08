@@ -9,7 +9,7 @@ import java.util.Collections;
 /**
  * This class models an ion.
  *
- * Created by IntelliJ IDEA. User: Marc Date: Jun 18, 2010 Time: 8:57:33 AM
+ * @author Marc Vaudel
  */
 public abstract class Ion extends ExperimentObject {
 

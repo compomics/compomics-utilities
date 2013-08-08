@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;

@@ -356,6 +356,8 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         switch (ptm.getType()) {
@@ -462,6 +464,8 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -807,10 +811,10 @@ public class Peptide extends ExperimentObject {
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useShortName if true the short names are used in the tags
+     * @param excludeAllFixedPtms if true, all fixed PTMs are excluded
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
-
+    public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
         HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -830,7 +834,7 @@ public class Peptide extends ExperimentObject {
                     }
                     secondaryModificationSites.get(modSite).add(modName);
                 }
-            } else {
+            } else if (!excludeAllFixedPtms) {
                 if (!fixedModificationSites.containsKey(modSite)) {
                     fixedModificationSites.put(modSite, new ArrayList<String>());
                 }
@@ -839,6 +843,24 @@ public class Peptide extends ExperimentObject {
         }
         return getTaggedModifiedSequence(modificationProfile, this, mainModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
+    }
+    
+    /**
+     * Returns the modified sequence as an tagged string with potential
+     * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
+     * this method will work only if the PTM found in the peptide are in the
+     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification matches of this peptide and displays all of them.
+     *
+     * @param modificationProfile the modification profile of the search
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
+     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
+     * @param useShortName if true the short names are used in the tags
+     * @return the modified sequence as a tagged string
+     */
+    public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+        return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
     }
 
     /**
@@ -964,11 +986,22 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the indexes of the residues in the peptide that contain at least
-     * one modification.
+     * one variable modification.
      *
      * @return the indexes of the modified residues
      */
     public ArrayList<Integer> getModifiedIndexes() {
+        return getModifiedIndexes(true);
+    }
+
+    /**
+     * Returns the indexes of the residues in the peptide that contain at least
+     * one modification.
+     *
+     * @param excludeFixed exclude fixed PTMs
+     * @return the indexes of the modified residues
+     */
+    public ArrayList<Integer> getModifiedIndexes(boolean excludeFixed) {
 
         ArrayList<Integer> modifiedResidues = new ArrayList<Integer>();
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -976,7 +1009,7 @@ public class Peptide extends ExperimentObject {
         for (int i = 0; i < sequence.length(); i++) {
             for (int j = 0; j < modifications.size(); j++) {
                 PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
-                if (ptm.getType() == PTM.MODAA && modifications.get(j).isVariable()) {
+                if (ptm.getType() == PTM.MODAA && (modifications.get(j).isVariable() || !excludeFixed)) {
                     if (modifications.get(j).getModificationSite() == (i + 1)) {
                         modifiedResidues.add(i + 1);
                     }
@@ -1054,6 +1087,8 @@ public class Peptide extends ExperimentObject {
      * occurred while reading the protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading the protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -1080,6 +1115,8 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();

@@ -9,13 +9,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
+ * GUIFileDAO.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class GUIFileDAO extends FileDAO {
 
     /**
-     *
      * {@inheritDoc }
      */
     @Override
@@ -61,6 +61,7 @@ public class GUIFileDAO extends FileDAO {
                 }
                 if (deleteOldShortcut) {
                     for (String fileName : new File(System.getProperty("user.home")).list()) {
+                        // @TODO: do something here??
                     }
                 }
             } catch (NullPointerException npe) {
@@ -69,7 +70,7 @@ public class GUIFileDAO extends FileDAO {
                 throw new IOException("could not create the shortcut");
             }
         } else {
-            //TODO
+            // @TODO: do something here??
         }
         return true;
     }

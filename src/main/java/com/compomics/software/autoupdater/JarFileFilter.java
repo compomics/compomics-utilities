@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
+ * JarFileFilter.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class JarFileFilter implements FilenameFilter {
 

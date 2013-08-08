@@ -11,19 +11,24 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
 /**
+ * WebDAO.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class WebDAO {
 
+    /**
+     * The locale.
+     */
     private static final Locale LOCALE = new Locale("en");
 
     /**
-     * fetches the latest maven deployed version from a maven built repository
+     * Fetches the latest maven deployed version from a maven built repository.
+     *
      * @param remoteVersionXMLFileLocation
      * @return
      * @throws XMLStreamException
-     * @throws IOException 
+     * @throws IOException
      */
     public static String getLatestVersionNumberFromRemoteRepo(URL remoteVersionXMLFileLocation) throws XMLStreamException, IOException {
         BufferedReader remoteVersionsReader = new BufferedReader(new InputStreamReader(remoteVersionXMLFileLocation.openStream()));
@@ -35,8 +40,8 @@ public class WebDAO {
     }
 
     /**
-     * gets the first zip file from an url, in case of a maven repo deploy this
-     * should be the only zip in the folder
+     * Gets the first zip file from an url, in case of a maven repo deploy this
+     * should be the only zip in the folder.
      *
      * @param repoURL the URL to get the zip from
      * @param suffix what file extension should be looked for
@@ -73,6 +78,15 @@ public class WebDAO {
         return new URL(new StringBuilder().append(repoURL.toExternalForm()).append("/").append(toReturn).toString());
     }
 
+    /**
+     * Returns true if a new version is available.
+     * 
+     * @param jarFile the maven jar file
+     * @param jarRepository the repository
+     * @return true if a new version is available
+     * @throws IOException
+     * @throws XMLStreamException 
+     */
     public static boolean newVersionReleased(MavenJarFile jarFile, URL jarRepository) throws IOException, XMLStreamException {
         boolean newVersion = false;
         String versionRepoURLString = new StringBuilder(jarRepository.toExternalForm()).append(jarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(jarFile.getArtifactId()).append("/maven-metadata.xml").toString();

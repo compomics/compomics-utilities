@@ -105,7 +105,7 @@ public class AnnotationPreferences implements Serializable {
      * 
      * @param searchParameters the search parameters where to take the information from
      */
-    public void setPreferencesFromSearchParamaers(SearchParameters searchParameters)  {
+    public void setPreferencesFromSearchParamaers(SearchParameters searchParameters)  { // @TODO: fix typo in method name (while keeping backwards compatability...)
         clearIonTypes();
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched1());
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched2());
@@ -128,6 +128,8 @@ public class AnnotationPreferences implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public void setCurrentSettings(Peptide currentPeptide, int currentPrecursorCharge, boolean newSpectrum) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 

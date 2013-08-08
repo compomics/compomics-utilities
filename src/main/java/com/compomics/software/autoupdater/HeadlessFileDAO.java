@@ -4,18 +4,18 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * HeadlessFileDAO.
  *
- * @author Davy
+ * @author Davy Maddelein
  */
 public class HeadlessFileDAO extends FileDAO {
 
     /**
-     *
      * {@inheritDoc }
      */
     @Override
     public boolean createDesktopShortcut(MavenJarFile file, String iconName, boolean deleteOldShortcut) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // @TODO: implement me...
     }
 
     /**
@@ -24,6 +24,6 @@ public class HeadlessFileDAO extends FileDAO {
      */
     @Override
     public File getLocationToDownloadOnDisk(String targetDownloadFolder) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // @TODO: implement me...
     }
 }

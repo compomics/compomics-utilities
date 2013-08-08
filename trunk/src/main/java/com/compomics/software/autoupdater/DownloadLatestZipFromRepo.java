@@ -22,14 +22,6 @@ import org.apache.commons.io.FileUtils;
  */
 public class DownloadLatestZipFromRepo {
 
-    public static void main(String[] args) {
-        try {
-            downloadLatestZipFromRepo(new File("C:\\Users\\Davy\\Desktop\\thermo-msf-parser-204\\thermo_msf_parser_GUI-2.0.4.jar").toURL(), true, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * downloads the latest deploy from the genesis maven repository of the
      * artifact of the jarPath,starts it without arguments and removes the old
@@ -102,7 +94,8 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * retrieves the latest version of a maven jar file from a maven repository
+     * retrieves the latest version of a maven jar file from a maven repository,
+     * also checks if the environment is headless or not
      *
      * @param jarPath the URL of the location of the jar that needs to be
      * updated on the file system. cannot be {@code null}
@@ -156,9 +149,12 @@ public class DownloadLatestZipFromRepo {
         MavenJarFile oldMavenJarFile = new MavenJarFile(jarPath.toURI());
         if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
             MavenJarFile downloadedJarFile;
+            
+            //TL;DR of the next three lines: make the url for the latest version location of a maven jar file
             String artifactInRepoLocation = new StringBuilder(jarRepository.toExternalForm()).append(oldMavenJarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(oldMavenJarFile.getArtifactId()).toString();
             String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(artifactInRepoLocation).append("/maven-metadata.xml").toString()));
             String latestArtifactLocation = new StringBuilder(artifactInRepoLocation).append("/").append(latestRemoteRelease).toString();
+            
             if (System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win")) {
                 downloadedJarFile = downloadAndUnzipJarForWindows(oldMavenJarFile, new URL(latestArtifactLocation), fileDAO, true);
                 //try{
@@ -197,10 +193,6 @@ public class DownloadLatestZipFromRepo {
         }
     }
 
-    private static void handleSilently(Exception ex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * simple jar launch through a {@code ProcessBuilder}
      *
@@ -227,12 +219,12 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * aggregation method for prepping everything and then downloading
+     * aggregation method for downloading and unzipping for windows
      *
-     * @param mavenJarFile
-     * @param jarRepository
-     * @param fileDAO
-     * @return
+     * @param mavenJarFile the maven jar file to download update for
+     * @param jarRepository the url of the version specific location
+     * @param fileDAO which fileDAO implementation that should be used
+     * @return the downloaded {@code MavenJarFile}
      * @throws MalformedURLException
      * @throws IOException
      * @throws XMLStreamException
@@ -248,8 +240,8 @@ public class DownloadLatestZipFromRepo {
             }
         }
         File downloadedFile = fileDAO.writeStreamToDisk(archiveURL.openStream(), archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")), downloadFolder);
-        ZipFile downloadedZipFile = new ZipFile(downloadedFile);
-        newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(fileDAO.unzipFile(downloadedZipFile, downloadFolder), mavenJarFile.getArtifactId());
+        fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder);
+        newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
         if (cleanupZipFile) {
             if (!downloadedFile.delete()) {
                 throw new IOException("could not delete the zip file");
@@ -258,19 +250,26 @@ public class DownloadLatestZipFromRepo {
         return newMavenJar;
     }
 
+    /**
+     * aggregation method for downloading and unzipping for linux/mac
+     *
+     * @param mavenJarFile the maven jar file to download update for
+     * @param jarRepository the url of the version specific location
+     * @param fileDAO which fileDAO implementation that should be used
+     * @return the downloaded {@code MavenJarFile}
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws XMLStreamException
+     */
     private static MavenJarFile downloadAndUnzipJarForUnix(MavenJarFile oldMavenJarFile, URL jarRepository, FileDAO fileDAO) throws MalformedURLException, IOException, XMLStreamException {
         MavenJarFile downloadedJarFile = null;
         URL archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", true);
-        if (archiveURL != null) {
-            downloadedJarFile = fileDAO.getMavenJarFileFromFolderWithArtifactId(fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), new File(fileDAO.getLocationToDownloadOnDisk(oldMavenJarFile.getAbsoluteFilePath()), archiveURL.getFile())), oldMavenJarFile.getArtifactId());
-        } else {
+        if (archiveURL == null) {
             archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", true);
-            try {
-                downloadedJarFile = fileDAO.getMavenJarFileFromFolderWithArtifactId(fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), new File(fileDAO.getLocationToDownloadOnDisk(oldMavenJarFile.getAbsoluteFilePath()), archiveURL.getFile())), oldMavenJarFile.getArtifactId());
-            } catch (IOException ioex) {
-                handleSilently(ioex);
-            }
         }
+        File downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(oldMavenJarFile.getAbsoluteFilePath()), archiveURL.getFile());
+        fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadFolder);
+        downloadedJarFile = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, oldMavenJarFile.getArtifactId());
         return downloadedJarFile;
     }
 }

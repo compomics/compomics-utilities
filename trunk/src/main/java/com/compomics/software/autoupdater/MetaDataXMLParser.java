@@ -28,7 +28,11 @@ public class MetaDataXMLParser {
         public String getHighestVersionNumber() {
             return highestVersionNumber;
         }
-
+/**
+ * parses the version numbers of a maven repository website (or just about any proper xml containing the tag version)
+ * @param xmlReader
+ * @throws XMLStreamException 
+ */
         private void parseVersionNumbers(XMLEventReader xmlReader) throws XMLStreamException {
             CompareVersionNumbers versionNumberComparator = new CompareVersionNumbers();
             while (xmlReader.hasNext()) {

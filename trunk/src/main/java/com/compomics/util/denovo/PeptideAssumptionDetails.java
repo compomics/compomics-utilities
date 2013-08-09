@@ -21,6 +21,10 @@ public class PeptideAssumptionDetails implements UrParameter {
      * The PepNovo rank score.
      */
     private double rankScore;
+    /**
+     * The PepNovo M+H.
+     */
+    private double mH;
 
     /**
      * Constructor.
@@ -80,6 +84,24 @@ public class PeptideAssumptionDetails implements UrParameter {
      */
     public void setRankScore(double rankScore) {
         this.rankScore = rankScore;
+    }
+
+    /**
+     * Returns the PepNovo mH.
+     *
+     * @return the PepNovo mH
+     */
+    public double getMH() {
+        return mH;
+    }
+
+    /**
+     * Sets the PepNovo provided mH.
+     *
+     * @param mH the PepNovo mH
+     */
+    public void setMH(double mH) {
+        this.mH = mH;
     }
 
     @Override

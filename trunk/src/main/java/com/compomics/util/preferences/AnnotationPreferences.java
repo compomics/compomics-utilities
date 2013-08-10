@@ -3,7 +3,6 @@ package com.compomics.util.preferences;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
@@ -154,6 +153,8 @@ public class AnnotationPreferences implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public void resetAutomaticAnnotation() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 

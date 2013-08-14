@@ -520,9 +520,10 @@ public class Header implements Cloneable, Serializable {
 
                     result.databaseType = DatabaseType.Generic_Split_Header;
 
-                    result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
-                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.lastIndexOf("|") + 1).trim();
-                    result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
+                    String subHeader = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
+                    result.iAccession = subHeader.substring(0, subHeader.indexOf("|"));
+                    result.iDescription = subHeader.substring(subHeader.indexOf("|") + 1).trim();
+                    result.iID = aFASTAHeader.substring(0, subHeader.indexOf("|"));
 
                 } else if (aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*")) {
                     // Old (everything before 9.0 release (31 Oct 2006)) standard SwissProt header as

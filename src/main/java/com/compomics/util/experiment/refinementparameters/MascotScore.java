@@ -4,9 +4,8 @@ import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
  * This class will contain the mascot score.
- * User: Marc
- * Date: Nov 12, 2010
- * Time: 6:36:48 PM
+ *
+ * @author Marc Vaudel
  */
 public class MascotScore implements UrParameter {
 
@@ -16,7 +15,7 @@ public class MascotScore implements UrParameter {
     static final long serialVersionUID = 1781298332459022056L;
 
     /**
-     * This method returns the family name of the parameter
+     * This method returns the family name of the parameter,
      *
      * @return family name
      */
@@ -25,7 +24,7 @@ public class MascotScore implements UrParameter {
     }
 
     /**
-     * This method returns the index of the parameter
+     * This method returns the index of the parameter.
      *
      * @return the index of the parameter
      */
@@ -33,18 +32,19 @@ public class MascotScore implements UrParameter {
         return 1;
     }
     /**
-     * The Mascot score
+     * The Mascot score.
      */
     private double score;
 
     /**
-     * Contructor for the Mascot score
+     * Constructor for the Mascot score.
      */
     public MascotScore() {
     }
 
     /**
-     * Contructor for the Mascot score
+     * Constructor for the Mascot score.
+     *
      * @param score Mascot score
      */
     public MascotScore(double score) {
@@ -52,7 +52,8 @@ public class MascotScore implements UrParameter {
     }
 
     /**
-     * Getter for Mascot score
+     * Getter for Mascot score.
+     *
      * @return Mascot score
      */
     public double getScore() {

@@ -5,12 +5,16 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
+import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.util.math.BasicMathFunctions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -607,5 +611,75 @@ public class PTMLocationScores {
         }
 
         return ptmTableContent;
+    }
+
+    /**
+     * Returns the MD score for the best peptide in a spectrum match (the best
+     * peptide has to be set before). Null if not identified by Mascot. If the
+     * peptide is the not the best scoring for Mascot the score will be
+     * negative.
+     *
+     * @param spectrumMatch the spectrum match of interest
+     * @return the MD score
+     */
+    public static Double getMDScore(SpectrumMatch spectrumMatch) {
+        return getMDScore(spectrumMatch, spectrumMatch.getBestAssumption().getPeptide());
+    }
+
+    /**
+     * Returns the MD score for the given peptide in a spectrum match. Null if
+     * not identified by Mascot. If the peptide is the not the best scoring for
+     * Mascot the score will be negative.
+     *
+     * @param peptide the peptide of interest
+     * @param spectrumMatch the spectrum match of interest
+     * @return the MD score
+     */
+    public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate) {
+        HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
+            Double firstScore = null,
+                    secondScore = null;
+        if (spectrumMatch.getAllAssumptions(Advocate.MASCOT) != null) {
+            for (ArrayList<PeptideAssumption> peptideAssumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
+                for (PeptideAssumption peptideAssumption : peptideAssumptionList) {
+                    if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate)) {
+                        MascotScore mascotScore = new MascotScore();
+                        mascotScore = (MascotScore) peptideAssumption.getUrParam(mascotScore);
+                        Double score = mascotScore.getScore();
+                        if (!mascotAssumptionsMap.containsKey(score)) {
+                            mascotAssumptionsMap.put(score, new ArrayList<Peptide>());
+                        }
+                        mascotAssumptionsMap.get(score).add(peptideAssumption.getPeptide());
+                    }
+                }
+            }
+            ArrayList<Double> scores = new ArrayList<Double>(mascotAssumptionsMap.keySet());
+            Collections.sort(scores, Collections.reverseOrder());
+            for (double score : scores) {
+                for (Peptide peptide : mascotAssumptionsMap.get(score)) {
+                    if (peptide.isSameAs(peptideCandidate)) {
+                        firstScore = score;
+                        if (secondScore != null) {
+                            break;
+                        }
+                    } else if (secondScore == null) {
+                        secondScore = score;
+                        if (firstScore != null) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (firstScore == null && secondScore == null) {
+            return null;
+        }
+        if (firstScore == null) {
+            return -secondScore;
+        }
+        if (secondScore == null) {
+            return firstScore;
+        }
+        return firstScore - secondScore;
     }
 }

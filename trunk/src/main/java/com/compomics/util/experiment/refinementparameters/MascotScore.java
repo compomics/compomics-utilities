@@ -39,6 +39,12 @@ public class MascotScore implements UrParameter {
 
     /**
      * Contructor for the Mascot score
+     */
+    public MascotScore() {
+    }
+
+    /**
+     * Contructor for the Mascot score
      * @param score Mascot score
      */
     public MascotScore(double score) {

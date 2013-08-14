@@ -51,6 +51,8 @@ public class PTMLocationScores {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
@@ -81,6 +83,8 @@ public class PTMLocationScores {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
@@ -113,6 +117,8 @@ public class PTMLocationScores {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException  
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
@@ -631,7 +637,7 @@ public class PTMLocationScores {
      * not identified by Mascot. If the peptide is the not the best scoring for
      * Mascot the score will be negative.
      *
-     * @param peptide the peptide of interest
+     * @param peptideCandidate the peptide of interest
      * @param spectrumMatch the spectrum match of interest
      * @return the MD score
      */

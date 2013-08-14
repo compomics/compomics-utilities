@@ -663,7 +663,7 @@ public class PTMLocationScores {
             Collections.sort(scores, Collections.reverseOrder());
             for (double score : scores) {
                 for (Peptide peptide : mascotAssumptionsMap.get(score)) {
-                    if (peptide.isSameAs(peptideCandidate)) {
+                    if (peptide.sameModificationsAs(peptideCandidate)) {
                         firstScore = score;
                         if (secondScore != null) {
                             break;
@@ -674,6 +674,9 @@ public class PTMLocationScores {
                             break;
                         }
                     }
+                }
+                if (firstScore == null && secondScore == null) {
+                    break;
                 }
             }
         }

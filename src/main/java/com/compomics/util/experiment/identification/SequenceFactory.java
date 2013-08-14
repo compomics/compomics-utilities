@@ -474,7 +474,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, Header.DatabaseType databaseType, String version, 
+    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, Header.DatabaseType databaseType, String version,
             WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
@@ -608,11 +608,19 @@ public class SequenceFactory {
      * @return a boolean indicating whether the protein is Decoy.
      */
     public static boolean isDecoy(String proteinAccession, String decoyFlag) {
+
+        // test if the decoy tag is empty, and return false if it is
+        if (decoyFlag.isEmpty()) {
+            return false;
+        }
+
         String start = decoyFlag + ".*";
         String end = ".*" + decoyFlag;
+
         if (proteinAccession.matches(start) || proteinAccession.matches(end)) {
             return true;
         }
+
         return false;
     }
 
@@ -811,7 +819,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the sequences present in the database. An empty list if no file is loaded.
+     * Returns the sequences present in the database. An empty list if no file
+     * is loaded.
      *
      * @return the sequences present in the database
      */

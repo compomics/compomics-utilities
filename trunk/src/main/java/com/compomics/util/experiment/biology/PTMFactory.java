@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -66,6 +67,14 @@ public class PTMFactory implements Serializable {
      * Suffix for the modifications searched but not in the factory.
      */
     public static final String SEARCH_SUFFIX = "|search-only";
+    /**
+     * Set to true if the default mods are sorted alphabetically.
+     */
+    public boolean defaultModsSorted = false;
+    /**
+     * Set to true if the users mods are sorted alphabetically.
+     */
+    public boolean usersModsSorted = false;
 
     /**
      * Constructor for the factory.
@@ -74,6 +83,7 @@ public class PTMFactory implements Serializable {
         ptmMap.put(unknownPTM.getName(), unknownPTM);
         defaultMods = new ArrayList<String>();
         defaultMods.add("unknown");
+        defaultModsSorted = false;
     }
 
     /**
@@ -185,6 +195,7 @@ public class PTMFactory implements Serializable {
         } else {
             userMods.set(userMods.indexOf(modName), modName);
         }
+        usersModsSorted = false;
     }
 
     /**
@@ -523,11 +534,13 @@ public class PTMFactory implements Serializable {
                     }
                 } else if (!userMods.contains(name) || overwrite) {
                     userMods.add(name);
+                    usersModsSorted = false;
                 }
             } else {
                 if (!defaultMods.contains(name) || overwrite) {
                     defaultMods.add(name);
                     defaultOmssaIndexes.put(name, number);
+                    defaultModsSorted = false;
                 }
             }
         }
@@ -729,11 +742,39 @@ public class PTMFactory implements Serializable {
     }
 
     /**
+     * Returns the alphabetically ordered names of the default modifications.
+     *
+     * @return the alphabetically ordered names of the default modifications
+     */
+    public ArrayList<String> getDefaultModificationsOrdered() {
+        if (!defaultModsSorted) {
+            Collections.sort(defaultMods);
+            defaultModsSorted = true;
+        }
+        return defaultMods;
+    }
+
+    /**
      * Returns the names of the user defined modifications.
      *
      * @return the names of the user defined modifications
      */
     public ArrayList<String> getUserModifications() {
+        return userMods;
+    }
+
+    /**
+     * Returns the alphabetically ordered names of the user defined
+     * modifications.
+     *
+     * @return the alphabetically ordered names of the user defined
+     * modifications
+     */
+    public ArrayList<String> getUserModificationsOrdered() {
+        if (!usersModsSorted) {
+            Collections.sort(userMods);
+            usersModsSorted = true;
+        }
         return userMods;
     }
 

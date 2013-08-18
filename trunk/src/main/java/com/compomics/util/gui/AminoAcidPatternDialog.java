@@ -723,7 +723,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         }
 
         // check for excluded amino acids in target
-        if (pattern.getExcludedAA(pattern.getTarget()).size() > 0) {
+        if (pattern.getExcludedAA(pattern.getTarget()) != null && pattern.getExcludedAA(pattern.getTarget()).size() > 0) {
             JOptionPane.showMessageDialog(this, "Excluded amino acids not allowed for the targeted residue!", "Exclud Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }

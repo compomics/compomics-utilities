@@ -174,10 +174,12 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         removeNeutralLoss.setEnabled(editable);
         addReporterIon.setEnabled(editable);
         removerReporterIon.setEnabled(editable);
+        residuesTxt.setEnabled(editable);
 
         if (currentPtm != null) {
             typeCmb.setSelectedIndex(currentPtm.getType());
             nameTxt.setText(currentPtm.getName());
+            nameShortTxt.setText(ptmFactory.getShortName(currentPtm.getName()));
             massTxt.setText(currentPtm.getMass() + "");
             residuesTxt.setText(pattern.toString());
 
@@ -401,6 +403,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         massTxt = new javax.swing.JTextField();
         patternLabel = new javax.swing.JLabel();
         residuesTxt = new javax.swing.JTextField();
+        nameShortLabel = new javax.swing.JLabel();
+        nameShortTxt = new javax.swing.JTextField();
         neutralLossesAndReporterIonsPanel = new javax.swing.JPanel();
         neutralLossesJScrollPane = new javax.swing.JScrollPane();
         neutralLossesTable = new javax.swing.JTable();
@@ -483,33 +487,51 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         });
 
+        nameShortLabel.setText("Short Name");
+        nameShortLabel.setToolTipText("The modification name");
+
+        nameShortTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        nameShortTxt.setToolTipText("The modification name");
+        nameShortTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nameShortTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
         detailsPanel.setLayout(detailsPanelLayout);
         detailsPanelLayout.setHorizontalGroup(
             detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(detailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameTxt)
-                            .addComponent(typeCmb, 0, 345, Short.MAX_VALUE)))
+                            .addGroup(detailsPanelLayout.createSequentialGroup()
+                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nameTxt)
+                                    .addComponent(typeCmb, 0, 345, Short.MAX_VALUE)))
+                            .addGroup(detailsPanelLayout.createSequentialGroup()
+                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(patternLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(massLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(residuesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                                    .addComponent(massTxt))))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(patternLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(massLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nameShortLabel)
                         .addGap(18, 18, 18)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(residuesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                            .addComponent(massTxt))))
-                .addContainerGap(58, Short.MAX_VALUE))
+                        .addComponent(nameShortTxt)))
+                .addContainerGap())
         );
 
-        detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, massLabel, nameLabel, patternLabel});
+        detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, massLabel, nameLabel, nameShortLabel, patternLabel});
 
         detailsPanelLayout.setVerticalGroup(
             detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -522,6 +544,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTxt)
                     .addComponent(nameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameShortTxt)
+                    .addComponent(nameShortLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(massTxt)
@@ -756,7 +782,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -779,7 +805,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
 
-            PTM newPTM = new PTM(typeCmb.getSelectedIndex(), nameTxt.getText().trim().toLowerCase(), new Double(massTxt.getText().trim()), pattern);
+            PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
+                    nameTxt.getText().trim().toLowerCase(),
+                    nameShortTxt.getText().trim().toLowerCase(),
+                    new Double(massTxt.getText().trim()), pattern);
             ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
 
             for (int row = 0; row < neutralLossesTable.getRowCount(); row++) {
@@ -820,6 +849,9 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             if (cvTerm != null) {
                 cvTerm.setValue(massTxt.getText()); // set the modification mass, note that this means that the mass can be different from the one in PSI-MOD...
             }
+
+            // store the short name in the factory
+            ptmFactory.setShortName(newPTM.getName(), nameShortTxt.getText().trim().toLowerCase());
 
             ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             ptmDialogParent.updateModifications();
@@ -1014,6 +1046,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private void massTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_massTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_massTxtKeyReleased
+
+    private void nameShortTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameShortTxtKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameShortTxtKeyReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
@@ -1026,6 +1062,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private javax.swing.JLabel massLabel;
     private javax.swing.JTextField massTxt;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JLabel nameShortLabel;
+    private javax.swing.JTextField nameShortTxt;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JPanel neutralLossesAndReporterIonsPanel;
     private javax.swing.JScrollPane neutralLossesJScrollPane;

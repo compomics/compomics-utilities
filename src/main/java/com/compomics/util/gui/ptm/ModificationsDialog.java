@@ -180,6 +180,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         defaultModsTableToolTips = new ArrayList<String>();
         defaultModsTableToolTips.add(null);
         defaultModsTableToolTips.add("Modification Name");
+        defaultModsTableToolTips.add("Modification Short Name");
         defaultModsTableToolTips.add("Modification Mass Change");
         defaultModsTableToolTips.add("Modification Type");
         defaultModsTableToolTips.add("Affected Residues");
@@ -188,6 +189,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         userModsTableToolTips = new ArrayList<String>();
         userModsTableToolTips.add(null);
         userModsTableToolTips.add("Modification Name");
+        userModsTableToolTips.add("Modification Short Name");
         userModsTableToolTips.add("Modification Mass Change");
         userModsTableToolTips.add("Modification Type");
         userModsTableToolTips.add("Affected Residues");
@@ -400,7 +402,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
+                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
                     .addGroup(defaultModsPanelLayout.createSequentialGroup()
                         .addComponent(findJLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -486,9 +488,9 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             .addGroup(userModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
+                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
                     .addGroup(userModsPanelLayout.createSequentialGroup()
-                        .addGap(10, 370, Short.MAX_VALUE)
+                        .addGap(10, 450, Short.MAX_VALUE)
                         .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -544,7 +546,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(modificationsSplitPane)
+                    .addComponent(modificationsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
                     .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -568,7 +570,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 629, Short.MAX_VALUE)
+            .addGap(0, 709, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(modificationsEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1028,7 +1030,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
         @Override
         public int getColumnCount() {
-            return 6;
+            return 7;
         }
 
         @Override
@@ -1039,12 +1041,14 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                 case 1:
                     return "Name";
                 case 2:
-                    return "Mass";
+                    return "Short";
                 case 3:
-                    return "Type";
+                    return "Mass";
                 case 4:
-                    return "Residues";
+                    return "Type";
                 case 5:
+                    return "Residues";
+                case 6:
                     return "PSI-MOD";
                 default:
                     return "";
@@ -1053,17 +1057,19 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
         @Override
         public Object getValueAt(int row, int column) {
-            String name = ptmFactory.getDefaultModifications().get(row);
+            String name = ptmFactory.getDefaultModificationsOrdered().get(row);
             switch (column) {
                 case 0:
                     return row + 1;
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getPTM(name).getMass();
+                    return ptmFactory.getShortName(name);
                 case 3:
-                    return ptmFactory.getPTM(name).getType();
+                    return ptmFactory.getPTM(name).getMass();
                 case 4:
+                    return ptmFactory.getPTM(name).getType();
+                case 5:
                     String residues = "";
                     for (AminoAcid residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
                         if (!residues.equals("")) {
@@ -1072,7 +1078,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                         residues += residue.singleLetterCode;
                     }
                     return residues;
-                case 5:
+                case 6:
                     CvTerm cvTerm = null;
                     if (ptmToPrideMap != null) {
                         cvTerm = ptmToPrideMap.getCVTerm(name);
@@ -1119,7 +1125,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
         @Override
         public int getColumnCount() {
-            return 6;
+            return 7;
         }
 
         @Override
@@ -1130,12 +1136,14 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                 case 1:
                     return "Name";
                 case 2:
-                    return "Mass";
+                    return "Short";
                 case 3:
-                    return "Type";
+                    return "Mass";
                 case 4:
-                    return "Residues";
+                    return "Type";
                 case 5:
+                    return "Residues";
+                case 6:
                     return "PSI-MOD";
                 default:
                     return "";
@@ -1144,17 +1152,19 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
 
         @Override
         public Object getValueAt(int row, int column) {
-            String name = ptmFactory.getUserModifications().get(row);
+            String name = ptmFactory.getUserModificationsOrdered().get(row);
             switch (column) {
                 case 0:
                     return row + 1;
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getPTM(name).getMass();
+                    return ptmFactory.getShortName(name);
                 case 3:
-                    return ptmFactory.getPTM(name).getType();
+                    return ptmFactory.getPTM(name).getMass();
                 case 4:
+                    return ptmFactory.getPTM(name).getType();
+                case 5:
                     String residues = "";
                     for (AminoAcid residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
                         if (!residues.equals("")) {
@@ -1163,7 +1173,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                         residues += residue.singleLetterCode;
                     }
                     return residues;
-                case 5:
+                case 6:
                     CvTerm cvTerm = null;
                     if (ptmToPrideMap != null) {
                         cvTerm = ptmToPrideMap.getCVTerm(name);

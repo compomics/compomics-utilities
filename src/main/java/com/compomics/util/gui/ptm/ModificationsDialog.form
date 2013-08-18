@@ -44,6 +44,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
@@ -63,7 +64,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="629" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="709" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="modificationsEditorPanel" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -95,7 +96,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="modificationsSplitPane" max="32767" attributes="0"/>
+                      <Component id="modificationsSplitPane" pref="689" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
@@ -158,7 +159,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="defaultModsScrollPane" alignment="0" pref="577" max="32767" attributes="0"/>
+                              <Component id="defaultModsScrollPane" alignment="0" pref="657" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="findJLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -324,9 +325,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="userModsScrollPane" alignment="0" pref="577" max="32767" attributes="0"/>
+                              <Component id="userModsScrollPane" alignment="0" pref="657" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="10" pref="370" max="32767" attributes="0"/>
+                                  <EmptySpace min="10" pref="450" max="32767" attributes="0"/>
                                   <Component id="addUserPTM" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editUserPTM" min="-2" pref="65" max="-2" attributes="2"/>

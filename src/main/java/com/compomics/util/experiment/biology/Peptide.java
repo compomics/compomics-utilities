@@ -747,16 +747,16 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the N-terminal of the peptide as a String. Returns "NH3" if the
+     * Returns the N-terminal of the peptide as a String. Returns "NH2" if the
      * terminal is not modified, otherwise returns the name of the modification.
      * /!\ this method will work only if the PTM found in the peptide are in the
      * PTMFactory.
      *
-     * @return the N-terminal of the peptide as a String, e.g., "NH3"
+     * @return the N-terminal of the peptide as a String, e.g., "NH2"
      */
     public String getNTerminal() {
 
-        String nTerm = "NH3";
+        String nTerm = "NH2";
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 

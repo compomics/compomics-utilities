@@ -485,7 +485,7 @@ public class ObjectsDB implements Serializable {
     /**
      * Retrieves an object from the desired table. The key should be unique
      * otherwise the first object will be returned. Returns null if the key is
-     * not found.
+     * not found. The retrieved object is saved in cache
      *
      * @param tableName the name of the table
      * @param objectKey the object key
@@ -500,6 +500,29 @@ public class ObjectsDB implements Serializable {
      * object is not found when deserializing it.
      */
     public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+        return retrieveObject(tableName, objectKey, useDB, true);
+    }
+
+    /**
+     * Retrieves an object from the desired table. The key should be unique
+     * otherwise the first object will be returned. Returns null if the key is
+     * not found.
+     *
+     * @param tableName the name of the table
+     * @param objectKey the object key
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
+     * @param useCache if true the retrieved object will be saved in cache
+     *
+     * @return the object stored in the table.
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     */
+    public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException {
 
         Object object = null;
 
@@ -542,7 +565,9 @@ public class ObjectsDB implements Serializable {
             results.close();
             stmt.close();
 
-            objectsCache.addObject(dbName, tableName, objectKey, object, false);
+            if (useCache) {
+                objectsCache.addObject(dbName, tableName, objectKey, object, false);
+            }
 
             if (debugSpeed) {
                 long loaded = System.currentTimeMillis();

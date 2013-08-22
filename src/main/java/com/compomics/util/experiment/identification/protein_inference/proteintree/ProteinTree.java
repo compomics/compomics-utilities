@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,14 +20,6 @@ import java.util.HashMap;
  */
 public class ProteinTree {
 
-    /**
-     * The maximal size allowed for a node.
-     */
-    private int maxNodeSize;
-    /**
-     * The maximal size allowed for a node.
-     */
-    private int initialTagSize;
     /**
      * The memory allocation in GB.
      */
@@ -52,13 +45,9 @@ public class ProteinTree {
      */
     private long treeSize = 0;
     /**
-     * Indexed version of the tree.
-     */
-    private HashMap<String, Long> indexedTree = new HashMap<String, Long>();
-    /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = true;
+    private boolean debugSpeed = false;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -66,27 +55,41 @@ public class ProteinTree {
     /**
      * The node factory when operating in indexed mode.
      */
-    private NodeFactory nodeFactory = null;
+    private ProteinTreeComponentsFactory componentsFactory = null;
     /**
-     * Convenience mapping of the length of the proteins in case of reversed
-     * sequences.
+     * size of the cache of the most queried peptides
      */
-    private HashMap<String, Integer> proteinLengthMap = new HashMap<String, Integer>();
+    private int cacheSize = 1000;
+    /**
+     * Cache of the last queried peptides
+     */
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> lastQueriedPeptidesCache = new HashMap<String, HashMap<String, ArrayList<Integer>>>(cacheSize);
+    /**
+     * peptide sequences in cache
+     */
+    private ArrayList<String> lastQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
+    /**
+     * time in ms after which a query is considered as slow
+     */
+    private int queryTimeThreshold = 50;
+    /**
+     * Cache of the last queried peptides where the query took long
+     */
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, ArrayList<Integer>>>(cacheSize);
+    /**
+     * peptide sequences in slow cache
+     */
+    private ArrayList<String> lastSlowQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
      *
-     * @param indexFolder the folder where to store the database tree. If null
-     * the tree will be kept in memory
      * @param memoryAllocation the number of GB available for the tree in
      * memory.
      */
-    public ProteinTree(File indexFolder, int memoryAllocation) {
+    public ProteinTree(int memoryAllocation) throws IOException {
 
-        if (indexFolder != null) {
-            nodeFactory = NodeFactory.getInstance(indexFolder);
-            this.memoryAllocation = memoryAllocation;
-        }
+        this.memoryAllocation = memoryAllocation;
 
         if (debugSpeed) {
             try {
@@ -101,7 +104,7 @@ public class ProteinTree {
      * Initiates the tree.
      *
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
-     * to initiate but slow to query. I typically use 5000.
+     * to initiate but slow to query. I typically use 500.
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null but strongly recommended :)
      * @throws IOException
@@ -109,7 +112,7 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    public void initiateTree(WaitingHandler waitingHandler, int initialTagSize, int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
         initiateTree(initialTagSize, maxNodeSize, null, waitingHandler);
     }
 
@@ -121,9 +124,9 @@ public class ProteinTree {
      * are slow to query, low initial size are slow to initiate. I typically use
      * 3 for databases containing less than 100 000 proteins.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
-     * to initiate but slow to query. I typically use 5000.
+     * to initiate but slow to query. I typically use 500.
      * @param enzyme the enzyme used to select peptides. If null all possible
-     * peptides will be indexed (takes more memory)
+     * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null.
      * @throws IOException
@@ -132,15 +135,78 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler)
-            throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+            throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        this.initialTagSize = initialTagSize;
-        this.maxNodeSize = maxNodeSize;
         tree.clear();
 
-        if (nodeFactory != null) {
-            nodeFactory.initiateFactory();
+        componentsFactory = ProteinTreeComponentsFactory.getInstance();
+
+        try {
+            boolean needImport;
+            try {
+                needImport = !componentsFactory.initiate();
+                if (!needImport) {
+                    componentsFactory.loadParameters();
+                    if (componentsFactory.isCorrupted()) {
+                        throw new IllegalArgumentException("Database is corrupted. Tree will be reindexed.");
+                    }
+                    if (!componentsFactory.importComplete()) {
+                        throw new IllegalArgumentException("Database import was not successfully completed. Tree will be reindexed.");
+                    }
+                    if (initialTagSize != componentsFactory.getInitialSize()) {
+                        throw new IllegalArgumentException("Different initial size. Tree will be reindexed.");
+                    }
+                }
+            } catch (Exception e) {
+                needImport = true;
+                componentsFactory.delete();
+                componentsFactory.initiate();
+            }
+            if (needImport) {
+                importDb(initialTagSize, maxNodeSize, enzyme, waitingHandler);
+            } else {
+                componentsFactory.loadProteinLenths();
+            }
+        } catch (IOException e) {
+            componentsFactory.delete();
+            throw e;
+        } catch (IllegalArgumentException e) {
+            componentsFactory.delete();
+            throw e;
+        } catch (InterruptedException e) {
+            componentsFactory.delete();
+            throw e;
+        } catch (ClassNotFoundException e) {
+            componentsFactory.delete();
+            throw e;
+        } catch (SQLException e) {
+            componentsFactory.delete();
+            throw e;
         }
+    }
+
+    /**
+     * Imports the db which is in the sequence factory into the tree and saves
+     * it in the nodeFactory
+     *
+     * @param initialTagSize the initial size of peptide tag. Large initial size
+     * are slow to query, low initial size are slow to initiate. I typically use
+     * 3 for databases containing less than 100 000 proteins.
+     * @param maxNodeSize the maximal size of a node. large nodes will be fast
+     * to initiate but slow to query. I typically use 5000.
+     * @param enzyme the enzyme used to select peptides. If null all possible
+     * peptides will be indexed
+     * @param waitingHandler the waiting handler used to display progress to the
+     * user. Can be null.
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    private void importDb(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler)
+            throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+
+        componentsFactory.saveInitialSize(initialTagSize);
 
         ArrayList<String> tags = TagFactory.getAminoAcidCombinations(initialTagSize);
         ArrayList<String> accessions;
@@ -159,8 +225,13 @@ public class ProteinTree {
         long capacity = memoryAllocation * cacheScale;
         long estimatedTreeSize = 6 * criticalSize; //in percent, as far as I tested, 6% of the proteins are covered by a tag in general (ie median)
         int ratio = (int) (estimatedTreeSize / capacity);
-        int nTags = 100 * tags.size() / ratio;
         int nPassages = (int) (ratio / 100) + 1;
+        int nTags;
+        if (ratio > 0) {
+            nTags = 100 * tags.size() / ratio;
+        } else {
+            nTags = tags.size();
+        }
         if (nPassages > 1) {
             Collections.shuffle(tags);
         }
@@ -187,9 +258,10 @@ public class ProteinTree {
 
         ArrayList<String> tempTags = new ArrayList<String>(nTags);
         int roundsCpt = 0;
+        ArrayList<String> loadedAccessions = new ArrayList<String>();
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, accessions, waitingHandler, enzyme, true, false);
+                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, true, loadedAccessions);
                 tempTags.clear();
                 if (sequenceFactory.getnCache() < accessions.size()) {
                     Collections.reverse(accessions);
@@ -205,7 +277,7 @@ public class ProteinTree {
             }
         }
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, accessions, waitingHandler, enzyme, false, sequenceFactory.isDefaultReversed());
+            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, false, loadedAccessions);
             if (debugSpeed) {
                 debugSpeedWriter.write(++roundsCpt + " rounds completed");
                 System.out.println(roundsCpt + " rounds completed");
@@ -213,6 +285,8 @@ public class ProteinTree {
                 debugSpeedWriter.flush();
             }
         }
+
+        componentsFactory.setImportComplete(true);
 
         if (debugSpeed) {
 
@@ -241,23 +315,24 @@ public class ProteinTree {
      * cleared when saving
      * @param saveLength boolean indicating whether the length of the proteins
      * shall be saved (mandatory when computing reverse indexes on the fly)
+     * @param loadedAccessions the accessions already loaded in the factory
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
     private void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
-            Enzyme enzyme, boolean clearNodes, boolean saveLength) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+            int initialTagSize, int maxNodeSize, Enzyme enzyme, boolean clearNodes, ArrayList<String> loadedAccessions) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
+        //@TODO: would be cool to have this multithreaded
         for (String accession : accessions) {
 
-            //@TODO: would be cool to have this multithreaded
             String sequence = sequenceFactory.getProtein(accession).getSequence();
-
-            if (saveLength) {
-                proteinLengthMap.put(accession, sequence.length());
+            if (!loadedAccessions.contains(accession)) {
+                componentsFactory.saveProteinLength(accession, sequence.length());
+                loadedAccessions.add(accession);
             }
-
             HashMap<String, ArrayList<Integer>> tagToIndexesMap = getTagToIndexesMap(sequence, tags, enzyme);
 
             if (waitingHandler != null) {
@@ -272,11 +347,9 @@ public class ProteinTree {
                     Node node = tree.get(tag);
                     if (node == null) {
                         node = new Node(initialTagSize);
-                        tagsInTree.add(tag);
                     }
                     tree.put(tag, node);
                     node.addAccession(accession, tagToIndexesMap.get(tag));
-                    treeSize++;
                 }
             }
 
@@ -295,8 +368,12 @@ public class ProteinTree {
 
             if (node != null) {
                 node.splitNode(maxNodeSize);
-                if (nodeFactory != null) {
-                    nodeFactory.saveAccessions(node, clearNodes);
+                componentsFactory.saveNode(tag, node);
+                if (clearNodes) {
+                    tree.remove(tag);
+                } else {
+                    tagsInTree.add(tag);
+                    treeSize += node.getSize();
                 }
             }
 
@@ -319,8 +396,11 @@ public class ProteinTree {
      * @param enzyme the enzyme restriction
      * @return all the positions of the given tags
      */
-    private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) {
+    private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException {
+
         HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());
+        Integer initialTagSize = componentsFactory.getInitialSize();
+
         for (String tag : tags) {
             tagToIndexesMap.put(tag, new ArrayList<Integer>());
         }
@@ -354,7 +434,7 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         long time0 = System.currentTimeMillis();
         HashMap<String, ArrayList<Integer>> result = getProteinMapping(peptideSequence, false);
         if (debugSpeed) {
@@ -380,39 +460,112 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException {
+    private HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        if (peptideSequence.length() < initialTagSize) {
-            throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
-        }
+        HashMap<String, ArrayList<Integer>> result = lastQueriedPeptidesCache.get(peptideSequence);
 
-        HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>();
+        if (result != null) {
+            lastQueriedPeptidesCacheContent.remove(peptideSequence);
+            lastQueriedPeptidesCacheContent.add(peptideSequence);
+        } else {
 
-        String tag = peptideSequence.substring(0, initialTagSize);
-        Node node = tree.get(tag);
+            result = lastSlowQueriedPeptidesCache.get(peptideSequence);
 
-        if (node != null) {
-            result.putAll(node.getProteinMapping(peptideSequence));
-        }
-        if (sequenceFactory.isDefaultReversed() && !reversed) {
-            String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-            HashMap<String, ArrayList<Integer>> reversedResult = getProteinMapping(reversedSequence, true);
-            int peptideLength = peptideSequence.length();
-            for (String accession : reversedResult.keySet()) {
-                String reversedAccession = SequenceFactory.getDefaultDecoyAccession(accession);
-                ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
-                Integer proteinLength = proteinLengthMap.get(accession);
-                if (proteinLength == null) {
-                    throw new IllegalArgumentException("Length of protein " + accession + " not found.");
+            if (result != null) {
+                lastSlowQueriedPeptidesCacheContent.remove(peptideSequence);
+                lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
+            } else {
+
+                long timeStart = System.currentTimeMillis();
+
+                int initialTagSize = componentsFactory.getInitialSize();
+                if (peptideSequence.length() < initialTagSize) {
+                    throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
                 }
-                for (int index : reversedResult.get(accession)) {
-                    int reversedIndex = proteinLength - index - peptideLength;
-                    if (reversedIndex < 0) {
-                        throw new IllegalArgumentException("Negative index found for peptide " + reversedSequence + " in protein " + reversedAccession + ".");
+
+                result = new HashMap<String, ArrayList<Integer>>();
+
+                String tag = peptideSequence.substring(0, initialTagSize);
+                Node node = getNode(tag);
+
+                if (node != null) {
+                    result.putAll(node.getProteinMapping(peptideSequence));
+                }
+                if (sequenceFactory.isDefaultReversed() && !reversed) {
+                    String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
+                    HashMap<String, ArrayList<Integer>> reversedResult = getProteinMapping(reversedSequence, true);
+                    int peptideLength = peptideSequence.length();
+                    for (String accession : reversedResult.keySet()) {
+                        String reversedAccession = SequenceFactory.getDefaultDecoyAccession(accession);
+                        ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
+                        Integer proteinLength = componentsFactory.getProteinLength(accession);
+                        if (proteinLength == null) {
+                            throw new IllegalArgumentException("Length of protein " + accession + " not found.");
+                        }
+                        for (int index : reversedResult.get(accession)) {
+                            int reversedIndex = proteinLength - index - peptideLength;
+                            if (reversedIndex < 0 || reversedIndex >= proteinLength) {
+                                throw new IllegalArgumentException("Wrong index found for peptide " + reversedSequence + " in protein " + reversedAccession + ": " + reversedIndex + ".");
+                            }
+                            reversedIndexes.add(reversedIndex);
+                        }
+                        result.put(reversedAccession, reversedIndexes);
                     }
-                    reversedIndexes.add(reversedIndex);
                 }
-                result.put(reversedAccession, reversedIndexes);
+
+                long timeEnd = System.currentTimeMillis();
+                long queryTime = timeEnd - timeStart;
+
+                if (queryTime <= queryTimeThreshold) {
+                    lastQueriedPeptidesCache.put(peptideSequence, result);
+                    lastQueriedPeptidesCacheContent.add(peptideSequence);
+                    if (lastQueriedPeptidesCacheContent.size() > cacheSize) {
+                        String key = lastQueriedPeptidesCacheContent.get(0);
+                        lastQueriedPeptidesCache.remove(key);
+                        lastQueriedPeptidesCacheContent.remove(0);
+                    }
+                } else {
+                    lastSlowQueriedPeptidesCache.put(peptideSequence, result);
+                    lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
+                    if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
+                        String key = lastSlowQueriedPeptidesCacheContent.get(0);
+                        lastSlowQueriedPeptidesCache.remove(key);
+                        lastSlowQueriedPeptidesCacheContent.remove(0);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns a node related to a tag and updates the cache. Null if not found.
+     *
+     * @param tag the tag of interest
+     *
+     * @return the corresponding node
+     *
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
+    private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
+        Node result = tree.get(tag);
+        if (result == null) {
+            result = componentsFactory.getNode(tag);
+            if (result != null) {
+                tree.put(tag, result);
+                treeSize += result.getSize();
+                long capacity = memoryAllocation * cacheScale;
+                while (treeSize > capacity && !tagsInTree.isEmpty()) {
+                    int index = tagsInTree.size() - 1;
+                    String tempTag = tagsInTree.get(index);
+                    Node tempNode = tree.get(tempTag);
+                    treeSize -= tempNode.getSize();
+                    tree.remove(tempTag);
+                    tagsInTree.remove(index);
+                }
+                tagsInTree.add(0, tag);
             }
         }
         return result;
@@ -421,7 +574,7 @@ public class ProteinTree {
     /**
      * Closes all connections to files.
      */
-    public void close() {
+    public void close() throws IOException, SQLException {
         if (debugSpeed) {
             try {
                 debugSpeedWriter.flush();
@@ -430,12 +583,6 @@ public class ProteinTree {
                 e.printStackTrace();
             }
         }
-        if (nodeFactory != null) {
-            try {
-                nodeFactory.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        componentsFactory.close();
     }
 }

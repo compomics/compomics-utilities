@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 
 import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class Node {
+public class Node implements Serializable {
 
     /**
      * The depth of the node in the tree.
@@ -25,14 +26,6 @@ public class Node {
      * Sutree starting from this node.
      */
     private HashMap<Character, Node> subtree = null;
-    /**
-     * Instance of the sequence factory.
-     */
-    private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-    /**
-     * The index of the node when saved.
-     */
-    private Long index = null;
 
     /**
      * Constructor.
@@ -65,9 +58,6 @@ public class Node {
      * @throws ClassNotFoundException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException {
-        if (isEmpty()) {
-            loadAccessions();
-        }
         if (depth == peptideSequence.length()) {
             return getAllMappings();
         } else if (accessions != null) {
@@ -187,16 +177,6 @@ public class Node {
     }
 
     /**
-     * Loads the content of the node from the node factory.
-     *
-     * @throws IOException
-     */
-    public void loadAccessions() throws IOException {
-        NodeFactory nodeFactory = NodeFactory.getInstance();
-        accessions = nodeFactory.getAccessions(index);
-    }
-
-    /**
      * Returns the depth of the node in the tree.
      *
      * @return the depth of the node in the tree
@@ -212,9 +192,6 @@ public class Node {
      * @throws IOException
      */
     public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
-        if (isEmpty()) {
-            loadAccessions();
-        }
         if (accessions != null) {
             return accessions;
         } else {
@@ -261,7 +238,7 @@ public class Node {
     private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
-        String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
+        String proteinSequence = SequenceFactory.getInstance().getProtein(accession).getSequence();
         ArrayList<Integer> results = new ArrayList<Integer>();
         int peptideLength = peptideSequence.length();
 
@@ -292,7 +269,7 @@ public class Node {
     private HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
-        String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
+        String proteinSequence = SequenceFactory.getInstance().getProtein(accession).getSequence();
         HashMap<Character, ArrayList<Integer>> result = new HashMap<Character, ArrayList<Integer>>();
 
         for (int startIndex : seeds) {
@@ -328,7 +305,7 @@ public class Node {
     private ArrayList<Integer> matchInProtein(String accession, ArrayList<Integer> seeds, int offset, char expectedChar)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
-        String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
+        String proteinSequence = SequenceFactory.getInstance().getProtein(accession).getSequence();
         ArrayList<Integer> results = new ArrayList<Integer>();
 
         for (int startIndex : seeds) {
@@ -341,23 +318,5 @@ public class Node {
         }
 
         return results;
-    }
-
-    /**
-     * Returns the index of the node when saved. Null if not set.
-     *
-     * @return the index of the node when save
-     */
-    public Long getIndex() {
-        return index;
-    }
-
-    /**
-     * Sets the index of the node when saved.
-     *
-     * @param index the index of the node when save
-     */
-    public void setIndex(Long index) {
-        this.index = index;
     }
 }

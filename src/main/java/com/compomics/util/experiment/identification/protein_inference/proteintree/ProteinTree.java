@@ -112,7 +112,7 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public void initiateTree(WaitingHandler waitingHandler, int initialTagSize, int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+    public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
         initiateTree(initialTagSize, maxNodeSize, null, waitingHandler);
     }
 

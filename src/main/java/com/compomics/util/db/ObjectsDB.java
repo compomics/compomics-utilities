@@ -485,7 +485,7 @@ public class ObjectsDB implements Serializable {
     /**
      * Retrieves an object from the desired table. The key should be unique
      * otherwise the first object will be returned. Returns null if the key is
-     * not found. The retrieved object is saved in cache
+     * not found. The retrieved object is saved in cache.
      *
      * @param tableName the name of the table
      * @param objectKey the object key

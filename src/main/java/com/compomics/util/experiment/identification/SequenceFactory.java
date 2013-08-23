@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
@@ -355,7 +354,7 @@ public class SequenceFactory {
      */
     public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
         currentFastaFile = fastaFile;
-        currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
+        currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100); // @TODO: what if fastaFile does not exist??
         fastaIndex = getFastaIndex(false, waitingHandler);
     }
 

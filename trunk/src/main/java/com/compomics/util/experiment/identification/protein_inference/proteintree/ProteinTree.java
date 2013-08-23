@@ -575,13 +575,11 @@ public class ProteinTree {
     }
 
     /**
-     * Reverts the indexes and the protein accessions of the given mapping
+     * Reverts the indexes and the protein accessions of the given mapping.
      *
      * @param forwardResults the given mapping
      * @param peptideSequence the sequence of interest
-     *
      * @return the reversed indexes
-     *
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException

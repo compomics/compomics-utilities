@@ -542,6 +542,8 @@ public class ProteinTree {
                     if (!peptideSequence.equals(reversedSequence)) {
                         HashMap<String, ArrayList<Integer>> reversedResult = getProteinMapping(reversedSequence, true);
                         result.putAll(getReversedResults(reversedResult, reversedSequence));
+                    } else {
+                        result.putAll(getReversedResults(result, reversedSequence));
                     }
                 }
 

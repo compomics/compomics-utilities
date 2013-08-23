@@ -190,6 +190,7 @@ public class Enzyme extends ExperimentObject {
      * @param aaBefore the amino acid before the cleavage site
      * @param aaAfter the amino acid after the cleavage site
      * @return true if the amino acid combination can represent a cleavage site
+     * @deprecated use the isCleavageSite method using chars as input instead
      */
     public boolean isCleavageSite(String aaBefore, String aaAfter) {
 
@@ -227,6 +228,50 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
+     * Returns a boolean indicating whether the given amino acids represent a
+     * cleavage site. Trypsin example: (D, E) returns false (R, D) returns true
+     * Note: returns false if no cleavage site is implemented.
+     *
+     * @param aaBefore the amino acid before the cleavage site
+     * @param aaAfter the amino acid after the cleavage site
+     * @return true if the amino acid combination can represent a cleavage site
+     */
+    public boolean isCleavageSite(char aaBefore, char aaAfter) {
+
+        for (Character aa1 : aminoAcidBefore) {
+            if (aaBefore == aa1.charValue()) {
+                boolean restriction = false;
+                for (Character aa2 : restrictionAfter) {
+                    if (aaAfter == aa2.charValue()) {
+                        restriction = true;
+                        break;
+                    }
+                }
+                if (!restriction) {
+                    return true;
+                }
+            }
+        }
+
+        for (Character aa1 : aminoAcidAfter) {
+            if (aaBefore == aa1.charValue()) {
+                boolean restriction = false;
+                for (Character aa2 : restrictionBefore) {
+                    if (aaAfter == aa2.charValue()) {
+                        restriction = true;
+                        break;
+                    }
+                }
+                if (!restriction) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the number of missed cleavages in an amino acid sequence.
      *
      * @param sequence the amino acid sequence as a string.
@@ -236,7 +281,7 @@ public class Enzyme extends ExperimentObject {
         int result = 0;
         if (sequence.length() > 1) {
             for (int i = 0; i < sequence.length() - 1; i++) {
-                if (isCleavageSite(String.valueOf(sequence.charAt(i)), String.valueOf(sequence.charAt(i + 1)))) {
+                if (isCleavageSite(sequence.charAt(i), sequence.charAt(i + 1))) {
                     result++;
                 }
             }
@@ -255,7 +300,9 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
 
-        String aa, aaBefore, aaAfter = "", currentPeptide = "";
+        char aa, aaBefore;
+        char aaAfter = ' ';
+        String currentPeptide = "";
         ArrayList<String> results = new ArrayList<String>();
 
         HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
@@ -265,8 +312,7 @@ public class Enzyme extends ExperimentObject {
 
         for (int i = 0; i < sequence.length(); i++) {
 
-            aa = sequence.charAt(i) + "";
-
+            aa = sequence.charAt(i);
             aaBefore = aaAfter;
             aaAfter = aa;
 

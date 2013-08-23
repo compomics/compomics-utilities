@@ -7,9 +7,6 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This factory stores and returns protein trees components from databases.
@@ -35,11 +32,11 @@ public class ProteinTreeComponentsFactory {
      */
     private boolean debug = true;
     /**
-     * The objects db used to retrieve saved nodes
+     * The objects db used to retrieve saved nodes.
      */
     private ObjectsDB objectsDB;
     /**
-     * The cache of the objectsDB
+     * The cache of the objectsDB.
      */
     private ObjectsCache objectsCache = new ObjectsCache();
     /**
@@ -47,19 +44,19 @@ public class ProteinTreeComponentsFactory {
      */
     public static final String folderSeparator = "_cus_";
     /**
-     * The name of the db to use
+     * The name of the db to use.
      */
     public static final String dbName = "proteinTree";
     /**
-     * The name of the node table
+     * The name of the node table.
      */
     private static final String nodeTable = "nodes";
     /**
-     * The name of the protein length table
+     * The name of the protein length table.
      */
     private static final String lengthTable = "lengths";
     /**
-     * The name of the protein length table
+     * The name of the protein length table.
      */
     private static final String parametersTable = "parameters";
 
@@ -80,6 +77,7 @@ public class ProteinTreeComponentsFactory {
      * serialization folder should have been already set.
      *
      * @return the instance of the factory
+     * @throws IOException
      */
     public static ProteinTreeComponentsFactory getInstance() throws IOException {
         if (instance == null) {
@@ -139,6 +137,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Closes the factory, closes all connection and deletes the file.
      *
+     * @throws IOException
      * @throws SQLException exception thrown if closing the db failed
      */
     public void close() throws IOException, SQLException {
@@ -169,11 +168,10 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * adds a node to the database
+     * Adds a node to the database.
      *
      * @param tag the tag referring to the node of interest
      * @param node the node
-     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -184,11 +182,10 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Retrieves the node of the given tag
+     * Retrieves the node of the given tag.
      *
      * @param tag the tag of interest
      * @return the node at this tag
-     *
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException
@@ -198,11 +195,10 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * adds a protein length to the database
+     * Adds a protein length to the database.
      *
      * @param accession the protein accession
      * @param length the length
-     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -213,11 +209,10 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Retrieves the length of a protein
+     * Retrieves the length of a protein.
      *
      * @param accession the accession of the protein of interest
      * @return the length of this protein
-     *
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException
@@ -230,7 +225,6 @@ public class ProteinTreeComponentsFactory {
      * Saves the initial tag size in the parameters table of the DB.
      *
      * @param size the initial tag size
-     *
      * @throws SQLException
      * @throws IOException
      */
@@ -241,17 +235,17 @@ public class ProteinTreeComponentsFactory {
     /**
      * Retrieves the initial tag size from the db.
      *
-     * @returnthe initial tag size
-     *
+     * @return the initial tag size
      * @throws SQLException
      * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
     }
 
     /**
-     * Loads all protein lengths in cache
+     * Loads all protein lengths in cache.
      *
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -263,7 +257,7 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Loads all tree parameters
+     * Loads all tree parameters.
      *
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -275,8 +269,9 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Sets whether the import was completed
+     * Sets whether the import was completed.
      *
+     * @param completed 
      * @throws SQLException
      * @throws IOException
      */
@@ -288,8 +283,10 @@ public class ProteinTreeComponentsFactory {
      * Returns a boolean indicating whether the import was complete. False if
      * not set.
      *
+     * @return true if the import was complete
      * @throws SQLException
      * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public boolean importComplete() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "importComplete", true);
@@ -301,8 +298,9 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Sets whether the database is corrupted
+     * Sets whether the database is corrupted.
      *
+     * @param corrupted 
      * @throws SQLException
      * @throws IOException
      */
@@ -314,8 +312,10 @@ public class ProteinTreeComponentsFactory {
      * Returns a boolean indicating whether the database is corrupted. False if
      * not set.
      *
+     * @return true if the database is corrupted
      * @throws SQLException
      * @throws IOException
+     * @throws ClassNotFoundException  
      */
     public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "corrupted", true);

@@ -26,7 +26,8 @@ public class ProteinTree {
      */
     private int memoryAllocation;
     /**
-     * Approximate number of accession*node one can store in a GB of memory (empirical value).
+     * Approximate number of accession*node one can store in a GB of memory
+     * (empirical value).
      */
     private static final long cacheScale = 12000000;
     /**
@@ -58,27 +59,27 @@ public class ProteinTree {
      */
     private ProteinTreeComponentsFactory componentsFactory = null;
     /**
-     * size of the cache of the most queried peptides
+     * Size of the cache of the most queried peptides.
      */
     private int cacheSize = 20000;
     /**
-     * Cache of the last queried peptides
+     * Cache of the last queried peptides.
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> lastQueriedPeptidesCache = new HashMap<String, HashMap<String, ArrayList<Integer>>>(cacheSize);
     /**
-     * peptide sequences in cache
+     * Peptide sequences in cache.
      */
     private ArrayList<String> lastQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
     /**
-     * time in ms after which a query is considered as slow
+     * Time in ms after which a query is considered as slow.
      */
     private int queryTimeThreshold = 50;
     /**
-     * Cache of the last queried peptides where the query took long
+     * Cache of the last queried peptides where the query took long.
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, ArrayList<Integer>>>(cacheSize);
     /**
-     * peptide sequences in slow cache
+     * Peptide sequences in slow cache.
      */
     private ArrayList<String> lastSlowQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
 
@@ -87,6 +88,7 @@ public class ProteinTree {
      *
      * @param memoryAllocation the number of GB available for the tree in
      * memory.
+     * @throws IOException
      */
     public ProteinTree(int memoryAllocation) throws IOException {
 
@@ -104,6 +106,7 @@ public class ProteinTree {
     /**
      * Initiates the tree.
      *
+     * @param initialTagSize the initial tag size
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 500.
      * @param waitingHandler the waiting handler used to display progress to the
@@ -112,6 +115,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
+     * @throws SQLException
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
         initiateTree(initialTagSize, maxNodeSize, null, waitingHandler);
@@ -134,6 +138,7 @@ public class ProteinTree {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
+     * @throws SQLException
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
@@ -188,7 +193,7 @@ public class ProteinTree {
 
     /**
      * Imports the db which is in the sequence factory into the tree and saves
-     * it in the nodeFactory
+     * it in the nodeFactory.
      *
      * @param initialTagSize the initial size of peptide tag. Large initial size
      * are slow to query, low initial size are slow to initiate. I typically use
@@ -211,6 +216,7 @@ public class ProteinTree {
 
         ArrayList<String> tags = TagFactory.getAminoAcidCombinations(initialTagSize);
         ArrayList<String> accessions;
+
         if (sequenceFactory.isDefaultReversed()) {
             accessions = new ArrayList<String>();
             for (String accession : sequenceFactory.getAccessions()) {
@@ -221,16 +227,24 @@ public class ProteinTree {
         } else {
             accessions = sequenceFactory.getAccessions();
         }
+
         long tagsSize = 500; // The space needed for tags in percent (empirical value)
         long criticalSize = tagsSize * accessions.size();
+
         // try to estimate the number of tags we can process at a time given the memory settings. We might want to fine tune this
         long capacity = memoryAllocation * cacheScale;
         long estimatedTreeSize = 6 * criticalSize; // as far as I tested, 6% of the proteins are covered by a tag in general (ie median)
         int ratio = (int) (estimatedTreeSize / capacity);
+
+        if (ratio == 0) {
+            ratio = 1;
+        }
+
         int nPassages = (int) (ratio);
         if (tags.size() % ratio != 0) {
             nPassages += 1;
         }
+
         int nTags;
         if (ratio > 0) {
             nTags = tags.size() / ratio;
@@ -240,9 +254,11 @@ public class ProteinTree {
         } else {
             nTags = tags.size();
         }
+
         if (nPassages > 1) {
             Collections.shuffle(tags);
         }
+
         if (debugSpeed) {
             debugSpeedWriter.write("Critical size: " + criticalSize);
             System.out.println("Critical size: " + criticalSize);
@@ -267,6 +283,7 @@ public class ProteinTree {
         ArrayList<String> tempTags = new ArrayList<String>(nTags);
         int roundsCpt = 0;
         ArrayList<String> loadedAccessions = new ArrayList<String>();
+
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
                 loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, true, loadedAccessions);
@@ -284,6 +301,7 @@ public class ProteinTree {
                 tempTags.add(tag);
             }
         }
+
         if (!tempTags.isEmpty()) {
             loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, false, loadedAccessions);
             if (debugSpeed) {
@@ -331,7 +349,8 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
-            int initialTagSize, int maxNodeSize, Enzyme enzyme, boolean clearNodes, ArrayList<String> loadedAccessions) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+            int initialTagSize, int maxNodeSize, Enzyme enzyme, boolean clearNodes, ArrayList<String> loadedAccessions)
+            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         //@TODO: would be cool to have this multithreaded
         for (String accession : accessions) {
@@ -367,7 +386,6 @@ public class ProteinTree {
                 }
                 waitingHandler.increaseSecondaryProgressCounter();
             }
-
         }
 
         for (String tag : tags) {
@@ -391,7 +409,6 @@ public class ProteinTree {
                 }
                 waitingHandler.increaseSecondaryProgressCounter();
             }
-
         }
     }
 
@@ -441,6 +458,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException
+     * @throws SQLException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         long time0 = System.currentTimeMillis();
@@ -550,9 +568,7 @@ public class ProteinTree {
      * Returns a node related to a tag and updates the cache. Null if not found.
      *
      * @param tag the tag of interest
-     *
      * @return the corresponding node
-     *
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException
@@ -581,6 +597,9 @@ public class ProteinTree {
 
     /**
      * Closes all connections to files.
+     *
+     * @throws IOException
+     * @throws SQLException
      */
     public void close() throws IOException, SQLException {
         if (debugSpeed) {
@@ -595,7 +614,9 @@ public class ProteinTree {
     }
 
     /**
-     * Returns the size of the cache used for peptide mappings (note that there are two of them)
+     * Returns the size of the cache used for peptide mappings (note that there
+     * are two of them).
+     *
      * @return the size of the cache used for peptide mappings
      */
     public int getCacheSize() {
@@ -603,7 +624,9 @@ public class ProteinTree {
     }
 
     /**
-     * Sets the size of the cache used for peptide mappings (note that there are two of them)
+     * Sets the size of the cache used for peptide mappings (note that there are
+     * two of them).
+     *
      * @param cacheSize the size of the cache used for peptide mappings
      */
     public void setCacheSize(int cacheSize) {

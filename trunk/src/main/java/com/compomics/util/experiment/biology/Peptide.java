@@ -72,7 +72,6 @@ public class Peptide extends ExperimentObject {
      * Constructor for the peptide.
      *
      * @param aSequence The peptide sequence
-     * @param parentProteins The parent proteins, cannot be null or empty
      * @param modifications The PTM of this peptide
      * @throws IllegalArgumentException Thrown if the peptide sequence contains
      * unknown amino acids

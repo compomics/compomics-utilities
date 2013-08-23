@@ -18,12 +18,13 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import junit.framework.TestCase;
 
 /**
  *
  * @author Marc Vaudel
  */
-public class IdentificationDBTest {
+public class IdentificationDBTest extends TestCase {
 
     public void testDB() throws SQLException, IOException, ClassNotFoundException {
 

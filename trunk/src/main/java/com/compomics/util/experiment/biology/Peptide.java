@@ -64,6 +64,20 @@ public class Peptide extends ExperimentObject {
      * unknown amino acids
      */
     public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
+        this(aSequence, modifications);
+        setParentProteins(parentProteins);
+    }
+
+    /**
+     * Constructor for the peptide.
+     *
+     * @param aSequence The peptide sequence
+     * @param parentProteins The parent proteins, cannot be null or empty
+     * @param modifications The PTM of this peptide
+     * @throws IllegalArgumentException Thrown if the peptide sequence contains
+     * unknown amino acids
+     */
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         sequence = sequence.replaceAll("[#*$%&]", "");
         HashMap<String, ArrayList<Integer>> ptmToPositionsMap = new HashMap<String, ArrayList<Integer>>();
@@ -82,7 +96,6 @@ public class Peptide extends ExperimentObject {
             ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
         }
-        setParentProteins(parentProteins);
         estimateTheoreticMass();
     }
 

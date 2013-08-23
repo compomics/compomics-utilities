@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -25,9 +26,9 @@ public class ProteinTree {
      */
     private int memoryAllocation;
     /**
-     * Approximate number of accession*node one can store in a GB of memory.
+     * Approximate number of accession*node one can store in a GB of memory (empirical value).
      */
-    private static final long cacheScale = 7000000;
+    private static final long cacheScale = 12000000;
     /**
      * Instance of the sequence factory.
      */
@@ -47,7 +48,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = false;
+    private boolean debugSpeed = true;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -59,7 +60,7 @@ public class ProteinTree {
     /**
      * size of the cache of the most queried peptides
      */
-    private int cacheSize = 1000;
+    private int cacheSize = 20000;
     /**
      * Cache of the last queried peptides
      */
@@ -220,15 +221,22 @@ public class ProteinTree {
         } else {
             accessions = sequenceFactory.getAccessions();
         }
-        long criticalSize = accessions.size() * tags.size();
+        long tagsSize = 500; // The space needed for tags in percent (empirical value)
+        long criticalSize = tagsSize * accessions.size();
         // try to estimate the number of tags we can process at a time given the memory settings. We might want to fine tune this
         long capacity = memoryAllocation * cacheScale;
-        long estimatedTreeSize = 6 * criticalSize; //in percent, as far as I tested, 6% of the proteins are covered by a tag in general (ie median)
+        long estimatedTreeSize = 6 * criticalSize; // as far as I tested, 6% of the proteins are covered by a tag in general (ie median)
         int ratio = (int) (estimatedTreeSize / capacity);
-        int nPassages = (int) (ratio / 100) + 1;
+        int nPassages = (int) (ratio);
+        if (tags.size() % ratio != 0) {
+            nPassages += 1;
+        }
         int nTags;
         if (ratio > 0) {
-            nTags = 100 * tags.size() / ratio;
+            nTags = tags.size() / ratio;
+            if (nTags == 0) {
+                nTags = 1;
+            }
         } else {
             nTags = tags.size();
         }
@@ -267,8 +275,8 @@ public class ProteinTree {
                     Collections.reverse(accessions);
                 }
                 if (debugSpeed) {
-                    debugSpeedWriter.write(++roundsCpt + " passages completed");
-                    System.out.println(roundsCpt + " passages completed");
+                    debugSpeedWriter.write(new Date() + " " + ++roundsCpt + " passages completed");
+                    System.out.println(new Date() + " " + roundsCpt + " passages completed");
                     debugSpeedWriter.newLine();
                     debugSpeedWriter.flush();
                 }
@@ -279,8 +287,8 @@ public class ProteinTree {
         if (!tempTags.isEmpty()) {
             loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, false, loadedAccessions);
             if (debugSpeed) {
-                debugSpeedWriter.write(++roundsCpt + " rounds completed");
-                System.out.println(roundsCpt + " rounds completed");
+                debugSpeedWriter.write(new Date() + " " + ++roundsCpt + " passages completed");
+                System.out.println(new Date() + " " + roundsCpt + " passages completed");
                 debugSpeedWriter.newLine();
                 debugSpeedWriter.flush();
             }
@@ -584,5 +592,21 @@ public class ProteinTree {
             }
         }
         componentsFactory.close();
+    }
+
+    /**
+     * Returns the size of the cache used for peptide mappings (note that there are two of them)
+     * @return the size of the cache used for peptide mappings
+     */
+    public int getCacheSize() {
+        return cacheSize;
+    }
+
+    /**
+     * Sets the size of the cache used for peptide mappings (note that there are two of them)
+     * @param cacheSize the size of the cache used for peptide mappings
+     */
+    public void setCacheSize(int cacheSize) {
+        this.cacheSize = cacheSize;
     }
 }

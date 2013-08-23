@@ -344,7 +344,7 @@ public class Protein extends ExperimentObject {
 
             if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)
                     || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)
-                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) {
+                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) { // @TODO: should use the char versions of the enzyme methods
                 return true;
             }
         }

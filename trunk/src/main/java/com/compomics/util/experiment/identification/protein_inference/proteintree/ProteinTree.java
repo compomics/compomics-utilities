@@ -49,7 +49,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = true;
+    private boolean debugSpeed = false;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -432,8 +432,8 @@ public class ProteinTree {
 
         for (int i = 0; i < sequence.length() - initialTagSize; i++) {
 
-            if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1) + "", sequence.charAt(i) + "")) {
-                char[] tagValue = new char[initialTagSize];
+            if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
+                char[] tagValue = new char[initialTagSize]; // @TODO: possible to not create a new char array every time? replace my StringBuilder?
                 for (int j = 0; j < initialTagSize; j++) {
                     char aa = sequence.charAt(i + j);
                     tagValue[j] = aa;
@@ -445,6 +445,7 @@ public class ProteinTree {
                 }
             }
         }
+
         return tagToIndexesMap;
     }
 
@@ -461,7 +462,10 @@ public class ProteinTree {
      * @throws SQLException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        long time0 = System.currentTimeMillis();
+        long time0 = 0;
+        if (debugSpeed) {
+            time0 = System.currentTimeMillis();
+        }
         HashMap<String, ArrayList<Integer>> result = getProteinMapping(peptideSequence, false);
         if (debugSpeed) {
             long time1 = System.currentTimeMillis();
@@ -547,10 +551,11 @@ public class ProteinTree {
                     }
                 }
 
-                long timeEnd = System.currentTimeMillis();
-                long queryTime = timeEnd - timeStart;
-
                 if (!reversed) {
+
+                    long timeEnd = System.currentTimeMillis();
+                    long queryTime = timeEnd - timeStart;
+
                     if (queryTime <= queryTimeThreshold) {
                         lastQueriedPeptidesCache.put(peptideSequence, result);
                         lastQueriedPeptidesCacheContent.add(peptideSequence);
@@ -571,6 +576,7 @@ public class ProteinTree {
                 }
             }
         }
+
         return result;
     }
 

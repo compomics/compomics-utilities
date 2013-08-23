@@ -502,6 +502,26 @@ public class ProteinTree {
                 lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
             } else {
 
+                if (sequenceFactory.isDefaultReversed()) {
+                    String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
+                    result = lastQueriedPeptidesCache.get(reversedSequence);
+                    if (result != null) {
+                        lastQueriedPeptidesCacheContent.remove(peptideSequence);
+                        lastQueriedPeptidesCacheContent.add(peptideSequence);
+                    } else {
+
+                        result = lastSlowQueriedPeptidesCache.get(reversedSequence);
+
+                        if (result != null) {
+                            lastSlowQueriedPeptidesCacheContent.remove(peptideSequence);
+                            lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
+                        }
+                    }
+                    if (result != null) {
+                        return getReversedResults(result, peptideSequence);
+                    }
+                }
+
                 long timeStart = System.currentTimeMillis();
 
                 int initialTagSize = componentsFactory.getInitialSize();
@@ -519,49 +539,81 @@ public class ProteinTree {
                 }
                 if (sequenceFactory.isDefaultReversed() && !reversed) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-                    HashMap<String, ArrayList<Integer>> reversedResult = getProteinMapping(reversedSequence, true);
-                    int peptideLength = peptideSequence.length();
-                    for (String accession : reversedResult.keySet()) {
-                        String reversedAccession = SequenceFactory.getDefaultDecoyAccession(accession);
-                        ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
-                        Integer proteinLength = componentsFactory.getProteinLength(accession);
-                        if (proteinLength == null) {
-                            throw new IllegalArgumentException("Length of protein " + accession + " not found.");
-                        }
-                        for (int index : reversedResult.get(accession)) {
-                            int reversedIndex = proteinLength - index - peptideLength;
-                            if (reversedIndex < 0 || reversedIndex >= proteinLength) {
-                                throw new IllegalArgumentException("Wrong index found for peptide " + reversedSequence + " in protein " + reversedAccession + ": " + reversedIndex + ".");
-                            }
-                            reversedIndexes.add(reversedIndex);
-                        }
-                        result.put(reversedAccession, reversedIndexes);
+                    if (!peptideSequence.equals(reversedSequence)) {
+                        HashMap<String, ArrayList<Integer>> reversedResult = getProteinMapping(reversedSequence, true);
+                        result.putAll(getReversedResults(reversedResult, reversedSequence));
                     }
                 }
 
                 long timeEnd = System.currentTimeMillis();
                 long queryTime = timeEnd - timeStart;
 
-                if (queryTime <= queryTimeThreshold) {
-                    lastQueriedPeptidesCache.put(peptideSequence, result);
-                    lastQueriedPeptidesCacheContent.add(peptideSequence);
-                    if (lastQueriedPeptidesCacheContent.size() > cacheSize) {
-                        String key = lastQueriedPeptidesCacheContent.get(0);
-                        lastQueriedPeptidesCache.remove(key);
-                        lastQueriedPeptidesCacheContent.remove(0);
-                    }
-                } else {
-                    lastSlowQueriedPeptidesCache.put(peptideSequence, result);
-                    lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
-                    if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
-                        String key = lastSlowQueriedPeptidesCacheContent.get(0);
-                        lastSlowQueriedPeptidesCache.remove(key);
-                        lastSlowQueriedPeptidesCacheContent.remove(0);
+                if (!reversed) {
+                    if (queryTime <= queryTimeThreshold) {
+                        lastQueriedPeptidesCache.put(peptideSequence, result);
+                        lastQueriedPeptidesCacheContent.add(peptideSequence);
+                        if (lastQueriedPeptidesCacheContent.size() > cacheSize) {
+                            String key = lastQueriedPeptidesCacheContent.get(0);
+                            lastQueriedPeptidesCache.remove(key);
+                            lastQueriedPeptidesCacheContent.remove(0);
+                        }
+                    } else {
+                        lastSlowQueriedPeptidesCache.put(peptideSequence, result);
+                        lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
+                        if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
+                            String key = lastSlowQueriedPeptidesCacheContent.get(0);
+                            lastSlowQueriedPeptidesCache.remove(key);
+                            lastSlowQueriedPeptidesCacheContent.remove(0);
+                        }
                     }
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * Reverts the indexes and the protein accessions of the given mapping
+     *
+     * @param forwardResults the given mapping
+     * @param peptideSequence the sequence of interest
+     *
+     * @return the reversed indexes
+     *
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
+    private HashMap<String, ArrayList<Integer>> getReversedResults(HashMap<String, ArrayList<Integer>> forwardResults, String peptideSequence) throws SQLException, ClassNotFoundException, IOException {
+        int peptideLength = peptideSequence.length();
+        HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
+        for (String accession : forwardResults.keySet()) {
+            String newAccession;
+            Integer proteinLength;
+            if (accession.endsWith(SequenceFactory.getDefaultDecoyAccessionSuffix())) {
+                newAccession = SequenceFactory.getDefaultTargetAccession(accession);
+                proteinLength = componentsFactory.getProteinLength(newAccession);
+                if (proteinLength == null) {
+                    throw new IllegalArgumentException("Length of protein " + newAccession + " not found.");
+                }
+            } else {
+                newAccession = SequenceFactory.getDefaultDecoyAccession(accession);
+                proteinLength = componentsFactory.getProteinLength(accession);
+                if (proteinLength == null) {
+                    throw new IllegalArgumentException("Length of protein " + accession + " not found.");
+                }
+            }
+            ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
+            for (int index : forwardResults.get(accession)) {
+                int reversedIndex = proteinLength - index - peptideLength;
+                if (reversedIndex < 0 || reversedIndex >= proteinLength) {
+                    throw new IllegalArgumentException("Wrong index found for peptide " + peptideSequence + " in protein " + newAccession + ": " + reversedIndex + ".");
+                }
+                reversedIndexes.add(reversedIndex);
+            }
+            results.put(newAccession, reversedIndexes);
+        }
+        return results;
     }
 
     /**

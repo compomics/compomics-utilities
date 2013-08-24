@@ -625,7 +625,7 @@ public class ProteinTree {
      */
     private HashMap<String, ArrayList<Integer>> getReversedResults(HashMap<String, ArrayList<Integer>> forwardResults, String peptideSequence) throws SQLException, ClassNotFoundException, IOException {
         int peptideLength = peptideSequence.length();
-        HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
+        HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>(forwardResults.keySet().size());
         for (String accession : forwardResults.keySet()) {
             String newAccession;
             Integer proteinLength;

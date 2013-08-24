@@ -108,39 +108,42 @@ public class ProteinTree {
      *
      * @param initialTagSize the initial tag size
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
-     * to initiate but slow to query. I typically use 500.
+     * to initiate but slow to query. I typically use 500 giving an approximate query time <20ms.
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null but strongly recommended :)
+     * @param printExpectedImportTime if true the expected import time will be
+     * printed to the waiting handler
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        initiateTree(initialTagSize, maxNodeSize, null, waitingHandler);
+    public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler, boolean printExpectedImportTime) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+        initiateTree(initialTagSize, maxNodeSize, null, waitingHandler, printExpectedImportTime);
     }
 
     /**
-     * Initiates the tree. Note: the memory consumption is for now only
-     * calibrated for the no enzyme case.
+     * Initiates the tree. Note: speed and memory are calibrated for the no enzyme case.
      *
      * @param initialTagSize the initial size of peptide tag. Large initial size
-     * are slow to query, low initial size are slow to initiate. I typically use
-     * 3 for databases containing less than 100 000 proteins.
+     * are fast to query, low initial size are fast to initiate. I typically use
+     * 3 for databases containing less than 100 000 proteins giving an approximate initiation time of 60ms per accession.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
-     * to initiate but slow to query. I typically use 500.
+     * to initiate but slow to query. I typically use 500 giving an approximate query time <20ms.
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null.
+     * @param printExpectedImportTime if true the expected import time will be
+     * printed to the waiting handler
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler)
+    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         tree.clear();
@@ -169,7 +172,7 @@ public class ProteinTree {
                 componentsFactory.initiate();
             }
             if (needImport) {
-                importDb(initialTagSize, maxNodeSize, enzyme, waitingHandler);
+                importDb(initialTagSize, maxNodeSize, enzyme, waitingHandler, printExpectedImportTime);
             } else {
                 componentsFactory.loadProteinLenths();
             }
@@ -204,13 +207,39 @@ public class ProteinTree {
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null.
+     * @param printExpectedImportTime if true the expected import time will be
+     * printed to the waiting handler
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void importDb(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler)
+    private void importDb(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+
+        if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
+            if (initialTagSize == 3 || initialTagSize == 4) {
+                String report = "Expected import time: ";
+                int nSeconds;
+                if (initialTagSize == 3) {
+                    nSeconds = sequenceFactory.getNTargetSequences() * 6 / 100;
+                } else {
+                    nSeconds = sequenceFactory.getNTargetSequences() * 2 / 10;
+                }
+                if (nSeconds < 120) {
+                    report += nSeconds + " seconds.";
+                } else {
+                    int nMinutes = nSeconds / 60;
+                    if (nMinutes < 120) {
+                        report += nMinutes + " minutes.";
+                    } else {
+                        int nHours = nMinutes / 60;
+                        report += nHours + " hours.";
+                    }
+                }
+            }
+            waitingHandler.appendReport(null, true, true);
+        }
 
         componentsFactory.saveInitialSize(initialTagSize);
 

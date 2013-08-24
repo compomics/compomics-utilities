@@ -108,7 +108,8 @@ public class ProteinTree {
      *
      * @param initialTagSize the initial tag size
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
-     * to initiate but slow to query. I typically use 500 giving an approximate query time <20ms.
+     * to initiate but slow to query. I typically use 500 giving an approximate
+     * query time <20ms.
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null but strongly recommended :)
      * @param printExpectedImportTime if true the expected import time will be
@@ -124,13 +125,16 @@ public class ProteinTree {
     }
 
     /**
-     * Initiates the tree. Note: speed and memory are calibrated for the no enzyme case.
+     * Initiates the tree. Note: speed and memory are calibrated for the no
+     * enzyme case.
      *
      * @param initialTagSize the initial size of peptide tag. Large initial size
      * are fast to query, low initial size are fast to initiate. I typically use
-     * 3 for databases containing less than 100 000 proteins giving an approximate initiation time of 60ms per accession.
+     * 3 for databases containing less than 100 000 proteins giving an
+     * approximate initiation time of 60ms per accession.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
-     * to initiate but slow to query. I typically use 500 giving an approximate query time <20ms.
+     * to initiate but slow to query. I typically use 500 giving an approximate
+     * query time <20ms.
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
@@ -237,8 +241,8 @@ public class ProteinTree {
                         report += nHours + " hours.";
                     }
                 }
+                waitingHandler.appendReport(report, true, true);
             }
-            waitingHandler.appendReport(null, true, true);
         }
 
         componentsFactory.saveInitialSize(initialTagSize);

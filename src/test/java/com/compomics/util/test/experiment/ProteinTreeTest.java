@@ -20,11 +20,7 @@ import junit.framework.TestCase;
 public class ProteinTreeTest extends TestCase {
 
     public void testProteinTree() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-
-        String path = this.getClass().getResource("ProteinTreeTest.class").getPath();
-        path = path.substring(1, path.indexOf("/target/"));
-        path += "/src/test/resources/experiment";
-        File sequences = new File(path, "proteinTreeTestSequences");
+        File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
 
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences);

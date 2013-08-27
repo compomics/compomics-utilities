@@ -250,6 +250,25 @@ public class ProteinMatch extends IdentificationMatch {
         }
         return true;
     }
+    
+    /**
+     * Returns the proteins in a shared group which are not in a unique group.
+     * 
+     * @param sharedKey the key of the shared group
+     * @param uniqueKey the key of the unique group
+     * @return list of the accessions in the search group which are not in the unique group
+     */
+    public static ArrayList<String> getOtherProteins(String sharedKey, String uniqueKey) {
+        String[] sharedProteins = getAccessions(sharedKey);
+        List<String> uniqueProteins = Arrays.asList(getAccessions(uniqueKey));
+        ArrayList<String> result = new ArrayList<String>();
+        for (String sharedAccession : sharedProteins) {
+            if (!uniqueProteins.contains(sharedAccession)) {
+                result.add(sharedAccession);
+            }
+        }
+        return result;
+    }
 
     /**
      * Returns a boolean indicating whether the protein match contains another

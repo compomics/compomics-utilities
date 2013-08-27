@@ -61,7 +61,7 @@ public class ProteinTree {
     /**
      * Size of the cache of the most queried peptides.
      */
-    private int cacheSize = 20000;
+    private int cacheSize = 10000;
     /**
      * Cache of the last queried peptides.
      */

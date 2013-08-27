@@ -217,6 +217,7 @@
                           <SubComponents>
                             <Component class="javax.swing.JEditorPane" name="tipOfTheDayEditorPane">
                               <Properties>
+                                <Property name="editable" type="boolean" value="false"/>
                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                                   <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                     <LineBorder thickness="20">
@@ -225,8 +226,7 @@
                                   </Border>
                                 </Property>
                                 <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
-                                <Property name="editable" type="boolean" value="false"/>
-                                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xd;&#xa;  &lt;/head&gt;&#xd;&#xa;&lt;body style=&quot;background-color:#F0F0F0;&quot;&gt;&#xa;    &lt;p style=&quot;margin-top: 0&quot; align=&quot;justify&quot;&gt;&#xd;&#xa;     &lt;b&gt; &#xd;Tip of the Day!&lt;/b&gt;&#xa;     &lt;br&gt;&lt;br&gt;&#xa;     Did you know that. Did you know that. Did you know that. Did you know that. Did you know that. &#xa;     Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.&#xa;    &lt;br&gt;&lt;br&gt;&#xa;    Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.&#xa;    &lt;/p&gt;&#xd;&#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
+                                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xd;&#xa;  &lt;/head&gt;&#xd;&#xa;&lt;body style=&quot;background-color:#F0F0F0;&quot;&gt;&#xa;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#xd;&#xa;     &lt;b&gt; &#xd;Tip of the Day!&lt;/b&gt;&#xa;     &lt;br&gt;&lt;br&gt;&#xa;     Did you know that. Did you know that. Did you know that. Did you know that. Did you know that. &#xa;     Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.&#xa;    &lt;br&gt;&lt;br&gt;&#xa;    Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.&#xa;    &lt;/p&gt;&#xd;&#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
                                 <Property name="opaque" type="boolean" value="false"/>
                               </Properties>
                               <Events>

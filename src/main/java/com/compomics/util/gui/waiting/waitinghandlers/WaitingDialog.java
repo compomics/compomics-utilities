@@ -381,10 +381,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         tipOfTheDayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         tipOfTheDayScrollPane.setOpaque(false);
 
+        tipOfTheDayEditorPane.setEditable(false);
         tipOfTheDayEditorPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240), 20));
         tipOfTheDayEditorPane.setContentType("text/html"); // NOI18N
-        tipOfTheDayEditorPane.setEditable(false);
-        tipOfTheDayEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n<body style=\"background-color:#F0F0F0;\">\n    <p style=\"margin-top: 0\" align=\"justify\">\r\n     <b> \rTip of the Day!</b>\n     <br><br>\n     Did you know that. Did you know that. Did you know that. Did you know that. Did you know that. \n     Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    <br><br>\n    Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    </p>\r\n  </body>\r\n</html>\r\n");
+        tipOfTheDayEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n<body style=\"background-color:#F0F0F0;\">\n    <p style=\"margin-top: 0\">\r\n     <b> \rTip of the Day!</b>\n     <br><br>\n     Did you know that. Did you know that. Did you know that. Did you know that. Did you know that. \n     Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    <br><br>\n    Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    </p>\r\n  </body>\r\n</html>\r\n");
         tipOfTheDayEditorPane.setOpaque(false);
         tipOfTheDayEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
@@ -853,7 +853,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             runCanceled = true;
             if (waitingActionListener != null) {
                 waitingActionListener.cancelPressed();
-            }            
+            }
             appendReportEndLine();
             appendReport(processName + " Canceled!", true, true);
             okButton.setText("OK");
@@ -1055,7 +1055,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private String getTipOfTheDay() {
 
         String htmlStart = "<html><head></head><body style=\"background-color:#F0F0F0;\">"
-                + " <p style=\"margin-top: 0\" align=\"justify\">"
+                + " <p style=\"margin-top: 0\">"
                 + "<b>Tip of the Day!</b><br><br>";
 
         String htmlEnd = "</p></body></html>";
@@ -1067,7 +1067,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
 
         currentTipIndex = newTipIndex;
-
         return htmlStart + tips.get(currentTipIndex) + htmlEnd;
     }
 
@@ -1176,22 +1175,22 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public int getPrimaryProgressCounter(){
+    public int getPrimaryProgressCounter() {
         return progressBar.getValue();
     }
 
     @Override
-    public int getMaxPrimaryProgressCounter(){
+    public int getMaxPrimaryProgressCounter() {
         return progressBar.getMaximum();
     }
 
     @Override
-    public int getSecondaryProgressCounter(){
+    public int getSecondaryProgressCounter() {
         return secondaryJProgressBar.getValue();
     }
 
     @Override
-    public int getMaxSecondaryProgressCounter(){
+    public int getMaxSecondaryProgressCounter() {
         return secondaryJProgressBar.getMaximum();
     }
 }

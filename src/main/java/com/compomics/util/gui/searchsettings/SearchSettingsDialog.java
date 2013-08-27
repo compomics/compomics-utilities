@@ -1777,7 +1777,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         if (fastaFile != null) {
             String fastaPath = fastaFile.getAbsolutePath();
             databaseSettingsTxt.setText(fastaPath);
-            if (!fastaFile.equals(sequenceFactory.getCurrentFastaFile())) {
+            if (!fastaFile.equals(sequenceFactory.getCurrentFastaFile()) && fastaFile.exists()) {
                 loadFastaFile(fastaFile);
             }
         }

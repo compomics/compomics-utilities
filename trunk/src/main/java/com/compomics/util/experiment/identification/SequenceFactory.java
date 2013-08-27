@@ -353,8 +353,13 @@ public class SequenceFactory {
      * found
      */
     public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
+
+        if (!fastaFile.exists()) {
+            throw new FileNotFoundException("The FASTA file \'" + fastaFile.getAbsolutePath() + "\' could not be found!");
+        }
+
         currentFastaFile = fastaFile;
-        currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100); // @TODO: what if fastaFile does not exist??
+        currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(false, waitingHandler);
     }
 

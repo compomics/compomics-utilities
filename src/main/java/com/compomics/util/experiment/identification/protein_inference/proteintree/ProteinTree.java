@@ -82,6 +82,10 @@ public class ProteinTree {
      * Peptide sequences in slow cache.
      */
     private ArrayList<String> lastSlowQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
+    /**
+     * The version of the protein tree
+     */
+    public static final String version = "1.0.0";
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
@@ -166,11 +170,16 @@ public class ProteinTree {
                     if (!componentsFactory.importComplete()) {
                         throw new IllegalArgumentException("Database import was not successfully completed. Tree will be reindexed.");
                     }
+                    String tempVersion = componentsFactory.getVersion();
+                    if (tempVersion ==  null || !tempVersion.equals(version)) {
+                        throw new IllegalArgumentException("Database version" + tempVersion + " obsolete. Tree will be reindexed.");
+                    }
                     if (initialTagSize != componentsFactory.getInitialSize()) {
                         throw new IllegalArgumentException("Different initial size. Tree will be reindexed.");
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 needImport = true;
                 componentsFactory.delete();
                 componentsFactory.initiate();
@@ -314,37 +323,50 @@ public class ProteinTree {
         long time0 = System.currentTimeMillis();
 
         ArrayList<String> tempTags = new ArrayList<String>(nTags);
-        int roundsCpt = 0;
+        int tagsLoaded = 0;
         ArrayList<String> loadedAccessions = new ArrayList<String>();
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, true, loadedAccessions);
+                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, loadedAccessions);
+                tagsLoaded += tempTags.size();
                 tempTags.clear();
+                if (tags.size() - tagsLoaded > 1.5 * nTags) {
+                    tree.clear();
+                } else {
+                    tagsInTree.addAll(tempTags);
+                    for (Node node : tree.values()) {
+                        treeSize += node.getSize();
+                    }
+                }
                 if (sequenceFactory.getnCache() < accessions.size()) {
                     Collections.reverse(accessions);
                 }
                 if (debugSpeed) {
-                    debugSpeedWriter.write(new Date() + " " + ++roundsCpt + " passages completed");
-                    System.out.println(new Date() + " " + roundsCpt + " passages completed");
+                    debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
+                    System.out.println(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
                     debugSpeedWriter.newLine();
                     debugSpeedWriter.flush();
                 }
-            } else {
-                tempTags.add(tag);
             }
+                tempTags.add(tag);
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, false, loadedAccessions);
+            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, loadedAccessions);
+            tagsInTree.addAll(tempTags);
+            for (Node node : tree.values()) {
+                treeSize += node.getSize();
+            }
             if (debugSpeed) {
-                debugSpeedWriter.write(new Date() + " " + ++roundsCpt + " passages completed");
-                System.out.println(new Date() + " " + roundsCpt + " passages completed");
+                debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
+                System.out.println(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
                 debugSpeedWriter.newLine();
                 debugSpeedWriter.flush();
             }
         }
 
+        componentsFactory.setVersion(version);
         componentsFactory.setImportComplete(true);
 
         if (debugSpeed) {
@@ -370,8 +392,6 @@ public class ProteinTree {
      * @param waitingHandler waiting handler displaying progress to the user -
      * can be null
      * @param enzyme the enzyme restriction
-     * @param clearNodes boolean indicating whether the end nodes shall be
-     * cleared when saving
      * @param saveLength boolean indicating whether the length of the proteins
      * shall be saved (mandatory when computing reverse indexes on the fly)
      * @param loadedAccessions the accessions already loaded in the factory
@@ -382,7 +402,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
-            int initialTagSize, int maxNodeSize, Enzyme enzyme, boolean clearNodes, ArrayList<String> loadedAccessions)
+            int initialTagSize, int maxNodeSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         //@TODO: would be cool to have this multithreaded
@@ -404,11 +424,12 @@ public class ProteinTree {
             for (String tag : tagToIndexesMap.keySet()) {
                 ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
                 if (!indexes.isEmpty()) {
+
                     Node node = tree.get(tag);
                     if (node == null) {
                         node = new Node(initialTagSize);
+                        tree.put(tag, node);
                     }
-                    tree.put(tag, node);
                     node.addAccession(accession, tagToIndexesMap.get(tag));
                 }
             }
@@ -422,18 +443,13 @@ public class ProteinTree {
         }
 
         for (String tag : tags) {
-
+            
             Node node = tree.get(tag);
 
             if (node != null) {
                 node.splitNode(maxNodeSize);
                 componentsFactory.saveNode(tag, node);
-                if (clearNodes) {
-                    tree.remove(tag);
-                } else {
-                    tagsInTree.add(tag);
-                    treeSize += node.getSize();
-                }
+//                Node test = componentsFactory.getNode(tag); time consuming test
             }
 
             if (waitingHandler != null) {

@@ -325,4 +325,27 @@ public class ProteinTreeComponentsFactory {
             return result;
         }
     }
+
+    /**
+     * Sets the version.
+     *
+     * @param version the version 
+     * @throws SQLException
+     * @throws IOException
+     */
+    public void setVersion(String version) throws SQLException, IOException {
+        objectsDB.insertObject(parametersTable, "version", version, false);
+    }
+
+    /**
+     * Returns the version. Null if not set.
+     *
+     * @return the version
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException  
+     */
+    public String getVersion() throws SQLException, IOException, ClassNotFoundException {
+        return (String) objectsDB.retrieveObject(parametersTable, "version", true);
+    }
 }

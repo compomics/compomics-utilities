@@ -83,7 +83,7 @@ public class ProteinTree {
      */
     private ArrayList<String> lastSlowQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
     /**
-     * The version of the protein tree
+     * The version of the protein tree.
      */
     public static final String version = "1.0.0";
 
@@ -171,8 +171,8 @@ public class ProteinTree {
                         throw new IllegalArgumentException("Database import was not successfully completed. Tree will be reindexed.");
                     }
                     String tempVersion = componentsFactory.getVersion();
-                    if (tempVersion ==  null || !tempVersion.equals(version)) {
-                        throw new IllegalArgumentException("Database version" + tempVersion + " obsolete. Tree will be reindexed.");
+                    if (tempVersion == null || !tempVersion.equals(version)) {
+                        throw new IllegalArgumentException("Database version " + tempVersion + " obsolete. Tree will be reindexed.");
                     }
                     if (initialTagSize != componentsFactory.getInitialSize()) {
                         throw new IllegalArgumentException("Different initial size. Tree will be reindexed.");
@@ -349,7 +349,7 @@ public class ProteinTree {
                     debugSpeedWriter.flush();
                 }
             }
-                tempTags.add(tag);
+            tempTags.add(tag);
         }
 
         if (!tempTags.isEmpty()) {
@@ -443,7 +443,7 @@ public class ProteinTree {
         }
 
         for (String tag : tags) {
-            
+
             Node node = tree.get(tag);
 
             if (node != null) {

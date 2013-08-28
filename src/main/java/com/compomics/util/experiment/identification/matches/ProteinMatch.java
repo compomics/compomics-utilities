@@ -1,8 +1,12 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -310,6 +314,32 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public static String[] getAccessions(String key) {
         return key.split(PROTEIN_KEY_SPLITTER);
+    }
+    
+    /**
+     * Indicates whether the protein group has an enzymatic peptide when considering the given accession as main accession.
+     * 
+     * @param accession the candidate main accession
+     * @param enzyme the enzyme used
+     * 
+     * @return true if the main accession generates an enzymatic peptide
+     * 
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException 
+     */
+    public boolean hasEnzymatic(String accession, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        for (String peptideKey : peptideMatches) {
+            String peptideSequence = Peptide.getSequence(peptideKey);
+            Protein protein = sequenceFactory.getProtein(accession);
+            if (protein.isEnzymaticPeptide(peptideSequence, enzyme)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

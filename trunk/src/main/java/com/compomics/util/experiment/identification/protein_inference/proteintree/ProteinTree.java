@@ -235,7 +235,7 @@ public class ProteinTree {
                 String report = "Expected import time: ";
                 int nSeconds;
                 if (initialTagSize == 3) {
-                    nSeconds = sequenceFactory.getNTargetSequences() * 6 / 100;
+                    nSeconds = sequenceFactory.getNTargetSequences() * 15 / 1000;
                 } else {
                     nSeconds = sequenceFactory.getNTargetSequences() * 2 / 10;
                 }
@@ -298,7 +298,7 @@ public class ProteinTree {
         }
 
         if (nPassages > 1) {
-            Collections.shuffle(tags);
+//            Collections.shuffle(tags);
         }
 
         if (debugSpeed) {
@@ -333,11 +333,6 @@ public class ProteinTree {
                 tempTags.clear();
                 if (tags.size() - tagsLoaded > 1.5 * nTags) {
                     tree.clear();
-                } else {
-                    tagsInTree.addAll(tempTags);
-                    for (Node node : tree.values()) {
-                        treeSize += node.getSize();
-                    }
                 }
                 if (sequenceFactory.getnCache() < accessions.size()) {
                     Collections.reverse(accessions);
@@ -354,16 +349,18 @@ public class ProteinTree {
 
         if (!tempTags.isEmpty()) {
             loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, loadedAccessions);
-            tagsInTree.addAll(tempTags);
-            for (Node node : tree.values()) {
-                treeSize += node.getSize();
-            }
+
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
                 System.out.println(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
                 debugSpeedWriter.newLine();
                 debugSpeedWriter.flush();
             }
+        }
+
+        tagsInTree.addAll(tree.keySet());
+        for (Node node : tree.values()) {
+            treeSize += node.getSize();
         }
 
         componentsFactory.setVersion(version);
@@ -442,16 +439,13 @@ public class ProteinTree {
             }
         }
 
+        HashMap<String, Object> toSave = new HashMap<String, Object>(tree.size());
         for (String tag : tags) {
-
             Node node = tree.get(tag);
-
             if (node != null) {
                 node.splitNode(maxNodeSize);
-                componentsFactory.saveNode(tag, node);
-//                Node test = componentsFactory.getNode(tag); time consuming test
+                toSave.put(tag, node);
             }
-
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled()) {
                     return;
@@ -459,6 +453,7 @@ public class ProteinTree {
                 waitingHandler.increaseSecondaryProgressCounter();
             }
         }
+        componentsFactory.saveNodes(toSave);
     }
 
     /**
@@ -685,8 +680,6 @@ public class ProteinTree {
         if (result == null) {
             result = componentsFactory.getNode(tag);
             if (result != null) {
-                tree.put(tag, result);
-                treeSize += result.getSize();
                 long capacity = memoryAllocation * cacheScale;
                 while (treeSize > capacity && !tagsInTree.isEmpty()) {
                     int index = tagsInTree.size() - 1;
@@ -696,6 +689,8 @@ public class ProteinTree {
                     tree.remove(tempTag);
                     tagsInTree.remove(index);
                 }
+                tree.put(tag, result);
+                treeSize += result.getSize();
                 tagsInTree.add(0, tag);
             }
         }

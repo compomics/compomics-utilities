@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * This factory stores and returns protein trees components from databases.
@@ -179,6 +180,20 @@ public class ProteinTreeComponentsFactory {
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException {
         objectsDB.insertObject(nodeTable, tag, node, false);
+    }
+
+    /**
+     * Adds nodes to the database.
+     *
+     * @param nodes map of the nodes
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading data in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * loading data in the database
+     */
+    public void saveNodes(HashMap<String, Object> nodes) throws SQLException, IOException {
+        objectsDB.insertObjects(nodeTable, nodes, null, true);
     }
 
     /**

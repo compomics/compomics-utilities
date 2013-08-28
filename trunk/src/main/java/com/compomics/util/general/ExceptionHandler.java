@@ -67,7 +67,7 @@ public class ExceptionHandler {
 
                     JOptionPane.showMessageDialog(parent,
                             "An error occured" + error + ".\n"
-                            + "Please contact the developers.",
+                            + "If the problem persists, please contact the developers.",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

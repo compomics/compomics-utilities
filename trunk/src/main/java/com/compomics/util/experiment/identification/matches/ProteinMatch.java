@@ -254,13 +254,14 @@ public class ProteinMatch extends IdentificationMatch {
         }
         return true;
     }
-    
+
     /**
      * Returns the proteins in a shared group which are not in a unique group.
-     * 
+     *
      * @param sharedKey the key of the shared group
      * @param uniqueKey the key of the unique group
-     * @return list of the accessions in the search group which are not in the unique group
+     * @return list of the accessions in the search group which are not in the
+     * unique group
      */
     public static ArrayList<String> getOtherProteins(String sharedKey, String uniqueKey) {
         String[] sharedProteins = getAccessions(sharedKey);
@@ -315,20 +316,19 @@ public class ProteinMatch extends IdentificationMatch {
     public static String[] getAccessions(String key) {
         return key.split(PROTEIN_KEY_SPLITTER);
     }
-    
+
     /**
-     * Indicates whether the protein group has an enzymatic peptide when considering the given accession as main accession.
-     * 
+     * Indicates whether the protein group has an enzymatic peptide when
+     * considering the given accession as main accession.
+     *
      * @param accession the candidate main accession
      * @param enzyme the enzyme used
-     * 
      * @return true if the main accession generates an enzymatic peptide
-     * 
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public boolean hasEnzymatic(String accession, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();

@@ -201,7 +201,7 @@ public class ObjectsDB implements Serializable {
      * @param objects map of the objects (object key -> object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
-     * 
+     *
      * @throws SQLException
      * @throws IOException
      */
@@ -217,7 +217,7 @@ public class ObjectsDB implements Serializable {
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
      * @param allNewObjects boolean indicating whether all objects are new
-     * 
+     *
      * @throws SQLException
      * @throws IOException
      */
@@ -230,7 +230,7 @@ public class ObjectsDB implements Serializable {
         dbConnection.setAutoCommit(false);
         ArrayList<String> tableContent = new ArrayList<String>();
         if (!allNewObjects) {
-        tableContent = tableContent(tableName);
+            tableContent = tableContent(tableName);
         }
         int rowCounter = 0;
 
@@ -892,7 +892,6 @@ public class ObjectsDB implements Serializable {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**

@@ -201,17 +201,37 @@ public class ObjectsDB implements Serializable {
      * @param objects map of the objects (object key -> object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
+     * 
      * @throws SQLException
      * @throws IOException
      */
     public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException {
+        insertObjects(tableName, objects, waitingHandler, false);
+    }
+
+    /**
+     * Inserts a set of objects in the given table.
+     *
+     * @param tableName the name of the table
+     * @param objects map of the objects (object key -> object)
+     * @param waitingHandler a waiting handler displaying the progress (can be
+     * null). The progress will be displayed on the secondary progress bar.
+     * @param allNewObjects boolean indicating whether all objects are new
+     * 
+     * @throws SQLException
+     * @throws IOException
+     */
+    public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean allNewObjects) throws SQLException, IOException {
         if (debugInteractions) {
             System.out.println("Preparing table insertion:" + tableName);
         }
         PreparedStatement insertStatement = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
         PreparedStatement updateStatement = dbConnection.prepareStatement("UPDATE " + tableName + " SET MATCH_BLOB=? WHERE NAME=?");
         dbConnection.setAutoCommit(false);
-        ArrayList<String> tableContent = tableContent(tableName);
+        ArrayList<String> tableContent = new ArrayList<String>();
+        if (!allNewObjects) {
+        tableContent = tableContent(tableName);
+        }
         int rowCounter = 0;
 
         for (String objectKey : objects.keySet()) {
@@ -238,7 +258,7 @@ public class ObjectsDB implements Serializable {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(objects.get(objectKey));
 
-            if (tableContent.contains(objectKey)) {
+            if (!allNewObjects && tableContent.contains(objectKey)) {
                 updateStatement.setString(2, objectKey);
                 updateStatement.setBytes(1, bos.toByteArray());
                 updateStatement.addBatch();

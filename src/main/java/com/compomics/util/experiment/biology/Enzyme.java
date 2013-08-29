@@ -40,6 +40,63 @@ public class Enzyme extends ExperimentObject {
      * The restriction amino-acids after cleavage.
      */
     private ArrayList<Character> restrictionAfter = new ArrayList<Character>();
+    /**
+     * If true, the enzyme is considered as semi-specific, meaning that only one
+     * end of the resulting peptide has to be enzymatic.
+     */
+    private Boolean isSemiSpecific = false;
+
+    /**
+     * Constructor for an Enzyme.
+     *
+     * @param id the enzyme id which should be OMSSA compatible.
+     * @param name the name of the enzyme
+     * @param aminoAcidBefore the amino-acids which can be found before the
+     * cleavage
+     * @param restrictionBefore the amino-acids which should not be found before
+     * the cleavage
+     * @param aminoAcidAfter the amino-acids which should be found after the
+     * cleavage
+     * @param restrictionAfter the amino-acids which should not be found after
+     * the cleavage
+     */
+    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
+        this(id, name, aminoAcidBefore, restrictionBefore, aminoAcidAfter, restrictionAfter, false);
+    }
+
+    /**
+     * Constructor for an Enzyme.
+     *
+     * @param id the enzyme id which should be OMSSA compatible.
+     * @param name the name of the enzyme
+     * @param aminoAcidBefore the amino-acids which can be found before the
+     * cleavage
+     * @param restrictionBefore the amino-acids which should not be found before
+     * the cleavage
+     * @param aminoAcidAfter the amino-acids which should be found after the
+     * cleavage
+     * @param restrictionAfter the amino-acids which should not be found after
+     * the cleavage
+     * @param isSemiSpecific if true, the enzyme is considered as semi-specific, meaning
+     * that only one end of the resulting peptide has to be enzymatic
+     */
+    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter, Boolean isSemiSpecific) {
+        this.id = id;
+        this.name = name;
+        this.isSemiSpecific = isSemiSpecific;
+        for (char aa : aminoAcidBefore.toCharArray()) {
+            this.aminoAcidBefore.add(aa);
+        }
+        for (char aa : restrictionBefore.toCharArray()) {
+            this.restrictionBefore.add(aa);
+        }
+        for (char aa : aminoAcidAfter.toCharArray()) {
+            this.aminoAcidAfter.add(aa);
+        }
+        for (char aa : restrictionAfter.toCharArray()) {
+            this.restrictionAfter.add(aa);
+        }
+    }
 
     /**
      * Get the enzyme name.
@@ -60,44 +117,17 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Constructor for an Enzyme.
-     *
-     * @param id the enzyme id which should be OMSSA compatible.
-     * @param name the name of the enzyme
-     * @param aminoAcidBefore the amino-acids which can be found before the
-     * cleavage
-     * @param restrictionBefore the amino-acids which should not be found before
-     * the cleavage
-     * @param aminoAcidAfter the amino-acids which should be found after the
-     * cleavage
-     * @param restrictionAfter the amino-acids which should not be found after
-     * the cleavage
-     */
-    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
-        this.id = id;
-        this.name = name;
-        for (char aa : aminoAcidBefore.toCharArray()) {
-            this.aminoAcidBefore.add(aa);
-        }
-        for (char aa : restrictionBefore.toCharArray()) {
-            this.restrictionBefore.add(aa);
-        }
-        for (char aa : aminoAcidAfter.toCharArray()) {
-            this.aminoAcidAfter.add(aa);
-        }
-        for (char aa : restrictionAfter.toCharArray()) {
-            this.restrictionAfter.add(aa);
-        }
-    }
-
-    /**
      * Get the X!Tandem enzyme format.
      *
      * @return The enzyme X!Tandem format as String
      */
     public String getXTandemFormat() {
         String result = "";
+        
+        // @TODO: add special case for Asp-N + Glu-C -> [E]|[X],[X]|[D]
 
+        // @TODO: should [X] be used more??
+        
         if (aminoAcidBefore.size() > 0) {
             result += "[";
             for (Character aa : aminoAcidBefore) {
@@ -179,6 +209,9 @@ public class Enzyme extends ExperimentObject {
      * this enzyme
      */
     public boolean enzymeCleaves() {
+        
+        // @TODO: should be deprectated??
+        
         return !getAminoAcidBefore().isEmpty() || !getAminoAcidAfter().isEmpty();
     }
 
@@ -391,5 +424,26 @@ public class Enzyme extends ExperimentObject {
         }
 
         return true;
+    }
+
+    /**
+     * Set if the enzyme is semi-specific.
+     * 
+     * @param isSemiSpecific if the enzyme is semi-specific
+     */
+    public void setSemiSpecific(boolean isSemiSpecific) {
+        this.isSemiSpecific = isSemiSpecific;
+    }
+
+    /**
+     * Returns true if the enzyme is semi-specific.
+     * 
+     * @return true if the enzyme is semi-specific
+     */
+    public boolean isSemiSpecific() {
+        if (isSemiSpecific == null) {
+            return false;
+        }
+        return isSemiSpecific;
     }
 }

@@ -124,8 +124,6 @@ public class EnzymeFactory {
      * @throws IOException when reading the corresponding file failed
      */
     private void parseEnzyme(XmlPullParser aParser) throws XmlPullParserException, IOException {
-        int id;
-        String name, aaBefore, restrictionBefore, aaAfter, restrictionAfter;
 
         // Start tag.
         aParser.nextTag();
@@ -133,44 +131,65 @@ public class EnzymeFactory {
         if (!aParser.getName().equals("id")) {
             throw new XmlPullParserException("Found tag '" + aParser.getName() + "' where 'id' was expected on line " + aParser.getLineNumber() + ".");
         }
+
+        // name
         aParser.next();
         String idString = aParser.getText();
+        int id;
         try {
             id = Integer.parseInt(idString.trim());
         } catch (NumberFormatException nfe) {
             throw new XmlPullParserException("Found non-parseable text '" + idString + "' for the value of the 'id' tag on line " + aParser.getLineNumber() + ".");
         }
-        // OK, we got the id. Progress to the user-readable name.
         int type = aParser.next();
         while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("name"))) {
             type = aParser.next();
         }
+
+        // aminoAcidBefore
         aParser.next();
-        name = aParser.getText().trim();
+        String name = aParser.getText().trim();
         type = aParser.next();
         while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("aminoAcidBefore"))) {
             type = aParser.next();
         }
         aParser.next();
-        aaBefore = aParser.getText().trim();
+        String aaBefore = aParser.getText().trim();
+
+        // restrictionBefore
         type = aParser.next();
         while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("restrictionBefore"))) {
             type = aParser.next();
         }
         aParser.next();
-        restrictionBefore = aParser.getText().trim();
+        String restrictionBefore = aParser.getText().trim();
+
+        // aminoAcidAfter
         type = aParser.next();
         while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("aminoAcidAfter"))) {
             type = aParser.next();
         }
         aParser.next();
-        aaAfter = aParser.getText().trim();
+        String aaAfter = aParser.getText().trim();
+
+        // restrictionAfter
         type = aParser.next();
         while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("restrictionAfter"))) {
             type = aParser.next();
         }
         aParser.next();
-        restrictionAfter = aParser.getText().trim();
-        enzymes.put(name, new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter));
+        String restrictionAfter = aParser.getText().trim();
+
+        // semiSpecific
+        type = aParser.next();
+        while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("semiSpecific"))) {
+            type = aParser.next();
+        }
+        aParser.next();
+        String semiSpecificAsText = aParser.getText().trim();
+        boolean semiSpecific = semiSpecificAsText.equalsIgnoreCase("yes");
+
+        // create the enzyme
+        enzymes.put(name, new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter, semiSpecific));
     }
 }

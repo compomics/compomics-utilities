@@ -738,7 +738,7 @@ public class ProteinTree {
     }
     
     /**
-     * Empties the cache
+     * Empties the cache.
      */
     public void emptyCache() {
         tree.clear();

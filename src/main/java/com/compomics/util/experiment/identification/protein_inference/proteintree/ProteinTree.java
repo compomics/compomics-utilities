@@ -735,4 +735,16 @@ public class ProteinTree {
     public void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
     }
+    
+    /**
+     * Empties the cache
+     */
+    public void emptyCache() {
+        tree.clear();
+        tagsInTree.clear();
+        lastQueriedPeptidesCache.clear();
+        lastQueriedPeptidesCacheContent.clear();
+        lastSlowQueriedPeptidesCache.clear();
+        lastSlowQueriedPeptidesCacheContent.clear();
+    }
 }

@@ -274,6 +274,26 @@ public class ProteinMatch extends IdentificationMatch {
         }
         return result;
     }
+    
+    /**
+     * Returns the common proteins between two protein groups
+     * 
+     * @param group1 key of the first group
+     * @param group2 key of the second group
+     * 
+     * @return a list of common keys
+     */
+    public static ArrayList<String> getCommonProteins(String group1, String group2) {
+        String[] group1Proteins = getAccessions(group1);
+        List<String> group2Proteins = Arrays.asList(getAccessions(group2));
+        ArrayList<String> result = new ArrayList<String>();
+        for (String sharedAccession : group1Proteins) {
+            if (group2Proteins.contains(sharedAccession)) {
+                result.add(sharedAccession);
+            }
+        }
+        return result;
+    }
 
     /**
      * Returns a boolean indicating whether the protein match contains another

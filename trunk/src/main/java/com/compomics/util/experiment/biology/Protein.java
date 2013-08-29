@@ -160,6 +160,8 @@ public class Protein extends ExperimentObject {
 
         while (tempSequence.length() > 1) {
             int cleavage = 0;
+            
+            // @TODO: how to handle this for semi-specific??
 
             for (Character aa : enzyme.getAminoAcidAfter()) {
                 int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
@@ -341,6 +343,8 @@ public class Protein extends ExperimentObject {
 
             String before = surroundingAminoAcids.get(index)[0];
             String after = surroundingAminoAcids.get(index)[1];
+            
+            // @TODO: how to handle semi-specific enzymes??
 
             if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)
                     || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)

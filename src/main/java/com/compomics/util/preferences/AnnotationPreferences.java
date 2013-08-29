@@ -98,13 +98,14 @@ public class AnnotationPreferences implements Serializable {
      */
     public AnnotationPreferences() {
     }
-    
+
     /**
      * Updates the annotation parameters based on the search parameters
-     * 
-     * @param searchParameters the search parameters where to take the information from
+     *
+     * @param searchParameters the search parameters where to take the
+     * information from
      */
-    public void setPreferencesFromSearchParamaers(SearchParameters searchParameters)  { // @TODO: fix typo in method name (while keeping backwards compatability...)
+    public void setPreferencesFromSearchParamaers(SearchParameters searchParameters) { // @TODO: fix typo in method name (while keeping backwards compatability...)
         clearIonTypes();
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched1());
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched2());
@@ -128,7 +129,7 @@ public class AnnotationPreferences implements Serializable {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public void setCurrentSettings(Peptide currentPeptide, int currentPrecursorCharge, boolean newSpectrum) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -154,13 +155,18 @@ public class AnnotationPreferences implements Serializable {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public void resetAutomaticAnnotation() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         selectedCharges.clear();
-        for (int charge = 1; charge < currentPrecursorCharge; charge++) {
-            selectedCharges.add(charge);
+
+        if (currentPrecursorCharge == 1) {
+            selectedCharges.add(currentPrecursorCharge);
+        } else {
+            for (int charge = 1; charge < currentPrecursorCharge; charge++) {
+                selectedCharges.add(charge);
+            }
         }
 
         neutralLossesMap = SpectrumAnnotator.getDefaultLosses(currentPeptide);

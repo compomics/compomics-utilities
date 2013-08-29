@@ -256,7 +256,8 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the proteins in a group (group1) which are not in another group (group2).
+     * Returns the proteins in a group (group1) which are not in another group
+     * (group2).
      *
      * @param group1 the key of the shared group
      * @param group2 the key of the unique group
@@ -274,13 +275,13 @@ public class ProteinMatch extends IdentificationMatch {
         }
         return result;
     }
-    
+
     /**
-     * Returns the common proteins between two protein groups
-     * 
+     * Returns the common proteins between two protein groups.
+     *
      * @param group1 key of the first group
      * @param group2 key of the second group
-     * 
+     *
      * @return a list of common keys
      */
     public static ArrayList<String> getCommonProteins(String group1, String group2) {

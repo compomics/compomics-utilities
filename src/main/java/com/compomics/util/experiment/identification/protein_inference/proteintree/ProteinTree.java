@@ -22,14 +22,14 @@ import java.util.HashMap;
 public class ProteinTree {
 
     /**
-     * The memory allocation in GB.
+     * The memory allocation in MB.
      */
     private int memoryAllocation;
     /**
      * Approximate number of accession*node one can store in a GB of memory
      * (empirical value).
      */
-    private static final long cacheScale = 12000000;
+    private static final long cacheScale = 12000;
     /**
      * Instance of the sequence factory.
      */
@@ -90,7 +90,7 @@ public class ProteinTree {
     /**
      * Creates a tree based on the proteins present in the sequence factory.
      *
-     * @param memoryAllocation the number of GB available for the tree in
+     * @param memoryAllocation the number of MB available for the tree in
      * memory.
      * @throws IOException
      */
@@ -333,6 +333,7 @@ public class ProteinTree {
                 tempTags.clear();
                 if (tags.size() - tagsLoaded > 1.5 * nTags) {
                     tree.clear();
+                    System.gc();
                 }
                 if (sequenceFactory.getnCache() < accessions.size()) {
                     Collections.reverse(accessions);

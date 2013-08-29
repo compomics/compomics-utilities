@@ -713,6 +713,7 @@ public class ProteinTree {
                 e.printStackTrace();
             }
         }
+        emptyCache();
         componentsFactory.close();
     }
 

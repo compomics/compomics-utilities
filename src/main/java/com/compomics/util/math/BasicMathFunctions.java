@@ -13,9 +13,9 @@ public class BasicMathFunctions {
 
     /**
      * returns n!
-     * 
+     *
      * @param n a given integer
-     * @return  the corresponding factorial
+     * @return the corresponding factorial
      */
     public static int factorial(int n) {
         if (n <= 1) {
@@ -27,6 +27,7 @@ public class BasicMathFunctions {
 
     /**
      * Returns the number of k-combinations in a set of n elements
+     *
      * @param k the number of k-combinations
      * @param n the number of elements
      * @return the number of k-combinations in a set of n elements
@@ -38,11 +39,11 @@ public class BasicMathFunctions {
             return 0;
         }
     }
-    
+
     /**
      * Method to estimate the median
      *
-     * @param ratios    array of double
+     * @param ratios array of double
      * @return median of the input
      */
     public static double median(double[] ratios) {
@@ -57,28 +58,45 @@ public class BasicMathFunctions {
             return (ratios[length / 2] + ratios[(length) / 2 - 1]) / 2;
         }
     }
-    
+
     /**
      * Method to estimate the median
      *
-     * @param input    ArrayList of double
+     * @param input ArrayList of double
      * @return median of the input
      */
     public static double median(ArrayList<Double> input) {
+        return percentile(input, 0.5);
+    }
+
+    /**
+     * Returns the desired percentile in a given list of double. If the percentile is between two values a linear interpolation is done.
+     * 
+     * @param input the input list
+     * @param percentile the desired percentile. 0.01 returns the first percentile. 0.5 returns the median.
+     * 
+     * @return the desired percentile
+     */
+    public static double percentile(ArrayList<Double> input, double percentile) {
+        if (percentile < 0 || percentile > 1) {
+            throw new IllegalArgumentException("Incorrect input for percentile: " + percentile + ". Input must be between 0 and 1.");
+        }
         Collections.sort(input);
         int length = input.size();
         if (length == 0) {
-            throw new IllegalArgumentException("Attempting to estimate the median of an empty list.");
+            throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
         }
         if (length == 1) {
             return input.get(0);
         }
-        int index = length/2;
-        if (length % 2 == 1) {
-            return input.get(index);
-        } else {
-            return (input.get(index) + input.get(index-1)) / 2;
+        double indexDouble = percentile * length;
+        int index = (int) (indexDouble);
+        double valueAtIndex = input.get(index);
+        double rest = indexDouble - index;
+        if (index == input.size()-1 || rest == 0) {
+            return valueAtIndex;
         }
+         return valueAtIndex + rest * (input.get(index+1) - valueAtIndex);
     }
 
     /**
@@ -95,9 +113,11 @@ public class BasicMathFunctions {
         }
         return median(deviations);
     }
-    
+
     /**
-     * Convenience method returning the standard deviation of a list of doubles. Returns 0 if the list is null or of size < 2.
+     * Convenience method returning the standard deviation of a list of doubles.
+     * Returns 0 if the list is null or of size < 2.
+     *
      * @param input input list
      * @return the corresponding standard deviation
      */
@@ -108,15 +128,16 @@ public class BasicMathFunctions {
         double result = 0;
         double mean = mean(input);
         for (Double x : input) {
-            result += Math.pow(x-mean, 2);
+            result += Math.pow(x - mean, 2);
         }
-        result = result / (input.size()-1);
+        result = result / (input.size() - 1);
         result = Math.sqrt(result);
         return result;
     }
-    
+
     /**
      * Convenience method returning the mean of a list of doubles
+     *
      * @param input input list
      * @return the corresponding mean
      */
@@ -125,6 +146,6 @@ public class BasicMathFunctions {
         for (Double x : input) {
             result += x;
         }
-        return result/input.size();
+        return result / input.size();
     }
 }

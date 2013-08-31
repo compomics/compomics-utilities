@@ -77,8 +77,8 @@ public class Enzyme extends ExperimentObject {
      * cleavage
      * @param restrictionAfter the amino-acids which should not be found after
      * the cleavage
-     * @param isSemiSpecific if true, the enzyme is considered as semi-specific, meaning
-     * that only one end of the resulting peptide has to be enzymatic
+     * @param isSemiSpecific if true, the enzyme is considered as semi-specific,
+     * meaning that only one end of the resulting peptide has to be enzymatic
      */
     public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter, Boolean isSemiSpecific) {
         this.id = id;
@@ -123,43 +123,46 @@ public class Enzyme extends ExperimentObject {
      */
     public String getXTandemFormat() {
         String result = "";
-        
-        // @TODO: add special case for Asp-N + Glu-C -> [E]|[X],[X]|[D]
 
-        // @TODO: should [X] be used more??
-        
-        if (aminoAcidBefore.size() > 0) {
-            result += "[";
-            for (Character aa : aminoAcidBefore) {
-                result += aa;
+        if (name.equals("Asp-N + Glu-C")) { //  special case as this enzyme has to cleavage sites
+            result = "[E]|[X],[X]|[D]"; // @TODO: should be made generic if we stop using omssa enzymes...
+        } else {
+
+            // @TODO: should [X] be used more??
+
+            if (aminoAcidBefore.size() > 0) {
+                result += "[";
+                for (Character aa : aminoAcidBefore) {
+                    result += aa;
+                }
+                result += "]";
             }
-            result += "]";
-        }
 
-        if (restrictionBefore.size() > 0) {
-            result += "{";
-            for (Character aa : restrictionBefore) {
-                result += aa;
+            if (restrictionBefore.size() > 0) {
+                result += "{";
+                for (Character aa : restrictionBefore) {
+                    result += aa;
+                }
+                result += "}";
             }
-            result += "}";
-        }
 
-        result += "|";
+            result += "|";
 
-        if (aminoAcidAfter.size() > 0) {
-            result += "[";
-            for (Character aa : aminoAcidAfter) {
-                result += aa;
+            if (aminoAcidAfter.size() > 0) {
+                result += "[";
+                for (Character aa : aminoAcidAfter) {
+                    result += aa;
+                }
+                result += "]";
             }
-            result += "]";
-        }
 
-        if (restrictionAfter.size() > 0) {
-            result += "{";
-            for (Character aa : restrictionAfter) {
-                result += aa;
+            if (restrictionAfter.size() > 0) {
+                result += "{";
+                for (Character aa : restrictionAfter) {
+                    result += aa;
+                }
+                result += "}";
             }
-            result += "}";
         }
 
         return result;
@@ -209,9 +212,9 @@ public class Enzyme extends ExperimentObject {
      * this enzyme
      */
     public boolean enzymeCleaves() {
-        
+
         // @TODO: should be deprectated??
-        
+
         return !getAminoAcidBefore().isEmpty() || !getAminoAcidAfter().isEmpty();
     }
 
@@ -428,7 +431,7 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Set if the enzyme is semi-specific.
-     * 
+     *
      * @param isSemiSpecific if the enzyme is semi-specific
      */
     public void setSemiSpecific(boolean isSemiSpecific) {
@@ -437,7 +440,7 @@ public class Enzyme extends ExperimentObject {
 
     /**
      * Returns true if the enzyme is semi-specific.
-     * 
+     *
      * @return true if the enzyme is semi-specific
      */
     public boolean isSemiSpecific() {

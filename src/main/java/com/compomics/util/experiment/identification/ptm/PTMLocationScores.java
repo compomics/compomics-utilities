@@ -329,10 +329,10 @@ public class PTMLocationScores {
     }
 
     /**
-     * Estimates the peptide score for every modification localization and returns a map score -> localization
-     * 
+     * Estimates the peptide score for every modification localization and
+     * returns a map score -> localization.
+     *
      * @param positionToScoreMap the position to score map
-     * 
      * @return a score to position map
      */
     public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap) {
@@ -379,12 +379,13 @@ public class PTMLocationScores {
     }
 
     /**
-     * Returns a map PTM localization -> score
+     * Returns a map PTM localization -> score.
      *
      * @param peptide
-     * @param ptms
+     * @param noModPeptide
      * @param spectrum
      * @param iontypes
+     * @param spectrumMap
      * @param scoringLossesMap
      * @param charges
      * @param precursorCharge
@@ -392,10 +393,10 @@ public class PTMLocationScores {
      * @param spectrumAnnotator
      * @param possibleSites
      * @param refPTM
-     * @return
+     * @return a map PTM localization -> score
      */
-    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites, MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
+    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SpectrumAnnotator spectrumAnnotator, PTM refPTM) {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
@@ -435,11 +436,10 @@ public class PTMLocationScores {
 
     /**
      * Returns a version of the peptide which does not contain the inspected
-     * PTMs
+     * PTMs.
      *
      * @param peptide the original peptide
      * @param ptms list of inspected PTMs
-     *
      * @return a not modified version of the peptide
      */
     public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) {
@@ -691,10 +691,12 @@ public class PTMLocationScores {
      * @return the MD score
      */
     public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate) {
+
         HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
-        Double firstScore = null,
-                secondScore = null;
+        Double firstScore = null, secondScore = null;
+
         if (spectrumMatch.getAllAssumptions(Advocate.MASCOT) != null) {
+
             for (ArrayList<PeptideAssumption> peptideAssumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
                 for (PeptideAssumption peptideAssumption : peptideAssumptionList) {
                     if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate)) {
@@ -708,8 +710,10 @@ public class PTMLocationScores {
                     }
                 }
             }
+
             ArrayList<Double> scores = new ArrayList<Double>(mascotAssumptionsMap.keySet());
             Collections.sort(scores, Collections.reverseOrder());
+
             for (double score : scores) {
                 for (Peptide peptide : mascotAssumptionsMap.get(score)) {
                     if (peptide.sameModificationsAs(peptideCandidate)) {
@@ -729,6 +733,7 @@ public class PTMLocationScores {
                 }
             }
         }
+
         if (firstScore == null && secondScore == null) {
             return null;
         }
@@ -738,6 +743,7 @@ public class PTMLocationScores {
         if (secondScore == null) {
             return firstScore;
         }
+
         return firstScore - secondScore;
     }
 }

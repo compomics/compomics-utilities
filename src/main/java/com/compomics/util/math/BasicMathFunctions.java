@@ -5,14 +5,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * Class used to perform basic mathematical functions
+ * Class used to perform basic mathematical functions.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class BasicMathFunctions {
 
     /**
-     * returns n!
+     * Returns n!
      *
      * @param n a given integer
      * @return the corresponding factorial
@@ -26,7 +26,7 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Returns the number of k-combinations in a set of n elements
+     * Returns the number of k-combinations in a set of n elements.
      *
      * @param k the number of k-combinations
      * @param n the number of elements
@@ -41,7 +41,7 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Method to estimate the median
+     * Method to estimate the median.
      *
      * @param ratios array of double
      * @return median of the input
@@ -60,7 +60,7 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Method to estimate the median
+     * Method to estimate the median.
      *
      * @param input ArrayList of double
      * @return median of the input
@@ -70,11 +70,13 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Returns the desired percentile in a given list of double. If the percentile is between two values a linear interpolation is done.
-     * 
+     * Returns the desired percentile in a given list of double. If the
+     * percentile is between two values a linear interpolation is done.
+     *
      * @param input the input list
-     * @param percentile the desired percentile. 0.01 returns the first percentile. 0.5 returns the median.
-     * 
+     * @param percentile the desired percentile. 0.01 returns the first
+     * percentile. 0.5 returns the median.
+     *
      * @return the desired percentile
      */
     public static double percentile(ArrayList<Double> input, double percentile) {
@@ -93,14 +95,14 @@ public class BasicMathFunctions {
         int index = (int) (indexDouble);
         double valueAtIndex = input.get(index);
         double rest = indexDouble - index;
-        if (index == input.size()-1 || rest == 0) {
+        if (index == input.size() - 1 || rest == 0) {
             return valueAtIndex;
         }
-         return valueAtIndex + rest * (input.get(index+1) - valueAtIndex);
+        return valueAtIndex + rest * (input.get(index + 1) - valueAtIndex);
     }
 
     /**
-     * Method estimating the median absolute deviation
+     * Method estimating the median absolute deviation.
      *
      * @param ratios array of doubles
      * @return the mad of the input
@@ -136,7 +138,7 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Convenience method returning the mean of a list of doubles
+     * Convenience method returning the mean of a list of doubles.
      *
      * @param input input list
      * @return the corresponding mean

@@ -1,20 +1,20 @@
-package com.compomics.util.experiment.identification.ptm;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
-import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.util.math.BasicMathFunctions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,12 +23,13 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class scores PTM locations using various scores.
+ * This class estimates the A-score as described in http://www.ncbi.nlm.nih.gov/pubmed/16964243
+ * Note: Here the window size is adapted to mz tolerance and the score is not restricted to phosphorylation
  *
  * @author Marc
  */
-public class PTMLocationScores {
-
+public class AScore {
+    
     /**
      * Returns the A-score for the best PTM location without accounting for
      * neutral losses. In case the two best locations score the same they are
@@ -168,7 +169,7 @@ public class PTMLocationScores {
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
             SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
-            Peptide noModPeptide = getNoModPeptide(peptide, ptms);
+            Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
 
             HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites, spectrum, spectrumMap, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance, spectrumAnnotator, refPTM);
@@ -329,10 +330,10 @@ public class PTMLocationScores {
     }
 
     /**
-     * Estimates the peptide score for every modification localization and
-     * returns a map score -> localization.
-     *
+     * Estimates the peptide score for every modification localization and returns a map score -> localization
+     * 
      * @param positionToScoreMap the position to score map
+     * 
      * @return a score to position map
      */
     public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap) {
@@ -379,13 +380,12 @@ public class PTMLocationScores {
     }
 
     /**
-     * Returns a map PTM localization -> score.
+     * Returns a map PTM localization -> score
      *
      * @param peptide
-     * @param noModPeptide
+     * @param ptms
      * @param spectrum
      * @param iontypes
-     * @param spectrumMap
      * @param scoringLossesMap
      * @param charges
      * @param precursorCharge
@@ -393,10 +393,10 @@ public class PTMLocationScores {
      * @param spectrumAnnotator
      * @param possibleSites
      * @param refPTM
-     * @return a map PTM localization -> score
+     * @return
      */
-    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
+    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites, MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap,
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SpectrumAnnotator spectrumAnnotator, PTM refPTM) {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
@@ -432,34 +432,6 @@ public class PTMLocationScores {
             }
         }
         return positionToScoreMap;
-    }
-
-    /**
-     * Returns a version of the peptide which does not contain the inspected
-     * PTMs.
-     *
-     * @param peptide the original peptide
-     * @param ptms list of inspected PTMs
-     * @return a not modified version of the peptide
-     */
-    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) {
-
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
-
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            boolean found = false;
-            for (PTM ptm : ptms) {
-                if (modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                noModPeptide.addModificationMatch(modificationMatch);
-            }
-        }
-
-        return noModPeptide;
     }
 
     /**
@@ -540,210 +512,5 @@ public class PTMLocationScores {
             currentmzMin += 200 * mzTolerance;
         }
         return result;
-    }
-
-    /**
-     * Returns the PTM plot series in the JFreechart format for one PSM.
-     *
-     * @param peptide The peptide of interest
-     * @param ptm The PTM to score
-     * @param nPTM The amount of times the PTM is expected
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param intensityLimit
-     * @return the PTM plot series in the JFreechart format for one PSM.
-     */
-    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
-
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
-
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                noModPeptide.addModificationMatch(modificationMatch);
-            }
-        }
-
-        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
-        HashMap<Integer, ArrayList<Ion>> fragmentIons =
-                spectrumAnnotator.getExpectedIons(iontypes, neutralLosses, charges, precursorCharge, noModPeptide);
-        HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
-
-        for (int i = 0; i <= nPTM; i++) {
-
-            spectrumAnnotator.setMassShift(i * ptm.getMass());
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(
-                    iontypes, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false);
-
-            for (IonMatch ionMatch : matches) {
-                if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                    PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                    for (Ion noModIon : fragmentIons.get(ionMatch.charge.value)) {
-                        if (noModIon.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
-                                && peptideFragmentIon.isSameAs(noModIon)) {
-                            PeptideFragmentIon noModFragmentIon = (PeptideFragmentIon) noModIon;
-                            if (!map.containsKey(noModFragmentIon)) {
-                                map.put(noModFragmentIon, new ArrayList<IonMatch>());
-                            }
-                            map.get(noModFragmentIon).add(ionMatch);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return map;
-    }
-
-    /**
-     * Get the PTM table content.
-     *
-     * @param peptide The peptide of interest
-     * @param ptm The PTM to score
-     * @param nPTM The amount of times the PTM is expected
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param intensityLimit
-     * @return the PtmtableContent object
-     */
-    public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
-
-        PtmtableContent ptmTableContent = new PtmtableContent();
-
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
-
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                noModPeptide.addModificationMatch(modificationMatch);
-            }
-        }
-
-        NeutralLossesMap lossesMap = new NeutralLossesMap();
-        for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
-            if (Math.abs(neutralLoss.mass - ptm.getMass()) > mzTolerance) {
-                lossesMap.addNeutralLoss(neutralLoss, 1, 1);
-            }
-        }
-
-
-        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
-        spectrumAnnotator.setPeptide(noModPeptide, precursorCharge);
-        PeptideFragmentIon peptideFragmentIon;
-
-        for (int i = 0; i <= nPTM; i++) {
-
-            spectrumAnnotator.setMassShift(i * ptm.getMass());
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(
-                    iontypes, lossesMap, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false);
-
-            for (IonMatch ionMatch : matches) {
-                if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                    peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                    if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
-                        ptmTableContent.addIntensity(i, peptideFragmentIon.getSubType(), peptideFragmentIon.getNumber(), ionMatch.peak.intensity);
-                    } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.X_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION
-                            || peptideFragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
-                        ptmTableContent.addIntensity(i, peptideFragmentIon.getSubType(),
-                                peptide.getSequence().length() - peptideFragmentIon.getNumber() + 1, ionMatch.peak.intensity);
-                    }
-                }
-            }
-        }
-
-        return ptmTableContent;
-    }
-
-    /**
-     * Returns the MD score for the best peptide in a spectrum match (the best
-     * peptide has to be set before). Null if not identified by Mascot. If the
-     * peptide is the not the best scoring for Mascot the score will be
-     * negative.
-     *
-     * @param spectrumMatch the spectrum match of interest
-     * @return the MD score
-     */
-    public static Double getMDScore(SpectrumMatch spectrumMatch) {
-        return getMDScore(spectrumMatch, spectrumMatch.getBestAssumption().getPeptide());
-    }
-
-    /**
-     * Returns the MD score for the given peptide in a spectrum match. Null if
-     * not identified by Mascot. If the peptide is the not the best scoring for
-     * Mascot the score will be negative.
-     *
-     * @param peptideCandidate the peptide of interest
-     * @param spectrumMatch the spectrum match of interest
-     * @return the MD score
-     */
-    public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate) {
-
-        HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
-        Double firstScore = null, secondScore = null;
-
-        if (spectrumMatch.getAllAssumptions(Advocate.MASCOT) != null) {
-
-            for (ArrayList<PeptideAssumption> peptideAssumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
-                for (PeptideAssumption peptideAssumption : peptideAssumptionList) {
-                    if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate)) {
-                        MascotScore mascotScore = new MascotScore();
-                        mascotScore = (MascotScore) peptideAssumption.getUrParam(mascotScore);
-                        Double score = mascotScore.getScore();
-                        if (!mascotAssumptionsMap.containsKey(score)) {
-                            mascotAssumptionsMap.put(score, new ArrayList<Peptide>());
-                        }
-                        mascotAssumptionsMap.get(score).add(peptideAssumption.getPeptide());
-                    }
-                }
-            }
-
-            ArrayList<Double> scores = new ArrayList<Double>(mascotAssumptionsMap.keySet());
-            Collections.sort(scores, Collections.reverseOrder());
-
-            for (double score : scores) {
-                for (Peptide peptide : mascotAssumptionsMap.get(score)) {
-                    if (peptide.sameModificationsAs(peptideCandidate)) {
-                        firstScore = score;
-                        if (secondScore != null) {
-                            break;
-                        }
-                    } else if (secondScore == null) {
-                        secondScore = score;
-                        if (firstScore != null) {
-                            break;
-                        }
-                    }
-                }
-                if (firstScore == null && secondScore == null) {
-                    break;
-                }
-            }
-        }
-
-        if (firstScore == null && secondScore == null) {
-            return null;
-        }
-        if (firstScore == null) {
-            return -secondScore;
-        }
-        if (secondScore == null) {
-            return firstScore;
-        }
-
-        return firstScore - secondScore;
     }
 }

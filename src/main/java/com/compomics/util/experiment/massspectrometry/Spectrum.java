@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -471,6 +472,43 @@ public abstract class Spectrum extends ExperimentObject {
             }
 
             result.put(peak.mz - correction, new Peak(peak.mz - correction, peak.intensity));
+        }
+        return result;
+    }
+
+    /**
+     * Returns the peak list of this spectrum without matched peaks.
+     *
+     * @param matches the ion matches
+     *
+     * @return a peak list which does not contain the peak matched
+     */
+    public HashMap<Double, Peak> getDesignaledPeakList(ArrayList<IonMatch> matches) {
+        HashMap<Double, Peak> result = new HashMap<Double, Peak>(peakList);
+        for (IonMatch ionMatch : matches) {
+            result.remove(ionMatch.peak.mz);
+        }
+        return result;
+    }
+
+    /**
+     * Returns the part of the spectrum contained between mzMin (inclusive) and
+     * mzMax (exclusive) as a peak list
+     *
+     * @param mzMin
+     * @param mzMax
+     * @return
+     */
+    public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) {
+        HashMap<Double, Peak> result = new HashMap<Double, Peak>();
+        ArrayList<Double> mzList = new ArrayList<Double>(peakList.keySet());
+        Collections.sort(mzList);
+        for (double mz : mzList) {
+            if (mz >= mzMin && mz < mzMax) {
+                result.put(mz, peakList.get(mz));
+            } else if (mz >= mzMax) {
+                break;
+            }
         }
         return result;
     }

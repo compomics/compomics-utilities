@@ -369,7 +369,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         switch (ptm.getType()) {
@@ -477,7 +477,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -716,7 +716,7 @@ public class Peptide extends ExperimentObject {
      * @return true if the other peptide has the same positions at the same
      * location as the considered peptide
      */
-    public boolean sameModificationsAs(Peptide anotherPeptide) {
+    public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> ptms) {
         if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
             return false;
         }
@@ -724,19 +724,23 @@ public class Peptide extends ExperimentObject {
         HashMap<String, ArrayList<Integer>> ptmToPositionsMap2 = new HashMap<String, ArrayList<Integer>>();
         for (ModificationMatch modificationMatch : modifications) {
             String modName = modificationMatch.getTheoreticPtm();
-            if (!ptmToPositionsMap1.containsKey(modName)) {
-                ptmToPositionsMap1.put(modName, new ArrayList<Integer>());
+            if (ptms.contains(modName)) {
+                if (!ptmToPositionsMap1.containsKey(modName)) {
+                    ptmToPositionsMap1.put(modName, new ArrayList<Integer>());
+                }
+                int position = modificationMatch.getModificationSite();
+                ptmToPositionsMap1.get(modName).add(position);
             }
-            int position = modificationMatch.getModificationSite();
-            ptmToPositionsMap1.get(modName).add(position);
         }
         for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
             String modName = modificationMatch.getTheoreticPtm();
-            if (!ptmToPositionsMap2.containsKey(modName)) {
-                ptmToPositionsMap2.put(modName, new ArrayList<Integer>());
+            if (ptms.contains(modName)) {
+                if (!ptmToPositionsMap2.containsKey(modName)) {
+                    ptmToPositionsMap2.put(modName, new ArrayList<Integer>());
+                }
+                int position = modificationMatch.getModificationSite();
+                ptmToPositionsMap2.get(modName).add(position);
             }
-            int position = modificationMatch.getModificationSite();
-            ptmToPositionsMap2.get(modName).add(position);
         }
         for (String modName : ptmToPositionsMap1.keySet()) {
             if (!ptmToPositionsMap2.containsKey(modName)) {
@@ -756,6 +760,32 @@ public class Peptide extends ExperimentObject {
             }
         }
         return true;
+    }
+
+    /**
+     * Indicates whether another peptide has the same modifications at the same
+     * localization as this peptide. This method comes as a complement of
+     * isSameAs, here the localization of all PTMs is taken into account.
+     *
+     * @param anotherPeptide another peptide
+     * @return true if the other peptide has the same positions at the same
+     * location as the considered peptide
+     */
+    public boolean sameModificationsAs(Peptide anotherPeptide) {
+        ArrayList<String> ptms = new ArrayList<String>();
+        for (ModificationMatch modificationMatch : modifications) {
+            String modName = modificationMatch.getTheoreticPtm();
+            if (!ptms.contains(modName)) {
+                ptms.add(modName);
+            }
+        }
+        for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
+            String modName = modificationMatch.getTheoreticPtm();
+            if (!ptms.contains(modName)) {
+                ptms.add(modName);
+            }
+        }
+        return sameModificationsAs(anotherPeptide, ptms);
     }
 
     /**
@@ -810,7 +840,7 @@ public class Peptide extends ExperimentObject {
         cTerm = cTerm.replaceAll("-", " ");
         return cTerm;
     }
-    
+
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
@@ -856,7 +886,7 @@ public class Peptide extends ExperimentObject {
         return getTaggedModifiedSequence(modificationProfile, this, mainModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
     }
-    
+
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
@@ -1100,7 +1130,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading the protein sequence
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -1128,7 +1158,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -1160,10 +1190,10 @@ public class Peptide extends ExperimentObject {
     public static AminoAcidPattern getSequenceAsPattern(String sequence) {
         return new AminoAcidPattern(sequence);
     }
-    
+
     /**
      * Indicates whether a peptide can be derived from a decoy protein.
-     * 
+     *
      * @return whether a peptide can be derived from a decoy protein
      */
     public boolean isDecoy() {
@@ -1173,5 +1203,34 @@ public class Peptide extends ExperimentObject {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns a version of the peptide which does not contain the inspected
+     * PTMs
+     *
+     * @param peptide the original peptide
+     * @param ptms list of inspected PTMs
+     *
+     * @return a not modified version of the peptide
+     */
+    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) {
+
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+
+        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+            boolean found = false;
+            for (PTM ptm : ptms) {
+                if (modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                noModPeptide.addModificationMatch(modificationMatch);
+            }
+        }
+
+        return noModPeptide;
     }
 }

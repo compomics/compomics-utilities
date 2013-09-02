@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.14.35</version>
+    <version>3.14.36</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -70,8 +70,8 @@
         <developer>
             <name>Marc Vaudel</name>
             <id>marc</id>
-            <email>marc.vaudel AT isas.de</email>
-            <organization>ISAS</organization>
+            <email>marc.vaudel AT biomed.uib.no</email>
+            <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>
             </roles>

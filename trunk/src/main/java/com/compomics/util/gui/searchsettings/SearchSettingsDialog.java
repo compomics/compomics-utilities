@@ -200,8 +200,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        modificationOptionsPopupMenu = new javax.swing.JPopupMenu();
-        editModificationsMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
         configurationFilePanelSettings = new javax.swing.JPanel();
         configurationFileLbl2 = new javax.swing.JLabel();
@@ -261,19 +259,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 };
             }
         };
-        modificationsHelpJButton = new javax.swing.JButton();
-        modificationsOptionsJButton = new javax.swing.JButton();
-        contextMenuModificationsBackgroundPanel = new javax.swing.JPanel();
+        openModificationSettingsJButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-
-        editModificationsMenuItem.setText("Edit Modifications");
-        editModificationsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editModificationsMenuItemActionPerformed(evt);
-            }
-        });
-        modificationOptionsPopupMenu.add(editModificationsMenuItem);
+        openDialogHelpJButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Search Settings");
@@ -286,7 +275,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        configurationFilePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
+        configurationFilePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings File"));
         configurationFilePanelSettings.setOpaque(false);
 
         configurationFileLbl2.setText("Settings File");
@@ -347,10 +336,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        proteaseAndFragmentationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Protease & Fragmentation"));
+        proteaseAndFragmentationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Enzyme & Fragmentation"));
         proteaseAndFragmentationPanel.setOpaque(false);
 
-        enzymeLabel.setText("Protease");
+        enzymeLabel.setText("Enzyme");
 
         enzymesCmb.setModel(new DefaultComboBoxModel(loadEnzymes()));
         enzymesCmb.addActionListener(new java.awt.event.ActionListener() {
@@ -598,7 +587,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
                         .addGap(242, 242, 242))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -692,7 +681,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             .addComponent(variableModificationsLabel)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addVariableModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -764,17 +753,43 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         });
         modificationsJScrollPane.setViewportView(modificationsTable);
 
+        openModificationSettingsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        openModificationSettingsJButton.setToolTipText("Edit Modifications");
+        openModificationSettingsJButton.setBorder(null);
+        openModificationSettingsJButton.setBorderPainted(false);
+        openModificationSettingsJButton.setContentAreaFilled(false);
+        openModificationSettingsJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        openModificationSettingsJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openModificationSettingsJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openModificationSettingsJButtonMouseExited(evt);
+            }
+        });
+        openModificationSettingsJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openModificationSettingsJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout availableModsPanelLayout = new javax.swing.GroupLayout(availableModsPanel);
         availableModsPanel.setLayout(availableModsPanelLayout);
         availableModsPanelLayout.setHorizontalGroup(
             availableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(modificationsListCombo, 0, 340, Short.MAX_VALUE)
-            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+            .addGroup(availableModsPanelLayout.createSequentialGroup()
+                .addComponent(modificationsListCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(openModificationSettingsJButton)
+                .addGap(2, 2, 2))
         );
         availableModsPanelLayout.setVerticalGroup(
             availableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(availableModsPanelLayout.createSequentialGroup()
-                .addComponent(modificationsListCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(availableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(modificationsListCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(openModificationSettingsJButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -799,66 +814,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 .addContainerGap())
         );
 
-        modificationsPanel.setBounds(0, 0, 800, 0);
+        modificationsPanel.setBounds(0, 0, 800, 318);
         modificationsLayeredPane.add(modificationsPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        modificationsHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame_grey.png"))); // NOI18N
-        modificationsHelpJButton.setToolTipText("Help");
-        modificationsHelpJButton.setBorder(null);
-        modificationsHelpJButton.setBorderPainted(false);
-        modificationsHelpJButton.setContentAreaFilled(false);
-        modificationsHelpJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame.png"))); // NOI18N
-        modificationsHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                modificationsHelpJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                modificationsHelpJButtonMouseExited(evt);
-            }
-        });
-        modificationsHelpJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modificationsHelpJButtonActionPerformed(evt);
-            }
-        });
-        modificationsHelpJButton.setBounds(760, 0, 10, 19);
-        modificationsLayeredPane.add(modificationsHelpJButton, javax.swing.JLayeredPane.POPUP_LAYER);
-
-        modificationsOptionsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_gray.png"))); // NOI18N
-        modificationsOptionsJButton.setToolTipText("Modification Details");
-        modificationsOptionsJButton.setBorder(null);
-        modificationsOptionsJButton.setBorderPainted(false);
-        modificationsOptionsJButton.setContentAreaFilled(false);
-        modificationsOptionsJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_black.png"))); // NOI18N
-        modificationsOptionsJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                modificationsOptionsJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                modificationsOptionsJButtonMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                modificationsOptionsJButtonMouseReleased(evt);
-            }
-        });
-        modificationsOptionsJButton.setBounds(745, 5, 10, 19);
-        modificationsLayeredPane.add(modificationsOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
-
-        contextMenuModificationsBackgroundPanel.setBackground(backgroundPanel.getBackground());
-
-        javax.swing.GroupLayout contextMenuModificationsBackgroundPanelLayout = new javax.swing.GroupLayout(contextMenuModificationsBackgroundPanel);
-        contextMenuModificationsBackgroundPanel.setLayout(contextMenuModificationsBackgroundPanelLayout);
-        contextMenuModificationsBackgroundPanelLayout.setHorizontalGroup(
-            contextMenuModificationsBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-        contextMenuModificationsBackgroundPanelLayout.setVerticalGroup(
-            contextMenuModificationsBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 19, Short.MAX_VALUE)
-        );
-
-        contextMenuModificationsBackgroundPanel.setBounds(730, 0, 50, 19);
-        modificationsLayeredPane.add(contextMenuModificationsBackgroundPanel, javax.swing.JLayeredPane.POPUP_LAYER);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -874,6 +831,25 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         });
 
+        openDialogHelpJButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        openDialogHelpJButton1.setToolTipText("Help");
+        openDialogHelpJButton1.setBorder(null);
+        openDialogHelpJButton1.setBorderPainted(false);
+        openDialogHelpJButton1.setContentAreaFilled(false);
+        openDialogHelpJButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButton1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButton1MouseExited(evt);
+            }
+        });
+        openDialogHelpJButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openDialogHelpJButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -886,7 +862,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(openDialogHelpJButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)))
@@ -907,9 +885,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton))
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(openDialogHelpJButton1)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -1288,65 +1267,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }//GEN-LAST:event_modificationsListComboActionPerformed
 
     /**
-     * Change the cursor into a hand cursor.
-     *
-     * @param evt
-     */
-    private void modificationsHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsHelpJButtonMouseEntered
-        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_modificationsHelpJButtonMouseEntered
-
-    /**
-     * Change the cursor back to the default cursor.
-     *
-     * @param evt
-     */
-    private void modificationsHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsHelpJButtonMouseExited
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_modificationsHelpJButtonMouseExited
-
-    /**
-     * Opens the help dialog.
-     *
-     * @param evt
-     */
-    private void modificationsHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificationsHelpJButtonActionPerformed
-        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/Modifications.html"),
-                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                normalIcon,
-                "Search Settings Help");
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_modificationsHelpJButtonActionPerformed
-
-    /**
-     * Change the cursor into a hand cursor.
-     *
-     * @param evt
-     */
-    private void modificationsOptionsJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsOptionsJButtonMouseEntered
-        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_modificationsOptionsJButtonMouseEntered
-
-    /**
-     * Change the cursor back to the default cursor.
-     *
-     * @param evt
-     */
-    private void modificationsOptionsJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsOptionsJButtonMouseExited
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_modificationsOptionsJButtonMouseExited
-
-    /**
-     * Open the modifications pop up menu.
-     *
-     * @param evt
-     */
-    private void modificationsOptionsJButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsOptionsJButtonMouseReleased
-        modificationOptionsPopupMenu.show(modificationsOptionsJButton, evt.getX(), evt.getY());
-    }//GEN-LAST:event_modificationsOptionsJButtonMouseReleased
-
-    /**
      * Close the window without saving the changes.
      *
      * @param evt
@@ -1399,24 +1319,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
-     * Save if settings changed.
+     * Validate the parameters.
      *
      * @param evt
      */
     private void enzymesCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesCmbActionPerformed
-//        if (defaultConfigsLoaded) {
-//            configurationFileTxtSearchTab_parameters.setText(userSettingsTxt); // @TODO: re-add this??
-//        }
+        validateParametersInput(false);
     }//GEN-LAST:event_enzymesCmbActionPerformed
-
-    /**
-     * Open the ModificationsDialog.
-     *
-     * @param evt
-     */
-    private void editModificationsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editModificationsMenuItemActionPerformed
-        new ModificationsDialog(parentFrame, this, true);
-    }//GEN-LAST:event_editModificationsMenuItemActionPerformed
 
     /**
      * Resize the layered panes.
@@ -1424,27 +1333,27 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param evt
      */
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        // move the icons
-        modificationsLayeredPane.getComponent(0).setBounds(
-                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(0).getWidth() - 10,
-                -3,
-                modificationsLayeredPane.getComponent(0).getWidth(),
-                modificationsLayeredPane.getComponent(0).getHeight());
-
-        modificationsLayeredPane.getComponent(1).setBounds(
-                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(1).getWidth() - 22,
-                0,
-                modificationsLayeredPane.getComponent(1).getWidth(),
-                modificationsLayeredPane.getComponent(1).getHeight());
-
-        modificationsLayeredPane.getComponent(2).setBounds(
-                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(2).getWidth() - 5,
-                -3,
-                modificationsLayeredPane.getComponent(2).getWidth(),
-                modificationsLayeredPane.getComponent(2).getHeight());
+//        // move the icons
+//        modificationsLayeredPane.getComponent(0).setBounds(
+//                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(0).getWidth() - 10,
+//                -3,
+//                modificationsLayeredPane.getComponent(0).getWidth(),
+//                modificationsLayeredPane.getComponent(0).getHeight());
+//
+//        modificationsLayeredPane.getComponent(1).setBounds(
+//                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(1).getWidth() - 22,
+//                0,
+//                modificationsLayeredPane.getComponent(1).getWidth(),
+//                modificationsLayeredPane.getComponent(1).getHeight());
+//
+//        modificationsLayeredPane.getComponent(2).setBounds(
+//                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(2).getWidth() - 5,
+//                -3,
+//                modificationsLayeredPane.getComponent(2).getWidth(),
+//                modificationsLayeredPane.getComponent(2).getHeight());
 
         // resize the plot area
-        modificationsLayeredPane.getComponent(3).setBounds(0, 0, modificationsLayeredPane.getWidth(), modificationsLayeredPane.getHeight());
+        modificationsLayeredPane.getComponent(0).setBounds(0, 0, modificationsLayeredPane.getWidth(), modificationsLayeredPane.getHeight());
         modificationsLayeredPane.revalidate();
         modificationsLayeredPane.repaint();
     }//GEN-LAST:event_formComponentResized
@@ -1634,6 +1543,65 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         enableAddRemoveButtons();
     }//GEN-LAST:event_variableModsTableMouseReleased
+
+    /**
+     * Open the modifications pop up menu.
+     *
+     * @param evt
+     */
+    private void openModificationSettingsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonActionPerformed
+        new ModificationsDialog(parentFrame, this, true);
+    }//GEN-LAST:event_openModificationSettingsJButtonActionPerformed
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void openModificationSettingsJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_openModificationSettingsJButtonMouseExited
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void openModificationSettingsJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_openModificationSettingsJButtonMouseEntered
+
+    /**
+     * Opens the help dialog.
+     *
+     * @param evt
+     */
+    private void openDialogHelpJButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1ActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(this, getClass().getResource("/helpFiles/Modifications.html"),
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                normalIcon,
+                "Search Settings Help", 500, 100);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_openDialogHelpJButton1ActionPerformed
+
+    /**
+     * Change the cursor into a hand cursor.
+     *
+     * @param evt
+     */
+    private void openDialogHelpJButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1MouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_openDialogHelpJButton1MouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void openDialogHelpJButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1MouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_openDialogHelpJButton1MouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFixedModification;
     private javax.swing.JButton addVariableModification;
@@ -1644,12 +1612,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private javax.swing.JLabel configurationFileLbl2;
     private javax.swing.JPanel configurationFilePanelSettings;
     private javax.swing.JTextField configurationFileTxt_parameters;
-    private javax.swing.JPanel contextMenuModificationsBackgroundPanel;
     private javax.swing.JPanel dataBasePanelSettings;
     private javax.swing.JLabel databaseSettingsLbl;
     private javax.swing.JTextField databaseSettingsTxt;
     private javax.swing.JButton editDatabaseSettings;
-    private javax.swing.JMenuItem editModificationsMenuItem;
     private javax.swing.JLabel enzymeLabel;
     private javax.swing.JComboBox enzymesCmb;
     private javax.swing.JLabel fixedModificationsLabel;
@@ -1666,16 +1632,15 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private javax.swing.JTextField maxPrecursorChargeTxt;
     private javax.swing.JTextField minPrecursorChargeTxt;
     private javax.swing.JTextField missedCleavagesTxt;
-    private javax.swing.JPopupMenu modificationOptionsPopupMenu;
     private javax.swing.JSplitPane modificationTypesSplitPane;
-    private javax.swing.JButton modificationsHelpJButton;
     private javax.swing.JScrollPane modificationsJScrollPane;
     private javax.swing.JLayeredPane modificationsLayeredPane;
     private javax.swing.JComboBox modificationsListCombo;
-    private javax.swing.JButton modificationsOptionsJButton;
     private javax.swing.JPanel modificationsPanel;
     private javax.swing.JTable modificationsTable;
     private javax.swing.JButton okButton;
+    private javax.swing.JButton openDialogHelpJButton1;
+    private javax.swing.JButton openModificationSettingsJButton;
     private javax.swing.JLabel precursorChargeLbl;
     private javax.swing.JLabel precursorChargeRangeLabel;
     private javax.swing.JTextField precursorIonAccuracyTxt;
@@ -1706,10 +1671,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         Collections.sort(tempEnzymes);
 
-        String[] enzymes = new String[tempEnzymes.size()];
+        String[] enzymes = new String[tempEnzymes.size() + 1];
+
+        enzymes[0] = "--- Select ---";
 
         for (int i = 0; i < tempEnzymes.size(); i++) {
-            enzymes[i] = tempEnzymes.get(i);
+            enzymes[i + 1] = tempEnzymes.get(i);
         }
 
         return enzymes;
@@ -1882,6 +1849,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 enzymeFactory.addEnzyme(searchParameters.getEnzyme());
             }
             enzymesCmb.setSelectedItem(enzymeName);
+        } else {
+            enzymesCmb.setSelectedIndex(0);
         }
 
         if (searchParameters.getIonSearched1() != null) {
@@ -2091,12 +2060,14 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         fragmentIonLbl.setForeground(Color.BLACK);
         precursorChargeLbl.setForeground(Color.BLACK);
         databaseSettingsLbl.setForeground(Color.BLACK);
+        enzymeLabel.setForeground(Color.BLACK);
 
         precursorIonLbl.setToolTipText(null);
         maxMissedCleavagesLabel.setToolTipText(null);
         fragmentIonLbl.setToolTipText(null);
         precursorChargeLbl.setToolTipText(null);
         databaseSettingsLbl.setToolTipText(null);
+        enzymeLabel.setToolTipText(null);
 
         if (databaseSettingsTxt.getText() == null || databaseSettingsTxt.getText().trim().equals("")) {
             if (showMessage && valid) {
@@ -2313,6 +2284,15 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             valid = false;
             precursorChargeLbl.setForeground(Color.RED);
             precursorChargeLbl.setToolTipText("Minimum precursor charge > Maximum precursor charge!");
+        }
+
+        if (enzymesCmb.getSelectedIndex() == 0) {
+            if (showMessage && valid) {
+                JOptionPane.showMessageDialog(this, "Please select an enzyme.", "Enzyme Error", JOptionPane.WARNING_MESSAGE);
+            }
+            valid = false;
+            enzymeLabel.setForeground(Color.RED);
+            enzymeLabel.setToolTipText("No enzyme selected!");
         }
 
         okButton.setEnabled(valid);

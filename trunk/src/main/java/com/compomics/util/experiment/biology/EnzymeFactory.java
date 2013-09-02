@@ -192,4 +192,91 @@ public class EnzymeFactory {
         // create the enzyme
         enzymes.put(name, new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter, semiSpecific));
     }
+
+    /**
+     * Tries to map the enzyme name given in the PRIDE file a utilities/OMSSA
+     * enzyme.
+     *
+     * @param prideEnzymeName the PRIDE enzyme name
+     * @return the Enzyme object, or null if not mapping is found
+     */
+    public Enzyme getUtilitiesEnzyme(String prideEnzymeName) {
+
+        Enzyme tempEnzyme = null;
+        prideEnzymeName = prideEnzymeName.trim().toLowerCase();
+
+        if (prideEnzymeName.equalsIgnoreCase("trypsin")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Trypsin");
+        } else if (prideEnzymeName.equalsIgnoreCase("chymotrypsin")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Chymotrypsin (FYWL)");
+        } else if (prideEnzymeName.equalsIgnoreCase("arg-c")
+                || prideEnzymeName.equalsIgnoreCase("argc")
+                || prideEnzymeName.equalsIgnoreCase("arg c")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Arg-C");
+        } else if (prideEnzymeName.equalsIgnoreCase("cnbr")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("CNBr");
+        } else if (prideEnzymeName.equalsIgnoreCase("formic acid")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Formic Acid");
+        } else if (prideEnzymeName.equalsIgnoreCase("lys-c")
+                || prideEnzymeName.equalsIgnoreCase("lysc")
+                || prideEnzymeName.equalsIgnoreCase("lys c")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Lys-C");
+        } else if (prideEnzymeName.equalsIgnoreCase("lys-c/p")
+                || prideEnzymeName.equalsIgnoreCase("lysc/p")
+                || prideEnzymeName.equalsIgnoreCase("lys c/p")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Lys-C, no P rule");
+        } else if (prideEnzymeName.equalsIgnoreCase("pepsin a")
+                || prideEnzymeName.equalsIgnoreCase("pepsin")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Pepsin A");
+        } else if (prideEnzymeName.equalsIgnoreCase("trypsin + cnbr")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Trypsin + CNBr");
+        } else if (prideEnzymeName.equalsIgnoreCase("trypsin + chymotrypsin")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Trypsin + Chymotrypsin ((FYWLKR))");
+        } else if (prideEnzymeName.equalsIgnoreCase("trypsin, no p rule")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Trypsin, no P rule"); // @TODO: other ways to annotate this?
+        } else if (prideEnzymeName.equalsIgnoreCase("whole protein")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Whole Protein");
+        } else if (prideEnzymeName.equalsIgnoreCase("asp-n")
+                || prideEnzymeName.equalsIgnoreCase("aspn")
+                || prideEnzymeName.equalsIgnoreCase("asp n")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Asp-N");
+        } else if (prideEnzymeName.equalsIgnoreCase("glu-c")
+                || prideEnzymeName.equalsIgnoreCase("gluc")
+                || prideEnzymeName.equalsIgnoreCase("glu c")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Glu-C");
+        } else if (prideEnzymeName.equalsIgnoreCase("asp-n + glu-c")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Asp-N + Glu-C");
+        } else if (prideEnzymeName.equalsIgnoreCase("top-down")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Top-Down");
+        } else if (prideEnzymeName.equalsIgnoreCase("semi-tryptic")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Semi-Tryptic");
+        } else if (prideEnzymeName.equalsIgnoreCase("no enzyme")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("No Enzyme");
+        } else if (prideEnzymeName.equalsIgnoreCase("chymotrypsin, no p rule")) {
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Chymotrypsin, no P rule (FYWL)");
+        } else if (prideEnzymeName.equalsIgnoreCase("asp-n de")
+                || prideEnzymeName.equalsIgnoreCase("aspn de")
+                || prideEnzymeName.equalsIgnoreCase("asp n de")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Asp-N (DE)");
+        } else if (prideEnzymeName.equalsIgnoreCase("glu-c de")
+                || prideEnzymeName.equalsIgnoreCase("gluc de")
+                || prideEnzymeName.equalsIgnoreCase("glu c de")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Glu-C (DE)");
+        } else if (prideEnzymeName.equalsIgnoreCase("lys-n k")
+                || prideEnzymeName.equalsIgnoreCase("lys-n")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Lys-N (K)");
+        } else if (prideEnzymeName.equalsIgnoreCase("thermolysin")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Thermolysin, no P rule");
+        } else if (prideEnzymeName.equalsIgnoreCase("semi-chymotrypsin")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Semi-Chymotrypsin (FYWL)");
+        } else if (prideEnzymeName.equalsIgnoreCase("semi glu-c")
+                || prideEnzymeName.equalsIgnoreCase("semi gluc")
+                || prideEnzymeName.equalsIgnoreCase("semi glu c")) { // @TODO: other ways to annotate this?
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Semi-Glu-C");
+        } else {
+            // unknown/unmapped enyzyme, nothing to do...
+        }
+
+        return tempEnzyme;
+    }
 }

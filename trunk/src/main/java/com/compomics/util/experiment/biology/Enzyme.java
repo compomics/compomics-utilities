@@ -210,11 +210,9 @@ public class Enzyme extends ExperimentObject {
      *
      * @return a boolean indicating whether a cleavage site was implemented for
      * this enzyme
+     * @deprecated use isSemiSpecific instead
      */
     public boolean enzymeCleaves() {
-
-        // @TODO: should be deprectated??
-
         return !getAminoAcidBefore().isEmpty() || !getAminoAcidAfter().isEmpty();
     }
 
@@ -448,5 +446,5 @@ public class Enzyme extends ExperimentObject {
             return false;
         }
         return isSemiSpecific;
-    }
+    } 
 }

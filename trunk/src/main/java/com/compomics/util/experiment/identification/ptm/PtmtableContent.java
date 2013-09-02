@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Convenience class for the content of a ptm table
+ * Convenience class for the content of a PTM table.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -22,8 +22,9 @@ import java.util.HashMap;
 public class PtmtableContent {
 
     /**
-     * The content of the table: modification status -> fragment ion type according to the peptide fragment ion static fields-> aa
-     * number -> list of intensities
+     * The content of the table: modification status -> fragment ion type
+     * according to the peptide fragment ion static fields-> aa number -> list
+     * of intensities.
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, ArrayList<Double>>>> map;
     /**
@@ -172,7 +173,7 @@ public class PtmtableContent {
     }
 
     /**
-     * Normalize intesities.
+     * Normalize intensities.
      */
     public void normalize() {
         if (totalIntensity > 0) {
@@ -202,8 +203,7 @@ public class PtmtableContent {
     public double getMaxIntensity() {
         return maxIntensity;
     }
-    
-    
+
     /**
      * Returns the PTM plot series in the JFreechart format for one PSM.
      *

@@ -713,6 +713,7 @@ public class Peptide extends ExperimentObject {
      * isSameAs, here the localization of all PTMs is taken into account.
      *
      * @param anotherPeptide another peptide
+     * @param ptms the PTMs
      * @return true if the other peptide has the same positions at the same
      * location as the considered peptide
      */
@@ -1207,7 +1208,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns a version of the peptide which does not contain the inspected
-     * PTMs
+     * PTMs.
      *
      * @param peptide the original peptide
      * @param ptms list of inspected PTMs

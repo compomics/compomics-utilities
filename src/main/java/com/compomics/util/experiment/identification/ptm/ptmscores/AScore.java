@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.experiment.biology.Ion;
@@ -23,13 +19,14 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class estimates the A-score as described in http://www.ncbi.nlm.nih.gov/pubmed/16964243
- * Note: Here the window size is adapted to mz tolerance and the score is not restricted to phosphorylation
+ * This class estimates the A-score as described in
+ * http://www.ncbi.nlm.nih.gov/pubmed/16964243 Note: Here the window size is
+ * adapted to mz tolerance and the score is not restricted to phosphorylation.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AScore {
-    
+
     /**
      * Returns the A-score for the best PTM location without accounting for
      * neutral losses. In case the two best locations score the same they are
@@ -56,8 +53,8 @@ public class AScore {
      * @throws ClassNotFoundException
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
     }
 
@@ -88,8 +85,8 @@ public class AScore {
      * @throws ClassNotFoundException
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
     }
 
@@ -123,7 +120,8 @@ public class AScore {
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) 
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for A-score calculation.");
@@ -172,7 +170,8 @@ public class AScore {
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
 
-            HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites, spectrum, spectrumMap, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance, spectrumAnnotator, refPTM);
+            HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites, 
+                    spectrum, spectrumMap, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance, spectrumAnnotator, refPTM);
 
             HashMap<Double, ArrayList<Integer>> peptideScoreToPostitionMap = getPeptideScoreToPositionMap(positionToScoreMap);
             ArrayList<Double> scores = new ArrayList<Double>(peptideScoreToPostitionMap.keySet());
@@ -330,13 +329,15 @@ public class AScore {
     }
 
     /**
-     * Estimates the peptide score for every modification localization and returns a map score -> localization
-     * 
+     * Estimates the peptide score for every modification localization and
+     * returns a map score -> localization.
+     *
      * @param positionToScoreMap the position to score map
-     * 
+     *
      * @return a score to position map
      */
     public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap) {
+
         HashMap<Double, ArrayList<Integer>> result = new HashMap<Double, ArrayList<Integer>>();
 
         for (int pos : positionToScoreMap.keySet()) {
@@ -380,12 +381,13 @@ public class AScore {
     }
 
     /**
-     * Returns a map PTM localization -> score
+     * Returns a map PTM localization -> score.
      *
      * @param peptide
-     * @param ptms
+     * @param noModPeptide
      * @param spectrum
      * @param iontypes
+     * @param spectrumMap 
      * @param scoringLossesMap
      * @param charges
      * @param precursorCharge
@@ -393,10 +395,10 @@ public class AScore {
      * @param spectrumAnnotator
      * @param possibleSites
      * @param refPTM
-     * @return
+     * @return  a map PTM localization -> score
      */
-    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites, MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
+    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites, 
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SpectrumAnnotator spectrumAnnotator, PTM refPTM) {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();

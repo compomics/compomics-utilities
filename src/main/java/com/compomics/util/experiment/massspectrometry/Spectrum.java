@@ -497,7 +497,8 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param mzMin
      * @param mzMax
-     * @return
+     * @return the part of the spectrum contained between mzMin (inclusive) and
+     * mzMax (exclusive)
      */
     public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) {
         HashMap<Double, Peak> result = new HashMap<Double, Peak>();

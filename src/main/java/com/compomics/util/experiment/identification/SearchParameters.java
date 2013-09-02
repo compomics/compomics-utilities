@@ -928,16 +928,16 @@ public class SearchParameters implements Serializable {
         if (!this.getMaxChargeSearched().equals(otherSearchParameters.getMaxChargeSearched())) {
             return false;
         }
-        if (this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() != null
-                && this.getMinPeptideLength().intValue() != otherSearchParameters.getMinPeptideLength().intValue()) {
+        if ((this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() != null)
+                && (this.getMinPeptideLength().intValue() != otherSearchParameters.getMinPeptideLength().intValue())) {
             return false;
         }
         if ((this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() == null)
                 || (this.getMinPeptideLength() == null && otherSearchParameters.getMinPeptideLength() != null)) {
             return false;
         }
-        if (this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() != null
-                && this.getMaxPeptideLength().intValue() != otherSearchParameters.getMaxPeptideLength().intValue()) {
+        if ((this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() != null)
+                && (this.getMaxPeptideLength().intValue() != otherSearchParameters.getMaxPeptideLength().intValue())) {
             return false;
         }
         if ((this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() == null)
@@ -962,7 +962,12 @@ public class SearchParameters implements Serializable {
         if (this.isEstimateCharge().booleanValue() != otherSearchParameters.isEstimateCharge().booleanValue()) {
             return false;
         }
-        if (!this.getEnzyme().equals(otherSearchParameters.getEnzyme())) {
+        if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() != null)
+                && (!this.getEnzyme().equals(otherSearchParameters.getEnzyme()))) {
+            return false;
+        }
+        if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() == null)
+                || (this.getEnzyme() == null && otherSearchParameters.getEnzyme() != null)) {
             return false;
         }
         if (this.getParametersFile() != null && otherSearchParameters.getParametersFile() != null

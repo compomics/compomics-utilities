@@ -107,8 +107,10 @@ public class AScore {
      * @param mzTolerance The m/z tolerance to use
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
+     * 
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -232,7 +234,7 @@ public class AScore {
             }
 
             double p = ((double) bestI + 1) / 100;
-            Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+            Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
             ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             int n = 0;
@@ -265,7 +267,7 @@ public class AScore {
                 p1 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
             }
 
-            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+            tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
             matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
             n = 0;
@@ -414,7 +416,7 @@ public class AScore {
             double p = ((double) i + 1) / 100;
 
             for (int pos : possibleSites) {
-                Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getParentProteins(), noModPeptide.getModificationMatches());
+                Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
                 tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
 
                 ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance, false);

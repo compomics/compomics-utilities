@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * This class sorts the proteins into groups.
@@ -49,7 +50,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = false;
+    private boolean debugSpeed = true;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -124,8 +125,8 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, WaitingHandler waitingHandler, boolean printExpectedImportTime) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        initiateTree(initialTagSize, maxNodeSize, null, waitingHandler, printExpectedImportTime);
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime);
     }
 
     /**
@@ -151,7 +152,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         tree.clear();
@@ -185,7 +186,7 @@ public class ProteinTree {
                 componentsFactory.initiate();
             }
             if (needImport) {
-                importDb(initialTagSize, maxNodeSize, enzyme, waitingHandler, printExpectedImportTime);
+                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime);
             } else {
                 componentsFactory.loadProteinLenths();
             }
@@ -227,7 +228,7 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void importDb(int initialTagSize, int maxNodeSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
+    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
@@ -307,8 +308,8 @@ public class ProteinTree {
             estimatedTreeSize = estimatedTreeSize / 100;
             debugSpeedWriter.write("Estimated tree size: " + estimatedTreeSize);
             System.out.println("Estimated tree size: " + estimatedTreeSize);
-            debugSpeedWriter.write(nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
-            System.out.println(nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
+            debugSpeedWriter.write(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
+            System.out.println(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
             debugSpeedWriter.newLine();
             debugSpeedWriter.flush();
         }
@@ -328,13 +329,9 @@ public class ProteinTree {
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, loadedAccessions);
+                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
                 tagsLoaded += tempTags.size();
                 tempTags.clear();
-                if (tags.size() - tagsLoaded > 1.5 * nTags) {
-                    tree.clear();
-                    System.gc();
-                }
                 if (sequenceFactory.getnCache() < accessions.size()) {
                     Collections.reverse(accessions);
                 }
@@ -349,7 +346,7 @@ public class ProteinTree {
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, enzyme, loadedAccessions);
+            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
 
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -400,7 +397,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
-            int initialTagSize, int maxNodeSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
+            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         //@TODO: would be cool to have this multithreaded
@@ -440,12 +437,12 @@ public class ProteinTree {
             }
         }
 
-        HashMap<String, Object> toSave = new HashMap<String, Object>(tree.size());
         for (String tag : tags) {
             Node node = tree.get(tag);
             if (node != null) {
-                node.splitNode(maxNodeSize);
-                toSave.put(tag, node);
+                node.splitNode(maxNodeSize, maxPeptideSize);
+                componentsFactory.saveNode(tag, node);
+                tree.remove(tag);
             }
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled()) {
@@ -454,7 +451,6 @@ public class ProteinTree {
                 waitingHandler.increaseSecondaryProgressCounter();
             }
         }
-        componentsFactory.saveNodes(toSave);
     }
 
     /**
@@ -736,7 +732,7 @@ public class ProteinTree {
     public void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
     }
-    
+
     /**
      * Empties the cache.
      */
@@ -747,5 +743,176 @@ public class ProteinTree {
         lastQueriedPeptidesCacheContent.clear();
         lastSlowQueriedPeptidesCache.clear();
         lastSlowQueriedPeptidesCacheContent.clear();
+    }
+
+    /**
+     * returns a PeptideIterator which iterates alphabetically all peptides
+     * corresponding to the end of a branch in the tree.
+     *
+     * @return a PeptideIterator which iterates alphabetically all peptides
+     * corresponding to the end of a branch in the tree
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException {
+        return new PeptideIterator();
+    }
+
+    /**
+     * Alphabetical iterator for the tree
+     */
+    public class PeptideIterator implements Iterator {
+
+        /**
+         * The initial tag size of the tree
+         */
+        private Integer initialTagSize;
+        /**
+         * The list of possible initial tags
+         */
+        private ArrayList<String> tags;
+        /**
+         * The current node
+         */
+        private Node currentNode = null;
+        /**
+         * The parent node
+         */
+        private Node parentNode = null;
+        /**
+         * The current peptide sequence
+         */
+        private String currentSequence = null;
+        /**
+         * List of amino acids found in the current node subtree if any
+         */
+        private ArrayList<Character> aas = null;
+        /**
+         * The current iterator position in the tags
+         */
+        private int i = -1;
+        /**
+         * The current iterator position in the amino acid list
+         */
+        private int j = 0;
+
+        /**
+         * Constructor
+         *
+         * @throws SQLException
+         * @throws IOException
+         * @throws ClassNotFoundException
+         */
+        private PeptideIterator() throws SQLException, IOException, ClassNotFoundException {
+            initialTagSize = componentsFactory.getInitialSize();
+            tags = TagFactory.getAminoAcidCombinations(initialTagSize);
+        }
+
+        @Override
+        public boolean hasNext() {
+            try {
+                if (currentNode != null && currentNode.getDepth() == initialTagSize && currentNode.getAccessions() != null && i < tags.size() - 1) {
+                    // ok we're done with this node
+                    parentNode = null;
+                    aas = null;
+                    j = 0;
+                    currentSequence = tags.get(++i);
+                    currentNode = getNode(currentSequence);
+                }
+                while (++i < tags.size() && currentNode == null && parentNode == null) {
+                    currentSequence = tags.get(i);
+                    currentNode = getNode(currentSequence);
+                }
+                if (i < tags.size()) {
+                    if (aas != null) {
+                        int parentDepth = currentSequence.length() - 1;
+                        currentSequence = currentSequence.substring(0, parentDepth);
+                        if (++j == aas.size()) {
+                            if (!parentNode.getTermini().isEmpty()) {
+                                currentNode = null;
+                                return true;
+                            } else {
+                                j++;
+                            }
+                        }
+                        if (j == aas.size() + 1) {
+                            if (parentDepth <= initialTagSize) {
+                                // ok we're done with this node
+                                currentSequence = null;
+                                currentNode = null;
+                                parentNode = null;
+                                aas = null;
+                                j = 0;
+                            } else {
+                                parentDepth = currentSequence.length() - 1;
+                                String parentSequence = currentSequence.substring(0, parentDepth);
+                                char aa = currentSequence.charAt(parentDepth);
+                                if (parentDepth == initialTagSize) {
+                                    parentNode = getNode(parentSequence);
+                                } else {
+                                    String tag = parentSequence.substring(0, initialTagSize);
+                                    parentNode = getNode(tag).getSubNode(parentSequence);
+                                }
+                                currentNode = parentNode.getSubtree().get(aa);
+                                aas = new ArrayList<Character>(parentNode.getSubtree().keySet());
+                                Collections.sort(aas);
+                                j = aas.indexOf(aa);
+                            }
+                            return hasNext();
+                        }
+                        char aa = aas.get(j);
+                        currentSequence += aa;
+                        currentNode = parentNode.getSubtree().get(aa);
+                    }
+                    if (currentNode == null) {
+                        int debug = 1;
+                    }
+                    while (currentNode.getAccessions() == null) {
+                        j = 0;
+                        aas = new ArrayList<Character>(currentNode.getSubtree().keySet());
+                            parentNode = currentNode;
+                        if (!aas.isEmpty()) {
+                            Collections.sort(aas);
+                            char aa = aas.get(j);
+                            currentSequence += aa;
+                            currentNode = currentNode.getSubtree().get(aa);
+                        } else {
+                            currentNode = null;
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("An error occurred while iterating the tree. See previous exception.");
+            }
+        }
+
+        @Override
+        public Object next() {
+            return currentSequence;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("ProteinTrees are not editable.");
+        }
+
+        /**
+         * Returns the protein mapping of the current peptide.
+         *
+         * @return the protein mapping of the current peptide.
+         */
+        public HashMap<String, ArrayList<Integer>> getMapping() {
+            if (currentNode != null) {
+                return currentNode.getAccessions();
+            } else {
+                return parentNode.getTermini();
+            }
+        }
     }
 }

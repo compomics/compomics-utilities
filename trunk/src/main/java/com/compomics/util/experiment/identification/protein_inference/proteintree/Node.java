@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class Node implements Serializable {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 8936868785405252371L;
     /**
@@ -31,7 +31,7 @@ public class Node implements Serializable {
      */
     private HashMap<String, ArrayList<Integer>> termini = new HashMap<String, ArrayList<Integer>>();
     /**
-     * Sutree starting from this node.
+     * Subtree starting from this node.
      */
     private HashMap<Character, Node> subtree = null;
 
@@ -373,7 +373,7 @@ public class Node implements Serializable {
     }
 
     /**
-     * Returns the subnode associated to an amino acid sequence
+     * Returns the subnode associated to an amino acid sequence.
      *
      * @param sequence the amino acid sequence
      *

@@ -615,7 +615,7 @@ public class SequenceFactory {
     public static boolean isDecoy(String proteinAccession, String decoyFlag) {
 
         // test if the decoy tag is empty, and return false if it is
-        if (decoyFlag.isEmpty()) {
+        if (decoyFlag == null || decoyFlag.isEmpty()) {
             return false;
         }
 

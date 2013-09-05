@@ -50,7 +50,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = true;
+    private boolean debugSpeed = false;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -115,6 +115,7 @@ public class ProteinTree {
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 500 giving an approximate
      * query time <20ms.
+     * @param maxPeptideSize the maximum peptide size
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null but strongly recommended :)
      * @param printExpectedImportTime if true the expected import time will be
@@ -125,7 +126,8 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime)
+            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
         initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime);
     }
 
@@ -140,6 +142,7 @@ public class ProteinTree {
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 500 giving an approximate
      * query time <20ms.
+     * @param maxPeptideSize the maximum peptide size
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
@@ -217,6 +220,7 @@ public class ProteinTree {
      * 3 for databases containing less than 100 000 proteins.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 5000.
+     * @param maxPeptideSize the maximum peptide size
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
@@ -746,7 +750,7 @@ public class ProteinTree {
     }
 
     /**
-     * returns a PeptideIterator which iterates alphabetically all peptides
+     * Returns a PeptideIterator which iterates alphabetically all peptides
      * corresponding to the end of a branch in the tree.
      *
      * @return a PeptideIterator which iterates alphabetically all peptides
@@ -761,45 +765,45 @@ public class ProteinTree {
     }
 
     /**
-     * Alphabetical iterator for the tree
+     * Alphabetical iterator for the tree.
      */
     public class PeptideIterator implements Iterator {
 
         /**
-         * The initial tag size of the tree
+         * The initial tag size of the tree.
          */
         private Integer initialTagSize;
         /**
-         * The list of possible initial tags
+         * The list of possible initial tags.
          */
         private ArrayList<String> tags;
         /**
-         * The current node
+         * The current node.
          */
         private Node currentNode = null;
         /**
-         * The parent node
+         * The parent node.
          */
         private Node parentNode = null;
         /**
-         * The current peptide sequence
+         * The current peptide sequence.
          */
         private String currentSequence = null;
         /**
-         * List of amino acids found in the current node subtree if any
+         * List of amino acids found in the current node subtree if any.
          */
         private ArrayList<Character> aas = null;
         /**
-         * The current iterator position in the tags
+         * The current iterator position in the tags.
          */
         private int i = -1;
         /**
-         * The current iterator position in the amino acid list
+         * The current iterator position in the amino acid list.
          */
         private int j = 0;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @throws SQLException
          * @throws IOException
@@ -872,7 +876,7 @@ public class ProteinTree {
                     while (currentNode.getAccessions() == null) {
                         j = 0;
                         aas = new ArrayList<Character>(currentNode.getSubtree().keySet());
-                            parentNode = currentNode;
+                        parentNode = currentNode;
                         if (!aas.isEmpty()) {
                             Collections.sort(aas);
                             char aa = aas.get(j);

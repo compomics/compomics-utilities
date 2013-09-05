@@ -15,6 +15,10 @@ import java.util.HashMap;
 public class Node implements Serializable {
 
     /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 8936868785405252371L;
+    /**
      * The depth of the node in the tree.
      */
     private int depth;
@@ -22,6 +26,10 @@ public class Node implements Serializable {
      * List of accessions contained in this node.
      */
     private HashMap<String, ArrayList<Integer>> accessions = new HashMap<String, ArrayList<Integer>>();
+    /**
+     * In case of splitting, the terminal mappings are put here.
+     */
+    private HashMap<String, ArrayList<Integer>> termini = new HashMap<String, ArrayList<Integer>>();
     /**
      * Sutree starting from this node.
      */
@@ -92,13 +100,16 @@ public class Node implements Serializable {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public boolean splitNode(int maxNodeSize) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
+    public boolean splitNode(int maxNodeSize, int maxDepth) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
-        if (accessions.size() > maxNodeSize) {
+        if (accessions.size() > maxNodeSize && depth <= maxDepth) {
 
             subtree = new HashMap<Character, Node>();
             for (String accession : accessions.keySet()) {
                 HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
+                if (indexes.isEmpty()) {
+                    indexes = getAA(accession, accessions.get(accession), depth);
+                }
                 for (char aa : indexes.keySet()) {
                     if (!subtree.containsKey(aa)) {
                         subtree.put(aa, new Node(depth + 1));
@@ -108,6 +119,10 @@ public class Node implements Serializable {
                 }
             }
             accessions = null;
+
+            for (Node node : subtree.values()) {
+                node.splitNode(maxNodeSize, maxDepth);
+            }
 
             return true;
         }
@@ -149,6 +164,15 @@ public class Node implements Serializable {
      */
     public HashMap<String, ArrayList<Integer>> getAccessions() {
         return accessions;
+    }
+
+    /**
+     * Returns the terminal mappings (they are not in the subtree).
+     *
+     * @return the terminal mappings
+     */
+    public HashMap<String, ArrayList<Integer>> getTermini() {
+        return termini;
     }
 
     /**
@@ -219,6 +243,18 @@ public class Node implements Serializable {
                     }
                 }
             }
+            for (String accession : termini.keySet()) {
+                ArrayList<Integer> indexes = result.get(accession);
+                if (indexes == null) {
+                    indexes = new ArrayList<Integer>();
+                    result.put(accession, indexes);
+                }
+                for (Integer index : termini.get(accession)) {
+                    if (!indexes.contains(index)) {
+                        indexes.add(index);
+                    }
+                }
+            }
             return result;
         }
     }
@@ -256,7 +292,9 @@ public class Node implements Serializable {
     }
 
     /**
-     * Returns a map of the amino acids found on the sequence: aa -> indexes.
+     * Returns a map of the amino acids found on the sequence: aa -> indexes. If
+     * the termination of the protein is reached the terminal character is used
+     * (see static field)
      *
      * @param accession the accession of the protein of interest
      * @param seeds the indexes where to start looking at
@@ -274,6 +312,7 @@ public class Node implements Serializable {
 
         for (int startIndex : seeds) {
             int tempIndex = startIndex + offset;
+
             if (tempIndex < proteinSequence.length()) {
                 char aa = proteinSequence.charAt(tempIndex);
                 ArrayList<Integer> indexes = result.get(aa);
@@ -281,7 +320,20 @@ public class Node implements Serializable {
                     indexes = new ArrayList<Integer>();
                     result.put(aa, indexes);
                 }
-                indexes.add(startIndex);
+                if (!indexes.contains(startIndex)) {
+                    indexes.add(startIndex);
+                }
+            } else if (tempIndex == proteinSequence.length()) {
+                ArrayList<Integer> indexes = termini.get(accession);
+                if (indexes == null) {
+                    indexes = new ArrayList<Integer>();
+                    termini.put(accession, indexes);
+                }
+                if (!indexes.contains(startIndex)) {
+                    indexes.add(startIndex);
+                }
+            } else {
+                throw new IllegalArgumentException("Attempting to index after the protein termini.");
             }
         }
 
@@ -318,5 +370,26 @@ public class Node implements Serializable {
         }
 
         return results;
+    }
+
+    /**
+     * Returns the subnode associated to an amino acid sequence
+     *
+     * @param sequence the amino acid sequence
+     *
+     * @return the corresponding subnode
+     */
+    public Node getSubNode(String sequence) {
+        if (sequence.length() <= depth) {
+            throw new IllegalArgumentException(sequence + " is not subnode of the node (depth=" + depth + ").");
+        }
+        char aa = sequence.charAt(depth);
+        if (depth < sequence.length() - 1) {
+            return subtree.get(aa).getSubNode(sequence);
+        } else if (depth == sequence.length() - 1) {
+            return subtree.get(aa);
+        } else {
+            throw new IllegalArgumentException("depth " + depth + " longer than sequence " + sequence + ".");
+        }
     }
 }

@@ -120,7 +120,7 @@ public class PeptideFragmentIon extends Ion {
     }
     
     /**
-     * Returns the name with number. for example b5-H2O.
+     * Returns the name with number. For example b5-H2O.
      * 
      * @return the name with number
      */

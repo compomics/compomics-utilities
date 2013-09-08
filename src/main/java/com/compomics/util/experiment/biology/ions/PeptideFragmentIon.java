@@ -118,6 +118,15 @@ public class PeptideFragmentIon extends Ion {
     public String getName() {
         return getSubTypeAsString() + getNeutralLossesAsString();
     }
+    
+    /**
+     * Returns the name with number. for example b5-H2O.
+     * 
+     * @return the name with number
+     */
+    public String getNameWithNumber() {
+        return getSubTypeAsString() + getNumber() + getNeutralLossesAsString();
+    }
 
     @Override
     public CvTerm getPrideCvTerm() {

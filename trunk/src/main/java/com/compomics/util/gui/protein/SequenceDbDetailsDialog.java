@@ -11,6 +11,7 @@ import com.compomics.util.protein.Header;
 import java.awt.Frame;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
@@ -324,15 +325,20 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         } catch (OutOfMemoryError error) {
             Runtime.getRuntime().gc();
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                    "SearchGUI used up all the available memory and had to be stopped.\n"
+                    "The tool used up all the available memory and had to be stopped.\n"
                     + "Memory boundaries are set in the Edit menu (Edit > Java Options).",
                     "Out Of Memory Error",
                     JOptionPane.ERROR_MESSAGE);
             System.out.println("Ran out of memory!");
             error.printStackTrace();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
                     new String[]{"FASTA Import Error.", "File " + fastaInput + " not found."},
+                    "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                    new String[]{"FASTA Import Error.", "File " + fastaInput + " could not be imported."},
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
         }

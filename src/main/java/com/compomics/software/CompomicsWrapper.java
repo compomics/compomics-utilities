@@ -291,21 +291,21 @@ public class CompomicsWrapper {
 
         ProcessBuilder pb = new ProcessBuilder(process_name_array);
 
-        pb.directory(jarFile.getParentFile());
-
         // try to run the command line
         try {
             Process p = pb.start();
             StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream());
             Thread errorThread = (new Thread(errorGobbler));
-            Thread inputThread = (new Thread(new StreamGobbler(p.getInputStream())));
+            StreamGobbler inputGobbler = new StreamGobbler(p.getInputStream());
+            Thread inputThread = (new Thread(inputGobbler));
             errorThread.start();
             inputThread.start();
-            errorThread.join();
-            inputThread.join();
 
             int exitValue = p.waitFor();
 
+            errorGobbler.setContinueReading(false);
+            inputGobbler.setContinueReading(false);
+            
             if (useStartUpLog) {
                 System.out.println("Process exitValue: " + exitValue + System.getProperty("line.separator"));
                 bw.write("Process exitValue: " + exitValue + System.getProperty("line.separator"));

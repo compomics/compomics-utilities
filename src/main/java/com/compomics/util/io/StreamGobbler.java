@@ -11,7 +11,8 @@ import java.io.InputStreamReader;
  * @author Davy Maddelein
  */
 public class StreamGobbler implements Runnable {
-
+    
+    boolean continueReading = true;
     /**
      * The input stream.
      */
@@ -29,16 +30,18 @@ public class StreamGobbler implements Runnable {
     public StreamGobbler(InputStream is) {
         this.is = is;
     }
-
+    
     @Override
     public void run() {
         try {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String line;
-            if ((line = br.readLine()) != null) {
-                System.out.println(line);
-                builder.append(line);
+            while (continueReading) {
+                if ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                    //builder.append(line);
+                }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -52,5 +55,9 @@ public class StreamGobbler implements Runnable {
      */
     public String getMessages() {
         return builder.toString();
+    }
+    
+    public void setContinueReading(boolean continueReading){
+        this.continueReading = continueReading; 
     }
 }

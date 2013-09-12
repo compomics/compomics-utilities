@@ -12,7 +12,10 @@ import java.io.InputStreamReader;
  */
 public class StreamGobbler implements Runnable {
     
-    boolean continueReading = true;
+    /**
+     * If the reading is to continue or not.
+     */
+    private boolean continueReading = true;
     /**
      * The input stream.
      */
@@ -57,6 +60,11 @@ public class StreamGobbler implements Runnable {
         return builder.toString();
     }
     
+    /**
+     * Set if the reading is to continue or not.
+     * 
+     * @param continueReading if the reading is to continue or not
+     */
     public void setContinueReading(boolean continueReading){
         this.continueReading = continueReading; 
     }

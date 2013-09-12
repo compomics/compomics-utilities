@@ -215,6 +215,9 @@ public class MgfReader {
                 try {
                     title = URLDecoder.decode(title, "utf-8");
                 } catch (UnsupportedEncodingException e) {
+                    if (waitingHandler != null) {
+                        waitingHandler.appendReport("An exception was thrown when trying to decode an mgf title: " + title, true, true);
+                    }
                     System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
                     e.printStackTrace();
                 }
@@ -222,7 +225,10 @@ public class MgfReader {
                 if (nDuplicates != null || spectrumTitles.contains(title)) {
                     if (nDuplicates == null) {
                         nDuplicates = 0;
-                        System.err.println("Warning: spectrum title " + title + " is not unique in " + mgfFile.getName() + ".");
+                        if (waitingHandler != null) {
+                            waitingHandler.appendReport("Warning: spectrum title " + title + " is not unique in " + mgfFile.getName() + "!", true, true);
+                        }
+                        System.err.println("Warning: spectrum title " + title + " is not unique in " + mgfFile.getName() + "!");
                     }
                     duplicateTitles.put(title, ++nDuplicates);
                     title += "_" + nDuplicates;
@@ -286,7 +292,7 @@ public class MgfReader {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Cannot parse retention time:" + rtInput);
+                    throw new IllegalArgumentException("Cannot parse retention time: " + rtInput);
                 }
             } else if (line.equals("END IONS")) {
                 if (title == null) {

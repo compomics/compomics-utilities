@@ -307,12 +307,21 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Appends decoy sequences to the given target database file.
      *
      * @param targetFile the target database file
-     * @param progressDialog the progress dialog 
+     * @param progressDialog the progress dialog
      */
     public void generateTargetDecoyDatabase(File targetFile, ProgressDialogX progressDialog) {
 
         String fastaInput = targetFile.getAbsolutePath();
-        String newFasta = fastaInput.substring(0, fastaInput.lastIndexOf("."));
+
+        // set up the new fasta file name
+        String newFasta = fastaInput;
+
+        // remove the ending .fasta (if there)
+        if (fastaInput.lastIndexOf(".") != -1) {
+            newFasta = fastaInput.substring(0, fastaInput.lastIndexOf("."));
+        }
+
+        // add the target decoy tag
         newFasta += SequenceFactory.getTargetDecoyFileNameTag();
 
         try {

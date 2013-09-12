@@ -74,9 +74,9 @@ public class CompomicsWrapper {
     }
 /**
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args,boolean checkForUpdates){
-    
+
     }
-   */ 
+     */
     /**
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.
@@ -305,7 +305,7 @@ public class CompomicsWrapper {
 
             errorGobbler.setContinueReading(false);
             inputGobbler.setContinueReading(false);
-            
+
             if (useStartUpLog) {
                 System.out.println("Process exitValue: " + exitValue + System.getProperty("line.separator"));
                 bw.write("Process exitValue: " + exitValue + System.getProperty("line.separator"));

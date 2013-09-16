@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Serine
+ * Serine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Serine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Serine extends AminoAcid {
     static final long serialVersionUID = -2201410868329421240L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Serine() {
         singleLetterCode = "S";

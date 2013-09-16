@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Valine
+ * Valine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Valine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Valine extends AminoAcid {
     static final long serialVersionUID = -5155418025636472676L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Valine() {
         singleLetterCode = "V";

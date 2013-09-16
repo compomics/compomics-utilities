@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Arginine
+ * Arginine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Arginine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Arginine extends AminoAcid {
         static final long serialVersionUID = -5308475190007072857L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Arginine() {
         singleLetterCode = "R";

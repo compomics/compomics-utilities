@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Alanine
+ * Alanine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Alanine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Alanine extends AminoAcid {
     static final long serialVersionUID = 2553535668713619525L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Alanine() {
         singleLetterCode = "A";

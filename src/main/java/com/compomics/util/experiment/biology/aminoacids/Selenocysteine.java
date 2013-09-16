@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * SeC (U) (Mascot)
+ * SeC (U) (Mascot)-
  *
  * @author Harald Barsnes
  */
@@ -15,7 +15,7 @@ public class Selenocysteine extends AminoAcid {
     static final long serialVersionUID = -2123392615229813870L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Selenocysteine() {
         singleLetterCode = "U";

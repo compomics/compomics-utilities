@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Isoleucine
+ * Isoleucine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Isoleucine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Isoleucine extends AminoAcid {
     static final long serialVersionUID = -514676021245212886L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Isoleucine() {
         singleLetterCode = "I";

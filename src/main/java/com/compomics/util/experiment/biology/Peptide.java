@@ -364,10 +364,10 @@ public class Peptide extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a boolean indicating whether the given modification can be found
      * on the peptide
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -478,9 +478,9 @@ public class Peptide extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a list of potential modification sites
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -490,7 +490,8 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
@@ -1136,10 +1137,10 @@ public class Peptide extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a list of proteins where this peptide can be found in the
      * N-terminus
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -1169,10 +1170,10 @@ public class Peptide extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a list of proteins where this peptide can be found in the
      * C-terminus
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error

@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Aspartic Acid
+ * Aspartic Acid.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AsparticAcid extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class AsparticAcid extends AminoAcid {
     static final long serialVersionUID = -8410332876209882538L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public AsparticAcid() {
         singleLetterCode = "D";

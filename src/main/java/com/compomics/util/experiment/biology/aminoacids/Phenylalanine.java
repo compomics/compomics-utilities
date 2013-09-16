@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Phenylalanine
+ * Phenylalanine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Phenylalanine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Phenylalanine extends AminoAcid {
     static final long serialVersionUID = -939609662176974248L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Phenylalanine() {
         singleLetterCode = "F";

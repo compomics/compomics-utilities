@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Tyrosine
+ * Tyrosine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Tyrosine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Tyrosine extends AminoAcid {
     static final long serialVersionUID = 7542892886050340088L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Tyrosine() {
         singleLetterCode = "Y";

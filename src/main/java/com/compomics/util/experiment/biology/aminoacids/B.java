@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Asn or Asp: Asx (Mascot)
+ * Asn or Asp: Asx (Mascot).
  *
  * @author Harald Barsnes
  */
@@ -15,7 +15,7 @@ public class B extends AminoAcid {
     static final long serialVersionUID = -584166511231722270L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public B() {
         singleLetterCode = "B";

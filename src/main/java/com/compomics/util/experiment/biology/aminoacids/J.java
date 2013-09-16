@@ -15,7 +15,7 @@ public class J extends AminoAcid {
     static final long serialVersionUID = 1963175809911841522L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public J() {
         singleLetterCode = "J";

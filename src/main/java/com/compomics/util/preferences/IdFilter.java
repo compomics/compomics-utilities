@@ -134,7 +134,7 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates a peptide depending on its protein inference status
+     * Validates a peptide depending on its protein inference status.
      *
      * @param peptide the peptide
      * @return a boolean indicating whether the peptide passed the test
@@ -155,6 +155,7 @@ public class IdFilter implements Serializable {
                 return false;
             }
         }
+
         return true;
     }
 

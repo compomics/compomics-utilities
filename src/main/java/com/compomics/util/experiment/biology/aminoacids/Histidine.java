@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Histidine
+ * Histidine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Histidine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Histidine extends AminoAcid {
     static final long serialVersionUID = -669587024023052011L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Histidine() {
         singleLetterCode = "H";

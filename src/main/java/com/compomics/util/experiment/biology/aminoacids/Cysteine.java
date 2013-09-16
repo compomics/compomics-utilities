@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Cysteine
+ * Cysteine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Cysteine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Cysteine extends AminoAcid {
     static final long serialVersionUID = 9171494537928740228L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Cysteine() {
         singleLetterCode = "C";

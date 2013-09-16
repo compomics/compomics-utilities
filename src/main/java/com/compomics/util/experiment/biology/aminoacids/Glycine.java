@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Glycine
+ * Glycine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Glycine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Glycine extends AminoAcid {
     static final long serialVersionUID = 2128316713069027803L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Glycine() {
         singleLetterCode = "G";

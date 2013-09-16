@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Threonine
+ * Threonine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Threonine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Threonine extends AminoAcid {
     static final long serialVersionUID = 172831874616867727L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Threonine() {
         singleLetterCode = "T";

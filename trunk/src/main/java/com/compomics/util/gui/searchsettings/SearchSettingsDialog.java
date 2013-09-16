@@ -21,6 +21,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -1051,6 +1052,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             try {
                 sequenceFactory.clearFactory();
             } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to clear the sequence factory.", "File Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Failed to clear the sequence factory.", "File Error", JOptionPane.ERROR_MESSAGE);
             }

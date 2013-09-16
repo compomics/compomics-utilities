@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.io.IOException;
@@ -147,93 +148,45 @@ public class Protein extends ExperimentObject {
     }
 
     /**
-     * Returns the number of observable amino acids of the sequence.
+     * Returns the number of observable amino acids in the sequence.
      *
      * @param enzyme the enzyme to use
      * @param pepMaxLength the max peptide length
+     * 
      * @return the number of observable amino acids of the sequence
      */
     public int getObservableLength(Enzyme enzyme, int pepMaxLength) {
-
-        int length = 0;
-        String tempSequence = sequence;
-
-        while (tempSequence.length() > 1) {
-            int cleavage = 0;
-            
-            // @TODO: how to handle this for semi-specific??
-
-            for (Character aa : enzyme.getAminoAcidAfter()) {
-                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa) - 1;
-                while (tempCleavage > cleavage && enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
-                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa) - 1;
+        int length = 0, tempLength = 1;
+        for (int i = 0; i < sequence.length() - 1; i++) {
+            if (enzyme.isCleavageSite(sequence.charAt(i), sequence.charAt(i + 1))) {
+                if (tempLength <= pepMaxLength) {
+                    length += tempLength;
                 }
-                if (tempCleavage > cleavage && !enzyme.getRestrictionBefore().contains(tempSequence.charAt(tempCleavage))) {
-                    cleavage = tempCleavage;
-                }
+                tempLength = 0;
             }
-
-            for (Character aa : enzyme.getAminoAcidBefore()) {
-                int tempCleavage = tempSequence.substring(0, tempSequence.length() - 1).lastIndexOf(aa);
-                while (tempCleavage > cleavage && enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
-                    tempCleavage = tempSequence.substring(0, tempCleavage - 1).lastIndexOf(aa);
-                }
-                if (tempCleavage > cleavage && !enzyme.getRestrictionAfter().contains(tempSequence.charAt(tempCleavage + 1))) {
-                    cleavage = tempCleavage;
-                }
-            }
-
-            if (cleavage == 0) {
-                if (tempSequence.length() <= pepMaxLength) {
-                    length += tempSequence.length();
-                }
-                break;
-            }
-
-            String tempPeptide = tempSequence.substring(cleavage + 1);
-
-            if (tempPeptide.length() <= pepMaxLength) {
-                length += tempPeptide.length();
-            }
-
-            tempSequence = tempSequence.substring(0, cleavage + 1);
+            tempLength++;
         }
-
+        if (tempLength < pepMaxLength) {
+            length += tempLength;
+        }
         return length;
     }
 
     /**
-     * Returns the number of possible peptides (not accounting PTMs nor missed
-     * cleavages) with the selected enzyme.
+     * Returns the number of cleavage sites.
      *
      * @param enzyme The selected enzyme
+     * 
      * @return the number of possible peptides
      */
-    public int getNPossiblePeptides(Enzyme enzyme) {
-
-        int nCleavages = 1;
-        ArrayList<Character> aminoAcidBefore = enzyme.getAminoAcidBefore();
-        ArrayList<Character> aminoAcidAfter = enzyme.getAminoAcidAfter();
-        ArrayList<Character> restrictionBefore = enzyme.getRestrictionBefore();
-        ArrayList<Character> restrictionAfter = enzyme.getRestrictionAfter();
-
-        try {
-            char[] sequenceCharacters = sequence.toCharArray();
-            char aaBefore, aaAfter;
-            for (int i = 0; i < sequenceCharacters.length - 1; i++) {
-                aaBefore = sequenceCharacters[i];
-                aaAfter = sequenceCharacters[i + 1];
-                if ((aminoAcidBefore.contains(aaBefore) || aminoAcidAfter.contains(aaAfter))
-                        && !(restrictionBefore.contains(aaBefore) || restrictionAfter.contains(aaAfter))) {
-                    nCleavages++;
-                }
+    public int getNCleavageSites(Enzyme enzyme) {
+        int nCleavageSites = 0;
+        for (int i = 0; i < sequence.length() - 1; i++) {
+            if (enzyme.isCleavageSite(sequence.charAt(i), sequence.charAt(i + 1))) {
+                nCleavageSites++;
             }
-            nCleavages++;
-        } catch (Exception e) {
-            // exception thrown when the sequence was not implemented. Ignore and return 0.
         }
-
-        return nCleavages;
+        return nCleavageSites;
     }
 
     /**
@@ -271,25 +224,19 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the list of indexes where a peptide can be found in the protein
-     * sequence. Note: it might be faster to use an AminoAcidPattern matching to
-     * the protein sequence.
+     * sequence.
      *
-     * @param peptide the sequence of the peptide of interest
+     * @param peptideSequence the sequence of the peptide of interest
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return the list of indexes where a peptide can be found in a protein
      * sequence
      */
-    public ArrayList<Integer> getPeptideStart(String peptide) {
-
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        String tempSequence = sequence;
-
-        while (tempSequence.lastIndexOf(peptide) >= 0) {
-            int startIndex = tempSequence.lastIndexOf(peptide);
-            result.add(startIndex + 1);
-            tempSequence = tempSequence.substring(0, startIndex);
-        }
-
-        return result;
+    public ArrayList<Integer> getPeptideStart(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        AminoAcidPattern pattern = new AminoAcidPattern(peptideSequence);
+        return pattern.getIndexes(sequence, matchingType, massTolerance);
     }
 
     /**
@@ -297,11 +244,17 @@ public class Protein extends ExperimentObject {
      * peptide.
      *
      * @param peptideSequence the peptide sequence
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a boolean indicating whether the protein starts with the given
      * peptide
      */
-    public boolean isNTerm(String peptideSequence) {
-        return sequence.startsWith(peptideSequence);
+    public boolean isNTerm(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        AminoAcidPattern pattern = new AminoAcidPattern(peptideSequence);
+        String subSequence = sequence.substring(0, peptideSequence.length());
+        return pattern.matches(subSequence, matchingType, massTolerance);
     }
 
     /**
@@ -309,11 +262,17 @@ public class Protein extends ExperimentObject {
      * peptide.
      *
      * @param peptideSequence the peptide sequence
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a boolean indicating whether the protein ends with the given
      * peptide
      */
-    public boolean isCTerm(String peptideSequence) {
-        return sequence.endsWith(peptideSequence);
+    public boolean isCTerm(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        AminoAcidPattern pattern = new AminoAcidPattern(peptideSequence);
+        String subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
+        return pattern.matches(subSequence, matchingType, massTolerance);
     }
 
     /**
@@ -327,13 +286,18 @@ public class Protein extends ExperimentObject {
      *
      * @param peptideSequence the peptide sequence to check
      * @param enzyme the enzyme to use
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return true of the peptide is non-enzymatic
+     * 
      * @throws IOException
      */
-    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme) throws IOException {
+    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException {
 
         // get the surrounding amino acids
-        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 1);
+        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 1, matchingType, massTolerance);
 
         String firstAA = peptideSequence.charAt(0) + "";
         String lastAA = peptideSequence.charAt(peptideSequence.length() - 1) + "";
@@ -343,7 +307,7 @@ public class Protein extends ExperimentObject {
 
             String before = surroundingAminoAcids.get(index)[0];
             String after = surroundingAminoAcids.get(index)[1];
-            
+
             // @TODO: how to handle semi-specific enzymes??
 
             if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)
@@ -363,13 +327,18 @@ public class Protein extends ExperimentObject {
      *
      * @param peptide the sequence of the peptide of interest
      * @param nAA the number of amino acids to include
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return the amino acids surrounding a peptide in the protein sequence
+     * 
      * @throws IOException Exception thrown whenever an error occurred while
      * parsing the protein sequence
      */
-    public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA) throws IOException {
+    public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException {
 
-        ArrayList<Integer> startIndexes = getPeptideStart(peptide);
+        ArrayList<Integer> startIndexes = getPeptideStart(peptide, matchingType, massTolerance);
         HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();
 
         for (int startIndex : startIndexes) {

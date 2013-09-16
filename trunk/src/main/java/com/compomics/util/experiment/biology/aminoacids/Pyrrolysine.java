@@ -9,11 +9,29 @@ import com.compomics.util.experiment.biology.AminoAcid;
  */
 public class Pyrrolysine extends AminoAcid {
 
+    /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = 8680204019988094523L;
+
+    /**
+     * Constructor
+     */
     public Pyrrolysine() {
         singleLetterCode = "O";
         threeLetterCode = "Pyl";
         name = "Pyrrolysine";
         averageMass = 255.3134;
         monoisotopicMass = 255.158295;
+    }
+
+    @Override
+    public char[] getActualAminoAcids() {
+        return new char[]{'O'};
+    }
+
+    @Override
+    public char[] getCombinations() {
+        return new char[]{'X'};
     }
 }

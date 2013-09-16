@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -232,25 +233,62 @@ public class AminoAcidPattern implements Serializable {
 
     /**
      * Returns the amino acid pattern as case insensitive pattern for String
-     * matching.
+     * matching using default single letter code of amino acids.
      *
      * @return the amino acid pattern as java string pattern
      */
     public Pattern getAsStringPattern() {
+        return getAsStringPattern(ProteinMatch.MatchingType.string, null);
+    }
+
+    /**
+     * Returns the amino acid pattern as case insensitive pattern for String
+     * matching.
+     *
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the amino acid pattern as java string pattern
+     */
+    public Pattern getAsStringPattern(ProteinMatch.MatchingType matchingType, Double massTolerance) {
         String regex = "";
         int length = length();
         for (int i = 0; i < length; i++) {
             ArrayList<AminoAcid> tempTarget = aaTargeted.get(i);
             ArrayList<String> toAdd = new ArrayList<String>();
             if (tempTarget == null || tempTarget.isEmpty()) {
-                toAdd.addAll(AminoAcid.getAminoAcids());
+                toAdd.addAll(AminoAcid.getAminoAcidsList());
             } else {
                 for (AminoAcid aa : tempTarget) {
                     if (!toAdd.contains(aa.singleLetterCode)) {
                         toAdd.add(aa.singleLetterCode);
                     }
+                    if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                        for (char tempAa : aa.getActualAminoAcids()) {
+                            String value = tempAa + "";
+                            if (!toAdd.contains(value)) {
+                                toAdd.add(value);
+                            }
+                        }
+                        for (char tempAa : aa.getCombinations()) {
+                            String value = tempAa + "";
+                            if (!toAdd.contains(value)) {
+                                toAdd.add(value);
+                            }
+                        }
+                        if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                            for (char tempAa : aa.getIndistinguishibleAminoAcids(massTolerance)) {
+                                String value = tempAa + "";
+                                if (!toAdd.contains(value)) {
+                                    toAdd.add(value);
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
             Collections.sort(toAdd);
             ArrayList<String> restrictions = new ArrayList<String>();
             ArrayList<AminoAcid> exclude = aaExcluded.get(i);
@@ -261,7 +299,6 @@ public class AminoAcidPattern implements Serializable {
                     }
                 }
             }
-
             regex += "[";
             for (String aa : toAdd) {
                 if (!restrictions.contains(aa)) {
@@ -269,9 +306,21 @@ public class AminoAcidPattern implements Serializable {
                 }
             }
             regex += "]";
-
         }
         return Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+    }
+
+    /**
+     * Returns the indexes where the amino acid pattern was found in the input
+     * using default single letter code of amino acids. 1 is the first amino
+     * acid.
+     *
+     * @param input the amino acid input sequence as string
+     *
+     * @return a list of indexes where the amino acid pattern was found
+     */
+    public ArrayList<Integer> getIndexes(String input) {
+        return getIndexes(input, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
@@ -279,10 +328,13 @@ public class AminoAcidPattern implements Serializable {
      * 1 is the first amino acid.
      *
      * @param input the amino acid input sequence as string
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input) {
-        Pattern pattern = getAsStringPattern();
+    public ArrayList<Integer> getIndexes(String input, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        Pattern pattern = getAsStringPattern(matchingType, massTolerance);
         ArrayList<Integer> result = new ArrayList<Integer>();
         Matcher matcher = pattern.matcher(input);
         matcher.matches();
@@ -296,44 +348,93 @@ public class AminoAcidPattern implements Serializable {
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino-acid sequence.
+     * Indicates whether the pattern is found in the given amino-acid sequence
+     * using default single letter code of amino acids.
      *
      * @param aminoAcidSequence the amino-acid sequence
+     *
      * @return a boolean indicating whether the pattern is found in the given
      * amino-acid sequence
      */
     public boolean matches(String aminoAcidSequence) {
-        Pattern pattern = getAsStringPattern();
+        return matches(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+    }
+
+    /**
+     * Indicates whether the pattern is found in the given amino-acid sequence.
+     *
+     * @param aminoAcidSequence the amino-acid sequence
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return a boolean indicating whether the pattern is found in the given
+     * amino-acid sequence
+     */
+    public boolean matches(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        Pattern pattern = getAsStringPattern(matchingType, massTolerance);
         Matcher matcher = pattern.matcher(aminoAcidSequence);
         return matcher.find();
+    }
+
+    /**
+     * Indicates whether the given amino acid sequence starts with the pattern
+     * using default single letter code of amino acids.
+     *
+     * @param aminoAcidSequence the amino acid sequence
+     *
+     * @return a boolean indicating whether the given amino acid sequence starts
+     * with the pattern
+     */
+    public boolean isStarting(String aminoAcidSequence) {
+        return isStarting(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence) {
-        return matches(aminoAcidSequence.substring(0, length()));
+    public boolean isStarting(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return matches(aminoAcidSequence.substring(0, length()), matchingType, massTolerance);
+    }
+
+    /**
+     * Indicates whether the given amino acid sequence ends with the pattern
+     * using default single letter code of amino acids.
+     *
+     * @param aminoAcidSequence the amino acid sequence
+     *
+     * @return a boolean indicating whether the given amino acid sequence ends
+     * with the pattern
+     */
+    public boolean isEnding(String aminoAcidSequence) {
+        return isEnding(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence) {
-        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - length()));
+    public boolean isEnding(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - length()), matchingType, massTolerance);
     }
 
     /**
      * Indicates whether another AminoAcidPattern targets the same pattern.
      *
      * @param anotherPattern the other AminoAcidPattern
+     *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
     public boolean isSameAs(AminoAcidPattern anotherPattern) {

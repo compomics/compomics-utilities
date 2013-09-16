@@ -57,14 +57,14 @@ public class NeutralLossesMap implements Serializable {
         }
         found = false;
         for (NeutralLoss oldNeutralLoss : yBoundaries.keySet()) {
-            if (oldNeutralLoss.isSameAs(neutralLoss) && bStart < yBoundaries.get(oldNeutralLoss)) {
-                yBoundaries.put(oldNeutralLoss, bStart);
+            if (oldNeutralLoss.isSameAs(neutralLoss) && yStart < yBoundaries.get(oldNeutralLoss)) {
+                yBoundaries.put(oldNeutralLoss, yStart);
                 found = true;
                 break;
             }
         }
         if (!found) {
-            yBoundaries.put(neutralLoss, bStart);
+            yBoundaries.put(neutralLoss, yStart);
         }
     }
 

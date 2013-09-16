@@ -227,38 +227,10 @@ public class Enzyme extends ExperimentObject {
      * @deprecated use the isCleavageSite method using chars as input instead
      */
     public boolean isCleavageSite(String aaBefore, String aaAfter) {
-
-        for (Character aa1 : aminoAcidBefore) {
-            if (aaBefore.equals(aa1 + "")) {
-                boolean restriction = false;
-                for (Character aa2 : restrictionAfter) {
-                    if (aaAfter.equals(aa2 + "")) {
-                        restriction = true;
-                        break;
-                    }
-                }
-                if (!restriction) {
-                    return true;
-                }
-            }
+        if (aaBefore.length() == 0 || aaAfter.length() == 0) {
+            return true;
         }
-
-        for (Character aa1 : aminoAcidAfter) {
-            if (aaBefore.equals(aa1 + "")) {
-                boolean restriction = false;
-                for (Character aa2 : restrictionBefore) {
-                    if (aaAfter.equals(aa2 + "")) {
-                        restriction = true;
-                        break;
-                    }
-                }
-                if (!restriction) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return isCleavageSite(aaBefore.charAt(aaBefore.length() - 1), aaAfter.charAt(0));
     }
 
     /**
@@ -273,35 +245,52 @@ public class Enzyme extends ExperimentObject {
     public boolean isCleavageSite(char aaBefore, char aaAfter) {
 
         for (Character aa1 : aminoAcidBefore) {
-            if (aaBefore == aa1.charValue()) {
-                boolean restriction = false;
-                for (Character aa2 : restrictionAfter) {
-                    if (aaAfter == aa2.charValue()) {
-                        restriction = true;
-                        break;
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaBefore);
+            for (char possibleAaBefore : aminoAcid.getActualAminoAcids()) {
+                if (possibleAaBefore == aa1.charValue()) {
+                    boolean restriction = false;
+                    for (Character aa2 : restrictionAfter) {
+                        aminoAcid = AminoAcid.getAminoAcid(aaAfter);
+                        for (char possibleAaAfter : aminoAcid.getActualAminoAcids()) {
+                            if (possibleAaAfter == aa2.charValue()) {
+                                restriction = true;
+                                break;
+                            }
+                        }
+                        if (restriction) {
+                            break;
+                        }
                     }
-                }
-                if (!restriction) {
-                    return true;
+                    if (!restriction) {
+                        return true;
+                    }
                 }
             }
         }
 
         for (Character aa1 : aminoAcidAfter) {
-            if (aaBefore == aa1.charValue()) {
-                boolean restriction = false;
-                for (Character aa2 : restrictionBefore) {
-                    if (aaAfter == aa2.charValue()) {
-                        restriction = true;
-                        break;
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaAfter);
+            for (char possibleAaAfter : aminoAcid.getActualAminoAcids()) {
+                if (possibleAaAfter == aa1.charValue()) {
+                    boolean restriction = false;
+                    for (Character aa2 : restrictionBefore) {
+                        aminoAcid = AminoAcid.getAminoAcid(aaAfter);
+                        for (char possibleAaBefore : aminoAcid.getActualAminoAcids()) {
+                            if (possibleAaBefore == aa2.charValue()) {
+                                restriction = true;
+                                break;
+                            }
+                        }
+                        if (restriction) {
+                            break;
+                        }
                     }
-                }
-                if (!restriction) {
-                    return true;
+                    if (!restriction) {
+                        return true;
+                    }
                 }
             }
         }
-
         return false;
     }
 
@@ -334,9 +323,9 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
 
-        char aa, aaBefore;
-        char aaAfter = ' ';
-        String currentPeptide = "";
+        char aa, aaBefore ;
+        char aaAfter = sequence.charAt(0);
+        String currentPeptide = aaAfter + "";
         ArrayList<String> results = new ArrayList<String>();
 
         HashMap<Integer, ArrayList<String>> mc = new HashMap<Integer, ArrayList<String>>();
@@ -344,7 +333,7 @@ public class Enzyme extends ExperimentObject {
             mc.put(i, new ArrayList<String>());
         }
 
-        for (int i = 0; i < sequence.length(); i++) {
+        for (int i = 1; i < sequence.length(); i++) {
 
             aa = sequence.charAt(i);
             aaBefore = aaAfter;
@@ -446,5 +435,5 @@ public class Enzyme extends ExperimentObject {
             return false;
         }
         return isSemiSpecific;
-    } 
+    }
 }

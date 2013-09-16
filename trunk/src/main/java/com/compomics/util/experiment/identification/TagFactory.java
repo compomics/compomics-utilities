@@ -14,6 +14,7 @@ public class TagFactory {
      * Returns all the amino acid combinations for a given tag length.
      *
      * @param length the length of the tag
+     * 
      * @return all the amino acid combinations
      */
     public static ArrayList<String> getAminoAcidCombinations(int length) {
@@ -23,11 +24,11 @@ public class TagFactory {
         if (length == 0) {
             return new ArrayList<String>();
         }
-        ArrayList<String> tempList, result = AminoAcid.getAminoAcids();
+        ArrayList<String> tempList, result = AminoAcid.getAminoAcidsList();
         for (int i = 1; i < length; i++) {
             tempList = new ArrayList<String>();
             for (String tag : result) {
-                for (String aa : AminoAcid.getAminoAcids()) {
+                for (char aa : AminoAcid.getAminoAcids()) {
                     tempList.add(tag + aa);
                 }
             }

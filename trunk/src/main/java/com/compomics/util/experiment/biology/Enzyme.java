@@ -323,7 +323,7 @@ public class Enzyme extends ExperimentObject {
      */
     public ArrayList<String> digest(String sequence, int nMissedCleavages, int nMin, int nMax) {
 
-        char aa, aaBefore ;
+        char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
         String currentPeptide = aaAfter + "";
         ArrayList<String> results = new ArrayList<String>();

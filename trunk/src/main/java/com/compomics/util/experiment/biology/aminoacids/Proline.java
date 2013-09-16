@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Proline
+ * Proline.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Proline extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Proline extends AminoAcid {
     static final long serialVersionUID = 3754407258673679661L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Proline() {
         singleLetterCode = "P";

@@ -90,11 +90,11 @@ public class ProteinTree {
      */
     public static final String version = "1.0.0";
     /**
-     * The matching type of the matches in cache
+     * The matching type of the matches in cache.
      */
     private MatchingType matchingTypeInCache = MatchingType.indistiguishibleAminoAcids;
     /**
-     * the mass tolerance of the matches in cache
+     * The mass tolerance of the matches in cache.
      */
     private Double massToleranceInCache = null;
 
@@ -511,7 +511,8 @@ public class ProteinTree {
      * @param peptideSequence the peptide sequence
      *
      * @return the peptide to protein mapping: Accession -> list of indexes
-     * where the peptide can be found on the sequence. An empty map if not found.
+     * where the peptide can be found on the sequence. An empty map if not
+     * found.
      *
      * @throws IOException
      * @throws InterruptedException
@@ -565,8 +566,8 @@ public class ProteinTree {
 
     /**
      * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence. peptide sequence -> protein accession -> index in the protein
-     * An empty map if not
+     * sequence. peptide sequence -> protein accession -> index in the protein.
+     * An empty map if not.
      *
      * @param peptideSequence the peptide sequence
      * @param reversed boolean indicating whether we are looking at a reversed
@@ -640,8 +641,7 @@ public class ProteinTree {
                     if (node != null) {
                         HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideSequence, matchingType, massTolerance);
                         for (String tagSequence : tagResults.keySet()) {
-                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence),
-                                    tagMapping = tagResults.get(tagSequence);
+                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence), tagMapping = tagResults.get(tagSequence);
                             if (mapping == null && !tagMapping.isEmpty()) {
                                 result.put(tagSequence, tagMapping);
                             } else {
@@ -714,7 +714,7 @@ public class ProteinTree {
      * @param peptideSequence the peptide sequence
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 'indistiguishibleAminoAcids'. Can be null otherwise.
      *
      * @returna list of possible initial tags.
      *
@@ -723,8 +723,10 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private ArrayList<String> getInitialTags(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException {
+
         int initialTagSize = componentsFactory.getInitialSize();
         ArrayList<String> tempTags, result = new ArrayList<String>();
+
         if (matchingType == MatchingType.string) {
             result.add(peptideSequence.substring(0, initialTagSize));
             return result;
@@ -911,26 +913,37 @@ public class ProteinTree {
         lastSlowQueriedPeptidesCache.clear();
         lastSlowQueriedPeptidesCacheContent.clear();
     }
-    
+
     /**
-     * Returns a list of peptides matched using the given peptide sequence in the given protein according the provided matching settings
-     * 
+     * Returns a list of peptides matched using the given peptide sequence in
+     * the given protein according the provided matching settings.
+     *
      * @param peptideSequence the original peptide sequence
      * @param proteinAccession the accession of the protein of interest
      * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for indistinguishible amino acids matching mode
-     * 
-     * @return a list of peptides matched and their indexes in the protein sequence
+     * @param massTolerance the mass tolerance for indistinguishable amino acids
+     * matching mode
+     *
+     * @return a list of peptides matched and their indexes in the protein
+     * sequence
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws SQLException
+     * @throws ClassNotFoundException
      */
-    public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, MatchingType matchingType, Double massTolerance)
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+
         HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, matchingType, massTolerance);
         HashMap<String, ArrayList<Integer>> tempMapping, result = new HashMap<String, ArrayList<Integer>>();
+
         for (String peptide : mapping.keySet()) {
             tempMapping = mapping.get(peptide);
             if (tempMapping.containsKey(proteinAccession)) {
                 result.put(peptide, tempMapping.get(proteinAccession));
             }
         }
+
         return result;
     }
 

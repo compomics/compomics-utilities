@@ -112,19 +112,25 @@ public class Node implements Serializable {
      * @return the possible next amino acids
      */
     private ArrayList<Character> getNextAminoAcids(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+
         char aa = peptideSequence.charAt(depth);
         ArrayList<Character> result = new ArrayList<Character>();
+
         if (matchingType == ProteinMatch.MatchingType.string) {
             result.add(aa);
             return result;
         }
+
         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+
         for (char aaChar : aminoAcid.getActualAminoAcids()) {
             result.add(aaChar);
         }
+
         for (char aaChar : aminoAcid.getCombinations()) {
             result.add(aaChar);
         }
+
         if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
             for (char aaChar : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
                 if (!result.contains(aaChar)) {
@@ -132,6 +138,7 @@ public class Node implements Serializable {
                 }
             }
         }
+
         return result;
     }
 
@@ -140,6 +147,7 @@ public class Node implements Serializable {
      * and does the same for every sub node.
      *
      * @param maxNodeSize the maximal node size allowed when splitting
+     * @param maxDepth the maximum depth
      * @return returns true if the node was actually splitted and thus needs to
      * be saved in indexed mode
      * @throws IOException

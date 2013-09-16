@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Glutamine
+ * Glutamine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Glutamine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Glutamine extends AminoAcid {
     static final long serialVersionUID = -1552736259723394861L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Glutamine() {
         singleLetterCode = "Q";

@@ -3,7 +3,6 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.aminoacids.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Class representing amino acids.
@@ -65,13 +64,16 @@ public abstract class AminoAcid implements Serializable {
     public double monoisotopicMass;
 
     /**
-     * Convenience method returning an array of all implemented amino-acids represented by their singe letter code.
-     * 
+     * Convenience method returning an array of all implemented amino-acids
+     * represented by their singe letter code.
+     *
      * @return an array of all implemented amino-acids
      */
     public static char[] getAminoAcids() {
-        return new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
+        return new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 
+            'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
     }
+
     /**
      * Convenience method returning an arrayList of all implemented amino-acids.
      *
@@ -171,17 +173,21 @@ public abstract class AminoAcid implements Serializable {
      * @return the actual amino acids
      */
     public abstract char[] getActualAminoAcids();
+
     /**
-     * Returns the amino acids combinations which might represent this amino acid. Example: g -> {Z, X}.
-     * 
-     * @return the amino acids combinations which might represent this amino acid
+     * Returns the amino acids combinations which might represent this amino
+     * acid. Example: g -> {Z, X}.
+     *
+     * @return the amino acids combinations which might represent this amino
+     * acid
      */
     public abstract char[] getCombinations();
 
     /**
      * Returns the amino acids which cannot be distinguished from this amino
-     * acid given a mass tolerance.
-     * Note that these amino acids may contain the getActualAminoAcids() and getCombinations() amino acids, not comprehensively though, and the amino acid itself.
+     * acid given a mass tolerance. Note that these amino acids may contain the
+     * getActualAminoAcids() and getCombinations() amino acids, not
+     * comprehensively though, and the amino acid itself.
      *
      * @param massTolerance the mass tolerance
      *
@@ -189,7 +195,7 @@ public abstract class AminoAcid implements Serializable {
      * character code
      */
     public ArrayList<Character> getIndistinguishibleAminoAcids(Double massTolerance) {
-        if (massTolerance == null || massTolerance == Double.NaN ||  massTolerance == Double.NEGATIVE_INFINITY ||  massTolerance == Double.POSITIVE_INFINITY) {
+        if (massTolerance == null || massTolerance == Double.NaN || massTolerance == Double.NEGATIVE_INFINITY || massTolerance == Double.POSITIVE_INFINITY) {
             throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino-acids comparison.");
         }
         ArrayList<Character> results = new ArrayList<Character>();

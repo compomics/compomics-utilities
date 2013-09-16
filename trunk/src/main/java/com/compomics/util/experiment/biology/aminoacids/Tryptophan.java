@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Tryptophan
+ * Tryptophan.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Tryptophan extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Tryptophan extends AminoAcid {
     static final long serialVersionUID = -6773437038176247799L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Tryptophan() {
         singleLetterCode = "W";

@@ -42,7 +42,7 @@ public class SequenceFactory {
      */
     private BufferedRandomAccessFile currentRandomAccessFile = null;
     /**
-     * The FASTA file currently loaded
+     * The FASTA file currently loaded.
      */
     private File currentFastaFile = null;
     /**
@@ -107,6 +107,7 @@ public class SequenceFactory {
      * Clears the factory getInstance() needs to be called afterwards.
      *
      * @throws IOException
+     * @throws SQLException  
      */
     public void clearFactory() throws IOException, SQLException {
         closeFile();
@@ -608,6 +609,7 @@ public class SequenceFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * closing the file
+     * @throws SQLException  
      */
     public void closeFile() throws IOException, SQLException {
         if (currentRandomAccessFile != null) {
@@ -1031,9 +1033,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the fasta index of the currently loaded file.
+     * Returns the FASTA index of the currently loaded file.
      *
-     * @return the fasta index of the currently loaded file
+     * @return the FASTA index of the currently loaded file
      */
     public FastaIndex getCurrentFastaIndex() {
         return fastaIndex;
@@ -1041,9 +1043,14 @@ public class SequenceFactory {
 
     /**
      * Returns the default protein tree corresponding to the database loaded in
-     * factory
+     * factory.
      *
      * @return the default protein tree
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException 
+     * @throws IllegalArgumentException
+     * @throws SQLException  
      */
     public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         return getDefaultProteinTree(null);
@@ -1057,6 +1064,11 @@ public class SequenceFactory {
      * during the initiation of the tree
      *
      * @return the default protein tree
+     * @throws IOException
+     * @throws InterruptedException 
+     * @throws ClassNotFoundException 
+     * @throws IllegalArgumentException 
+     * @throws SQLException  
      */
     public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         if (defaultProteinTree == null) {

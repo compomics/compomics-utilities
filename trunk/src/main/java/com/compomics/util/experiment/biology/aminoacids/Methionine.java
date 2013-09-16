@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Methionine
+ * Methionine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Methionine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Methionine extends AminoAcid {
     static final long serialVersionUID = 1841628592146093511L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Methionine() {
         singleLetterCode = "M";

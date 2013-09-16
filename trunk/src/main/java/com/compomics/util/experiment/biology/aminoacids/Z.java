@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Glu or Gln: Glx (Mascot)
+ * Glu or Gln: Glx (Mascot).
  *
  * @author Harald Barsnes
  */
@@ -15,7 +15,7 @@ public class Z extends AminoAcid {
     static final long serialVersionUID = -7714841171012071337L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Z() {
         singleLetterCode = "Z";

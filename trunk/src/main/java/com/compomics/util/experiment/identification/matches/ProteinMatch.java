@@ -40,15 +40,23 @@ public class ProteinMatch extends IdentificationMatch {
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
+
     /**
-     * the different types of peptide to protein amino acid matching
+     * The different types of peptide to protein amino acid matching.
      */
     public static enum MatchingType {
-        // Matches character strings only
+
+        /**
+         * Matches character strings only.
+         */
         string,
-        // Matches amino acids
+        /**
+         * Matches amino acids.
+         */
         aminoAcid,
-        // Matches amino acids of inditiguishible masses
+        /**
+         * Matches amino acids of indistinguishable masses.
+         */
         indistiguishibleAminoAcids;
     }
 
@@ -358,13 +366,13 @@ public class ProteinMatch extends IdentificationMatch {
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
-     * 
+     *
      * @return true if the main accession generates an enzymatic peptide
      */
     public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {

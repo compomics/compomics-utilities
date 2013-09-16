@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Pyrrolysine
+ * Pyrrolysine.
  *
  * @author Harald Barsnes
  */
@@ -15,7 +15,7 @@ public class Pyrrolysine extends AminoAcid {
     static final long serialVersionUID = 8680204019988094523L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Pyrrolysine() {
         singleLetterCode = "O";

@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Leucine
+ * Leucine.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Leucine extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class Leucine extends AminoAcid {
     static final long serialVersionUID = -656824121858821632L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Leucine() {
         singleLetterCode = "L";

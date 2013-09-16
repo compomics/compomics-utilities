@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Unknown amino acid (Mascot)
+ * Unknown amino acid (Mascot).
  *
  * @author Harald Barsnes
  */
@@ -15,7 +15,7 @@ public class X extends AminoAcid {
     static final long serialVersionUID = -2618109862080991929L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public X() {
         singleLetterCode = "X";

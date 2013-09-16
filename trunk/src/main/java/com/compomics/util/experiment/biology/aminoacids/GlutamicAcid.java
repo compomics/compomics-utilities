@@ -3,9 +3,9 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Glutamic Acid
+ * Glutamic Acid.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class GlutamicAcid extends AminoAcid {
 
@@ -15,7 +15,7 @@ public class GlutamicAcid extends AminoAcid {
     static final long serialVersionUID = 6850534412637609745L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public GlutamicAcid() {
         singleLetterCode = "E";

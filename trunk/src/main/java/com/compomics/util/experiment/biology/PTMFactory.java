@@ -848,7 +848,7 @@ public class PTMFactory implements Serializable {
      * @param massTolerance the mass tolerance to use to match the modification
      * mass
      * @param matchingType the type of sequence matching
-     * 
+     *
      * @return a map of expected PTMs corresponding to the given
      * characteristics. Empty if none found.
      * @throws IOException exception thrown whenever an error occurred while
@@ -893,9 +893,9 @@ public class PTMFactory implements Serializable {
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return the possible expected modification names. Empty if not found.
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -929,14 +929,17 @@ public class PTMFactory implements Serializable {
     /**
      * Removes the fixed modifications of the peptide and remaps the one
      * searched for according to the ModificationProfile. Note: for protein
-     * terminal modification the protein must be loaded in the sequence factory
+     * terminal modification the protein must be loaded in the sequence factory.
      *
      * @param modificationProfile
      * @param peptide
-     * @param matchingType the matching type to map the peptide sequence onto the protein sequence for modifications
+     * @param matchingType the matching type to map the peptide sequence onto
+     * the protein sequence for modifications
      * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise. Actually only useful when considering modifications targeting a motif comprising interchangeable amino-acids. Thanks glyco people for making my life so exciting.
-     * 
+     * 'indistiguishibleAminoAcids'. Can be null otherwise. (Only useful when
+     * considering modifications targeting a motif comprising interchangeable
+     * amino acids, e.g., glyco)
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -946,7 +949,9 @@ public class PTMFactory implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             if (!modMatch.isVariable()) {
@@ -999,7 +1004,6 @@ public class PTMFactory implements Serializable {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             }
-
         }
     }
 

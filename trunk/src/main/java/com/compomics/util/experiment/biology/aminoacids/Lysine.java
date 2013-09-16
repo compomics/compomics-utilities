@@ -3,7 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids;
 import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
- * Lysine
+ * Lysine.
  *
  * @author Marc
  */
@@ -15,7 +15,7 @@ public class Lysine extends AminoAcid {
     static final long serialVersionUID = 3427548228986235710L;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Lysine() {
         singleLetterCode = "K";

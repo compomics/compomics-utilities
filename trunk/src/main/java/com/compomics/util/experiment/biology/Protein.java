@@ -152,7 +152,7 @@ public class Protein extends ExperimentObject {
      *
      * @param enzyme the enzyme to use
      * @param pepMaxLength the max peptide length
-     * 
+     *
      * @return the number of observable amino acids of the sequence
      */
     public int getObservableLength(Enzyme enzyme, int pepMaxLength) {
@@ -176,7 +176,7 @@ public class Protein extends ExperimentObject {
      * Returns the number of cleavage sites.
      *
      * @param enzyme The selected enzyme
-     * 
+     *
      * @return the number of possible peptides
      */
     public int getNCleavageSites(Enzyme enzyme) {
@@ -230,7 +230,7 @@ public class Protein extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return the list of indexes where a peptide can be found in a protein
      * sequence
      */
@@ -247,7 +247,7 @@ public class Protein extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a boolean indicating whether the protein starts with the given
      * peptide
      */
@@ -265,7 +265,7 @@ public class Protein extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a boolean indicating whether the protein ends with the given
      * peptide
      */
@@ -289,9 +289,9 @@ public class Protein extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return true of the peptide is non-enzymatic
-     * 
+     *
      * @throws IOException
      */
     public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException {
@@ -330,9 +330,9 @@ public class Protein extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return the amino acids surrounding a peptide in the protein sequence
-     * 
+     *
      * @throws IOException Exception thrown whenever an error occurred while
      * parsing the protein sequence
      */

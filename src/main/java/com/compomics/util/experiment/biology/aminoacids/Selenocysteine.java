@@ -9,11 +9,29 @@ import com.compomics.util.experiment.biology.AminoAcid;
  */
 public class Selenocysteine extends AminoAcid {
 
+    /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = -2123392615229813870L;
+
+    /**
+     * Constructor
+     */
     public Selenocysteine() {
         singleLetterCode = "U";
         threeLetterCode = "SeC";
         name = "U_Mascot";
         averageMass = 150.0379;
         monoisotopicMass = 150.95363;
+    }
+
+    @Override
+    public char[] getActualAminoAcids() {
+        return new char[]{'U'};
+    }
+
+    @Override
+    public char[] getCombinations() {
+        return new char[]{'X'};
     }
 }

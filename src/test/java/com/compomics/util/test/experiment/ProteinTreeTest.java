@@ -1,6 +1,7 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,6 +64,11 @@ public class ProteinTreeTest extends TestCase {
         sequence = sequenceFactory.getProtein("Q9FI94").getSequence();
         index = sequence.indexOf("QTCESKT");
         Assert.assertTrue(indexes.get(0) == index);
+        testIndexes = proteinTree.getProteinMapping("TKSECTQ");
+        indexes = testIndexes.get("Q9FI94_REVERSED");
+        Assert.assertTrue(testIndexes.size() == 1);
+        Assert.assertTrue(indexes.size() == 1);
+        Assert.assertTrue(indexes.get(0) == 0);
         testIndexes = proteinTree.getProteinMapping("TKSECT");
         indexes = testIndexes.get("Q9FI94_REVERSED");
         Assert.assertTrue(testIndexes.size() == 1);
@@ -79,5 +85,57 @@ public class ProteinTreeTest extends TestCase {
         sequence = sequenceFactory.getProtein("Q9FI94_REVERSED").getSequence();
         index = sequence.indexOf("DEM");
         Assert.assertTrue(indexes.get(0) == index);
+        
+        sequence = sequenceFactory.getProtein("Q9FHX5").getSequence();
+        testIndexes = proteinTree.getProteinMapping("VANB");
+        Assert.assertTrue(testIndexes.size() == 1);
+        indexes = testIndexes.get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        index = sequence.indexOf("VANB");
+        Assert.assertTrue(testIndexes.get("Q9FHX5").get(0) == index);
+        testIndexes = proteinTree.getProteinMapping("VANN");
+        Assert.assertTrue(testIndexes.isEmpty());
+        HashMap<String, HashMap<String, ArrayList<Integer>>> extendedIndexes = proteinTree.getProteinMapping("VANN", ProteinMatch.MatchingType.aminoAcid, Double.NaN);
+        Assert.assertTrue(extendedIndexes.size() == 1);
+        Assert.assertTrue(extendedIndexes.get("VANB").size() == 1);
+        indexes = extendedIndexes.get("VANB").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        Assert.assertTrue(indexes.get(0) == index);
+        extendedIndexes = proteinTree.getProteinMapping("VAND", ProteinMatch.MatchingType.aminoAcid, Double.NaN);
+        Assert.assertTrue(extendedIndexes.get("VANB").size() == 1);
+        indexes = extendedIndexes.get("VANB").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        Assert.assertTrue(indexes.get(0) == index);
+        Assert.assertTrue(extendedIndexes.get("VAND").size() == 1);
+        indexes = extendedIndexes.get("VAND").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        index = sequence.indexOf("VAND");
+        Assert.assertTrue(indexes.get(0) == index);
+        extendedIndexes = proteinTree.getProteinMapping("VANB", ProteinMatch.MatchingType.aminoAcid, Double.NaN);
+        Assert.assertTrue(extendedIndexes.size() == 2);
+        
+        extendedIndexes = proteinTree.getProteinMapping("IVAI", ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5);
+        Assert.assertTrue(extendedIndexes.size() == 4);
+        Assert.assertTrue(extendedIndexes.get("IVAI").size() == 1);
+        indexes = extendedIndexes.get("IVAI").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        index = sequence.indexOf("IVAI");
+        Assert.assertTrue(indexes.get(0) == index);
+        Assert.assertTrue(extendedIndexes.get("LVAI").size() == 1);
+        indexes = extendedIndexes.get("LVAI").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        index = sequence.indexOf("LVAI");
+        Assert.assertTrue(indexes.get(0) == index);
+        Assert.assertTrue(extendedIndexes.get("IVAL").size() == 1);
+        indexes = extendedIndexes.get("IVAL").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        index = sequence.indexOf("IVAL");
+        Assert.assertTrue(indexes.get(0) == index);
+        Assert.assertTrue(extendedIndexes.get("LVAL").size() == 1);
+        indexes = extendedIndexes.get("LVAL").get("Q9FHX5");
+        Assert.assertTrue(indexes.size() == 1);
+        index = sequence.indexOf("LVAL");
+        Assert.assertTrue(indexes.get(0) == index);
+        
     }
 }

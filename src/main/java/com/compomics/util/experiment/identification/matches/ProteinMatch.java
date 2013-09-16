@@ -40,6 +40,17 @@ public class ProteinMatch extends IdentificationMatch {
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
+    /**
+     * the different types of peptide to protein amino acid matching
+     */
+    public static enum MatchingType {
+        // Matches character strings only
+        string,
+        // Matches amino acids
+        aminoAcid,
+        // Matches amino acids of inditiguishible masses
+        indistiguishibleAminoAcids;
+    }
 
     /**
      * Constructor for the protein match.
@@ -344,19 +355,24 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param accession the candidate main accession
      * @param enzyme the enzyme used
-     * @return true if the main accession generates an enzymatic peptide
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * 
+     * @return true if the main accession generates an enzymatic peptide
      */
-    public boolean hasEnzymatic(String accession, Enzyme enzyme) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatches) {
             String peptideSequence = Peptide.getSequence(peptideKey);
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isEnzymaticPeptide(peptideSequence, enzyme)) {
+            if (protein.isEnzymaticPeptide(peptideSequence, enzyme, matchingType, massTolerance)) {
                 return true;
             }
         }

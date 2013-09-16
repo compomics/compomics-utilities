@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.aminoacids.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class representing amino acids.
@@ -64,39 +65,24 @@ public abstract class AminoAcid implements Serializable {
     public double monoisotopicMass;
 
     /**
+     * Convenience method returning an array of all implemented amino-acids represented by their singe letter code.
+     * 
+     * @return an array of all implemented amino-acids
+     */
+    public static char[] getAminoAcids() {
+        return new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
+    }
+    /**
      * Convenience method returning an arrayList of all implemented amino-acids.
      *
      * @return an arrayList of all implemented amino-acids represented by their
      * character
      */
-    public static ArrayList<String> getAminoAcids() {
-        ArrayList<String> aas = new ArrayList<String>();
-        aas.add("A");
-        aas.add("C");
-        aas.add("D");
-        aas.add("E");
-        aas.add("F");
-        aas.add("G");
-        aas.add("H");
-        aas.add("I");
-        aas.add("K");
-        aas.add("L");
-        aas.add("M");
-        aas.add("N");
-        aas.add("P");
-        aas.add("Q");
-        aas.add("R");
-        aas.add("S");
-        aas.add("T");
-        aas.add("V");
-        aas.add("W");
-        aas.add("Y");
-        aas.add("B");
-        aas.add("Z");
-        aas.add("X");
-        aas.add("U");
-        aas.add("J");
-        aas.add("O");
+    public static ArrayList<String> getAminoAcidsList() {
+        ArrayList<String> aas = new ArrayList<String>(26);
+        for (char aa : getAminoAcids()) {
+            aas.add(aa + "");
+        }
         return aas;
     }
 
@@ -176,5 +162,42 @@ public abstract class AminoAcid implements Serializable {
             default:
                 return null;
         }
+    }
+
+    /**
+     * In case of a combination of amino acids, returns the actual amino acids
+     * represented by their single letter code. Example: Z -> {G, Q}.
+     *
+     * @return the actual amino acids
+     */
+    public abstract char[] getActualAminoAcids();
+    /**
+     * Returns the amino acids combinations which might represent this amino acid. Example: g -> {Z, X}.
+     * 
+     * @return the amino acids combinations which might represent this amino acid
+     */
+    public abstract char[] getCombinations();
+
+    /**
+     * Returns the amino acids which cannot be distinguished from this amino
+     * acid given a mass tolerance.
+     * Note that these amino acids may contain the getActualAminoAcids() and getCombinations() amino acids, not comprehensively though, and the amino acid itself.
+     *
+     * @param massTolerance the mass tolerance
+     *
+     * @return the amino acids which cannot be distinguished using their single
+     * character code
+     */
+    public ArrayList<Character> getIndistinguishibleAminoAcids(Double massTolerance) {
+        if (massTolerance == null || massTolerance == Double.NaN ||  massTolerance == Double.NEGATIVE_INFINITY ||  massTolerance == Double.POSITIVE_INFINITY) {
+            throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino-acids comparison.");
+        }
+        ArrayList<Character> results = new ArrayList<Character>();
+        for (char aa : getAminoAcids()) {
+            if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
+                results.add(aa);
+            }
+        }
+        return results;
     }
 }

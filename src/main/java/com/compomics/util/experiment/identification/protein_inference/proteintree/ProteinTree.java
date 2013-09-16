@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagFactory;
+import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -66,7 +68,7 @@ public class ProteinTree {
     /**
      * Cache of the last queried peptides.
      */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> lastQueriedPeptidesCache = new HashMap<String, HashMap<String, ArrayList<Integer>>>(cacheSize);
+    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in cache.
      */
@@ -78,7 +80,7 @@ public class ProteinTree {
     /**
      * Cache of the last queried peptides where the query took long.
      */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, ArrayList<Integer>>>(cacheSize);
+    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in slow cache.
      */
@@ -87,6 +89,14 @@ public class ProteinTree {
      * The version of the protein tree.
      */
     public static final String version = "1.0.0";
+    /**
+     * The matching type of the matches in cache
+     */
+    private MatchingType matchingTypeInCache = MatchingType.indistiguishibleAminoAcids;
+    /**
+     * the mass tolerance of the matches in cache
+     */
+    private Double massToleranceInCache = null;
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
@@ -496,22 +506,53 @@ public class ProteinTree {
 
     /**
      * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence.
+     * sequence based on string matching only.
      *
      * @param peptideSequence the peptide sequence
+     *
      * @return the peptide to protein mapping: Accession -> list of indexes
-     * where the peptide can be found on the sequence
+     * where the peptide can be found on the sequence. An empty map if not found.
+     *
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      * @throws SQLException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, MatchingType.string, null);
+        if (mapping.size() > 1) {
+            throw new IllegalArgumentException("Different mappings found for peptide " + peptideSequence + " in string matching. Only one expected.");
+        }
+        HashMap<String, ArrayList<Integer>> result = mapping.get(peptideSequence);
+        if (result != null) {
+            return result;
+        }
+        return new HashMap<String, ArrayList<Integer>>();
+    }
+
+    /**
+     * Returns the protein mapping in the sequence factory for the given peptide
+     * sequence.
+     *
+     * @param peptideSequence the peptide sequence
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the peptide to protein mapping: peptide sequence -> protein
+     * accession -> index in the protein An empty map if not
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         long time0 = 0;
         if (debugSpeed) {
             time0 = System.currentTimeMillis();
         }
-        HashMap<String, ArrayList<Integer>> result = getProteinMapping(peptideSequence, false);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, matchingType, massTolerance, false);
         if (debugSpeed) {
             long time1 = System.currentTimeMillis();
             long queryTime = time1 - time0;
@@ -524,20 +565,32 @@ public class ProteinTree {
 
     /**
      * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence.
+     * sequence. peptide sequence -> protein accession -> index in the protein
+     * An empty map if not
      *
      * @param peptideSequence the peptide sequence
      * @param reversed boolean indicating whether we are looking at a reversed
      * peptide sequence
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
      * @return the peptide to protein mapping: Accession -> list of indexes
      * where the peptide can be found on the sequence
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        HashMap<String, ArrayList<Integer>> result = lastQueriedPeptidesCache.get(peptideSequence);
+        if (matchingType != matchingTypeInCache || matchingType == MatchingType.indistiguishibleAminoAcids && (massToleranceInCache == null || !massToleranceInCache.equals(massTolerance))) {
+            //@TODO adapt the cache to the different matching types
+            emptyCache();
+            matchingTypeInCache = matchingType;
+            massToleranceInCache = massTolerance;
+        }
+
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = lastQueriedPeptidesCache.get(peptideSequence);
 
         if (result != null) {
             lastQueriedPeptidesCacheContent.remove(peptideSequence);
@@ -567,7 +620,7 @@ public class ProteinTree {
                         }
                     }
                     if (result != null) {
-                        return getReversedResults(result, peptideSequence);
+                        return getReversedResults(result);
                     }
                 }
 
@@ -578,26 +631,57 @@ public class ProteinTree {
                     throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
                 }
 
-                result = new HashMap<String, ArrayList<Integer>>();
+                result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
-                String tag = peptideSequence.substring(0, initialTagSize);
-                Node node = getNode(tag);
+                ArrayList<String> initialTags = getInitialTags(peptideSequence, matchingType, massTolerance);
 
-                if (node != null) {
-                    result.putAll(node.getProteinMapping(peptideSequence));
+                for (String tag : initialTags) {
+                    Node node = getNode(tag);
+                    if (node != null) {
+                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideSequence, matchingType, massTolerance);
+                        for (String tagSequence : tagResults.keySet()) {
+                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence),
+                                    tagMapping = tagResults.get(tagSequence);
+                            if (mapping == null && !tagMapping.isEmpty()) {
+                                result.put(tagSequence, tagMapping);
+                            } else {
+                                for (String tagAccession : tagMapping.keySet()) {
+                                    ArrayList<Integer> indexes = mapping.get(tagAccession),
+                                            tagIndexes = tagMapping.get(tagAccession);
+                                    if (indexes == null) {
+                                        mapping.put(tagAccession, tagIndexes);
+                                    } else {
+                                        for (int newIndex : tagIndexes) {
+                                            if (!indexes.contains(newIndex)) {
+                                                indexes.add(newIndex);
+                                            }
+                                        }
+                                        Collections.sort(indexes);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (sequenceFactory.isDefaultReversed() && !reversed) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-                    if (!peptideSequence.equals(reversedSequence)) {
-                        HashMap<String, ArrayList<Integer>> reversedResult = getProteinMapping(reversedSequence, true);
-                        result.putAll(getReversedResults(reversedResult, reversedSequence));
+                    HashMap<String, HashMap<String, ArrayList<Integer>>> reversedResult;
+                    if (!reversedSequence.equals(peptideSequence)) {
+                        reversedResult = getProteinMapping(reversedSequence, matchingType, massTolerance, true);
+                        reversedResult = getReversedResults(reversedResult);
                     } else {
-                        result.putAll(getReversedResults(result, reversedSequence));
+                        reversedResult = getReversedResults(result);
+                    }
+                    for (String tempReversedSequence : reversedResult.keySet()) {
+                        HashMap<String, ArrayList<Integer>> mapping = result.get(tempReversedSequence);
+                        if (mapping != null) {
+                            mapping.putAll(reversedResult.get(tempReversedSequence));
+                        } else {
+                            result.put(tempReversedSequence, reversedResult.get(tempReversedSequence));
+                        }
                     }
                 }
-
                 if (!reversed) {
-
                     long timeEnd = System.currentTimeMillis();
                     long queryTime = timeEnd - timeStart;
 
@@ -621,7 +705,81 @@ public class ProteinTree {
                 }
             }
         }
+        return result;
+    }
 
+    /**
+     * Returns a list of possible initial tags.
+     *
+     * @param peptideSequence the peptide sequence
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @returna list of possible initial tags.
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private ArrayList<String> getInitialTags(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException {
+        int initialTagSize = componentsFactory.getInitialSize();
+        ArrayList<String> tempTags, result = new ArrayList<String>();
+        if (matchingType == MatchingType.string) {
+            result.add(peptideSequence.substring(0, initialTagSize));
+            return result;
+        }
+        for (int i = 0; i < initialTagSize; i++) {
+            char aa = peptideSequence.charAt(i);
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            tempTags = new ArrayList<String>(result);
+            result.clear();
+            if (tempTags.isEmpty()) {
+                for (char newAa : aminoAcid.getActualAminoAcids()) {
+                    String newTag = newAa + "";
+                    if (!result.contains(newTag)) {
+                        result.add(newTag);
+                    }
+                }
+                for (char newAa : aminoAcid.getCombinations()) {
+                    String newTag = newAa + "";
+                    if (!result.contains(newTag)) {
+                        result.add(newTag);
+                    }
+                }
+                if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                    for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                        String newTag = newAa + "";
+                        if (!result.contains(newTag)) {
+                            result.add(newTag);
+                        }
+                    }
+                }
+            } else {
+                for (String sequence : tempTags) {
+                    for (char newAa : aminoAcid.getActualAminoAcids()) {
+                        String newTag = sequence + newAa;
+                        if (!result.contains(newTag)) {
+                            result.add(newTag);
+                        }
+                    }
+                    for (char newAa : aminoAcid.getCombinations()) {
+                        String newTag = sequence + newAa;
+                        if (!result.contains(newTag)) {
+                            result.add(newTag);
+                        }
+                    }
+                    if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                        for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                            String newTag = sequence + newAa;
+                            if (!result.contains(newTag)) {
+                                result.add(newTag);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -635,34 +793,39 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    private HashMap<String, ArrayList<Integer>> getReversedResults(HashMap<String, ArrayList<Integer>> forwardResults, String peptideSequence) throws SQLException, ClassNotFoundException, IOException {
-        int peptideLength = peptideSequence.length();
-        HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>(forwardResults.keySet().size());
-        for (String accession : forwardResults.keySet()) {
-            String newAccession;
-            Integer proteinLength;
-            if (accession.endsWith(SequenceFactory.getDefaultDecoyAccessionSuffix())) {
-                newAccession = SequenceFactory.getDefaultTargetAccession(accession);
-                proteinLength = componentsFactory.getProteinLength(newAccession);
-                if (proteinLength == null) {
-                    throw new IllegalArgumentException("Length of protein " + newAccession + " not found.");
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>(forwardResults.keySet().size());
+        for (String sequence : forwardResults.keySet()) {
+            int peptideLength = sequence.length();
+            String reversedSequence = SequenceFactory.reverseSequence(sequence);
+            HashMap<String, ArrayList<Integer>> mapping = new HashMap<String, ArrayList<Integer>>(forwardResults.get(sequence).size());
+            for (String accession : forwardResults.get(sequence).keySet()) {
+                String newAccession;
+                Integer proteinLength;
+                if (accession.endsWith(SequenceFactory.getDefaultDecoyAccessionSuffix())) {
+                    newAccession = SequenceFactory.getDefaultTargetAccession(accession);
+                    proteinLength = componentsFactory.getProteinLength(newAccession);
+                    if (proteinLength == null) {
+                        throw new IllegalArgumentException("Length of protein " + newAccession + " not found.");
+                    }
+                } else {
+                    newAccession = SequenceFactory.getDefaultDecoyAccession(accession);
+                    proteinLength = componentsFactory.getProteinLength(accession);
+                    if (proteinLength == null) {
+                        throw new IllegalArgumentException("Length of protein " + accession + " not found.");
+                    }
                 }
-            } else {
-                newAccession = SequenceFactory.getDefaultDecoyAccession(accession);
-                proteinLength = componentsFactory.getProteinLength(accession);
-                if (proteinLength == null) {
-                    throw new IllegalArgumentException("Length of protein " + accession + " not found.");
+                ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
+                for (int index : forwardResults.get(sequence).get(accession)) {
+                    int reversedIndex = proteinLength - index - peptideLength;
+                    if (reversedIndex < 0 || reversedIndex >= proteinLength) {
+                        throw new IllegalArgumentException("Wrong index found for peptide " + reversedSequence + " in protein " + newAccession + ": " + reversedIndex + ".");
+                    }
+                    reversedIndexes.add(reversedIndex);
                 }
+                mapping.put(newAccession, reversedIndexes);
             }
-            ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
-            for (int index : forwardResults.get(accession)) {
-                int reversedIndex = proteinLength - index - peptideLength;
-                if (reversedIndex < 0 || reversedIndex >= proteinLength) {
-                    throw new IllegalArgumentException("Wrong index found for peptide " + peptideSequence + " in protein " + newAccession + ": " + reversedIndex + ".");
-                }
-                reversedIndexes.add(reversedIndex);
-            }
-            results.put(newAccession, reversedIndexes);
+            results.put(reversedSequence, mapping);
         }
         return results;
     }
@@ -747,6 +910,28 @@ public class ProteinTree {
         lastQueriedPeptidesCacheContent.clear();
         lastSlowQueriedPeptidesCache.clear();
         lastSlowQueriedPeptidesCacheContent.clear();
+    }
+    
+    /**
+     * Returns a list of peptides matched using the given peptide sequence in the given protein according the provided matching settings
+     * 
+     * @param peptideSequence the original peptide sequence
+     * @param proteinAccession the accession of the protein of interest
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for indistinguishible amino acids matching mode
+     * 
+     * @return a list of peptides matched and their indexes in the protein sequence
+     */
+    public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, matchingType, massTolerance);
+        HashMap<String, ArrayList<Integer>> tempMapping, result = new HashMap<String, ArrayList<Integer>>();
+        for (String peptide : mapping.keySet()) {
+            tempMapping = mapping.get(peptide);
+            if (tempMapping.containsKey(proteinAccession)) {
+                result.put(peptide, tempMapping.get(proteinAccession));
+            }
+        }
+        return result;
     }
 
     /**

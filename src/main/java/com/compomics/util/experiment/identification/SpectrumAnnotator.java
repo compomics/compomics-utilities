@@ -11,6 +11,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
@@ -377,7 +378,7 @@ public class SpectrumAnnotator {
                 throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
             }
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm);
+                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, ProteinMatch.MatchingType.string, Double.NaN);
                 if (!indexes.isEmpty()) {
                     Collections.sort(indexes);
                     modMin = indexes.get(0);

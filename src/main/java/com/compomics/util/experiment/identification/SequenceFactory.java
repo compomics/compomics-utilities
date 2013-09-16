@@ -1,10 +1,13 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import java.io.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
@@ -63,6 +66,10 @@ public class SequenceFactory {
      * The tag added after adding decoy sequences to a FASTA file.
      */
     private static String targetDecoyFileNameTag = "_concatenated_target_decoy.fasta";
+    /**
+     * The default protein tree attached to the database loaded
+     */
+    private ProteinTree defaultProteinTree = null;
 
     /**
      * Constructor.
@@ -101,8 +108,9 @@ public class SequenceFactory {
      *
      * @throws IOException
      */
-    public void clearFactory() throws IOException {
+    public void clearFactory() throws IOException, SQLException {
         closeFile();
+        defaultProteinTree = null;
         currentHeaderMap.clear();
         currentProteinMap.clear();
         fastaIndex = null;
@@ -120,6 +128,9 @@ public class SequenceFactory {
         currentProteinMap.clear();
         loadedProteins.clear();
         molecularWeights.clear();
+        if (defaultProteinTree != null) {
+            defaultProteinTree.emptyCache();
+        }
     }
 
     /**
@@ -357,7 +368,7 @@ public class SequenceFactory {
         if (!fastaFile.exists()) {
             throw new FileNotFoundException("The FASTA file \'" + fastaFile.getAbsolutePath() + "\' could not be found!");
         }
-
+        defaultProteinTree = null;
         currentFastaFile = fastaFile;
         currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(false, waitingHandler);
@@ -598,9 +609,12 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * closing the file
      */
-    public void closeFile() throws IOException {
+    public void closeFile() throws IOException, SQLException {
         if (currentRandomAccessFile != null) {
             currentRandomAccessFile.close();
+        }
+        if (defaultProteinTree != null) {
+            defaultProteinTree.close();
         }
     }
 
@@ -1023,5 +1037,47 @@ public class SequenceFactory {
      */
     public FastaIndex getCurrentFastaIndex() {
         return fastaIndex;
+    }
+
+    /**
+     * Returns the default protein tree corresponding to the database loaded in
+     * factory
+     *
+     * @return the default protein tree
+     */
+    public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+        return getDefaultProteinTree(null);
+    }
+
+    /**
+     * Returns the default protein tree corresponding to the database loaded in
+     * factory
+     *
+     * @param waitingHandler waiting handler displaying progress to the user
+     * during the initiation of the tree
+     *
+     * @return the default protein tree
+     */
+    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+        if (defaultProteinTree == null) {
+
+            UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            int memoryPreference = userPreferences.getMemoryPreference();
+            int treeSize = memoryPreference / 4;
+            defaultProteinTree = new ProteinTree(treeSize);
+
+            int tagLength = 3;
+            if (getNTargetSequences() > 100000) {
+                tagLength = 4;
+                if (memoryPreference > 4000) {
+                    defaultProteinTree.setCacheSize(100000);
+                }
+            }
+            if (memoryPreference < 2000) {
+                defaultProteinTree.setCacheSize(500);
+            }
+            defaultProteinTree.initiateTree(tagLength, 500, 50, waitingHandler, true);
+        }
+        return defaultProteinTree;
     }
 }

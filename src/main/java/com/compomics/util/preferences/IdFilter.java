@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import java.io.IOException;
@@ -161,9 +162,13 @@ public class IdFilter implements Serializable {
      * Validates the modifications of a peptide.
      *
      * @param peptide the peptide of interest
+     * @param matchingType the peptide-protein matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide) {
+    public boolean validateModifications(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) {
 
         // check it it's an unknown peptide
         if (unknownPtm) {
@@ -195,7 +200,7 @@ public class IdFilter implements Serializable {
         // check if there are more ptms than ptm sites
         for (String modName : modMatches.keySet()) {
             try {
-                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modName));
+                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modName), matchingType, massTolerance);
                 if (possiblePositions.size() < modMatches.get(modName).size()) {
                     return false;
                 }

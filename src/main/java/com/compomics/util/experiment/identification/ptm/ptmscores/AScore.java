@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
@@ -159,7 +160,7 @@ public class AScore {
         HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         for (PTM ptm : ptms) {
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm)) {
+            for (int potentialSite : peptide.getPotentialModificationSites(ptm, ProteinMatch.MatchingType.string, null)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
                 }

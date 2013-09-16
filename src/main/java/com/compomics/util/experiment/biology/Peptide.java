@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 
@@ -360,8 +361,13 @@ public class Peptide extends ExperimentObject {
      * sequences must be accessible from the sequence factory.
      *
      * @param ptm the PTM of interest
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a boolean indicating whether the given modification can be found
      * on the peptide
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -371,7 +377,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public boolean isModifiable(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean isModifiable(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         switch (ptm.getType()) {
             case PTM.MODAA:
                 AminoAcidPattern pattern = ptm.getPattern();
@@ -383,7 +389,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
@@ -401,11 +407,11 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNP:
                 return true;
             case PTM.MODC:
-                return !isCterm().isEmpty();
+                return !isCterm(matchingType, massTolerance).isEmpty();
             case PTM.MODN:
-                return !isNterm().isEmpty();
+                return !isNterm(matchingType, massTolerance).isEmpty();
             case PTM.MODCAA:
-                if (isCterm().isEmpty()) {
+                if (isCterm(matchingType, massTolerance).isEmpty()) {
                     return false;
                 }
             case PTM.MODCPAA:
@@ -418,7 +424,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
@@ -432,7 +438,7 @@ public class Peptide extends ExperimentObject {
                     return false;
                 }
             case PTM.MODNAA:
-                if (isNterm().isEmpty()) {
+                if (isNterm(matchingType, massTolerance).isEmpty()) {
                     return false;
                 }
             case PTM.MODNPAA:
@@ -445,7 +451,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
@@ -469,7 +475,12 @@ public class Peptide extends ExperimentObject {
      * found. This method does not account for protein terminal modifications.
      *
      * @param ptm the PTM considered
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a list of potential modification sites
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -479,7 +490,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
@@ -494,7 +505,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
@@ -535,7 +546,7 @@ public class Peptide extends ExperimentObject {
                     Protein protein;
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
@@ -564,7 +575,7 @@ public class Peptide extends ExperimentObject {
                     Protein protein;
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + nAA - target;
                             if (endIndex < protein.getLength()) {
@@ -1122,8 +1133,13 @@ public class Peptide extends ExperimentObject {
      * N-terminus. The proteins must be accessible via the sequence factory. If
      * none found, an empty list is returned.
      *
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a list of proteins where this peptide can be found in the
      * N-terminus
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading the protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -1133,12 +1149,12 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<String> isNterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<String> isNterm(ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isNTerm(sequence)) {
+            if (protein.isNTerm(sequence, matchingType, massTolerance)) {
                 result.add(accession);
             }
         }
@@ -1150,8 +1166,13 @@ public class Peptide extends ExperimentObject {
      * C-terminus. The proteins must be accessible via the sequence factory. If
      * none found, an empty list is returned.
      *
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a list of proteins where this peptide can be found in the
      * C-terminus
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -1161,12 +1182,12 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<String> isCterm() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<String> isCterm(ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isCTerm(sequence)) {
+            if (protein.isCTerm(sequence, matchingType, massTolerance)) {
                 result.add(accession);
             }
         }

@@ -1,14 +1,12 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Convenience class for sequence tag generation.
  *
  * @author Marc Vaudel
+ * @author Kenneth Verheggen
  */
 public class TagFactory {
 

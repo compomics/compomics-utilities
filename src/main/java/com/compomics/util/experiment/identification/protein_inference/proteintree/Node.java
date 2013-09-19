@@ -172,8 +172,8 @@ public class Node implements Serializable {
                     node.addAccession(accession, indexes.get(aa));
                 }
             }
-            //clear first !!!! setting to null = just removing reference, object is still there !!!
-            //accessions.clear();
+
+            accessions = null;
 
             for (Node node : subtree.values()) {
                 node.splitNode(maxNodeSize, maxDepth);
@@ -181,6 +181,7 @@ public class Node implements Serializable {
 
             return true;
         }
+
         return false;
     }
 

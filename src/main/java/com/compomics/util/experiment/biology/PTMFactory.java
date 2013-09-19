@@ -1372,6 +1372,13 @@ public class PTMFactory implements Serializable {
             modProfile.addVariableModification(getPTM("itraq8plex:13c(6)15n(2) on y"));
             prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on y" + " (assumed variable)";
 
+        } else if (pridePtmName.equalsIgnoreCase("TMT2plex") || pridePtmName.equalsIgnoreCase("TMTduplex")) {
+
+            modProfile.addFixedModification(getPTM("tmt duplex on k"));
+            prideParametersReport += "<br>" + "tmt duplex on k" + " (assumed fixed)";
+            modProfile.addFixedModification(getPTM("tmt duplex on n-term peptide"));
+            prideParametersReport += "<br>" + "tmt duplex on n-term peptide" + " (assumed fixed)";
+
         } else if (pridePtmName.equalsIgnoreCase("TMT6plex")) {
 
             modProfile.addFixedModification(getPTM("tmt 6-plex on k"));

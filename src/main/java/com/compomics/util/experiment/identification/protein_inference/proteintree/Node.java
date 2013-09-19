@@ -158,7 +158,6 @@ public class Node implements Serializable {
     public boolean splitNode(int maxNodeSize, int maxDepth) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         if (accessions.size() > maxNodeSize && depth <= maxDepth) {
-
             subtree = new HashMap<Character, Node>();
             for (String accession : accessions.keySet()) {
                 HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
@@ -173,7 +172,8 @@ public class Node implements Serializable {
                     node.addAccession(accession, indexes.get(aa));
                 }
             }
-            accessions = null;
+            //clear first !!!! setting to null = just removing reference, object is still there !!!
+            //accessions.clear();
 
             for (Node node : subtree.values()) {
                 node.splitNode(maxNodeSize, maxDepth);

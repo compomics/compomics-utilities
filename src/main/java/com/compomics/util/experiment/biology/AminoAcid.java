@@ -62,6 +62,9 @@ public abstract class AminoAcid implements Serializable {
      * Monoisotopic mass of the amino acid.
      */
     public double monoisotopicMass;
+    
+    private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 
+            'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
 
     /**
      * Convenience method returning an array of all implemented amino-acids
@@ -70,8 +73,7 @@ public abstract class AminoAcid implements Serializable {
      * @return an array of all implemented amino-acids
      */
     public static char[] getAminoAcids() {
-        return new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 
-            'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
+        return aminoAcidChars;
     }
 
     /**

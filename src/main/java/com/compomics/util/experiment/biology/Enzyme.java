@@ -124,7 +124,7 @@ public class Enzyme extends ExperimentObject {
     public String getXTandemFormat() {
         String result = "";
 
-        if (name.equals("Asp-N + Glu-C")) { //  special case as this enzyme has to cleavage sites
+        if (name.equals("Asp-N + Glu-C")) { //  special case as this enzyme has two cleavage sites
             result = "[E]|[X],[X]|[D]"; // @TODO: should be made generic if we stop using omssa enzymes...
         } else {
 

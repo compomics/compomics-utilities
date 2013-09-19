@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -60,6 +61,14 @@ public class ProteinTreeComponentsFactory {
      * The name of the protein length table.
      */
     private static final String parametersTable = "parameters";
+    /**
+     * Boolean to check whether the database has been initialized already
+     */
+    private static boolean initialized = false;
+    /**
+     * List to check for double-added tags
+     */
+    private ArrayList<String> alreadyAddedTags = new ArrayList<String>();
 
     /**
      * Constructor.
@@ -100,21 +109,25 @@ public class ProteinTreeComponentsFactory {
      * attempting to connect to the database
      */
     public boolean initiate() throws SQLException, IOException {
-        File dbFolder = getDbFolder();
-        boolean exists = true;
-        if (!dbFolder.exists()) {
-            exists = false;
-            if (!dbFolder.mkdir()) {
-                throw new IOException("Impossible to create database folder " + dbFolder.getAbsolutePath() + ".");
+        if (!initialized) {
+            File dbFolder = getDbFolder();
+            boolean exists = true;
+            if (!dbFolder.exists()) {
+                exists = false;
+                if (!dbFolder.mkdir()) {
+                    throw new IOException("Impossible to create database folder " + dbFolder.getAbsolutePath() + ".");
+                }
             }
+            objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
+            if (!exists) {
+                objectsDB.addTable(nodeTable);
+                objectsDB.addTable(lengthTable);
+                objectsDB.addTable(parametersTable);
+            }
+            initialized = true;
+            return exists;
         }
-        objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
-        if (!exists) {
-            objectsDB.addTable(nodeTable);
-            objectsDB.addTable(lengthTable);
-            objectsDB.addTable(parametersTable);
-        }
-        return exists;
+        return initialized;
     }
 
     /**
@@ -125,6 +138,7 @@ public class ProteinTreeComponentsFactory {
     public boolean delete() {
         try {
             setCorrupted(true);
+            initialized = false;
         } finally {
             try {
                 close();
@@ -169,6 +183,15 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
+     * Returns arraylist of added tags
+     *
+     * @return the arraylist of already added tags
+     */
+    public ArrayList<String> getAddedTags() {
+        return alreadyAddedTags;
+    }
+
+    /**
      * Adds a node to the database.
      *
      * @param tag the tag referring to the node of interest
@@ -179,14 +202,17 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException {
-        objectsDB.insertObject(nodeTable, tag, node, false);
+        if (!alreadyAddedTags.contains(tag)) {
+            objectsDB.insertObject(nodeTable, tag, node, false);
+            alreadyAddedTags.add(tag);
+        }
     }
 
     /**
      * Adds nodes to the database.
      *
      * @param nodes map of the nodes
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -253,7 +279,7 @@ public class ProteinTreeComponentsFactory {
      * @return the initial tag size
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
@@ -286,7 +312,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the import was completed.
      *
-     * @param completed 
+     * @param completed
      * @throws SQLException
      * @throws IOException
      */
@@ -301,7 +327,7 @@ public class ProteinTreeComponentsFactory {
      * @return true if the import was complete
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public boolean importComplete() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "importComplete", true);
@@ -315,7 +341,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the database is corrupted.
      *
-     * @param corrupted 
+     * @param corrupted
      * @throws SQLException
      * @throws IOException
      */
@@ -330,7 +356,7 @@ public class ProteinTreeComponentsFactory {
      * @return true if the database is corrupted
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "corrupted", true);
@@ -344,7 +370,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets the version.
      *
-     * @param version the version 
+     * @param version the version
      * @throws SQLException
      * @throws IOException
      */
@@ -358,7 +384,7 @@ public class ProteinTreeComponentsFactory {
      * @return the version
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public String getVersion() throws SQLException, IOException, ClassNotFoundException {
         return (String) objectsDB.retrieveObject(parametersTable, "version", true);

@@ -2,6 +2,8 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Convenience class for sequence tag generation.
@@ -14,26 +16,31 @@ public class TagFactory {
      * Returns all the amino acid combinations for a given tag length.
      *
      * @param length the length of the tag
-     * 
+     *
      * @return all the amino acid combinations
      */
-    public static ArrayList<String> getAminoAcidCombinations(int length) {
-        if (length < 0) {
+    public static String[] getAminoAcidCombinations(int length) {
+        if (length < 1) {
             throw new IllegalArgumentException("Sequence length must be a positive number.");
         }
-        if (length == 0) {
-            return new ArrayList<String>();
-        }
-        ArrayList<String> tempList, result = AminoAcid.getAminoAcidsList();
-        for (int i = 1; i < length; i++) {
-            tempList = new ArrayList<String>();
-            for (String tag : result) {
-                for (char aa : AminoAcid.getAminoAcids()) {
-                    tempList.add(tag + aa);
+        char[] seq = AminoAcid.getAminoAcids();
+        StringBuilder builder = new StringBuilder("");
+        String[] aminoAcidArray = new String[(int) Math.pow(seq.length, length)];
+        int[] pos = new int[length];
+        for (int i = 0; i < aminoAcidArray.length; i++) {
+            builder.delete(0, length);
+            for (int x = 0; x < length; x++) {
+                if (pos[x] == seq.length) {
+                    pos[x] = 0;
+                    if (x + 1 < length) {
+                        pos[x + 1]++;
+                    }
                 }
+                builder.append(seq[pos[x]]);
             }
-            result = tempList;
+            pos[0]++;
+            aminoAcidArray[i] = (builder.toString());
         }
-        return result;
+        return aminoAcidArray;
     }
 }

@@ -62,11 +62,11 @@ public class ProteinTreeComponentsFactory {
      */
     private static final String parametersTable = "parameters";
     /**
-     * Boolean to check whether the database has been initialized already
+     * Boolean to check whether the database has been initialized already.
      */
     private static boolean initialized = false;
     /**
-     * List to check for double-added tags
+     * List to check for double-added tags.
      */
     private ArrayList<String> alreadyAddedTags = new ArrayList<String>();
 
@@ -183,7 +183,7 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Returns arraylist of added tags
+     * Returns arraylist of added tags.
      *
      * @return the arraylist of already added tags
      */

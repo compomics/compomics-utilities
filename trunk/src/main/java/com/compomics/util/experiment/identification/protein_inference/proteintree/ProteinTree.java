@@ -31,6 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * This class sorts the proteins into groups.
  *
  * @author Marc Vaudel
+ * @author Kenneth Verheggen
  */
 public class ProteinTree {
 
@@ -292,7 +293,7 @@ public class ProteinTree {
 
 
         if (sequenceFactory.isDefaultReversed()) {
-            //TODO sequenceFactory needs a only decoy and only true fetcher
+            //@TODO: the sequenceFactory needs an get only decoy and get only target fetcher
             for (String accession : sequenceFactory.getAccessions()) {
                 if (!sequenceFactory.isDecoyAccession(accession)) {
                     accessions.add(accession);
@@ -309,7 +310,7 @@ public class ProteinTree {
         long capacity = memoryAllocation * cacheScale;
         long estimatedTreeSize = 6 * criticalSize; // as far as I tested, 6% of the proteins are covered by a tag in general (ie median),sounds very efficient
         int ratio = (int) (capacity / estimatedTreeSize);
-//this solves NOTHIIIIIIING
+
         if (ratio == 0) {
             ratio = 1;
         }
@@ -319,9 +320,7 @@ public class ProteinTree {
             nPassages += 1;
         }
 
-        int nTags;
-
-        nTags = tags.length / ratio;
+        int nTags = tags.length / ratio;
         if (nTags == 0) {
             nTags = 1;
         }
@@ -344,7 +343,7 @@ public class ProteinTree {
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            int totalProgress = (int) (nPassages * accessions.size() + tags.length);
+            int totalProgress = (int) (nPassages * accessions.size() + tags.length); // @TODO: for some reason this now only goes to 75%...
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
             waitingHandler.setSecondaryProgressCounter(0);
         }
@@ -408,34 +407,45 @@ public class ProteinTree {
     private void loadTags(String[] tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        //SETUP QUEUE FOR MULTITHREADING
+
+        // setup queue for multithreading
         BlockingQueue<String> accessionsQueue = new LinkedBlockingQueue<String>();
         accessionsQueue.addAll(accessions);
-        //SETUP EXECUTORSERVICE FOR MULTITHREADING
+
+        // setup executor service for multithreading
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         long currentTime = System.currentTimeMillis();
         if (waitingHandler != null) {
-            waitingHandler.appendReport("Starting " + availableProcessors + " threads to import accessions", true, true);
+            if (availableProcessors == 1) {
+                waitingHandler.appendReport("Starting " + availableProcessors + " thread to import protein accessions.", true, true);
+            } else {
+                waitingHandler.appendReport("Starting " + availableProcessors + " threads to import protein accessions.", true, true);
+            }
         }
-        System.out.println("Starting " + availableProcessors + " threads to import accessions");
+        if (debugSpeed) {
+            System.out.println("Starting " + availableProcessors + " threads to import accessions");
+        }
         ExecutorService exec = Executors.newFixedThreadPool(availableProcessors);
         for (int i = 0; i < availableProcessors; i++) {
             exec.submit(new AccessionLoader("Loader " + (i + 1), accessionsQueue, waitingHandler, loadedAccessions, tags, enzyme, initialTagSize));
         }
 
-        //NOTIFY EXECUTOR THAT THE THREADS SHOULD BE STARTED NOW
+        // notify executor that the threads should be started
         exec.shutdown();
         exec.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
         while (!accessionsQueue.isEmpty()) {
-            //wait for all threads to finish = as soon as the queue is empty...
+            // wait for all threads to finish = as soon as the queue is empty...
             Thread.sleep(500);
         }
         if (waitingHandler != null) {
-            waitingHandler.appendReport("Building protein tree (" + tags.length + " leaves)", true, true);
+            waitingHandler.appendReport("Building peptide to protein map.", true, true);
         }
-        System.out.println("Building protein tree (" + tags.length + " leaves)");
-        //SAME FOR TAGS !!!!! (could not thread in same handlers...)
-        //SETUP QUEUE FOR MULTITHREADING
+        if (debugSpeed) {
+            System.out.println("Building peptide to protein map (" + tags.length + " leaves)");
+        }
+
+        // same for tags (could not thread in same handlers...)
+        // setup queue for multithreading
         Set<String> taskSet = new HashSet<String>();
         taskSet.addAll(new ArrayList<String>(Arrays.asList(tags)));
         BlockingQueue<String> tagsQueue = new LinkedBlockingQueue<String>(taskSet);
@@ -443,11 +453,12 @@ public class ProteinTree {
         for (int i = 0; i < availableProcessors; i++) {
             exec.submit(new TagSaver(tagsQueue, maxNodeSize, maxPeptideSize, waitingHandler));
         }
+
         //shut down the executor service now
         exec.shutdown();
-        //-----------
+
         while (!tagsQueue.isEmpty()) {
-            //wait for all threads to finish = as soon as the queue is empty...
+            // wait for all threads to finish = as soon as the queue is empty...
             Thread.sleep(500);
         }
         currentTime = System.currentTimeMillis() - currentTime;
@@ -456,13 +467,13 @@ public class ProteinTree {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(currentTime);
         currentTime -= TimeUnit.MINUTES.toMillis(minutes);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(currentTime);
-        if (waitingHandler
-                != null) {
+        if (waitingHandler != null) {
             waitingHandler.appendReport("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!", true, true);
         }
 
-        System.out.println(
-                "Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!");
+        if (debugSpeed) {
+            System.out.println("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!");
+        }
     }
 
     /**
@@ -475,18 +486,20 @@ public class ProteinTree {
      * @return all the positions of the given tags
      */
     private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, Enzyme enzyme, HashMap<String, ArrayList<Integer>> tagToIndexesMap) throws SQLException, IOException, ClassNotFoundException {
+
         Integer initialTagSize;
         synchronized (componentsFactory) {
             initialTagSize = componentsFactory.getInitialSize();
         }
-        //trim the map to improve memory efficiency
+
+        // trim the map to improve memory efficiency
         tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tagToIndexesMap);
-        String tag;
         ArrayList<Integer> indexes;
-        //only add what is required to use !!!! ---> will definatly speed up iterations later !
+
+        //@TODO: only add what is required to use !!!! ---> will definatly speed up iterations later !
         for (int i = 0; i < sequence.length() - initialTagSize; i++) {
             if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
-                tag = sequence.substring(i, i + initialTagSize);
+                String tag = sequence.substring(i, i + initialTagSize);
                 if (!tagToIndexesMap.containsKey(tag)) {
                     indexes = new ArrayList<Integer>();
                     tagToIndexesMap.put(tag, indexes);
@@ -808,7 +821,7 @@ public class ProteinTree {
                 } else {
                     newAccession = SequenceFactory.getDefaultDecoyAccession(accession);
                     proteinLength = componentsFactory.getProteinLength(accession);
-                    if (proteinLength == 0) {
+                    if (proteinLength == null) {
                         throw new IllegalArgumentException("Length of protein " + accession + " not found.");
                     }
                 }
@@ -837,14 +850,17 @@ public class ProteinTree {
      * @throws IOException
      */
     private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
+
         Node result = tree.get(tag);
+
         if (result == null) {
+
             result = componentsFactory.getNode(tag);
+
             if (result != null) {
                 long capacity = memoryAllocation * cacheScale;
 
-
-                //why do tags get removed for no apparent reason?
+                //@TODO: why do tags get removed for no apparent reason?
                 while (treeSize > capacity && !tree.keySet().isEmpty()) {
                     int index = tagsInTree.size() - 1;
                     String tempTag = tagsInTree.get(index);
@@ -853,11 +869,13 @@ public class ProteinTree {
                     tree.remove(tempTag);
                     tagsInTree.remove(index);
                 }
+
                 tree.put(tag, result);
                 treeSize += result.getSize();
                 tagsInTree.add(0, tag);
             }
         }
+
         return result;
     }
 
@@ -958,10 +976,6 @@ public class ProteinTree {
      */
     public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException {
         return new PeptideIterator();
-
-
-
-
     }
 
     /**
@@ -1120,13 +1134,36 @@ public class ProteinTree {
         }
     }
 
+    /**
+     * Private class for storing tags.
+     */
     private class TagSaver implements Runnable {
 
+        /**
+         * The tag queue.
+         */
         private final BlockingQueue<String> tagsQueue;
+        /**
+         * The waiting handler.
+         */
         private final WaitingHandler waitingHandler;
+        /**
+         * The maximum node size.
+         */
         private final int maxNodeSize;
+        /**
+         * The maximum peptide size.
+         */
         private final int maxPeptideSize;
 
+        /**
+         * Constructor.
+         * 
+         * @param tagsQueue the tag queue
+         * @param maxNodeSize the maximum node size
+         * @param maxPeptideSize the maximum peptide size
+         * @param waitingHandler the waiting handler
+         */
         private TagSaver(BlockingQueue<String> tagsQueue, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler) {
             this.tagsQueue = tagsQueue;
             this.waitingHandler = waitingHandler;
@@ -1136,10 +1173,10 @@ public class ProteinTree {
 
         @Override
         public void run() {
-            String tag;
             ArrayList<String> tagsToRemove = new ArrayList<String>();
+            
             while (!tagsQueue.isEmpty()) {
-                tag = (String) tagsQueue.poll();
+                String tag = (String) tagsQueue.poll();
                 Node node;
                 synchronized (tree) {
                     node = tree.get(tag);
@@ -1183,17 +1220,55 @@ public class ProteinTree {
         }
     }
 
+    /**
+     * Private class for loading accessions.
+     */
     private class AccessionLoader implements Runnable {
 
+        /**
+         * The accession queue.
+         */
         private final BlockingQueue accessionsQueue;
+        /**
+         * The waiting handler.
+         */
         private final WaitingHandler waitingHandler;
+        /**
+         * The list of loaded accessions.
+         */
         private final ArrayList<String> loadedAccessions;
+        /**
+         * The tags.
+         */
         private final String[] tags;
+        /**
+         * The enzyme.
+         */
         private final Enzyme enzyme;
+        /**
+         * The initial tag size.
+         */
         private final int initialTagSize;
+        /**
+         * The accession name.
+         */
         private final String name;
+        /**
+         * The lock.
+         */
         private final Lock lock = new ReentrantLock();
 
+        /**
+         * Constructor.
+         * 
+         * @param name the accession name
+         * @param accessionsQueue the accession queue
+         * @param waitingHandler the waiting handler
+         * @param loadedAccessions the list of loaded accessions
+         * @param tags the tags
+         * @param enzyme the enzyme
+         * @param initialTagSize the initial tag size
+         */
         private AccessionLoader(String name, BlockingQueue<String> accessionsQueue, WaitingHandler waitingHandler, ArrayList<String> loadedAccessions, String[] tags, Enzyme enzyme, int initialTagSize) {
             this.name = name;
             this.accessionsQueue = accessionsQueue;
@@ -1206,10 +1281,10 @@ public class ProteinTree {
 
         @Override
         public void run() {
-            String accession;
+
             HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.length);
             while (!accessionsQueue.isEmpty()) {
-                accession = (String) accessionsQueue.poll();
+                String accession = (String) accessionsQueue.poll();
                 try {
                     String sequence;
                     //         synchronized (sequenceFactory) {
@@ -1265,7 +1340,10 @@ public class ProteinTree {
                     ex.printStackTrace();
                 }
             }
-            System.out.println(name + " is done !");
+            
+            if (debugSpeed) {
+                System.out.println(name + " is done !");
+            }
         }
     }
 }

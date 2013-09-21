@@ -65,10 +65,6 @@ public class ProteinTreeComponentsFactory {
      * Boolean to check whether the database has been initialized already.
      */
     private static boolean initialized = false;
-    /**
-     * List to check for double-added tags.
-     */
-    private ArrayList<String> alreadyAddedTags = new ArrayList<String>();
 
     /**
      * Constructor.
@@ -183,15 +179,6 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Returns arraylist of added tags.
-     *
-     * @return the arraylist of already added tags
-     */
-    public ArrayList<String> getAddedTags() {
-        return alreadyAddedTags;
-    }
-
-    /**
      * Adds a node to the database.
      *
      * @param tag the tag referring to the node of interest
@@ -202,10 +189,7 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException {
-        if (!alreadyAddedTags.contains(tag)) {
             objectsDB.insertObject(nodeTable, tag, node, false);
-            alreadyAddedTags.add(tag);
-        }
     }
 
     /**
@@ -233,6 +217,19 @@ public class ProteinTreeComponentsFactory {
      */
     public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
         return (Node) objectsDB.retrieveObject(nodeTable, tag, true, false);
+    }
+    
+    /**
+     * Returns the tags loaded in the database
+     * 
+     * @return the tags loaded in the database
+     * 
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException 
+     */
+    public ArrayList<String> getTags() throws SQLException, ClassNotFoundException, IOException {
+        return objectsDB.tableContent(nodeTable);
     }
 
     /**

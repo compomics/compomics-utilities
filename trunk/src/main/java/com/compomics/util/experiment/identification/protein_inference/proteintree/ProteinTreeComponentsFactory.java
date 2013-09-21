@@ -220,7 +220,7 @@ public class ProteinTreeComponentsFactory {
     }
     
     /**
-     * Returns the tags loaded in the database
+     * Returns the tags loaded in the database.
      * 
      * @return the tags loaded in the database
      * 

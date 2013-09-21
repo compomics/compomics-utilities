@@ -57,7 +57,7 @@ public class ProteinTree {
      */
     private ArrayList<String> tagsInTree = new ArrayList<String>();
     /**
-     * List of the tags found in this protein sequence database
+     * List of the tags found in this protein sequence database.
      */
     private ArrayList<String> tagsInDB = new ArrayList<String>();
     /**
@@ -67,7 +67,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = true;
+    private boolean debugSpeed = false;
     /**
      * The writer used to send the output to a debug file.
      */

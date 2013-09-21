@@ -47,15 +47,19 @@ public class ProteinTree {
     /**
      * Instance of the sequence factory.
      */
-    private static final SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+    private final SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
      * The tree containing the accessions indexed by sequence tags.
      */
     private HashMap<String, Node> tree = new HashMap<String, Node>();
     /**
-     * List of the nodes in tree.
+     * List of the nodes in tree (ie in memory).
      */
     private ArrayList<String> tagsInTree = new ArrayList<String>();
+    /**
+     * List of the tags found in this protein sequence database
+     */
+    private ArrayList<String> tagsInDB = new ArrayList<String>();
     /**
      * The size of the tree in memory in accession*node.
      */
@@ -63,7 +67,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = false;
+    private boolean debugSpeed = true;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -87,7 +91,7 @@ public class ProteinTree {
     /**
      * Time in ms after which a query is considered as slow.
      */
-    private int queryTimeThreshold = 50;
+    private int queryTimeThreshold = 20;
     /**
      * Cache of the last queried peptides where the query took long.
      */
@@ -122,7 +126,9 @@ public class ProteinTree {
 
         if (debugSpeed) {
             try {
-                debugSpeedWriter = new BufferedWriter(new FileWriter(new File("dbSpeed.txt")));
+                debugSpeedWriter = new BufferedWriter(new FileWriter(new File("treeSpeed.txt")));
+                debugSpeedWriter.write("sequence\tnPeptides\tnProteins\tQuery time\tslow cache usage\tcache usage\tDB query");
+                debugSpeedWriter.newLine();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -213,6 +219,7 @@ public class ProteinTree {
                 importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime);
             } else {
                 componentsFactory.loadProteinLenths();
+                tagsInDB = componentsFactory.getTags();
             }
         } catch (IOException e) {
             componentsFactory.delete();
@@ -293,7 +300,6 @@ public class ProteinTree {
 
 
         if (sequenceFactory.isDefaultReversed()) {
-            //@TODO: the sequenceFactory needs an get only decoy and get only target fetcher
             for (String accession : sequenceFactory.getAccessions()) {
                 if (!sequenceFactory.isDecoyAccession(accession)) {
                     accessions.add(accession);
@@ -308,8 +314,8 @@ public class ProteinTree {
 
         // try to estimate the number of tags we can process at a time given the memory settings. We might want to fine tune this
         long capacity = memoryAllocation * cacheScale;
-        long estimatedTreeSize = 6 * criticalSize; // as far as I tested, 6% of the proteins are covered by a tag in general (ie median),sounds very efficient
-        int ratio = (int) (capacity / estimatedTreeSize);
+        long estimatedTreeSize = 6 * criticalSize; // as far as I tested, 6% of the proteins are covered by a tag in general (ie median)
+        int ratio = (int) (estimatedTreeSize / capacity);
 
         if (ratio == 0) {
             ratio = 1;
@@ -558,14 +564,28 @@ public class ProteinTree {
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         long time0 = 0;
+        boolean dbQuery = false;
         if (debugSpeed) {
             time0 = System.currentTimeMillis();
+            ArrayList<String> initialTags = getInitialTags(peptideSequence, matchingType, massTolerance);
+            for (String tag : initialTags) {
+                if (tree.containsKey(tag)) {
+                    dbQuery = true;
+                    break;
+                }
+            }
         }
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, matchingType, massTolerance, false);
         if (debugSpeed) {
             long time1 = System.currentTimeMillis();
             long queryTime = time1 - time0;
-            debugSpeedWriter.write(peptideSequence + "\t" + result.size() + "\t" + queryTime);
+            int nProteins = 0;
+            for (String peptide : result.keySet()) {
+                nProteins += result.get(peptide).size();
+            }
+            double slowCacheUsage = ((double) lastSlowQueriedPeptidesCacheContent.size()) / cacheSize;
+            double cacheUsage = ((double) lastQueriedPeptidesCache.size()) / cacheSize;
+            debugSpeedWriter.write(peptideSequence + "\t" + result.size() + "\t" + nProteins + "\t" + queryTime + "\t" + slowCacheUsage + "\t" + cacheUsage + "\t" + dbQuery);
             debugSpeedWriter.newLine();
             debugSpeedWriter.flush();
         }
@@ -852,15 +872,16 @@ public class ProteinTree {
     private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
 
         Node result = tree.get(tag);
-
         if (result == null) {
-
-            result = componentsFactory.getNode(tag);
-
-            if (result != null) {
+            if (!tagsInDB.contains(tag)) {
+                return null;
+            } else {
+                result = componentsFactory.getNode(tag);
+                if (result == null) {
+                    throw new IllegalArgumentException("Tag " + tag + " not found in database.");
+                }
                 long capacity = memoryAllocation * cacheScale;
 
-                //@TODO: why do tags get removed for no apparent reason?
                 while (treeSize > capacity && !tree.keySet().isEmpty()) {
                     int index = tagsInTree.size() - 1;
                     String tempTag = tagsInTree.get(index);
@@ -873,9 +894,9 @@ public class ProteinTree {
                 tree.put(tag, result);
                 treeSize += result.getSize();
                 tagsInTree.add(0, tag);
+
             }
         }
-
         return result;
     }
 
@@ -1084,9 +1105,6 @@ public class ProteinTree {
                         currentSequence += aa;
                         currentNode = parentNode.getSubtree().get(aa);
                     }
-                    if (currentNode == null) {
-                        int debug = 1;
-                    }
                     while (currentNode.getAccessions() == null) {
                         j = 0;
                         aas = new ArrayList<Character>(currentNode.getSubtree().keySet());
@@ -1158,7 +1176,7 @@ public class ProteinTree {
 
         /**
          * Constructor.
-         * 
+         *
          * @param tagsQueue the tag queue
          * @param maxNodeSize the maximum node size
          * @param maxPeptideSize the maximum peptide size
@@ -1174,13 +1192,17 @@ public class ProteinTree {
         @Override
         public void run() {
             ArrayList<String> tagsToRemove = new ArrayList<String>();
-            
+
             while (!tagsQueue.isEmpty()) {
                 String tag = (String) tagsQueue.poll();
+                synchronized (tagsInDB) {
+                    tagsInDB.add(tag);
+                }
                 Node node;
                 synchronized (tree) {
                     node = tree.get(tag);
                 }
+                tree.remove(tag);
                 if (node != null) {
                     try {
                         node.splitNode(maxNodeSize, maxPeptideSize);
@@ -1260,7 +1282,7 @@ public class ProteinTree {
 
         /**
          * Constructor.
-         * 
+         *
          * @param name the accession name
          * @param accessionsQueue the accession queue
          * @param waitingHandler the waiting handler
@@ -1340,7 +1362,7 @@ public class ProteinTree {
                     ex.printStackTrace();
                 }
             }
-            
+
             if (debugSpeed) {
                 System.out.println(name + " is done !");
             }

@@ -265,7 +265,7 @@ public class AminoAcidPattern implements Serializable {
                         toAdd.add(aa.singleLetterCode);
                     }
                     if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
-                        for (char tempAa : aa.getActualAminoAcids()) {
+                        for (char tempAa : aa.getSubAminoAcids()) {
                             String value = tempAa + "";
                             if (!toAdd.contains(value)) {
                                 toAdd.add(value);
@@ -334,14 +334,10 @@ public class AminoAcidPattern implements Serializable {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(String input, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        Pattern pattern = getAsStringPattern(matchingType, massTolerance);
         ArrayList<Integer> result = new ArrayList<Integer>();
-        Matcher matcher = pattern.matcher(input);
-        matcher.matches();
         int index = 0;
-        while (matcher.find(index)) {
-            index = matcher.start();
-            result.add(index + target + 1);
+        while ((index = firstIndex(input, matchingType, massTolerance, index)) >= 0) {
+            result.add(index + 1);
             index++;
         }
         return result;
@@ -361,6 +357,123 @@ public class AminoAcidPattern implements Serializable {
     }
 
     /**
+     * Returns the first index where the amino acid pattern is found. -1 if not
+     * found.
+     *
+     * @param aminoAcidSequence the amino-acid sequence to look into
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return the first index where the amino acid pattern is found
+     */
+    public int firstIndex(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return firstIndex(aminoAcidSequence, matchingType, massTolerance, 0);
+    }
+
+    /**
+     * Returns the first index where the amino acid pattern is found. -1 if not
+     * found.
+     *
+     * @param aminoAcidSequence the amino-acid sequence to look into
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * @param startIndex the start index where to start looking for
+     *
+     * @return the first index where the amino acid pattern is found
+     */
+    public int firstIndex(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
+        int patternLength = length();
+        int lastIndex = aminoAcidSequence.length() - patternLength;
+        for (int i = startIndex; i <= lastIndex; i++) {
+            boolean match = true;
+            for (int j = 0; j < patternLength; j++) {
+                char aa = aminoAcidSequence.charAt(i + j);
+                boolean reject = false;
+                ArrayList<AminoAcid> aaList = aaExcluded.get(j);
+                if (aaList != null && !aaList.isEmpty()) {
+                    for (AminoAcid vetoAA : aaList) {
+                        if (aa == vetoAA.singleLetterCode.charAt(0)) {
+                            reject = true;
+                            break;
+                        }
+                        if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                            for (char tempAA : vetoAA.getSubAminoAcids()) {
+                                if (aa == tempAA) {
+                                    reject = true;
+                                    break;
+                                }
+                            }
+                            if (reject) {
+                                break;
+                            }
+                            for (char tempAA : vetoAA.getCombinations()) {
+                                if (aa == tempAA) {
+                                    reject = true;
+                                    break;
+                                }
+                            }
+                            if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                                for (char tempAA : vetoAA.getIndistinguishibleAminoAcids(massTolerance)) {
+                                    if (aa == tempAA) {
+                                        reject = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (reject) {
+                        match = false;
+                        break;
+                    }
+                }
+                aaList = aaTargeted.get(j);
+                if (aaList != null && !aaList.isEmpty()) {
+                    boolean found = false;
+                    for (AminoAcid targetedAA : aaList) {
+                        if (aa == targetedAA.singleLetterCode.charAt(0)) {
+                            found = true;
+                            break;
+                        } else if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                            for (char tempAA : targetedAA.getSubAminoAcids()) {
+                                if (aa == tempAA) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found) {
+                                break;
+                            }
+                            for (char tempAA : targetedAA.getCombinations()) {
+                                if (aa == tempAA) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found && matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                                for (char tempAA : targetedAA.getIndistinguishibleAminoAcids(massTolerance)) {
+                                    if (aa == tempAA) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!found) {
+                        match = false;
+                        break;
+                    }
+                }
+            }
+            if (match) {
+                return i + target;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Indicates whether the pattern is found in the given amino-acid sequence.
      *
      * @param aminoAcidSequence the amino-acid sequence
@@ -371,9 +484,7 @@ public class AminoAcidPattern implements Serializable {
      * amino-acid sequence
      */
     public boolean matches(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        Pattern pattern = getAsStringPattern(matchingType, massTolerance);
-        Matcher matcher = pattern.matcher(aminoAcidSequence);
-        return matcher.find();
+        return firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
     }
 
     /**

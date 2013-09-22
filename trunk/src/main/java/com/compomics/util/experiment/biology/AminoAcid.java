@@ -171,12 +171,12 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
-     * In case of a combination of amino acids, returns the actual amino acids
+     * In case of a combination of amino acids, returns the comprised amino acids or amino acid groups
      * represented by their single letter code. Example: Z -> {G, Q}.
      *
      * @return the actual amino acids
      */
-    public abstract char[] getActualAminoAcids();
+    public abstract char[] getSubAminoAcids();
 
     /**
      * Returns the amino acids combinations which might represent this amino

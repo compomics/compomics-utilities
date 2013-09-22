@@ -123,7 +123,7 @@ public class Node implements Serializable {
 
         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
 
-        for (char aaChar : aminoAcid.getActualAminoAcids()) {
+        for (char aaChar : aminoAcid.getSubAminoAcids()) {
             result.add(aaChar);
         }
 

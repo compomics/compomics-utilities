@@ -5,6 +5,7 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import java.util.ArrayList;
 import junit.framework.Assert;
 
@@ -32,6 +33,17 @@ public class AminoAcidPatternTest {
         Assert.assertTrue(indexes.size() == 2);
         Assert.assertTrue(indexes.get(0) == 1);
         Assert.assertTrue(indexes.get(1) == 2);
+        input = "IJX";
+        AminoAcidPattern pattern = new AminoAcidPattern("IJX");
+        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        pattern = new AminoAcidPattern("IIX");
+        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        pattern = new AminoAcidPattern("JJX");
+        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        pattern = new AminoAcidPattern("JJJ");
+        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        pattern = new AminoAcidPattern("XXX");
+        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
     }
     
 }

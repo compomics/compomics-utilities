@@ -246,12 +246,12 @@ public class Enzyme extends ExperimentObject {
 
         for (Character aa1 : aminoAcidBefore) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaBefore);
-            for (char possibleAaBefore : aminoAcid.getActualAminoAcids()) {
+            for (char possibleAaBefore : aminoAcid.getSubAminoAcids()) {
                 if (possibleAaBefore == aa1.charValue()) {
                     boolean restriction = false;
                     for (Character aa2 : restrictionAfter) {
                         aminoAcid = AminoAcid.getAminoAcid(aaAfter);
-                        for (char possibleAaAfter : aminoAcid.getActualAminoAcids()) {
+                        for (char possibleAaAfter : aminoAcid.getSubAminoAcids()) {
                             if (possibleAaAfter == aa2.charValue()) {
                                 restriction = true;
                                 break;
@@ -270,12 +270,12 @@ public class Enzyme extends ExperimentObject {
 
         for (Character aa1 : aminoAcidAfter) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaAfter);
-            for (char possibleAaAfter : aminoAcid.getActualAminoAcids()) {
+            for (char possibleAaAfter : aminoAcid.getSubAminoAcids()) {
                 if (possibleAaAfter == aa1.charValue()) {
                     boolean restriction = false;
                     for (Character aa2 : restrictionBefore) {
                         aminoAcid = AminoAcid.getAminoAcid(aaAfter);
-                        for (char possibleAaBefore : aminoAcid.getActualAminoAcids()) {
+                        for (char possibleAaBefore : aminoAcid.getSubAminoAcids()) {
                             if (possibleAaBefore == aa2.charValue()) {
                                 restriction = true;
                                 break;

@@ -26,7 +26,7 @@ public class Asparagine extends AminoAcid {
     }
 
     @Override
-    public char[] getActualAminoAcids() {
+    public char[] getSubAminoAcids() {
         return new char[]{'N'};
     }
 

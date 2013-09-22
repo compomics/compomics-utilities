@@ -765,7 +765,7 @@ public class ProteinTree {
             tempTags = new ArrayList<String>(result);
             result.clear();
             if (tempTags.isEmpty()) {
-                for (char newAa : aminoAcid.getActualAminoAcids()) {
+                for (char newAa : aminoAcid.getSubAminoAcids()) {
                     String newTag = newAa + "";
                     if (!result.contains(newTag)) {
                         result.add(newTag);
@@ -787,7 +787,7 @@ public class ProteinTree {
                 }
             } else {
                 for (String sequence : tempTags) {
-                    for (char newAa : aminoAcid.getActualAminoAcids()) {
+                    for (char newAa : aminoAcid.getSubAminoAcids()) {
                         String newTag = sequence + newAa;
                         if (!result.contains(newTag)) {
                             result.add(newTag);

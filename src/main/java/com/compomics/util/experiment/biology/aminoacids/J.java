@@ -26,7 +26,7 @@ public class J extends AminoAcid {
     }
 
     @Override
-    public char[] getActualAminoAcids() {
+    public char[] getSubAminoAcids() {
         return new char[]{'I', 'L'};
     }
 

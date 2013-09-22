@@ -999,8 +999,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param evt
      */
     private void neutralLossesTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_neutralLossesTableMouseReleased
-        int row = neutralLossesTable.getSelectedRow();
-        removeNeutralLoss.setEnabled(row != -1);
+        if (editable) {
+            int row = neutralLossesTable.getSelectedRow();
+            removeNeutralLoss.setEnabled(row != -1);
+        }
     }//GEN-LAST:event_neutralLossesTableMouseReleased
 
     /**
@@ -1009,8 +1011,10 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * @param evt
      */
     private void reporterIonsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reporterIonsTableMouseReleased
-        int row = reporterIonsTable.getSelectedRow();
-        removerReporterIon.setEnabled(row != -1);
+        if (editable) {
+            int row = reporterIonsTable.getSelectedRow();
+            removerReporterIon.setEnabled(row != -1);
+        }
     }//GEN-LAST:event_reporterIonsTableMouseReleased
 
     /**
@@ -1230,7 +1234,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex != 0;
+            return columnIndex != 0 && editable;
         }
 
         @Override
@@ -1302,7 +1306,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex != 0;
+            return columnIndex != 0 && editable;
         }
 
         @Override

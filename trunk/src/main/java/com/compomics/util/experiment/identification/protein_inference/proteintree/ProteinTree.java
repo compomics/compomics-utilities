@@ -363,12 +363,10 @@ public class ProteinTree {
             System.arraycopy(tags, arrayPointer, bufferedArray, 0, nTags);
             arrayPointer = +nTags;
             loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
-            if (debugSpeed) {
-                debugSpeedWriter.write(new Date() + " " + arrayPointer + " tags of " + tags.length + " loaded.");
-                System.out.println(new Date() + " " + arrayPointer + " tags of " + tags.length + " loaded.");
-                debugSpeedWriter.newLine();
-                debugSpeedWriter.flush();
-            }
+        }
+        if (arrayPointer != tags.length) {
+            System.arraycopy(tags, arrayPointer, bufferedArray, 0, (tags.length - nTags));
+            loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
         }
         tagsInTree.addAll(tree.keySet());
         for (Node node : tree.values()) {

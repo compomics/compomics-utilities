@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -1024,7 +1026,7 @@ public class ProteinTree {
         /**
          * List of amino acids found in the current node subtree if any.
          */
-        private ArrayList<Character> aas = null;
+        private TreeSet<Character> aas = null;
         /**
          * The current iterator position in the tags.
          */
@@ -1048,6 +1050,7 @@ public class ProteinTree {
 
         @Override
         public boolean hasNext() {
+            ArrayList<Character> aasAsList = new ArrayList<Character>();
             try {
                 if (currentNode != null && currentNode.getDepth() == initialTagSize && currentNode.getAccessions() != null && i < tags.length - 1) {
                     // ok we're done with this node
@@ -1092,23 +1095,24 @@ public class ProteinTree {
                                     parentNode = getNode(tag).getSubNode(parentSequence);
                                 }
                                 currentNode = parentNode.getSubtree().get(aa);
-                                aas = new ArrayList<Character>(parentNode.getSubtree().keySet());
-                                Collections.sort(aas);
-                                j = aas.indexOf(aa);
+                                aas = new TreeSet<Character>(parentNode.getSubtree().keySet()) {
+                                };
+                                j = aas.headSet(aa).size();
                             }
                             return hasNext();
                         }
-                        char aa = aas.get(j);
+
+                        aasAsList.addAll(aas);
+                        char aa = aasAsList.get(j);
                         currentSequence += aa;
                         currentNode = parentNode.getSubtree().get(aa);
                     }
                     while (currentNode.getAccessions() == null) {
                         j = 0;
-                        aas = new ArrayList<Character>(currentNode.getSubtree().keySet());
+                        aas = new TreeSet<Character>(currentNode.getSubtree().keySet());
                         parentNode = currentNode;
                         if (!aas.isEmpty()) {
-                            Collections.sort(aas);
-                            char aa = aas.get(j);
+                            char aa = aasAsList.get(j);
                             currentSequence += aa;
                             currentNode = currentNode.getSubtree().get(aa);
                         } else {

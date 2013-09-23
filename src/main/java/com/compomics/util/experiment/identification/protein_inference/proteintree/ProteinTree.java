@@ -296,8 +296,7 @@ public class ProteinTree {
         componentsFactory.saveInitialSize(initialTagSize);
 
         String[] tags = TagFactory.getAminoAcidCombinations(initialTagSize);
-        ArrayList<String> accessions = new ArrayList<String>();
-
+        Set<String> accessions = new HashSet<String>();
 
         if (sequenceFactory.isDefaultReversed()) {
             for (String accession : sequenceFactory.getAccessions()) {
@@ -408,7 +407,7 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void loadTags(String[] tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
+    private void loadTags(String[] tags, Set<String> accessions, WaitingHandler waitingHandler,
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 

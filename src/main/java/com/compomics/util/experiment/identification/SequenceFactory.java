@@ -10,6 +10,8 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JProgressBar;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -107,7 +109,7 @@ public class SequenceFactory {
      * Clears the factory getInstance() needs to be called afterwards.
      *
      * @throws IOException
-     * @throws SQLException  
+     * @throws SQLException
      */
     public void clearFactory() throws IOException, SQLException {
         closeFile();
@@ -609,7 +611,7 @@ public class SequenceFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * closing the file
-     * @throws SQLException  
+     * @throws SQLException
      */
     public void closeFile() throws IOException, SQLException {
         if (currentRandomAccessFile != null) {
@@ -845,12 +847,12 @@ public class SequenceFactory {
      *
      * @return the sequences present in the database
      */
-    public ArrayList<String> getAccessions() {
+    public Set<String> getAccessions() {
+        Set<String> setToFill = new HashSet<String>();
         if (fastaIndex != null) {
-            return new ArrayList<String>(fastaIndex.getIndexes().keySet());
-        } else {
-            return new ArrayList<String>();
+            setToFill = fastaIndex.getIndexes().keySet();
         }
+        return setToFill;
     }
 
     /**
@@ -886,7 +888,7 @@ public class SequenceFactory {
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         HashMap<String, Integer> aaMap = new HashMap<String, Integer>();
-        ArrayList<String> accessions = getAccessions();
+        Set<String> accessions = getAccessions();
 
         if (progressBar != null) {
             progressBar.setIndeterminate(false);
@@ -1048,9 +1050,9 @@ public class SequenceFactory {
      * @return the default protein tree
      * @throws IOException
      * @throws InterruptedException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      * @throws IllegalArgumentException
-     * @throws SQLException  
+     * @throws SQLException
      */
     public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         return getDefaultProteinTree(null);
@@ -1065,10 +1067,10 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      * @throws IOException
-     * @throws InterruptedException 
-     * @throws ClassNotFoundException 
-     * @throws IllegalArgumentException 
-     * @throws SQLException  
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException
+     * @throws SQLException
      */
     public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         if (defaultProteinTree == null) {

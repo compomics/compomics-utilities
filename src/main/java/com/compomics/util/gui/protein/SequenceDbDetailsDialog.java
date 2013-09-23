@@ -13,7 +13,10 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -110,8 +113,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             decoyFlagTxt.setEditable(dbEditable);
             if (!sequenceFactory.getAccessions().isEmpty()) {
                 accessionsSpinner.setEnabled(true);
-                accessionsSpinner.setModel(new SpinnerListModel(sequenceFactory.getAccessions()));
-                accessionsSpinner.setValue(sequenceFactory.getAccessions().get(0));
+                List<String> accessionsAsList = new ArrayList<String>();
+                for (String anAcession : sequenceFactory.getAccessions()) {
+                    accessionsAsList.add(anAcession);
+                }
+                accessionsSpinner.setModel(new SpinnerListModel(accessionsAsList));
+                accessionsSpinner.setValue(accessionsAsList.get(0));
                 updateSequence();
             } else {
                 accessionsSpinner.setEnabled(false);

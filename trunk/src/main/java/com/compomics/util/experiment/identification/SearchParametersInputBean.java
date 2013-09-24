@@ -142,6 +142,12 @@ public class SearchParametersInputBean {
                 Double option = new Double(arg);
                 searchParameters.setPrecursorAccuracy(option);
             }
+            if (aLine.hasOption(SearchParametersCLIParams.PREC_TOL_DA.id)) {
+                String arg = aLine.getOptionValue(SearchParametersCLIParams.PREC_TOL_DA.id);
+                Double option = new Double(arg);
+                searchParameters.setPrecursorAccuracyDalton(option);
+                //searchParameters.setPrecursorAccuracyType(SearchParameters.PrecursorAccuracyType.DA);
+            }
             if (aLine.hasOption(SearchParametersCLIParams.FRAG_TOL.id)) {
                 String arg = aLine.getOptionValue(SearchParametersCLIParams.FRAG_TOL.id);
                 Double option = new Double(arg);

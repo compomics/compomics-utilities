@@ -22,8 +22,8 @@ public enum SearchParametersCLIParams {
     OUTPUT_FOLDER("output_folder", "The output folder.", true),
     SEARCH_PARAMETERS("search_params", "Serialized com.compomics.util.experiment.identification.SearchParameters object created by SearchGUI/DeNovoGUI.", false),
     PPM("ppm", "Precursor ion tolerance unit: ppm (1) or Da (2). Default is '1'.", false),
-    PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' (ppm).", false),
-    FRAG_TOL("frag_tol", "Fragment ion mass tolerance in Da, default is '0.5' (Da).", false),
+    PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' ppm.", false), // same as PREC_TOL_DA, but different description and default value
+    FRAG_TOL("frag_tol", "Fragment ion mass tolerance in Dalton, default is '0.5' Da.", false),
     ENZYME("enzyme", "Enzyme, default is 'Trypsin'. The available enzymes are listed in the GUI. (Names are case sensitive.)", false),
     FIXED_MODS("fixed_mods", "The fixed modifications as a comma separated list. (Modifications are configured in the GUI.)", false),
     VARIABLE_MODS("variable_mods", "The variable modifications as a comma separated list. (Modifications are configured in the GUI.)", false),
@@ -63,6 +63,7 @@ public enum SearchParametersCLIParams {
     DISCARD_SPECTRA("discard_spectra", "Discard low quality spectra, 1: true, 0: false, default is '1'.", false),
     FRAGMENTATION_MODEL("fragmentation_model", "The PepNovo+ fragmentation model. Default is 'CID_IT_TRYP'.", false),
     GENERATE_BLAST("generate_blast", "Generate a BLAST query, 1: true, 0: false, default is '0'.", false),
+    PREC_TOL_DA("prec_tol_da", "Precursor ion mass tolerance in Dalton, default is '0.5' Da.", false), // same as PREC_TOL, but different description and default value
     PEP_NOVO_LOCATION("pep_novo", "The PepNovo+ executable, defaults to the OS dependent versions included with DeNovoGUI.", false);
     
     /**

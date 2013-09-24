@@ -39,6 +39,10 @@ public class SearchParameters implements Serializable {
      */
     private Double precursorTolerance = 10.0;
     /**
+     * The precursor mass tolerance in Dalton (for de novo searches).
+     */
+    private Double precursorToleranceDalton = 0.5;
+    /**
      * The MS2 ion tolerance.
      */
     private Double fragmentIonMZTolerance = 0.5;
@@ -386,6 +390,27 @@ public class SearchParameters implements Serializable {
      */
     public void setPrecursorAccuracy(Double precursorTolerance) {
         this.precursorTolerance = precursorTolerance;
+    }
+
+    /**
+     * Returns the precursor tolerance in Dalton (for de novo searches).
+     *
+     * @return the precursor tolerance
+     */
+    public Double getPrecursorAccuracyDalton() {
+        if (precursorToleranceDalton == null) {
+            precursorToleranceDalton = 0.5; // for backwards compatability
+        }
+        return precursorToleranceDalton;
+    }
+
+    /**
+     * Sets the precursor tolerance in Dalton (for de novo searches).
+     *
+     * @param precursorToleranceDalton the precursor tolerance
+     */
+    public void setPrecursorAccuracyDalton(Double precursorToleranceDalton) {
+        this.precursorToleranceDalton = precursorToleranceDalton;
     }
 
     /**

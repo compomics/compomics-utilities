@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder;
 
 import com.compomics.util.experiment.biology.Enzyme;
@@ -17,8 +13,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * AccessionLoader class.
  *
- * @author Kenneth
+ * @author Kenneth Verheggen
  */
 public class AccessionLoader implements Runnable {
 

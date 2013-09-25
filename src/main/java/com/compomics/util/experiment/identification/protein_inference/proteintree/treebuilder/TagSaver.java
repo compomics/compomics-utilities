@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder;
 
-import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.Node;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
@@ -11,13 +10,11 @@ import java.util.concurrent.BlockingQueue;
 
 /**
  * Private class for storing tags.
+ *
+ * @author Kenneth Verheggen
  */
 public class TagSaver implements Runnable {
 
-    /**
-     * Instance of the sequence factory.
-     */
-    private final SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
      * Instance of the proteintreecomponents factory.
      */
@@ -51,7 +48,7 @@ public class TagSaver implements Runnable {
      * @param maxNodeSize the maximum node size
      * @param maxPeptideSize the maximum peptide size
      * @param waitingHandler the waiting handler
-     * @throws IOException  
+     * @throws IOException
      */
     public TagSaver(ProteinTree parentTree, BlockingQueue<String> tagsQueue, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler) throws IOException {
         this.tagsQueue = tagsQueue;

@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class models a peptide.
@@ -299,12 +300,12 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         if (remap && parentProteins == null) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
+            ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
             parentProteins = new ArrayList<String>();
             for (String peptideSequence : proteinMapping.keySet()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
                 if (xShare <= ProteinMatch.maxX) {
-                    HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                    ConcurrentHashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
                     for (String accession : subMapping.keySet()) {
                         if (!parentProteins.contains(accession)) {
                             parentProteins.add(accession);

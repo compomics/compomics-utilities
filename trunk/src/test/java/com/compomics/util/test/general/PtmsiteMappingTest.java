@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 /**
  * This class tests the general methods of the util class.
  *
  * @author Marc Vaudel
  */
-public class PtmsiteMappingTest {
+public class PtmsiteMappingTest extends TestCase {
 
     /**
      * Tests the results of the integer alignment method.

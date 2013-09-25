@@ -7,8 +7,9 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This factory stores and returns protein trees components from databases.
@@ -65,6 +66,10 @@ public class ProteinTreeComponentsFactory {
      * Boolean to check whether the database has been initialized already.
      */
     private static boolean initialized = false;
+    /**
+     * Set to keep track of added tags (across threads)
+     */
+    private static final Set<String> tagsAddedToDb = new HashSet<String>();
 
     /**
      * Constructor.
@@ -90,6 +95,18 @@ public class ProteinTreeComponentsFactory {
             instance = new ProteinTreeComponentsFactory();
         }
         return instance;
+    }
+
+    /**
+     * private method returning whether the factory contains the added tag.
+     * Note: this is required for multithreaded saving, to prevent multiple tags
+     * from being generated.
+     *
+     * @return whether the factory contains the added tag
+     * @throws IOException
+     */
+    private boolean containsTag(String tag) {
+        return tagsAddedToDb.contains(tag);
     }
 
     /**
@@ -189,7 +206,12 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException {
+        if (!containsTag(tag)) {
             objectsDB.insertObject(nodeTable, tag, node, false);
+            tagsAddedToDb.add(tag);
+        } else {
+            System.out.println(tag = " : This tag has already been added");
+        }
     }
 
     /**
@@ -218,18 +240,19 @@ public class ProteinTreeComponentsFactory {
     public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
         return (Node) objectsDB.retrieveObject(nodeTable, tag, true, false);
     }
-    
+
     /**
      * Returns the tags loaded in the database.
-     * 
+     *
      * @return the tags loaded in the database
-     * 
+     *
      * @throws SQLException
      * @throws ClassNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
-    public ArrayList<String> getTags() throws SQLException, ClassNotFoundException, IOException {
-        return objectsDB.tableContent(nodeTable);
+    public Set<String> getTags() throws SQLException, ClassNotFoundException, IOException {
+        //from Kenneth, to Kenneth: never, ever , EEEEEEEEEEEEEEEEEVER do this again !
+        return new HashSet<String>(objectsDB.tableContent(nodeTable));
     }
 
     /**

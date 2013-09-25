@@ -502,13 +502,13 @@ public class Util {
         }
         return true;
     }
-    
+
     /**
-     * Returns the occurrence of a character in a string
-     * 
+     * Returns the occurrence of a character in a string.
+     *
      * @param input the string of interest
-     * @param character the charcater to look for
-     * 
+     * @param character the character to look for
+     *
      * @return the occurrence of a character in a string
      */
     public static int getOccurrence(String input, char character) {
@@ -519,7 +519,7 @@ public class Util {
             }
         }
         return result;
-    } 
+    }
 
     /**
      * Returns at which indexes a small string can be found in a big string.

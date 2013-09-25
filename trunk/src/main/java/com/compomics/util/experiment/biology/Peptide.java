@@ -212,6 +212,10 @@ public class Peptide extends ExperimentObject {
      * Getter for the parent proteins.
      *
      * @return the parent proteins
+     * @throws IOException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
      */
     public ArrayList<String> getParentProteins() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getParentProteins(false, null, null, null);
@@ -219,7 +223,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the parent proteins and eventually remaps the peptide to the
-     * protein using the default protein tree
+     * protein using the default protein tree.
      *
      * @param remap boolean indicating whether the peptide sequence should be
      * remapped to the proteins if no protein is found
@@ -227,6 +231,11 @@ public class Peptide extends ExperimentObject {
      * @param massTolerance the ms2 mass tolerance
      *
      * @return the proteins mapping this peptide
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws SQLException
      */
     public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
         return getParentProteins(remap, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
@@ -234,13 +243,18 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
-     * protein mapping was set
+     * protein mapping was set.
      *
      * @param matchingType the desired peptide to protein matching type
      * @param massTolerance the ms2 mass tolerance
      * @param proteinTree the protein tree to use for peptide to protein mapping
      *
      * @return the proteins mapping this peptide
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws SQLException
      */
     public ArrayList<String> getParentProteins(ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, matchingType, massTolerance, proteinTree);
@@ -249,12 +263,17 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
      * protein mapping was set using the default protein tree of the sequence
-     * factory
+     * factory.
      *
      * @param matchingType the desired peptide to protein matching type
      * @param massTolerance the ms2 mass tolerance
      *
      * @return the proteins mapping this peptide
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws SQLException
      */
     public ArrayList<String> getParentProteins(ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, matchingType, massTolerance);
@@ -262,7 +281,8 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the parent proteins and eventually remaps the peptide to the
-     * protein. Note, the maximal share of 'X's in the sequence is set according to the ProteinMatch MaxX field.
+     * protein. Note, the maximal share of 'X's in the sequence is set according
+     * to the ProteinMatch MaxX field.
      *
      * @param remap boolean indicating whether the peptide sequence should be
      * remapped to the proteins if no protein is found
@@ -271,6 +291,11 @@ public class Peptide extends ExperimentObject {
      * @param proteinTree the protein tree to use for peptide to protein mapping
      *
      * @return the proteins mapping this peptide
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws SQLException
      */
     public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         if (remap && parentProteins == null) {
@@ -1315,6 +1340,11 @@ public class Peptide extends ExperimentObject {
      * @param ptms list of inspected PTMs
      *
      * @return a not modified version of the peptide
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws SQLException
      */
     public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getNoModPeptide(peptide, ptms, false);
@@ -1330,6 +1360,11 @@ public class Peptide extends ExperimentObject {
      * will not be set
      *
      * @return a not modified version of the peptide
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws SQLException
      */
     public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms, boolean includeParentProteins) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 

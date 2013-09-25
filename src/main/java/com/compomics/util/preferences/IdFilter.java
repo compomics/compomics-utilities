@@ -143,9 +143,12 @@ public class IdFilter implements Serializable {
      * @param peptide the peptide
      * @param matchingType the desired peptide to protein matching type
      * @param massTolerance the ms2 mass tolerance
-     * @param proteinTree the protein tree to use for peptide to protein mapping
-     *
      * @return a boolean indicating whether the peptide passed the test
+     *
+     * @throws IOException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
      */
     public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return validateProteins(peptide, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
@@ -161,9 +164,17 @@ public class IdFilter implements Serializable {
      * @param proteinTree the protein tree to use for peptide to protein mapping
      *
      * @return a boolean indicating whether the peptide passed the test
+     *
+     * @throws IOException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
      */
-    public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+
         ArrayList<String> accessions = peptide.getParentProteins(matchingType, massTolerance, proteinTree);
+
         if (accessions.size() > 1) {
             boolean target = false;
             boolean decoy = false;

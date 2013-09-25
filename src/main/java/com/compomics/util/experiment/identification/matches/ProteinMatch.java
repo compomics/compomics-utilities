@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -43,7 +42,8 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
     /**
-     * the maximal share of 'X' allowed in a peptide sequence. 0.25 means that less than 25% the amino acids can be 'X'
+     * The maximal share of 'X' allowed in a peptide sequence. 0.25 means that
+     * less than 25% the amino acids can be 'X'
      */
     public static final double maxX = 0.25;
 
@@ -87,7 +87,8 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Constructor for the protein match. Note: proteins must be set for the peptide
+     * Constructor for the protein match. Note: proteins must be set for the
+     * peptide
      *
      * @param peptide the corresponding peptide match
      */
@@ -215,7 +216,8 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Convenience method which returns the protein key of a peptide. Note: proteins must be set for the peptide.
+     * Convenience method which returns the protein key of a peptide. Note:
+     * proteins must be set for the peptide.
      *
      * @param peptide the considered peptide
      * @return the protein match key

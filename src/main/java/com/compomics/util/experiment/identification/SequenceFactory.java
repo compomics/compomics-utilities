@@ -73,7 +73,7 @@ public class SequenceFactory {
      */
     private ProteinTree defaultProteinTree = null;
     /**
-     * boolean indicating that the factory is reading the file
+     * Boolean indicating that the factory is reading the file.
      */
     private boolean reading = false;
 

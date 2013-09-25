@@ -8,7 +8,6 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Private class for storing tags.
@@ -36,18 +35,23 @@ public class TagSaver implements Runnable {
      */
     private final int maxPeptideSize;
     /**
-     * This runnable's tree (this is needed to sync on)
+     * This runnable's tree (this is needed to sync on).
      */
     private final ProteinTree parentTree;
+    /**
+     * The blocking queue.
+     */
     private final BlockingQueue<String> tagsQueue;
 
     /**
      * Constructor.
      *
+     * @param parentTree the parent tree
      * @param tagsQueue the tag queue
      * @param maxNodeSize the maximum node size
      * @param maxPeptideSize the maximum peptide size
      * @param waitingHandler the waiting handler
+     * @throws IOException  
      */
     public TagSaver(ProteinTree parentTree, BlockingQueue<String> tagsQueue, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler) throws IOException {
         this.tagsQueue = tagsQueue;
@@ -98,6 +102,6 @@ public class TagSaver implements Runnable {
             }
             tagsToRemove.clear();
         }
-        System.out.println("done");
+        //System.out.println("done");
     }
 }

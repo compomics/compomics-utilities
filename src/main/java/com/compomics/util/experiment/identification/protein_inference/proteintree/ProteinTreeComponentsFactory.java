@@ -33,7 +33,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Boolean indicating whether the factory is in debug mode.
      */
-    private boolean debug = true;
+    private boolean debug = false;
     /**
      * The objects db used to retrieve saved nodes.
      */
@@ -67,7 +67,7 @@ public class ProteinTreeComponentsFactory {
      */
     private static boolean initialized = false;
     /**
-     * Set to keep track of added tags (across threads)
+     * Set to keep track of added tags (across threads).
      */
     private static final Set<String> tagsAddedToDb = new HashSet<String>();
 
@@ -98,9 +98,9 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * private method returning whether the factory contains the added tag.
-     * Note: this is required for multithreaded saving, to prevent multiple tags
-     * from being generated.
+     * Returning whether the factory contains the added tag. Note: this is
+     * required for multithreaded saving, to prevent multiple tags from being
+     * generated.
      *
      * @return whether the factory contains the added tag
      * @throws IOException
@@ -210,7 +210,7 @@ public class ProteinTreeComponentsFactory {
             objectsDB.insertObject(nodeTable, tag, node, false);
             tagsAddedToDb.add(tag);
         } else {
-            System.out.println(tag = " : This tag has already been added");
+            System.out.println(tag = " : This tag has already been added"); // @TODO: this cannot be printed!!!
         }
     }
 
@@ -251,8 +251,7 @@ public class ProteinTreeComponentsFactory {
      * @throws IOException
      */
     public Set<String> getTags() throws SQLException, ClassNotFoundException, IOException {
-        //from Kenneth, to Kenneth: never, ever , EEEEEEEEEEEEEEEEEVER do this again !
-        return new HashSet<String>(objectsDB.tableContent(nodeTable));
+        return new HashSet<String>(objectsDB.tableContent(nodeTable)); //@TODO: should not be done like this!
     }
 
     /**

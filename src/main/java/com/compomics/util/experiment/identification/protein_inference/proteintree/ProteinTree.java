@@ -75,7 +75,8 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Cache of the last queried peptides.
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache 
+            = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in cache.
      */
@@ -87,7 +88,8 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Cache of the last queried peptides where the query took long.
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache 
+            = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in slow cache.
      */
@@ -441,18 +443,24 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         }
         //merge back into one tree
         if (waitingHandler != null) {
-            waitingHandler.appendReport("Enting trees created by threads", true, true);
+            waitingHandler.appendReport("Cleaning peptide to protein map.", true, true);
         }
-        System.out.println("Merging ents into parent tree");
+        if (debugSpeed) {
+            System.out.println("Merging ents into parent tree");
+        }
         for (int i = 0; i < availableProcessors; i++) {
             this.putAll(ents[i]);
         }
-        System.out.println("Done : parent contains " + this.size() + " tags");
+        if (debugSpeed) {
+            System.out.println("Done : parent contains " + this.size() + " tags");
+        }
         // setup queue for multithreading
         BlockingQueue<String> tagsQueue = new LinkedBlockingQueue<String>(this.keySet());
 
         exec = Executors.newFixedThreadPool(availableProcessors);
-        System.out.println("Saving tags");
+        if (debugSpeed) {
+            System.out.println("Saving tags");
+        }
         for (int i = 0; i < availableProcessors; i++) {
             exec.submit(ents[i].getTagSaver(tagsQueue));
         }
@@ -469,11 +477,13 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(currentTime);
         currentTime -= TimeUnit.MINUTES.toMillis(minutes);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(currentTime);
-        if (waitingHandler
-                != null) {
+
+        if (waitingHandler != null) {
             waitingHandler.appendReport("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!", true, true);
         }
-        System.out.println("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!");
+        if (debugSpeed) {
+            System.out.println("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!");
+        }
     }
 
     /**
@@ -835,7 +845,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         Node result = this.get(tag);
         if (result == null) {
             result = componentsFactory.getNode(tag);
-            //KENNETH I tried to only add arraylists when needed, I think this is causing this error...
+            //@TODO: tried to only add arraylists when needed, I think this is causing this error...
             // The result can technically never be null anymore, it can be empty however !
             if (result.isEmpty()) {
                 throw new IllegalArgumentException("Tag " + tag + " not found in database.");

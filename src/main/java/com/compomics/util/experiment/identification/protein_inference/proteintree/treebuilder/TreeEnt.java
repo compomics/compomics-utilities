@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder;
 
 import com.compomics.util.experiment.biology.Enzyme;
@@ -16,8 +12,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
- * @author Kenneth
+ * A class for merging sub trees.
+ * 
+ * @author Kenneth Verheggen
  */
 public class TreeEnt extends ConcurrentHashMap<String, Node> {
 
@@ -62,7 +59,21 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
      */
     private final ProteinTree parentTree;
 
-    public TreeEnt(ProteinTree parentTree, WaitingHandler waitingHandler, ArrayList<String> loadedAccessions, String[] tags, Enzyme enzyme, int initialTagSize, int maxNodeSize, int maxPeptideSize) throws IOException {
+    /**
+     * Constructor.
+     * 
+     * @param parentTree
+     * @param waitingHandler
+     * @param loadedAccessions
+     * @param tags
+     * @param enzyme
+     * @param initialTagSize
+     * @param maxNodeSize
+     * @param maxPeptideSize
+     * @throws IOException 
+     */
+    public TreeEnt(ProteinTree parentTree, WaitingHandler waitingHandler, ArrayList<String> loadedAccessions, 
+            String[] tags, Enzyme enzyme, int initialTagSize, int maxNodeSize, int maxPeptideSize) throws IOException {
         this.componentsFactory = ProteinTreeComponentsFactory.getInstance();
         this.waitingHandler = waitingHandler;
         this.loadedAccessions = loadedAccessions;
@@ -74,10 +85,24 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
         this.parentTree = parentTree;
     }
 
+    /**
+     * Get the AccessionLoader.
+     * 
+     * @param accessionsQueue
+     * @return the AccessionLoader
+     * @throws IOException 
+     */
     public AccessionLoader getAccessionLoader(BlockingQueue accessionsQueue) throws IOException {
         return new AccessionLoader(this, accessionsQueue, waitingHandler, loadedAccessions, tags, enzyme, initialTagSize);
     }
 
+    /**
+     * Get the tag saver.
+     * 
+     * @param tagsQueue
+     * @return the tag saver
+     * @throws IOException 
+     */
     public TagSaver getTagSaver(BlockingQueue<String> tagsQueue) throws IOException {
         return new TagSaver(parentTree, tagsQueue, maxNodeSize, maxPeptideSize, waitingHandler);
     }

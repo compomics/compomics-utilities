@@ -62,7 +62,7 @@ public class AccessionLoader implements Runnable {
     /**
      * Constructor.
      *
-     * @param name the accession name
+     * @param subTree the sub tree
      * @param accessionsQueue the accession queue
      * @param waitingHandler the waiting handler
      * @param loadedAccessions the list of loaded accessions
@@ -85,20 +85,22 @@ public class AccessionLoader implements Runnable {
     public void run() {
 
         HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.length);
+
         while (!accessionsQueue.isEmpty()) {
-            String accession;
-            accession = (String) accessionsQueue.poll();
+
+            String accession = (String) accessionsQueue.poll();
+
             try {
                 String sequence;
-                //  synchronized (sequenceFactory) {
+                // synchronized (sequenceFactory) {
                 sequence = sequenceFactory.getProtein(accession).getSequence();
                 //    }
                 if (!loadedAccessions.contains(accession)) {
                     componentsFactory.saveProteinLength(accession, sequence.length());
                     loadedAccessions.add(accession);
                 }
-                //reuse the same map = lower memory footprint
 
+                // reuse the same map = lower memory footprint
                 tagToIndexesMap = getTagToIndexesMap(sequence, enzyme, tagToIndexesMap);
 
                 if (waitingHandler != null) {
@@ -141,7 +143,7 @@ public class AccessionLoader implements Runnable {
                 e.printStackTrace();
             }
         }
-        System.out.println("done");
+        //System.out.println("done");
     }
 
     /**
@@ -155,9 +157,7 @@ public class AccessionLoader implements Runnable {
      */
     private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, Enzyme enzyme, HashMap<String, ArrayList<Integer>> tagToIndexesMap) throws SQLException, IOException, ClassNotFoundException {
 
-        Integer initialTagSize;
-        initialTagSize = componentsFactory.getInitialSize();
-
+        Integer initialTagSize = componentsFactory.getInitialSize();
 
         // trim the map to improve memory efficiency
         tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tagToIndexesMap);

@@ -233,8 +233,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the parent proteins and remaps the peptide to the
-     * protein if no protein mapping was set
+     * Returns the parent proteins and remaps the peptide to the protein if no
+     * protein mapping was set
      *
      * @param matchingType the desired peptide to protein matching type
      * @param massTolerance the ms2 mass tolerance
@@ -247,8 +247,9 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the parent proteins and remaps the peptide to the
-     * protein if no protein mapping was set using the default protein tree of the sequence factory
+     * Returns the parent proteins and remaps the peptide to the protein if no
+     * protein mapping was set using the default protein tree of the sequence
+     * factory
      *
      * @param matchingType the desired peptide to protein matching type
      * @param massTolerance the ms2 mass tolerance
@@ -261,7 +262,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns the parent proteins and eventually remaps the peptide to the
-     * protein
+     * protein. Note, the maximal share of 'X's in the sequence is set according to the ProteinMatch MaxX field.
      *
      * @param remap boolean indicating whether the peptide sequence should be
      * remapped to the proteins if no protein is found
@@ -275,10 +276,14 @@ public class Peptide extends ExperimentObject {
         if (remap && parentProteins == null) {
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
             parentProteins = new ArrayList<String>();
-            for (HashMap<String, ArrayList<Integer>> subMapping : proteinMapping.values()) {
-                for (String accession : subMapping.keySet()) {
-                    if (!parentProteins.contains(accession)) {
-                        parentProteins.add(accession);
+            for (String peptideSequence : proteinMapping.keySet()) {
+                double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
+                if (xShare <= ProteinMatch.maxX) {
+                    HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                    for (String accession : subMapping.keySet()) {
+                        if (!parentProteins.contains(accession)) {
+                            parentProteins.add(accession);
+                        }
                     }
                 }
             }

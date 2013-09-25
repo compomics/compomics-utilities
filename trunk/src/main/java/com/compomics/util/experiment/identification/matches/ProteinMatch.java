@@ -42,6 +42,10 @@ public class ProteinMatch extends IdentificationMatch {
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
+    /**
+     * the maximal share of 'X' allowed in a peptide sequence. 0.25 means that less than 25% the amino acids can be 'X'
+     */
+    public static final double maxX = 0.25;
 
     /**
      * The different types of peptide to protein amino acid matching.

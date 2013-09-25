@@ -761,6 +761,9 @@ public class ProteinTree {
         for (int i = 0; i < initialTagSize; i++) {
             char aa = peptideSequence.charAt(i);
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (aminoAcid == null) {
+                throw new IllegalArgumentException("Unknown amino-acid " + aa + " found in peptide sequence " + peptideSequence + ".");
+            }
             tempTags = new ArrayList<String>(result);
             result.clear();
             if (tempTags.isEmpty()) {

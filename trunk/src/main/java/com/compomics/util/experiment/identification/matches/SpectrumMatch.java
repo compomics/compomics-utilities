@@ -133,23 +133,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param otherAssumption The new peptide assumption
      */
     public void addHit(int otherAdvocateId, PeptideAssumption otherAssumption) {
-        // Uniformize the protein inference between search engines and ranks
-        Peptide loadedPeptide, newPeptide = otherAssumption.getPeptide();
-        for (PeptideAssumption loadedAssumption : getAllAssumptions()) {
-            if (loadedAssumption.getPeptide().getSequence().equals(newPeptide.getSequence())) {
-                loadedPeptide = loadedAssumption.getPeptide();
-                for (String protein : loadedPeptide.getParentProteins()) {
-                    if (!newPeptide.getParentProteins().contains(protein)) {
-                        newPeptide.getParentProteins().add(protein);
-                    }
-                }
-                for (String protein : newPeptide.getParentProteins()) {
-                    if (!loadedPeptide.getParentProteins().contains(protein)) {
-                        loadedPeptide.getParentProteins().add(protein);
-                    }
-                }
-            }
-        }
         if (!firstHits.containsKey(otherAdvocateId) || 
                 !SearchEngine.isAscendingScore(otherAdvocateId) && firstHits.get(otherAdvocateId).getScore() > otherAssumption.getScore() ||
                 SearchEngine.isAscendingScore(otherAdvocateId) && firstHits.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {

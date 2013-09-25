@@ -4,12 +4,14 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 
 import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -34,7 +36,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The parent proteins.
      */
-    private ArrayList<String> parentProteins = new ArrayList<String>();
+    private ArrayList<String> parentProteins = null;
     /**
      * The modifications carried by the peptide.
      */
@@ -61,6 +63,10 @@ public class Peptide extends ExperimentObject {
      * @param aSequence The peptide sequence
      * @param parentProteins The parent proteins, cannot be null or empty
      * @param modifications The PTM of this peptide
+     *
+     * @deprecated use peptide without proteins and remap the peptide to the
+     * proteins a posteriori instead
+     *
      * @throws IllegalArgumentException Thrown if the peptide sequence contains
      * unknown amino acids
      */
@@ -207,7 +213,77 @@ public class Peptide extends ExperimentObject {
      *
      * @return the parent proteins
      */
-    public ArrayList<String> getParentProteins() {
+    public ArrayList<String> getParentProteins() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        return getParentProteins(false, null, null, null);
+    }
+
+    /**
+     * Returns the parent proteins and eventually remaps the peptide to the
+     * protein using the default protein tree
+     *
+     * @param remap boolean indicating whether the peptide sequence should be
+     * remapped to the proteins if no protein is found
+     * @param matchingType the desired peptide to protein matching type
+     * @param massTolerance the ms2 mass tolerance
+     *
+     * @return the proteins mapping this peptide
+     */
+    public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
+        return getParentProteins(remap, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
+    }
+
+    /**
+     * Returns the parent proteins and remaps the peptide to the
+     * protein if no protein mapping was set
+     *
+     * @param matchingType the desired peptide to protein matching type
+     * @param massTolerance the ms2 mass tolerance
+     * @param proteinTree the protein tree to use for peptide to protein mapping
+     *
+     * @return the proteins mapping this peptide
+     */
+    public ArrayList<String> getParentProteins(ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        return getParentProteins(true, matchingType, massTolerance, proteinTree);
+    }
+
+    /**
+     * Returns the parent proteins and remaps the peptide to the
+     * protein if no protein mapping was set using the default protein tree of the sequence factory
+     *
+     * @param matchingType the desired peptide to protein matching type
+     * @param massTolerance the ms2 mass tolerance
+     *
+     * @return the proteins mapping this peptide
+     */
+    public ArrayList<String> getParentProteins(ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        return getParentProteins(true, matchingType, massTolerance);
+    }
+
+    /**
+     * Returns the parent proteins and eventually remaps the peptide to the
+     * protein
+     *
+     * @param remap boolean indicating whether the peptide sequence should be
+     * remapped to the proteins if no protein is found
+     * @param matchingType the desired peptide to protein matching type
+     * @param massTolerance the ms2 mass tolerance
+     * @param proteinTree the protein tree to use for peptide to protein mapping
+     *
+     * @return the proteins mapping this peptide
+     */
+    public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        if (remap && parentProteins == null) {
+            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
+            parentProteins = new ArrayList<String>();
+            for (HashMap<String, ArrayList<Integer>> subMapping : proteinMapping.values()) {
+                for (String accession : subMapping.keySet()) {
+                    if (!parentProteins.contains(accession)) {
+                        parentProteins.add(accession);
+                    }
+                }
+            }
+            Collections.sort(parentProteins);
+        }
         return parentProteins;
     }
 
@@ -218,9 +294,7 @@ public class Peptide extends ExperimentObject {
      * empty
      */
     public void setParentProteins(ArrayList<String> parentProteins) {
-        if (parentProteins != null && !parentProteins.isEmpty()) {
-            this.parentProteins = parentProteins;
-        }
+        this.parentProteins = parentProteins;
     }
 
     /**
@@ -1230,16 +1304,34 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns a version of the peptide which does not contain the inspected
-     * PTMs.
+     * PTMs without protein mapping.
      *
      * @param peptide the original peptide
      * @param ptms list of inspected PTMs
      *
      * @return a not modified version of the peptide
      */
-    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) {
+    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        return getNoModPeptide(peptide, ptms, false);
+    }
 
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+    /**
+     * Returns a version of the peptide which does not contain the inspected
+     * PTMs.
+     *
+     * @param peptide the original peptide
+     * @param ptms list of inspected PTMs
+     * @param includeParentProteins if false the parent protein of the peptide
+     * will not be set
+     *
+     * @return a not modified version of the peptide
+     */
+    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms, boolean includeParentProteins) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
+        if (includeParentProteins) {
+            noModPeptide.setParentProteins(peptide.getParentProteins());
+        }
 
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
             boolean found = false;

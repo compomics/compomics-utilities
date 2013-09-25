@@ -5,8 +5,10 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,11 +83,11 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Constructor for the protein match.
+     * Constructor for the protein match. Note: proteins must be set for the peptide
      *
      * @param peptide the corresponding peptide match
      */
-    public ProteinMatch(Peptide peptide) {
+    public ProteinMatch(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> parentProteins = peptide.getParentProteins();
         if (parentProteins == null || parentProteins.isEmpty()) {
             throw new IllegalArgumentException("Peptide " + peptide.getSequence() + " presents no parent protein.");
@@ -209,14 +211,18 @@ public class ProteinMatch extends IdentificationMatch {
     }
 
     /**
-     * Convenience method which returns the protein key of a peptide.
+     * Convenience method which returns the protein key of a peptide. Note: proteins must be set for the peptide.
      *
      * @param peptide the considered peptide
      * @return the protein match key
      */
-    public static String getProteinMatchKey(Peptide peptide) {
-        ArrayList<String> accessions = new ArrayList<String>();
-        for (String protein : peptide.getParentProteins()) {
+    public static String getProteinMatchKey(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        ArrayList<String> accessions = new ArrayList<String>(),
+                originalAccessions = peptide.getParentProteins();
+        if (originalAccessions == null) {
+            throw new IllegalArgumentException("Proteins not set for peptide " + peptide.getKey() + ".");
+        }
+        for (String protein : originalAccessions) {
             if (!accessions.contains(protein)) {
                 accessions.add(protein);
             }

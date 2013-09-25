@@ -72,6 +72,10 @@ public class SequenceFactory {
      * The default protein tree attached to the database loaded
      */
     private ProteinTree defaultProteinTree = null;
+    /**
+     * boolean indicating that the factory is reading the file
+     */
+    private boolean reading = false;
 
     /**
      * Constructor.
@@ -226,6 +230,10 @@ public class SequenceFactory {
     private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException, IllegalArgumentException {
 
         try {
+            if (reading) {
+                throw new IllegalStateException("Attempting to read new line before current read operation is completed.");
+            }
+            reading = true;
             currentRandomAccessFile.seek(index);
             String line, sequence = "";
             Header currentHeader = currentHeaderMap.get(accession);
@@ -245,10 +253,11 @@ public class SequenceFactory {
                     sequence += line;
                 }
             }
-
+            reading = false;
             return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
 
         } catch (IOException e) {
+            reading = false;
             if (nTries <= 100) {
                 wait(10);
                 return getProtein(accession, index, nTries + 1);
@@ -318,10 +327,17 @@ public class SequenceFactory {
      */
     private synchronized Header getHeader(long index, int nTries) throws InterruptedException, IOException {
 
+        if (reading) {
+            throw new IllegalStateException("Attempting to read new line before current read operation is completed.");
+        }
         try {
+            reading = true;
             currentRandomAccessFile.seek(index);
-            return Header.parseFromFASTA(currentRandomAccessFile.readLine());
+            Header result = Header.parseFromFASTA(currentRandomAccessFile.readLine());
+            reading = false;
+            return result;
         } catch (IOException e) {
+            reading = false;
             if (nTries <= 100) {
                 wait(10);
                 return getHeader(index, nTries + 1);

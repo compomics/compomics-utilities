@@ -487,13 +487,13 @@ public class Util {
      * @param list2 the second list
      * @return a boolean indicating whether list1 has the same content as list2
      */
-    public static boolean sameLists(ArrayList<Integer> list1, ArrayList<Integer> list2) {
+    public static boolean sameLists(ArrayList list1, ArrayList list2) {
         if (list1.size() != list2.size()) {
             return false;
         }
-        ArrayList<Integer> list1copy = new ArrayList<Integer>(list1);
+        ArrayList list1copy = new ArrayList(list1);
         Collections.sort(list1copy);
-        ArrayList<Integer> list2copy = new ArrayList<Integer>(list2);
+        ArrayList list2copy = new ArrayList(list2);
         Collections.sort(list2copy);
         for (int i = 0; i < list1copy.size(); i++) {
             if (!list1copy.get(i).equals(list2copy.get(i))) {

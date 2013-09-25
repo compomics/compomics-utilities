@@ -138,11 +138,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         
         String[] temp = line.trim().split("\t");
         String[] temp1 = temp[5].split(";");
-        ArrayList<String> proteins = new ArrayList<String>();
-        
-        for (String accession : temp1) {
-            proteins.add(accession.substring(1, accession.length()));
-        }
 
         temp1 = temp[4].split(",");
         ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
@@ -154,7 +149,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
             }
         }
 
-        Peptide peptide = new Peptide(temp[0], proteins, modMatches);
+        Peptide peptide = new Peptide(temp[0], modMatches);
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         double score = new Double(temp[1]);
 

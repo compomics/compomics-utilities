@@ -8,14 +8,16 @@ import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import java.util.ArrayList;
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 /**
- * This class tests the application of amino acid patterns on an amino acid sequence
+ * This class tests the application of amino acid patterns on an amino acid
+ * sequence
  *
  * @author Marc
  */
-public class AminoAcidPatternTest {
-    
+public class AminoAcidPatternTest extends TestCase {
+
     public void testIndexes() {
         String input = "KTESTRTESTKPTESTK";
         ArrayList<Integer> indexes = AminoAcidPattern.getTrypsinExample().getIndexes(input);
@@ -45,5 +47,4 @@ public class AminoAcidPatternTest {
         pattern = new AminoAcidPattern("XXX");
         Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
     }
-    
 }

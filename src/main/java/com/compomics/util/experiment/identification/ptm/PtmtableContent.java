@@ -223,7 +223,8 @@ public class PtmtableContent {
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
 
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+        //@TODO: use Peptide.getNoModPeptide instead
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
 
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
             if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
@@ -284,7 +285,8 @@ public class PtmtableContent {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
 
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), peptide.getParentProteins(), new ArrayList<ModificationMatch>());
+        //@TODO: use Peptide.getNoModPeptide instead
+        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
 
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
             if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {

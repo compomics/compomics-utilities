@@ -8,6 +8,7 @@ import com.compomics.util.experiment.identification.advocates.SearchEngine;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
@@ -1212,10 +1213,11 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Creates the peptides and protein instances based on the given spectrum
      * match. Note that the attribute bestAssumption should be set for every
-     * spectrum match at this point. This operation will be very slow if the
+     * spectrum match at this point and peptides should be mapped to proteins. This operation will be very slow if the
      * cache is already full.
      *
      * @param spectrumMatchKey The key of the spectrum match to add
+     * 
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -1224,7 +1226,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public void buildPeptidesAndProteins(String spectrumMatchKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        SpectrumMatch othermatch, spectrumMatch = getSpectrumMatch(spectrumMatchKey);
+        SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
@@ -1236,26 +1238,6 @@ public abstract class Identification extends ExperimentObject {
             peptideMatch = getPeptideMatch(peptideKey);
             if (peptideMatch == null) {
                 throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
-            }
-            // correct protein inference discrepancies between spectrum matches
-            loadSpectrumMatches(peptideMatch.getSpectrumMatches(), null);
-
-            for (String otherMatchKey : peptideMatch.getSpectrumMatches()) {
-                othermatch = getSpectrumMatch(otherMatchKey);
-                if (othermatch == null) {
-                    throw new IllegalArgumentException("Spectrum match " + otherMatchKey + " not found.");
-                }
-                Peptide otherPeptide = othermatch.getBestAssumption().getPeptide();
-                for (String protein : otherPeptide.getParentProteins()) {
-                    if (!peptide.getParentProteins().contains(protein)) {
-                        peptide.getParentProteins().add(protein);
-                    }
-                }
-                for (String protein : peptide.getParentProteins()) {
-                    if (!otherPeptide.getParentProteins().contains(protein)) {
-                        otherPeptide.getParentProteins().add(protein);
-                    }
-                }
             }
             peptideMatch.addSpectrumMatch(spectrumMatchKey);
             identificationDB.updatePeptideMatch(peptideMatch);
@@ -1287,43 +1269,9 @@ public abstract class Identification extends ExperimentObject {
         } else {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide());
             if (!proteinMatch.getKey().equals(proteinKey)) {
-
-                // @TODO: would using peptide to protein remapping for all search engines solve the problem?? use ProteinTree?
-
-                // the protein lists are different so find the biggest joined set and use that // @TODO: does this work..?
-                
-//                System.out.println("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + ". Fixed?");
-//                
-//                ArrayList<String> allProteinKeys = new ArrayList<String>();
-//
-//                // add all the peptide parent proteins
-//                for (String protein : peptide.getParentProteins()) {
-//                    if (!allProteinKeys.contains(protein)) {
-//                        allProteinKeys.add(protein);
-//                    }
-//                }
-//
-//                // add all the proteins from the existing protein match
-//                for (String protein : proteinMatch.getTheoreticProteinsAccessions()) {
-//                    if (!allProteinKeys.contains(protein)) {
-//                        allProteinKeys.add(protein);
-//                    }
-//                }
-//
-//                // sort the protein list
-//                Collections.sort(allProteinKeys);
-//
-//                // set the new mappings
-//                peptide.setParentProteins(allProteinKeys);
-//                proteinMatch = new ProteinMatch(peptide);
-//                proteinKey = ProteinMatch.getProteinMatchKey(peptide);
-//
-//                // last check to check that it's all ok (should no longer be needed)
-//                if (!proteinMatch.getKey().equals(proteinKey)) {
                     throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
                             + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
                             + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
-//                }
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteins()) {
@@ -1619,7 +1567,7 @@ public abstract class Identification extends ExperimentObject {
      * @param peptide the peptide of interest
      * @return the keys of the protein matches
      */
-    public ArrayList<String> getProteinMatches(Peptide peptide) {
+    public ArrayList<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> proteinMatches = new ArrayList<String>();
         for (String accession : peptide.getParentProteins()) {
             ArrayList<String> keys = proteinMap.get(accession);
@@ -1640,7 +1588,7 @@ public abstract class Identification extends ExperimentObject {
      * @param peptide the peptide of interest
      * @return true if peptide is found in a single protein match
      */
-    public boolean isUnique(Peptide peptide) {
+    public boolean isUnique(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getProteinMatches(peptide).size() == 1;
     }
 }

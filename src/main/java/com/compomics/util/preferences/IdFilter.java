@@ -8,10 +8,12 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
@@ -134,18 +136,39 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates a peptide depending on its protein inference status.
+     * Validates a peptide depending on its protein inference status. Maps the
+     * peptide to proteins in case it was not done before using the default
+     * protein tree of the sequence factory
      *
      * @param peptide the peptide
+     * @param matchingType the desired peptide to protein matching type
+     * @param massTolerance the ms2 mass tolerance
+     * @param proteinTree the protein tree to use for peptide to protein mapping
+     *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateProteins(Peptide peptide) {
+    public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        return validateProteins(peptide, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
+    }
 
-        if (peptide.getParentProteins().size() > 1) {
+    /**
+     * Validates a peptide depending on its protein inference status. Maps the
+     * peptide to proteins in case it was not done before
+     *
+     * @param peptide the peptide
+     * @param matchingType the desired peptide to protein matching type
+     * @param massTolerance the ms2 mass tolerance
+     * @param proteinTree the protein tree to use for peptide to protein mapping
+     *
+     * @return a boolean indicating whether the peptide passed the test
+     */
+    public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        ArrayList<String> accessions = peptide.getParentProteins(matchingType, massTolerance, proteinTree);
+        if (accessions.size() > 1) {
             boolean target = false;
             boolean decoy = false;
-            for (String protein : peptide.getParentProteins()) {
-                if (SequenceFactory.getInstance().isDecoyAccession(protein)) {
+            for (String accession : accessions) {
+                if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                     decoy = true;
                 } else {
                     target = true;
@@ -166,7 +189,7 @@ public class IdFilter implements Serializable {
      * @param matchingType the peptide-protein matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateModifications(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) {

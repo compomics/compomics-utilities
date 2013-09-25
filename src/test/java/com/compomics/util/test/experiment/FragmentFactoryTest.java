@@ -27,10 +27,7 @@ public class FragmentFactoryTest extends TestCase {
     public void testFragmentation() {
 
         String sequence = "ACDEFGHIKLMNPQRSTVWY";
-        ArrayList<String> testProteins = new ArrayList<String>();
-        testProteins.add("test protein1");
-        testProteins.add("test protein2");
-        Peptide peptide = new Peptide(sequence, testProteins, new ArrayList<ModificationMatch>());
+        Peptide peptide = new Peptide(sequence, new ArrayList<ModificationMatch>());
 
         HashMap<NeutralLoss, Integer> neutralLosses = new HashMap<NeutralLoss, Integer>();
         neutralLosses.put(NeutralLoss.H2O, 3);

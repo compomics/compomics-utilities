@@ -15,6 +15,7 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class AScore {
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
     }
 
@@ -87,7 +88,7 @@ public class AScore {
      */
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
     }
 
@@ -124,7 +125,7 @@ public class AScore {
     public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) 
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for A-score calculation.");

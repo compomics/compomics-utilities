@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class IdentificationDBTest extends TestCase {
 
-    public void testDB() throws SQLException, IOException, ClassNotFoundException {
+    public void testDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
 
             String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
             path = path.substring(1, path.indexOf("/target/"));

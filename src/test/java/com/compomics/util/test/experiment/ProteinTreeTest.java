@@ -15,8 +15,6 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * Test for the protein tree.
@@ -25,8 +23,7 @@ import org.junit.Before;
  */
 public class ProteinTreeTest extends TestCase {
 
-    @Before
-    @After
+
     public static void deleteTestingResults() {
         File resultFolder = new File(System.getProperty("user.home") + "/.compomics/proteins");
         File[] filesToDelete = resultFolder.listFiles(new FileFilter() {

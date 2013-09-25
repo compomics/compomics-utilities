@@ -356,7 +356,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
         }
         if (arrayPointer != tags.length) {
-            System.arraycopy(tags, arrayPointer, bufferedArray, 0, ((tags.length - arrayPointer)));//array starts from 0
+            System.arraycopy(tags, arrayPointer, bufferedArray, 0, ((tags.length - arrayPointer))); // array starts from 0
             loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
         }
         tagsInTree.addAll(this.keySet());
@@ -446,7 +446,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             waitingHandler.appendReport("Cleaning peptide to protein map.", true, true);
         }
         if (debugSpeed) {
-            System.out.println("Merging ents into parent tree");
+            System.out.println("Cleaning peptide to protein map.");
         }
         for (int i = 0; i < availableProcessors; i++) {
             this.putAll(ents[i]);
@@ -731,7 +731,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             char aa = peptideSequence.charAt(i);
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
             if (aminoAcid == null) {
-                throw new IllegalArgumentException("Unknown amino-acid " + aa + " found in peptide sequence " + peptideSequence + ".");
+                throw new IllegalArgumentException("Unknown amino acid " + aa + " found in peptide sequence " + peptideSequence + ".");
             }
             tempTags = new ArrayList<String>(result);
             result.clear();

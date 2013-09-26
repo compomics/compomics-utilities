@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class for merging sub trees.
- * 
+ *
  * @author Kenneth Verheggen
  */
 public class TreeEnt extends ConcurrentHashMap<String, Node> {
@@ -61,7 +61,7 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
 
     /**
      * Constructor.
-     * 
+     *
      * @param parentTree
      * @param waitingHandler
      * @param loadedAccessions
@@ -70,9 +70,9 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
      * @param initialTagSize
      * @param maxNodeSize
      * @param maxPeptideSize
-     * @throws IOException 
+     * @throws IOException
      */
-    public TreeEnt(ProteinTree parentTree, WaitingHandler waitingHandler, ArrayList<String> loadedAccessions, 
+    public TreeEnt(ProteinTree parentTree, WaitingHandler waitingHandler, ArrayList<String> loadedAccessions,
             String[] tags, Enzyme enzyme, int initialTagSize, int maxNodeSize, int maxPeptideSize) throws IOException {
         this.componentsFactory = ProteinTreeComponentsFactory.getInstance();
         this.waitingHandler = waitingHandler;
@@ -87,10 +87,10 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
 
     /**
      * Get the AccessionLoader.
-     * 
+     *
      * @param accessionsQueue
      * @return the AccessionLoader
-     * @throws IOException 
+     * @throws IOException
      */
     public AccessionLoader getAccessionLoader(BlockingQueue accessionsQueue) throws IOException {
         return new AccessionLoader(this, accessionsQueue, waitingHandler, loadedAccessions, tags, enzyme, initialTagSize);
@@ -98,13 +98,12 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
 
     /**
      * Get the tag saver.
-     * 
+     *
      * @param tagsQueue
      * @return the tag saver
-     * @throws IOException 
+     * @throws IOException
      */
     public TagSaver getTagSaver(BlockingQueue<String> tagsQueue) throws IOException {
         return new TagSaver(parentTree, tagsQueue, maxNodeSize, maxPeptideSize, waitingHandler);
     }
-    
 }

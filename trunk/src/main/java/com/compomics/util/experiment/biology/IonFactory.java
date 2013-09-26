@@ -74,7 +74,7 @@ public class IonFactory {
 
     /**
      * This method returns the theoretic ions expected from a peptide. /!\ this
-     * method will work only if the ptms found in the peptide are in the
+     * method will work only if the PMTs found in the peptide are in the
      * PTMFactory.
      *
      * @param peptide The considered peptide

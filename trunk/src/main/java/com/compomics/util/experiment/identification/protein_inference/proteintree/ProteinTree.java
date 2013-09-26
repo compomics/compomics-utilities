@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder.TagSaver;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder.TreeEnt;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedWriter;
@@ -36,6 +37,11 @@ import java.util.concurrent.TimeUnit;
 public class ProteinTree extends ConcurrentHashMap<String, Node> {
 
     /**
+     * The amount of available cores (if this is <1, the machine is breaking
+     * down).
+     */
+    private int cores = Runtime.getRuntime().availableProcessors();
+    /**
      * The memory allocation in MB.
      */
     private int memoryAllocation;
@@ -59,7 +65,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = false;
+    private static boolean debugSpeed = false;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -75,8 +81,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Cache of the last queried peptides.
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache 
-            = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in cache.
      */
@@ -88,8 +93,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Cache of the last queried peptides where the query took long.
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache 
-            = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in slow cache.
      */
@@ -106,6 +110,11 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * The mass tolerance of the matches in cache.
      */
     private Double massToleranceInCache = null;
+    /**
+     * Boolean indicating whether a tableheader needs to be printed for the
+     * matched sequences (debugging output)
+     */
+    private boolean printHeader = true;
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
@@ -121,8 +130,6 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         if (debugSpeed) {
             try {
                 debugSpeedWriter = new BufferedWriter(new FileWriter(new File("treeSpeed.txt")));
-                debugSpeedWriter.write("sequence\tnPeptides\tnProteins\tQuery time\tslow cache usage\tcache usage\tDB query");
-                debugSpeedWriter.newLine();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -255,20 +262,17 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
+
         if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
-            int cores = Runtime.getRuntime().availableProcessors();
-            if (cores > 1) {
-                //remove a core from the calculations for time due to overhead etc...
-                cores = cores - 1;
-            }
             //what if i want pentameres?
             if (initialTagSize == 3 || initialTagSize == 4) {
                 String report = "Expected import time: ";
                 int nSeconds;
                 if (initialTagSize == 3) {
-                    nSeconds = ((sequenceFactory.getNTargetSequences() / (cores)) * 15 / 1000);
+                    //remove 1 from cores to consider overhead during calculation time...
+                    nSeconds = ((sequenceFactory.getNTargetSequences() / (cores - 1)) * 15 / 1000);
                 } else {
-                    nSeconds = ((sequenceFactory.getNTargetSequences()) / cores) * 2 / 10;
+                    nSeconds = ((sequenceFactory.getNTargetSequences()) / cores - 1) * 2 / 10;
                 }
                 if (nSeconds < 120) {
                     report += nSeconds + " seconds. (First time only.)";
@@ -281,7 +285,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                         report += nHours + " hours. (First time only.)";
                     }
                 }
-                waitingHandler.appendReport(report, true, true);
+                notifyUser(report, waitingHandler);
             }
         }
 
@@ -326,17 +330,10 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
          //            Collections.shuffle(tags);
          }
          */
-        if (debugSpeed) {
-            debugSpeedWriter.write("Critical size: " + criticalSize);
-            System.out.println("Critical size: " + criticalSize);
-            estimatedTreeSize = estimatedTreeSize / 100;
-            debugSpeedWriter.write("Estimated tree size: " + estimatedTreeSize);
-            System.out.println("Estimated tree size: " + estimatedTreeSize);
-            debugSpeedWriter.write(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.length + " per passage)");
-            System.out.println(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.length + " per passage)");
-            debugSpeedWriter.newLine();
-            debugSpeedWriter.flush();
-        }
+
+        notifyUser("Critical size: " + criticalSize);
+        notifyUser("Estimated tree size: " + estimatedTreeSize);
+        notifyUser(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.length + " per passage)", waitingHandler);
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -344,21 +341,39 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
             waitingHandler.setSecondaryProgressCounter(0);
         }
-
-        long time0 = System.currentTimeMillis();
+        long totalTime = 0;
+        long time0;
+        long passageTime;
         ArrayList<String> loadedAccessions = new ArrayList<String>();
+
+        notifyUser("Starting " + cores + " threads to import accessions", waitingHandler);
+        notifyUser("Building peptide to protein map ...", waitingHandler);
 
         int arrayPointer = 0;
         String[] bufferedArray = new String[nTags];
         for (int i = 0; i < nPassages; i++) {
+            time0 = System.currentTimeMillis();
             System.arraycopy(tags, arrayPointer, bufferedArray, 0, nTags);
             arrayPointer = arrayPointer + nTags;
             loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
+            passageTime = (System.currentTimeMillis() - time0);
+            totalTime += passageTime;
+            notifyUser("Finished passage " + (i + 1) + " in " + passageTime + " ms");
         }
         if (arrayPointer != tags.length) {
+            time0 = System.currentTimeMillis();
             System.arraycopy(tags, arrayPointer, bufferedArray, 0, ((tags.length - arrayPointer))); // array starts from 0
             loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
+            passageTime = (System.currentTimeMillis() - time0);
+            totalTime += passageTime;
+            notifyUser("Finished wrap-up passage in " + passageTime + " ms");
+            notifyUser("... ", waitingHandler);
         }
+        
+        
+        notifyUser("Saving tree to disk", waitingHandler);
+        saveTags(waitingHandler, maxNodeSize, maxPeptideSize);
+        notifyUser("Tree was successfully created !", waitingHandler);
         tagsInTree.addAll(this.keySet());
         for (Node node : this.values()) {
             treeSize += node.getSize();
@@ -366,19 +381,18 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
 
         componentsFactory.setVersion(version);
         componentsFactory.setImportComplete(true);
+        notifyUser("Tree initiation time: " + totalTime + " ms.");
 
-        if (debugSpeed) {
-
-            long time1 = System.currentTimeMillis();
-            long initiationTime = time1 - time0;
-
-            debugSpeedWriter.write("tree initiation: " + initiationTime + " ms.");
-            System.out.println("tree initiation: " + initiationTime + " ms.");
-            debugSpeedWriter.write("tree size: " + this.size() + " tags, " + treeSize + " node.accession loaded and saved.");
-            System.out.println("tree size: " + this.size() + " tags, " + treeSize + " node.accession loaded and saved.");
-            debugSpeedWriter.newLine();
-            debugSpeedWriter.flush();
+        int nodes = 0;
+        int max_depth_reached = 0;
+        for (Node aNode : this.values()) {
+            nodes += aNode.getSize();
+            if (aNode.getDepth() > max_depth_reached) {
+                max_depth_reached = aNode.getDepth();
+            }
         }
+        notifyUser("Tree size: " + this.keySet().size() + " tags in " + nodes + " nodes(max depth = " + max_depth_reached + " originating from " + accessions.size() + " accessions", waitingHandler);
+        notifyUser("Removing tree from memory");
     }
 
     /**
@@ -403,87 +417,54 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
+        notifyUser("Processing tags [" + tags[0] + "-" + tags[tags.length - 1] + "]");
         // setup queue for multithreading
         BlockingQueue<String> accessionsQueue = new LinkedBlockingQueue<String>();
         accessionsQueue.addAll(accessions);
 
-        // setup executor service for multithreading
-        int availableProcessors = Runtime.getRuntime().availableProcessors();
-        long currentTime = System.currentTimeMillis();
-        if (waitingHandler != null) {
-            if (availableProcessors == 1) {
-                waitingHandler.appendReport("Starting " + availableProcessors + " thread to import protein accessions.", true, true);
-            } else {
-                waitingHandler.appendReport("Starting " + availableProcessors + " threads to import protein accessions.", true, true);
-            }
-        }
-        if (debugSpeed) {
-            System.out.println("Starting " + availableProcessors + " threads to import accessions");
-        }
+        //Make an array of ents for the threads to use
+        TreeEnt ents[] = new TreeEnt[cores];
 
-        //Make an array of subtrees for the threads to use?
-        TreeEnt ents[] = new TreeEnt[availableProcessors];
-
-        ExecutorService exec = Executors.newFixedThreadPool(availableProcessors);
-        for (int i = 0; i < availableProcessors; i++) {
+        ExecutorService exec = Executors.newFixedThreadPool(cores);
+        for (int i = 0; i < cores; i++) {
             ents[i] = new TreeEnt(this, waitingHandler, loadedAccessions, tags, enzyme, initialTagSize, maxNodeSize, maxPeptideSize);
             exec.submit(ents[i].getAccessionLoader(accessionsQueue));
         }
         // notify executor that the threads should be started
         exec.shutdown();
-        while (exec.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS) & !accessionsQueue.isEmpty()) {
+        while (!accessionsQueue.isEmpty()) {
             //  wait for all threads to finish = as soon as the queue is empty...
             Thread.sleep(500);
         }
-        if (waitingHandler != null) {
-            waitingHandler.appendReport("Building peptide to protein map.", true, true);
-        }
-        if (debugSpeed) {
-            System.out.println("Building peptide to protein map (" + tags.length + " leaves)");
-        }
-        //merge back into one tree
-        if (waitingHandler != null) {
-            waitingHandler.appendReport("Cleaning peptide to protein map.", true, true);
-        }
-        if (debugSpeed) {
-            System.out.println("Cleaning peptide to protein map.");
-        }
-        for (int i = 0; i < availableProcessors; i++) {
+
+        notifyUser("Merging subtrees for current passage");
+        //merge back into one parent tree
+        //clear the ents
+        for (int i = 0; i < cores; i++) {
             this.putAll(ents[i]);
+            ents[i].clear();
         }
+
         if (debugSpeed) {
             System.out.println("Done : parent contains " + this.size() + " tags");
         }
-        // setup queue for multithreading
-        BlockingQueue<String> tagsQueue = new LinkedBlockingQueue<String>(this.keySet());
+    }
 
-        exec = Executors.newFixedThreadPool(availableProcessors);
-        if (debugSpeed) {
-            System.out.println("Saving tags");
+    private void saveTags(WaitingHandler waitingHandler, int maxNodeSize, int maxPeptideSize)
+            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+        BlockingQueue<String> tagsQueue = new LinkedBlockingQueue<String>(this.keySet());
+        notifyUser("Saving tags.");
+        ExecutorService exec = Executors.newFixedThreadPool(cores);
+        for (int i = 0; i < cores; i++) {
+            exec.submit(new TagSaver(this, tagsQueue, maxNodeSize, maxPeptideSize, waitingHandler));
         }
-        for (int i = 0; i < availableProcessors; i++) {
-            exec.submit(ents[i].getTagSaver(tagsQueue));
-        }
-        //shut down the executor service now
+        // notify executor that the threads should be started
         exec.shutdown();
         while (!tagsQueue.isEmpty()) {
-            // wait for all threads to finish = as soon as the queue is empty...
+            //  wait for all threads to finish = as soon as the queue is empty...
             Thread.sleep(500);
         }
 
-        currentTime = System.currentTimeMillis() - currentTime;
-        long hours = TimeUnit.MILLISECONDS.toHours(currentTime);
-        currentTime -= TimeUnit.HOURS.toMillis(hours);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(currentTime);
-        currentTime -= TimeUnit.MINUTES.toMillis(minutes);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(currentTime);
-
-        if (waitingHandler != null) {
-            waitingHandler.appendReport("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!", true, true);
-        }
-        if (debugSpeed) {
-            System.out.println("Finished importing accessions in " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds!");
-        }
     }
 
     /**
@@ -544,19 +525,19 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             }
         }
         ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, matchingType, massTolerance, false);
-        if (debugSpeed) {
-            long time1 = System.currentTimeMillis();
-            long queryTime = time1 - time0;
-            int nProteins = 0;
-            for (String peptide : result.keySet()) {
-                nProteins += result.get(peptide).size();
-            }
-            double slowCacheUsage = ((double) lastSlowQueriedPeptidesCacheContent.size()) / cacheSize;
-            double cacheUsage = ((double) lastQueriedPeptidesCache.size()) / cacheSize;
-            debugSpeedWriter.write(peptideSequence + "\t" + result.size() + "\t" + nProteins + "\t" + queryTime + "\t" + slowCacheUsage + "\t" + cacheUsage + "\t" + dbQuery);
-            debugSpeedWriter.newLine();
-            debugSpeedWriter.flush();
+        long time1 = System.currentTimeMillis();
+        long queryTime = time1 - time0;
+        int nProteins = 0;
+        for (String peptide : result.keySet()) {
+            nProteins += result.get(peptide).size();
         }
+        double slowCacheUsage = ((double) lastSlowQueriedPeptidesCacheContent.size()) / cacheSize;
+        double cacheUsage = ((double) lastQueriedPeptidesCache.size()) / cacheSize;
+        if (printHeader) {
+            notifyUser("sequence\tnPeptides\tnProteins\tQuery time\tslow cache usage\tcache usage\tDB query");
+            printHeader = false;
+        }
+        notifyUser(peptideSequence + "\t" + result.size() + "\t" + nProteins + "\t" + queryTime + "\t" + slowCacheUsage + "\t" + cacheUsage + "\t" + dbQuery);
         return result;
     }
 
@@ -879,7 +860,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws SQLException
      */
     public void close() throws IOException, SQLException {
-        if (debugSpeed) {
+        if (debugSpeedWriter != null) {
             try {
                 debugSpeedWriter.flush();
                 debugSpeedWriter.close();
@@ -1128,23 +1109,77 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         }
     }
 
+    /**
+     * Allows the merging of different ents into a single parent.
+     *
+     * @return merges different ents into a single parent.
+     */
     @Override
     public void putAll(Map<? extends String, ? extends Node> m) {
         Node motherNode;
         for (String aTag : m.keySet()) {
             if (!this.contains(m)) {
-                synchronized (this) {
-                    this.put(aTag, m.get(aTag));
-                }
+                this.put(aTag, m.get(aTag));
             } else {
                 motherNode = this.get(aTag);
-                synchronized (this) {
-                    motherNode.getAccessions().putAll(m.get(aTag).getAccessions());
-                }
-                synchronized (this) {
-                    motherNode.getTermini().putAll(m.get(aTag).getTermini());
-                }
+                motherNode.getAccessions().putAll(m.get(aTag).getAccessions());
+                motherNode.getTermini().putAll(m.get(aTag).getTermini());
             }
         }
+    }
+
+    /**
+     * Outputs a message to both console and debugwriter if debugging mode is
+     * enabled.
+     *
+     * @return Outputs a message to both console and debugwriter if debugging
+     * mode is enabled.
+     */
+    private void printDebugStatement(String message) {
+        if (debugSpeed) {
+            try {
+                if (debugSpeedWriter != null) {
+                    debugSpeedWriter.write(message);
+                    debugSpeedWriter.newLine();
+                    debugSpeedWriter.flush();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Notify user (gui mode)
+     *
+     * @return notifies user via commandline/debugwriter and gui
+     */
+    private void notifyUser(String message, WaitingHandler waitingHandler) {
+        notifyUser(message);
+        if (waitingHandler != null) {
+            waitingHandler.appendReport(message, true, true);
+        }
+
+    }
+
+    /**
+     * Notify user (headless mode)
+     *
+     * @return notifies user via commandline/debugwriter
+     */
+    private void notifyUser(String message) {
+        System.out.println(message);
+        if (debugSpeed) {
+            printDebugStatement(message);
+        }
+    }
+
+    /**
+     * Sets debugging-mode
+     *
+     * @return enable/disable debugging mode for the protein tree
+     */
+    public static void setDebugMode(boolean debug) {
+        debugSpeed = debug;
     }
 }

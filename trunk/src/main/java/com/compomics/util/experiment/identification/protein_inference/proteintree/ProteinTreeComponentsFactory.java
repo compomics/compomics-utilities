@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This factory stores and returns protein trees components from databases.
@@ -33,7 +31,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Boolean indicating whether the factory is in debug mode.
      */
-    private boolean debug = false;
+    private boolean debug = true;
     /**
      * The objects db used to retrieve saved nodes.
      */
@@ -62,14 +60,6 @@ public class ProteinTreeComponentsFactory {
      * The name of the protein length table.
      */
     private static final String parametersTable = "parameters";
-    /**
-     * Boolean to check whether the database has been initialized already.
-     */
-    private static boolean initialized = false;
-    /**
-     * Set to keep track of added tags (across threads).
-     */
-    private static final Set<String> tagsAddedToDb = new HashSet<String>();
 
     /**
      * Constructor.
@@ -98,18 +88,6 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Returning whether the factory contains the added tag. Note: this is
-     * required for multithreaded saving, to prevent multiple tags from being
-     * generated.
-     *
-     * @return whether the factory contains the added tag
-     * @throws IOException
-     */
-    private boolean containsTag(String tag) {
-        return tagsAddedToDb.contains(tag);
-    }
-
-    /**
      * Initiates the connection to the database and indicates whether the
      * corresponding folder is already created.
      *
@@ -122,25 +100,21 @@ public class ProteinTreeComponentsFactory {
      * attempting to connect to the database
      */
     public boolean initiate() throws SQLException, IOException {
-        if (!initialized) {
-            File dbFolder = getDbFolder();
-            boolean exists = true;
-            if (!dbFolder.exists()) {
-                exists = false;
-                if (!dbFolder.mkdir()) {
-                    throw new IOException("Impossible to create database folder " + dbFolder.getAbsolutePath() + ".");
-                }
+        File dbFolder = getDbFolder();
+        boolean exists = true;
+        if (!dbFolder.exists()) {
+            exists = false;
+            if (!dbFolder.mkdir()) {
+                throw new IOException("Impossible to create database folder " + dbFolder.getAbsolutePath() + ".");
             }
-            objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
-            if (!exists) {
-                objectsDB.addTable(nodeTable);
-                objectsDB.addTable(lengthTable);
-                objectsDB.addTable(parametersTable);
-            }
-            initialized = true;
-            return exists;
         }
-        return initialized;
+        objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
+        if (!exists) {
+            objectsDB.addTable(nodeTable);
+            objectsDB.addTable(lengthTable);
+            objectsDB.addTable(parametersTable);
+        }
+        return exists;
     }
 
     /**
@@ -151,7 +125,6 @@ public class ProteinTreeComponentsFactory {
     public boolean delete() {
         try {
             setCorrupted(true);
-            initialized = false;
         } finally {
             try {
                 close();
@@ -206,17 +179,14 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException {
-        if (!containsTag(tag)) {
-            objectsDB.insertObject(nodeTable, tag, node, false);
-            tagsAddedToDb.add(tag);
-        } 
+        objectsDB.insertObject(nodeTable, tag, node, false);
     }
 
     /**
      * Adds nodes to the database.
      *
      * @param nodes map of the nodes
-     *
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -237,19 +207,6 @@ public class ProteinTreeComponentsFactory {
      */
     public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
         return (Node) objectsDB.retrieveObject(nodeTable, tag, true, false);
-    }
-
-    /**
-     * Returns the tags loaded in the database.
-     *
-     * @return the tags loaded in the database
-     *
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     */
-    public Set<String> getTags() throws SQLException, ClassNotFoundException, IOException {
-        return new HashSet<String>(objectsDB.tableContent(nodeTable)); //@TODO: should not be done like this!
     }
 
     /**
@@ -296,7 +253,7 @@ public class ProteinTreeComponentsFactory {
      * @return the initial tag size
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException  
      */
     public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
@@ -329,7 +286,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the import was completed.
      *
-     * @param completed
+     * @param completed 
      * @throws SQLException
      * @throws IOException
      */
@@ -344,7 +301,7 @@ public class ProteinTreeComponentsFactory {
      * @return true if the import was complete
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException  
      */
     public boolean importComplete() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "importComplete", true);
@@ -358,7 +315,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the database is corrupted.
      *
-     * @param corrupted
+     * @param corrupted 
      * @throws SQLException
      * @throws IOException
      */
@@ -373,7 +330,7 @@ public class ProteinTreeComponentsFactory {
      * @return true if the database is corrupted
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException  
      */
     public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "corrupted", true);
@@ -387,7 +344,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets the version.
      *
-     * @param version the version
+     * @param version the version 
      * @throws SQLException
      * @throws IOException
      */
@@ -401,7 +358,7 @@ public class ProteinTreeComponentsFactory {
      * @return the version
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException  
      */
     public String getVersion() throws SQLException, IOException, ClassNotFoundException {
         return (String) objectsDB.retrieveObject(parametersTable, "version", true);

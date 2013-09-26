@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,17 +60,16 @@ public class ProteinTreeTest extends TestCase {
      }
      */
     public void testProteinTree() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-        
+
         System.out.println("Regular test");
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences);
 
         ProteinTree proteinTree = new ProteinTree(1);
-        proteinTree.setDebugMode(true);
         proteinTree.initiateTree(3, 500, 15, null, true);
 
-        ConcurrentHashMap<String, ArrayList<Integer>> testIndexes = proteinTree.getProteinMapping("SSS");
+        HashMap<String, ArrayList<Integer>> testIndexes = proteinTree.getProteinMapping("SSS");
         Assert.assertTrue(testIndexes.size() == 2);
         ArrayList<Integer> indexes = testIndexes.get("Q9FHX5");
         String sequence = sequenceFactory.getProtein("Q9FHX5").getSequence();

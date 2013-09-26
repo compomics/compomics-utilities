@@ -300,12 +300,12 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         if (remap && parentProteins == null) {
-            ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
+            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
             parentProteins = new ArrayList<String>();
             for (String peptideSequence : proteinMapping.keySet()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
                 if (xShare <= ProteinMatch.maxX) {
-                    ConcurrentHashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                    HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
                     for (String accession : subMapping.keySet()) {
                         if (!parentProteins.contains(accession)) {
                             parentProteins.add(accession);

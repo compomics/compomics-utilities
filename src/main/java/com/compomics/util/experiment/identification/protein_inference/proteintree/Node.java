@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A node of the protein tree.
@@ -30,15 +29,15 @@ public class Node implements Serializable {
     /**
      * List of accessions contained in this node.
      */
-    private ConcurrentHashMap<String, ArrayList<Integer>> accessions = new ConcurrentHashMap<String, ArrayList<Integer>>();
+    private HashMap<String, ArrayList<Integer>> accessions = new HashMap<String, ArrayList<Integer>>();
     /**
      * In case of splitting, the terminal mappings are put here.
      */
-    private ConcurrentHashMap<String, ArrayList<Integer>> termini = new ConcurrentHashMap<String, ArrayList<Integer>>();
+    private HashMap<String, ArrayList<Integer>> termini = new HashMap<String, ArrayList<Integer>>();
     /**
      * Subtree starting from this node.
      */
-    private ConcurrentHashMap<Character, Node> subtree = null;
+    private HashMap<Character, Node> subtree = null;
 
     /**
      * Constructor.
@@ -55,7 +54,7 @@ public class Node implements Serializable {
      * @param depth the depth of the node
      * @param accessions the accessions of the node
      */
-    public Node(int depth, ConcurrentHashMap<String, ArrayList<Integer>> accessions) {
+    public Node(int depth, HashMap<String, ArrayList<Integer>> accessions) {
         this.depth = depth;
         this.accessions = accessions;
     }
@@ -76,17 +75,17 @@ public class Node implements Serializable {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
-        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> result = new ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>();
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
         if (depth == peptideSequence.length()) {
             result.put(peptideSequence, getAllMappings());
         } else if (accessions != null) {
             for (String accession : accessions.keySet()) {
                 HashMap<String, ArrayList<Integer>> indexes = matchInProtein(accession, accessions.get(accession), peptideSequence, matchingType, massTolerance);
                 for (String tempSequence : indexes.keySet()) {
-                    ConcurrentHashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
+                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
                     if (mapping == null) {
-                        mapping = new ConcurrentHashMap<String, ArrayList<Integer>>();
+                        mapping = new HashMap<String, ArrayList<Integer>>();
                         result.put(tempSequence, mapping);
                     }
                     mapping.put(accession, indexes.get(tempSequence));
@@ -159,7 +158,8 @@ public class Node implements Serializable {
     public boolean splitNode(int maxNodeSize, int maxDepth) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         if (accessions.size() > maxNodeSize && depth <= maxDepth) {
-            subtree = new ConcurrentHashMap<Character, Node>();
+
+            subtree = new HashMap<Character, Node>();
             for (String accession : accessions.keySet()) {
                 HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
                 if (indexes.isEmpty()) {
@@ -167,15 +167,12 @@ public class Node implements Serializable {
                 }
                 for (char aa : indexes.keySet()) {
                     if (!subtree.containsKey(aa)) {
-                        synchronized (subtree) {
-                            subtree.put(aa, new Node(depth + 1));
-                        }
+                        subtree.put(aa, new Node(depth + 1));
                     }
                     Node node = subtree.get(aa);
                     node.addAccession(accession, indexes.get(aa));
                 }
             }
-
             accessions = null;
 
             for (Node node : subtree.values()) {
@@ -184,7 +181,6 @@ public class Node implements Serializable {
 
             return true;
         }
-
         return false;
     }
 
@@ -221,7 +217,7 @@ public class Node implements Serializable {
      *
      * @return the accessions attribute
      */
-    public ConcurrentHashMap<String, ArrayList<Integer>> getAccessions() {
+    public HashMap<String, ArrayList<Integer>> getAccessions() {
         return accessions;
     }
 
@@ -230,7 +226,7 @@ public class Node implements Serializable {
      *
      * @return the terminal mappings
      */
-    public ConcurrentHashMap<String, ArrayList<Integer>> getTermini() {
+    public HashMap<String, ArrayList<Integer>> getTermini() {
         return termini;
     }
 
@@ -239,7 +235,7 @@ public class Node implements Serializable {
      *
      * @return the subtree
      */
-    public ConcurrentHashMap<Character, Node> getSubtree() {
+    public HashMap<Character, Node> getSubtree() {
         return subtree;
     }
 
@@ -274,13 +270,13 @@ public class Node implements Serializable {
      * @return all the protein mappings of the node
      * @throws IOException
      */
-    public ConcurrentHashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
+    public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
         if (accessions != null) {
             return accessions;
         } else {
-            ConcurrentHashMap<String, ArrayList<Integer>> result = new ConcurrentHashMap<String, ArrayList<Integer>>();
+            HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>();
             for (Node node : subtree.values()) {
-                ConcurrentHashMap<String, ArrayList<Integer>> subResult = node.getAllMappings();
+                HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings();
                 for (String accession : subResult.keySet()) {
                     ArrayList<Integer> indexes = result.get(accession);
                     if (indexes == null) {
@@ -373,11 +369,8 @@ public class Node implements Serializable {
      */
     private HashMap<Character, ArrayList<Integer>> getAA(String accession, ArrayList<Integer> seeds, int offset)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        String proteinSequence = "";
-        synchronized (sequenceFactory) {
-            proteinSequence = sequenceFactory.getProtein(accession).getSequence();
-        }
+
+        String proteinSequence = SequenceFactory.getInstance().getProtein(accession).getSequence();
         HashMap<Character, ArrayList<Integer>> result = new HashMap<Character, ArrayList<Integer>>();
 
         for (int startIndex : seeds) {

@@ -2,11 +2,10 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder.TagSaver;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.treebuilder.TreeEnt;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,30 +14,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class sorts the proteins into groups.
  *
  * @author Marc Vaudel
- * @author Kenneth Verheggen
  */
-public class ProteinTree extends ConcurrentHashMap<String, Node> {
+public class ProteinTree {
 
-    /**
-     * The amount of available cores (if this is <1, the machine is breaking
-     * down).
-     */
-    private int cores = Runtime.getRuntime().availableProcessors();
     /**
      * The memory allocation in MB.
      */
@@ -47,13 +36,17 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * Approximate number of accession*node one can store in a GB of memory
      * (empirical value).
      */
-    private static final long cacheScale = 12000;
+    private static final long cacheScale = 6000;
     /**
      * Instance of the sequence factory.
      */
-    private final SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+    private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
-     * List of the nodes in tree (ie in memory).
+     * The tree containing the accessions indexed by sequence tags.
+     */
+    private HashMap<String, Node> tree = new HashMap<String, Node>();
+    /**
+     * List of the nodes in tree.
      */
     private ArrayList<String> tagsInTree = new ArrayList<String>();
     /**
@@ -63,7 +56,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private static boolean debugSpeed = false;
+    private boolean debugSpeed = true;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -79,7 +72,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Cache of the last queried peptides.
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in cache.
      */
@@ -87,11 +80,11 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     /**
      * Time in ms after which a query is considered as slow.
      */
-    private int queryTimeThreshold = 20;
+    private int queryTimeThreshold = 50;
     /**
      * Cache of the last queried peptides where the query took long.
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache = new ConcurrentHashMap<String, ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
     /**
      * Peptide sequences in slow cache.
      */
@@ -109,10 +102,9 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      */
     private Double massToleranceInCache = null;
     /**
-     * Boolean indicating whether a table header needs to be printed for the
-     * matched sequences (debugging output).
+     * indicates whether the main thread is listening or preparing to wait
      */
-    private boolean printHeader = true;
+    private boolean listening = true;
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
@@ -127,7 +119,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
 
         if (debugSpeed) {
             try {
-                debugSpeedWriter = new BufferedWriter(new FileWriter(new File("treeSpeed.txt")));
+                debugSpeedWriter = new BufferedWriter(new FileWriter(new File("dbSpeed.txt")));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -184,7 +176,8 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        this.clear();
+        tree.clear();
+
         componentsFactory = ProteinTreeComponentsFactory.getInstance();
 
         try {
@@ -260,17 +253,14 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-
         if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
-            //what if i want pentameres?
             if (initialTagSize == 3 || initialTagSize == 4) {
                 String report = "Expected import time: ";
                 int nSeconds;
                 if (initialTagSize == 3) {
-                    //remove 1 from cores to consider overhead during calculation time...
-                    nSeconds = ((sequenceFactory.getNTargetSequences() / (cores - 1)) * 15 / 1000);
+                    nSeconds = sequenceFactory.getNTargetSequences() * 15 / 1000;
                 } else {
-                    nSeconds = ((sequenceFactory.getNTargetSequences()) / cores - 1) * 2 / 10;
+                    nSeconds = sequenceFactory.getNTargetSequences() * 2 / 10;
                 }
                 if (nSeconds < 120) {
                     report += nSeconds + " seconds. (First time only.)";
@@ -283,23 +273,24 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                         report += nHours + " hours. (First time only.)";
                     }
                 }
-                notifyUser(report, waitingHandler);
+                waitingHandler.appendReport(report, true, true);
             }
         }
 
         componentsFactory.saveInitialSize(initialTagSize);
 
-        String[] tags = TagFactory.getAminoAcidCombinations(initialTagSize);
-        Set<String> accessions = new HashSet<String>();
+        ArrayList<String> tags = TagFactory.getAminoAcidCombinations(initialTagSize);
+        ArrayList<String> accessions;
 
         if (sequenceFactory.isDefaultReversed()) {
+            accessions = new ArrayList<String>();
             for (String accession : sequenceFactory.getAccessions()) {
                 if (!sequenceFactory.isDecoyAccession(accession)) {
                     accessions.add(accession);
                 }
             }
         } else {
-            accessions = sequenceFactory.getAccessions();
+            accessions = new ArrayList<String>(sequenceFactory.getAccessions());
         }
 
         long tagsSize = 500; // The space needed for tags in percent (empirical value)
@@ -314,83 +305,97 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             ratio = 1;
         }
 
-        int nPassages = ratio;
-        if (tags.length % ratio != 0) {
+        int nPassages = (int) (ratio);
+        if (tags.size() % ratio != 0) {
             nPassages += 1;
         }
 
-        int nTags = tags.length / ratio;
-        if (nTags == 0) {
-            nTags = 1;
+        int nTags;
+        if (ratio > 0) {
+            nTags = tags.size() / ratio;
+            if (nTags == 0) {
+                nTags = 1;
+            }
+        } else {
+            nTags = tags.size();
         }
-        /*
-         if (nPassages > 1) {
-         //            Collections.shuffle(tags);
-         }
-         */
 
-        notifyUser("Critical size: " + criticalSize);
-        notifyUser("Estimated tree size: " + estimatedTreeSize);
-        notifyUser(nPassages + " passages needed (" + nTags + " tags of " + tags.length + " per passage).", waitingHandler);
+        if (nPassages > 1) {
+//            Collections.shuffle(tags);
+        }
+
+        if (debugSpeed) {
+            debugSpeedWriter.write("Critical size: " + criticalSize);
+            System.out.println("Critical size: " + criticalSize);
+            estimatedTreeSize = estimatedTreeSize / 100;
+            debugSpeedWriter.write("Estimated tree size: " + estimatedTreeSize);
+            System.out.println("Estimated tree size: " + estimatedTreeSize);
+            debugSpeedWriter.write(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
+            System.out.println(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
+            debugSpeedWriter.newLine();
+            debugSpeedWriter.flush();
+        }
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            int totalProgress = (int) (nPassages * accessions.size() + tags.length); // @TODO: for some reason this now only goes to 75%...
+            int totalProgress = (int) (nPassages * accessions.size() + tags.size());
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
             waitingHandler.setSecondaryProgressCounter(0);
         }
-        long totalTime = 0;
-        long time0;
-        long passageTime;
+
+        long time0 = System.currentTimeMillis();
+
+        ArrayList<String> tempTags = new ArrayList<String>(nTags);
+        int tagsLoaded = 0;
         ArrayList<String> loadedAccessions = new ArrayList<String>();
 
-        notifyUser("Starting " + cores + " threads to import accessions", waitingHandler);
-        notifyUser("Building peptide to protein map ...", waitingHandler);
+        for (String tag : tags) {
+            if (tempTags.size() == nTags) {
+                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
+                tagsLoaded += tempTags.size();
+                tempTags.clear();
+                if (sequenceFactory.getnCache() < accessions.size()) {
+                    Collections.reverse(accessions);
+                }
+                if (debugSpeed) {
+                    debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
+                    System.out.println(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
+                    debugSpeedWriter.newLine();
+                    debugSpeedWriter.flush();
+                }
+            }
+            tempTags.add(tag);
+        }
 
-        int arrayPointer = 0;
-        String[] bufferedArray = new String[nTags];
-        for (int i = 0; i < nPassages; i++) {
-            time0 = System.currentTimeMillis();
-            System.arraycopy(tags, arrayPointer, bufferedArray, 0, nTags);
-            arrayPointer = arrayPointer + nTags;
-            loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
-            passageTime = (System.currentTimeMillis() - time0);
-            totalTime += passageTime;
-            notifyUser("Finished passage " + (i + 1) + " in " + passageTime + " ms");
+        if (!tempTags.isEmpty()) {
+            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
+
+            if (debugSpeed) {
+                debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
+                System.out.println(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
+                debugSpeedWriter.newLine();
+                debugSpeedWriter.flush();
+            }
         }
-        if (arrayPointer != tags.length) {
-            time0 = System.currentTimeMillis();
-            System.arraycopy(tags, arrayPointer, bufferedArray, 0, ((tags.length - arrayPointer))); // array starts from 0
-            loadTags(bufferedArray, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
-            passageTime = (System.currentTimeMillis() - time0);
-            totalTime += passageTime;
-            notifyUser("Finished wrap-up passage in " + passageTime + " ms");
-            notifyUser("... ", waitingHandler);
-        }
-        
-        
-        notifyUser("Saving tree to disk", waitingHandler);
-        saveTags(waitingHandler, maxNodeSize, maxPeptideSize);
-        notifyUser("Tree was successfully created !", waitingHandler);
-        tagsInTree.addAll(this.keySet());
-        for (Node node : this.values()) {
+
+        tagsInTree.addAll(tree.keySet());
+        for (Node node : tree.values()) {
             treeSize += node.getSize();
         }
 
         componentsFactory.setVersion(version);
         componentsFactory.setImportComplete(true);
-        notifyUser("Tree initiation time: " + totalTime + " ms.");
 
-        int nodes = 0;
-        int max_depth_reached = 0;
-        for (Node aNode : this.values()) {
-            nodes += aNode.getSize();
-            if (aNode.getDepth() > max_depth_reached) {
-                max_depth_reached = aNode.getDepth();
-            }
+        if (debugSpeed) {
+
+            long time1 = System.currentTimeMillis();
+            long initiationTime = time1 - time0;
+
+            debugSpeedWriter.write("tree initiation: " + initiationTime + " ms.");
+            System.out.println("tree initiation: " + initiationTime + " ms.");
+            debugSpeedWriter.newLine();
+            debugSpeedWriter.flush();
         }
-        notifyUser("Tree size: " + this.keySet().size() + " tags in " + nodes + " nodes(max depth = " + max_depth_reached + " originating from " + accessions.size() + " accessions", waitingHandler);
-        notifyUser("Removing tree from memory");
     }
 
     /**
@@ -411,58 +416,156 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void loadTags(String[] tags, Set<String> accessions, WaitingHandler waitingHandler,
+    private synchronized void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        notifyUser("Processing tags [" + tags[0] + "-" + tags[tags.length - 1] + "]");
-        // setup queue for multithreading
-        BlockingQueue<String> accessionsQueue = new LinkedBlockingQueue<String>();
-        accessionsQueue.addAll(accessions);
+        int nThreads = Math.max(Runtime.getRuntime().availableProcessors()-1, 1);
 
-        //Make an array of ents for the threads to use
-        TreeEnt ents[] = new TreeEnt[cores];
+        ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(nThreads);
+        ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
 
-        ExecutorService exec = Executors.newFixedThreadPool(cores);
-        for (int i = 0; i < cores; i++) {
-            ents[i] = new TreeEnt(this, waitingHandler, loadedAccessions, tags, enzyme, initialTagSize, maxNodeSize, maxPeptideSize);
-            exec.submit(ents[i].getAccessionLoader(accessionsQueue));
-        }
-        // notify executor that the threads should be started
-        exec.shutdown();
-        while (!accessionsQueue.isEmpty()) {
-            //  wait for all threads to finish = as soon as the queue is empty...
-            Thread.sleep(500);
-        }
+        for (String accession : accessions) {
 
-        notifyUser("Merging subtrees for current passage");
-        //merge back into one parent tree
-        //clear the ents
-        for (int i = 0; i < cores; i++) {
-            this.putAll(ents[i]);
-            ents[i].clear();
-        }
+            Protein protein = sequenceFactory.getProtein(accession);
+            if (!loadedAccessions.contains(accession)) {
+                componentsFactory.saveProteinLength(accession, protein.getLength());
+                loadedAccessions.add(accession);
+            }
+            sequenceBuffer.add(protein);
 
-        if (debugSpeed) {
-            System.out.println("Done : parent contains " + this.size() + " tags");
+            if (sequenceBuffer.size() == nThreads) {
+                while (sequenceIndexers.size() == nThreads) {
+                    processFinishedIndexers(sequenceIndexers, initialTagSize);
+                }
+                ArrayList<Protein> proteinsToProcess = new ArrayList<Protein>(sequenceBuffer.subList(0, nThreads - sequenceIndexers.size()));
+                for (Protein tempProtein : proteinsToProcess) {
+                    sequenceBuffer.remove(tempProtein);
+                    SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme);
+                    sequenceIndexers.add(sequenceIndexer);
+                    new Thread(sequenceIndexer, "sequence indexing of protein " + tempProtein.getAccession()).start();
+                }
+            }
+
+            if (waitingHandler != null) {
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
+                waitingHandler.increaseSecondaryProgressCounter();
+            }
         }
+        while (!sequenceBuffer.isEmpty()) {
+            if (sequenceIndexers.size() == nThreads) {
+                processFinishedIndexers(sequenceIndexers, initialTagSize);
+            }
+            ArrayList<Protein> proteinsToProcess = new ArrayList<Protein>(sequenceBuffer.subList(0, Math.min(nThreads - sequenceIndexers.size(), sequenceBuffer.size())));
+            for (Protein tempProtein : proteinsToProcess) {
+                sequenceBuffer.remove(tempProtein);
+                SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme);
+                sequenceIndexers.add(sequenceIndexer);
+                new Thread(sequenceIndexer, "sequence indexing of protein " + tempProtein.getAccession()).start();
+            }
+        }
+        while (!sequenceIndexers.isEmpty()) {
+            processFinishedIndexers(sequenceIndexers, initialTagSize);
+        }
+        ArrayList<RawNodeProcessor> rawNodeProcessors = new ArrayList<RawNodeProcessor>(nThreads);
+        if (waitingHandler != null) {
+            waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
+        }
+        for (String tag : tree.keySet()) {
+            Node node = tree.get(tag);
+            while (rawNodeProcessors.size() == nThreads) {
+                processFinishedNodeProcessors(rawNodeProcessors);
+            }
+            RawNodeProcessor rawNodeProcessor = new RawNodeProcessor(tag, node, maxNodeSize, maxPeptideSize);
+            new Thread(rawNodeProcessor, "Raw node process of tag " + tag).start();
+            rawNodeProcessors.add(rawNodeProcessor);
+            if (waitingHandler != null) {
+                if (waitingHandler.isRunCanceled()) {
+                    return;
+                }
+                waitingHandler.increaseSecondaryProgressCounter();
+            }
+        }
+        while (!rawNodeProcessors.isEmpty()) {
+            processFinishedNodeProcessors(rawNodeProcessors);
+        }
+        tree.clear();
+        System.gc();
     }
 
-    private void saveTags(WaitingHandler waitingHandler, int maxNodeSize, int maxPeptideSize)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        BlockingQueue<String> tagsQueue = new LinkedBlockingQueue<String>(this.keySet());
-        notifyUser("Saving tags.");
-        ExecutorService exec = Executors.newFixedThreadPool(cores);
-        for (int i = 0; i < cores; i++) {
-            exec.submit(new TagSaver(this, tagsQueue, maxNodeSize, maxPeptideSize, waitingHandler));
+    /**
+     * Clears the finished raw node processors from a given list or wait for one
+     * to finish.
+     *
+     * @param nodeProcessors the node processors of interest
+     *
+     * @throws InterruptedException
+     */
+    private synchronized void processFinishedNodeProcessors(ArrayList<RawNodeProcessor> nodeProcessors) throws InterruptedException {
+        listening = false;
+        ArrayList<RawNodeProcessor> done = new ArrayList<RawNodeProcessor>();
+        for (RawNodeProcessor rawNodeProcessor : nodeProcessors) {
+            if (rawNodeProcessor.isFinished()) {
+                done.add(rawNodeProcessor);
+            }
         }
-        // notify executor that the threads should be started
-        exec.shutdown();
-        while (!tagsQueue.isEmpty()) {
-            //  wait for all threads to finish = as soon as the queue is empty...
-            Thread.sleep(500);
+        if (done.isEmpty()) {
+            listening = true;
+            wait();
+            for (RawNodeProcessor rawNodeProcessor : nodeProcessors) {
+                if (rawNodeProcessor.isFinished()) {
+                    done.add(rawNodeProcessor);
+                }
+            }
         }
+        listening = true;
+        nodeProcessors.removeAll(done);
+    }
 
+    /**
+     * Stores the result of the finished indexers and updates the list. Waits if
+     * none is finished.
+     *
+     * @param sequenceIndexers the sequence indexers
+     * @param initialTagSize the initial tag size
+     *
+     * @throws InterruptedException
+     */
+    private synchronized void processFinishedIndexers(ArrayList<SequenceIndexer> sequenceIndexers, int initialTagSize) throws InterruptedException {
+        listening = false;
+        ArrayList<SequenceIndexer> done = new ArrayList<SequenceIndexer>();
+        for (SequenceIndexer sequenceIndexer : sequenceIndexers) {
+            if (sequenceIndexer.isFinished()) {
+                done.add(sequenceIndexer);
+            }
+        }
+        if (done.isEmpty()) {
+            listening = true;
+            wait();
+            for (SequenceIndexer sequenceIndexer : sequenceIndexers) {
+                if (sequenceIndexer.isFinished()) {
+                    done.add(sequenceIndexer);
+                }
+            }
+        }
+        listening = true;
+        for (SequenceIndexer sequenceIndexer : done) {
+            HashMap<String, ArrayList<Integer>> tagToIndexesMap = sequenceIndexer.getIndexes();
+            for (String tag : tagToIndexesMap.keySet()) {
+                ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
+                if (!indexes.isEmpty()) {
+                    Node node = tree.get(tag);
+                    if (node == null) {
+                        node = new Node(initialTagSize);
+                        tree.put(tag, node);
+                    }
+                    node.addAccession(sequenceIndexer.getAccession(), tagToIndexesMap.get(tag));
+                }
+            }
+        }
+        sequenceIndexers.removeAll(done);
     }
 
     /**
@@ -480,16 +583,16 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public ConcurrentHashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, MatchingType.string, null);
+    public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, MatchingType.string, null);
         if (mapping.size() > 1) {
             throw new IllegalArgumentException("Different mappings found for peptide " + peptideSequence + " in string matching. Only one expected.");
         }
-        ConcurrentHashMap<String, ArrayList<Integer>> result = mapping.get(peptideSequence);
+        HashMap<String, ArrayList<Integer>> result = mapping.get(peptideSequence);
         if (result != null) {
             return result;
         }
-        return new ConcurrentHashMap<String, ArrayList<Integer>>();
+        return new HashMap<String, ArrayList<Integer>>();
     }
 
     /**
@@ -509,33 +612,19 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         long time0 = 0;
-        boolean dbQuery = false;
         if (debugSpeed) {
             time0 = System.currentTimeMillis();
-            ArrayList<String> initialTags = getInitialTags(peptideSequence, matchingType, massTolerance);
-            for (String tag : initialTags) {
-                if (this.containsKey(tag)) {
-                    dbQuery = true;
-                    break;
-                }
-            }
         }
-        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, matchingType, massTolerance, false);
-        long time1 = System.currentTimeMillis();
-        long queryTime = time1 - time0;
-        int nProteins = 0;
-        for (String peptide : result.keySet()) {
-            nProteins += result.get(peptide).size();
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, matchingType, massTolerance, false);
+        if (debugSpeed) {
+            long time1 = System.currentTimeMillis();
+            long queryTime = time1 - time0;
+            debugSpeedWriter.write(peptideSequence + "\t" + result.size() + "\t" + queryTime);
+            debugSpeedWriter.newLine();
+            debugSpeedWriter.flush();
         }
-        double slowCacheUsage = ((double) lastSlowQueriedPeptidesCacheContent.size()) / cacheSize;
-        double cacheUsage = ((double) lastQueriedPeptidesCache.size()) / cacheSize;
-        if (printHeader) {
-            notifyUser("sequence\tnPeptides\tnProteins\tQuery time\tslow cache usage\tcache usage\tDB query");
-            printHeader = false;
-        }
-        notifyUser(peptideSequence + "\t" + result.size() + "\t" + nProteins + "\t" + queryTime + "\t" + slowCacheUsage + "\t" + cacheUsage + "\t" + dbQuery);
         return result;
     }
 
@@ -557,7 +646,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (matchingType != matchingTypeInCache || matchingType == MatchingType.indistiguishibleAminoAcids && (massToleranceInCache == null || !massToleranceInCache.equals(massTolerance))) {
             //@TODO adapt the cache to the different matching types
@@ -566,7 +655,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
             massToleranceInCache = massTolerance;
         }
 
-        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> result = lastQueriedPeptidesCache.get(peptideSequence);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = lastQueriedPeptidesCache.get(peptideSequence);
 
         if (result != null) {
             lastQueriedPeptidesCacheContent.remove(peptideSequence);
@@ -607,16 +696,16 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                     throw new IllegalArgumentException("Peptide (" + peptideSequence + ") should be at least of length " + initialTagSize + ".");
                 }
 
-                result = new ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>();
+                result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
                 ArrayList<String> initialTags = getInitialTags(peptideSequence, matchingType, massTolerance);
 
                 for (String tag : initialTags) {
                     Node node = getNode(tag);
                     if (node != null) {
-                        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideSequence, matchingType, massTolerance);
+                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideSequence, matchingType, massTolerance);
                         for (String tagSequence : tagResults.keySet()) {
-                            ConcurrentHashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence), tagMapping = tagResults.get(tagSequence);
+                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence), tagMapping = tagResults.get(tagSequence);
                             if (mapping == null && !tagMapping.isEmpty()) {
                                 result.put(tagSequence, tagMapping);
                             } else {
@@ -640,7 +729,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                 }
                 if (sequenceFactory.isDefaultReversed() && !reversed) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-                    ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> reversedResult;
+                    HashMap<String, HashMap<String, ArrayList<Integer>>> reversedResult;
                     if (!reversedSequence.equals(peptideSequence)) {
                         reversedResult = getProteinMapping(reversedSequence, matchingType, massTolerance, true);
                         reversedResult = getReversedResults(reversedResult);
@@ -648,7 +737,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                         reversedResult = getReversedResults(result);
                     }
                     for (String tempReversedSequence : reversedResult.keySet()) {
-                        ConcurrentHashMap<String, ArrayList<Integer>> mapping = result.get(tempReversedSequence);
+                        HashMap<String, ArrayList<Integer>> mapping = result.get(tempReversedSequence);
                         if (mapping != null) {
                             mapping.putAll(reversedResult.get(tempReversedSequence));
                         } else {
@@ -667,14 +756,6 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                             String key = lastQueriedPeptidesCacheContent.get(0);
                             lastQueriedPeptidesCache.remove(key);
                             lastQueriedPeptidesCacheContent.remove(0);
-                        }
-                    } else {
-                        lastSlowQueriedPeptidesCache.put(peptideSequence, result);
-                        lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
-                        if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
-                            String key = lastSlowQueriedPeptidesCacheContent.get(0);
-                            lastSlowQueriedPeptidesCache.remove(key);
-                            lastSlowQueriedPeptidesCacheContent.remove(0);
                         }
                     }
                 }
@@ -773,12 +854,12 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> getReversedResults(ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException {
-        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> results = new ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>>(forwardResults.keySet().size());
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>(forwardResults.keySet().size());
         for (String sequence : forwardResults.keySet()) {
             int peptideLength = sequence.length();
             String reversedSequence = SequenceFactory.reverseSequence(sequence);
-            ConcurrentHashMap<String, ArrayList<Integer>> mapping = new ConcurrentHashMap<String, ArrayList<Integer>>(forwardResults.get(sequence).size());
+            HashMap<String, ArrayList<Integer>> mapping = new HashMap<String, ArrayList<Integer>>(forwardResults.get(sequence).size());
             for (String accession : forwardResults.get(sequence).keySet()) {
                 String newAccession;
                 Integer proteinLength;
@@ -820,33 +901,23 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws IOException
      */
     private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
-
-        Node result = this.get(tag);
+        Node result = tree.get(tag);
         if (result == null) {
             result = componentsFactory.getNode(tag);
-            //@TODO: tried to only add arraylists when needed, I think this is causing this error...
-            // The result can technically never be null anymore, it can be empty however !
-            if (result.isEmpty()) {
-                throw new IllegalArgumentException("Tag " + tag + " not found in database.");
+            if (result != null) {
+                long capacity = memoryAllocation * cacheScale;
+                while (treeSize > capacity && !tagsInTree.isEmpty()) {
+                    int index = tagsInTree.size() - 1;
+                    String tempTag = tagsInTree.get(index);
+                    Node tempNode = tree.get(tempTag);
+                    treeSize -= tempNode.getSize();
+                    tree.remove(tempTag);
+                    tagsInTree.remove(index);
+                }
+                tree.put(tag, result);
+                treeSize += result.getSize();
+                tagsInTree.add(0, tag);
             }
-
-            long capacity = memoryAllocation * cacheScale;
-
-            ArrayList<String> tempTags = new ArrayList<String>();
-            while (treeSize > capacity && !this.keySet().isEmpty()) {
-                int index = tagsInTree.size() - 1;
-                String tempTag = tagsInTree.get(index);
-                Node tempNode = this.get(tempTag);
-                treeSize -= tempNode.getSize();
-                tempTags.add(tempTag);
-                tagsInTree.remove(index);
-            }
-            synchronized (this) {
-                this.keySet().removeAll(tempTags);
-                this.put(tag, result);
-            }
-            treeSize += result.getSize();
-            tagsInTree.add(0, tag);
         }
         return result;
     }
@@ -858,7 +929,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws SQLException
      */
     public void close() throws IOException, SQLException {
-        if (debugSpeedWriter != null) {
+        if (debugSpeed) {
             try {
                 debugSpeedWriter.flush();
                 debugSpeedWriter.close();
@@ -894,7 +965,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * Empties the cache.
      */
     public void emptyCache() {
-        this.clear();
+        tree.clear();
         tagsInTree.clear();
         lastQueriedPeptidesCache.clear();
         lastQueriedPeptidesCacheContent.clear();
@@ -919,11 +990,11 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public ConcurrentHashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, MatchingType matchingType, Double massTolerance)
+    public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, MatchingType matchingType, Double massTolerance)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        ConcurrentHashMap<String, ConcurrentHashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, matchingType, massTolerance);
-        ConcurrentHashMap<String, ArrayList<Integer>> tempMapping, result = new ConcurrentHashMap<String, ArrayList<Integer>>();
+        HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, matchingType, massTolerance);
+        HashMap<String, ArrayList<Integer>> tempMapping, result = new HashMap<String, ArrayList<Integer>>();
 
         for (String peptide : mapping.keySet()) {
             tempMapping = mapping.get(peptide);
@@ -948,8 +1019,18 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      */
     public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException {
         return new PeptideIterator();
+    }
 
-
+    /**
+     * Notifies the tree that a runnable has finished working
+     *
+     * @throws InterruptedException
+     */
+    private synchronized void runnableFinished() throws InterruptedException {
+        while (!listening) {
+            wait(10);
+        }
+        notify();
     }
 
     /**
@@ -964,7 +1045,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         /**
          * The list of possible initial tags.
          */
-        private String[] tags;
+        private ArrayList<String> tags;
         /**
          * The current node.
          */
@@ -980,7 +1061,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
         /**
          * List of amino acids found in the current node subtree if any.
          */
-        private TreeSet<Character> aas = null;
+        private ArrayList<Character> aas = null;
         /**
          * The current iterator position in the tags.
          */
@@ -1004,21 +1085,20 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
 
         @Override
         public boolean hasNext() {
-            ArrayList<Character> aasAsList = new ArrayList<Character>();
             try {
-                if (currentNode != null && currentNode.getDepth() == initialTagSize && currentNode.getAccessions() != null && i < tags.length - 1) {
+                if (currentNode != null && currentNode.getDepth() == initialTagSize && currentNode.getAccessions() != null && i < tags.size() - 1) {
                     // ok we're done with this node
                     parentNode = null;
                     aas = null;
                     j = 0;
-                    currentSequence = tags[++i];
+                    currentSequence = tags.get(++i);
                     currentNode = getNode(currentSequence);
                 }
-                while (++i < tags.length && currentNode == null && parentNode == null) {
-                    currentSequence = tags[i];
+                while (++i < tags.size() && currentNode == null && parentNode == null) {
+                    currentSequence = tags.get(i);
                     currentNode = getNode(currentSequence);
                 }
-                if (i < tags.length) {
+                if (i < tags.size()) {
                     if (aas != null) {
                         int parentDepth = currentSequence.length() - 1;
                         currentSequence = currentSequence.substring(0, parentDepth);
@@ -1049,24 +1129,23 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
                                     parentNode = getNode(tag).getSubNode(parentSequence);
                                 }
                                 currentNode = parentNode.getSubtree().get(aa);
-                                aas = new TreeSet<Character>(parentNode.getSubtree().keySet()) {
-                                };
-                                j = aas.headSet(aa).size();
+                                aas = new ArrayList<Character>(parentNode.getSubtree().keySet());
+                                Collections.sort(aas);
+                                j = aas.indexOf(aa);
                             }
                             return hasNext();
                         }
-
-                        aasAsList.addAll(aas);
-                        char aa = aasAsList.get(j);
+                        char aa = aas.get(j);
                         currentSequence += aa;
                         currentNode = parentNode.getSubtree().get(aa);
                     }
                     while (currentNode.getAccessions() == null) {
                         j = 0;
-                        aas = new TreeSet<Character>(currentNode.getSubtree().keySet());
+                        aas = new ArrayList<Character>(currentNode.getSubtree().keySet());
                         parentNode = currentNode;
                         if (!aas.isEmpty()) {
-                            char aa = aasAsList.get(j);
+                            Collections.sort(aas);
+                            char aa = aas.get(j);
                             currentSequence += aa;
                             currentNode = currentNode.getSubtree().get(aa);
                         } else {
@@ -1098,7 +1177,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
          *
          * @return the protein mapping of the current peptide.
          */
-        public ConcurrentHashMap<String, ArrayList<Integer>> getMapping() {
+        public HashMap<String, ArrayList<Integer>> getMapping() {
             if (currentNode != null) {
                 return currentNode.getAccessions();
             } else {
@@ -1108,73 +1187,200 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     }
 
     /**
-     * Allows the merging of different ents into a single parent.
+     * Runnable used for the indexing of a protein sequence.
      */
-    @Override
-    public void putAll(Map<? extends String, ? extends Node> m) {
-        Node motherNode;
-        for (String aTag : m.keySet()) {
-            if (!this.contains(m)) {
-                this.put(aTag, m.get(aTag));
-            } else {
-                motherNode = this.get(aTag);
-                motherNode.getAccessions().putAll(m.get(aTag).getAccessions());
-                motherNode.getTermini().putAll(m.get(aTag).getTermini());
-            }
-        }
-    }
+    private class SequenceIndexer implements Runnable {
 
-    /**
-     * Outputs a message to both console and debugwriter if debugging mode is
-     * enabled.
-     *
-     * @return Outputs a message to both console and debugwriter if debugging
-     * mode is enabled.
-     */
-    private void printDebugStatement(String message) {
-        if (debugSpeed) {
+        /**
+         * The accession of the protein being indexed
+         */
+        private String accession;
+        /**
+         * The protein sequence to index
+         */
+        private String proteinSequence;
+        /**
+         * Boolean indicating whether the thread shall be interrupted.
+         */
+        private boolean finished = false;
+        /**
+         * List of tags to inspect
+         */
+        private ArrayList<String> tags;
+        /**
+         * the enzyme to use
+         */
+        private Enzyme enzyme;
+        /**
+         * The result of the indexing
+         */
+        private HashMap<String, ArrayList<Integer>> indexes = null;
+
+        /**
+         * Constructor
+         *
+         * @param proteinSequence the protein sequence
+         * @param tags the tags to inspect
+         * @param enzyme the enzyme to use, can be null
+         */
+        public SequenceIndexer(String accession, String proteinSequence, ArrayList<String> tags, Enzyme enzyme) {
+            this.accession = accession;
+            this.proteinSequence = proteinSequence;
+            this.tags = tags;
+            this.enzyme = enzyme;
+        }
+
+        @Override
+        public synchronized void run() {
             try {
-                if (debugSpeedWriter != null) {
-                    debugSpeedWriter.write(message);
-                    debugSpeedWriter.newLine();
-                    debugSpeedWriter.flush();
-                }
+                indexes = getTagToIndexesMap(proteinSequence, tags, enzyme);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finished = true;
+            try {
+                runnableFinished();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
 
-    /**
-     * Notify user.
-     *
-     * @return notifies user via commandline/debugwriter and GUI.
-     */
-    private void notifyUser(String message, WaitingHandler waitingHandler) {
-        notifyUser(message);
-        if (waitingHandler != null) {
-            waitingHandler.appendReport(message, true, true);
+        /**
+         * Indicates whether the run is finished.
+         *
+         * @return true if the thread is finished.
+         */
+        public boolean isFinished() {
+            return finished;
+        }
+
+        /**
+         * returns the indexes
+         *
+         * @return the indexes
+         */
+        public HashMap<String, ArrayList<Integer>> getIndexes() {
+            return indexes;
+        }
+
+        /**
+         * Returns the accession of the protein being indexed
+         *
+         * @return the accession of the protein being indexed
+         */
+        public String getAccession() {
+            return accession;
+        }
+
+        /**
+         * Returns all the positions of the given tags on the given sequence in
+         * a map: tag -> list of indexes in the sequence.
+         *
+         * @param sequence the sequence of interest
+         * @param tags the tags of interest
+         * @param enzyme the enzyme restriction
+         * @return all the positions of the given tags
+         */
+        private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException {
+
+            HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());
+            Integer initialTagSize = componentsFactory.getInitialSize();
+
+            for (String tag : tags) {
+                tagToIndexesMap.put(tag, new ArrayList<Integer>());
+            }
+
+            for (int i = 0; i < sequence.length() - initialTagSize; i++) {
+
+                if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
+                    char[] tagValue = new char[initialTagSize]; // @TODO: possible to not create a new char array every time? replace my StringBuilder?
+                    for (int j = 0; j < initialTagSize; j++) {
+                        char aa = sequence.charAt(i + j);
+                        tagValue[j] = aa;
+                    }
+                    String tag = new String(tagValue);
+                    ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
+                    if (indexes != null) {
+                        indexes.add(i);
+                    }
+                }
+            }
+            return tagToIndexesMap;
         }
     }
 
     /**
-     * Notify user (headless mode).
-     *
-     * @return notifies user via commandline/debugwriter
+     * Runnable used to process raw nodes and store them in the database.
      */
-    private void notifyUser(String message) {
-        System.out.println(message);
-        if (debugSpeed) {
-            printDebugStatement(message);
-        }
-    }
+    private class RawNodeProcessor implements Runnable {
 
-    /**
-     * Sets debugging mode.
-     *
-     * @param debug enable/disable debugging mode for the protein tree
-     */
-    public static void setDebugMode(boolean debug) {
-        debugSpeed = debug;
+        /**
+         * The tag of the node
+         */
+        private String tag;
+        /**
+         * The node
+         */
+        private Node node;
+        /**
+         * the max node size
+         */
+        private int maxNodeSize;
+        /**
+         * The max peptide size
+         */
+        private int maxPeptideSize;
+        /**
+         * Boolean indicating whether the thread shall be interrupted.
+         */
+        private boolean finished = false;
+
+        /**
+         * Constructor
+         *
+         * @param tag the tag of interest
+         * @param node the node to process
+         */
+        public RawNodeProcessor(String tag, Node node, int maxNodeSize, int maxPeptideSize) {
+            this.tag = tag;
+            this.node = node;
+        }
+
+        @Override
+        public synchronized void run() {
+            try {
+                node.splitNode(maxNodeSize, maxPeptideSize);
+                componentsFactory.saveNode(tag, node);
+            } catch (IOException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finished = true;
+            try {
+                runnableFinished();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        /**
+         * Indicates whether the run is finished.
+         *
+         * @return true if the thread is finished.
+         */
+        public boolean isFinished() {
+            return finished;
+        }
     }
 }

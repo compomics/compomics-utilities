@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class sorts the proteins into groups.
@@ -111,8 +109,8 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
      */
     private Double massToleranceInCache = null;
     /**
-     * Boolean indicating whether a tableheader needs to be printed for the
-     * matched sequences (debugging output)
+     * Boolean indicating whether a table header needs to be printed for the
+     * matched sequences (debugging output).
      */
     private boolean printHeader = true;
 
@@ -333,7 +331,7 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
 
         notifyUser("Critical size: " + criticalSize);
         notifyUser("Estimated tree size: " + estimatedTreeSize);
-        notifyUser(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.length + " per passage)", waitingHandler);
+        notifyUser(nPassages + " passages needed (" + nTags + " tags of " + tags.length + " per passage).", waitingHandler);
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -1111,8 +1109,6 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
 
     /**
      * Allows the merging of different ents into a single parent.
-     *
-     * @return merges different ents into a single parent.
      */
     @Override
     public void putAll(Map<? extends String, ? extends Node> m) {
@@ -1150,20 +1146,19 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     }
 
     /**
-     * Notify user (gui mode)
+     * Notify user.
      *
-     * @return notifies user via commandline/debugwriter and gui
+     * @return notifies user via commandline/debugwriter and GUI.
      */
     private void notifyUser(String message, WaitingHandler waitingHandler) {
         notifyUser(message);
         if (waitingHandler != null) {
             waitingHandler.appendReport(message, true, true);
         }
-
     }
 
     /**
-     * Notify user (headless mode)
+     * Notify user (headless mode).
      *
      * @return notifies user via commandline/debugwriter
      */
@@ -1175,9 +1170,9 @@ public class ProteinTree extends ConcurrentHashMap<String, Node> {
     }
 
     /**
-     * Sets debugging-mode
+     * Sets debugging mode.
      *
-     * @return enable/disable debugging mode for the protein tree
+     * @param debug enable/disable debugging mode for the protein tree
      */
     public static void setDebugMode(boolean debug) {
         debugSpeed = debug;

@@ -140,7 +140,6 @@ public class AccessionLoader implements Runnable {
                 e.printStackTrace();
             }
         }
-        //System.out.println("done");
     }
 
     /**

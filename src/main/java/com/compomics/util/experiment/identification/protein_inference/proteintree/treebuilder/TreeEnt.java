@@ -106,4 +106,5 @@ public class TreeEnt extends ConcurrentHashMap<String, Node> {
     public TagSaver getTagSaver(BlockingQueue<String> tagsQueue) throws IOException {
         return new TagSaver(parentTree, tagsQueue, maxNodeSize, maxPeptideSize, waitingHandler);
     }
+    
 }

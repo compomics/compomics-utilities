@@ -20,9 +20,9 @@ import org.apache.commons.io.FileUtils;
  * Test for the protein tree.
  *
  * @author Marc Vaudel
+ * @author Kenneth Verheggen
  */
 public class ProteinTreeTest extends TestCase {
-
 
     public static void deleteTestingResults() {
         File resultFolder = new File(System.getProperty("user.home") + "/.compomics/proteins");
@@ -58,20 +58,15 @@ public class ProteinTreeTest extends TestCase {
      }
      }
      */
-    
     public void testProteinTree() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-        createProteinTree(1);
-    }
-
-    public void createProteinTree(int i) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+        
+        System.out.println("Regular test");
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
-        File sequenceFileToRun = new File("src/test/resources/experiment/proteinTreeTestSequences_" + i);
-        sequenceFileToRun.deleteOnExit();
-        FileUtils.copyFile(sequences, sequenceFileToRun);
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        sequenceFactory.loadFastaFile(sequenceFileToRun);
+        sequenceFactory.loadFastaFile(sequences);
 
         ProteinTree proteinTree = new ProteinTree(1);
+        proteinTree.setDebugMode(true);
         proteinTree.initiateTree(3, 500, 15, null, true);
 
         ConcurrentHashMap<String, ArrayList<Integer>> testIndexes = proteinTree.getProteinMapping("SSS");
@@ -98,4 +93,39 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(2) == index);
 
     }
+
+    /*  public void testExtendedProteinTree() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+     System.out.println("Extended test");
+     File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_extended");
+     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+     sequenceFactory.loadFastaFile(sequences);
+
+     ProteinTree proteinTree = new ProteinTree(1);
+     proteinTree.initiateTree(3, 500, 15, null, true);
+
+     System.out.println("There are " + proteinTree.size());
+
+     ConcurrentHashMap<String, ArrayList<Integer>> testIndexes= proteinTree.getProteinMapping("SSS");
+     Assert.assertTrue(testIndexes.size() == 2);
+     ArrayList<Integer> indexes = testIndexes.get("Q9FHX5");
+     String sequence = sequenceFactory.getProtein("Q9FHX5").getSequence();
+     Assert.assertTrue(indexes.size() == 3);
+     Collections.sort(indexes);
+     int index = sequence.indexOf("SSS");
+     Assert.assertTrue(indexes.get(0) == index);
+     index += sequence.substring(index + 1).indexOf("SSS") + 1;
+     Assert.assertTrue(indexes.get(1) == index);
+     index = sequence.lastIndexOf("SSS");
+     Assert.assertTrue(indexes.get(2) == index);
+     indexes = testIndexes.get("Q9FHX5_REVERSED");
+     sequence = sequenceFactory.getProtein("Q9FHX5_REVERSED").getSequence();
+     Assert.assertTrue(indexes.size() == 3);
+     Collections.sort(indexes);
+     index = sequence.indexOf("SSS");
+     Assert.assertTrue(indexes.get(0) == index);
+     index += sequence.substring(index + 1).indexOf("SSS") + 1;
+     Assert.assertTrue(indexes.get(1) == index);
+     index = sequence.lastIndexOf("SSS");
+     Assert.assertTrue(indexes.get(2) == index);
+     }*/
 }

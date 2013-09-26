@@ -209,9 +209,7 @@ public class ProteinTreeComponentsFactory {
         if (!containsTag(tag)) {
             objectsDB.insertObject(nodeTable, tag, node, false);
             tagsAddedToDb.add(tag);
-        } else {
-            System.out.println(tag = " : This tag has already been added"); // @TODO: this cannot be printed!!!
-        }
+        } 
     }
 
     /**

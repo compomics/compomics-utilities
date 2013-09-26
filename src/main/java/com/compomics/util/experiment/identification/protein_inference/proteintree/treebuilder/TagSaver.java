@@ -99,6 +99,5 @@ public class TagSaver implements Runnable {
             }
             tagsToRemove.clear();
         }
-        //System.out.println("done");
     }
 }

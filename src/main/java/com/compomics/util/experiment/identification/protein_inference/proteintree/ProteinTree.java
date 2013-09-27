@@ -419,7 +419,7 @@ public class ProteinTree {
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        int nThreads = Math.max(Runtime.getRuntime().availableProcessors()-1, 1);
+        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
 
         ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(nThreads);
         ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
@@ -520,6 +520,9 @@ public class ProteinTree {
             }
         }
         listening = true;
+        for (RawNodeProcessor rawNodeProcessor : done) {
+            rawNodeProcessor.clear();
+        }
         nodeProcessors.removeAll(done);
     }
 
@@ -563,6 +566,7 @@ public class ProteinTree {
                     node.addAccession(sequenceIndexer.getAccession(), tagToIndexesMap.get(tag));
                 }
             }
+            sequenceIndexer.clear();
         }
         sequenceIndexers.removeAll(done);
     }
@@ -1296,7 +1300,7 @@ public class ProteinTree {
             for (int i = 0; i < sequence.length() - initialTagSize; i++) {
 
                 if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
-                    char[] tagValue = new char[initialTagSize]; // @TODO: possible to not create a new char array every time? replace my StringBuilder?
+                    char[] tagValue = new char[initialTagSize];
                     for (int j = 0; j < initialTagSize; j++) {
                         char aa = sequence.charAt(i + j);
                         tagValue[j] = aa;
@@ -1309,6 +1313,15 @@ public class ProteinTree {
                 }
             }
             return tagToIndexesMap;
+        }
+
+        /**
+         * clears the content of the runnable
+         */
+        public void clear() {
+            proteinSequence = null;
+            tags = null;
+            indexes.clear();
         }
     }
 
@@ -1380,6 +1393,13 @@ public class ProteinTree {
          */
         public boolean isFinished() {
             return finished;
+        }
+
+        /**
+         * clears the content of the runnable
+         */
+        public void clear() {
+            node = null;
         }
     }
 }

@@ -1097,14 +1097,14 @@ public class PTMFactory implements Serializable {
     public void setDefaultReporterIons() {
 
         boolean changed = false;
+
         for (String ptmName : defaultMods) {
 
-            // @TODO: I hate hard coding this, any more elegant approach welcome...
+            // @TODO: remove the hard coding...
 
             if (ptmName.contains("itraq")) {
                 PTM ptm = ptmMap.get(ptmName);
                 if (ptm.getReporterIons().isEmpty()) {
-                    changed = true;
 
                     if (ptmName.contains("8")) {
                         ptm.addReporterIon(ReporterIon.iTRAQ113);
@@ -1120,10 +1120,11 @@ public class PTMFactory implements Serializable {
                         ptm.addReporterIon(ReporterIon.iTRAQ119);
                         ptm.addReporterIon(ReporterIon.iTRAQ121);
                     }
+
+                    changed = true;
                 }
             } else if (ptmName.contains("tmt")) {
 
-                changed = true;
                 PTM ptm = ptmMap.get(ptmName);
 
                 if (ptm.getReporterIons().isEmpty()) {
@@ -1137,6 +1138,25 @@ public class PTMFactory implements Serializable {
                         ptm.addReporterIon(ReporterIon.TMT4);
                         ptm.addReporterIon(ReporterIon.TMT5);
                     }
+
+                    changed = true;
+                }
+            } else if (ptmName.contains("acetylation of k")) {
+
+                PTM ptm = ptmMap.get(ptmName);
+
+                if (ptm.getReporterIons().isEmpty()) {
+                    ptm.addReporterIon(ReporterIon.ACE_K_126);
+                    ptm.addReporterIon(ReporterIon.ACE_K_143);
+                    changed = true;
+                }
+            } else if (ptmName.contains("phosphorylation of y")) {
+
+                PTM ptm = ptmMap.get(ptmName);
+
+                if (ptm.getReporterIons().isEmpty()) {
+                    ptm.addReporterIon(ReporterIon.PHOSPHO_Y);
+                    changed = true;
                 }
             }
         }

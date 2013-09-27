@@ -1071,7 +1071,7 @@ public class SequenceFactory {
      * @throws SQLException
      */
     public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        return getDefaultProteinTree(null);
+        return getDefaultProteinTree(null, false);
     }
 
     /**
@@ -1088,7 +1088,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException
      * @throws SQLException
      */
-    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         if (defaultProteinTree == null) {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -1096,17 +1096,19 @@ public class SequenceFactory {
             int treeSize = memoryPreference / 4;
             defaultProteinTree = new ProteinTree(treeSize);
 
+            int previousCache = nCache;
             int tagLength = 3;
             if (getNTargetSequences() > 100000) {
                 tagLength = 4;
                 if (memoryPreference > 4000) {
-                    defaultProteinTree.setCacheSize(100000);
+                    setnCache(100000);
                 }
             }
             if (memoryPreference < 2000) {
                 defaultProteinTree.setCacheSize(500);
             }
-            defaultProteinTree.initiateTree(tagLength, 500, 50, waitingHandler, true);
+            defaultProteinTree.initiateTree(tagLength, 500, 50, waitingHandler, true, displayProgress);
+            setnCache(previousCache);
         }
         return defaultProteinTree;
     }

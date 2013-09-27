@@ -143,9 +143,9 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime)
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime);
+        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime, displayProgress);
     }
 
     /**
@@ -172,7 +172,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         tree.clear();
@@ -206,7 +206,7 @@ public class ProteinTree {
                 componentsFactory.initiate();
             }
             if (needImport) {
-                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime);
+                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime, displayProgress);
             } else {
                 componentsFactory.loadProteinLenths();
             }
@@ -249,7 +249,7 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime)
+    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
@@ -350,7 +350,7 @@ public class ProteinTree {
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
+                loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions, displayProgress);
                 tagsLoaded += tempTags.size();
                 tempTags.clear();
                 if (sequenceFactory.getnCache() < accessions.size()) {
@@ -367,7 +367,7 @@ public class ProteinTree {
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions);
+            loadTags(tempTags, accessions, waitingHandler, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions, displayProgress);
 
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -416,7 +416,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private synchronized void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
-            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions)
+            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
@@ -440,17 +440,16 @@ public class ProteinTree {
                 ArrayList<Protein> proteinsToProcess = new ArrayList<Protein>(sequenceBuffer.subList(0, nThreads - sequenceIndexers.size()));
                 for (Protein tempProtein : proteinsToProcess) {
                     sequenceBuffer.remove(tempProtein);
-                    SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme);
+                    SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme, waitingHandler, displayProgress);
                     sequenceIndexers.add(sequenceIndexer);
                     new Thread(sequenceIndexer, "sequence indexing of protein " + tempProtein.getAccession()).start();
                 }
             }
 
             if (waitingHandler != null) {
-                if (waitingHandler.isRunCanceled()) {
+                if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     return;
                 }
-                waitingHandler.increaseSecondaryProgressCounter();
             }
         }
         while (!sequenceBuffer.isEmpty()) {
@@ -460,7 +459,7 @@ public class ProteinTree {
             ArrayList<Protein> proteinsToProcess = new ArrayList<Protein>(sequenceBuffer.subList(0, Math.min(nThreads - sequenceIndexers.size(), sequenceBuffer.size())));
             for (Protein tempProtein : proteinsToProcess) {
                 sequenceBuffer.remove(tempProtein);
-                SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme);
+                SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme, waitingHandler, displayProgress);
                 sequenceIndexers.add(sequenceIndexer);
                 new Thread(sequenceIndexer, "sequence indexing of protein " + tempProtein.getAccession()).start();
             }
@@ -469,7 +468,7 @@ public class ProteinTree {
             processFinishedIndexers(sequenceIndexers, initialTagSize);
         }
         ArrayList<RawNodeProcessor> rawNodeProcessors = new ArrayList<RawNodeProcessor>(nThreads);
-        if (waitingHandler != null) {
+        if (displayProgress && waitingHandler != null) {
             waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
         }
         for (String tag : tree.keySet()) {
@@ -477,14 +476,13 @@ public class ProteinTree {
             while (rawNodeProcessors.size() == nThreads) {
                 processFinishedNodeProcessors(rawNodeProcessors);
             }
-            RawNodeProcessor rawNodeProcessor = new RawNodeProcessor(tag, node, maxNodeSize, maxPeptideSize);
+            RawNodeProcessor rawNodeProcessor = new RawNodeProcessor(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
             new Thread(rawNodeProcessor, "Raw node process of tag " + tag).start();
             rawNodeProcessors.add(rawNodeProcessor);
             if (waitingHandler != null) {
-                if (waitingHandler.isRunCanceled()) {
+                if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     return;
                 }
-                waitingHandler.increaseSecondaryProgressCounter();
             }
         }
         while (!rawNodeProcessors.isEmpty()) {
@@ -1218,6 +1216,14 @@ public class ProteinTree {
          * The result of the indexing.
          */
         private HashMap<String, ArrayList<Integer>> indexes = null;
+        /**
+         * The waiting handler
+         */
+        private WaitingHandler waitingHandler;
+        /**
+         * boolean indicating whether progress should be displayed
+         */
+        private boolean displayProgress;
 
         /**
          * Constructor.
@@ -1226,11 +1232,13 @@ public class ProteinTree {
          * @param tags the tags to inspect
          * @param enzyme the enzyme to use, can be null
          */
-        public SequenceIndexer(String accession, String proteinSequence, ArrayList<String> tags, Enzyme enzyme) {
+        public SequenceIndexer(String accession, String proteinSequence, ArrayList<String> tags, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress) {
             this.accession = accession;
             this.proteinSequence = proteinSequence;
             this.tags = tags;
             this.enzyme = enzyme;
+            this.waitingHandler = waitingHandler;
+            this.displayProgress = displayProgress;
         }
 
         @Override
@@ -1243,6 +1251,9 @@ public class ProteinTree {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (displayProgress && waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressCounter();
             }
             finished = true;
             try {
@@ -1350,6 +1361,14 @@ public class ProteinTree {
          * Boolean indicating whether the thread shall be interrupted.
          */
         private boolean finished = false;
+        /**
+         * The waiting handler
+         */
+        private WaitingHandler waitingHandler;
+        /**
+         * boolean indicating whether progress should be displayed
+         */
+        private boolean displayProgress;
 
         /**
          * Constructor.
@@ -1357,9 +1376,11 @@ public class ProteinTree {
          * @param tag the tag of interest
          * @param node the node to process
          */
-        public RawNodeProcessor(String tag, Node node, int maxNodeSize, int maxPeptideSize) {
+        public RawNodeProcessor(String tag, Node node, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress) {
             this.tag = tag;
             this.node = node;
+            this.waitingHandler = waitingHandler;
+            this.displayProgress = displayProgress;
         }
 
         @Override
@@ -1377,6 +1398,9 @@ public class ProteinTree {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (displayProgress && waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressCounter();
             }
             finished = true;
             try {

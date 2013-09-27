@@ -50,6 +50,10 @@ public class ObjectsCache {
      * The standard batch size for saving objects in databases.
      */
     private int batchSize = 1000; // @TODO: find the optimal batch size
+    /**
+     * Boolean indicating whether a thread is updating the cache
+     */
+    private boolean updatingCache = false;
 
     /**
      * Constructor.
@@ -159,10 +163,12 @@ public class ObjectsCache {
      */
     public void removeObject(String dbName, String tableName, String objectKey) {
         String cacheKey = getCacheKey(dbName, tableName, objectKey);
+        updatingCache = true;
         loadedObjectsKeys.remove(cacheKey);
         if (loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName)) {
             loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
         }
+        updatingCache = false;
     }
 
     /**
@@ -186,6 +192,7 @@ public class ObjectsCache {
      * @param dbName the name of the database
      * @param tableName the name of the table
      * @param objectKey the key of the object
+     *
      * @return the object of interest, null if not present in the cache
      */
     public Object getObject(String dbName, String tableName, String objectKey) {
@@ -194,12 +201,16 @@ public class ObjectsCache {
             if (!memoryCheck()) {
                 // if we are encountering memory issues, put the most used object at the back so that they stay in cache
                 String entryKey = getCacheKey(dbName, tableName, objectKey);
-                for (int i = 0; i <= Math.min(100000, loadedObjectsKeys.size() / 2); i++) {
-                    if (entryKey.equals(loadedObjectsKeys.get(i))) {
-                        loadedObjectsKeys.remove(i);
-                        loadedObjectsKeys.add(entryKey);
-                        break;
+                if (!updatingCache) {
+                    updatingCache = true;
+                    for (int i = 0; i <= Math.min(100000, loadedObjectsKeys.size() / 2); i++) {
+                        if (entryKey.equals(loadedObjectsKeys.get(i))) {
+                            loadedObjectsKeys.remove(i);
+                            loadedObjectsKeys.add(entryKey);
+                            break;
+                        }
                     }
+                    updatingCache = false;
                 }
             }
             return entry.getObject();
@@ -348,6 +359,7 @@ public class ObjectsCache {
         }
         if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
             if (clearEntries) {
+                updatingCache = true;
                 for (String entryKey : entryKeys) {
                     String[] splittedKey = getKeyComponents(entryKey);
                     String dbName = splittedKey[0];
@@ -362,6 +374,7 @@ public class ObjectsCache {
                         loadedObjectsMap.remove(dbName);
                     }
                 }
+                updatingCache = false;
             }
         }
     }
@@ -420,6 +433,7 @@ public class ObjectsCache {
             }
         }
         if (clearEntry) {
+            updatingCache = true;
             loadedObjectsKeys.remove(entryKey);
             loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
             if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
@@ -428,6 +442,7 @@ public class ObjectsCache {
             if (loadedObjectsMap.get(dbName).isEmpty()) {
                 loadedObjectsMap.remove(dbName);
             }
+            updatingCache = false;
         }
     }
 

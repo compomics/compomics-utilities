@@ -67,7 +67,7 @@ public class ProteinTreeTest extends TestCase {
         sequenceFactory.loadFastaFile(sequences);
 
         ProteinTree proteinTree = new ProteinTree(1);
-        proteinTree.initiateTree(3, 500, 15, null, true);
+        proteinTree.initiateTree(3, 500, 15, null, true, false);
 
         HashMap<String, ArrayList<Integer>> testIndexes = proteinTree.getProteinMapping("SSS");
         Assert.assertTrue(testIndexes.size() == 2);

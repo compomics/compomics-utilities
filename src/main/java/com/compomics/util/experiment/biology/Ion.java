@@ -177,7 +177,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the theoretic m/z.
      */
     public double getTheoreticMz(int chargeValue) {
-        return (theoreticMass + chargeValue * ElementaryIon.proton.theoreticMass) / chargeValue;
+        return (getTheoreticMass() + chargeValue * ElementaryIon.proton.theoreticMass) / chargeValue;
     }
 
     /**

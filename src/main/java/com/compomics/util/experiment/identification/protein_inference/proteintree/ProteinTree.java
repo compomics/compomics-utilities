@@ -137,6 +137,7 @@ public class ProteinTree {
      * user. Can be null but strongly recommended :)
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
+     * @param displayProgress display progress
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
@@ -166,6 +167,7 @@ public class ProteinTree {
      * user. Can be null.
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
+     * @param displayProgress display progress
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
@@ -1217,11 +1219,11 @@ public class ProteinTree {
          */
         private HashMap<String, ArrayList<Integer>> indexes = null;
         /**
-         * The waiting handler
+         * The waiting handler.
          */
         private WaitingHandler waitingHandler;
         /**
-         * boolean indicating whether progress should be displayed
+         * Boolean indicating whether progress should be displayed.
          */
         private boolean displayProgress;
 
@@ -1327,7 +1329,7 @@ public class ProteinTree {
         }
 
         /**
-         * clears the content of the runnable
+         * Clears the content of the runnable.
          */
         public void clear() {
             proteinSequence = null;
@@ -1420,7 +1422,7 @@ public class ProteinTree {
         }
 
         /**
-         * clears the content of the runnable
+         * Clears the content of the runnable.
          */
         public void clear() {
             node = null;

@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 /**
  * This class models a reporter ion and is its own factory.
+ * Note: by convention the mass includes a proton here
  *
  * @author Marc Vaudel
  */
@@ -214,5 +215,10 @@ public class ReporterIon extends Ion {
     public boolean isSameAs(Ion anotherIon) {
         return anotherIon.getType() == IonType.REPORTER_ION
                 && anotherIon.getSubType() == subtype;
+    }
+    
+    @Override
+    public double getTheoreticMass() {
+        return theoreticMass - ElementaryIon.proton.getTheoreticMass();
     }
 }

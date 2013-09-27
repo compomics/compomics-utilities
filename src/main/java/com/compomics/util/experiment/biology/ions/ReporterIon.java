@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class models a reporter ion and is its own factory
+ * This class models a reporter ion and is its own factory.
  *
  * @author Marc Vaudel
  */
@@ -25,61 +25,61 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion iTRAQ 113.
      */
-    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113.1075 - ElementaryIon.proton.getTheoreticMass()); // @TODO: why minus the mass of a proton?? 
+    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113.1075);
     /**
      * Standard reporter ion iTRAQ 114.
      */
-    public final static ReporterIon iTRAQ114 = new ReporterIon("iTRAQ114", 114.111 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ114 = new ReporterIon("iTRAQ114", 114.111);
     /**
      * Standard reporter ion iTRAQ 115.
      */
-    public final static ReporterIon iTRAQ115 = new ReporterIon("iTRAQ115", 115.1079 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ115 = new ReporterIon("iTRAQ115", 115.1079);
     /**
      * Standard reporter ion iTRAQ 116.
      */
-    public final static ReporterIon iTRAQ116 = new ReporterIon("iTRAQ116", 116.1113 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ116 = new ReporterIon("iTRAQ116", 116.1113);
     /**
      * Standard reporter ion iTRAQ 117.
      */
-    public final static ReporterIon iTRAQ117 = new ReporterIon("iTRAQ117", 117.11465 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ117 = new ReporterIon("iTRAQ117", 117.11465);
     /**
      * Standard reporter ion iTRAQ 118.
      */
-    public final static ReporterIon iTRAQ118 = new ReporterIon("iTRAQ118", 118.1117 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ118 = new ReporterIon("iTRAQ118", 118.1117);
     /**
      * Standard reporter ion iTRAQ 119.
      */
-    public final static ReporterIon iTRAQ119 = new ReporterIon("iTRAQ119", 119.115 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ119 = new ReporterIon("iTRAQ119", 119.115);
     /**
      * Standard reporter ion iTRAQ 121.
      */
-    public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121.1217 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121.1217);
     /**
      * Standard reporter ion TMT0.
      */
-    public final static ReporterIon TMT0 = new ReporterIon("TMT0", 126.127491 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon TMT0 = new ReporterIon("TMT0", 126.127491);
     /**
      * Standard reporter ion TMT1.
      */
-    public final static ReporterIon TMT1 = new ReporterIon("TMT1", 127.1308594 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon TMT1 = new ReporterIon("TMT1", 127.1308594);
     /**
      * Standard reporter ion TMT2.
      */
-    public final static ReporterIon TMT2 = new ReporterIon("TMT2", 128.1341553 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon TMT2 = new ReporterIon("TMT2", 128.1341553);
     /**
      * Standard reporter ion TMT3.
      */
-    public final static ReporterIon TMT3 = new ReporterIon("TMT3", 129.1375046 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon TMT3 = new ReporterIon("TMT3", 129.1375046);
     /**
      * Standard reporter ion TMT4.
      */
-    public final static ReporterIon TMT4 = new ReporterIon("TMT4", 130.1408768 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon TMT4 = new ReporterIon("TMT4", 130.1408768);
     /**
      * Standard reporter ion TMT5.
      */
-    public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131.1444851 - ElementaryIon.proton.getTheoreticMass());
+    public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131.1444851);
     /**
-     * ion name for user defined ions.
+     * Ion name for user defined ions.
      */
     private String name;
     /**

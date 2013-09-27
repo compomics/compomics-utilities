@@ -79,6 +79,18 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131.1444851);
     /**
+     * Standard reporter ion for lysine acetylation (PMID: 18338905).
+     */
+    public final static ReporterIon ACE_K_126 = new ReporterIon("aceK_126", 126);
+    /**
+     * Standard reporter ion for lysine acetylation (PMID: 18338905).
+     */
+    public final static ReporterIon ACE_K_143 = new ReporterIon("aceK_143", 143);
+    /**
+     * Standard reporter ion for phosphorylation of tyrosine (PMID: 11473401).
+     */
+    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY_216", 216);
+    /**
      * Ion name for user defined ions.
      */
     private String name;

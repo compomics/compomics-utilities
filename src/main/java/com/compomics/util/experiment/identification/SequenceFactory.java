@@ -1082,6 +1082,25 @@ public class SequenceFactory {
      * during the initiation of the tree
      *
      * @return the default protein tree
+     * 
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
+    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+        return getDefaultProteinTree(waitingHandler, true);
+    }
+
+    /**
+     * Returns the default protein tree corresponding to the database loaded in
+     * factory
+     *
+     * @param waitingHandler waiting handler displaying progress to the user
+     * during the initiation of the tree
+     *
+     * @return the default protein tree
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException

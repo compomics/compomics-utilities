@@ -1076,7 +1076,7 @@ public class SequenceFactory {
 
     /**
      * Returns the default protein tree corresponding to the database loaded in
-     * factory
+     * factory.
      *
      * @param waitingHandler waiting handler displaying progress to the user
      * during the initiation of the tree
@@ -1099,7 +1099,7 @@ public class SequenceFactory {
      *
      * @param waitingHandler waiting handler displaying progress to the user
      * during the initiation of the tree
-     *
+     * @param displayProgress display progress
      * @return the default protein tree
      * @throws IOException
      * @throws InterruptedException

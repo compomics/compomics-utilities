@@ -25,7 +25,7 @@ public class ObjectsCache {
      */
     private int cacheSize = 0;
     /**
-     * boolean indicating whether the memory management should be done
+     * Boolean indicating whether the memory management should be done
      * automatically. If true, the cache size will be extended to reach 99% of
      * the available heap size. True by default.
      */
@@ -51,7 +51,7 @@ public class ObjectsCache {
      */
     private int batchSize = 1000; // @TODO: find the optimal batch size
     /**
-     * Boolean indicating whether a thread is updating the cache
+     * Boolean indicating whether a thread is updating the cache.
      */
     private boolean updatingCache = false;
 

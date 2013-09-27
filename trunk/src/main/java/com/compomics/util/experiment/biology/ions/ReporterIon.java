@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class models a reporter ion and is its own factory.
- * Note: by convention the mass includes a proton here
+ * This class models a reporter ion and is its own factory. Note: By convention
+ * the mass includes a proton here.
  *
  * @author Marc Vaudel
  */
@@ -176,9 +176,11 @@ public class ReporterIon extends Ion {
     public boolean isSameAs(ReporterIon anotherReporterIon) {
         return theoreticMass == anotherReporterIon.getTheoreticMass();
     }
-    
+
     /**
-     * Returns the index of a reporter ion. (i.e. its rounded m/z: 114 for iTRAQ 114).
+     * Returns the index of a reporter ion. (i.e. its rounded m/z: 114 for iTRAQ
+     * 114).
+     *
      * @return the index of a reporter ion.
      */
     public int getIndex() {
@@ -216,7 +218,7 @@ public class ReporterIon extends Ion {
         return anotherIon.getType() == IonType.REPORTER_ION
                 && anotherIon.getSubType() == subtype;
     }
-    
+
     @Override
     public double getTheoreticMass() {
         return theoreticMass - ElementaryIon.proton.getTheoreticMass();

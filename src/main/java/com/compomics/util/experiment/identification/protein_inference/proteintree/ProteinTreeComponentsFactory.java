@@ -31,7 +31,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Boolean indicating whether the factory is in debug mode.
      */
-    private boolean debug = true;
+    private boolean debug = false;
     /**
      * The objects db used to retrieve saved nodes.
      */

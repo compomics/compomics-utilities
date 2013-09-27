@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,7 +55,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = true;
+    private boolean debugSpeed = false;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -1022,7 +1021,7 @@ public class ProteinTree {
     }
 
     /**
-     * Notifies the tree that a runnable has finished working
+     * Notifies the tree that a runnable has finished working.
      *
      * @throws InterruptedException
      */
@@ -1192,11 +1191,11 @@ public class ProteinTree {
     private class SequenceIndexer implements Runnable {
 
         /**
-         * The accession of the protein being indexed
+         * The accession of the protein being indexed.
          */
         private String accession;
         /**
-         * The protein sequence to index
+         * The protein sequence to index.
          */
         private String proteinSequence;
         /**
@@ -1204,20 +1203,20 @@ public class ProteinTree {
          */
         private boolean finished = false;
         /**
-         * List of tags to inspect
+         * List of tags to inspect.
          */
         private ArrayList<String> tags;
         /**
-         * the enzyme to use
+         * The enzyme to use.
          */
         private Enzyme enzyme;
         /**
-         * The result of the indexing
+         * The result of the indexing.
          */
         private HashMap<String, ArrayList<Integer>> indexes = null;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param proteinSequence the protein sequence
          * @param tags the tags to inspect
@@ -1259,7 +1258,7 @@ public class ProteinTree {
         }
 
         /**
-         * returns the indexes
+         * Returns the indexes.
          *
          * @return the indexes
          */
@@ -1268,7 +1267,7 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the accession of the protein being indexed
+         * Returns the accession of the protein being indexed.
          *
          * @return the accession of the protein being indexed
          */
@@ -1319,19 +1318,19 @@ public class ProteinTree {
     private class RawNodeProcessor implements Runnable {
 
         /**
-         * The tag of the node
+         * The tag of the node.
          */
         private String tag;
         /**
-         * The node
+         * The node.
          */
         private Node node;
         /**
-         * the max node size
+         * the max node size.
          */
         private int maxNodeSize;
         /**
-         * The max peptide size
+         * The max peptide size.
          */
         private int maxPeptideSize;
         /**
@@ -1340,7 +1339,7 @@ public class ProteinTree {
         private boolean finished = false;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param tag the tag of interest
          * @param node the node to process

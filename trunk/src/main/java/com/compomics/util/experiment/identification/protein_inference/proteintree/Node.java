@@ -173,6 +173,7 @@ public class Node implements Serializable {
                     node.addAccession(accession, indexes.get(aa));
                 }
             }
+            accessions.clear();
             accessions = null;
 
             for (Node node : subtree.values()) {

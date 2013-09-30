@@ -55,7 +55,7 @@ public class ProteinTree {
     /**
      * Indicates whether a debug file with speed metrics shall be created.
      */
-    private boolean debugSpeed = false;
+    private boolean debugSpeed = true;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -118,7 +118,7 @@ public class ProteinTree {
 
         if (debugSpeed) {
             try {
-                debugSpeedWriter = new BufferedWriter(new FileWriter(new File("dbSpeed.txt")));
+                debugSpeedWriter = new BufferedWriter(new FileWriter(new File("treeSpeed.txt")));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -227,6 +227,11 @@ public class ProteinTree {
         } catch (SQLException e) {
             componentsFactory.delete();
             throw e;
+        }
+        try {
+            componentsFactory.loadTags();
+        } catch (Exception e) {
+            // ignore, tree will just be slower
         }
     }
 
@@ -337,7 +342,7 @@ public class ProteinTree {
             debugSpeedWriter.flush();
         }
 
-        if (waitingHandler != null) {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             int totalProgress = (int) (nPassages * accessions.size() + tags.size());
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
@@ -450,6 +455,7 @@ public class ProteinTree {
 
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
+                    emptyCache();
                     return;
                 }
             }
@@ -483,6 +489,7 @@ public class ProteinTree {
             rawNodeProcessors.add(rawNodeProcessor);
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
+                    emptyCache();
                     return;
                 }
             }
@@ -759,6 +766,14 @@ public class ProteinTree {
                             String key = lastQueriedPeptidesCacheContent.get(0);
                             lastQueriedPeptidesCache.remove(key);
                             lastQueriedPeptidesCacheContent.remove(0);
+                        }
+                    } else {
+                        lastSlowQueriedPeptidesCache.put(peptideSequence, result);
+                        lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
+                        if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
+                            String key = lastSlowQueriedPeptidesCacheContent.get(0);
+                            lastSlowQueriedPeptidesCache.remove(key);
+                            lastSlowQueriedPeptidesCacheContent.remove(0);
                         }
                     }
                 }

@@ -1,7 +1,5 @@
 package com.compomics.util.gui.spectrum;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
@@ -32,26 +30,14 @@ public class IntensityHistogram extends JPanel {
     /**
      * Creates an IntensityHistogram plot
      *
-     * //@TODO improve charge compatibility
      * @param annotations the full list of spectrum annotations
-     * @param currentFragmentIons the currently selected fragment ion types
      * @param currentSpectrum the current spectrum
      * @param intensityLevel annotation intensity level in percent, e.g., 0.75
-     * @param includeSinglyCharge if singly charged fragment ions are to be
-     * included
-     * @param includeDoublyCharge if doubly charged fragment ions are to be
-     * included
-     * @param includeMoreThanTwoCharges if fragment ions with more than two
-     * charges are to be included
      */
     public IntensityHistogram(
             ArrayList<IonMatch> annotations,
-            ArrayList<Integer> currentFragmentIons,
             MSnSpectrum currentSpectrum,
-            double intensityLevel,
-            boolean includeSinglyCharge,
-            boolean includeDoublyCharge,
-            boolean includeMoreThanTwoCharges) {
+            double intensityLevel) {
         super();
 
         setOpaque(false);
@@ -64,28 +50,14 @@ public class IntensityHistogram extends JPanel {
         // the annotated intensities
         ArrayList<Double> annotatedPeakIntensities = new ArrayList<Double>();
 
-        int currentCharge;
+        // get the list of annotated and not annotated intensities
         for (IonMatch ionMatch : annotations) {
-            currentCharge = ionMatch.charge.value;
-            if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
-
-                // set up the data for the mass error and instensity histograms
-                if (currentFragmentIons.contains(fragmentIon.getSubType())) {
-
-                    if ((currentCharge == 1 && includeSinglyCharge)
-                            || (currentCharge == 2 && includeDoublyCharge)
-                            || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                        annotatedPeakIntensities.add(ionMatch.peak.intensity);
-                        nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
-                    }
-                }
-            }
+            annotatedPeakIntensities.add(ionMatch.peak.intensity);
+            nonAnnotatedPeakIntensities.remove(ionMatch.peak.intensity);
         }
+
         // create the peak histograms
-        // @TODO use the Freedman-Diaconis rule
-        int bins = 30; // @TODO: make this a user selection!
-        
+        int bins = 30; // @TODO: make this a user selection! // @TODO use the Freedman-Diaconis rule
 
         // the non annotated peaks histogram
         double[] nonAnnotatedIntensities = new double[nonAnnotatedPeakIntensities.size()];

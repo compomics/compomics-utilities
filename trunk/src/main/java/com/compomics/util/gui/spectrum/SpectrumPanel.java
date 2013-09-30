@@ -1119,6 +1119,8 @@ public class SpectrumPanel extends GraphicsPanel {
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
             }
 
+        } else if (seriesLabel.startsWith("iTRAQ") || seriesLabel.startsWith("TMT")) {
+            return Color.ORANGE;
         }
 
         return currentColor;

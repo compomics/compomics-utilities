@@ -162,7 +162,6 @@ public class FragmentIonTable extends JTable {
 
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
-
             public String getToolTipText(MouseEvent e) {
                 java.awt.Point p = e.getPoint();
                 int index = columnModel.getColumnIndexAtX(p.x);
@@ -318,7 +317,6 @@ public class FragmentIonTable extends JTable {
         setModel(new javax.swing.table.DefaultTableModel(
                 new Vector(),
                 columnHeaders) {
-
             public Class getColumnClass(int columnIndex) {
                 return columnTypes.get(columnIndex);
             }
@@ -477,7 +475,7 @@ public class FragmentIonTable extends JTable {
 
             for (IonMatch ionMatch : currentAnnotations) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                    
+
                     int currentCharge = ionMatch.charge.value;
                     PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
@@ -797,10 +795,12 @@ public class FragmentIonTable extends JTable {
         // set the column renderers
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("a").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("a")));
+                getColumn("a").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.A_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("a").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("a").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("a")));
+                getColumn("a").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.A_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("a").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -808,10 +808,12 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("b").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b")));
+                getColumn("b").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.B_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("b").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("b").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b")));
+                getColumn("b").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.B_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("b").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -819,54 +821,76 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("b++").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b++")));
+                getColumn("b++").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.B_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("b++").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("b++").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b++")));
+                getColumn("b++").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.B_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("b++").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.H2O);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("b-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b-H2O")));
+                getColumn("b-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("b-H2O").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("b-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b-H2O")));
+                getColumn("b-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("b-H2O").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.H2O);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("b++-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b++-H2O")));
+                getColumn("b++-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("b++-H2O").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("b++-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b++-H2O")));
+                getColumn("b++-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("b++-H2O").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.NH3);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("b-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b-NH3")));
+                getColumn("b-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("b-NH3").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("b-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b-NH3")));
+                getColumn("b-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("b-NH3").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.NH3);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.B_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("b++-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b++-NH3")));
+                getColumn("b++-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("b++-NH3").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("b++-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("b++-NH3")));
+                getColumn("b++-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("b++-NH3").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -874,10 +898,12 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("c").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("c")));
+                getColumn("c").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.C_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("c").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("c").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("c")));
+                getColumn("c").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.C_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("c").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -885,10 +911,12 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("y").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y")));
+                getColumn("y").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Y_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("y").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("y").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y")));
+                getColumn("y").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Y_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("y").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -896,54 +924,76 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("y++").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y++")));
+                getColumn("y++").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Y_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("y++").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("y++").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y++")));
+                getColumn("y++").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Y_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("y++").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.H2O);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("y-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y-H2O")));
+                getColumn("y-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("y-H2O").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("y-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y-H2O")));
+                getColumn("y-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("y-H2O").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.H2O);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("y++-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y++-H2O")));
+                getColumn("y++-H2O").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("y++-H2O").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("y++-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y++-H2O")));
+                getColumn("y++-H2O").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("y++-H2O").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.NH3);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("y-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y-NH3")));
+                getColumn("y-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("y-NH3").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("y-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y-NH3")));
+                getColumn("y-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("y-NH3").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
             // do nothing
         }
         try {
+            ArrayList<NeutralLoss> tempNeutralLosses = new ArrayList<NeutralLoss>();
+            tempNeutralLosses.add(NeutralLoss.NH3);
+            PeptideFragmentIon tempPeptideFragmentIon = new PeptideFragmentIon(PeptideFragmentIon.Y_ION, tempNeutralLosses);
             if (allAnnotations.size() > 1) {
-                getColumn("y++-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y++-NH3")));
+                getColumn("y++-NH3").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("y++-NH3").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("y++-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("y++-NH3")));
+                getColumn("y++-NH3").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(tempPeptideFragmentIon, false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("y++-NH3").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -951,10 +1001,12 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("x").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("x")));
+                getColumn("x").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.X_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("x").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("x").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("x")));
+                getColumn("x").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.X_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("x").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {
@@ -962,10 +1014,12 @@ public class FragmentIonTable extends JTable {
         }
         try {
             if (allAnnotations.size() > 1) {
-                getColumn("z").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("z")));
+                getColumn("z").setCellRenderer(new JSparklinesErrorBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Z_ION), false)));
                 ((JSparklinesErrorBarChartTableCellRenderer) getColumn("z").getCellRenderer()).setMinimumChartValue(0);
             } else {
-                getColumn("z").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity, SpectrumPanel.determineFragmentIonColor("z")));
+                getColumn("z").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, maxIntensity,
+                        SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Z_ION), false)));
                 ((JSparklinesBarChartTableCellRenderer) getColumn("z").getCellRenderer()).setMinimumChartValue(0);
             }
         } catch (IllegalArgumentException e) {

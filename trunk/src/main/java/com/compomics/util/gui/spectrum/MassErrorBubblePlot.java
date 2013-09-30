@@ -1,8 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.XYZDataPoint;
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.awt.Color;
@@ -24,15 +22,16 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
 
 /**
- * Creates a MassErrorBubblePlot displaying the mz values vs the mass error
- * with the intensity as the size of the bubbles.
+ * Creates a MassErrorBubblePlot displaying the mz values vs the mass error with
+ * the intensity as the size of the bubbles.
  *
  * @author Harald Barsnes
  */
 public class MassErrorBubblePlot extends JPanel {
 
     /**
-     * If true the relative error (ppm) is used instead of the absolute error (Da).
+     * If true the relative error (ppm) is used instead of the absolute error
+     * (Da).
      */
     private boolean useRelativeError = false;
     /**
@@ -60,22 +59,6 @@ public class MassErrorBubblePlot extends JPanel {
      */
     public static final float DEFAULT_NON_VISIBLE_MARKER_ALPHA = 0.0f;
     /**
-     * The currently selected fragment ion types.
-     */
-    private ArrayList<Integer> currentFragmentIons;
-    /**
-     * If singly charged fragment ions are to be included.
-     */
-    private boolean includeSinglyCharge;
-    /**
-     * If doubly charged fragment ions are to be included.
-     */
-    private boolean includeDoublyCharge;
-    /**
-     * If fragment ions with more than two charges are to be included.
-     */
-    private boolean includeMoreThanTwoCharges;
-    /**
      * The list of currently used ions.
      */
     private ArrayList<IonMatch> currentlyUsedIonMatches;
@@ -83,94 +66,79 @@ public class MassErrorBubblePlot extends JPanel {
      * The chart panel.
      */
     private ChartPanel chartPanel;
+    /**
+     * The data series fragment ion colors.
+     */
+    private ArrayList<Color> dataSeriesfragmentIonColors = new ArrayList<Color>();
 
     /**
      * Creates a new MassErrorBubblePlot.
      *
-     * @param dataIndexes                   the data set indexes/labels
-     * @param annotations                   the full list of spectrum annotations
-     * @param currentFragmentIons           the currently selected fragment ion types
-     * @param currentSpectra                the current spectra
-     * @param massTolerance                 the mass error tolerance
-     * @param includeSinglyCharge           if singly charged fragment ions are to be included
-     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
-     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
-     * @param fragmentIonLabels             if true, the fragment ion type is used as the data series key,
-     *                                      otherwise the psm index is used
-     * @param addMarkers                    if true interval markers for the fragment ions will be shown
+     * @param dataIndexes the data set indexes/labels
+     * @param annotations the full list of spectrum annotations
+     * @param currentSpectra the current spectra
+     * @param massTolerance the mass error tolerance
+     * @param fragmentIonLabels if true, the fragment ion type is used as the
+     * data series key, otherwise the psm index is used
+     * @param addMarkers if true interval markers for the fragment ions will be
+     * shown
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<Integer> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
-            boolean includeSinglyCharge,
-            boolean includeDoublyCharge,
-            boolean includeMoreThanTwoCharges,
             boolean fragmentIonLabels,
             boolean addMarkers) {
-        this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers, false);
+        this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, false);
     }
 
     /**
      * Creates a new MassErrorBubblePlot.
      *
-     * @param dataIndexes                   the data set indexes/labels
-     * @param annotations                   the full list of spectrum annotations
-     * @param currentFragmentIons           the currently selected fragment ion types
-     * @param currentSpectra                the current spectra
-     * @param massTolerance                 the mass error tolerance
-     * @param includeSinglyCharge           if singly charged fragment ions are to be included
-     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
-     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
-     * @param fragmentIonLabels             if true, the fragment ion type is used as the data series key,
-     *                                      otherwise the psm index is used
-     * @param addMarkers                    if true interval markers for the fragment ions will be shown
-     * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da)
+     * @param dataIndexes the data set indexes/labels
+     * @param annotations the full list of spectrum annotations
+     * @param currentSpectra the current spectra
+     * @param massTolerance the mass error tolerance
+     * @param fragmentIonLabels if true, the fragment ion type is used as the
+     * data series key, otherwise the psm index is used
+     * @param addMarkers if true interval markers for the fragment ions will be
+     * shown
+     * @param useRelativeError if true the relative error (ppm) is used instead
+     * of the absolute error (Da)
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<Integer> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
-            boolean includeSinglyCharge,
-            boolean includeDoublyCharge,
-            boolean includeMoreThanTwoCharges,
             boolean fragmentIonLabels,
             boolean addMarkers,
             boolean useRelativeError) {
-        this(dataIndexes, annotations, currentFragmentIons, currentSpectra, massTolerance, 1, includeSinglyCharge, includeDoublyCharge, includeMoreThanTwoCharges, fragmentIonLabels, addMarkers, useRelativeError);
+        this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, useRelativeError);
     }
 
     /**
      * Creates a new MassErrorBubblePlot.
      *
-     * @param dataIndexes                   the data set indexes/labels
-     * @param annotations                   the full list of spectrum annotations
-     * @param currentFragmentIons           the currently selected fragment ion types
-     * @param currentSpectra                the current spectra
-     * @param massTolerance                 the mass error tolerance
-     * @param bubbleScale                   the bubble scale value
-     * @param includeSinglyCharge           if singly charged fragment ions are to be included
-     * @param includeDoublyCharge           if doubly charged fragment ions are to be included
-     * @param includeMoreThanTwoCharges     if fragment ions with more than two charges are to be included
-     * @param fragmentIonLabels             if true, the fragment ion type is used as the data series key,
-     *                                      otherwise the psm index is used
-     * @param addMarkers                    if true interval markers for the fragment ions will be shown
-     * @param useRelativeError              if true the relative error (ppm) is used instead of the absolute error (Da) 
+     * @param dataIndexes the data set indexes/labels
+     * @param annotations the full list of spectrum annotations
+     * @param currentSpectra the current spectra
+     * @param massTolerance the mass error tolerance
+     * @param bubbleScale the bubble scale value
+     * @param fragmentIonLabels if true, the fragment ion type is used as the
+     * data series key, otherwise the psm index is used
+     * @param addMarkers if true interval markers for the fragment ions will be
+     * shown
+     * @param useRelativeError if true the relative error (ppm) is used instead
+     * of the absolute error (Da)
      */
     public MassErrorBubblePlot(
             ArrayList<String> dataIndexes,
             ArrayList<ArrayList<IonMatch>> annotations,
-            ArrayList<Integer> currentFragmentIons,
             ArrayList<MSnSpectrum> currentSpectra,
             double massTolerance,
             double bubbleScale,
-            boolean includeSinglyCharge,
-            boolean includeDoublyCharge,
-            boolean includeMoreThanTwoCharges,
             boolean fragmentIonLabels,
             boolean addMarkers,
             boolean useRelativeError) {
@@ -181,16 +149,8 @@ public class MassErrorBubblePlot extends JPanel {
 
         currentlyUsedIonMatches = new ArrayList<IonMatch>();
 
-        this.currentFragmentIons = currentFragmentIons;
-        this.includeSinglyCharge = includeSinglyCharge;
-        this.includeDoublyCharge = includeDoublyCharge;
-        this.includeMoreThanTwoCharges = includeMoreThanTwoCharges;
-
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
-
-        HashMap<String, ArrayList<XYZDataPoint>> fragmentIonDataset =
-                new HashMap<String, ArrayList<XYZDataPoint>>();
-
+        HashMap<IonMatch, ArrayList<XYZDataPoint>> fragmentIonDataset = new HashMap<IonMatch, ArrayList<XYZDataPoint>>();
         double maxError = 0.0;
 
         for (int j = 0; j < annotations.size(); j++) {
@@ -199,7 +159,7 @@ public class MassErrorBubblePlot extends JPanel {
             MSnSpectrum currentSpectrum = currentSpectra.get(j);
 
             // the annotated ion matches
-            currentlyUsedIonMatches = getCurrentlyUsedIonMatches(currentAnnotations);
+            currentlyUsedIonMatches = currentAnnotations;
 
             if (currentlyUsedIonMatches.size() > 0) {
 
@@ -235,13 +195,13 @@ public class MassErrorBubblePlot extends JPanel {
                             maxError = Math.abs(error);
                         }
 
-                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)) != null) {
-                            fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)).add(
+                        if (fragmentIonDataset.get(ionMatch) != null) {
+                            fragmentIonDataset.get(ionMatch).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
-                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(true), temp);
+                            fragmentIonDataset.put(ionMatch, temp);
                         }
 
                         // The code below ought to be used if fragmentIonLabels are used and more than one spectrum is to be displayed.
@@ -282,13 +242,13 @@ public class MassErrorBubblePlot extends JPanel {
                         dataXYZ[1][i] = error;
                         dataXYZ[2][i] = (ionMatch.peak.intensity / totalIntensity) * bubbleScale;
 
-                        if (fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)) != null) {
-                            fragmentIonDataset.get(ionMatch.getPeakAnnotation(true)).add(
+                        if (fragmentIonDataset.get(ionMatch) != null) {
+                            fragmentIonDataset.get(ionMatch).add(
                                     new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
                         } else {
                             ArrayList<XYZDataPoint> temp = new ArrayList<XYZDataPoint>();
                             temp.add(new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
-                            fragmentIonDataset.put(ionMatch.getPeakAnnotation(true), temp);
+                            fragmentIonDataset.put(ionMatch, temp);
                         }
                     }
 
@@ -322,15 +282,7 @@ public class MassErrorBubblePlot extends JPanel {
         // set the data series colors if fragment ion label type is currently used
         if (fragmentIonLabels) {
             for (int i = 0; i < xyzDataset.getSeriesCount(); i++) {
-                
-                // have to remove html stuff first...
-                String tempKey = (String) xyzDataset.getSeriesKey(i);
-                tempKey = tempKey.replaceAll("<html>", "");
-                tempKey = tempKey.replaceAll("<sub>", "");
-                tempKey = tempKey.replaceAll("</html>", "");
-                tempKey = tempKey.replaceAll("</sub>", "");
-                
-                plot.getRenderer().setSeriesPaint(i, SpectrumPanel.determineFragmentIonColor(tempKey)); 
+                plot.getRenderer().setSeriesPaint(i, dataSeriesfragmentIonColors.get(i));
             }
         }
 
@@ -368,20 +320,21 @@ public class MassErrorBubblePlot extends JPanel {
     /**
      * Adds interval markers for all the fragment ion types.
      *
-     * @param data          the data to get the interval markers from
-     * @param chart         the chart to add the markers to
-     * @param showMarkers   if true interval markers for the fragment ions will be added
+     * @param data the data to get the interval markers from
+     * @param chart the chart to add the markers to
+     * @param showMarkers if true interval markers for the fragment ions will be
+     * added
      */
-    public static void addFragmentIonTypeMarkers(HashMap<String, ArrayList<XYZDataPoint>> data, JFreeChart chart, boolean showMarkers) {
+    public static void addFragmentIonTypeMarkers(HashMap<IonMatch, ArrayList<XYZDataPoint>> data, JFreeChart chart, boolean showMarkers) {
 
         int horizontalFontPadding = 13;
 
-        Iterator<String> iterator = data.keySet().iterator();
+        Iterator<IonMatch> iterator = data.keySet().iterator();
 
         // iterate the data and add one interval marker for each fragment ion type
         while (iterator.hasNext()) {
 
-            String fragmentIonType = iterator.next();
+            IonMatch fragmentIonType = iterator.next();
 
             // get the mz value of the current fragment ion type
             ArrayList<XYZDataPoint> dataPoints = data.get(fragmentIonType);
@@ -390,13 +343,10 @@ public class MassErrorBubblePlot extends JPanel {
 
             // create the interval marker
             IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
-            
-            String tempKey = fragmentIonType;
-            tempKey = tempKey.replaceAll("<html>", "");
-            tempKey = tempKey.replaceAll("<sub>", "");
-            tempKey = tempKey.replaceAll("</html>", "");
-            tempKey = tempKey.replaceAll("</sub>", "");
-            
+
+            IonMatch ionMatch = fragmentIonType;
+            String tempKey = ionMatch.getPeakAnnotation();
+
             intervalMarker.setLabel(tempKey);
             intervalMarker.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
             intervalMarker.setLabelPaint(Color.GRAY);
@@ -466,34 +416,6 @@ public class MassErrorBubblePlot extends JPanel {
     }
 
     /**
-     * Returns the currently selected ions.
-     *
-     * @return the currently selected ions
-     */
-    private ArrayList<IonMatch> getCurrentlyUsedIonMatches(ArrayList<IonMatch> annotations) {
-
-        currentlyUsedIonMatches = new ArrayList<IonMatch>();
-
-        for (IonMatch ionMatch : annotations) {
-if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
-
-            // set up the data for the mass error and instensity histograms
-            if (currentFragmentIons.contains(fragmentIon.getSubType())) {
-                int currentCharge = ionMatch.charge.value;
-                if ((currentCharge == 1 && includeSinglyCharge)
-                        || (currentCharge == 2 && includeDoublyCharge)
-                        || (currentCharge > 2 && includeMoreThanTwoCharges)) {
-                    currentlyUsedIonMatches.add(ionMatch);
-                }
-            }
-}
-        }
-
-        return currentlyUsedIonMatches;
-    }
-
-    /**
      * Returns the current number of data points in the mass error plot.
      *
      * @return the current number of data points
@@ -508,16 +430,18 @@ if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
      * @param data the data to add
      * @return the created data set
      */
-    public static DefaultXYZDataset addXYZDataSeries(HashMap<String, ArrayList<XYZDataPoint>> data) {
+    public DefaultXYZDataset addXYZDataSeries(HashMap<IonMatch, ArrayList<XYZDataPoint>> data) {
 
         // sort the keys
         ArrayList<String> sortedKeys = new ArrayList<String>();
+        HashMap<String, IonMatch> ionNameTypeMap = new HashMap<String, IonMatch>();
 
-        Iterator<String> iterator = data.keySet().iterator();
+        Iterator<IonMatch> iterator = data.keySet().iterator();
 
         while (iterator.hasNext()) {
-            String key = iterator.next();
-            sortedKeys.add(key);
+            IonMatch ionMatch = iterator.next();
+            ionNameTypeMap.put(ionMatch.getPeakAnnotation(), ionMatch);
+            sortedKeys.add(ionMatch.getPeakAnnotation());
         }
 
         java.util.Collections.sort(sortedKeys);
@@ -526,9 +450,9 @@ if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
         for (int j = 0; j < sortedKeys.size(); j++) {
 
-            String key = sortedKeys.get(j);
+            IonMatch ionMatch = ionNameTypeMap.get(sortedKeys.get(j));
 
-            ArrayList<XYZDataPoint> currentData = data.get(key);
+            ArrayList<XYZDataPoint> currentData = data.get(ionMatch);
 
             double[][] tempXYZData = new double[3][currentData.size()];
 
@@ -538,7 +462,8 @@ if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                 tempXYZData[2][i] = currentData.get(i).getZ();
             }
 
-            dataset.addSeries(key, tempXYZData);
+            dataset.addSeries(ionMatch.getPeakAnnotation(), tempXYZData);
+            dataSeriesfragmentIonColors.add(SpectrumPanel.determineFragmentIonColor(ionMatch.ion, false));
         }
 
         return dataset;
@@ -546,7 +471,7 @@ if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
     /**
      * Returns the chart panel.
-     * 
+     *
      * @return the chart panel
      */
     public ChartPanel getChartPanel() {

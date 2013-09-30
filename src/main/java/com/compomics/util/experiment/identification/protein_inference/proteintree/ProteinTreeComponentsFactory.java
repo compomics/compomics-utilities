@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -60,6 +61,10 @@ public class ProteinTreeComponentsFactory {
      * The name of the protein length table.
      */
     private static final String parametersTable = "parameters";
+    /**
+     * List of all tags in tree
+     */
+    private ArrayList<String> tagsInTree = null;
 
     /**
      * Constructor.
@@ -186,7 +191,7 @@ public class ProteinTreeComponentsFactory {
      * Adds nodes to the database.
      *
      * @param nodes map of the nodes
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -206,7 +211,14 @@ public class ProteinTreeComponentsFactory {
      * @throws IOException
      */
     public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
-        return (Node) objectsDB.retrieveObject(nodeTable, tag, true, false);
+        if (tagsInTree != null && !tagsInTree.contains(tag)) {
+            return null;
+        }
+        Node result = (Node) objectsDB.retrieveObject(nodeTable, tag, true, false);
+        if (tagsInTree != null && result == null) {
+            throw new IllegalArgumentException(tag + " not found in database.");
+        }
+        return result;
     }
 
     /**
@@ -253,7 +265,7 @@ public class ProteinTreeComponentsFactory {
      * @return the initial tag size
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
@@ -286,7 +298,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the import was completed.
      *
-     * @param completed 
+     * @param completed
      * @throws SQLException
      * @throws IOException
      */
@@ -301,7 +313,7 @@ public class ProteinTreeComponentsFactory {
      * @return true if the import was complete
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public boolean importComplete() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "importComplete", true);
@@ -315,7 +327,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the database is corrupted.
      *
-     * @param corrupted 
+     * @param corrupted
      * @throws SQLException
      * @throws IOException
      */
@@ -330,7 +342,7 @@ public class ProteinTreeComponentsFactory {
      * @return true if the database is corrupted
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "corrupted", true);
@@ -344,7 +356,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets the version.
      *
-     * @param version the version 
+     * @param version the version
      * @throws SQLException
      * @throws IOException
      */
@@ -358,9 +370,18 @@ public class ProteinTreeComponentsFactory {
      * @return the version
      * @throws SQLException
      * @throws IOException
-     * @throws ClassNotFoundException  
+     * @throws ClassNotFoundException
      */
     public String getVersion() throws SQLException, IOException, ClassNotFoundException {
         return (String) objectsDB.retrieveObject(parametersTable, "version", true);
+    }
+
+    /**
+     * Loads the tags implemented in the database
+     *
+     * @throws SQLException
+     */
+    public void loadTags() throws SQLException {
+        tagsInTree = objectsDB.tableContent(nodeTable);
     }
 }

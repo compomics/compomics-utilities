@@ -62,7 +62,7 @@ public class ProteinTreeComponentsFactory {
      */
     private static final String parametersTable = "parameters";
     /**
-     * List of all tags in tree
+     * List of all tags in tree.
      */
     private ArrayList<String> tagsInTree = null;
 
@@ -377,7 +377,7 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Loads the tags implemented in the database
+     * Loads the tags implemented in the database.
      *
      * @throws SQLException
      */

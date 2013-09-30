@@ -1105,20 +1105,20 @@ public class PTMFactory implements Serializable {
             if (ptmName.contains("itraq")) {
                 PTM ptm = ptmMap.get(ptmName);
                 if (ptm.getReporterIons().isEmpty()) {
-
-                    if (ptmName.contains("8")) {
-                        ptm.addReporterIon(ReporterIon.iTRAQ113);
-                    }
-
+                    
                     ptm.addReporterIon(ReporterIon.iTRAQ114);
                     ptm.addReporterIon(ReporterIon.iTRAQ115);
                     ptm.addReporterIon(ReporterIon.iTRAQ116);
                     ptm.addReporterIon(ReporterIon.iTRAQ117);
 
                     if (ptmName.contains("8")) {
+                        ptm.addReporterIon(ReporterIon.iTRAQ113);
                         ptm.addReporterIon(ReporterIon.iTRAQ118);
                         ptm.addReporterIon(ReporterIon.iTRAQ119);
                         ptm.addReporterIon(ReporterIon.iTRAQ121);
+                        ptm.addReporterIon(ReporterIon.iTRAQ_305);
+                    } else {
+                        ptm.addReporterIon(ReporterIon.iTRAQ_145);
                     }
 
                     changed = true;
@@ -1137,6 +1137,9 @@ public class PTMFactory implements Serializable {
                         ptm.addReporterIon(ReporterIon.TMT3);
                         ptm.addReporterIon(ReporterIon.TMT4);
                         ptm.addReporterIon(ReporterIon.TMT5);
+                        ptm.addReporterIon(ReporterIon.TMT_230);
+                    } else {
+                        ptm.addReporterIon(ReporterIon.TMT_226);
                     }
 
                     changed = true;

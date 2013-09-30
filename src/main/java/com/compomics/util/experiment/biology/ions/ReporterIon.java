@@ -56,29 +56,45 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121.1217);
     /**
+     * Standard reporter ion iTRAQ (reporter + balancer).
+     */
+    public final static ReporterIon iTRAQ_145 = new ReporterIon("iTRAQ145", 145.1); // @TODO: check the mass!!
+    /**
+     * Standard reporter ion iTRAQ (reporter + balancer).
+     */
+    public final static ReporterIon iTRAQ_305 = new ReporterIon("iTRAQ305", 305.2); // @TODO: check the mass!!
+    /**
      * Standard reporter ion TMT0.
      */
-    public final static ReporterIon TMT0 = new ReporterIon("TMT0", 126.127491);
+    public final static ReporterIon TMT0 = new ReporterIon("TMT126", 126.127491);
     /**
      * Standard reporter ion TMT1.
      */
-    public final static ReporterIon TMT1 = new ReporterIon("TMT1", 127.1308594);
+    public final static ReporterIon TMT1 = new ReporterIon("TMT127", 127.1308594);
     /**
      * Standard reporter ion TMT2.
      */
-    public final static ReporterIon TMT2 = new ReporterIon("TMT2", 128.1341553);
+    public final static ReporterIon TMT2 = new ReporterIon("TMT128", 128.1341553);
     /**
      * Standard reporter ion TMT3.
      */
-    public final static ReporterIon TMT3 = new ReporterIon("TMT3", 129.1375046);
+    public final static ReporterIon TMT3 = new ReporterIon("TMT129", 129.1375046);
     /**
      * Standard reporter ion TMT4.
      */
-    public final static ReporterIon TMT4 = new ReporterIon("TMT4", 130.1408768);
+    public final static ReporterIon TMT4 = new ReporterIon("TMT130", 130.1408768);
     /**
      * Standard reporter ion TMT5.
      */
-    public final static ReporterIon TMT5 = new ReporterIon("TMT5", 131.1444851);
+    public final static ReporterIon TMT5 = new ReporterIon("TMT131", 131.1444851);
+    /**
+     * Standard reporter ion TMT (reporter + balancer).
+     */
+    public final static ReporterIon TMT_230 = new ReporterIon("TMT230", 230.2); // @TODO: check the mass!!
+    /**
+     * Standard reporter ion TMT (reporter + balancer).
+     */
+    public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 226.2); // @TODO: check the mass!!
     /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
@@ -174,7 +190,8 @@ public class ReporterIon extends Ion {
      * @return a boolean indicating whether masses are equal
      */
     public boolean isSameAs(ReporterIon anotherReporterIon) {
-        return theoreticMass == anotherReporterIon.getTheoreticMass();
+        return subtype == anotherReporterIon.getSubType();
+        //return theoreticMass == anotherReporterIon.getTheoreticMass(); // @TODO: never a good idea to compare float values like this!
     }
 
     /**

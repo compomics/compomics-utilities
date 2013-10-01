@@ -104,6 +104,10 @@ public class ProteinTree {
      * indicates whether the main thread is listening or preparing to wait
      */
     private boolean listening = true;
+    /**
+     * the number of proteins which should be imported at a time
+     */
+    public static final int proteinBatchSize = 100;
 
     /**
      * Creates a tree based on the proteins present in the sequence factory.
@@ -415,7 +419,8 @@ public class ProteinTree {
      * @param enzyme the enzyme restriction
      * @param saveLength boolean indicating whether the length of the proteins
      * shall be saved (mandatory when computing reverse indexes on the fly)
-     * @param loadedAccessions the accessions already loaded in the factory
+     * @param loadedLengths the accessions of the proteins from which the length
+     * is already saved
      *
      * @throws IOException
      * @throws IllegalArgumentException
@@ -423,7 +428,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private synchronized void loadTags(ArrayList<String> tags, ArrayList<String> accessions, WaitingHandler waitingHandler,
-            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedAccessions, boolean displayProgress)
+            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedLengths, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
@@ -434,23 +439,20 @@ public class ProteinTree {
         for (String accession : accessions) {
 
             Protein protein = sequenceFactory.getProtein(accession);
-            if (!loadedAccessions.contains(accession)) {
+            if (!loadedLengths.contains(accession)) {
                 componentsFactory.saveProteinLength(accession, protein.getLength());
-                loadedAccessions.add(accession);
+                loadedLengths.add(accession);
             }
             sequenceBuffer.add(protein);
 
-            if (sequenceBuffer.size() == nThreads) {
+            if (sequenceBuffer.size() == proteinBatchSize) {
                 while (sequenceIndexers.size() == nThreads) {
                     processFinishedIndexers(sequenceIndexers, initialTagSize);
                 }
-                ArrayList<Protein> proteinsToProcess = new ArrayList<Protein>(sequenceBuffer.subList(0, nThreads - sequenceIndexers.size()));
-                for (Protein tempProtein : proteinsToProcess) {
-                    sequenceBuffer.remove(tempProtein);
-                    SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme, waitingHandler, displayProgress);
-                    sequenceIndexers.add(sequenceIndexer);
-                    new Thread(sequenceIndexer, "sequence indexing of protein " + tempProtein.getAccession()).start();
-                }
+                SequenceIndexer sequenceIndexer = new SequenceIndexer(new ArrayList<Protein>(sequenceBuffer), tags, enzyme, waitingHandler, displayProgress);
+                new Thread(sequenceIndexer, "sequence indexing").start();
+                sequenceBuffer.clear();
+                sequenceIndexers.add(sequenceIndexer);
             }
 
             if (waitingHandler != null) {
@@ -460,17 +462,11 @@ public class ProteinTree {
                 }
             }
         }
-        while (!sequenceBuffer.isEmpty()) {
-            if (sequenceIndexers.size() == nThreads) {
-                processFinishedIndexers(sequenceIndexers, initialTagSize);
-            }
-            ArrayList<Protein> proteinsToProcess = new ArrayList<Protein>(sequenceBuffer.subList(0, Math.min(nThreads - sequenceIndexers.size(), sequenceBuffer.size())));
-            for (Protein tempProtein : proteinsToProcess) {
-                sequenceBuffer.remove(tempProtein);
-                SequenceIndexer sequenceIndexer = new SequenceIndexer(tempProtein.getAccession(), tempProtein.getSequence(), tags, enzyme, waitingHandler, displayProgress);
-                sequenceIndexers.add(sequenceIndexer);
-                new Thread(sequenceIndexer, "sequence indexing of protein " + tempProtein.getAccession()).start();
-            }
+        if (!sequenceBuffer.isEmpty()) {
+            SequenceIndexer sequenceIndexer = new SequenceIndexer(new ArrayList<Protein>(sequenceBuffer), tags, enzyme, waitingHandler, displayProgress);
+            new Thread(sequenceIndexer, "sequence indexing").start();
+            sequenceBuffer.clear();
+            sequenceIndexers.add(sequenceIndexer);
         }
         while (!sequenceIndexers.isEmpty()) {
             processFinishedIndexers(sequenceIndexers, initialTagSize);
@@ -561,16 +557,18 @@ public class ProteinTree {
         }
         listening = true;
         for (SequenceIndexer sequenceIndexer : done) {
-            HashMap<String, ArrayList<Integer>> tagToIndexesMap = sequenceIndexer.getIndexes();
-            for (String tag : tagToIndexesMap.keySet()) {
-                ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
-                if (!indexes.isEmpty()) {
-                    Node node = tree.get(tag);
-                    if (node == null) {
-                        node = new Node(initialTagSize);
-                        tree.put(tag, node);
+            HashMap<String, HashMap<String, ArrayList<Integer>>> tagToIndexesMap = sequenceIndexer.getIndexes();
+            for (String accession : tagToIndexesMap.keySet()) {
+                for (String tag : tagToIndexesMap.get(accession).keySet()) {
+                    ArrayList<Integer> indexes = tagToIndexesMap.get(accession).get(tag);
+                    if (!indexes.isEmpty()) {
+                        Node node = tree.get(tag);
+                        if (node == null) {
+                            node = new Node(initialTagSize);
+                            tree.put(tag, node);
+                        }
+                        node.addAccession(accession, indexes);
                     }
-                    node.addAccession(sequenceIndexer.getAccession(), tagToIndexesMap.get(tag));
                 }
             }
             sequenceIndexer.clear();
@@ -1210,13 +1208,9 @@ public class ProteinTree {
     private class SequenceIndexer implements Runnable {
 
         /**
-         * The accession of the protein being indexed.
+         * The proteins to process
          */
-        private String accession;
-        /**
-         * The protein sequence to index.
-         */
-        private String proteinSequence;
+        private ArrayList<Protein> proteins;
         /**
          * Boolean indicating whether the thread shall be interrupted.
          */
@@ -1232,7 +1226,7 @@ public class ProteinTree {
         /**
          * The result of the indexing.
          */
-        private HashMap<String, ArrayList<Integer>> indexes = null;
+        private HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>(proteinBatchSize);
         /**
          * The waiting handler.
          */
@@ -1243,15 +1237,18 @@ public class ProteinTree {
         private boolean displayProgress;
 
         /**
-         * Constructor.
+         * Constructor
          *
-         * @param proteinSequence the protein sequence
-         * @param tags the tags to inspect
-         * @param enzyme the enzyme to use, can be null
+         * @param proteins the proteins to process
+         * @param tags the tags to process
+         * @param enzyme enzyme to use (can be null)
+         * @param waitingHandler waiting handler displaying progress to the user
+         * (can be null)
+         * @param displayProgress boolean indicating whether progress shall be
+         * displayed on the progress bar of the waiting handler
          */
-        public SequenceIndexer(String accession, String proteinSequence, ArrayList<String> tags, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress) {
-            this.accession = accession;
-            this.proteinSequence = proteinSequence;
+        public SequenceIndexer(ArrayList<Protein> proteins, ArrayList<String> tags, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress) {
+            this.proteins = proteins;
             this.tags = tags;
             this.enzyme = enzyme;
             this.waitingHandler = waitingHandler;
@@ -1261,7 +1258,9 @@ public class ProteinTree {
         @Override
         public synchronized void run() {
             try {
-                indexes = getTagToIndexesMap(proteinSequence, tags, enzyme);
+                for (Protein protein : proteins) {
+                    indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -1290,21 +1289,13 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the indexes.
+         * Returns the indexes: protein accession -> tag -> indexes of the tag
+         * on the protein sequence
          *
          * @return the indexes
          */
-        public HashMap<String, ArrayList<Integer>> getIndexes() {
+        public HashMap<String, HashMap<String, ArrayList<Integer>>> getIndexes() {
             return indexes;
-        }
-
-        /**
-         * Returns the accession of the protein being indexed.
-         *
-         * @return the accession of the protein being indexed
-         */
-        public String getAccession() {
-            return accession;
         }
 
         /**
@@ -1347,7 +1338,7 @@ public class ProteinTree {
          * Clears the content of the runnable.
          */
         public void clear() {
-            proteinSequence = null;
+            proteins.clear();
             tags = null;
             indexes.clear();
         }

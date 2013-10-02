@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
@@ -10,6 +11,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A node of the protein tree.
@@ -38,6 +41,14 @@ public class Node implements Serializable {
      * Subtree starting from this node.
      */
     private HashMap<Character, Node> subtree = null;
+    /**
+     * the number of proteins which should be imported at a time
+     */
+    public static final int proteinBatchSize = 100;
+    /**
+     * indicates whether the main thread is listening or preparing to wait
+     */
+    private boolean listening = true;
 
     /**
      * Constructor.
@@ -80,16 +91,33 @@ public class Node implements Serializable {
         if (depth == peptideSequence.length()) {
             result.put(peptideSequence, getAllMappings());
         } else if (accessions != null) {
+            int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
+            ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
+            HashMap<String, ArrayList<Integer>> seeds = new HashMap<String, ArrayList<Integer>>(proteinBatchSize);
+            ArrayList<SequenceMatcher> sequenceMatchers = new ArrayList<SequenceMatcher>(nThreads);
+            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
             for (String accession : accessions.keySet()) {
-                HashMap<String, ArrayList<Integer>> indexes = matchInProtein(accession, accessions.get(accession), peptideSequence, matchingType, massTolerance);
-                for (String tempSequence : indexes.keySet()) {
-                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
-                    if (mapping == null) {
-                        mapping = new HashMap<String, ArrayList<Integer>>();
-                        result.put(tempSequence, mapping);
+                Protein protein = sequenceFactory.getProtein(accession);
+                sequenceBuffer.add(protein);
+                seeds.put(accession, accessions.get(accession));
+                if (sequenceBuffer.size() == proteinBatchSize) {
+                    while (sequenceMatchers.size() == nThreads) {
+                        processFinishedMatchers(sequenceMatchers, result);
                     }
-                    mapping.put(accession, indexes.get(tempSequence));
+                    SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, peptideSequence, matchingType, massTolerance);
+                    new Thread(sequenceMatcher, "sequence indexing").start();
+                    sequenceMatchers.add(sequenceMatcher);
+                    sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
+                    seeds = new HashMap<String, ArrayList<Integer>>(proteinBatchSize);
                 }
+            }
+            if (!sequenceBuffer.isEmpty()) {
+                SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, peptideSequence, matchingType, massTolerance);
+                new Thread(sequenceMatcher, "sequence indexing").start();
+                sequenceMatchers.add(sequenceMatcher);
+            }
+            while (!sequenceMatchers.isEmpty()) {
+                processFinishedMatchers(sequenceMatchers, result);
             }
         } else {
             for (char aa : getNextAminoAcids(peptideSequence, matchingType, massTolerance)) {
@@ -100,6 +128,50 @@ public class Node implements Serializable {
             }
         }
         return result;
+    }
+
+    /**
+     * Stores the result of the finished indexers and updates the list. Waits if
+     * none is finished.
+     *
+     * @param sequenceIndexers the sequence indexers
+     * @param result a map where to store the results
+     *
+     * @throws InterruptedException
+     */
+    private synchronized void processFinishedMatchers(ArrayList<SequenceMatcher> sequenceMatchers, HashMap<String, HashMap<String, ArrayList<Integer>>> result) throws InterruptedException {
+        listening = false;
+        ArrayList<SequenceMatcher> done = new ArrayList<SequenceMatcher>();
+        for (SequenceMatcher sequenceMatcher : sequenceMatchers) {
+            if (sequenceMatcher.isFinished()) {
+                done.add(sequenceMatcher);
+            }
+        }
+        if (done.isEmpty()) {
+            listening = true;
+            wait();
+            for (SequenceMatcher sequenceMatcher : sequenceMatchers) {
+                if (sequenceMatcher.isFinished()) {
+                    done.add(sequenceMatcher);
+                }
+            }
+        }
+        listening = true;
+        for (SequenceMatcher sequenceMatcher : done) {
+            HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = sequenceMatcher.getIndexes();
+            for (String accession : indexes.keySet()) {
+                for (String tempSequence : indexes.keySet()) {
+                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
+                    if (mapping == null) {
+                        mapping = new HashMap<String, ArrayList<Integer>>();
+                        result.put(tempSequence, mapping);
+                    }
+                    mapping.put(accession, indexes.get(accession).get(tempSequence));
+                }
+            }
+            sequenceMatcher.clear();
+        }
+        sequenceMatchers.removeAll(done);
     }
 
     /**
@@ -320,7 +392,7 @@ public class Node implements Serializable {
      * Returns a map found sequence -> indexes. Example: sequence TESTEIST
      * seeds: 0, 3, 7 peptideSequence: TEI result: TEI -> {3}
      *
-     * @param accession the accession of the protein
+     * @param protein the protein to inspect
      * @param seeds the indexes where to start looking for
      * @param peptideSequence the peptide sequence to look for
      * @param matchingType the matching type
@@ -331,10 +403,10 @@ public class Node implements Serializable {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private HashMap<String, ArrayList<Integer>> matchInProtein(String accession, ArrayList<Integer> seeds, String peptideSequence, MatchingType matchingType, Double massTolerance)
+    private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds, String peptideSequence, MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
-        String proteinSequence = SequenceFactory.getInstance().getProtein(accession).getSequence();
+        String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
         int peptideLength = peptideSequence.length();
         for (int startIndex : seeds) {
@@ -421,6 +493,125 @@ public class Node implements Serializable {
             return subtree.get(aa);
         } else {
             throw new IllegalArgumentException("depth " + depth + " longer than sequence " + sequence + ".");
+        }
+    }
+
+    /**
+     * Notifies the tree that a runnable has finished working.
+     *
+     * @throws InterruptedException
+     */
+    private synchronized void runnableFinished() throws InterruptedException {
+        while (!listening) {
+            wait(10);
+        }
+        notify();
+    }
+
+    /**
+     * Runnable used for matching peptides on protein sequences.
+     */
+    private class SequenceMatcher implements Runnable {
+
+        /**
+         * The proteins to process
+         */
+        private ArrayList<Protein> proteins;
+        /**
+         * Boolean indicating whether the thread shall be interrupted.
+         */
+        private boolean finished = false;
+        /**
+         * The seed indexes where to look for the peptide in a map. Protein
+         * accession -> list of seed indexes
+         */
+        private HashMap<String, ArrayList<Integer>> seeds;
+        /**
+         * The peptide sequence to look for
+         */
+        private String peptideSequence;
+        /**
+         * The type of matching
+         */
+        private MatchingType matchingType;
+        /**
+         * The mass tolerance at the MS2 level
+         */
+        private Double massTolerance;
+        /**
+         * The result of the indexing. protein accession -> peptide found ->
+         * list of indexes where the peptide is found
+         */
+        private HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>(proteinBatchSize);
+
+        /**
+         * Constructor
+         *
+         * @param proteins the proteins to look into
+         * @param seeds the seed indexes where to look for in a map protein
+         * accession -> list of indexes
+         * @param peptideSequence the peptide sequence to look for
+         * @param matchingType the peptide to protein matching type
+         * @param massTolerance the mass tolerance used for the matching
+         */
+        public SequenceMatcher(ArrayList<Protein> proteins, HashMap<String, ArrayList<Integer>> seeds, String peptideSequence, MatchingType matchingType, Double massTolerance) {
+            this.proteins = proteins;
+            this.seeds = seeds;
+            this.peptideSequence = peptideSequence;
+            this.matchingType = matchingType;
+            this.massTolerance = massTolerance;
+        }
+
+        @Override
+        public synchronized void run() {
+            for (Protein protein : proteins) {
+                try {
+                    String accession = protein.getAccession();
+                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptideSequence, matchingType, massTolerance));
+                } catch (IOException ex) {
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            finished = true;
+            try {
+                runnableFinished();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        /**
+         * Indicates whether the run is finished.
+         *
+         * @return true if the thread is finished.
+         */
+        public boolean isFinished() {
+            return finished;
+        }
+
+        /**
+         * Returns the indexes: protein accession -> tag -> indexes of the tag
+         * on the protein sequence
+         *
+         * @return the indexes
+         */
+        public HashMap<String, HashMap<String, ArrayList<Integer>>> getIndexes() {
+            return indexes;
+        }
+
+        /**
+         * Clears the content of the runnable.
+         */
+        public void clear() {
+            proteins.clear();
+            seeds.clear();
+            indexes.clear();
         }
     }
 }

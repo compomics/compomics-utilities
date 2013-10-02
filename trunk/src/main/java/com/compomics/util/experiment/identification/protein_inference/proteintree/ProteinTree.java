@@ -101,11 +101,11 @@ public class ProteinTree {
      */
     private Double massToleranceInCache = null;
     /**
-     * indicates whether the main thread is listening or preparing to wait
+     * Indicates whether the main thread is listening or preparing to wait.
      */
     private boolean listening = true;
     /**
-     * the number of proteins which should be imported at a time
+     * The number of proteins which should be imported at a time.
      */
     public static final int proteinBatchSize = 100;
 
@@ -1208,7 +1208,7 @@ public class ProteinTree {
     private class SequenceIndexer implements Runnable {
 
         /**
-         * The proteins to process
+         * The proteins to process.
          */
         private ArrayList<Protein> proteins;
         /**
@@ -1237,7 +1237,7 @@ public class ProteinTree {
         private boolean displayProgress;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param proteins the proteins to process
          * @param tags the tags to process

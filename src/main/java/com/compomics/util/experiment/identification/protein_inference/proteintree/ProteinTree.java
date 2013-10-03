@@ -433,12 +433,12 @@ public class ProteinTree {
 
         // Find the tags in the proteins and create a node per tag found
         indexProteins(tags, accessions, initialTagSize, enzyme, loadedLengths, waitingHandler, displayProgress);
-        // Split the nodes and save them in the db
-        processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
         // Increase the progress by the number of tags not found 
         if (displayProgress && waitingHandler != null) {
             waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
         }
+        // Split the nodes and save them in the db
+        processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
         // Clear memory before further processing
         tree.clear();
         System.gc();

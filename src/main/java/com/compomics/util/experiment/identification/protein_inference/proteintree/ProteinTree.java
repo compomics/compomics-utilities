@@ -934,8 +934,9 @@ public class ProteinTree {
                         throw new IllegalArgumentException("Length of protein " + accession + " not found.");
                     }
                 }
-                ArrayList<Integer> reversedIndexes = new ArrayList<Integer>();
-                for (int index : forwardResults.get(sequence).get(accession)) {
+                ArrayList<Integer> forwardIndexes = forwardResults.get(sequence).get(accession);
+                ArrayList<Integer> reversedIndexes = new ArrayList<Integer>(forwardIndexes.size());
+                for (int index : forwardIndexes) {
                     int reversedIndex = proteinLength - index - peptideLength;
                     if (reversedIndex < 0 || reversedIndex >= proteinLength) {
                         throw new IllegalArgumentException("Wrong index found for peptide " + reversedSequence + " in protein " + newAccession + ": " + reversedIndex + ".");

@@ -160,7 +160,7 @@ public class Node implements Serializable {
         for (SequenceMatcher sequenceMatcher : done) {
             HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = sequenceMatcher.getIndexes();
             for (String accession : indexes.keySet()) {
-                for (String tempSequence : indexes.keySet()) {
+                for (String tempSequence : indexes.get(accession).keySet()) {
                     HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
                     if (mapping == null) {
                         mapping = new HashMap<String, ArrayList<Integer>>();

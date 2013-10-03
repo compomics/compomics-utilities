@@ -1118,7 +1118,6 @@ public class SequenceFactory {
             int previousCache = nCache;
             int tagLength = 3;
             if (getNTargetSequences() > 100000) {
-                tagLength = 4;
                 if (memoryPreference > 4000) {
                     setnCache(100000);
                 }

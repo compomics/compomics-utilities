@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +37,7 @@ public class ProteinTree {
      * Approximate number of accession*node one can store in a GB of memory
      * (empirical value).
      */
-    private static final long cacheScale = 6000;
+    private static final long cacheScale = 10000;
     /**
      * Instance of the sequence factory.
      */
@@ -56,6 +58,10 @@ public class ProteinTree {
      * Indicates whether a debug file with speed metrics shall be created.
      */
     private boolean debugSpeed = false;
+    /**
+     * Indicates whether the number of passages shall be displayed.
+     */
+    private boolean debugPassages = true;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -290,17 +296,17 @@ public class ProteinTree {
         componentsFactory.saveInitialSize(initialTagSize);
 
         ArrayList<String> tags = TagFactory.getAminoAcidCombinations(initialTagSize);
-        ArrayList<String> accessions;
+        Set<String> accessions;
 
         if (sequenceFactory.isDefaultReversed()) {
-            accessions = new ArrayList<String>();
+            accessions = new HashSet<String>();
             for (String accession : sequenceFactory.getAccessions()) {
                 if (!sequenceFactory.isDecoyAccession(accession)) {
                     accessions.add(accession);
                 }
             }
         } else {
-            accessions = new ArrayList<String>(sequenceFactory.getAccessions());
+            accessions = sequenceFactory.getAccessions();
         }
 
         long tagsSize = 500; // The space needed for tags in percent (empirical value)
@@ -334,14 +340,17 @@ public class ProteinTree {
 //            Collections.shuffle(tags);
         }
 
+        if (debugPassages) {
+            System.out.println("Estimated tree size: " + estimatedTreeSize);
+            System.out.println(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
+        }
+
         if (debugSpeed) {
             debugSpeedWriter.write("Critical size: " + criticalSize);
             System.out.println("Critical size: " + criticalSize);
             estimatedTreeSize = estimatedTreeSize / 100;
             debugSpeedWriter.write("Estimated tree size: " + estimatedTreeSize);
-            System.out.println("Estimated tree size: " + estimatedTreeSize);
             debugSpeedWriter.write(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
-            System.out.println(new Date() + " " + nPassages + " passages needed (" + nTags + " tags of " + tags.size() + " per passage)");
             debugSpeedWriter.newLine();
             debugSpeedWriter.flush();
         }
@@ -357,16 +366,16 @@ public class ProteinTree {
 
         ArrayList<String> tempTags = new ArrayList<String>(nTags);
         int tagsLoaded = 0;
-        ArrayList<String> loadedAccessions = new ArrayList<String>();
+        boolean first = true;
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, accessions, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions, waitingHandler, displayProgress);
+                loadTags(tempTags, accessions, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
+                if (first) {
+                    first = false;
+                }
                 tagsLoaded += tempTags.size();
                 tempTags.clear();
-                if (sequenceFactory.getnCache() < accessions.size()) {
-                    Collections.reverse(accessions);
-                }
                 if (debugSpeed) {
                     debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
                     System.out.println(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -378,7 +387,7 @@ public class ProteinTree {
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, accessions, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, loadedAccessions, waitingHandler, displayProgress);
+            loadTags(tempTags, accessions, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
 
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -417,8 +426,8 @@ public class ProteinTree {
      * @param waitingHandler waiting handler displaying progress to the user -
      * can be null
      * @param enzyme the enzyme restriction
-     * @param saveLength boolean indicating whether the length of the proteins
-     * shall be saved (mandatory when computing reverse indexes on the fly)
+     * @param loadLengths boolean indicating whether protein lengths should be
+     * loaded in the db
      * @param loadedLengths the accessions of the proteins from which the length
      * is already saved
      *
@@ -427,12 +436,12 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private synchronized void loadTags(ArrayList<String> tags, ArrayList<String> accessions,
-            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, ArrayList<String> loadedLengths, WaitingHandler waitingHandler, boolean displayProgress)
+    private synchronized void loadTags(ArrayList<String> tags, Set<String> accessions,
+            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         // Find the tags in the proteins and create a node per tag found
-        indexProteins(tags, accessions, initialTagSize, enzyme, loadedLengths, waitingHandler, displayProgress);
+        indexProteins(tags, accessions, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
         // Increase the progress by the number of tags not found 
         if (displayProgress && waitingHandler != null) {
             waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
@@ -445,34 +454,40 @@ public class ProteinTree {
     }
 
     /**
-     * Iterates all the proteins and indexes the given tags in their sequences by batches of proteinBatchSize using a SequenceIndexer in a separate thread. When sequence indexers are finished, a node per tag is created and stored in the tree map.
-     * 
+     * Iterates all the proteins and indexes the given tags in their sequences
+     * by batches of proteinBatchSize using a SequenceIndexer in a separate
+     * thread. When sequence indexers are finished, a node per tag is created
+     * and stored in the tree map.
+     *
      * @param tags the tags to index
      * @param accessions the accessions of the proteins to inspect
-     * @param waitingHandler waiting handler providing feedback on the process and allowing cancelling the process
+     * @param waitingHandler waiting handler providing feedback on the process
+     * and allowing cancelling the process
      * @param initialTagSize the initial tag size
      * @param enzyme enzyme to use. Can be null
-     * @param loadedLengths convenience list of the accessions of proteins which size has already been saved in the database
-     * @param displayProgress boolean indicating whether progress shall be displayed using the waiting handler
-     * 
+     * @param loadLengths boolean indicating whether protein lengths should be
+     * loaded in the db
+     * @param displayProgress boolean indicating whether progress shall be
+     * displayed using the waiting handler
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
-    private void indexProteins(ArrayList<String> tags, ArrayList<String> accessions,
-            int initialTagSize, Enzyme enzyme, ArrayList<String> loadedLengths, WaitingHandler waitingHandler, boolean displayProgress)
+    private void indexProteins(ArrayList<String> tags, Set<String> accessions,
+            int initialTagSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
         ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
         ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
+        HashMap<String, Object> proteinLengths = new HashMap<String, Object>(accessions.size());
         for (String accession : accessions) {
             Protein protein = sequenceFactory.getProtein(accession);
-            if (!loadedLengths.contains(accession)) {
-                componentsFactory.saveProteinLength(accession, protein.getLength());
-                loadedLengths.add(accession);
+            if (loadLengths) {
+                proteinLengths.put(accession, protein.getLength());
             }
             sequenceBuffer.add(protein);
             if (sequenceBuffer.size() == proteinBatchSize) {
@@ -496,37 +511,42 @@ public class ProteinTree {
             new Thread(sequenceIndexer, "sequence indexing").start();
             sequenceIndexers.add(sequenceIndexer);
         }
+        if (loadLengths) {
+            componentsFactory.saveProteinLengths(proteinLengths);
+        }
         while (!sequenceIndexers.isEmpty()) {
             processFinishedIndexers(sequenceIndexers, initialTagSize);
         }
     }
-    
+
     /**
      * Splits the raw nodes and saves them in the database
-     * 
+     *
      * @param maxNodeSize the maximal size allowed for a node
      * @param maxPeptideSize the maximal peptide length allowed
-     * @param waitingHandler waiting handler providing feedback on the process and allowing cancelling the process
-     * @param displayProgress boolean indicating whether progress shall be displayed using the waiting handler
-     * 
+     * @param waitingHandler waiting handler providing feedback on the process
+     * and allowing cancelling the process
+     * @param displayProgress boolean indicating whether progress shall be
+     * displayed using the waiting handler
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     private void processRawNodes(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
-        ArrayList <RawNodeProcessor > rawNodeProcessors = new ArrayList<RawNodeProcessor>(nThreads);
+        ArrayList<NodeSplitter> nodeSplitters = new ArrayList<NodeSplitter>(nThreads);
         for (String tag : tree.keySet()) {
             Node node = tree.get(tag);
-            while (rawNodeProcessors.size() == nThreads) {
-                processFinishedNodeProcessors(rawNodeProcessors);
+            while (nodeSplitters.size() == nThreads) {
+                processFinishedNodeSplitters(nodeSplitters);
             }
-            RawNodeProcessor rawNodeProcessor = new RawNodeProcessor(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
-            new Thread(rawNodeProcessor, "Raw node process of tag " + tag).start();
-            rawNodeProcessors.add(rawNodeProcessor);
+            NodeSplitter nodeSplitter = new NodeSplitter(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
+            new Thread(nodeSplitter, "Node splitting of tag " + tag).start();
+            nodeSplitters.add(nodeSplitter);
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     emptyCache();
@@ -534,41 +554,44 @@ public class ProteinTree {
                 }
             }
         }
-        while (!rawNodeProcessors.isEmpty()) {
-            processFinishedNodeProcessors(rawNodeProcessors);
+        while (!nodeSplitters.isEmpty()) {
+            processFinishedNodeSplitters(nodeSplitters);
         }
     }
 
     /**
-     * Clears the finished raw node processors from a given list or wait for one
-     * to finish.
+     * Clears the finished raw node splitters from a given list or wait for one
+     * to finish and batch saves the splitted nodes
      *
      * @param nodeProcessors the node processors of interest
      *
      * @throws InterruptedException
      */
-    private synchronized void processFinishedNodeProcessors(ArrayList<RawNodeProcessor> nodeProcessors) throws InterruptedException {
+    private synchronized void processFinishedNodeSplitters(ArrayList<NodeSplitter> nodeSplitters) throws InterruptedException, SQLException, IOException {
         listening = false;
-        ArrayList<RawNodeProcessor> done = new ArrayList<RawNodeProcessor>();
-        for (RawNodeProcessor rawNodeProcessor : nodeProcessors) {
-            if (rawNodeProcessor.isFinished()) {
-                done.add(rawNodeProcessor);
+        ArrayList<NodeSplitter> done = new ArrayList<NodeSplitter>();
+        for (NodeSplitter nodeSplitter : nodeSplitters) {
+            if (nodeSplitter.isFinished()) {
+                done.add(nodeSplitter);
             }
         }
         if (done.isEmpty()) {
             listening = true;
             wait();
-            for (RawNodeProcessor rawNodeProcessor : nodeProcessors) {
-                if (rawNodeProcessor.isFinished()) {
-                    done.add(rawNodeProcessor);
+            for (NodeSplitter nodeSplitter : nodeSplitters) {
+                if (nodeSplitter.isFinished()) {
+                    done.add(nodeSplitter);
                 }
             }
         }
         listening = true;
-        for (RawNodeProcessor rawNodeProcessor : done) {
-            rawNodeProcessor.clear();
+        HashMap<String, Object> splittedNodes = new HashMap<String, Object>(done.size());
+        for (NodeSplitter nodeSplitter : done) {
+            splittedNodes.put(nodeSplitter.getTag(), nodeSplitter.getNode());
+            nodeSplitter.clear();
         }
-        nodeProcessors.removeAll(done);
+        componentsFactory.saveNodes(splittedNodes);
+        nodeSplitters.removeAll(done);
     }
 
     /**
@@ -1303,6 +1326,9 @@ public class ProteinTree {
             try {
                 for (Protein protein : proteins) {
                     indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
+                    if (displayProgress && waitingHandler != null) {
+                        waitingHandler.increaseSecondaryProgressCounter();
+                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
@@ -1310,9 +1336,6 @@ public class ProteinTree {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (displayProgress && waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
             }
             finished = true;
             try {
@@ -1390,7 +1413,7 @@ public class ProteinTree {
     /**
      * Runnable used to process raw nodes and store them in the database.
      */
-    private class RawNodeProcessor implements Runnable {
+    private class NodeSplitter implements Runnable {
 
         /**
          * The tag of the node.
@@ -1427,7 +1450,7 @@ public class ProteinTree {
          * @param tag the tag of interest
          * @param node the node to process
          */
-        public RawNodeProcessor(String tag, Node node, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress) {
+        public NodeSplitter(String tag, Node node, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress) {
             this.tag = tag;
             this.node = node;
             this.waitingHandler = waitingHandler;
@@ -1438,7 +1461,6 @@ public class ProteinTree {
         public synchronized void run() {
             try {
                 node.splitNode(maxNodeSize, maxPeptideSize);
-                componentsFactory.saveNode(tag, node);
             } catch (IOException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
@@ -1447,13 +1469,11 @@ public class ProteinTree {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
             }
+            finished = true;
             if (displayProgress && waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressCounter();
             }
-            finished = true;
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {
@@ -1475,6 +1495,24 @@ public class ProteinTree {
          */
         public void clear() {
             node = null;
+        }
+
+        /**
+         * Returns the tag of the splitted node
+         *
+         * @return the tag of the splitted node
+         */
+        public String getTag() {
+            return tag;
+        }
+
+        /**
+         * Returns the splitted node
+         *
+         * @return the splitted node
+         */
+        public Node getNode() {
+            return node;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.compomics.util.gui.ptm;
 
 import com.compomics.util.experiment.biology.*;
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.gui.AminoAcidPatternDialog;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -1288,7 +1289,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 case 1:
                     return reporterIons.get(row).getName();
                 case 2:
-                    return reporterIons.get(row).getTheoreticMass();
+                    return reporterIons.get(row).getTheoreticMass() + ElementaryIon.proton.getTheoreticMass(); // @TODO: replace by another method??
                 default:
                     return "";
             }

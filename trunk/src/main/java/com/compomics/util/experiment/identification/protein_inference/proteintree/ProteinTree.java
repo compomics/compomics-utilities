@@ -1498,7 +1498,7 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the tag of the splitted node
+         * Returns the tag of the splitted node.
          *
          * @return the tag of the splitted node
          */
@@ -1507,7 +1507,7 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the splitted node
+         * Returns the splitted node.
          *
          * @return the splitted node
          */

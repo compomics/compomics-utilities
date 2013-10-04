@@ -1082,7 +1082,7 @@ public class SequenceFactory {
      * during the initiation of the tree
      *
      * @return the default protein tree
-     * 
+     *
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException
@@ -1117,15 +1117,27 @@ public class SequenceFactory {
 
             int previousCache = nCache;
             int tagLength = 3;
-            if (getNTargetSequences() > 100000) {
-                if (memoryPreference > 4000) {
-                    setnCache(100000);
-                }
-            }
             if (memoryPreference < 2000) {
                 defaultProteinTree.setCacheSize(500);
+            } else {
+                if (getNTargetSequences() > getnCache() && memoryPreference > 2000) {
+                    double sizeMb = (double) (currentFastaFile.length() / 1048576);
+                    int nTargetSequences = getNTargetSequences();
+                    double sequencePerMb = nTargetSequences / sizeMb;
+                    int cacheSize = (int) ((memoryPreference - treeSize) * sequencePerMb);
+                    if (cacheSize > nCache) {
+                        if (cacheSize > nTargetSequences) {
+                            cacheSize = nTargetSequences;
+                        }
+                        int cacheMemory = (int) (nTargetSequences / sequencePerMb);
+                        int free = memoryPreference - cacheMemory;
+                        defaultProteinTree.setCacheSize(free);
+                        setnCache(cacheSize);
+                    }
+                }
             }
             defaultProteinTree.initiateTree(tagLength, 500, 50, waitingHandler, true, displayProgress);
+            emptyCache();
             setnCache(previousCache);
         }
         return defaultProteinTree;

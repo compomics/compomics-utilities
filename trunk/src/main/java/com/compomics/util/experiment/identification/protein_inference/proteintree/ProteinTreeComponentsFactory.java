@@ -231,8 +231,8 @@ public class ProteinTreeComponentsFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * loading data in the database
      */
-    public void saveProteinLength(String accession, int length) throws SQLException, IOException {
-        objectsDB.insertObject(lengthTable, accession, length, false);
+    public void saveProteinLengths(HashMap<String, Object> lengths) throws SQLException, IOException {
+        objectsDB.insertObjects(lengthTable, lengths, null, true);
     }
 
     /**

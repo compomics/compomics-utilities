@@ -42,11 +42,11 @@ public class Node implements Serializable {
      */
     private HashMap<Character, Node> subtree = null;
     /**
-     * the number of proteins which should be imported at a time
+     * The number of proteins which should be imported at a time.
      */
     public static final int proteinBatchSize = 100;
     /**
-     * indicates whether the main thread is listening or preparing to wait
+     * Indicates whether the main thread is listening or preparing to wait.
      */
     private boolean listening = true;
 
@@ -514,7 +514,7 @@ public class Node implements Serializable {
     private class SequenceMatcher implements Runnable {
 
         /**
-         * The proteins to process
+         * The proteins to process.
          */
         private ArrayList<Protein> proteins;
         /**
@@ -523,29 +523,29 @@ public class Node implements Serializable {
         private boolean finished = false;
         /**
          * The seed indexes where to look for the peptide in a map. Protein
-         * accession -> list of seed indexes
+         * accession -> list of seed indexes.
          */
         private HashMap<String, ArrayList<Integer>> seeds;
         /**
-         * The peptide sequence to look for
+         * The peptide sequence to look for.
          */
         private String peptideSequence;
         /**
-         * The type of matching
+         * The type of matching.
          */
         private MatchingType matchingType;
         /**
-         * The mass tolerance at the MS2 level
+         * The mass tolerance at the MS2 level.
          */
         private Double massTolerance;
         /**
          * The result of the indexing. protein accession -> peptide found ->
-         * list of indexes where the peptide is found
+         * list of indexes where the peptide is found.
          */
         private HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>(proteinBatchSize);
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param proteins the proteins to look into
          * @param seeds the seed indexes where to look for in a map protein

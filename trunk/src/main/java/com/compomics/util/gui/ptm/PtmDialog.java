@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 import no.uib.olsdialog.OLSDialog;
 import no.uib.olsdialog.OLSInputable;
@@ -69,6 +70,14 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * The amino acid pattern of the modification
      */
     private AminoAcidPattern pattern;
+    /**
+     * The reporter ion table column header tooltips.
+     */
+    private ArrayList<String> reporterIonTableToolTips;
+    /**
+     * The neutral losses table column header tooltips.
+     */
+    private ArrayList<String> neutralLossesTableToolTips;
 
     /**
      * Creates a new PTM dialog.
@@ -147,6 +156,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         // the index column
         neutralLossesTable.getColumn(" ").setMaxWidth(50);
         neutralLossesTable.getColumn(" ").setMinWidth(50);
+        neutralLossesTable.getColumn("Fixed").setMaxWidth(50);
+        neutralLossesTable.getColumn("Fixed").setMinWidth(50);
         reporterIonsTable.getColumn(" ").setMaxWidth(50);
         reporterIonsTable.getColumn(" ").setMinWidth(50);
 
@@ -155,6 +166,17 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                 null,
                 "Fixed", null));
+
+        reporterIonTableToolTips = new ArrayList<String>();
+        reporterIonTableToolTips.add(null);
+        reporterIonTableToolTips.add("Reporter Ion Name");
+        reporterIonTableToolTips.add("Reporter Ion Mass (m/z)");
+
+        neutralLossesTableToolTips = new ArrayList<String>();
+        neutralLossesTableToolTips.add(null);
+        neutralLossesTableToolTips.add("Neutral Loss Name");
+        neutralLossesTableToolTips.add("Neutral Loss Mass");
+        neutralLossesTableToolTips.add("Fixed Neutral Loss");
 
         Vector comboboxTooltips = new Vector();
         comboboxTooltips.add("Modification at particular amino acids");
@@ -408,7 +430,18 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         nameShortTxt = new javax.swing.JTextField();
         neutralLossesAndReporterIonsPanel = new javax.swing.JPanel();
         neutralLossesJScrollPane = new javax.swing.JScrollPane();
-        neutralLossesTable = new javax.swing.JTable();
+        neutralLossesTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        return (String) neutralLossesTableToolTips.get(realIndex);
+                    }
+                };
+            }
+        };
         addNeutralLoss = new javax.swing.JButton();
         removeNeutralLoss = new javax.swing.JButton();
         helpJButton = new javax.swing.JButton();
@@ -418,7 +451,18 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         olsJButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         reporterIonsJScrollPane = new javax.swing.JScrollPane();
-        reporterIonsTable = new javax.swing.JTable();
+        reporterIonsTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        return (String) reporterIonTableToolTips.get(realIndex);
+                    }
+                };
+            }
+        };
         removerReporterIon = new javax.swing.JButton();
         addReporterIon = new javax.swing.JButton();
 

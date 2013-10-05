@@ -20,7 +20,7 @@
 
         <a name="#ModType"></a>
         <h3>Type</h3>
-        The type of ptm has to be specified according to OMSSA standards:<br><br>
+        The type of modification has to be specified according to OMSSA standards:<br><br>
         <ul>
             <li>modaa -- modification at particular amino acids</li>
             <li>modn -- at the N terminus of a protein</li>
@@ -38,7 +38,7 @@
 
         <a name="#Name"></a>
         <h3>Name</h3>
-        The name of the ptm should be unique and not contain '_'.
+        The name of the modification should be unique and not contain '_'.
         <br><br>
         <a href="#top">top of page</a>
         <br><br><br>
@@ -65,6 +65,10 @@
         with a mass lower than the normal mass of the fragment ion. The most common neutral losses 
         are water and ammonia. There are also neutral losses related to phosphorylation, e.g., H3PO4 (97.97689499).
         <br><br>
+        Neutral losses can be either fixed or variable. A fixed neutral loss means that the loss 
+        always occurs. Fixed neutral losses should be used with care as they affect how the search engines 
+        treat the modification itself.
+        <br><br>
         <a href="#top">top of page</a>
         <br><br><br>
 
@@ -74,6 +78,8 @@
         given modification. The most common reporter ions are iTRAQ and TMT marker ions. But reporter 
         ions can also be found for other modifications, e.g., <a href="http://www.ncbi.nlm.nih.gov/pubmed/18338905">126 (and 143) for lysine acetylation</a>, 
         and <a href="http://www.ncbi.nlm.nih.gov/pubmed/11473401">216.043 for phosphorylation of tyrosine</a>.
+        <br><br>
+        Please provide the mass of the reporter ion as m/z, i.e., the exact m/z value of the peak you want to annotate.
         <br><br>
         <a href="#top">top of page</a>
         <br><br><br>

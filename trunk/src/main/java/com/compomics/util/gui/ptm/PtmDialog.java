@@ -1240,7 +1240,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
         @Override
         public void setValueAt(Object aValue, int row, int column) {
-            int index = neutralLossesTable.convertColumnIndexToModel(row);
+            int index = neutralLossesTable.convertRowIndexToModel(row);
             NeutralLoss neutralLoss = neutralLosses.get(index);
             if (column == 1) {
                 neutralLoss.name = (String) aValue;
@@ -1312,7 +1312,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
         @Override
         public void setValueAt(Object aValue, int row, int column) {
-            int index = reporterIonsTable.convertColumnIndexToModel(row);
+            int index = reporterIonsTable.convertRowIndexToModel(row);
             ReporterIon reporterIon = reporterIons.get(index);
             if (column == 1) {
                 reporterIon.setName((String) aValue);

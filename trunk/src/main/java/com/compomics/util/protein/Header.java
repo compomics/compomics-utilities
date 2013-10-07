@@ -525,7 +525,7 @@ public class Header implements Cloneable, Serializable {
                     result.iDescription = subHeader.substring(subHeader.indexOf("|") + 1).trim();
                     result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
 
-                } else if (aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*")) {
+                } else if (aFASTAHeader.matches("^[^\\s]+_[^\\s]+ \\([PQOA][^\\s]+\\) .*") && aFASTAHeader.lastIndexOf("|") == -1) {
                     // Old (everything before 9.0 release (31 Oct 2006)) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:

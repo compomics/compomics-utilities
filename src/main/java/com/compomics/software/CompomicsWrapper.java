@@ -35,10 +35,6 @@ public class CompomicsWrapper {
      */
     private boolean useStartUpLog = true;
     /**
-     * Writes the debug output to startup.log.
-     */
-    private BufferedWriter bw = null;
-    /**
      * True if this the first time the wrapper tries to launch the application.
      * If the first launch fails, e.g., due to memory settings, it is set to
      * false.
@@ -72,11 +68,7 @@ public class CompomicsWrapper {
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass) {
         launchTool(toolName, jarFile, splashName, mainClass, null);
     }
-/**
-    public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args,boolean checkForUpdates){
 
-    }
-     */
     /**
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.
@@ -90,7 +82,9 @@ public class CompomicsWrapper {
      * @param args the arguments to pass to the tool (ignored if null)
      */
     public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args) {
-        File folder = new File(jarFile.getParentFile(), "startup.log");
+
+        BufferedWriter bw = null;
+
         try {
             try {
                 userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -99,7 +93,7 @@ public class CompomicsWrapper {
             }
 
             if (useStartUpLog) {
-                folder = new File(jarFile.getParentFile(), "resources/conf");
+                File folder = new File(jarFile.getParentFile(), "resources/conf");
                 if (!folder.exists()) {
                     String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
                     folder = new File(path, "resources/conf");
@@ -116,7 +110,9 @@ public class CompomicsWrapper {
                     }
                 }
                 File debugOutput = new File(folder, "startup.log");
-                bw = new BufferedWriter(new FileWriter(debugOutput));
+                FileWriter fw = new FileWriter(debugOutput);
+                bw = new BufferedWriter(fw);
+
                 bw.write("Memory settings read from the user preferences: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
                 String arguments = "args: ";
                 if (args != null) {
@@ -140,17 +136,16 @@ public class CompomicsWrapper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            launch(jarFile, splashName, mainClass, args);
 
-            if (useStartUpLog) {
-                bw.flush();
-                bw.close();
-            }
+            launch(jarFile, splashName, mainClass, args, bw);
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                bw = new BufferedWriter(new FileWriter(folder));
-                bw.write(e.getMessage());
+                if (useStartUpLog && bw != null) {
+                    bw.write(e.getMessage());
+                    bw.close();
+                }
                 JOptionPane.showMessageDialog(null,
                         "Failed to start " + toolName + ":" + System.getProperty("line.separator")
                         + e.getMessage(),
@@ -170,26 +165,14 @@ public class CompomicsWrapper {
      *
      * @throws java.lang.Exception
      * @param jarFile the jar file to execute
-     * @param splashName the splash name, for example peptide-shaker-splash.png
-     * @param mainClass the main class to execute, for example
-     * eu.isas.peptideshaker.gui.PeptideShakerGUI
-     */
-    private void launch(File jarFile, String splashName, String mainClass) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        launch(jarFile, splashName, mainClass, null);
-    }
-
-    /**
-     * Launches the jar file with parameters to the jvm.
-     *
-     * @throws java.lang.Exception
-     * @param jarFile the jar file to execute
      * @param splashName the splash name, for example peptide-shaker-splash.png,
      * can be null
      * @param mainClass the main class to execute, for example
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      * @param args the arguments to pass to the tool (ignored if null)
+     * @param bw buffered writer for the log files, can be null
      */
-    private void launch(File jarFile, String splashName, String mainClass, String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+    private void launch(File jarFile, String splashName, String mainClass, String[] args, BufferedWriter bw) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
 
@@ -249,7 +232,7 @@ public class CompomicsWrapper {
         }
 
         // get the java options
-        ArrayList<String> optionsAsList = getJavaOptions(confFolder, jarFile, bw);
+        ArrayList<String> optionsAsList = getJavaOptions(confFolder, bw);
         for (String currentOption : optionsAsList) {
             process_name_array.add(currentOption);
         }
@@ -322,15 +305,14 @@ public class CompomicsWrapper {
                     if (userPreferences.getMemoryPreference() > 3 * 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 1024);
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
-                        launch(jarFile, splashName, mainClass, args);
+                        launch(jarFile, splashName, mainClass, args, bw);
                     } else if (userPreferences.getMemoryPreference() > 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 512);
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
-                        launch(jarFile, splashName, mainClass, args);
+                        launch(jarFile, splashName, mainClass, args, bw);
                     } else {
                         if (useStartUpLog) {
                             bw.write("Memory Limit:" + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
-                            bw.flush();
                             bw.close();
                         }
 
@@ -347,7 +329,6 @@ public class CompomicsWrapper {
                 } else {
 
                     if (useStartUpLog) {
-                        bw.flush();
                         bw.close();
                     }
 
@@ -366,67 +347,22 @@ public class CompomicsWrapper {
                     System.exit(0);
                 }
             } else {
+
+                if (useStartUpLog && bw != null) {
+                    bw.close();
+                }
+
                 System.exit(0);
             }
         } catch (Throwable t) {
 
-            if (useStartUpLog) {
+            if (useStartUpLog && bw != null) {
                 bw.write(t.getMessage());
-                bw.flush();
                 bw.close();
             }
 
             t.printStackTrace();
-
             System.exit(0);
-        }
-    }
-
-    /**
-     * Creates a new javaOptions text file with the new settings.
-     */
-    private void saveJavaOptions(File jarFile) throws FileNotFoundException, UnsupportedEncodingException {
-
-        String currentLine, lines = "";
-
-        File confFolder = new File(jarFile.getParentFile(), "resources/conf");
-        if (!confFolder.exists()) {
-            String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
-            confFolder = new File(path, "resources/conf");
-        }
-        if (!confFolder.exists()) {
-            throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
-        }
-        File javaOptions = new File(confFolder, "JavaOptions.txt");
-
-        // read any java option settings
-        if (javaOptions.exists()) {
-
-            try {
-                FileReader f = new FileReader(javaOptions);
-                BufferedReader b = new BufferedReader(f);
-
-                while ((currentLine = b.readLine()) != null) {
-                    if (!currentLine.startsWith("-Xmx")) {
-                        lines += currentLine + System.getProperty("line.separator");
-                    }
-                }
-                b.close();
-                f.close();
-
-                FileWriter fw = new FileWriter(javaOptions);
-                BufferedWriter bow = new BufferedWriter(fw);
-                bow.write(lines);
-                bow.write("-Xmx" + userPreferences.getMemoryPreference() + "M" + System.getProperty("line.separator"));
-
-                bow.close();
-                fw.close();
-
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 
@@ -613,12 +549,11 @@ public class CompomicsWrapper {
      * Get the Java options.
      *
      * @param confFolder the conf folder for the project
-     * @param jarFile the jar file for the project
      * @param bw a buffered writer for log and errors, can be null
      * @return the options to the Java Virtual Machine
      * @throws IOException
      */
-    private ArrayList<String> getJavaOptions(File confFolder, File jarFile, BufferedWriter bw) throws IOException {
+    private ArrayList<String> getJavaOptions(File confFolder, BufferedWriter bw) throws IOException {
 
         try {
             userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -897,7 +832,6 @@ public class CompomicsWrapper {
 
         ArrayList<String> javaHomeAndOptions = new ArrayList<String>();
 
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         CompomicsWrapper wrapper = new CompomicsWrapper();
         File confFolder = new File(new File(toolPath).getParentFile(), "resources/conf");
         if (!confFolder.exists()) {
@@ -907,19 +841,15 @@ public class CompomicsWrapper {
         if (!confFolder.exists()) {
             throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
         }
-        File debugOutput = new File(confFolder, "startup.log");
-        BufferedWriter bwr = new BufferedWriter(new FileWriter(debugOutput));
-        String javaHome = wrapper.getJavaHome(confFolder, bwr);
 
+        String javaHome = wrapper.getJavaHome(confFolder, null);
         javaHomeAndOptions.add(javaHome);
 
-        ArrayList<String> optionsAsList = wrapper.getJavaOptions(confFolder, new File(utilitiesUserPreferences.getPeptideShakerPath()), bwr);
+        ArrayList<String> optionsAsList = wrapper.getJavaOptions(confFolder, null);
 
         for (String tempOption : optionsAsList) {
             javaHomeAndOptions.add(tempOption);
         }
-
-        bwr.close();
 
         return javaHomeAndOptions;
     }

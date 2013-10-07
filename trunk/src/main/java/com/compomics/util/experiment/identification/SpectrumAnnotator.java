@@ -123,7 +123,7 @@ public class SpectrumAnnotator {
 
         setPeptide(peptide, precursorCharge);
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
-        IonMatch ionMatch;
+
         if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION)) {
             charges.add(precursorCharge);
             charges.add(precursorCharge + 1);
@@ -135,7 +135,7 @@ public class SpectrumAnnotator {
                 for (int charge : charges) {
                     if (chargeValidated(peptideIon, charge, precursorCharge)
                             && lossesValidated(neutralLosses, peptideIon, peptide)) {
-                        ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
+                        IonMatch ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
                         if (Math.abs(ionMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
                             result.add(ionMatch);
                         }
@@ -143,6 +143,7 @@ public class SpectrumAnnotator {
                 }
             }
         }
+
         return result;
     }
 
@@ -469,7 +470,13 @@ public class SpectrumAnnotator {
                 PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) theoreticIon);
                 return charge <= peptideFragmentIon.getNumber() && (charge < precursorCharge || precursorCharge == 1);
             case PRECURSOR_ION:
-                return charge >= precursorCharge; // @TODO take into account lower charge? Like precursor -iTRAQ+?
+//                if ((theoreticIon.getNeutralLossesAsString().lastIndexOf("TMT_C") != -1
+//                        || theoreticIon.getNeutralLossesAsString().lastIndexOf("iTRAQ_C") != -1)
+//                        && theoreticIon.getNeutralLosses().size() == 1) {
+//                    return true; // special case for TMT cluster ions
+//                } else {
+                    return charge >= precursorCharge;
+//                }
             default:
                 throw new UnsupportedOperationException("Ion type " + theoreticIon.getTypeAsString() + " not implemented in the spectrum annotator.");
         }

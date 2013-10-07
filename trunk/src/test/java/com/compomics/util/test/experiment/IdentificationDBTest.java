@@ -43,12 +43,14 @@ public class IdentificationDBTest extends TestCase {
         ArrayList<String> testProteins = new ArrayList<String>();
         testProteins.add("test protein1");
         testProteins.add("test protein2");
-        testSpectrumMatch.addHit(Advocate.PEPTIDE_SHAKER, new PeptideAssumption(
-                new Peptide(peptideKey, testProteins, new ArrayList<ModificationMatch>()),
-                1, Advocate.PEPTIDE_SHAKER, new Charge(Charge.PLUS, 2), 0.1, "no file"));
+        Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
+        peptide.setParentProteins(testProteins);
+        testSpectrumMatch.addHit(Advocate.PEPTIDE_SHAKER, new PeptideAssumption(peptide, 1, Advocate.PEPTIDE_SHAKER, new Charge(Charge.PLUS, 2), 0.1, "no file"));
         idDB.addSpectrumMatch(testSpectrumMatch);
 
-        PeptideMatch testPeptideMatch = new PeptideMatch(new Peptide(peptideKey, testProteins, new ArrayList<ModificationMatch>()));
+        peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
+        peptide.setParentProteins(testProteins);
+        PeptideMatch testPeptideMatch = new PeptideMatch(peptide);
         idDB.addPeptideMatch(testPeptideMatch);
 
         ProteinMatch testProteinMatch = new ProteinMatch(proteinKey);

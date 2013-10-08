@@ -286,8 +286,8 @@ public class CompomicsWrapper {
 
             int exitValue = p.waitFor();
 
-            errorGobbler.setContinueReading(false);
-            inputGobbler.setContinueReading(false);
+            errorGobbler.setContinueReading(true);
+            inputGobbler.setContinueReading(true);
 
             if (useStartUpLog) {
                 System.out.println("Process exitValue: " + exitValue + System.getProperty("line.separator"));
@@ -328,20 +328,24 @@ public class CompomicsWrapper {
                     System.out.println("Mac OS/Java error (can be ignored): " + temp);
                 } else {
 
-                    if (useStartUpLog) {
-                        bw.close();
-                    }
-
                     if (temp.lastIndexOf("noclassdeffound") != -1) {
                         JOptionPane.showMessageDialog(null,
                                 "Seems like you are trying to start the tool from within a zip file!",
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
                     } else {
+
+                        System.out.println("Unknown error: " + temp);
+
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 "An error occurred when starting the tool.\n\n"
                                 + "Inspect the log file for details: resources/conf/startup.log.\n\n"
                                 + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com", // @TODO: move help to tool independent website
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    if (useStartUpLog) {
+                        bw.write(temp);
+                        bw.close();
                     }
 
                     System.exit(0);

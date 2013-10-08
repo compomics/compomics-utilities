@@ -43,7 +43,7 @@ public class StreamGobbler implements Runnable {
             while (continueReading) {
                 if ((line = br.readLine()) != null) {
                     System.out.println(line);
-                    //builder.append(line);
+                    builder.append(line);
                 }
             }
         } catch (IOException ex) {

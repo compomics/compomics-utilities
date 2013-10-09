@@ -8,34 +8,32 @@ import java.util.HashMap;
 /**
  * This class represents the experiment.
  *
- * Created by IntelliJ IDEA.
- * User: Marc
- * Date: Jun 18, 2010
- * Time: 8:55:09 AM
+ * @author Marc Vaudel
  */
 public class MsExperiment extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 4330394623824512352L;
     /**
-     * reference of the experiment
+     * Reference of the experiment.
      */
     private String reference;
     /**
-     * the samples analyzed
+     * The samples analyzed.
      */
     private HashMap<Integer, Sample> samples = new HashMap<Integer, Sample>();
     /**
-     * the analysis
+     * The analysis.
      */
     private HashMap<Sample, SampleAnalysisSet> analysis = new HashMap<Sample, SampleAnalysisSet>();
 
     /**
-     * Constructor for an experiment
+     * Constructor for an experiment.
+     *
      * @param reference the reference of the experiment
-     * @param samples   the samples analyzed
+     * @param samples the samples analyzed
      */
     public MsExperiment(String reference, HashMap<Integer, Sample> samples) {
         this.reference = reference;
@@ -43,7 +41,8 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * Constructor for an experiment
+     * Constructor for an experiment.
+     *
      * @param reference the reference of the experiment
      */
     public MsExperiment(String reference) {
@@ -51,7 +50,8 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * returns the reference of the experiment
+     * Returns the reference of the experiment.
+     *
      * @return reference of the experiment
      */
     public String getReference() {
@@ -59,7 +59,8 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * sets the reference of the experiment
+     * Sets the reference of the experiment.
+     *
      * @param reference the experiment reference
      */
     public void setReference(String reference) {
@@ -67,9 +68,10 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * Method to link an analysis set to an experiment
-     * @param sample        the reference sample
-     * @param analysisSet   the analysis set corresponding to this sample
+     * Method to link an analysis set to an experiment.
+     *
+     * @param sample the reference sample
+     * @param analysisSet the analysis set corresponding to this sample
      */
     public void addAnalysisSet(Sample sample, SampleAnalysisSet analysisSet) {
         analysis.put(sample, analysisSet);
@@ -81,8 +83,9 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * Returns the analysis set corresponding to a sample
-     * @param sample    the reference sample
+     * Returns the analysis set corresponding to a sample.
+     *
+     * @param sample the reference sample
      * @return the analysis set corresponding to the reference sample
      */
     public SampleAnalysisSet getAnalysisSet(Sample sample) {
@@ -90,7 +93,8 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * Returns the implemented samples
+     * Returns the implemented samples.
+     *
      * @return map containing all samples
      */
     public HashMap<Integer, Sample> getSamples() {
@@ -98,7 +102,8 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * Returns a single sample accessed by its index
+     * Returns a single sample accessed by its index.
+     *
      * @param id the index of the desired sample
      * @return the desired sample
      */
@@ -107,9 +112,10 @@ public class MsExperiment extends ExperimentObject {
     }
 
     /**
-     * Set a new sample
-     * @param index     the index of the sample
-     * @param sample    the new sample
+     * Set a new sample.
+     *
+     * @param index the index of the sample
+     * @param sample the new sample
      */
     public void setSample(int index, Sample sample) {
         samples.put(index, sample);

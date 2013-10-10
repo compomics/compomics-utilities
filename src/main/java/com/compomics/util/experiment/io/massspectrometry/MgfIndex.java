@@ -18,9 +18,13 @@ public class MgfIndex extends ExperimentObject {
      */
     private HashMap<String, Long> indexMap;
     /**
-     * List of all spectra.
+     * List of spectrum titles.
      */
     private ArrayList<String> spectrumTitles = null;
+    /**
+     * Map of duplicated spectrum titles and how often they are duplicated.
+     */
+    private HashMap<String, Integer> duplicatedSpectrumTitles = null;
     /**
      * The name of the indexed file.
      */
@@ -72,6 +76,39 @@ public class MgfIndex extends ExperimentObject {
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
             double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, long lastModified) {
         this.spectrumTitles = spectrumTitles;
+        this.duplicatedSpectrumTitles = null; //information not provided
+        this.indexMap = indexMap;
+        this.fileName = fileName;
+        this.maxRT = maxRT;
+        this.minRT = minRT;
+        this.maxMz = maxMz;
+        this.maxIntensity = maxIntensity;
+        this.maxCharge = maxCharge;
+        this.maxPeakCount = maxPeakCount;
+        this.lastModified = lastModified;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param spectrumTitles an ordered list of all spectrum titles
+     * @param duplicatedSpectrumTitles a map of duplicated spectrum titles, and
+     * how often each title is duplicated
+     * @param indexMap map of all indexes: spectrum title -> index in the file
+     * @param fileName the mgf file name
+     * @param maxRT the maximum retention time
+     * @param minRT the minimum retention tome
+     * @param maxMz the maximum m/z value
+     * @param maxIntensity the maximum precursor intensity
+     * @param maxCharge the maximum peak precursor charge
+     * @param maxPeakCount the maximum peak count
+     * @param lastModified a long indicating the last time the indexed file was
+     * modified
+     */
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
+            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, long lastModified) {
+        this.spectrumTitles = spectrumTitles;
+        this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
@@ -116,6 +153,15 @@ public class MgfIndex extends ExperimentObject {
         } else {
             return new ArrayList<String>(indexMap.keySet());
         }
+    }
+
+    /**
+     * Returns a map of the duplicated spectrum titles, can be null.
+     *
+     * @return a map of the duplicated spectrum titles, can be null
+     */
+    public HashMap<String, Integer> getDuplicatedSpectrumTitles() {
+        return duplicatedSpectrumTitles;
     }
 
     /**

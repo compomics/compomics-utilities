@@ -279,14 +279,14 @@ public class ProteinTree {
                     nSeconds = sequenceFactory.getNTargetSequences() * 2 / 10;
                 }
                 if (nSeconds < 120) {
-                    report += nSeconds + " seconds. (First time only.)";
+                    report += nSeconds + " seconds.";
                 } else {
                     int nMinutes = nSeconds / 60;
                     if (nMinutes < 120) {
-                        report += nMinutes + " minutes. (First time only.)";
+                        report += nMinutes + " minutes.";
                     } else {
                         int nHours = nMinutes / 60;
-                        report += nHours + " hours. (First time only.)";
+                        report += nHours + " hours.";
                     }
                 }
                 waitingHandler.appendReport(report, true, true);

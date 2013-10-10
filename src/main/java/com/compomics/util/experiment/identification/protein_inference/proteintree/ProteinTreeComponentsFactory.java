@@ -224,8 +224,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Adds a protein length to the database.
      *
-     * @param accession the protein accession
-     * @param length the length
+     * @param lengths the lengths
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while

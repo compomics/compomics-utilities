@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * The folder containing the databases.
      */
-    public static final String dbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/";
+    public static final String defaultDbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/";
     /**
      * Boolean indicating whether the factory is in debug mode.
      */
@@ -70,10 +71,6 @@ public class ProteinTreeComponentsFactory {
      * Constructor.
      */
     private ProteinTreeComponentsFactory() throws IOException {
-        File currentFolder = new File(dbFolderPath);
-        if (!currentFolder.exists() && !currentFolder.mkdirs()) {
-            throw new IOException("Impossible to create database folder " + dbFolderPath + ".");
-        }
         objectsCache.setAutomatedMemoryManagement(false); // Change this to true if large objects are stored
         objectsCache.setCacheSize(15000);
     }
@@ -127,7 +124,7 @@ public class ProteinTreeComponentsFactory {
      *
      * @return true if deletion was successful
      */
-    public boolean delete() {
+    public boolean delete() throws IOException {
         try {
             setCorrupted(true);
         } finally {
@@ -169,8 +166,13 @@ public class ProteinTreeComponentsFactory {
      *
      * @return the folder where the db in the sequence factory is stored
      */
-    public File getDbFolder() {
-        return new File(dbFolderPath, getDbFolderName());
+    public File getDbFolder() throws IOException {
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        File folder = utilitiesUserPreferences.getProteinTreeFolder();
+        if (!folder.exists()) {
+            throw new IOException("Impossible to create database folder " + folder + ".");
+        }
+        return new File(folder, getDbFolderName());
     }
 
     /**

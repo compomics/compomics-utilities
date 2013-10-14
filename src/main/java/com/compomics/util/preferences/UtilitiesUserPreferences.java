@@ -1,9 +1,11 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
 import com.compomics.util.io.SerializationUtils;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Utilities user preferences will be serialized in the user folder and provide
@@ -59,9 +61,19 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private Color peptideSelected = new Color(0, 0, 255);
     /**
-     * The memory to use by PeptideShaker.
+     * The memory to use.
      */
     private int memoryPreference = 4 * 1024;
+    /**
+     * The folder where to store the protein trees
+     * Note: for backward compatibility not initialized here
+     */
+    private File proteinTreeFolder = null;
+    /**
+     * Maps saving the protein trees import time in a map: fasta file size -> import times
+     * Note: for backward compatibility not initialized here
+     */
+    private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
      * The path to the SearchGUI installation (if any). Makes it possible to
      * start SearchGUI directly from PeptideShaker. Set to null if no path is
@@ -493,4 +505,57 @@ public class UtilitiesUserPreferences implements Serializable {
         }
         favoriteDBs.add(0, dbFile);
     }
+
+    /**
+     * Returns the protein tree folder.
+     * 
+     * @return the protein tree folder
+     */
+    public File getProteinTreeFolder() {
+        if (proteinTreeFolder == null) {
+            // if not set, set to default
+            proteinTreeFolder = new File(ProteinTreeComponentsFactory.defaultDbFolderPath);
+        }
+        return proteinTreeFolder;
+    }
+
+    /**
+     * Sets the protein tree folder.
+     * 
+     * @param proteinTreeFolder the protein tree folder
+     */
+    public void setProteinTreeFolder(File proteinTreeFolder) {
+        this.proteinTreeFolder = proteinTreeFolder;
+    }
+
+    /**
+     * Returns the protein tree import times in a map: file size -> list of import sizes
+     * @return the protein tree import times
+     */
+    public HashMap<Long, ArrayList<Long>> getProteinTreeImportTime() {
+        if (proteinTreeImportTime == null) {
+            // backward compatibility check
+            proteinTreeImportTime = new HashMap<Long, ArrayList<Long>>();
+        }
+        return proteinTreeImportTime;
+    }
+
+    /**
+     * Adds a protein tree import time
+     * @param fileSize the size of the fasta file
+     * @param importTime the import time
+     */
+    public void addProteinTreeImportTime(long fileSize, long importTime) {
+        if (proteinTreeImportTime == null) {
+            // backward compatibility check
+            proteinTreeImportTime = new HashMap<Long, ArrayList<Long>>();
+        }
+        ArrayList<Long> importTimes = proteinTreeImportTime.get(fileSize);
+        if (importTimes == null) {
+            importTimes = new ArrayList<Long>();
+            proteinTreeImportTime.put(fileSize, importTimes);
+        }
+        importTimes.add(importTime);
+    }
+    
 }

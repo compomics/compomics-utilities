@@ -6,6 +6,8 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
+import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -270,27 +272,20 @@ public class ProteinTree {
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
-            if (initialTagSize == 3 || initialTagSize == 4) {
-                String report = "Expected import time: ";
-                int nSeconds;
-                if (initialTagSize == 3) {
-                    nSeconds = sequenceFactory.getNTargetSequences() * 15 / 1000;
+            int nSeconds = getExpectedImportTime();
+            String report = "Expected import time: ";
+            if (nSeconds < 120) {
+                report += nSeconds + " seconds.";
+            } else {
+                int nMinutes = nSeconds / 60;
+                if (nMinutes < 120) {
+                    report += nMinutes + " minutes.";
                 } else {
-                    nSeconds = sequenceFactory.getNTargetSequences() * 2 / 10;
+                    int nHours = nMinutes / 60;
+                    report += nHours + " hours.";
                 }
-                if (nSeconds < 120) {
-                    report += nSeconds + " seconds.";
-                } else {
-                    int nMinutes = nSeconds / 60;
-                    if (nMinutes < 120) {
-                        report += nMinutes + " minutes.";
-                    } else {
-                        int nHours = nMinutes / 60;
-                        report += nHours + " hours.";
-                    }
-                }
-                waitingHandler.appendReport(report, true, true);
             }
+            waitingHandler.appendReport(report, true, true);
         }
 
         componentsFactory.saveInitialSize(initialTagSize);
@@ -405,15 +400,41 @@ public class ProteinTree {
         componentsFactory.setVersion(version);
         componentsFactory.setImportComplete(true);
 
-        if (debugSpeed) {
+        long time1 = System.currentTimeMillis();
+        long initiationTime = time1 - time0;
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserPreferences.addProteinTreeImportTime(sequenceFactory.getCurrentFastaFile().length(), initiationTime);
+        UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
 
-            long time1 = System.currentTimeMillis();
-            long initiationTime = time1 - time0;
+        if (debugSpeed) {
 
             debugSpeedWriter.write("tree initiation: " + initiationTime + " ms.");
             System.out.println("tree initiation: " + initiationTime + " ms.");
             debugSpeedWriter.newLine();
             debugSpeedWriter.flush();
+        }
+    }
+
+    /**
+     * Estimates the import time for the database in the sequence factory.
+     *
+     * @return the import time in seconds
+     */
+    private int getExpectedImportTime() {
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        HashMap<Long, ArrayList<Long>> importTimeMap = utilitiesUserPreferences.getProteinTreeImportTime();
+        if (importTimeMap.isEmpty()) {
+            return sequenceFactory.getNTargetSequences() * 8 / 1000;
+        } else {
+            ArrayList<Double> ratios = new ArrayList<Double>();
+            for (Long size : importTimeMap.keySet()) {
+                for (Long time : importTimeMap.get(size)) {
+                    double ratio = (double) (time / size);
+                    ratios.add(ratio);
+                }
+            }
+            double ratio = BasicMathFunctions.percentile(ratios, 0.95);
+            return (int) (ratio * (sequenceFactory.getCurrentFastaFile().length() / 1000));
         }
     }
 

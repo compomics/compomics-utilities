@@ -22,50 +22,54 @@ public class PTMScoringPreferences implements Serializable {
     /**
      * Boolean indicating whether neutral losses shall be accounted in the
      * calculation of the A-score.
-     * 
+     *
      * @deprecated use probabilisticScoreNeutralLosses instead
      */
     private boolean aScoreNeutralLosses = false;
     /**
-     * the FLR threshold in percent
+     * The FLR threshold in percent
      */
     private double flr = 1.0;
     /**
-     * boolean indicating whether the 
+     * Boolean indicating whether a probabilitstic score is to be calculated.
      */
     private Boolean probabilitsticScoreCalculation = true;
+
     /**
-     * List of implemented probabilistic scores
+     * List of implemented probabilistic scores.
      */
     public enum ProbabilisticScore {
-        
+
         AScore("A-score");
         /**
-         * The name of the score
+         * The name of the score.
          */
         private String name;
-        
+
         /**
-         * Constructor
-         * @param name the name of the score 
+         * Constructor.
+         *
+         * @param name the name of the score
          */
         private ProbabilisticScore(String name) {
             this.name = name;
         }
+
         /**
          * Returns the name of the probabilistic score.
-         * 
+         *
          * @return the name of the probabilistic score
          */
         public String getName() {
             return name;
         }
-        
+
         /**
-         * Returns the probabilistic score corresponding to a name. Null if not found.
-         * 
+         * Returns the probabilistic score corresponding to a name. Null if not
+         * found.
+         *
          * @param name the name of the score of interest
-         * 
+         *
          * @return the corresponding probabilistic score
          */
         public static ProbabilisticScore getProbabilisticScoreFromName(String name) {
@@ -76,40 +80,40 @@ public class PTMScoringPreferences implements Serializable {
             }
             return null;
         }
-        
+
         /**
          * Returns a list of implemented probabilistic scores.
-         * 
+         *
          * @return a list of implemented probabilistic scores
          */
         public static ProbabilisticScore[] getPossibilities() {
             return new ProbabilisticScore[]{AScore};
         }
-        
+
         /**
          * Returns a list of the names of the implemented probabilistic scores.
-         * 
+         *
          * @return a list of the names of the implemented probabilistic scores
          */
         public static String[] getPossibilitiesAsString() {
             ProbabilisticScore[] possibilities = getPossibilities();
             String[] result = new String[possibilities.length];
-            for (int i = 0 ; i < possibilities.length ; i++) {
+            for (int i = 0; i < possibilities.length; i++) {
                 result[i] = possibilities[i].getName();
             }
             return result;
         }
     };
     /**
-     * the probabilistic score selected
+     * The probabilistic score selected.
      */
     private ProbabilisticScore selectedProbabilisticScore = ProbabilisticScore.AScore;
     /**
-     * Boolean indicating whether the threshold should be FLR based
+     * Boolean indicating whether the threshold should be FLR based.
      */
     private boolean estimateFlr = true;
     /**
-     * the probabilistic score threshold
+     * The probabilistic score threshold.
      */
     private double probabilisticScoreThreshold = 99;
     /**
@@ -126,8 +130,9 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Indicates whether a probabilistic PTM score is required.
-     * 
-     * @return a boolean indicating whether a probabilistic PTM score is required
+     *
+     * @return a boolean indicating whether a probabilistic PTM score is
+     * required
      */
     public Boolean isProbabilitsticScoreCalculation() {
         if (probabilitsticScoreCalculation == null) {
@@ -139,8 +144,9 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Sets whether a probabilistic PTM score is required.
-     * 
-     * @param probabilitsticScoreCalculation a boolean indicating whether a probabilistic PTM score is required
+     *
+     * @param probabilitsticScoreCalculation a boolean indicating whether a
+     * probabilistic PTM score is required
      */
     public void setProbabilitsticScoreCalculation(boolean probabilitsticScoreCalculation) {
         this.probabilitsticScoreCalculation = probabilitsticScoreCalculation;
@@ -148,7 +154,7 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Returns the selected probabilistic score.
-     * 
+     *
      * @return the selected probabilistic score
      */
     public ProbabilisticScore getSelectedProbabilisticScore() {
@@ -157,7 +163,7 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Sets the selected probabilistic score.
-     * 
+     *
      * @param selectedProbabilisticScore the selected probabilistic score
      */
     public void setSelectedProbabilisticScore(ProbabilisticScore selectedProbabilisticScore) {
@@ -166,7 +172,7 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Indicates whether the threshold is FLR based
-     * 
+     *
      * @return a boolean indicating whether the threshold is FLR based
      */
     public boolean isEstimateFlr() {
@@ -175,7 +181,7 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Sets whether the threshold is FLR based.
-     * 
+     *
      * @param estimateFlr indicates whether the threshold is FLR based
      */
     public void setEstimateFlr(boolean estimateFlr) {
@@ -184,7 +190,7 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Returns the probabilistic score threshold.
-     * 
+     *
      * @return the probabilistic score threshold
      */
     public double getProbabilisticScoreThreshold() {
@@ -193,7 +199,7 @@ public class PTMScoringPreferences implements Serializable {
 
     /**
      * Sets the probabilistic score threshold.
-     * 
+     *
      * @param probabilisticScoreThreshold the probabilistic score threshold
      */
     public void setProbabilisticScoreThreshold(double probabilisticScoreThreshold) {
@@ -201,9 +207,12 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
-     * Indicates whether the neutral losses shall be taken into account for spectrum annotation when calculating the probabilistic score.
-     * 
-     * @return a boolean indicating whether the neutral losses shall be taken into account for spectrum annotation when calculating the probabilistic score
+     * Indicates whether the neutral losses shall be taken into account for
+     * spectrum annotation when calculating the probabilistic score.
+     *
+     * @return a boolean indicating whether the neutral losses shall be taken
+     * into account for spectrum annotation when calculating the probabilistic
+     * score
      */
     public Boolean isProbabilisticScoreNeutralLosses() {
         if (probabilisticScoreNeutralLosses == null) {
@@ -214,15 +223,17 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
-     * Sets whether the neutral losses shall be taken into account for spectrum annotation when calculating the probabilistic score.
-     * 
-     * @param probabilisticScoreNeutralLosses indicates whether the neutral losses shall be taken into account for spectrum annotation when calculating the probabilistic score
+     * Sets whether the neutral losses shall be taken into account for spectrum
+     * annotation when calculating the probabilistic score.
+     *
+     * @param probabilisticScoreNeutralLosses indicates whether the neutral
+     * losses shall be taken into account for spectrum annotation when
+     * calculating the probabilistic score
      */
     public void setProbabilisticScoreNeutralLosses(boolean probabilisticScoreNeutralLosses) {
         this.probabilisticScoreNeutralLosses = probabilisticScoreNeutralLosses;
     }
-    
-    
+
     /**
      * Returns a boolean indicating whether the A-score should be calculated.
      *

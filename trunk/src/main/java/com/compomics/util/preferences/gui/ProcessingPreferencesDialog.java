@@ -45,7 +45,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         proteinFdrTxt.setText(processingPreferences.getProteinFDR() + "");
         peptideFdrTxt.setText(processingPreferences.getPeptideFDR() + "");
         psmFdrTxt.setText(processingPreferences.getPsmFDR() + "");
-        
+
         proteinFdrTxt.setEditable(editable);
         peptideFdrTxt.setEditable(editable);
         psmFdrTxt.setEditable(editable);
@@ -341,13 +341,13 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
 
         neutralLossesLabel.setText("Score");
 
-        estimateAScoreLabel.setText("Probabilistic score");
+        estimateAScoreLabel.setText("Probabilistic Score");
 
         neutralLossesLabel1.setText("Account Neutral Losses");
 
         neutralLossesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        neutralLossesLabel3.setText("Threshold auto");
+        neutralLossesLabel3.setText("Threshold Auto");
 
         thresholdCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         thresholdCmb.addActionListener(new java.awt.event.ActionListener() {
@@ -363,19 +363,17 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(neutralLossesLabel1)
                     .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                         .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                                 .addComponent(estimateAScoreLabel)
-                                .addGap(10, 58, Short.MAX_VALUE)
+                                .addGap(10, 61, Short.MAX_VALUE)
                                 .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(probabilisticScoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 185, Short.MAX_VALUE)
                                     .addComponent(scoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 185, Short.MAX_VALUE)
                                     .addComponent(neutralLossesCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(neutralLossesLabel))
-                        .addGap(29, 29, 29))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ptmScoringPanelLayout.createSequentialGroup()
-                        .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(neutralLossesLabel)
                             .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                                 .addComponent(aScoreLabel)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -386,8 +384,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                             .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(thresholdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(29, 29, 29))
-                    .addComponent(neutralLossesLabel1)))
+                        .addGap(29, 29, 29))))
         );
         ptmScoringPanelLayout.setVerticalGroup(
             ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,6 +475,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton))
@@ -491,7 +489,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(processingParamsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ptmScoringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fractionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -540,6 +538,11 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Change the probabilistic score settings.
+     *
+     * @param evt
+     */
     private void probabilisticScoreCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_probabilisticScoreCmbActionPerformed
         if (probabilisticScoreCmb.getSelectedIndex() == 0) {
             scoreCmb.setEnabled(true);
@@ -561,6 +564,11 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_probabilisticScoreCmbActionPerformed
 
+    /**
+     * Change the threshold settings.
+     *
+     * @param evt
+     */
     private void thresholdCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thresholdCmbActionPerformed
         if (thresholdCmb.getSelectedIndex() == 1) {
             thresholdTxt.setEnabled(true);
@@ -571,22 +579,36 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_thresholdCmbActionPerformed
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
     private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }//GEN-LAST:event_helpJButtonMouseEntered
 
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
     private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonMouseExited
 
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(this, getClass().getResource("/helpFiles/ProcessingPreferences.html"),
-            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-            null, "Processing Preference Help");
+                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+                null, "Processing Preference Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel aScoreLabel;
     private javax.swing.JPanel backgroundPanel;

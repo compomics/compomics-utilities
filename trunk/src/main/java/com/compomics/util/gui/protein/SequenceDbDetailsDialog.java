@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -477,8 +476,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         sizeTxt = new javax.swing.JTextField();
         decoyButton = new javax.swing.JButton();
         browseButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        fileLabel = new javax.swing.JLabel();
+        advancedButton = new javax.swing.JButton();
         previewPanel = new javax.swing.JPanel();
         proteinYxtScrollPane = new javax.swing.JScrollPane();
         proteinTxt = new javax.swing.JTextArea();
@@ -552,13 +551,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("File");
+        fileLabel.setText("File");
 
-        jButton1.setText("Advanced");
-        jButton1.setPreferredSize(new java.awt.Dimension(90, 25));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        advancedButton.setText("Advanced");
+        advancedButton.setPreferredSize(new java.awt.Dimension(90, 25));
+        advancedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                advancedButtonActionPerformed(evt);
             }
         });
 
@@ -570,7 +569,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(fileLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fileTxt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -578,7 +577,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(decoyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(advancedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
                         .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
@@ -606,7 +605,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        databaseInformationPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {decoyTagLabel, jLabel1, lastModifiedLabel, nameLabel, sizeLabel, typeLabel, versionLabel});
+        databaseInformationPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {decoyTagLabel, fileLabel, lastModifiedLabel, nameLabel, sizeLabel, typeLabel, versionLabel});
+
+        databaseInformationPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {advancedButton, browseButton, decoyButton});
 
         databaseInformationPanelLayout.setVerticalGroup(
             databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -616,8 +617,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     .addComponent(fileTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(decoyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseButton)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fileLabel)
+                    .addComponent(advancedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
@@ -859,13 +860,19 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_databaseHelpSettingsJLabelMouseExited
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Show the AdvancedProteinDatabaseDialog.
+     * 
+     * @param evt 
+     */
+    private void advancedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedButtonActionPerformed
         new AdvancedProteinDatabaseDialog(parentFrame);
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_advancedButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner accessionsSpinner;
+    private javax.swing.JButton advancedButton;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
@@ -875,9 +882,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     private javax.swing.JButton decoyButton;
     private javax.swing.JTextField decoyFlagTxt;
     private javax.swing.JLabel decoyTagLabel;
+    private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileTxt;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lastModifiedLabel;
     private javax.swing.JTextField lastModifiedTxt;
     private javax.swing.JLabel nameLabel;

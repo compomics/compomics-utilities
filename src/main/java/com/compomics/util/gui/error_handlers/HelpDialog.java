@@ -257,7 +257,7 @@ public class HelpDialog extends javax.swing.JDialog {
             try {
                 textJEditorPane.setPage(getClass().getResource("/helpfiles/DefaultHelpFile.html"));
             } catch (Exception ex) {
-                textJEditorPane.setText("The selected help file is not yet available.");
+                textJEditorPane.setText("The selected help file is not available yet.");
             }
         }
 

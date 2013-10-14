@@ -1,0 +1,13 @@
+#summary The why and how of protein inference.
+
+= Protein Inference =
+
+This page describes what protein inference is, why it is so complicated, and how protein inference is handled in tools like [http://peptide-shaker.googlecode.com PeptideShaker]
+
+== What is Protein Inference? ==
+
+_(in development...)_
+
+== Why is it so complicated? ==
+
+_(in development...)_

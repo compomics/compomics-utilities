@@ -65,13 +65,13 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private int memoryPreference = 4 * 1024;
     /**
-     * The folder where to store the protein trees
-     * Note: for backward compatibility not initialized here
+     * The folder where to store the protein trees. Note: for backward
+     * compatibility not initialized here.
      */
     private File proteinTreeFolder = null;
     /**
-     * Maps saving the protein trees import time in a map: fasta file size -> import times
-     * Note: for backward compatibility not initialized here
+     * Maps saving the protein trees import time in a map: fasta file size ->
+     * import times. Note: for backward compatibility not initialized here.
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
@@ -450,7 +450,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the last used database folder. Null if not set.
-     * 
+     *
      * @return the last used database folder
      */
     public File getDbFolder() {
@@ -459,7 +459,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets the last used database folder.
-     * 
+     *
      * @param dbFolder the last used database folder
      */
     public void setDbFolder(File dbFolder) {
@@ -468,7 +468,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the last used databases. The most recent ones first.
-     * 
+     *
      * @return the last used databases.
      */
     public ArrayList<File> getFavoriteDBs() {
@@ -476,11 +476,11 @@ public class UtilitiesUserPreferences implements Serializable {
             // backward compatibility check
             favoriteDBs = new ArrayList<File>();
         } else {
-        checkDbFiles();
+            checkDbFiles();
         }
         return favoriteDBs;
     }
-    
+
     /**
      * Removes the db files which do not exist anymore.
      */
@@ -496,7 +496,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets the last used databases.
-     * 
+     *
      * @param dbFile the last used databases.
      */
     public void addFavoriteDB(File dbFile) {
@@ -508,7 +508,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the protein tree folder.
-     * 
+     *
      * @return the protein tree folder
      */
     public File getProteinTreeFolder() {
@@ -521,7 +521,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets the protein tree folder.
-     * 
+     *
      * @param proteinTreeFolder the protein tree folder
      */
     public void setProteinTreeFolder(File proteinTreeFolder) {
@@ -529,7 +529,9 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Returns the protein tree import times in a map: file size -> list of import sizes
+     * Returns the protein tree import times in a map: file size -> list of
+     * import sizes.
+     *
      * @return the protein tree import times
      */
     public HashMap<Long, ArrayList<Long>> getProteinTreeImportTime() {
@@ -541,8 +543,9 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Adds a protein tree import time
-     * @param fileSize the size of the fasta file
+     * Adds a protein tree import time.
+     *
+     * @param fileSize the size of the FASTA file
      * @param importTime the import time
      */
     public void addProteinTreeImportTime(long fileSize, long importTime) {
@@ -557,5 +560,4 @@ public class UtilitiesUserPreferences implements Serializable {
         }
         importTimes.add(importTime);
     }
-    
 }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.protein;
 
 import com.compomics.util.Util;
@@ -11,18 +7,21 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
+ * A dialog for advanced database settings.
  *
- * @author mva037
+ * @author Marc Vaudel
  */
 public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
 
     /**
-     * The database folder
+     * The database folder.
      */
     private File dbFolder;
 
     /**
-     * Creates new form AdvancedProteinDatabaseDialog
+     * Creates a new AdvancedProteinDatabaseDialog.
+     *
+     * @param parent
      */
     public AdvancedProteinDatabaseDialog(java.awt.Frame parent) {
         super(parent, true);
@@ -33,7 +32,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Initiates the GUI
+     * Initiates the GUI.
      */
     private void initGUI() {
         UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -42,7 +41,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the text in the text field
+     * Updates the text in the text field.
      */
     private void updateText() {
         databasesFolderTxt.setText(dbFolder.getAbsolutePath());
@@ -57,18 +56,20 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        backgroundPanel = new javax.swing.JPanel();
+        folderPanel = new javax.swing.JPanel();
         clearDatabaseFolderButton = new javax.swing.JButton();
         browseDatabaseFolderButton = new javax.swing.JButton();
         databasesFolderTxt = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Databases Folder"));
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        folderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Databases Folder"));
+        folderPanel.setOpaque(false);
 
         clearDatabaseFolderButton.setText("Clear");
         clearDatabaseFolderButton.setPreferredSize(new java.awt.Dimension(75, 25));
@@ -86,78 +87,78 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         });
 
         databasesFolderTxt.setEditable(false);
-        databasesFolderTxt.setText("jTextField1");
         databasesFolderTxt.setEnabled(false);
 
-        jLabel1.setText("Databases folder:");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout folderPanelLayout = new javax.swing.GroupLayout(folderPanel);
+        folderPanel.setLayout(folderPanelLayout);
+        folderPanelLayout.setHorizontalGroup(
+            folderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, folderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(databasesFolderTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                .addComponent(databasesFolderTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseDatabaseFolderButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearDatabaseFolderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+
+        folderPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {browseDatabaseFolderButton, clearDatabaseFolderButton});
+
+        folderPanelLayout.setVerticalGroup(
+            folderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(folderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(folderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(clearDatabaseFolderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseDatabaseFolderButton)
-                    .addComponent(databasesFolderTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(databasesFolderTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setText("OK");
-        jButton1.setPreferredSize(new java.awt.Dimension(75, 25));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        okButton.setText("OK");
+        okButton.setPreferredSize(new java.awt.Dimension(75, 25));
+        okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                okButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Cancel");
-        jButton2.setPreferredSize(new java.awt.Dimension(75, 25));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.setPreferredSize(new java.awt.Dimension(75, 25));
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(folderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+
+        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
+
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(folderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -165,35 +166,57 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Save the settings and close the dialog.
+     *
+     * @param evt
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
         userPreferences.setProteinTreeFolder(dbFolder);
         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_okButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    /**
+     * Close the dialog without saving the settings.
+     *
+     * @param evt
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Open a file chooser where the user can select where to save the protein
+     * tree.
+     *
+     * @param evt
+     */
     private void browseDatabaseFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseDatabaseFolderButtonActionPerformed
         dbFolder = Util.getUserSelectedFolder(this, "Please select new folder", dbFolder.getAbsolutePath(), "Databases Folder", "OK", false);
         updateText();
     }//GEN-LAST:event_browseDatabaseFolderButtonActionPerformed
 
+    /**
+     * Clear the database folder.
+     *
+     * @param evt
+     */
     private void clearDatabaseFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearDatabaseFolderButtonActionPerformed
-        int outcome = JOptionPane.showConfirmDialog(this, "This operation cannot be undone, continue?",
-                "Warning", JOptionPane.WARNING_MESSAGE);
+
+        int outcome = JOptionPane.showConfirmDialog(this, "This operation cannot be undone, continue?", "Warning", JOptionPane.WARNING_MESSAGE);
+
         if (outcome == JOptionPane.YES_OPTION) {
             ArrayList<String> notDeleted = new ArrayList<String>();
             for (File file : dbFolder.listFiles()) {
@@ -223,13 +246,12 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_clearDatabaseFolderButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseDatabaseFolderButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearDatabaseFolderButton;
     private javax.swing.JTextField databasesFolderTxt;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel folderPanel;
+    private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 }

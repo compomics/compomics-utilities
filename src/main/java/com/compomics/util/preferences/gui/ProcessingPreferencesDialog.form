@@ -66,6 +66,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="helpJButton" min="-2" pref="23" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" max="-2" attributes="0"/>
@@ -83,7 +84,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="processingParamsPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="ptmScoringPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="fractionsPanel" min="-2" max="-2" attributes="0"/>
@@ -241,11 +242,12 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Component id="neutralLossesLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="estimateAScoreLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="10" pref="58" max="32767" attributes="0"/>
+                                      <EmptySpace min="10" pref="61" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="probabilisticScoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
                                           <Component id="scoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
@@ -253,11 +255,6 @@
                                       </Group>
                                   </Group>
                                   <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="aScoreLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -272,9 +269,8 @@
                                       <Component id="thresholdTxt" min="-2" pref="185" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="neutralLossesLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -350,7 +346,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="estimateAScoreLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Probabilistic score"/>
+                <Property name="text" type="java.lang.String" value="Probabilistic Score"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="neutralLossesLabel1">
@@ -370,7 +366,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="neutralLossesLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Threshold auto"/>
+                <Property name="text" type="java.lang.String" value="Threshold Auto"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="thresholdCmb">

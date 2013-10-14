@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.JLabel" name="neutralLossesLabel2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Account Neutral Losses"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="neutralLossesCmb2">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="2">
+            <StringItem index="0" value="Yes"/>
+            <StringItem index="1" value="No"/>
+          </StringArray>
+        </Property>
+      </Properties>
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="Processing"/>
@@ -8,6 +25,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -29,7 +47,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
+          <Component id="backgroundPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -48,7 +66,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="helpJButton" min="-2" pref="23" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="ptmScoringPanel" max="32767" attributes="0"/>
@@ -69,7 +88,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="fractionsPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="okButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="helpJButton" alignment="2" min="-2" max="-2" attributes="1"/>
+                      <Component id="okButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -104,7 +126,7 @@
                           <Component id="peptideFdrLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="psmFdrLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="32" pref="87" max="32767" attributes="0"/>
+                      <EmptySpace min="32" pref="92" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="proteinFdrTxt" max="32767" attributes="0"/>
@@ -216,24 +238,44 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="estimateAScoreLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="10" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="ascoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
-                                  <Component id="neutralLossesCmb" alignment="1" pref="185" max="32767" attributes="0"/>
-                                  <Component id="flrTxt" pref="185" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="estimateAScoreLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="10" pref="58" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="probabilisticScoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
+                                          <Component id="scoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
+                                          <Component id="neutralLossesCmb" alignment="1" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="aScoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="aScoreLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="neutralLossesLabel3" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="thresholdCmb" min="-2" pref="185" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="thresholdTxt" min="-2" pref="185" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="neutralLossesLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="percentLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -243,25 +285,79 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="estimateAScoreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ascoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="probabilisticScoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="neutralLossesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="neutralLossesLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="neutralLossesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="neutralLossesLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="11" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="aScoreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="flrTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="percentLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
+            <Component class="javax.swing.JComboBox" name="scoreCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new DefaultComboBoxModel(PTMScoringPreferences.ProbabilisticScore.getPossibilitiesAsString())" type="code"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="thresholdTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="aScoreLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Threshold"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="probabilisticScoreCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="probabilisticScoreCmbActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="neutralLossesLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Score"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="estimateAScoreLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Probabilistic score"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="neutralLossesLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Account Neutral Losses"/>
+              </Properties>
+            </Component>
             <Component class="javax.swing.JComboBox" name="neutralLossesCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -272,18 +368,12 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="flrTxt">
+            <Component class="javax.swing.JLabel" name="neutralLossesLabel3">
               <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="1"/>
+                <Property name="text" type="java.lang.String" value="Threshold auto"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="aScoreLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="False Localization Rate"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="ascoreCmb">
+            <Component class="javax.swing.JComboBox" name="thresholdCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
@@ -292,21 +382,9 @@
                   </StringArray>
                 </Property>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="neutralLossesLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Account Neutral Losses"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="estimateAScoreLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Estimate A-score"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="percentLabel1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="%"/>
-              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="thresholdCmbActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -314,7 +392,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Fractions"/>
+                <TitledBorder title="Fractions (Beta)"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -369,6 +447,24 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="helpJButton">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/icons/help.GIF"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Help"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="helpJButtonMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="helpJButtonMouseExited"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpJButtonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

@@ -414,7 +414,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         selectedValuesTablePopupMenu.add(hideColumnsMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Statistics");
+        setTitle("Statistics (beta)");
         setMinimumSize(new java.awt.Dimension(800, 700));
 
         backgroundPanel.setBackground(new java.awt.Color(255, 255, 255));

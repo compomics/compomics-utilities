@@ -17,32 +17,48 @@
 
         <a name="#Introduction"></a>
         <h3>Introduction</h3>
-        The <b>Processing Preferences</b> are provided to <b>PeptideShaker</b> for the creation of your project. They are set before processing and cannot be changed subsequently. It is thus important to carefully inspect these before creating the project.
+        The <b>Processing Preferences</b> are provided to <b>PeptideShaker</b> for the creation of your project. They are set 
+        before processing and cannot be changed subsequently. It is thus important to carefully inspect these before creating 
+        the project.
         <br><br>
         <a href="#top">Go to top of page</a>
         <br><br><br>
 
         <a name="#ProcessingParameters"></a>
         <h3>Processing Parameters</h3>
-        The <b>processing parameters</b> comprise PSM, peptide and protein level convenience FDR threshold which are used for an initial validation of the matches. The validation of the matches can be changed once the project is created in the <i>Validation</i> tab without having to recreate a project.
-        For more help on Validation of matches see chapter 1.5 in our <a href="http://compomics.com/bioinformatics-for-proteomics/identification/">tutorial</a>.
+        The <b>processing parameters</b> comprise PSM, peptide and protein level convenience FDR threshold which are used for 
+        an initial validation of the matches. The validation of the matches can be changed once the project is created in the 
+        <i>Validation</i> tab without having to recreate a project.
+        <br><br>
+        For more help on validation of matches see Chapter 1.5 in our <a href="http://compomics.com/bioinformatics-for-proteomics">tutorial</a>.
         <br><br>
         <a href="#top">Go to top of page</a>
         <br><br><br>
 
         <a name="#PTMScoring"></a>
         <h3>PTM Scoring</h3>
-        The distinction of PTM sites is crucial for the distinction of peptides and scoring of proteins. <b>PeptideShaker</b> combines two scores to infer the confidence of a PTM localization: the <a href="http://onlinelibrary.wiley.com/doi/10.1002/pmic.201200408/abstract">D-score</a> and a probabilistic score. For more information on PTM site scoring, we recommend this <a href="http://www.mcponline.org/cgi/pmidlookup?view=long&pmid=22328712">review form Chalkley and Clauser</a>. In this dialog, you can tune the settings regarding PTM scoring. Note that since these will have strong impact on peptide inference and protein scoring, these settings cannot be changed after the project has been created.
-        You can choose to (i) turn off the probabilistic score, the import will be faster but the data of lower quality; (ii) select the score of your choice; (iii) select whether the score shall account for peaks with neutral losses; (iv) use an automatic threshold; and (v) use a manual threshold.
-        Probabilistic algorithms rely on the model that an ion is present or not in the spectrum. They are generally confused when a peak can match two different ions. This is notably the case when working with neutral losses. Thus, it is recommended to disable the use of neutral losses in order to reduce the search space.
-        When using an automatic threshold, <b>PeptideShaker</b> will use both scores to validate only the most confident ones, typically reaching < 1% FLR. You can also set a manual threshold.
+        The distinction of PTM sites is crucial for the distinction of peptides and scoring of proteins. <b>PeptideShaker</b> 
+        combines two scores to infer the confidence of a PTM localization: the <a href="http://onlinelibrary.wiley.com/doi/10.1002/pmic.201200408/abstract">D-score</a> 
+        and a probabilistic score. For more information on PTM site scoring, we recommend this <a href="http://www.mcponline.org/cgi/pmidlookup?view=long&pmid=22328712"> review form Chalkley and Clauser</a>. 
+        In this dialog, you can tune the settings regarding PTM scoring. Note that since these will have strong impact on peptide inference and protein scoring, 
+        these settings cannot be changed after the project has been created.
+        <br><br>
+        You can choose to (i) turn off the probabilistic score, the import will be faster but the data of lower quality; (ii) select the score of your choice; (iii) 
+        select whether the score shall account for peaks with neutral losses; (iv) use an automatic threshold; and (v) use a manual threshold.
+        <br><br>
+        Probabilistic algorithms rely on the model that an ion is present or not in the spectrum. They are generally confused when a peak can match two different 
+        ions. This is notably the case when working with neutral losses. Thus, it is recommended to disable the use of neutral losses in order to reduce the
+        search space.
+        <br><br>
+        When using an automatic threshold, <b>PeptideShaker</b> will use both scores to validate only the most confident ones, typically reaching &lt; 1% FLR. You 
+        can also set a manual threshold.
         <br><br>
         <a href="#top">Go to top of page</a>
         <br><br><br>
 
         <a name="#Fractions"></a>
         <h3>Fractions (beta)</h3>
-        todo
+        Set the protein confidence level required before a protein is included in the Fractions molecular weight plot.
         <br><br>
         <a href="#top">Go to top of page</a>
         <br><br><br>

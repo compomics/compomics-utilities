@@ -271,7 +271,7 @@ public class ProteinTree {
     private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        if (printExpectedImportTime && waitingHandler != null && waitingHandler.isReport()) {
+        if (printExpectedImportTime) {
             int nSeconds = getExpectedImportTime();
             String report = "Expected import time: ";
             if (nSeconds < 120) {
@@ -285,7 +285,11 @@ public class ProteinTree {
                     report += nHours + " hours.";
                 }
             }
-            waitingHandler.appendReport(report, true, true);
+            if (waitingHandler != null && waitingHandler.isReport()) {
+                waitingHandler.appendReport(report, true, true);
+            } else {
+                System.out.println(report);
+            }
         }
 
         componentsFactory.saveInitialSize(initialTagSize);
@@ -429,12 +433,12 @@ public class ProteinTree {
             ArrayList<Double> ratios = new ArrayList<Double>();
             for (Long size : importTimeMap.keySet()) {
                 for (Long time : importTimeMap.get(size)) {
-                    double ratio = (double) (time / size);
+                    double ratio = (double) (size / time);
                     ratios.add(ratio);
                 }
             }
             double ratio = BasicMathFunctions.percentile(ratios, 0.95);
-            return (int) (ratio * (sequenceFactory.getCurrentFastaFile().length() / 1000));
+            return (int) (sequenceFactory.getCurrentFastaFile().length() / (1000*ratio));
         }
     }
 

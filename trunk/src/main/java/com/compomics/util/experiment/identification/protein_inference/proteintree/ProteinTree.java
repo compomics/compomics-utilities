@@ -428,7 +428,7 @@ public class ProteinTree {
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         HashMap<Long, ArrayList<Long>> importTimeMap = utilitiesUserPreferences.getProteinTreeImportTime();
         if (importTimeMap.isEmpty()) {
-            return sequenceFactory.getNTargetSequences() * 8 / 1000;
+            return sequenceFactory.getNTargetSequences() * 16 / 1000;
         } else {
             ArrayList<Double> ratios = new ArrayList<Double>();
             for (Long size : importTimeMap.keySet()) {

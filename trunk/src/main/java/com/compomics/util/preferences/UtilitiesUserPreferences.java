@@ -560,11 +560,13 @@ public class UtilitiesUserPreferences implements Serializable {
         }
         importTimes.add(importTime);
     }
-    
+
     /**
      * Clears the protein tree import times
      */
     public void clearProteinTreeImportTimes() {
-        proteinTreeImportTime.clear();
+        if (proteinTreeImportTime != null) {
+            proteinTreeImportTime.clear();
+        }
     }
 }

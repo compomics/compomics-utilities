@@ -562,7 +562,7 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Clears the protein tree import times
+     * Clears the protein tree import times.
      */
     public void clearProteinTreeImportTimes() {
         if (proteinTreeImportTime != null) {

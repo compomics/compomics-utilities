@@ -15,9 +15,9 @@ public interface WaitingHandler {
      */
     public static final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
     /**
-     * The tab space to add when using tab.
+     * The tabHtml space to add when using tabHtml.
      */
-    public static final String tab = "        "; // tab could be used, but lenght is locale dependent
+    public static final String tabHtml = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     /**
      * Sets whether the primary progress counter is indeterminate or not.

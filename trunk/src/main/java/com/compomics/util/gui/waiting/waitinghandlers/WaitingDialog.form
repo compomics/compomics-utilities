@@ -140,31 +140,6 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="reportAreaScrollPane">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-                      <JLayeredPaneConstraints x="0" y="0" width="842" height="490" layer="0" position="-1"/>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JTextArea" name="reportArea">
-                      <Properties>
-                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="fe" green="fe" red="fe" type="rgb"/>
-                        </Property>
-                        <Property name="columns" type="int" value="20"/>
-                        <Property name="editable" type="boolean" value="false"/>
-                        <Property name="lineWrap" type="boolean" value="true"/>
-                        <Property name="rows" type="int" value="5"/>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
                 <Container class="javax.swing.JPanel" name="tipOfTheDayJPanel">
                   <Properties>
                     <Property name="opaque" type="boolean" value="false"/>
@@ -293,6 +268,30 @@
                     </Container>
                   </SubComponents>
                 </Container>
+                <Container class="javax.swing.JScrollPane" name="reportPaneScrollPane">
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
+                      <JLayeredPaneConstraints x="0" y="10" width="840" height="480" layer="0" position="-1"/>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JEditorPane" name="reportEditorPane">
+                      <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
+                        <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="hyperlinkUpdate" listener="javax.swing.event.HyperlinkListener" parameters="javax.swing.event.HyperlinkEvent" handler="reportEditorPaneHyperlinkUpdate"/>
+                      </Events>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JSplitPane" name="secondaryProgressBarSplitPane">
@@ -347,9 +346,9 @@
             <Property name="toolTipText" type="java.lang.String" value="Save the report to a text file"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="saveReportLabelMouseReleased"/>
             <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="saveReportLabelMouseEntered"/>
             <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="saveReportLabelMouseExited"/>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="saveReportLabelMouseReleased"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="showTipOfTheDayCheckBox">

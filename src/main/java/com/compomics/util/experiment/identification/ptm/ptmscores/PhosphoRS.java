@@ -25,6 +25,7 @@ import java.util.HashSet;
 /**
  * This class estimates the PhosphoRS score as described in
  * http://www.ncbi.nlm.nih.gov/pubmed/22073976.
+ * Warining: still under testing
  *
  * @author Marc Vaudel
  */
@@ -131,7 +132,7 @@ public class PhosphoRS {
             while (minMz < maxMz) {
                 tempMax = minMz + 100;
                 MSnSpectrum tempSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle()
-                        + "_PhosphoRS_minMZ_" + minMz, spectrum.getSubSpectrum(maxMz, tempMax), spectrum.getFileName());
+                        + "_PhosphoRS_minMZ_" + minMz, spectrum.getSubSpectrum(minMz, tempMax), spectrum.getFileName());
                 ArrayList<MSnSpectrum> spectra = getReducedSpectra(tempSpectrum);
                 HashMap<ArrayList<Integer>, ArrayList<Double>> subMapGoofy = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
                 for (double ionMz : siteDeterminingIons) {
@@ -159,16 +160,17 @@ public class PhosphoRS {
                         ArrayList<Double> currentDeltas = new ArrayList<Double>();
                         ArrayList<ArrayList<Double>> scored = new ArrayList<ArrayList<Double>>();
                         boolean noIons = false;
-
                         for (ArrayList<Integer> profile : possibleProfiles) {
-                            if (!subMapGoofy.containsKey(profile) && !noIons) {
-                                noIons = true;
-                                Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
-                                for (int pos : profile) {
-                                    tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
+                            if (!subMapGoofy.containsKey(profile)) {
+                                if (!noIons) {
+                                    noIons = true;
+                                    Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
+                                    for (int pos : profile) {
+                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
+                                    }
+                                    double score = getPhosphoRsScore(tempPeptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                                    scores.add(score);
                                 }
-                                double score = getPhosphoRsScore(tempPeptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
-                                scores.add(score);
                             } else {
                                 ArrayList<Double> tempSiteDeterminingIons = subMapGoofy.get(profile);
                                 boolean alreadyScored = false;
@@ -193,7 +195,7 @@ public class PhosphoRS {
                         Collections.sort(scores, Collections.reverseOrder());
 
                         for (int j = 0; j < scores.size() - 1; j++) {
-                            currentDeltas.add(scores.get(i) - scores.get(i + 1));
+                            currentDeltas.add(scores.get(j) - scores.get(j + 1));
                         }
 
                         if (currentDeltas.size() > nDeltas) {
@@ -220,7 +222,7 @@ public class PhosphoRS {
                     }
 
                     if (largestDelta == 0) {
-                        bestI = maxDepth;
+                        bestI = Math.min(maxDepth, spectra.size() - 1);
                     }
 
                     reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
@@ -239,6 +241,7 @@ public class PhosphoRS {
 
                     reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
                 }
+                minMz = tempMax;
             }
 
             MSnSpectrum phosphoRsSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_phosphoRS", reducedSpectrum, spectrum.getFileName());
@@ -254,7 +257,7 @@ public class PhosphoRS {
                 }
 
                 double score = getPhosphoRsScore(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
-                double pInv = Math.pow(10, score - 1);
+                double pInv = Math.pow(10, score/10);
                 pInvMap.put(profile, pInv);
                 pInvTotal += pInv;
             }

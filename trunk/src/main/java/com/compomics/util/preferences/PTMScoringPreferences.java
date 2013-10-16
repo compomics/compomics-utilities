@@ -40,7 +40,8 @@ public class PTMScoringPreferences implements Serializable {
      */
     public enum ProbabilisticScore {
 
-        AScore("A-score");
+        AScore("A-score"),
+        PhosphoRS("PhosphoRS (beta)");
         /**
          * The name of the score.
          */
@@ -87,7 +88,7 @@ public class PTMScoringPreferences implements Serializable {
          * @return a list of implemented probabilistic scores
          */
         public static ProbabilisticScore[] getPossibilities() {
-            return new ProbabilisticScore[]{AScore};
+            return new ProbabilisticScore[]{AScore, PhosphoRS};
         }
 
         /**

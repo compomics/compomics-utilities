@@ -2,6 +2,7 @@ package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -68,6 +69,10 @@ public class ProteinTreeTest extends TestCase {
 
         ProteinTree proteinTree = new ProteinTree(1000);
         proteinTree.initiateTree(3, 500, 15, null, true, false);
+        
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        utilitiesUserPreferences.clearProteinTreeImportTimes();
+        utilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
 
         HashMap<String, ArrayList<Integer>> testIndexes = proteinTree.getProteinMapping("SSS");
         Assert.assertTrue(testIndexes.size() == 2);

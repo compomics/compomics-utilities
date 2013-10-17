@@ -170,7 +170,7 @@ public class ProteinTreeComponentsFactory {
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         File folder = utilitiesUserPreferences.getProteinTreeFolder();
         if (!folder.exists()) {
-            throw new IOException("Impossible to create database folder " + folder + ".");
+            folder.mkdirs();
         }
         return new File(folder, getDbFolderName());
     }

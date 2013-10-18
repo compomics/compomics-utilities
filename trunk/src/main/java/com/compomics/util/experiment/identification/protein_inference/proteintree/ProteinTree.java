@@ -275,14 +275,14 @@ public class ProteinTree {
             int nSeconds = getExpectedImportTime();
             String report = "Expected import time: ";
             if (nSeconds < 120) {
-                report += nSeconds + " seconds. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">ProteinInference</a>.)";
+                report += nSeconds + " seconds. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
             } else {
                 int nMinutes = nSeconds / 60;
                 if (nMinutes < 120) {
-                    report += nMinutes + " minutes. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">ProteinInference</a>.)";
+                    report += nMinutes + " minutes. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
                 } else {
                     int nHours = nMinutes / 60;
-                    report += nHours + " hours. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">ProteinInference</a>.)";
+                    report += nHours + " hours. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
                 }
             }
             if (waitingHandler != null && waitingHandler.isReport()) {

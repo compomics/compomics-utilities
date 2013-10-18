@@ -107,6 +107,14 @@ public class UtilitiesUserPreferences implements Serializable {
      * The user last used databases.
      */
     private ArrayList<File> favoriteDBs = null;
+    /**
+     * The list of already read tweets.
+     */
+    private ArrayList<String> readTweets = null;
+    /**
+     * The list of already displayed tips.
+     */
+    private ArrayList<String> displayedTips = null;
 
     /**
      * Constructor
@@ -568,5 +576,47 @@ public class UtilitiesUserPreferences implements Serializable {
         if (proteinTreeImportTime != null) {
             proteinTreeImportTime.clear();
         }
+    }
+
+    /**
+     * Returns the list of read tweets.
+     *
+     * @return the list of read tweets
+     */
+    public ArrayList<String> getReadTweets() {
+        if (readTweets == null) {
+            readTweets = new ArrayList<String>();
+        }
+        return readTweets;
+    }
+
+    /**
+     * Set the list of read tweets.
+     *
+     * @param readTweets the readTweets to set
+     */
+    public void setReadTweets(ArrayList<String> readTweets) {
+        this.readTweets = readTweets;
+    }
+
+    /**
+     * Returns the list of displayed tips.
+     *
+     * @return the displayed tips
+     */
+    public ArrayList<String> getDisplayedTips() {
+        if (displayedTips == null) {
+            displayedTips = new ArrayList<String>();
+        }
+        return displayedTips;
+    }
+
+    /**
+     * Set the list of displayed tips.
+     *
+     * @param displayedTips the displayedTips to set
+     */
+    public void setDisplayedTips(ArrayList<String> displayedTips) {
+        this.displayedTips = displayedTips;
     }
 }

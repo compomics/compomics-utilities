@@ -143,22 +143,21 @@ public class ObjectsDB implements Serializable {
      * working with the database
      */
     public void addTable(String tableName) throws SQLException {
-        if (tableName.length() >= 128) {
-            int index = longKeys.size();
-            longKeys.add(tableName);
-            tableName = index + "";
-        }
         if (debugInteractions) {
             System.out.println("Inserting table, table:" + tableName);
         }
         Statement stmt = dbConnection.createStatement();
-
-        stmt.execute("CREATE table " + tableName + " ("
-                + "NAME VARCHAR(32672) PRIMARY KEY," // note: 32672 is the max length for a varchar, not that we should need it...
-                + "MATCH_BLOB blob"
-                + ")");
-
-        stmt.close();
+        try {
+            stmt.execute("CREATE table " + tableName + " ("
+                    + "NAME VARCHAR(32672) PRIMARY KEY," // note: 32672 is the max length for a varchar, not that we should need it...
+                    + "MATCH_BLOB blob"
+                    + ")");
+        } catch (SQLException e) {
+            System.out.println("An error occurred while creating table " + tableName);
+            throw (e);
+        } finally {
+            stmt.close();
+        }
     }
 
     /**
@@ -186,9 +185,12 @@ public class ObjectsDB implements Serializable {
             ps.setString(1, objectKey);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(object);
-            oos.close();
-            bos.close();
+            try {
+                oos.writeObject(object);
+            } finally {
+                oos.close();
+                bos.close();
+            }
             ps.setBytes(2, bos.toByteArray());
             ps.executeUpdate();
         }
@@ -580,8 +582,11 @@ public class ObjectsDB implements Serializable {
             BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
             ObjectInputStream in = new ObjectInputStream(bis);
-            object = in.readObject();
-            in.close();
+            try {
+                object = in.readObject();
+            } finally {
+                in.close();
+            }
             results.close();
             stmt.close();
 
@@ -902,11 +907,13 @@ public class ObjectsDB implements Serializable {
      * @return the corrected table name
      */
     public String correctTableName(String tableName) {
-
         tableName = "\"" + tableName + "\"";
-
         if (longKeys.contains(tableName)) {
-            tableName = longKeys.indexOf(tableName) + "";
+            tableName = "\"" + longKeys.indexOf(tableName) + "\"";
+        } else if (tableName.length() >= 128) {
+            int index = longKeys.size();
+            longKeys.add(tableName);
+            tableName = "\"" + index + "\"";
         }
         return tableName;
     }

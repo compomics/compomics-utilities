@@ -27,4 +27,6 @@ Search engines provide their own peptide to protein mapping. However, the mappin
 
 Also, this task is complicated by the presence of Xs (which can be any amino-acid), combination of amino-acids like B or J and indistinguishable amino-acids like I and L: the software then has to test every possibility and false peptide to protein matches might occur. An extreme example where protein inference breaks down is proteins containing series of Xs (like [http://www.uniprot.org/uniprot/Q02505 UniProtKB/Swiss-Prot Mucin-3A] at the time of writing) which can basically map to any peptide.
 
+Peptide to protein mapping is implemented in software like [http://open-ms.sourceforge.net/ OpenMS] or [https://code.google.com/p/peptide-shaker/ PeptideShaker] and in standalone services like in the [http://proteininformationresource.org/peptide.shtml Protein Information Resource] or in the [https://code.google.com/p/compomics-utilities/ compomics-utilities package].
+
 For the sake of speed and quality, it is thus crucial to provide as few sequences as possible with as low ambiguity as possible.

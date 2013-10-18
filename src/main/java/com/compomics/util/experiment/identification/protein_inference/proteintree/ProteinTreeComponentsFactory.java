@@ -165,12 +165,16 @@ public class ProteinTreeComponentsFactory {
      * Returns the folder where the db in the sequence factory is stored.
      *
      * @return the folder where the db in the sequence factory is stored
+     * @throws IOException  
      */
     public File getDbFolder() throws IOException {
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         File folder = utilitiesUserPreferences.getProteinTreeFolder();
         if (!folder.exists()) {
-            folder.mkdirs();
+            boolean success = folder.mkdirs();
+            if (!success) {
+                throw new IOException("Unable to create database folder " + folder + ".");
+            }
         }
         return new File(folder, getDbFolderName());
     }

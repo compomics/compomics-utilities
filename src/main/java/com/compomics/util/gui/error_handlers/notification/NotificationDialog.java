@@ -65,16 +65,16 @@ public class NotificationDialog extends javax.swing.JDialog {
         notificationPanelLayout.setHorizontalGroup(
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificationPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(10, 10, 10)
                 .addComponent(notificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                .addGap(15, 15, 15))
+                .addGap(10, 10, 10))
         );
         notificationPanelLayout.setVerticalGroup(
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notificationPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(10, 10, 10)
                 .addComponent(notificationLabel)
-                .addGap(15, 15, 15))
+                .addGap(10, 10, 10))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

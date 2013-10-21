@@ -15,12 +15,12 @@ public class SwingUtils {
 
     /**
      * Creates an animation to fade the dialog opacity from 0 to 1. Using a
-     * default delay of 5 ms and an increment size of 0.005.
+     * default delay of 5 ms and an increment size of 0.05.
      *
      * @param dialog the dialog to fade in
      */
     public static void fadeIn(final JDialog dialog) {
-        fadeIn(dialog, 5, 0.005f);
+        fadeIn(dialog, 5, 0.05f);
     }
 
     /**
@@ -53,12 +53,12 @@ public class SwingUtils {
 
     /**
      * Creates an animation to fade the dialog opacity from 1 to 0. Using a
-     * default delay of 5 ms and an increment size of 0.005.
+     * default delay of 5 ms and an increment size of 0.05.
      *
      * @param dialog the dialog to fade out
      */
     public static void fadeOut(final JDialog dialog) {
-        fadeOut(dialog, 5, 0.005f);
+        fadeOut(dialog, 5, 0.05f);
     }
 
     /**

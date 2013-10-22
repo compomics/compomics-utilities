@@ -343,45 +343,54 @@ public class ObjectsDB implements Serializable {
 
             busy = true;
 
-            Statement stmt = dbConnection.createStatement();
-            results = stmt.executeQuery("select * from " + tableName);
+            try {
 
-            while (results.next()) {
+                Statement stmt = dbConnection.createStatement();
+                results = stmt.executeQuery("select * from " + tableName);
 
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
+                try {
+
+                    while (results.next()) {
+
+                        if (waitingHandler != null) {
+                            waitingHandler.increaseSecondaryProgressCounter();
+                            if (waitingHandler.isRunCanceled()) {
+                                break;
+                            }
+                        }
+                        String key = results.getString(1);
+
+                        if (!objectsCache.inCache(dbName, tableName, key)) {
+
+                            Blob tempBlob;
+
+                            if (useSQLite) {
+                                byte[] bytes = results.getBytes(2);
+                                tempBlob = new SerialBlob(bytes);
+                            } else {
+                                tempBlob = results.getBlob(2);
+                            }
+
+                            BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+
+                            ObjectInputStream in = new ObjectInputStream(bis);
+                            Object object = in.readObject();
+                            in.close();
+
+                            objectsCache.addObject(dbName, tableName, key, object, false);
+                        }
                     }
+
+                    tableQueue.remove(tableName);
+
+                } finally {
+                    results.close();
+                    stmt.close();
                 }
-                String key = results.getString(1);
 
-                if (!objectsCache.inCache(dbName, tableName, key)) {
-
-                    Blob tempBlob;
-
-                    if (useSQLite) {
-                        byte[] bytes = results.getBytes(2);
-                        tempBlob = new SerialBlob(bytes);
-                    } else {
-                        tempBlob = results.getBlob(2);
-                    }
-
-                    BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-
-                    ObjectInputStream in = new ObjectInputStream(bis);
-                    Object object = in.readObject();
-                    in.close();
-
-                    objectsCache.addObject(dbName, tableName, key, object, false);
-                }
+            } finally {
+                busy = false;
             }
-
-            results.close();
-            stmt.close();
-
-            busy = false;
-            tableQueue.remove(tableName);
 
         } else {
 
@@ -389,8 +398,9 @@ public class ObjectsDB implements Serializable {
                 tableQueue.add(tableName);
             }
 
-            wait(11);
-            //@TODO: would be nice to check that the db is working properly here. ie check the connection and so on
+            while (busy) {
+                wait(11);
+            }
 
             loadObjects(tableName, waitingHandler);
         }
@@ -442,45 +452,54 @@ public class ObjectsDB implements Serializable {
 
                 busy = true;
 
-                Statement stmt = dbConnection.createStatement();
-                ResultSet results = stmt.executeQuery("select * from " + tableName);
+                try {
 
-                int found = 0;
+                    Statement stmt = dbConnection.createStatement();
+                    ResultSet results = stmt.executeQuery("select * from " + tableName);
 
-                while (results.next() && found < toLoad.size()) {
-                    String key = results.getString(1);
-                    if (toLoad.contains(key)) {
-                        found++;
-                        Blob tempBlob;
+                    try {
 
-                        if (useSQLite) {
-                            byte[] bytes = results.getBytes(2);
-                            tempBlob = new SerialBlob(bytes);
-                        } else {
-                            tempBlob = results.getBlob(2);
+                        int found = 0;
+
+                        while (results.next() && found < toLoad.size()) {
+                            String key = results.getString(1);
+                            if (toLoad.contains(key)) {
+                                found++;
+                                Blob tempBlob;
+
+                                if (useSQLite) {
+                                    byte[] bytes = results.getBytes(2);
+                                    tempBlob = new SerialBlob(bytes);
+                                } else {
+                                    tempBlob = results.getBlob(2);
+                                }
+
+                                BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+
+                                ObjectInputStream in = new ObjectInputStream(bis);
+                                Object object = in.readObject();
+                                in.close();
+                                bis.close();
+
+                                objectsCache.addObject(dbName, tableName, key, object, false);
+                                if (waitingHandler != null) {
+                                    waitingHandler.increaseSecondaryProgressCounter();
+                                }
+                            }
+                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                break;
+                            }
                         }
 
-                        BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-
-                        ObjectInputStream in = new ObjectInputStream(bis);
-                        Object object = in.readObject();
-                        in.close();
-                        bis.close();
-
-                        objectsCache.addObject(dbName, tableName, key, object, false);
-                        if (waitingHandler != null) {
-                            waitingHandler.increaseSecondaryProgressCounter();
-                        }
+                    } finally {
+                        results.close();
+                        stmt.close();
                     }
-                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                        break;
-                    }
+
+                } finally {
+                    busy = false;
                 }
 
-                results.close();
-                stmt.close();
-
-                busy = false;
             }
         } else {
 
@@ -489,8 +508,9 @@ public class ObjectsDB implements Serializable {
                 contentTableQueue.add(tableName);
                 contentQueue.put(tableName, keys);
             } else if (keys.equals(contentQueue.get(tableName))) {
-                wait(7);
-                //@TODO: would be nice to check that the db is working properly here. ie check the connection and so on
+                while (busy) {
+                    wait(7);
+                }
                 loadObjects(tableName, keys, waitingHandler);
             } else {
                 ArrayList<String> queue = contentQueue.get(tableName);
@@ -580,7 +600,6 @@ public class ObjectsDB implements Serializable {
             }
 
             BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-
             ObjectInputStream in = new ObjectInputStream(bis);
             try {
                 object = in.readObject();

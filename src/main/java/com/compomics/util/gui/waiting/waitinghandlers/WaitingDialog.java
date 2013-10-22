@@ -107,7 +107,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param processName the name of the process we are waiting for, e.g.,
      * 'Import Data' or 'Search'
      * @param toolName the name of the tool, need for the report
-     * @param toolVersion the version number of the tool, need for the report
+     * @param toolVersion the version number of the tool, needed for the report
      * @param modal
      */
     public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, String processName,
@@ -126,7 +126,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param processName the name of the process we are waiting for
      * @param modal
      * @param toolName the name of the tool, need for the report
-     * @param toolVersion the version number of the tool, need for the report
+     * @param toolVersion the version number of the tool, needed for the report
      * @param tips the list of Tip of the day
      */
     public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished,

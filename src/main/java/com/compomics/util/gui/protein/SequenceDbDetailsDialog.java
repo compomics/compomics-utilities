@@ -133,6 +133,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     private void updateSequence() {
         String accession = accessionsSpinner.getValue().toString();
         try {
+            if (sequenceFactory.isClosed()) {
+                sequenceFactory.resetConnection();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             Protein protein = sequenceFactory.getProtein(accession);
             proteinTxt.setText(sequenceFactory.getHeader(accession).toString() + System.getProperty("line.separator") + protein.getSequence());
             proteinTxt.setCaretPosition(0);
@@ -199,7 +206,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 File file = fc.getSelectedFile();
                 lastSelectedFolder = file.getParent();
                 utilitiesUserPreferences.setDbFolder(file.getParentFile());
-
 
                 if (file.getName().indexOf(" ") != -1) {
                     file = renameFastaFileName(file);
@@ -862,8 +868,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Show the AdvancedProteinDatabaseDialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void advancedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedButtonActionPerformed
         new AdvancedProteinDatabaseDialog(parentFrame);

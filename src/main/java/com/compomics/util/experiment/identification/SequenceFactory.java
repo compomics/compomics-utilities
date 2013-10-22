@@ -392,6 +392,23 @@ public class SequenceFactory {
         currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(false, waitingHandler);
     }
+    
+    /**
+     * Indicates whether the connection to the random access file has been closed.
+     * 
+     * @return a boolean indicating whether the connection to the random access file has been closed.
+     */
+    public boolean isClosed() {
+        return currentFastaFile == null;
+    }
+    
+    /**
+     * Resets the connection to the random access file.
+     */
+    public void resetConnection() throws IOException {
+        currentRandomAccessFile.close();
+        currentRandomAccessFile = new BufferedRandomAccessFile(currentFastaFile, "r", 1024 * 100);
+    }
 
     /**
      * Returns the file index of a FASTA file.
@@ -632,6 +649,7 @@ public class SequenceFactory {
     public void closeFile() throws IOException, SQLException {
         if (currentRandomAccessFile != null) {
             currentRandomAccessFile.close();
+            currentFastaFile = null;
         }
         if (defaultProteinTree != null) {
             defaultProteinTree.close();
@@ -737,6 +755,15 @@ public class SequenceFactory {
      */
     public int getNTargetSequences() {
         return fastaIndex.getNTarget();
+    }
+    
+    /**
+     * Returns the number of sequences in the fasta file.
+     * 
+     * @return the number of sequences in the fasta file
+     */
+    public int getNSequences() {
+        return fastaIndex.getNSequences();
     }
 
     /**

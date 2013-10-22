@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.15.30</version>
+    <version>3.15.31</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -283,13 +283,10 @@
             <url>http://genesis.UGent.be/maven2</url>
             <layout>default</layout>
         </repository>
-
-        <!-- EBI nexus repository -->
         <repository>
-            <id>nexus-ebi-repo</id>
+            <id>ebi-repo</id> 
             <name>The EBI internal repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-            <layout>default</layout>
+            <url>http://www.ebi.ac.uk/~maven/m2repo</url> 
         </repository>
 
     </repositories>

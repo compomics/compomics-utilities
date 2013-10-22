@@ -32,6 +32,7 @@ public class NotesDialog extends javax.swing.JDialog {
         }
 
         notesEditorPane.setText("<html>" + allNotes + "</html>");
+        notesEditorPane.setCaretPosition(0);
         notesScrollPane.getViewport().setOpaque(false);
     }
 

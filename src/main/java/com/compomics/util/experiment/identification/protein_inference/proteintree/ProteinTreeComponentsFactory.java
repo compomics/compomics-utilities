@@ -8,8 +8,8 @@ import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This factory stores and returns protein trees components from databases.
@@ -65,7 +65,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * List of all tags in tree.
      */
-    private ArrayList<String> tagsInTree = null;
+    private HashSet<String> tagsInTree = null;
 
     /**
      * Constructor.
@@ -387,6 +387,6 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      */
     public void loadTags() throws SQLException {
-        tagsInTree = objectsDB.tableContent(nodeTable);
+        tagsInTree = objectsDB.tableContentAsSet(nodeTable);
     }
 }

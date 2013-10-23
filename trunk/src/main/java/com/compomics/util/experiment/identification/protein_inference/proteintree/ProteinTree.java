@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class sorts the proteins into groups.
@@ -63,7 +61,7 @@ public class ProteinTree {
     /**
      * Indicates whether the number of passages shall be displayed.
      */
-    private boolean debugPassages = true;
+    private boolean debugPassages = false;
     /**
      * The writer used to send the output to a debug file.
      */
@@ -438,7 +436,7 @@ public class ProteinTree {
                 }
             }
             double ratio = BasicMathFunctions.percentile(ratios, 0.05);
-            return (int) (1.2 * sequenceFactory.getCurrentFastaFile().length() / (1000*ratio));
+            return (int) (1.2 * sequenceFactory.getCurrentFastaFile().length() / (1000 * ratio));
         }
     }
 
@@ -795,7 +793,6 @@ public class ProteinTree {
                 }
 
                 result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-
                 ArrayList<String> initialTags = getInitialTags(peptideSequence, matchingType, massTolerance);
 
                 for (String tag : initialTags) {
@@ -903,20 +900,20 @@ public class ProteinTree {
             result.clear();
             if (tempTags.isEmpty()) {
                 for (char newAa : aminoAcid.getSubAminoAcids()) {
-                    String newTag = newAa + "";
+                    String newTag = String.valueOf(newAa);
                     if (!result.contains(newTag)) {
                         result.add(newTag);
                     }
                 }
                 for (char newAa : aminoAcid.getCombinations()) {
-                    String newTag = newAa + "";
+                    String newTag = String.valueOf(newAa);
                     if (!result.contains(newTag)) {
                         result.add(newTag);
                     }
                 }
                 if (matchingType == MatchingType.indistiguishibleAminoAcids) {
                     for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
-                        String newTag = newAa + "";
+                        String newTag = String.valueOf(newAa);
                         if (!result.contains(newTag)) {
                             result.add(newTag);
                         }
@@ -1356,17 +1353,17 @@ public class ProteinTree {
                     }
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (IOException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
             finished = true;
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
 
@@ -1487,13 +1484,13 @@ public class ProteinTree {
             try {
                 node.splitNode(maxNodeSize, maxPeptideSize);
             } catch (IOException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (InterruptedException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
             finished = true;
             if (displayProgress && waitingHandler != null) {
@@ -1502,7 +1499,7 @@ public class ProteinTree {
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
 

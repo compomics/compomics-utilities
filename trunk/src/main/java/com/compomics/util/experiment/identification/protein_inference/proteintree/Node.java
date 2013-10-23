@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A node of the protein tree.
@@ -409,6 +407,7 @@ public class Node implements Serializable {
         String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
         int peptideLength = peptideSequence.length();
+
         for (int startIndex : seeds) {
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
@@ -424,6 +423,7 @@ public class Node implements Serializable {
                 }
             }
         }
+
         return results;
     }
 
@@ -569,20 +569,20 @@ public class Node implements Serializable {
                     String accession = protein.getAccession();
                     indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptideSequence, matchingType, massTolerance));
                 } catch (IOException ex) {
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 }
             }
             finished = true;
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {
-                Logger.getLogger(ProteinTree.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
 

@@ -116,11 +116,11 @@ public class IdfileReaderFactory {
      * @throws SAXException
      * @throws FileNotFoundException
      * @throws IOException
+     * @throws OutOfMemoryError thrown if the parser runs out of memory
      */
-    public IdfileReader getFileReader(File aFile, WaitingHandler waitingHandler) throws SAXException, FileNotFoundException, IOException {
+    public IdfileReader getFileReader(File aFile, WaitingHandler waitingHandler) throws SAXException, FileNotFoundException, IOException, OutOfMemoryError {
 
         // @TODO: create parsers using waiting handlers and indexed files.
-
         // The return value, defaulting to null.
         IdfileReader result = null;
 
@@ -128,11 +128,9 @@ public class IdfileReaderFactory {
         String name = aFile.getName().toLowerCase();
 
         // Iterator registered IdfileReaders, see who likes this file. First come, first served.
-
         // @TODO: May want to make this more sophisticated, possibly like the DBLoaders in DBToolkit, 
         //        that get the actual file to read some lines prior to making up their mind; thus constitutes 
         //        an actual format check rather than an extension check.
-
         Iterator<String> extensions = idFileReaders.keySet().iterator();
         while (extensions.hasNext()) {
             String key = extensions.next();
@@ -151,9 +149,14 @@ public class IdfileReaderFactory {
                             + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' has incorrect access modifier!", iae);
                     iae.printStackTrace();
                 } catch (InvocationTargetException ite) {
-                    logger.error("Required constructor with single java.io.File parameter in IdfileReader implementation '"
-                            + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' threw an exception!", ite);
-                    ite.printStackTrace();
+                    if (ite.getCause() instanceof OutOfMemoryError) {
+                        ite.printStackTrace();
+                        throw (OutOfMemoryError) ite.getCause();
+                    } else {
+                        logger.error("Required constructor with single java.io.File parameter in IdfileReader implementation '"
+                                + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' threw an exception!", ite);
+                        ite.printStackTrace();
+                    }
                 } catch (InstantiationException ie) {
                     logger.error("Required constructor with single java.io.File parameter in IdfileReader implementation '"
                             + idfileReaderClass.getCanonicalName() + "', matching query extension '" + extension + "' inaccessible; probably abstract class?!", ie);

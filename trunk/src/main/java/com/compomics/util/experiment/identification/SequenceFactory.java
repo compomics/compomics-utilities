@@ -392,18 +392,22 @@ public class SequenceFactory {
         currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(false, waitingHandler);
     }
-    
+
     /**
-     * Indicates whether the connection to the random access file has been closed.
-     * 
-     * @return a boolean indicating whether the connection to the random access file has been closed.
+     * Indicates whether the connection to the random access file has been
+     * closed.
+     *
+     * @return a boolean indicating whether the connection to the random access
+     * file has been closed.
      */
     public boolean isClosed() {
         return currentFastaFile == null;
     }
-    
+
     /**
      * Resets the connection to the random access file.
+     * 
+     * @throws java.io.IOException
      */
     public void resetConnection() throws IOException {
         currentRandomAccessFile.close();
@@ -555,7 +559,6 @@ public class SequenceFactory {
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
-
                 if (accession == null) {
                     accession = fastaHeader.getRest();
                 }
@@ -674,11 +677,7 @@ public class SequenceFactory {
         String start = decoyFlag + ".*";
         String end = ".*" + decoyFlag;
 
-        if (proteinAccession.matches(start) || proteinAccession.matches(end)) {
-            return true;
-        }
-
-        return false;
+        return proteinAccession.matches(start) || proteinAccession.matches(end);
     }
 
     /**
@@ -756,10 +755,10 @@ public class SequenceFactory {
     public int getNTargetSequences() {
         return fastaIndex.getNTarget();
     }
-    
+
     /**
      * Returns the number of sequences in the fasta file.
-     * 
+     *
      * @return the number of sequences in the fasta file
      */
     public int getNSequences() {
@@ -1144,6 +1143,7 @@ public class SequenceFactory {
 
             int previousCache = nCache;
             int tagLength = 3;
+
             if (memoryPreference < 2000) {
                 defaultProteinTree.setCacheSize(500);
             } else {
@@ -1163,10 +1163,39 @@ public class SequenceFactory {
                     }
                 }
             }
+
             defaultProteinTree.initiateTree(tagLength, 500, 50, waitingHandler, true, displayProgress);
             emptyCache();
             setnCache(previousCache);
+
+            // close and delete the database if the process was canceled
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                defaultProteinTree.close();
+                defaultProteinTree.deleteDb();
+            }
         }
+
         return defaultProteinTree;
+    }
+
+    /**
+     * Try to delete the current database.
+     *
+     * @return true of the deletion was a success
+     */
+    public boolean deleteProteinTree() {
+        if (defaultProteinTree != null) {
+            try {
+                defaultProteinTree.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return defaultProteinTree.deleteDb();
+        }
+        return true;
     }
 }

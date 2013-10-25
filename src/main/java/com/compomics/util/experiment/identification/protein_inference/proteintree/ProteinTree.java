@@ -220,7 +220,7 @@ public class ProteinTree {
             if (needImport) {
                 importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime, displayProgress);
             } else {
-                componentsFactory.loadProteinLenths();
+                componentsFactory.loadProteinLengths();
             }
         } catch (IOException e) {
             componentsFactory.delete();
@@ -242,6 +242,20 @@ public class ProteinTree {
             componentsFactory.loadTags();
         } catch (Exception e) {
             // ignore, tree will just be slower
+        }
+    }
+
+    /**
+     * Try to delete the current database.
+     *
+     * @return true of the deletion was a success
+     */
+    public boolean deleteDb() {
+        try {
+            return componentsFactory.delete();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
         }
     }
 
@@ -273,14 +287,14 @@ public class ProteinTree {
             int nSeconds = getExpectedImportTime();
             String report = "Expected import time: ";
             if (nSeconds < 120) {
-                report += nSeconds + " seconds. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>)";
+                report += nSeconds + " seconds. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
             } else {
                 int nMinutes = nSeconds / 60;
                 if (nMinutes < 120) {
-                    report += nMinutes + " minutes. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>)";
+                    report += nMinutes + " minutes. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
                 } else {
                     int nHours = nMinutes / 60;
-                    report += nHours + " hours. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>)";
+                    report += nHours + " hours. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
                 }
             }
             if (waitingHandler != null && waitingHandler.isReport()) {
@@ -352,11 +366,15 @@ public class ProteinTree {
             debugSpeedWriter.flush();
         }
 
-        if (waitingHandler != null && displayProgress) {
+        if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             int totalProgress = (int) (nPassages * accessions.size() + tags.size());
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
             waitingHandler.setSecondaryProgressCounter(0);
+        }
+
+        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+            return;
         }
 
         long time0 = System.currentTimeMillis();
@@ -381,6 +399,10 @@ public class ProteinTree {
                 }
             }
             tempTags.add(tag);
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                return;
+            }
         }
 
         if (!tempTags.isEmpty()) {
@@ -409,7 +431,6 @@ public class ProteinTree {
         UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
 
         if (debugSpeed) {
-
             debugSpeedWriter.write("tree initiation: " + initiationTime + " ms.");
             System.out.println("tree initiation: " + initiationTime + " ms.");
             debugSpeedWriter.newLine();
@@ -466,7 +487,7 @@ public class ProteinTree {
         // Find the tags in the proteins and create a node per tag found
         indexProteins(tags, accessions, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
         // Increase the progress by the number of tags not found 
-        if (displayProgress && waitingHandler != null) {
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
         }
         // Split the nodes and save them in the db
@@ -800,13 +821,14 @@ public class ProteinTree {
                     if (node != null) {
                         HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideSequence, matchingType, massTolerance);
                         for (String tagSequence : tagResults.keySet()) {
-                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence), tagMapping = tagResults.get(tagSequence);
+                            HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence);
+                            HashMap<String, ArrayList<Integer>> tagMapping = tagResults.get(tagSequence);
                             if (mapping == null && !tagMapping.isEmpty()) {
                                 result.put(tagSequence, tagMapping);
                             } else {
                                 for (String tagAccession : tagMapping.keySet()) {
-                                    ArrayList<Integer> indexes = mapping.get(tagAccession),
-                                            tagIndexes = tagMapping.get(tagAccession);
+                                    ArrayList<Integer> indexes = mapping.get(tagAccession);
+                                    ArrayList<Integer> tagIndexes = tagMapping.get(tagAccession);
                                     if (indexes == null) {
                                         mapping.put(tagAccession, tagIndexes);
                                     } else {
@@ -1348,8 +1370,11 @@ public class ProteinTree {
             try {
                 for (Protein protein : proteins) {
                     indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
-                    if (displayProgress && waitingHandler != null) {
+                    if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                         waitingHandler.increaseSecondaryProgressCounter();
+                    }
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        return;
                     }
                 }
             } catch (SQLException ex) {
@@ -1493,7 +1518,7 @@ public class ProteinTree {
                 ex.printStackTrace();
             }
             finished = true;
-            if (displayProgress && waitingHandler != null) {
+            if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 waitingHandler.increaseSecondaryProgressCounter();
             }
             try {

@@ -123,6 +123,7 @@ public class ProteinTreeComponentsFactory {
      * Sets the currently loaded database as corrupted and tries to delete it.
      *
      * @return true if deletion was successful
+     * @throws java.io.IOException
      */
     public boolean delete() throws IOException {
         try {
@@ -284,7 +285,7 @@ public class ProteinTreeComponentsFactory {
      * @throws IOException
      * @throws InterruptedException
      */
-    public void loadProteinLenths() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
+    public void loadProteinLengths() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         objectsDB.loadObjects(lengthTable, null);
     }
 

@@ -1164,7 +1164,7 @@ public class SequenceFactory {
                 }
             }
 
-            defaultProteinTree.initiateTree(tagLength, 500, 50, waitingHandler, true, displayProgress);
+            defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress);
             emptyCache();
             setnCache(previousCache);
 
@@ -1177,9 +1177,8 @@ public class SequenceFactory {
 
         return defaultProteinTree;
     }
-
     /**
-     * Try to delete the current database.
+     * Try to delete the default protein tree.
      *
      * @return true of the deletion was a success
      */
@@ -1197,5 +1196,208 @@ public class SequenceFactory {
             return defaultProteinTree.deleteDb();
         }
         return true;
+    }
+    
+    /**
+     * Returns an iterator of all the headers in the fasta file. Note: when reaching the end of the file the connection will be closed. Do it using the close() method if the end is never reached.
+     * 
+     * @param targetOnly boolean indicating whether only target accessions shall be iterated
+     * 
+     * @return a header iterator.
+     * 
+     * @throws FileNotFoundException 
+     */
+    public HeaderIterator getHeaderIterator(boolean targetOnly) throws FileNotFoundException {
+        return new HeaderIterator(currentFastaFile, targetOnly);
+    }
+    
+    /**
+     * Returns an iterator of all the proteins in the fasta file. Note: when reaching the end of the file the connection will be closed. Do it using the close() method if the end is never reached.
+     * 
+     * @param targetOnly boolean indicating whether only target accessions shall be iterated
+     * 
+     * @return a protein iterator.
+     * 
+     * @throws FileNotFoundException 
+     */
+    public ProteinIterator getProteinIterator(boolean targetOnly) throws FileNotFoundException {
+        return new ProteinIterator(currentFastaFile, targetOnly);
+    }
+    /**
+     * Convenience iterator iterating the headers of a fasta file without using
+     * the cache. The order is the one in the fasta file
+     */
+    public class HeaderIterator {
+
+        /**
+         * The header of the next protein
+         */
+        private Header nextHeader = null;
+        /**
+         * The buffered reader
+         */
+        private BufferedReader br;
+        /**
+         * Boolean indicating whether target protein only should be iterated
+         */
+        private final boolean targetOnly;
+
+        /**
+         * Constructor
+         *
+         * @param targetOnly if true only target proteins will be iterated
+         * @param file the fasta file to iterate
+         */
+        public HeaderIterator(File file, boolean targetOnly) throws FileNotFoundException {
+            this.targetOnly = targetOnly;
+            br = new BufferedReader(new FileReader(file));
+        }
+
+        /**
+         * Returns true if there is a next header
+         *
+         * @return true if there is a next header
+         *
+         * @throws IOException
+         */
+        public boolean hasNext() throws IOException {
+            nextHeader = null;
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (!line.equals("")) {
+                    if (line.startsWith(">")) {
+                        nextHeader = Header.parseFromFASTA(line);
+                        if (!targetOnly || !isDecoyAccession(nextHeader.getAccession())) {
+                            break;
+                        } else {
+                            nextHeader = null;
+                        }
+                    }
+                }
+            }
+            if (nextHeader != null) {
+                return true;
+            } else {
+                close();
+                return false;
+            }
+        }
+
+        /**
+         * Returns the next header in the fasta file
+         *
+         * @return the next header in the fasta file
+         */
+        public Header getNext() {
+            return nextHeader;
+        }
+        /**
+         * Closes the connection to the file
+         */
+        public void close() throws IOException {
+            br.close();
+        }
+    }
+
+    /**
+     * Convenience iterator iterating all proteins in a fasta file without using
+     * index or cache
+     */
+    public class ProteinIterator {
+
+        /**
+         * The header of the next protein
+         */
+        private Header nextHeader = null;
+
+        /**
+         * The next protein
+         */
+        private Protein nextProtein = null;
+
+        /**
+         * The buffered reader
+         */
+        private BufferedReader br;
+        /**
+         * Boolean indicating whether target protein only should be iterated
+         */
+        private final boolean targetOnly;
+
+        /**
+         * Constructor
+         *
+         * @param targetOnly if true only target proteins will be iterated
+         * @param file the fasta file
+         *
+         * @throws FileNotFoundException
+         */
+        public ProteinIterator(File file, boolean targetOnly) throws FileNotFoundException {
+            this.targetOnly = targetOnly;
+            br = new BufferedReader(new FileReader(file));
+        }
+
+        /**
+         * Returns true if there is another protein
+         *
+         * @return true if there is another protein
+         *
+         * @throws IOException
+         */
+        public boolean hasNext() throws IOException {
+            nextProtein = null;
+            String sequence = "";
+            Header header = nextHeader;
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (!line.equals("")) {
+                    if (line.startsWith(">")) {
+                        Header tempHeader = Header.parseFromFASTA(line);
+                        if (targetOnly && isDecoyAccession(tempHeader.getAccession())) {
+                            while ((line = br.readLine()) != null && isDecoyAccession(tempHeader.getAccession())) {
+                                if (line.startsWith(">")) {
+                                    tempHeader = Header.parseFromFASTA(line);
+                                }
+                            }
+                            if (line == null) {
+                                break;
+                            }
+                        }
+                        if (header == null) {
+                            header = tempHeader;
+                        } else {
+                            nextHeader = tempHeader;
+                            break;
+                        }
+                    } else {
+                        sequence += line;
+                    }
+                }
+            }
+            if (!sequence.equals("")) {
+                nextProtein = new Protein(header.getAccession(), header.getDatabaseType(), sequence, isDecoyAccession(header.getAccession()));
+                return true;
+            } else {
+                close();
+                return false;
+            }
+        }
+
+        /**
+         * Returns the next protein
+         *
+         * @return the next protein
+         */
+        public Protein getNextProtein() {
+            return nextProtein;
+        }
+        /**
+         * Closes the connection to the file
+         */
+        public void close() throws IOException {
+            br.close();
+        }
     }
 }

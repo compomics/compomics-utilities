@@ -406,7 +406,7 @@ public class SequenceFactory {
 
     /**
      * Resets the connection to the random access file.
-     * 
+     *
      * @throws java.io.IOException
      */
     public void resetConnection() throws IOException {
@@ -1177,6 +1177,7 @@ public class SequenceFactory {
 
         return defaultProteinTree;
     }
+
     /**
      * Try to delete the default protein tree.
      *
@@ -1197,56 +1198,59 @@ public class SequenceFactory {
         }
         return true;
     }
-    
+
     /**
-     * Returns an iterator of all the headers in the fasta file. Note: when reaching the end of the file the connection will be closed. Do it using the close() method if the end is never reached.
-     * 
-     * @param targetOnly boolean indicating whether only target accessions shall be iterated
-     * 
+     * Returns an iterator of all the headers in the FASTA file. Note: when
+     * reaching the end of the file the connection will be closed. Do it using
+     * the close() method if the end is never reached.
+     *
+     * @param targetOnly boolean indicating whether only target accessions shall
+     * be iterated
      * @return a header iterator.
-     * 
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     public HeaderIterator getHeaderIterator(boolean targetOnly) throws FileNotFoundException {
         return new HeaderIterator(currentFastaFile, targetOnly);
     }
-    
+
     /**
-     * Returns an iterator of all the proteins in the fasta file. Note: when reaching the end of the file the connection will be closed. Do it using the close() method if the end is never reached.
-     * 
-     * @param targetOnly boolean indicating whether only target accessions shall be iterated
-     * 
+     * Returns an iterator of all the proteins in the FASTA file. Note: when
+     * reaching the end of the file the connection will be closed. Do it using
+     * the close() method if the end is never reached.
+     *
+     * @param targetOnly boolean indicating whether only target accessions shall
+     * be iterated
      * @return a protein iterator.
-     * 
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     public ProteinIterator getProteinIterator(boolean targetOnly) throws FileNotFoundException {
         return new ProteinIterator(currentFastaFile, targetOnly);
     }
+
     /**
-     * Convenience iterator iterating the headers of a fasta file without using
-     * the cache. The order is the one in the fasta file
+     * Convenience iterator iterating the headers of a FASTA file without using
+     * the cache. The order is the one in the FASTA file.
      */
     public class HeaderIterator {
 
         /**
-         * The header of the next protein
+         * The header of the next protein.
          */
         private Header nextHeader = null;
         /**
-         * The buffered reader
+         * The buffered reader.
          */
         private BufferedReader br;
         /**
-         * Boolean indicating whether target protein only should be iterated
+         * Boolean indicating whether target protein only should be iterated.
          */
         private final boolean targetOnly;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param targetOnly if true only target proteins will be iterated
-         * @param file the fasta file to iterate
+         * @param file the FASTA file to iterate
          */
         public HeaderIterator(File file, boolean targetOnly) throws FileNotFoundException {
             this.targetOnly = targetOnly;
@@ -1254,10 +1258,9 @@ public class SequenceFactory {
         }
 
         /**
-         * Returns true if there is a next header
+         * Returns true if there is a next header.
          *
          * @return true if there is a next header
-         *
          * @throws IOException
          */
         public boolean hasNext() throws IOException {
@@ -1285,15 +1288,18 @@ public class SequenceFactory {
         }
 
         /**
-         * Returns the next header in the fasta file
+         * Returns the next header in the FASTA file.
          *
-         * @return the next header in the fasta file
+         * @return the next header in the FASTA file
          */
         public Header getNext() {
             return nextHeader;
         }
+
         /**
-         * Closes the connection to the file
+         * Closes the connection to the file.
+         *
+         * @throws java.io.IOException
          */
         public void close() throws IOException {
             br.close();
@@ -1301,35 +1307,35 @@ public class SequenceFactory {
     }
 
     /**
-     * Convenience iterator iterating all proteins in a fasta file without using
-     * index or cache
+     * Convenience iterator iterating all proteins in a FASTA file without using
+     * index or cache.
      */
     public class ProteinIterator {
 
         /**
-         * The header of the next protein
+         * The header of the next protein.
          */
         private Header nextHeader = null;
 
         /**
-         * The next protein
+         * The next protein.
          */
         private Protein nextProtein = null;
 
         /**
-         * The buffered reader
+         * The buffered reader.
          */
         private BufferedReader br;
         /**
-         * Boolean indicating whether target protein only should be iterated
+         * Boolean indicating whether target protein only should be iterated.
          */
         private final boolean targetOnly;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param targetOnly if true only target proteins will be iterated
-         * @param file the fasta file
+         * @param file the FASTA file.
          *
          * @throws FileNotFoundException
          */
@@ -1339,7 +1345,7 @@ public class SequenceFactory {
         }
 
         /**
-         * Returns true if there is another protein
+         * Returns true if there is another protein.
          *
          * @return true if there is another protein
          *
@@ -1386,15 +1392,18 @@ public class SequenceFactory {
         }
 
         /**
-         * Returns the next protein
+         * Returns the next protein.
          *
          * @return the next protein
          */
         public Protein getNextProtein() {
             return nextProtein;
         }
+
         /**
-         * Closes the connection to the file
+         * Closes the connection to the file.
+         *
+         * @throws java.io.IOException
          */
         public void close() throws IOException {
             br.close();

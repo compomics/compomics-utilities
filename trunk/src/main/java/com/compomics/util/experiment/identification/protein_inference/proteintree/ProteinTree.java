@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * This class sorts the proteins into groups.
@@ -891,16 +889,16 @@ public class ProteinTree {
     }
 
     /**
-     * Batch loads the nodes needed for a peptide mapping
-     * 
+     * Batch loads the nodes needed for a peptide mapping.
+     *
      * @param peptideSequence the sequence of the peptide
      * @param matchingType the matching type
      * @param massTolerance the ms2 mass tolerance
-     * 
+     *
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     private void batchLoadNodes(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         ArrayList<String> tags = getInitialTags(peptideSequence, matchingType, massTolerance);

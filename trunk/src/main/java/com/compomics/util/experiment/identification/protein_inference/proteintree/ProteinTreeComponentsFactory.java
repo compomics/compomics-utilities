@@ -231,7 +231,7 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Loads nodes in the cache
+     * Loads nodes in the cache.
      *
      * @param tags list of tags corresponding to the nodes to load
      *

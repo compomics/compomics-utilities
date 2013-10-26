@@ -8,6 +8,7 @@ import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -72,7 +73,8 @@ public class ProteinTreeComponentsFactory {
      */
     private ProteinTreeComponentsFactory() throws IOException {
         objectsCache.setAutomatedMemoryManagement(false); // Change this to true if large objects are stored
-        objectsCache.setCacheSize(15000);
+        objectsCache.setCacheSize(100);
+        objectsCache.setBatchSize(100);
     }
 
     /**
@@ -166,7 +168,7 @@ public class ProteinTreeComponentsFactory {
      * Returns the folder where the db in the sequence factory is stored.
      *
      * @return the folder where the db in the sequence factory is stored
-     * @throws IOException  
+     * @throws IOException
      */
     public File getDbFolder() throws IOException {
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -226,6 +228,20 @@ public class ProteinTreeComponentsFactory {
             throw new IllegalArgumentException(tag + " not found in database.");
         }
         return result;
+    }
+
+    /**
+     * Loads nodes in the cache
+     *
+     * @param tags list of tags corresponding to the nodes to load
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public void loadNodes(ArrayList<String> tags) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(nodeTable, tags, null);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
 import com.compomics.util.math.BasicMathFunctions;
@@ -73,7 +74,7 @@ public class ProteinTree {
     /**
      * Size of the cache of the most queried peptides.
      */
-    private int cacheSize = 10000;
+    private int cacheSize = 5000;
     /**
      * Cache of the last queried peptides.
      */
@@ -307,21 +308,16 @@ public class ProteinTree {
         componentsFactory.saveInitialSize(initialTagSize);
 
         ArrayList<String> tags = TagFactory.getAminoAcidCombinations(initialTagSize);
-        Set<String> accessions;
 
+        int nAccessions;
         if (sequenceFactory.isDefaultReversed()) {
-            accessions = new HashSet<String>();
-            for (String accession : sequenceFactory.getAccessions()) {
-                if (!sequenceFactory.isDecoyAccession(accession)) {
-                    accessions.add(accession);
-                }
-            }
+            nAccessions = sequenceFactory.getNTargetSequences();
         } else {
-            accessions = sequenceFactory.getAccessions();
+            nAccessions = sequenceFactory.getNSequences();
         }
 
         long tagsSize = 500; // The space needed for tags in percent (empirical value)
-        long criticalSize = tagsSize * accessions.size();
+        long criticalSize = tagsSize * nAccessions;
 
         // try to estimate the number of tags we can process at a time given the memory settings. We might want to fine tune this
         long capacity = memoryAllocation * cacheScale;
@@ -368,7 +364,7 @@ public class ProteinTree {
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            int totalProgress = (int) (nPassages * accessions.size() + tags.size());
+            int totalProgress = (int) (nPassages * nAccessions + tags.size());
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
             waitingHandler.setSecondaryProgressCounter(0);
         }
@@ -385,7 +381,7 @@ public class ProteinTree {
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, accessions, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
+                loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
                 if (first) {
                     first = false;
                 }
@@ -406,7 +402,7 @@ public class ProteinTree {
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, accessions, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
+            loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
 
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -466,7 +462,6 @@ public class ProteinTree {
      * nodes in the NodeFactory if not null.
      *
      * @param tags the tags of interest
-     * @param accessions the accessions of the proteins of interest
      * @param waitingHandler waiting handler displaying progress to the user -
      * can be null
      * @param enzyme the enzyme restriction
@@ -480,12 +475,12 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private synchronized void loadTags(ArrayList<String> tags, Set<String> accessions,
+    private synchronized void loadTags(ArrayList<String> tags,
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         // Find the tags in the proteins and create a node per tag found
-        indexProteins(tags, accessions, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
+        indexProteins(tags, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
         // Increase the progress by the number of tags not found 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
@@ -504,7 +499,6 @@ public class ProteinTree {
      * and stored in the tree map.
      *
      * @param tags the tags to index
-     * @param accessions the accessions of the proteins to inspect
      * @param waitingHandler waiting handler providing feedback on the process
      * and allowing cancelling the process
      * @param initialTagSize the initial tag size
@@ -520,18 +514,25 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private void indexProteins(ArrayList<String> tags, Set<String> accessions,
+    private void indexProteins(ArrayList<String> tags,
             int initialTagSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
         ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
         ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
-        HashMap<String, Object> proteinLengths = new HashMap<String, Object>(accessions.size());
-        for (String accession : accessions) {
-            Protein protein = sequenceFactory.getProtein(accession);
+        int nAccessions;
+        if (sequenceFactory.isDefaultReversed()) {
+            nAccessions = sequenceFactory.getNTargetSequences();
+        } else {
+            nAccessions = sequenceFactory.getNSequences();
+        }
+        ProteinIterator proteinIterator = sequenceFactory.getProteinIterator(sequenceFactory.isDefaultReversed());
+        HashMap<String, Object> proteinLengths = new HashMap<String, Object>(nAccessions);
+        while (proteinIterator.hasNext()) {
+            Protein protein = proteinIterator.getNextProtein();
             if (loadLengths) {
-                proteinLengths.put(accession, protein.getLength());
+                proteinLengths.put(protein.getAccession(), protein.getLength());
             }
             sequenceBuffer.add(protein);
             if (sequenceBuffer.size() == proteinBatchSize) {
@@ -887,6 +888,32 @@ public class ProteinTree {
             }
         }
         return result;
+    }
+
+    /**
+     * Batch loads the nodes needed for a peptide mapping
+     * 
+     * @param peptideSequence the sequence of the peptide
+     * @param matchingType the matching type
+     * @param massTolerance the ms2 mass tolerance
+     * 
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException 
+     */
+    private void batchLoadNodes(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        ArrayList<String> tags = getInitialTags(peptideSequence, matchingType, massTolerance);
+        String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
+        tags.addAll(getInitialTags(reversedSequence, matchingType, massTolerance));
+        ArrayList<String> toLoad = new ArrayList<String>();
+        for (String tag : tags) {
+            Node result = tree.get(tag);
+            if (result == null) {
+                toLoad.add(tag);
+            }
+        }
+        componentsFactory.loadNodes(toLoad);
     }
 
     /**

@@ -1137,7 +1137,7 @@ public class SequenceFactory {
         if (defaultProteinTree == null) {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
-            int memoryPreference = userPreferences.getMemoryPreference();
+            int memoryPreference = 3 * userPreferences.getMemoryPreference() / 4;
             defaultProteinTree = new ProteinTree(memoryPreference);
 
             int tagLength = 3;

@@ -73,8 +73,8 @@ public class ProteinTreeComponentsFactory {
      */
     private ProteinTreeComponentsFactory() throws IOException {
         objectsCache.setAutomatedMemoryManagement(false); // Change this to true if large objects are stored
-        objectsCache.setCacheSize(10);
-        objectsCache.setBatchSize(10);
+        objectsCache.setCacheSize(1000);
+        objectsCache.setBatchSize(100);
     }
 
     /**

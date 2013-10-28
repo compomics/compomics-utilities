@@ -527,9 +527,7 @@ public class ProteinTree {
         }
         ProteinIterator proteinIterator = sequenceFactory.getProteinIterator(sequenceFactory.isDefaultReversed());
         HashMap<String, Object> proteinLengths = new HashMap<String, Object>(nAccessions);
-        int cpt = 0;
         while (proteinIterator.hasNext()) {
-            cpt++;
             Protein protein = proteinIterator.getNextProtein();
             if (loadLengths) {
                 proteinLengths.put(protein.getAccession(), protein.getLength());
@@ -556,7 +554,6 @@ public class ProteinTree {
             new Thread(sequenceIndexer, "sequence indexing").start();
             sequenceIndexers.add(sequenceIndexer);
         }
-        System.out.println("Sequences: " + cpt);
         if (loadLengths) {
             componentsFactory.saveProteinLengths(proteinLengths);
         }

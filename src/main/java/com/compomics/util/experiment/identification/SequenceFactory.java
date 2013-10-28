@@ -1138,35 +1138,14 @@ public class SequenceFactory {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
             int memoryPreference = userPreferences.getMemoryPreference();
-            int treeSize = memoryPreference / 4;
-            defaultProteinTree = new ProteinTree(treeSize);
+            defaultProteinTree = new ProteinTree(memoryPreference);
 
-            int previousCache = nCache;
             int tagLength = 3;
-
-            if (memoryPreference < 2000) {
-                defaultProteinTree.setCacheSize(500);
-            } else {
-                if (getNTargetSequences() > getnCache() && memoryPreference > 2000) {
-                    double sizeMb = (double) (currentFastaFile.length() / 1048576);
-                    int nTargetSequences = getNTargetSequences();
-                    double sequencePerMb = nTargetSequences / sizeMb;
-                    int cacheSize = (int) ((memoryPreference - treeSize) * sequencePerMb);
-                    if (cacheSize > nCache) {
-                        if (cacheSize > nTargetSequences) {
-                            cacheSize = nTargetSequences;
-                        }
-                        int cacheMemory = (int) (nTargetSequences / sequencePerMb);
-                        int free = memoryPreference - cacheMemory;
-                        defaultProteinTree.setCacheSize(free);
-                        setnCache(cacheSize);
-                    }
-                }
-            }
-
             defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress);
             emptyCache();
-            setnCache(previousCache);
+            
+            int treeSize = memoryPreference / 4;
+            defaultProteinTree.setCacheSize(treeSize);
 
             // close and delete the database if the process was canceled
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
@@ -1362,9 +1341,12 @@ public class SequenceFactory {
                     if (line.startsWith(">")) {
                         Header tempHeader = Header.parseFromFASTA(line);
                         if (targetOnly && isDecoyAccession(tempHeader.getAccession())) {
-                            while ((line = br.readLine()) != null && isDecoyAccession(tempHeader.getAccession())) {
+                            while ((line = br.readLine()) != null) {
                                 if (line.startsWith(">")) {
                                     tempHeader = Header.parseFromFASTA(line);
+                                    if (!isDecoyAccession(tempHeader.getAccession())) {
+                                        break;
+                                    }
                                 }
                             }
                             if (line == null) {

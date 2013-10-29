@@ -201,17 +201,16 @@ public class ObjectsCache {
             if (!memoryCheck()) {
                 // if we are encountering memory issues, put the most used object at the back so that they stay in cache
                 String entryKey = getCacheKey(dbName, tableName, objectKey);
-                if (!updatingCache) {
-                    updatingCache = true;
                     for (int i = 0; i <= Math.min(100000, loadedObjectsKeys.size() / 2); i++) {
+                        if (updatingCache) {
+                            break;
+                        }
                         if (entryKey.equals(loadedObjectsKeys.get(i))) {
                             loadedObjectsKeys.remove(i);
                             loadedObjectsKeys.add(entryKey);
                             break;
                         }
                     }
-                    updatingCache = false;
-                }
             }
             return entry.getObject();
         } else {

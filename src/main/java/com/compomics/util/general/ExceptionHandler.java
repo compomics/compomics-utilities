@@ -1,5 +1,6 @@
 package com.compomics.util.general;
 
+import com.compomics.util.gui.JOptionEditorPane;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -46,17 +47,17 @@ public class ExceptionHandler {
             exceptionCaught.add(getExceptionType(e));
             if (parent != null) {
                 if (getExceptionType(e).equals("Protein not found")) {
-                    JOptionPane.showMessageDialog(parent,
-                            e.getLocalizedMessage() + "\nPlease see the Database help page: "
-                            + "http://code.google.com/p/searchgui/wiki/DatabaseHelp.\nThis message will appear only once.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                            e.getLocalizedMessage() + "<br>"
+                            + "Please see the <a href=\"http://code.google.com/p/peptide-shaker/#Database_Help\">Database help page</a>.<br>"
+                            + "This message will appear only once."),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (getExceptionType(e).equals("Serialization")) {
-                    JOptionPane.showMessageDialog(parent,
-                            e.getLocalizedMessage() + "\nPlease see the troubleshooting section "
-                            + "in http://peptide-shaker.googlecode.com.\nThis message will appear only once.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                            e.getLocalizedMessage() + "<br>"
+                            + "Please see our <a href=\"http://code.google.com/p/peptide-shaker/#Troubleshooting\">troubleshooting section</a>.<br>"
+                            + "This message will appear only once."),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
 
                     String error = "";
@@ -65,9 +66,9 @@ public class ExceptionHandler {
                         error = ": " + e.getLocalizedMessage();
                     }
 
-                    JOptionPane.showMessageDialog(parent,
-                            "An error occured" + error + ".\n"
-                            + "If the problem persists, please contact the developers.",
+                    JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                            "An error occured: " + error + ".<br>"
+                            + "If the problem persists, please <a href=\"http://code.google.com/p/peptide-shaker/issues/list\">contact the developers</a>."),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

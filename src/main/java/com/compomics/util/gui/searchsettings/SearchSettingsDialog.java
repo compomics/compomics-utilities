@@ -1300,8 +1300,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
                 if (value == JOptionPane.YES_OPTION) {
                     try {
-                        tempSearchParameters.setParametersFile(searchSettingsDialogParent.getSearchParameters().getParametersFile());
-                        SearchParameters.saveIdentificationParameters(tempSearchParameters, searchSettingsDialogParent.getSearchParameters().getParametersFile());
+                        SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
                         searchSettingsDialogParent.setSearchParameters(tempSearchParameters);
                         dispose();
                     } catch (ClassNotFoundException e) {

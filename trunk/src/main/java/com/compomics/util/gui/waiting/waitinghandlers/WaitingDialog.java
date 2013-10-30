@@ -1036,6 +1036,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         dialog.repaint();
 
         appendReport("Your peptides have been shaken!", true, true);
+        appendReportEndLine();
     }
 
     /**

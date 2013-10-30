@@ -240,6 +240,7 @@ public class ProteinTree {
         try {
             componentsFactory.loadTags();
         } catch (Exception e) {
+            e.printStackTrace();
             // ignore, tree will just be slower
         }
     }
@@ -498,7 +499,7 @@ public class ProteinTree {
      *
      * @param tags the tags to index
      * @param waitingHandler waiting handler providing feedback on the process
-     * and allowing cancelling the process
+     * and allowing canceling the process
      * @param initialTagSize the initial tag size
      * @param enzyme enzyme to use. Can be null
      * @param loadLengths boolean indicating whether protein lengths should be
@@ -885,6 +886,7 @@ public class ProteinTree {
                 }
             }
         }
+
         return result;
     }
 

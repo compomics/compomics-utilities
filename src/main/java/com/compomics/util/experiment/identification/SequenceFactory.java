@@ -534,6 +534,7 @@ public class SequenceFactory {
             WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
+        HashSet<String> decoyAccessions = new HashSet<String>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
@@ -581,10 +582,13 @@ public class SequenceFactory {
                             multipleType = true;
                         }
                     }
-                } else if (!decoy) {
-                    decoy = true;
-                    if (accession.endsWith(getDefaultDecoyAccessionSuffix())) {
-                        defaultReversed = true;
+                } else {
+                    decoyAccessions.add(accession);
+                    if (!decoy) {
+                        decoy = true;
+                        if (accession.endsWith(getDefaultDecoyAccessionSuffix())) {
+                            defaultReversed = true;
+                        }
                     }
                 }
 
@@ -616,7 +620,7 @@ public class SequenceFactory {
             name = fileName;
         }
 
-        return new FastaIndex(indexes, fileName, name, decoy, defaultReversed, nTarget, lastModified, databaseType, decoyTag, version);
+        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, databaseType, decoyTag, version);
     }
 
     /**
@@ -661,7 +665,8 @@ public class SequenceFactory {
 
     /**
      * Returns a boolean indicating whether a protein is decoy or not based on
-     * the protein accession and a given decoy flag.
+     * the protein accession and a given decoy flag. Note: in most cases the
+     * faster isDecoyAccession method should be used instead!
      *
      * @param proteinAccession The accession of the protein
      * @param decoyFlag the decoy flag
@@ -687,7 +692,7 @@ public class SequenceFactory {
      *
      * @return the decoy tag matched by this protein
      */
-    public static String getDecoyFlag(String proteinAccession) {
+    private static String getDecoyFlag(String proteinAccession) {
         for (String flag : decoyFlags) {
             if (isDecoy(proteinAccession, flag)) {
                 return flag;
@@ -697,13 +702,13 @@ public class SequenceFactory {
     }
 
     /**
-     * Indicates whether a protein is decoy in the selected loaded FASTA file.
+     * Indicates whether a protein is a decoy in the selected loaded FASTA file.
      *
      * @param proteinAccession the protein accession of interest.
      * @return true if decoy
      */
     public boolean isDecoyAccession(String proteinAccession) {
-        return isDecoy(proteinAccession, fastaIndex.getDecoyTag());
+        return fastaIndex.isDecoy(proteinAccession);
     }
 
     /**
@@ -1143,7 +1148,7 @@ public class SequenceFactory {
             int tagLength = 3;
             defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress);
             emptyCache();
-            
+
             int treeSize = memoryPreference / 4;
             defaultProteinTree.setCacheSize(treeSize);
 
@@ -1230,6 +1235,7 @@ public class SequenceFactory {
          *
          * @param targetOnly if true only target proteins will be iterated
          * @param file the FASTA file to iterate
+         * @throws java.io.FileNotFoundException
          */
         public HeaderIterator(File file, boolean targetOnly) throws FileNotFoundException {
             this.targetOnly = targetOnly;

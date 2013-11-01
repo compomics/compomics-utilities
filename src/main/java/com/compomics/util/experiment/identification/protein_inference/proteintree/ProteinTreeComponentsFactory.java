@@ -104,20 +104,25 @@ public class ProteinTreeComponentsFactory {
      * attempting to connect to the database
      */
     public boolean initiate() throws SQLException, IOException {
+
         File dbFolder = getDbFolder();
         boolean exists = true;
+
         if (!dbFolder.exists()) {
             exists = false;
             if (!dbFolder.mkdir()) {
                 throw new IOException("Impossible to create database folder " + dbFolder.getAbsolutePath() + ".");
             }
         }
+
         objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, objectsCache);
+
         if (!exists) {
             objectsDB.addTable(nodeTable);
             objectsDB.addTable(lengthTable);
             objectsDB.addTable(parametersTable);
         }
+
         return exists;
     }
 

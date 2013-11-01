@@ -4,6 +4,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class contains the index of a FASTA file.
@@ -16,6 +17,10 @@ public class FastaIndex extends ExperimentObject {
      * The indexes of the inspected FASTA file.
      */
     private HashMap<String, Long> indexes;
+    /**
+     * The decoy accessions.
+     */
+    private HashSet<String> decoyAccessions;
     /**
      * The FASTA file name.
      */
@@ -58,6 +63,7 @@ public class FastaIndex extends ExperimentObject {
      * Constructor.
      *
      * @param indexes The indexes of the inspected FASTA file
+     * @param decoyAccessions the decoy accession numbers
      * @param fileName The FASTA file name
      * @param name the name of the database
      * @param concatenatedTargetDecoy If the FASTA file is a concatenated
@@ -70,8 +76,9 @@ public class FastaIndex extends ExperimentObject {
      * @param decoyTag the decoy tag
      * @param version the database version
      */
-    public FastaIndex(HashMap<String, Long> indexes, String fileName, String name, boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
+    public FastaIndex(HashMap<String, Long> indexes, HashSet<String> decoyAccessions, String fileName, String name, boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
         this.indexes = indexes;
+        this.decoyAccessions = decoyAccessions;
         this.fileName = fileName;
         this.name = name;
         this.concatenatedTargetDecoy = concatenatedTargetDecoy;
@@ -90,6 +97,25 @@ public class FastaIndex extends ExperimentObject {
      */
     public HashMap<String, Long> getIndexes() {
         return indexes;
+    }
+
+    /**
+     * Returns true if the given accession number is a decoy.
+     *
+     * @param accession the accession number to check
+     * @return true if the given accession number is a decoy
+     */
+    public boolean isDecoy(String accession) {
+        return decoyAccessions.contains(accession);
+    }
+
+    /**
+     * Returns the list of decoy accessions.
+     *
+     * @return the list of decoy accessions
+     */
+    public HashSet<String> getDecoyAccesions() {
+        return decoyAccessions;
     }
 
     /**

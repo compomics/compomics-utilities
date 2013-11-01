@@ -84,18 +84,23 @@ public class Node implements Serializable {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence,
+            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+
         if (depth == peptideSequence.length()) {
             result.put(peptideSequence, getAllMappings());
         } else if (accessions != null) {
+
             int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
             ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
             HashMap<String, ArrayList<Integer>> seeds = new HashMap<String, ArrayList<Integer>>(proteinBatchSize);
             ArrayList<SequenceMatcher> sequenceMatchers = new ArrayList<SequenceMatcher>(nThreads);
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+
             for (String accession : accessions.keySet()) {
-                Protein protein = sequenceFactory.getProtein(accession);
+                Protein protein = sequenceFactory.getProtein(accession);    
                 sequenceBuffer.add(protein);
                 seeds.put(accession, accessions.get(accession));
                 if (sequenceBuffer.size() == proteinBatchSize) {
@@ -109,11 +114,13 @@ public class Node implements Serializable {
                     seeds = new HashMap<String, ArrayList<Integer>>(proteinBatchSize);
                 }
             }
+
             if (!sequenceBuffer.isEmpty()) {
                 SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, peptideSequence, matchingType, massTolerance);
                 new Thread(sequenceMatcher, "sequence indexing").start();
                 sequenceMatchers.add(sequenceMatcher);
             }
+
             while (!sequenceMatchers.isEmpty()) {
                 processFinishedMatchers(sequenceMatchers, result);
             }
@@ -125,6 +132,7 @@ public class Node implements Serializable {
                 }
             }
         }
+
         return result;
     }
 
@@ -138,13 +146,16 @@ public class Node implements Serializable {
      * @throws InterruptedException
      */
     private synchronized void processFinishedMatchers(ArrayList<SequenceMatcher> sequenceMatchers, HashMap<String, HashMap<String, ArrayList<Integer>>> result) throws InterruptedException {
+
         listening = false;
         ArrayList<SequenceMatcher> done = new ArrayList<SequenceMatcher>();
+
         for (SequenceMatcher sequenceMatcher : sequenceMatchers) {
             if (sequenceMatcher.isFinished()) {
                 done.add(sequenceMatcher);
             }
         }
+
         if (done.isEmpty()) {
             listening = true;
             wait();
@@ -154,14 +165,16 @@ public class Node implements Serializable {
                 }
             }
         }
+
         listening = true;
+
         for (SequenceMatcher sequenceMatcher : done) {
             HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = sequenceMatcher.getIndexes();
             for (String accession : indexes.keySet()) {
                 for (String tempSequence : indexes.get(accession).keySet()) {
                     HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
                     if (mapping == null) {
-                        mapping = new HashMap<String, ArrayList<Integer>>();
+                        mapping = new HashMap<String, ArrayList<Integer>>(1);
                         result.put(tempSequence, mapping);
                     }
                     mapping.put(accession, indexes.get(accession).get(tempSequence));
@@ -169,6 +182,7 @@ public class Node implements Serializable {
             }
             sequenceMatcher.clear();
         }
+
         sequenceMatchers.removeAll(done);
     }
 
@@ -230,6 +244,7 @@ public class Node implements Serializable {
         if (accessions.size() > maxNodeSize && depth <= maxDepth) {
 
             subtree = new HashMap<Character, Node>();
+
             for (String accession : accessions.keySet()) {
                 HashMap<Character, ArrayList<Integer>> indexes = getAA(accession, accessions.get(accession), depth);
                 if (indexes.isEmpty()) {
@@ -243,6 +258,7 @@ public class Node implements Serializable {
                     node.addAccession(accession, indexes.get(aa));
                 }
             }
+
             accessions.clear();
             accessions = null;
 
@@ -252,6 +268,7 @@ public class Node implements Serializable {
 
             return true;
         }
+
         return false;
     }
 
@@ -342,16 +359,23 @@ public class Node implements Serializable {
      * @throws IOException
      */
     public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
+
         if (accessions != null) {
             return accessions;
         } else {
+
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>();
+
             for (Node node : subtree.values()) {
+
                 HashMap<String, ArrayList<Integer>> subResult = node.getAllMappings();
+
                 for (String accession : subResult.keySet()) {
+
                     ArrayList<Integer> indexes = result.get(accession);
+
                     if (indexes == null) {
-                        indexes = new ArrayList<Integer>();
+                        indexes = new ArrayList<Integer>(subResult.get(accession).size());
                         indexes.addAll(subResult.get(accession));
                         result.put(accession, indexes);
                     } else {
@@ -359,28 +383,35 @@ public class Node implements Serializable {
                         Collections.sort(indexes);
                         int previousIndex = -1;
                         ArrayList<Integer> singleIndexes = new ArrayList<Integer>(indexes.size());
+
                         for (int tempIndex : indexes) {
                             if (tempIndex != previousIndex) {
                                 singleIndexes.add(tempIndex);
                                 previousIndex = tempIndex;
                             }
                         }
+
                         result.put(accession, singleIndexes);
                     }
                 }
             }
+
             for (String accession : termini.keySet()) {
+
                 ArrayList<Integer> indexes = result.get(accession);
+
                 if (indexes == null) {
-                    indexes = new ArrayList<Integer>();
+                    indexes = new ArrayList<Integer>(0);
                     result.put(accession, indexes);
                 }
+
                 for (Integer index : termini.get(accession)) {
                     if (!indexes.contains(index)) {
                         indexes.add(index);
                     }
                 }
             }
+
             return result;
         }
     }
@@ -392,7 +423,8 @@ public class Node implements Serializable {
      *
      * @param protein the protein to inspect
      * @param seeds the indexes where to start looking for
-     * @param peptideSequence the peptide sequence to look for
+     * @param peptidePattern the peptide sequence as an amino acid pattern
+     * @param peptideLength the peptide length
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance
      *
@@ -401,22 +433,21 @@ public class Node implements Serializable {
      * @throws IllegalArgumentException
      * @throws InterruptedException
      */
-    private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds, String peptideSequence, MatchingType matchingType, Double massTolerance)
+    private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds,
+            AminoAcidPattern peptidePattern, int peptideLength, MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
-        int peptideLength = peptideSequence.length();
 
         for (int startIndex : seeds) {
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
                 String subSequence = proteinSequence.substring(startIndex, endIndex);
-                AminoAcidPattern pattern = new AminoAcidPattern(peptideSequence);
-                if (pattern.matches(subSequence, matchingType, massTolerance)) {
+                if (peptidePattern.matches(subSequence, matchingType, massTolerance)) {
                     ArrayList<Integer> indexes = results.get(subSequence);
                     if (indexes == null) {
-                        indexes = new ArrayList<Integer>();
+                        indexes = new ArrayList<Integer>(0);
                         results.put(subSequence, indexes);
                     }
                     indexes.add(startIndex);
@@ -453,7 +484,7 @@ public class Node implements Serializable {
                 char aa = proteinSequence.charAt(tempIndex);
                 ArrayList<Integer> indexes = result.get(aa);
                 if (indexes == null) {
-                    indexes = new ArrayList<Integer>();
+                    indexes = new ArrayList<Integer>(0);
                     result.put(aa, indexes);
                 }
                 if (!indexes.contains(startIndex)) {
@@ -462,7 +493,7 @@ public class Node implements Serializable {
             } else if (tempIndex == proteinSequence.length()) {
                 ArrayList<Integer> indexes = termini.get(accession);
                 if (indexes == null) {
-                    indexes = new ArrayList<Integer>();
+                    indexes = new ArrayList<Integer>(0);
                     termini.put(accession, indexes);
                 }
                 if (!indexes.contains(startIndex)) {
@@ -472,6 +503,7 @@ public class Node implements Serializable {
                 throw new IllegalArgumentException("Attempting to index after the protein termini.");
             }
         }
+
         return result;
     }
 
@@ -483,10 +515,13 @@ public class Node implements Serializable {
      * @return the corresponding subnode
      */
     public Node getSubNode(String sequence) {
+
         if (sequence.length() <= depth) {
             throw new IllegalArgumentException(sequence + " is not subnode of the node (depth=" + depth + ").");
         }
+
         char aa = sequence.charAt(depth);
+
         if (depth < sequence.length() - 1) {
             return subtree.get(aa).getSubNode(sequence);
         } else if (depth == sequence.length() - 1) {
@@ -564,10 +599,13 @@ public class Node implements Serializable {
 
         @Override
         public synchronized void run() {
+
+            AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
+
             for (Protein protein : proteins) {
                 try {
                     String accession = protein.getAccession();
-                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptideSequence, matchingType, massTolerance));
+                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptidePattern, peptideSequence.length(), matchingType, massTolerance));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 } catch (IllegalArgumentException ex) {
@@ -578,7 +616,9 @@ public class Node implements Serializable {
                     ex.printStackTrace();
                 }
             }
+
             finished = true;
+
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {

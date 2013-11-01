@@ -192,6 +192,7 @@ public class ProteinTree {
 
         try {
             boolean needImport;
+
             try {
                 needImport = !componentsFactory.initiate();
                 if (!needImport) {
@@ -216,6 +217,7 @@ public class ProteinTree {
                 componentsFactory.delete();
                 componentsFactory.initiate();
             }
+
             if (needImport) {
                 importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime, displayProgress);
             } else {
@@ -237,6 +239,7 @@ public class ProteinTree {
             componentsFactory.delete();
             throw e;
         }
+
         try {
             componentsFactory.loadTags();
         } catch (Exception e) {
@@ -286,6 +289,7 @@ public class ProteinTree {
         if (printExpectedImportTime) {
             int nSeconds = getExpectedImportTime();
             String report = "Expected import time: ";
+
             if (nSeconds < 120) {
                 report += nSeconds + " seconds. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
             } else {
@@ -297,6 +301,7 @@ public class ProteinTree {
                     report += nHours + " hours. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
                 }
             }
+
             if (waitingHandler != null && waitingHandler.isReport()) {
                 waitingHandler.appendReport(report, true, true);
             } else {
@@ -439,18 +444,23 @@ public class ProteinTree {
      * @return the import time in seconds
      */
     private int getExpectedImportTime() {
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         HashMap<Long, ArrayList<Long>> importTimeMap = utilitiesUserPreferences.getProteinTreeImportTime();
+
         if (importTimeMap.isEmpty()) {
             return sequenceFactory.getNTargetSequences() * 16 / 1000;
         } else {
+
             ArrayList<Double> ratios = new ArrayList<Double>();
+
             for (Long size : importTimeMap.keySet()) {
                 for (Long time : importTimeMap.get(size)) {
                     double ratio = (double) (size / time);
                     ratios.add(ratio);
                 }
             }
+
             double ratio = BasicMathFunctions.percentile(ratios, 0.05);
             return (int) (1.2 * sequenceFactory.getCurrentFastaFile().length() / (1000 * ratio));
         }
@@ -478,15 +488,18 @@ public class ProteinTree {
             int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        // Find the tags in the proteins and create a node per tag found
+        // find the tags in the proteins and create a node per tag found
         indexProteins(tags, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
-        // Increase the progress by the number of tags not found 
+
+        // increase the progress by the number of tags not found 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
         }
-        // Split the nodes and save them in the db
+
+        // split the nodes and save them in the db
         processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
-        // Clear memory before further processing
+
+        // clear memory before further processing
         tree.clear();
         System.gc();
     }
@@ -526,8 +539,10 @@ public class ProteinTree {
         } else {
             nAccessions = sequenceFactory.getNSequences();
         }
+
         ProteinIterator proteinIterator = sequenceFactory.getProteinIterator(sequenceFactory.isDefaultReversed());
         HashMap<String, Object> proteinLengths = new HashMap<String, Object>(nAccessions);
+
         while (proteinIterator.hasNext()) {
             Protein protein = proteinIterator.getNextProtein();
             if (loadLengths) {
@@ -550,14 +565,17 @@ public class ProteinTree {
                 }
             }
         }
+
         if (!sequenceBuffer.isEmpty()) {
             SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, displayProgress);
             new Thread(sequenceIndexer, "sequence indexing").start();
             sequenceIndexers.add(sequenceIndexer);
         }
+
         if (loadLengths) {
             componentsFactory.saveProteinLengths(proteinLengths);
         }
+
         while (!sequenceIndexers.isEmpty()) {
             processFinishedIndexers(sequenceIndexers, initialTagSize);
         }
@@ -581,16 +599,22 @@ public class ProteinTree {
      */
     private void processRawNodes(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
         ArrayList<NodeSplitter> nodeSplitters = new ArrayList<NodeSplitter>(nThreads);
+
         for (String tag : tree.keySet()) {
+
             Node node = tree.get(tag);
+
             while (nodeSplitters.size() == nThreads) {
                 processFinishedNodeSplitters(nodeSplitters);
             }
+
             NodeSplitter nodeSplitter = new NodeSplitter(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
             new Thread(nodeSplitter, "Node splitting of tag " + tag).start();
             nodeSplitters.add(nodeSplitter);
+
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     emptyCache();
@@ -598,6 +622,7 @@ public class ProteinTree {
                 }
             }
         }
+
         while (!nodeSplitters.isEmpty()) {
             processFinishedNodeSplitters(nodeSplitters);
         }
@@ -612,13 +637,16 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     private synchronized void processFinishedNodeSplitters(ArrayList<NodeSplitter> nodeSplitters) throws InterruptedException, SQLException, IOException {
+
         listening = false;
         ArrayList<NodeSplitter> done = new ArrayList<NodeSplitter>();
+
         for (NodeSplitter nodeSplitter : nodeSplitters) {
             if (nodeSplitter.isFinished()) {
                 done.add(nodeSplitter);
             }
         }
+
         if (done.isEmpty()) {
             listening = true;
             wait();
@@ -628,12 +656,15 @@ public class ProteinTree {
                 }
             }
         }
+
         listening = true;
         HashMap<String, Object> splittedNodes = new HashMap<String, Object>(done.size());
+
         for (NodeSplitter nodeSplitter : done) {
             splittedNodes.put(nodeSplitter.getTag(), nodeSplitter.getNode());
             nodeSplitter.clear();
         }
+
         componentsFactory.saveNodes(splittedNodes);
         nodeSplitters.removeAll(done);
     }
@@ -648,13 +679,16 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     private synchronized void processFinishedIndexers(ArrayList<SequenceIndexer> sequenceIndexers, int initialTagSize) throws InterruptedException {
+
         listening = false;
         ArrayList<SequenceIndexer> done = new ArrayList<SequenceIndexer>();
+
         for (SequenceIndexer sequenceIndexer : sequenceIndexers) {
             if (sequenceIndexer.isFinished()) {
                 done.add(sequenceIndexer);
             }
         }
+
         if (done.isEmpty()) {
             listening = true;
             wait();
@@ -664,7 +698,9 @@ public class ProteinTree {
                 }
             }
         }
+
         listening = true;
+
         for (SequenceIndexer sequenceIndexer : done) {
             HashMap<String, HashMap<String, ArrayList<Integer>>> tagToIndexesMap = sequenceIndexer.getIndexes();
             for (String accession : tagToIndexesMap.keySet()) {
@@ -682,6 +718,7 @@ public class ProteinTree {
             }
             sequenceIndexer.clear();
         }
+
         sequenceIndexers.removeAll(done);
     }
 
@@ -701,14 +738,19 @@ public class ProteinTree {
      * @throws SQLException
      */
     public HashMap<String, ArrayList<Integer>> getProteinMapping(String peptideSequence) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+
         HashMap<String, HashMap<String, ArrayList<Integer>>> mapping = getProteinMapping(peptideSequence, MatchingType.string, null);
+
         if (mapping.size() > 1) {
             throw new IllegalArgumentException("Different mappings found for peptide " + peptideSequence + " in string matching. Only one expected.");
         }
+
         HashMap<String, ArrayList<Integer>> result = mapping.get(peptideSequence);
+
         if (result != null) {
             return result;
         }
+
         return new HashMap<String, ArrayList<Integer>>();
     }
 
@@ -730,11 +772,14 @@ public class ProteinTree {
      * @throws SQLException
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+
         long time0 = 0;
         if (debugSpeed) {
             time0 = System.currentTimeMillis();
         }
+
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, matchingType, massTolerance, false);
+
         if (debugSpeed) {
             long time1 = System.currentTimeMillis();
             long queryTime = time1 - time0;
@@ -742,6 +787,7 @@ public class ProteinTree {
             debugSpeedWriter.newLine();
             debugSpeedWriter.flush();
         }
+
         return result;
     }
 
@@ -844,6 +890,7 @@ public class ProteinTree {
                         }
                     }
                 }
+
                 if (sequenceFactory.isDefaultReversed() && !reversed) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
                     HashMap<String, HashMap<String, ArrayList<Integer>>> reversedResult;
@@ -862,6 +909,7 @@ public class ProteinTree {
                         }
                     }
                 }
+
                 if (!reversed) {
                     long timeEnd = System.currentTimeMillis();
                     long queryTime = timeEnd - timeStart;
@@ -903,16 +951,19 @@ public class ProteinTree {
      * @throws InterruptedException
      */
     private void batchLoadNodes(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+
         ArrayList<String> tags = getInitialTags(peptideSequence, matchingType, massTolerance);
         String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
         tags.addAll(getInitialTags(reversedSequence, matchingType, massTolerance));
         ArrayList<String> toLoad = new ArrayList<String>();
+
         for (String tag : tags) {
             Node result = tree.get(tag);
             if (result == null) {
                 toLoad.add(tag);
             }
         }
+
         componentsFactory.loadNodes(toLoad);
     }
 
@@ -939,14 +990,19 @@ public class ProteinTree {
             result.add(peptideSequence.substring(0, initialTagSize));
             return result;
         }
+
         for (int i = 0; i < initialTagSize; i++) {
+
             char aa = peptideSequence.charAt(i);
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+
             if (aminoAcid == null) {
                 throw new IllegalArgumentException("Unknown amino acid " + aa + " found in peptide sequence " + peptideSequence + ".");
             }
+
             tempTags = new ArrayList<String>(result);
             result.clear();
+
             if (tempTags.isEmpty()) {
                 for (char newAa : aminoAcid.getSubAminoAcids()) {
                     String newTag = String.valueOf(newAa);
@@ -993,6 +1049,7 @@ public class ProteinTree {
                 }
             }
         }
+
         return result;
     }
 
@@ -1007,14 +1064,20 @@ public class ProteinTree {
      * @throws IOException
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException {
+
         HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>(forwardResults.keySet().size());
+
         for (String sequence : forwardResults.keySet()) {
+
             int peptideLength = sequence.length();
             String reversedSequence = SequenceFactory.reverseSequence(sequence);
             HashMap<String, ArrayList<Integer>> mapping = new HashMap<String, ArrayList<Integer>>(forwardResults.get(sequence).size());
+
             for (String accession : forwardResults.get(sequence).keySet()) {
+
                 String newAccession;
                 Integer proteinLength;
+
                 if (accession.endsWith(SequenceFactory.getDefaultDecoyAccessionSuffix())) {
                     newAccession = SequenceFactory.getDefaultTargetAccession(accession);
                     proteinLength = componentsFactory.getProteinLength(newAccession);
@@ -1028,8 +1091,10 @@ public class ProteinTree {
                         throw new IllegalArgumentException("Length of protein " + accession + " not found.");
                     }
                 }
+
                 ArrayList<Integer> forwardIndexes = forwardResults.get(sequence).get(accession);
                 ArrayList<Integer> reversedIndexes = new ArrayList<Integer>(forwardIndexes.size());
+
                 for (int index : forwardIndexes) {
                     int reversedIndex = proteinLength - index - peptideLength;
                     if (reversedIndex < 0 || reversedIndex >= proteinLength) {
@@ -1037,10 +1102,13 @@ public class ProteinTree {
                     }
                     reversedIndexes.add(reversedIndex);
                 }
+
                 mapping.put(newAccession, reversedIndexes);
             }
+
             results.put(reversedSequence, mapping);
         }
+
         return results;
     }
 
@@ -1054,11 +1122,17 @@ public class ProteinTree {
      * @throws IOException
      */
     private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
+
         Node result = tree.get(tag);
+
         if (result == null) {
+
             result = componentsFactory.getNode(tag);
+
             if (result != null) {
+
                 long capacity = memoryAllocation * cacheScale;
+
                 while (treeSize > capacity && !tagsInTree.isEmpty()) {
                     int index = tagsInTree.size() - 1;
                     String tempTag = tagsInTree.get(index);
@@ -1067,11 +1141,13 @@ public class ProteinTree {
                     tree.remove(tempTag);
                     tagsInTree.remove(index);
                 }
+
                 tree.put(tag, result);
                 treeSize += result.getSize();
                 tagsInTree.add(0, tag);
             }
         }
+
         return result;
     }
 
@@ -1238,6 +1314,7 @@ public class ProteinTree {
 
         @Override
         public boolean hasNext() {
+
             try {
                 if (currentNode != null && currentNode.getDepth() == initialTagSize && currentNode.getAccessions() != null && i < tags.size() - 1) {
                     // ok we're done with this node
@@ -1247,14 +1324,18 @@ public class ProteinTree {
                     currentSequence = tags.get(++i);
                     currentNode = getNode(currentSequence);
                 }
+
                 while (++i < tags.size() && currentNode == null && parentNode == null) {
                     currentSequence = tags.get(i);
                     currentNode = getNode(currentSequence);
                 }
+
                 if (i < tags.size()) {
                     if (aas != null) {
+
                         int parentDepth = currentSequence.length() - 1;
                         currentSequence = currentSequence.substring(0, parentDepth);
+
                         if (++j == aas.size()) {
                             if (!parentNode.getTermini().isEmpty()) {
                                 currentNode = null;
@@ -1263,6 +1344,7 @@ public class ProteinTree {
                                 j++;
                             }
                         }
+
                         if (j == aas.size() + 1) {
                             if (parentDepth <= initialTagSize) {
                                 // ok we're done with this node
@@ -1286,16 +1368,21 @@ public class ProteinTree {
                                 Collections.sort(aas);
                                 j = aas.indexOf(aa);
                             }
+
                             return hasNext();
                         }
+
                         char aa = aas.get(j);
                         currentSequence += aa;
                         currentNode = parentNode.getSubtree().get(aa);
                     }
+
                     while (currentNode.getAccessions() == null) {
+
                         j = 0;
                         aas = new ArrayList<Character>(currentNode.getSubtree().keySet());
                         parentNode = currentNode;
+
                         if (!aas.isEmpty()) {
                             Collections.sort(aas);
                             char aa = aas.get(j);
@@ -1306,8 +1393,10 @@ public class ProteinTree {
                             return true;
                         }
                     }
+
                     return true;
                 }
+
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1394,12 +1483,16 @@ public class ProteinTree {
 
         @Override
         public synchronized void run() {
+
             try {
                 for (Protein protein : proteins) {
+
                     indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
+
                     if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                         waitingHandler.increaseSecondaryProgressCounter();
                     }
+
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         return;
                     }
@@ -1411,7 +1504,9 @@ public class ProteinTree {
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
+
             finished = true;
+
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {
@@ -1459,18 +1554,23 @@ public class ProteinTree {
             for (int i = 0; i < sequence.length() - initialTagSize; i++) {
 
                 if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
+
                     char[] tagValue = new char[initialTagSize];
+
                     for (int j = 0; j < initialTagSize; j++) {
                         char aa = sequence.charAt(i + j);
                         tagValue[j] = aa;
                     }
+
                     String tag = new String(tagValue);
                     ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
+
                     if (indexes != null) {
                         indexes.add(i);
                     }
                 }
             }
+
             return tagToIndexesMap;
         }
 
@@ -1533,6 +1633,7 @@ public class ProteinTree {
 
         @Override
         public synchronized void run() {
+
             try {
                 node.splitNode(maxNodeSize, maxPeptideSize);
             } catch (IOException ex) {
@@ -1544,10 +1645,13 @@ public class ProteinTree {
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
+
             finished = true;
+
             if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 waitingHandler.increaseSecondaryProgressCounter();
             }
+
             try {
                 runnableFinished();
             } catch (InterruptedException ex) {

@@ -590,7 +590,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence);
+        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, pattern.length());
 
         String result = "";
 
@@ -686,12 +686,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
         @Override
         public boolean isCellEditable(int row, int column) {
-
-            if (editable && column != 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return editable && column != 0;
         }
     }
 

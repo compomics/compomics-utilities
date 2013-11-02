@@ -337,11 +337,12 @@ public class AminoAcidPattern implements Serializable {
      * acid.
      *
      * @param input the amino acid input sequence as string
+     * @param patternLength the pattern length
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input) {
-        return getIndexes(input, ProteinMatch.MatchingType.string, Double.NaN);
+    public ArrayList<Integer> getIndexes(String input, int patternLength) {
+        return getIndexes(input, patternLength, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
@@ -351,15 +352,16 @@ public class AminoAcidPattern implements Serializable {
      * @param input the amino acid input sequence as string
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
+     * @param patternLength the pattern length
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getIndexes(String input, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
 
         ArrayList<Integer> result = new ArrayList<Integer>();
         int index = 0;
 
-        while ((index = firstIndex(input, matchingType, massTolerance, index)) >= 0) {
+        while ((index = firstIndex(input, patternLength, matchingType, massTolerance, index)) >= 0) {
             result.add(index + 1);
             index++;
         }
@@ -372,12 +374,13 @@ public class AminoAcidPattern implements Serializable {
      * using default single letter code of amino acids.
      *
      * @param aminoAcidSequence the amino-acid sequence
+     * @param patternLength the pattern length
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino-acid sequence
      */
-    public boolean matches(String aminoAcidSequence) {
-        return matches(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+    public boolean matches(String aminoAcidSequence, int patternLength) {
+        return matches(aminoAcidSequence, patternLength, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
@@ -385,13 +388,14 @@ public class AminoAcidPattern implements Serializable {
      * found.
      *
      * @param aminoAcidSequence the amino-acid sequence to look into
+     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidSequence, matchingType, massTolerance, 0);
+    public int firstIndex(String aminoAcidSequence, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return firstIndex(aminoAcidSequence, patternLength, matchingType, massTolerance, 0);
     }
 
     /**
@@ -399,15 +403,15 @@ public class AminoAcidPattern implements Serializable {
      * found.
      *
      * @param aminoAcidSequence the amino-acid sequence to look into
+     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * @param startIndex the start index where to start looking for
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
+    public int firstIndex(String aminoAcidSequence, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
 
-        int patternLength = length();
         int lastIndex = aminoAcidSequence.length() - patternLength;
 
         for (int i = startIndex; i <= lastIndex; i++) {
@@ -525,14 +529,15 @@ public class AminoAcidPattern implements Serializable {
      * Indicates whether the pattern is found in the given amino-acid sequence.
      *
      * @param aminoAcidSequence the amino-acid sequence
+     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino-acid sequence
      */
-    public boolean matches(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
+    public boolean matches(String aminoAcidSequence, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return firstIndex(aminoAcidSequence, patternLength, matchingType, massTolerance) >= 0;
     }
 
     /**
@@ -540,26 +545,28 @@ public class AminoAcidPattern implements Serializable {
      * using default single letter code of amino acids.
      *
      * @param aminoAcidSequence the amino acid sequence
+     * @param patternLength the pattern length
      *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence) {
-        return isStarting(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+    public boolean isStarting(String aminoAcidSequence, int patternLength) {
+        return isStarting(aminoAcidSequence, patternLength, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
+     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        return matches(aminoAcidSequence.substring(0, length()), matchingType, massTolerance);
+    public boolean isStarting(String aminoAcidSequence, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return matches(aminoAcidSequence.substring(0, patternLength), patternLength, matchingType, massTolerance);
     }
 
     /**
@@ -567,26 +574,28 @@ public class AminoAcidPattern implements Serializable {
      * using default single letter code of amino acids.
      *
      * @param aminoAcidSequence the amino acid sequence
+     * @param patternLength the pattern length
      *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence) {
-        return isEnding(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+    public boolean isEnding(String aminoAcidSequence, int patternLength) {
+        return isEnding(aminoAcidSequence, patternLength, ProteinMatch.MatchingType.string, Double.NaN);
     }
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
+     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - length()), matchingType, massTolerance);
+    public boolean isEnding(String aminoAcidSequence, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), patternLength, matchingType, massTolerance);
     }
 
     /**

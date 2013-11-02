@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.advocates.SearchEngine;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
@@ -1151,7 +1150,8 @@ public abstract class Identification extends ExperimentObject {
     public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException {
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
-        if (spectrumIdentificationMap.containsKey(spectrumFile) && spectrumIdentificationMap.get(spectrumFile).contains(spectrumKey)) {
+        boolean containsSpectrumKey = spectrumIdentificationMap.containsKey(spectrumFile);
+        if (containsSpectrumKey && spectrumIdentificationMap.get(spectrumFile).contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey, true);
             if (oldMatch == null) {
                 throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
@@ -1161,7 +1161,7 @@ public abstract class Identification extends ExperimentObject {
             }
             identificationDB.updateSpectrumMatch(oldMatch);
         } else {
-            if (!spectrumIdentificationMap.containsKey(spectrumFile)) {
+            if (!containsSpectrumKey) {
                 spectrumIdentificationMap.put(spectrumFile, new ArrayList<String>());
             }
             spectrumIdentificationMap.get(spectrumFile).add(spectrumKey);
@@ -1515,7 +1515,7 @@ public abstract class Identification extends ExperimentObject {
             if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressCounter();
             }
-            if (waitingHandler.isRunCanceled()) {
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 break;
             }
         }
@@ -1566,6 +1566,10 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptide the peptide of interest
      * @return the keys of the protein matches
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     * @throws java.lang.InterruptedException
+     * @throws java.lang.ClassNotFoundException
      */
     public ArrayList<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> proteinMatches = new ArrayList<String>();
@@ -1587,6 +1591,10 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptide the peptide of interest
      * @return true if peptide is found in a single protein match
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
     public boolean isUnique(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getProteinMatches(peptide).size() == 1;

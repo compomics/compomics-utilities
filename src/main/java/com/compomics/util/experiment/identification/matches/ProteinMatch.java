@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
@@ -392,7 +393,8 @@ public class ProteinMatch extends IdentificationMatch {
         for (String peptideKey : peptideMatches) {
             String peptideSequence = Peptide.getSequence(peptideKey);
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isEnzymaticPeptide(peptideSequence, enzyme, matchingType, massTolerance)) {
+            AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
+            if (protein.isEnzymaticPeptide(peptideSequence, aminoAcidPattern, aminoAcidPattern.length(), enzyme, matchingType, massTolerance)) {
                 return true;
             }
         }

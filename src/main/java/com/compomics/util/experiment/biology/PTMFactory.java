@@ -932,7 +932,9 @@ public class PTMFactory implements Serializable {
      * terminal modification the protein must be loaded in the sequence factory.
      *
      * @param modificationProfile
-     * @param peptide
+     * @param peptide the peptide
+     * @param aminoAcidPattern the amino acid pattern
+     * @param patternLength the peptide length
      * @param matchingType the matching type to map the peptide sequence onto
      * the protein sequence for modifications
      * @param massTolerance the mass tolerance for matching type
@@ -949,7 +951,7 @@ public class PTMFactory implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance)
+    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, AminoAcidPattern aminoAcidPattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
@@ -962,6 +964,7 @@ public class PTMFactory implements Serializable {
             peptide.getModificationMatches().remove(modMatch);
         }
         HashMap<Integer, Double> taken = new HashMap<Integer, Double>();
+
         for (String fixedModification : modificationProfile.getFixedModifications()) {
             PTM ptm = getPTM(fixedModification);
             if (ptm.getType() == PTM.MODAA) {
@@ -974,20 +977,22 @@ public class PTMFactory implements Serializable {
                     }
                 }
             } else if (ptm.getType() == PTM.MODC) {
-                if (!peptide.isCterm(matchingType, massTolerance).isEmpty()) {
+                if (!peptide.isCterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
                 }
             } else if (ptm.getType() == PTM.MODN) {
-                if (!peptide.isNterm(matchingType, massTolerance).isEmpty()) {
+                if (!peptide.isNterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             } else if (ptm.getType() == PTM.MODCAA) {
                 String sequence = peptide.getSequence();
-                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(sequence.length()) && !peptide.isCterm(matchingType, massTolerance).isEmpty()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(sequence.length()) 
+                        && !peptide.isCterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
                 }
             } else if (ptm.getType() == PTM.MODNAA) {
-                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(1) && !peptide.isNterm(matchingType, massTolerance).isEmpty()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(1) 
+                        && !peptide.isNterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             } else if (ptm.getType() == PTM.MODCP) {

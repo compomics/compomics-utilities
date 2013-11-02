@@ -424,6 +424,7 @@ public class Node implements Serializable {
      * @param protein the protein to inspect
      * @param seeds the indexes where to start looking for
      * @param peptidePattern the peptide sequence as an amino acid pattern
+     * @param peptidePatternLength the length of the peptide pattern
      * @param peptideLength the peptide length
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance
@@ -434,7 +435,7 @@ public class Node implements Serializable {
      * @throws InterruptedException
      */
     private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds,
-            AminoAcidPattern peptidePattern, int peptideLength, MatchingType matchingType, Double massTolerance)
+            AminoAcidPattern peptidePattern, int peptidePatternLength, int peptideLength, MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
         String proteinSequence = protein.getSequence();
@@ -444,7 +445,7 @@ public class Node implements Serializable {
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
                 String subSequence = proteinSequence.substring(startIndex, endIndex);
-                if (peptidePattern.matches(subSequence, matchingType, massTolerance)) {
+                if (peptidePattern.matches(subSequence, peptidePatternLength, matchingType, massTolerance)) {
                     ArrayList<Integer> indexes = results.get(subSequence);
                     if (indexes == null) {
                         indexes = new ArrayList<Integer>(0);
@@ -601,11 +602,12 @@ public class Node implements Serializable {
         public synchronized void run() {
 
             AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
+            int peptidePatternLength = peptidePattern.length();
 
             for (Protein protein : proteins) {
                 try {
                     String accession = protein.getAccession();
-                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptidePattern, peptideSequence.length(), matchingType, massTolerance));
+                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptidePattern, peptidePatternLength, peptideSequence.length(), matchingType, massTolerance));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 } catch (IllegalArgumentException ex) {

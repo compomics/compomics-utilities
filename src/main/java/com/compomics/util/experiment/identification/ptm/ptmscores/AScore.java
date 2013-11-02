@@ -97,7 +97,7 @@ public class AScore {
     /**
      * Returns the A-score for the best PTM location. In case the two best
      * locations score the same they are both given with the score of 0. 0 is
-     * the first amino-acid. Note that PTMs found on peptides must be loaded in
+     * the first amino acid. Note that PTMs found on peptides must be loaded in
      * the PTM factory.
      *
      * @param peptide The peptide of interest

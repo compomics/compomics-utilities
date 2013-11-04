@@ -32,7 +32,15 @@ public class ObjectsDB implements Serializable {
     /**
      * List of keys too long to create a table.
      */
-    private ArrayList<String> longKeys = new ArrayList<String>();
+    private ArrayList<String> longTableNames = new ArrayList<String>();
+    /**
+     * Map of the keys too long to be stored in the database indexed by table name
+     */
+    private HashMap<String, ArrayList<String>> longKeys = new HashMap<String, ArrayList<String>>();
+    /**
+     * Suffix used for long keys
+     */
+    public static final String longKeyPrefix = "long_key_";
     /**
      * The cache to be used for the objects
      */
@@ -176,14 +184,17 @@ public class ObjectsDB implements Serializable {
      * writing in the database
      */
     public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException {
+
+        String correctedKey = correctKey(tableName, objectKey);        
+        
         if (inCache) {
-            objectsCache.addObject(dbName, tableName, objectKey, object, true);
+            objectsCache.addObject(dbName, tableName, correctedKey, object, true);
         } else {
             if (debugInteractions) {
                 System.out.println("Inserting single object, table:" + tableName + ", key: " + objectKey);
             }
             PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
-            ps.setString(1, objectKey);
+            ps.setString(1, correctedKey);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             try {
@@ -239,6 +250,8 @@ public class ObjectsDB implements Serializable {
 
         for (String objectKey : objects.keySet()) {
 
+        String correctedKey = correctKey(tableName, objectKey);        
+
             if (debugContent) {
                 if (debugInteractions) {
                     System.out.println("Inserting batch of objects, table:" + tableName + ", key: " + objectKey);
@@ -262,11 +275,11 @@ public class ObjectsDB implements Serializable {
             oos.writeObject(objects.get(objectKey));
 
             if (!allNewObjects && tableContent.contains(objectKey)) {
-                updateStatement.setString(2, objectKey);
+                updateStatement.setString(2, correctedKey);
                 updateStatement.setBytes(1, bos.toByteArray());
                 updateStatement.addBatch();
             } else {
-                insertStatement.setString(1, objectKey);
+                insertStatement.setString(1, correctedKey);
                 insertStatement.setBytes(2, bos.toByteArray());
                 insertStatement.addBatch();
             }
@@ -445,8 +458,10 @@ public class ObjectsDB implements Serializable {
             }
             ArrayList<String> toLoad = new ArrayList<String>();
             for (String key : queue) {
-                if (objectsCache != null && !objectsCache.inCache(dbName, tableName, key)) {
-                    toLoad.add(key);
+
+        String correctedKey = correctKey(tableName, key);      
+                if (objectsCache != null && !objectsCache.inCache(dbName, tableName, correctedKey)) {
+                    toLoad.add(correctedKey);
                 }
             }
             if (!toLoad.isEmpty()) {
@@ -478,11 +493,13 @@ public class ObjectsDB implements Serializable {
                                 BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
 
                                 ObjectInputStream in = new ObjectInputStream(bis);
+                                try {
                                 Object object = in.readObject();
+                                objectsCache.addObject(dbName, tableName, key, object, false);
+                                }finally {
                                 in.close();
                                 bis.close();
-
-                                objectsCache.addObject(dbName, tableName, key, object, false);
+                                }
                                 if (waitingHandler != null) {
                                     waitingHandler.increaseSecondaryProgressCounter();
                                 }
@@ -567,10 +584,12 @@ public class ObjectsDB implements Serializable {
      */
     public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException {
 
+        String correctedKey = correctKey(tableName, objectKey);      
+        
         Object object = null;
 
         if (objectsCache != null) {
-            object = objectsCache.getObject(dbName, tableName, objectKey);
+            object = objectsCache.getObject(dbName, tableName, correctedKey);
         }
 
         if (!useDB || object != null) {
@@ -587,7 +606,7 @@ public class ObjectsDB implements Serializable {
         long start = System.currentTimeMillis();
 
         Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + objectKey + "'");
+        ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + correctedKey + "'");
 
         if (results.next()) {
 
@@ -668,8 +687,10 @@ public class ObjectsDB implements Serializable {
      */
     public boolean inDB(String tableName, String objectKey, boolean cache) throws SQLException {
 
+        String correctedKey = correctKey(tableName, objectKey);
+
         if (cache) {
-            if (objectsCache.inCache(dbName, tableName, objectKey)) {
+            if (objectsCache.inCache(dbName, tableName, correctedKey)) {
                 return true;
             }
         }
@@ -677,7 +698,7 @@ public class ObjectsDB implements Serializable {
             System.out.println("checking db content, table:" + tableName + ", key: " + objectKey);
         }
         Statement stmt = dbConnection.createStatement();
-        ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + objectKey + "'");
+        ResultSet results = stmt.executeQuery("select * from " + tableName + " where NAME='" + correctedKey + "'");
 
         boolean result = results.next();
         results.close();
@@ -703,7 +724,11 @@ public class ObjectsDB implements Serializable {
         ArrayList<String> tableContent = new ArrayList<String>();
 
         while (results.next()) {
-            tableContent.add(results.getString(1));
+            String key = results.getString(1);
+            if (key.startsWith(longKeyPrefix)) {
+                key = getOriginalKey(tableName, key);
+            }
+            tableContent.add(key);
         }
 
         results.close();
@@ -729,7 +754,11 @@ public class ObjectsDB implements Serializable {
         HashSet<String> tableContent = new HashSet<String>();
 
         while (results.next()) {
-            tableContent.add(results.getString(1));
+            String key = results.getString(1);
+            if (key.startsWith(longKeyPrefix)) {
+                key = getOriginalKey(tableName, key);
+            }
+            tableContent.add(key);
         }
 
         results.close();
@@ -749,15 +778,17 @@ public class ObjectsDB implements Serializable {
      */
     public void deleteObject(String tableName, String objectKey) throws SQLException, IOException {
 
+        String correctedKey = correctKey(tableName, objectKey);
+        
         // remove from the cache
-        objectsCache.removeObject(dbName, tableName, objectKey);
+        objectsCache.removeObject(dbName, tableName, correctedKey);
 
         // delete from database
         if (debugInteractions) {
             System.out.println("Removing object, table:" + tableName + ", key: " + objectKey);
         }
         Statement stmt = dbConnection.createStatement();
-        stmt.executeUpdate("delete from " + tableName + " where NAME='" + objectKey + "'");
+        stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'");
         stmt.close();
     }
 
@@ -792,10 +823,12 @@ public class ObjectsDB implements Serializable {
      */
     public void updateObject(String tableName, String objectKey, Object object, boolean cache) throws SQLException, IOException {
 
+        String correctedKey = correctKey(tableName, objectKey);
+        
         boolean cacheUpdated = false;
 
         if (cache) {
-            cacheUpdated = objectsCache.updateObject(dbName, tableName, objectKey, object);
+            cacheUpdated = objectsCache.updateObject(dbName, tableName, correctedKey, object);
         }
 
         if (!cacheUpdated) {
@@ -954,13 +987,57 @@ public class ObjectsDB implements Serializable {
      */
     public String correctTableName(String tableName) {
         tableName = "\"" + tableName + "\"";
-        if (longKeys.contains(tableName)) {
-            tableName = "\"" + longKeys.indexOf(tableName) + "\"";
+        if (longTableNames.contains(tableName)) {
+            tableName = "\"" + longTableNames.indexOf(tableName) + "\"";
         } else if (tableName.length() >= 128) {
-            int index = longKeys.size();
-            longKeys.add(tableName);
+            int index = longTableNames.size();
+            longTableNames.add(tableName);
             tableName = "\"" + index + "\"";
         }
         return tableName;
+    }
+
+    /**
+     * indexes the long keys by a number
+     *
+     * @param tableName the table name
+     * @param key the key of the object to be stored
+     * 
+     * @return the corrected table name
+     */
+    public String correctKey(String tableName, String key) {
+        if (key.startsWith(longKeyPrefix)) {
+            throw new IllegalArgumentException("Object key cannot start by " + longKeyPrefix + ".");
+        }
+        String correctedKey = key;
+        if (longKeys.containsKey(tableName) && longKeys.get(tableName).contains(key)) {
+            correctedKey = longKeyPrefix + longKeys.get(tableName).indexOf(tableName);
+        } else if (tableName.length() >= 128) {
+            if (!longKeys.containsKey(tableName)) {
+                longKeys.put(tableName, new ArrayList<String>());
+            }
+            int index = longKeys.get(tableName).size();
+            longKeys.get(tableName).add(key);
+            correctedKey = index + "";
+        }
+        return correctedKey;
+    }
+    
+    /**
+     * Returns the original key of the corrected long key
+     * 
+     * @param tableName the table
+     * @param correctedKey the corrected key, should be prefix + number
+     * 
+     * @return the original long key
+     */
+    public String getOriginalKey(String tableName, String correctedKey) {
+        String subKey = correctedKey.substring(longKeyPrefix.length());
+        try {
+            Integer index = new Integer(subKey);
+            return longKeys.get(tableName).get(index);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An error occurred when getting the original key of " + correctedKey + ".");
+        }
     }
 }

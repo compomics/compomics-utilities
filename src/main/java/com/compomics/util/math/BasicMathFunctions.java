@@ -150,21 +150,21 @@ public class BasicMathFunctions {
         }
         return result / input.size();
     }
-    
+
     /**
      * Returns the population Pearson correlation r between series1 and series2.
-     * 
+     *
      * @param series1 first series to compare
      * @param series2 second series to compare
-     * 
+     *
      * @return the Pearson correlation factor
      */
     public static double getCorrelation(ArrayList<Double> series1, ArrayList<Double> series2) {
         if (series1.size() != series2.size()) {
-            throw new IllegalArgumentException("Series must be of same size for correlation analysis (series 1: " + series1.size() + " elements, series 1: " + series2.size() + " elements)." );
+            throw new IllegalArgumentException("Series must be of same size for correlation analysis (series 1: " + series1.size() + " elements, series 1: " + series2.size() + " elements).");
         }
         int n = series1.size();
-        if (n<=1) {
+        if (n <= 1) {
             throw new IllegalArgumentException("At least two values are required for the estimation of correlation factors (" + n + " elements).");
         }
         double std1 = std(series1);
@@ -181,32 +181,34 @@ public class BasicMathFunctions {
         double mean1 = mean(series1);
         double mean2 = mean(series2);
         double corr = 0;
-        for (int i = 0 ; i < n ; i++) {
-            corr += (series1.get(i) - mean1)*(series2.get(i) - mean2);
+        for (int i = 0; i < n; i++) {
+            corr += (series1.get(i) - mean1) * (series2.get(i) - mean2);
         }
-        corr = corr / (std1*std2);
-        corr = corr / (n-1);
+        corr = corr / (std1 * std2);
+        corr = corr / (n - 1);
         return corr;
     }
-    
+
     /**
-     * Returns the population Pearson correlation r between series1 and series2. Here the correlation factor is estimated using median and percentile distance instead of mean and standard deviation
-     * 
+     * Returns the population Pearson correlation r between series1 and series2.
+     * Here the correlation factor is estimated using median and percentile
+     * distance instead of mean and standard deviation.
+     *
      * @param series1 the first series to inspect
      * @param series2 the second series to inspect
-     * 
+     *
      * @return a robust version of the Pearson correlation factor
      */
     public static double getRobustCorrelation(ArrayList<Double> series1, ArrayList<Double> series2) {
         if (series1.size() != series2.size()) {
-            throw new IllegalArgumentException("Series must be of same size for correlation analysis (series 1: " + series1.size() + " elements, series 1: " + series2.size() + " elements)." );
+            throw new IllegalArgumentException("Series must be of same size for correlation analysis (series 1: " + series1.size() + " elements, series 1: " + series2.size() + " elements).");
         }
         int n = series1.size();
-        if (n<=1) {
+        if (n <= 1) {
             throw new IllegalArgumentException("At least two values are required for the estimation of correlation factors (" + n + " elements).");
         }
-        double std1 = (percentile(series1, 0.841)-percentile(series1, 0.159))/2;
-        double std2 = (percentile(series2, 0.841)-percentile(series2, 0.159))/2;
+        double std1 = (percentile(series1, 0.841) - percentile(series1, 0.159)) / 2;
+        double std2 = (percentile(series2, 0.841) - percentile(series2, 0.159)) / 2;
         if (std1 == 0 && std2 == 0) {
             return 1;
         }
@@ -219,11 +221,11 @@ public class BasicMathFunctions {
         double mean1 = median(series1);
         double mean2 = median(series2);
         double corr = 0;
-        for (int i = 0 ; i < n ; i++) {
-            corr += (series1.get(i) - mean1)*(series2.get(i) - mean2);
+        for (int i = 0; i < n; i++) {
+            corr += (series1.get(i) - mean1) * (series2.get(i) - mean2);
         }
-        corr = corr / (std1*std2);
-        corr = corr / (n-1);
+        corr = corr / (std1 * std2);
+        corr = corr / (n - 1);
         return corr;
     }
 }

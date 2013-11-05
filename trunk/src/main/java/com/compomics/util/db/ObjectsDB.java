@@ -30,13 +30,13 @@ public class ObjectsDB implements Serializable {
      */
     private Connection dbConnection;
     /**
-     * The maximal length of a table name
+     * The maximal length of a table name.
      */
-    public static final int tableNameMaxLength = 128;
+    public static final int TABLE_NAME_MAX_LENGTH = 128;
     /**
-     * The maximal length of a varchar
+     * The maximal length of a varchar.
      */
-    public static final int varcharMaxLength = 32672;
+    public static final int VARCHAR_MAX_LENGTH = 32672; // note: 32672 is the max length for a varchar
     /**
      * List of keys too long to create a table.
      */
@@ -49,7 +49,7 @@ public class ObjectsDB implements Serializable {
     /**
      * Suffix used for long keys.
      */
-    public static final String longKeyPrefix = "long_key_";
+    public static final String LONG_KEY_PREFIX = "long_key_";
     /**
      * The cache to be used for the objects.
      */
@@ -167,7 +167,7 @@ public class ObjectsDB implements Serializable {
         Statement stmt = dbConnection.createStatement();
         try {
             stmt.execute("CREATE table " + tableName + " ("
-                    + "NAME VARCHAR(" + varcharMaxLength + ") PRIMARY KEY,"
+                    + "NAME VARCHAR(" + VARCHAR_MAX_LENGTH + ") PRIMARY KEY,"
                     + "MATCH_BLOB blob"
                     + ")");
         } catch (SQLException e) {
@@ -738,7 +738,7 @@ public class ObjectsDB implements Serializable {
 
         while (results.next()) {
             String key = results.getString(1);
-            if (key.startsWith(longKeyPrefix)) {
+            if (key.startsWith(LONG_KEY_PREFIX)) {
                 key = getOriginalKey(tableName, key);
             }
             tableContent.add(key);
@@ -768,7 +768,7 @@ public class ObjectsDB implements Serializable {
 
         while (results.next()) {
             String key = results.getString(1);
-            if (key.startsWith(longKeyPrefix)) {
+            if (key.startsWith(LONG_KEY_PREFIX)) {
                 key = getOriginalKey(tableName, key);
             }
             tableContent.add(key);
@@ -1002,12 +1002,12 @@ public class ObjectsDB implements Serializable {
         tableName = "\"" + tableName + "\"";
         if (longTableNames.contains(tableName)) {
             tableName = "\"" + longTableNames.indexOf(tableName) + "\"";
-        } else if (tableName.length() >= tableNameMaxLength) {
+        } else if (tableName.length() >= TABLE_NAME_MAX_LENGTH) {
             int index = longTableNames.size();
             longTableNames.add(tableName);
             tableName = "\"" + index + "\"";
         }
-        if (tableName.length() >= tableNameMaxLength) {
+        if (tableName.length() >= TABLE_NAME_MAX_LENGTH) {
             throw new IllegalArgumentException("Table name " + tableName + " is too long to be stored in the database.");
         }
         return tableName;
@@ -1018,26 +1018,29 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table name
      * @param key the key of the object to be stored
-     *
      * @return the corrected table name
      */
     public String correctKey(String tableName, String key) {
+
         String correctedKey = key;
-        if (!correctedKey.startsWith(longKeyPrefix)) {
-        if (longKeys.containsKey(tableName) && longKeys.get(tableName).contains(key)) {
-            correctedKey = longKeyPrefix + longKeys.get(tableName).indexOf(key);
-        } else if (key.length() >= varcharMaxLength) {
-            if (!longKeys.containsKey(tableName)) {
-                longKeys.put(tableName, new ArrayList<String>());
+
+        if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
+            if (longKeys.containsKey(tableName) && longKeys.get(tableName).contains(key)) {
+                correctedKey = LONG_KEY_PREFIX + longKeys.get(tableName).indexOf(key);
+            } else if (key.length() >= VARCHAR_MAX_LENGTH) {
+                if (!longKeys.containsKey(tableName)) {
+                    longKeys.put(tableName, new ArrayList<String>());
+                }
+                int index = longKeys.get(tableName).size();
+                longKeys.get(tableName).add(key);
+                correctedKey = LONG_KEY_PREFIX + index;
             }
-            int index = longKeys.get(tableName).size();
-            longKeys.get(tableName).add(key);
-            correctedKey = longKeyPrefix + index;
         }
-        }
-        if (correctedKey.length() >= varcharMaxLength) {
+
+        if (correctedKey.length() >= VARCHAR_MAX_LENGTH) {
             throw new IllegalArgumentException("Object key " + correctedKey + " is too long to be stored in the database.");
         }
+
         return correctedKey;
     }
 
@@ -1046,11 +1049,12 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table
      * @param correctedKey the corrected key, should be prefix + number
-     *
      * @return the original long key
      */
     public String getOriginalKey(String tableName, String correctedKey) {
-        String subKey = correctedKey.substring(longKeyPrefix.length());
+
+        String subKey = correctedKey.substring(LONG_KEY_PREFIX.length());
+
         try {
             Integer index = new Integer(subKey);
             return longKeys.get(tableName).get(index);

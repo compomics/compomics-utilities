@@ -1017,13 +1017,13 @@ public class ObjectsDB implements Serializable {
         String correctedKey = key;
         if (longKeys.containsKey(tableName) && longKeys.get(tableName).contains(key)) {
             correctedKey = longKeyPrefix + longKeys.get(tableName).indexOf(tableName);
-        } else if (tableName.length() >= 128) {
+        } else if (key.length() >= 128) {
             if (!longKeys.containsKey(tableName)) {
                 longKeys.put(tableName, new ArrayList<String>());
             }
             int index = longKeys.get(tableName).size();
             longKeys.get(tableName).add(key);
-            correctedKey = index + "";
+            correctedKey = longKeyPrefix + index;
         }
         return correctedKey;
     }

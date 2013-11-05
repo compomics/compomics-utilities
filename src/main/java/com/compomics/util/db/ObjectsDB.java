@@ -30,6 +30,14 @@ public class ObjectsDB implements Serializable {
      */
     private Connection dbConnection;
     /**
+     * The maximal length of a table name
+     */
+    public static final int tableNameMaxLength = 128;
+    /**
+     * The maximal length of a varchar
+     */
+    public static final int varcharMaxLength = 32672;
+    /**
      * List of keys too long to create a table.
      */
     private ArrayList<String> longTableNames = new ArrayList<String>();
@@ -159,7 +167,7 @@ public class ObjectsDB implements Serializable {
         Statement stmt = dbConnection.createStatement();
         try {
             stmt.execute("CREATE table " + tableName + " ("
-                    + "NAME VARCHAR(32672) PRIMARY KEY," // note: 32672 is the max length for a varchar, not that we should need it...
+                    + "NAME VARCHAR(" + varcharMaxLength + ") PRIMARY KEY,"
                     + "MATCH_BLOB blob"
                     + ")");
         } catch (SQLException e) {
@@ -994,10 +1002,13 @@ public class ObjectsDB implements Serializable {
         tableName = "\"" + tableName + "\"";
         if (longTableNames.contains(tableName)) {
             tableName = "\"" + longTableNames.indexOf(tableName) + "\"";
-        } else if (tableName.length() >= 128) {
+        } else if (tableName.length() >= tableNameMaxLength) {
             int index = longTableNames.size();
             longTableNames.add(tableName);
             tableName = "\"" + index + "\"";
+        }
+        if (tableName.length() >= tableNameMaxLength) {
+            throw new IllegalArgumentException("Table name " + tableName + " is too long to be stored in the database.");
         }
         return tableName;
     }
@@ -1011,19 +1022,21 @@ public class ObjectsDB implements Serializable {
      * @return the corrected table name
      */
     public String correctKey(String tableName, String key) {
-        if (key.startsWith(longKeyPrefix)) {
-            throw new IllegalArgumentException("Object key cannot start by " + longKeyPrefix + ".");
-        }
         String correctedKey = key;
+        if (!correctedKey.startsWith(longKeyPrefix)) {
         if (longKeys.containsKey(tableName) && longKeys.get(tableName).contains(key)) {
-            correctedKey = longKeyPrefix + longKeys.get(tableName).indexOf(tableName);
-        } else if (key.length() >= 128) {
+            correctedKey = longKeyPrefix + longKeys.get(tableName).indexOf(key);
+        } else if (key.length() >= varcharMaxLength) {
             if (!longKeys.containsKey(tableName)) {
                 longKeys.put(tableName, new ArrayList<String>());
             }
             int index = longKeys.get(tableName).size();
             longKeys.get(tableName).add(key);
             correctedKey = longKeyPrefix + index;
+        }
+        }
+        if (correctedKey.length() >= varcharMaxLength) {
+            throw new IllegalArgumentException("Object key " + correctedKey + " is too long to be stored in the database.");
         }
         return correctedKey;
     }

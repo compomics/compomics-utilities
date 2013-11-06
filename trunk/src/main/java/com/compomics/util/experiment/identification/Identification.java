@@ -79,7 +79,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @deprecated use the database instead
      */
-    protected ArrayList<String> longKeys = new ArrayList<String>(); // @TODO implement this for db keys
+    protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
      * Boolean indicating whether the matches should be stored in a database
      * (default) or in serialized files.

@@ -1,14 +1,12 @@
 package com.compomics.util.experiment.identification.identifications;
 
-import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.experiment.identification.IdentificationMethod;
 import com.compomics.util.experiment.identification.Identification;
 
 /**
- * This class models an Ms2 Identification.
- * User: Marc
- * Date: Nov 11, 2010
- * Time: 4:40:47 PM
+ * This class models an MS2 Identification.
+ *
+ * @author Marc Vaudel
  */
 public class Ms2Identification extends Identification {
 
@@ -18,7 +16,9 @@ public class Ms2Identification extends Identification {
     static final long serialVersionUID = -7242302146506873391L;
 
     /**
-     * constructor for MS2 identification
+     * Constructor for MS2 identification.
+     * 
+     * @param reference the reference
      */
     public Ms2Identification(String reference) {
         this.reference = reference;

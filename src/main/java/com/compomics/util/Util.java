@@ -24,10 +24,10 @@ public class Util {
     /**
      * Forbidden characters in file names.
      */
-    public static final String[] forbiddenCharacters = {"!", ":", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
+    public static final String[] forbiddenCharacters = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
 
     /**
-     * Removes the forbidden characters from a string
+     * Removes the forbidden characters from a string.
      *
      * @param string the string of interest
      * @return a version without forbidden characters
@@ -201,7 +201,6 @@ public class Util {
     public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, boolean openDialog) {
 
         // @TODO: should support multiple file endings, e.g., fasta and fast for example
-
         final String fileEnding = aFileEnding;
         final String fileFormatDescription = aFileFormatDescription;
         final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
@@ -388,13 +387,13 @@ public class Util {
      * @param table the table to write to file
      * @param separator the text separator
      * @param progressDialog the progress dialog
-     * @param removeHtml if true, html is converted to text
+     * @param removeHtml if true, HTML is converted to text
      * @param writer the writer where the file is to be written
      * @throws IOException
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
 
-        for (int i = 0; i < table.getColumnCount() && !progressDialog.isRunCanceled(); i++) {
+        for (int i = 0; i < table.getColumnCount(); i++) {
             writer.write(table.getColumnName(i) + separator);
         }
 
@@ -405,13 +404,22 @@ public class Util {
 
         writer.write(System.getProperty("line.separator"));
 
-        for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
+        for (int i = 0; i < table.getRowCount(); i++) {
 
             if (progressDialog != null) {
+                if (progressDialog.isRunCanceled()) {
+                    return;
+                }
                 progressDialog.increasePrimaryProgressCounter();
             }
 
-            for (int j = 0; j < table.getColumnCount() && !progressDialog.isRunCanceled(); j++) {
+            for (int j = 0; j < table.getColumnCount(); j++) {
+
+                if (progressDialog != null) {
+                    if (progressDialog.isRunCanceled()) {
+                        return;
+                    }
+                }
 
                 if (table.getValueAt(i, j) != null) {
                     String tempValue = table.getValueAt(i, j).toString();

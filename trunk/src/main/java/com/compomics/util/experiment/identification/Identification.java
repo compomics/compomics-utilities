@@ -1550,7 +1550,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the default reference for an identification
+     * Returns the default reference for an identification.
      *
      * @param experimentReference the experiment reference
      * @param sampleReference the sample reference

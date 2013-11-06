@@ -35,8 +35,15 @@ public class ObjectsDB implements Serializable {
     public static final int TABLE_NAME_MAX_LENGTH = 128;
     /**
      * The maximal length of a varchar.
+     * note: 32672 is the max length for a varchar
      */
-    public static final int VARCHAR_MAX_LENGTH = 32672; // note: 32672 is the max length for a varchar
+    public static final int VARCHAR_MAX_LENGTH = 32672;
+    /**
+     * List of keys too long to create a table
+     *
+     * @deprecated use longTableNames instead
+     */
+    private ArrayList<String> longKeys = new ArrayList<String>();
     /**
      * List of keys too long to create a table.
      */
@@ -45,7 +52,7 @@ public class ObjectsDB implements Serializable {
      * Map of the keys too long to be stored in the database indexed by table
      * name.
      */
-    private HashMap<String, ArrayList<String>> longKeys = new HashMap<String, ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> longKeysMap = new HashMap<String, ArrayList<String>>();
     /**
      * Suffix used for long keys.
      */
@@ -990,6 +997,17 @@ public class ObjectsDB implements Serializable {
             }
         }
     }
+    
+    /**
+     * Verifies that the ObjectDB is up to date and makes the necessary fixes
+     */
+    private void compatibilityCheck() {
+        if (longTableNames == null) {
+            // version older than 3.16.0
+            longTableNames = new ArrayList<String>(longKeys);
+            longKeysMap = new HashMap<String, ArrayList<String>>();
+        }
+    }
 
     /**
      * Surrounds the table name with quotation marks such that spaces etc are
@@ -1000,6 +1018,7 @@ public class ObjectsDB implements Serializable {
      */
     public String correctTableName(String tableName) {
         tableName = "\"" + tableName + "\"";
+        compatibilityCheck();
         if (longTableNames.contains(tableName)) {
             tableName = "\"" + longTableNames.indexOf(tableName) + "\"";
         } else if (tableName.length() >= TABLE_NAME_MAX_LENGTH) {
@@ -1023,16 +1042,16 @@ public class ObjectsDB implements Serializable {
     public String correctKey(String tableName, String key) {
 
         String correctedKey = key;
-
+        compatibilityCheck();
         if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
-            if (longKeys.containsKey(tableName) && longKeys.get(tableName).contains(key)) {
-                correctedKey = LONG_KEY_PREFIX + longKeys.get(tableName).indexOf(key);
+            if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {
+                correctedKey = LONG_KEY_PREFIX + longKeysMap.get(tableName).indexOf(key);
             } else if (key.length() >= VARCHAR_MAX_LENGTH) {
-                if (!longKeys.containsKey(tableName)) {
-                    longKeys.put(tableName, new ArrayList<String>());
+                if (!longKeysMap.containsKey(tableName)) {
+                    longKeysMap.put(tableName, new ArrayList<String>());
                 }
-                int index = longKeys.get(tableName).size();
-                longKeys.get(tableName).add(key);
+                int index = longKeysMap.get(tableName).size();
+                longKeysMap.get(tableName).add(key);
                 correctedKey = LONG_KEY_PREFIX + index;
             }
         }
@@ -1054,10 +1073,10 @@ public class ObjectsDB implements Serializable {
     public String getOriginalKey(String tableName, String correctedKey) {
 
         String subKey = correctedKey.substring(LONG_KEY_PREFIX.length());
-
+        compatibilityCheck();
         try {
             Integer index = new Integer(subKey);
-            return longKeys.get(tableName).get(index);
+            return longKeysMap.get(tableName).get(index);
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred when getting the original key of " + correctedKey + ".");
         }

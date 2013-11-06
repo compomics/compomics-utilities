@@ -34,12 +34,12 @@ public class ObjectsDB implements Serializable {
      */
     public static final int TABLE_NAME_MAX_LENGTH = 128;
     /**
-     * The maximal length of a varchar.
-     * note: 32672 is the max length for a varchar
+     * The maximal length of a varchar. Note: 32672 is the max length for a
+     * varchar.
      */
     public static final int VARCHAR_MAX_LENGTH = 32672;
     /**
-     * List of keys too long to create a table
+     * List of keys too long to create a table.
      *
      * @deprecated use longTableNames instead
      */
@@ -997,9 +997,9 @@ public class ObjectsDB implements Serializable {
             }
         }
     }
-    
+
     /**
-     * Verifies that the ObjectDB is up to date and makes the necessary fixes
+     * Verifies that the ObjectDB is up to date and makes the necessary fixes.
      */
     private void compatibilityCheck() {
         if (longTableNames == null) {

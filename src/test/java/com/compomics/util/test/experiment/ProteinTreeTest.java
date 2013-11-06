@@ -4,19 +4,14 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Test for the protein tree.
@@ -28,6 +23,7 @@ public class ProteinTreeTest extends TestCase {
     
 /**
  * Tests the import and the mapping of few sequences.
+ * 
  * @throws FileNotFoundException
  * @throws IOException
  * @throws ClassNotFoundException
@@ -70,7 +66,5 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
-
     }
-
 }

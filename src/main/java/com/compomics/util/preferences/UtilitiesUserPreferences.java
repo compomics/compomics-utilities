@@ -117,7 +117,7 @@ public class UtilitiesUserPreferences implements Serializable {
     private ArrayList<String> displayedTips = null;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public UtilitiesUserPreferences() {
     }
@@ -412,7 +412,7 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Retries the user preferences. If an error is encountered, preferences are
+     * Loads the user preferences. If an error is encountered, preferences are
      * set back to default.
      *
      * @return returns the utilities user preferences

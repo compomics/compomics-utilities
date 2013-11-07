@@ -148,7 +148,7 @@ public class HelpDialog extends javax.swing.JDialog {
             });
         }
 
-        setSize(windowWidth, parent.getHeight() - windowHeightReduction);
+        setSize(windowWidth, Math.max(parent.getHeight() - windowHeightReduction, 500));
         parent.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -274,7 +274,7 @@ public class HelpDialog extends javax.swing.JDialog {
             });
         }
 
-        setSize(windowWidth, parent.getParent().getHeight() - windowHeightReduction);
+        setSize(windowWidth, Math.max(parent.getParent().getHeight() - windowHeightReduction, 500));
         parent.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
         setLocationRelativeTo(parent);
         setVisible(true);

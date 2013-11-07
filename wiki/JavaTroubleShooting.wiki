@@ -6,7 +6,7 @@ The aim of this page is to provide help with common Java related issues that one
 
 == Installing Java ==
 
- * Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here]. (You only need the JRE version (and not the JDK version) to run CompOmics tools.) [32_bit_vs_64_bit 64 bit is always recommended!]
+ * Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here]. (You only need the JRE version (and not the JDK version) to run CompOmics tools.) [#32_bit_vs_64_bit 64 bit is always recommended!]
 
 ----
 
@@ -28,7 +28,7 @@ The aim of this page is to provide help with common Java related issues that one
 
 == Tool Does Not Start ==
 
- * *Does Not Start I* - Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run CompOmics tools.) [32_bit_vs_64_bit 64 bit is always recommended!]
+ * *Does Not Start I* - Do you have Java installed? Download the latest version of Java  [http://java.sun.com/javase/downloads/index.jsp here] and try again. (You only need the JRE version (and not the JDK version) to run CompOmics tools.) [#32_bit_vs_64_bit 64 bit is always recommended!]
 
  * *Does Not Start II* - Have you unzipped the zip file? You need to unzip the file before double clicking the jar file. If you get the message "A Java Exception has occurred", you are most likely trying to run the tool from within the zip file. Unzip the file and try again.
 

@@ -419,7 +419,19 @@ public class CompomicsWrapper {
     }
 
     /**
-     * Checks if the user is running Java 64 bit and shows a warning if not.
+     * Returns if the Java version used is 64 bit.
+     *
+     * @return true if the Java version is 64 bit
+     */
+    public static boolean is64BitJava() {
+        String arch = System.getProperty("os.arch");
+        return !arch.endsWith("x86");
+    }
+
+    /**
+     * Checks if the user is running Java 64 bit and shows a warning if not, and
+     * shows a dialog with a warning and a link to the JavaTroubleShooting page
+     * if not.
      *
      * @param toolName the name of the tool, e.g., "PeptideShaker"
      */
@@ -730,25 +742,19 @@ public class CompomicsWrapper {
         }
 
         // @TODO: should rather run java -version!!!
-
         // try to force the use of 64 bit Java if available
         if (usingStandardJavaHome && javaHome.lastIndexOf(" (x86)") != -1 && System.getProperty("os.name").lastIndexOf("Windows") != -1) {
 
             // @TODO: add similar tests for Mac and Linux...
-
             // default java 32 bit windows home looks like this:    C:\Program Files (x86)\Java\jre6\bin\javaw.exe
             // default java 64 bit windows home looks like this:    C:\Program Files\Java\jre6\bin\javaw.exe
-
             String tempJavaHome = javaHome.replaceAll(" \\(x86\\)", "");
 
             if (bw != null) {
                 bw.write("temp java.home: " + tempJavaHome + System.getProperty("line.separator"));
             }
 
-
             // @TODO: replace this simple test and rather do the real test below instead. otherwise we would always default to an old 64 bit version of using an old 32 bit version initially...
-
-
             if (new File(tempJavaHome).exists()) {
                 javaHome = tempJavaHome;
             } else {

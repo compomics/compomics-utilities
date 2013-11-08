@@ -181,19 +181,23 @@ public class PrideObjectsFactory {
 
                 // corrupt file, reset the mappings
                 if (ptmToPrideMap == null) {
+                    System.out.println("Error: Corrupt PRIDE PTM mapping file. Resetting the mappings.");
                     ptmMapFile.delete();
                     ptmToPrideMap = new PtmToPrideMap();
                     setPtmToPrideMap(ptmToPrideMap);
                 }
 
             } catch (InvalidClassException e) {
+                e.printStackTrace();
                 ptmMapFile.delete();
                 ptmToPrideMap = new PtmToPrideMap();
                 setPtmToPrideMap(ptmToPrideMap);
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
                 ptmToPrideMap = new PtmToPrideMap();
                 setPtmToPrideMap(ptmToPrideMap);
             } catch (IOException e) {
+                e.printStackTrace();
                 ptmMapFile.delete();
                 ptmToPrideMap = new PtmToPrideMap();
                 setPtmToPrideMap(ptmToPrideMap);

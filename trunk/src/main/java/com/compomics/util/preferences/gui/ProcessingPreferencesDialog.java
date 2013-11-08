@@ -58,8 +58,8 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         if (ptmScoringPreferences.isProbabilitsticScoreCalculation()) {
             probabilisticScoreCmb.setSelectedIndex(0);
             scoreCmb.setEnabled(editable);
-            if (ptmScoringPreferences.getSelectedProbabilisticScore() != null ) {
-            scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore().getName());
+            if (ptmScoringPreferences.getSelectedProbabilisticScore() != null) {
+                scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore().getName());
             }
             neutralLossesCmb.setEnabled(editable);
             if (ptmScoringPreferences.isProbabilisticScoreNeutralLosses()) {

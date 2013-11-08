@@ -430,28 +430,31 @@ public class PtmToPrideMap implements Serializable {
 
     /**
      * Loads the PRIDE to PTM map from the user folder or creates a new one if
-     * the file is not present. Loads a default mapping if a PTM is not present.
+     * the file is not present. Loads a default mapping if a PTM is not mapped.
      *
+     * @param searchParameters the search parameters
      * @return the PRIDE to PTM map
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
      */
     public static PtmToPrideMap loadPtmToPrideMap(SearchParameters searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException {
-            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
-            PtmToPrideMap ptmToPrideMap = prideObjectsFactory.getPtmToPrideMap();
-            boolean changes = false;
-            ModificationProfile modificationProfile = searchParameters.getModificationProfile();
-            for (String psPtm : modificationProfile.getAllModifications()) {
-                if (ptmToPrideMap.getCVTerm(psPtm) == null) {
-                    CvTerm defaultCVTerm = PtmToPrideMap.getDefaultCVTerm(psPtm);
-                    if (defaultCVTerm != null) {
-                        ptmToPrideMap.putCVTerm(psPtm, defaultCVTerm);
-                        changes = true;
-                        break;
-                    }
+        PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
+        PtmToPrideMap ptmToPrideMap = prideObjectsFactory.getPtmToPrideMap();
+        boolean changes = false;
+        ModificationProfile modificationProfile = searchParameters.getModificationProfile();
+        for (String psPtm : modificationProfile.getAllModifications()) {
+            if (ptmToPrideMap.getCVTerm(psPtm) == null) {
+                CvTerm defaultCVTerm = PtmToPrideMap.getDefaultCVTerm(psPtm);
+                if (defaultCVTerm != null) {
+                    ptmToPrideMap.putCVTerm(psPtm, defaultCVTerm);
+                    changes = true;
                 }
             }
-            if (changes) {
-                prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
-            }
-            return ptmToPrideMap;
+        }
+        if (changes) {
+            prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
+        }
+        return ptmToPrideMap;
     }
 }

@@ -1204,7 +1204,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     }
 
     /**
-     * Saves the changes of the PTM factory
+     * Saves the changes of the PTM factory.
      */
     private void saveChanges() {
         try {

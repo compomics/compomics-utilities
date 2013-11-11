@@ -30,9 +30,17 @@ public class ToolFactory {
      */
     public static final String searchGuiParametersFileOption = "-search_parameters";
     /**
-     * The command line argument for an output folder
+     * The command line argument for an output folder.
      */
     public static final String outputFolderOption = "-output_folder";
+    /**
+     * The command line argument for the species.
+     */
+    public static final String speciesOption = "-species";
+    /**
+     * The command line argument for the species type.
+     */
+    public static final String speciesTypeOption = "-species_type";
 
     /**
      * Starts PeptideShaker from the location of utilities preferences.
@@ -151,7 +159,7 @@ public class ToolFactory {
      * @throws InterruptedException
      */
     public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
-        startSearchGUI(parent, null, null, null);
+        startSearchGUI(parent, null, null, null, null, null);
     }
 
     /**
@@ -160,13 +168,15 @@ public class ToolFactory {
      * @param parent a frame to display the path setting dialog.
      * @param mgfFiles the mgf files to search (can be null)
      * @param searchParameters the search parameters as a file (can be null)
-     * @param outputFolder outputFolder the output folder
+     * @param outputFolder outputFolder the output folder (can be null)
+     * @param species the species (can be null)
+     * @param speciesType the species type (can be null)
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder)
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder, String species, String speciesType)
             throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -180,7 +190,7 @@ public class ToolFactory {
         if (openSearchGUI) {
             if (utilitiesUserPreferences.getSearchGuiPath() != null
                     && new File(utilitiesUserPreferences.getSearchGuiPath()).exists()) {
-                if (mgfFiles == null && searchParameters == null) {
+                if (mgfFiles == null && searchParameters == null && species == null) {
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
                 } else {
                     ArrayList<String> args = new ArrayList<String>();
@@ -195,6 +205,14 @@ public class ToolFactory {
                     if (outputFolder != null) {
                         args.add(outputFolderOption);
                         args.add(CommandLineUtils.getCommandLineArgument(outputFolder));
+                    }
+                    if (species != null) {
+                        args.add(speciesOption);
+                        args.add(species);
+                    }
+                    if (speciesType != null) {
+                        args.add(speciesTypeOption);
+                        args.add(speciesType);
                     }
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
                 }

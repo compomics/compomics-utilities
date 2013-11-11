@@ -91,6 +91,14 @@ public class SearchParametersInputBean {
      * Number of threads to use. Defaults to the number of cores available.
      */
     private int nThreads = Runtime.getRuntime().availableProcessors();
+    /**
+     * The current species.
+     */
+    private String species;
+    /**
+     * The current species type.
+     */
+    private String speciesType;
 
     /**
      * Takes all the arguments from a command line.
@@ -355,6 +363,14 @@ public class SearchParametersInputBean {
             String arg = aLine.getOptionValue(SearchParametersCLIParams.THREADS.id);
             nThreads = new Integer(arg);
         }
+
+        // get the species
+        if (aLine.hasOption(SearchParametersCLIParams.SPECIES.id)) {
+            species = aLine.getOptionValue(SearchParametersCLIParams.SPECIES.id);
+        }
+        if (aLine.hasOption(SearchParametersCLIParams.SPECIES_TYPE.id)) {
+            speciesType = aLine.getOptionValue(SearchParametersCLIParams.SPECIES_TYPE.id);
+        }
     }
 
     /**
@@ -526,6 +542,24 @@ public class SearchParametersInputBean {
      */
     public int getNThreads() {
         return nThreads;
+    }
+
+    /**
+     * Returns the species.
+     *
+     * @return the species
+     */
+    public String getSpecies() {
+        return species;
+    }
+
+    /**
+     * Returns the species type.
+     *
+     * @return the species type
+     */
+    public String getSpeciesType() {
+        return speciesType;
     }
 
     /**

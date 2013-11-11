@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.16.2</version>
+    <version>3.16.3</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 

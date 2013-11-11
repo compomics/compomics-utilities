@@ -53,6 +53,8 @@ public enum SearchParametersCLIParams {
     MGF_SPLITTING_LIMIT("mgf_splitting", "The maximum mgf file size in MB before splitting the mgf. Default is '1000'.", false),
     MGF_MAX_SPECTRA("mgf_spectrum_count", "The maximum number of spectra per mgf file when splitting. Default is '25000'.", false),
     FIX_DUPLICATE_TITLES("fix_titles", "Correct for duplicate spectrum titles. (1: on, 0: off, default is '0').", false),
+    SPECIES("species", "The species to use for the gene annotation. Supported species are listed in the GUI.", false),
+    SPECIES_TYPE("species_type", "The species type to use for the gene annotation. Supported species types are listed in the GUI.", false),
     
     //////////////////////////////////
     // DeNovoGUI specific options

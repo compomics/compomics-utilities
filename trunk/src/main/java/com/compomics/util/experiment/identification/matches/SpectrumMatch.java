@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
 
 import java.util.ArrayList;
@@ -26,16 +27,29 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * The corresponding peptide assumptions indexed by search engine and
      * e-value.
+     *
+     * @deprecated use the assumptionsMap instead
      */
     private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptions = new HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>>();
     /**
-     * The best assumption.
+     * Map of the identification algorithm assumption: advocate number -> score
+     * -> assumptions
      */
-    private PeptideAssumption bestAssumption;
+    private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>();
+    /**
+     * Map containing the first hits indexed by the Advocate index.
+     *
+     * @deprecated use the firstHitsMap instead
+     */
+    private HashMap<Integer, PeptideAssumption> firstHits = new HashMap<Integer, PeptideAssumption>();
     /**
      * Map containing the first hits indexed by the Advocate index.
      */
-    private HashMap<Integer, PeptideAssumption> firstHits = new HashMap<Integer, PeptideAssumption>();
+    private HashMap<Integer, SpectrumIdentificationAssumption> firstHitsMap = new HashMap<Integer, SpectrumIdentificationAssumption>();
+    /**
+     * The best peptide assumption.
+     */
+    private PeptideAssumption bestAssumption;
     /**
      * All advocates used.
      */
@@ -56,14 +70,14 @@ public class SpectrumMatch extends IdentificationMatch {
      * Constructor for the spectrum match.
      *
      * @param spectrumKey The matched spectrumKey
-     * @param assumption The matching peptide assumption
+     * @param assumption The matching assumption
      */
-    public SpectrumMatch(String spectrumKey, PeptideAssumption assumption) {
+    public SpectrumMatch(String spectrumKey, SpectrumIdentificationAssumption assumption) {
         int advocateId = assumption.getAdvocate();
-        assumptions.put(advocateId, new HashMap<Double, ArrayList<PeptideAssumption>>());
-        assumptions.get(advocateId).put(assumption.getScore(), new ArrayList<PeptideAssumption>());
-        assumptions.get(advocateId).get(assumption.getScore()).add(assumption);
-        firstHits.put(advocateId, assumption);
+        assumptionsMap.put(advocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
+        assumptionsMap.get(advocateId).put(assumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
+        assumptionsMap.get(advocateId).get(assumption.getScore()).add(assumption);
+        firstHitsMap.put(advocateId, assumption);
         advocates.add(advocateId);
         this.spectrumKey = spectrumKey;
     }
@@ -78,20 +92,20 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Getter for the best assumption.
+     * Getter for the best peptide assumption.
      *
      * @return the best assumption for the spectrum
      */
-    public PeptideAssumption getBestAssumption() {
+    public PeptideAssumption getBestPeptideAssumption() {
         return bestAssumption;
     }
 
     /**
-     * Setter for the best assumption.
+     * Setter for the best peptide assumption.
      *
      * @param bestAssumption the best assumption for the spectrum
      */
-    public void setBestAssumption(PeptideAssumption bestAssumption) {
+    public void setBestPeptideAssumption(PeptideAssumption bestAssumption) {
         this.bestAssumption = bestAssumption;
     }
 
@@ -107,18 +121,40 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param advocateId the desired advocate ID
      * @return all assumptions
      */
-    public HashMap<Double, ArrayList<PeptideAssumption>> getAllAssumptions(int advocateId) {
-        return assumptions.get(advocateId);
+    public HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> getAllAssumptions(int advocateId) {
+        if (assumptionsMap == null) { // backward compatibility check
+            update();
+        }
+        return assumptionsMap.get(advocateId);
     }
 
     /**
-     * Return all assumptions for all search engines as a list.
+     * Updates the assumption maps based on the old structure where only peptide
+     * assumptions were supported
+     */
+    private void update() {
+        assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(assumptions.size());
+        for (int advocate : assumptions.keySet()) {
+            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMapping = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>(assumptions.get(advocate).size());
+            for (double score : assumptions.get(advocate).keySet()) {
+                advocateMapping.put(score, new ArrayList<SpectrumIdentificationAssumption>(assumptions.get(advocate).get(score)));
+            }
+            assumptionsMap.put(advocate, advocateMapping);
+        }
+        firstHitsMap = new HashMap<Integer, SpectrumIdentificationAssumption>(firstHits);
+    }
+
+    /**
+     * Return all assumptions for all identification algorithms as a list.
      *
      * @return all assumptions
      */
-    public ArrayList<PeptideAssumption> getAllAssumptions() {
-        ArrayList<PeptideAssumption> result = new ArrayList<PeptideAssumption>();
-        for (HashMap<Double, ArrayList<PeptideAssumption>> seMap : assumptions.values()) {
+    public ArrayList<SpectrumIdentificationAssumption> getAllAssumptions() {
+        if (assumptionsMap == null) { // backward compatibility check
+            update();
+        }
+        ArrayList<SpectrumIdentificationAssumption> result = new ArrayList<SpectrumIdentificationAssumption>();
+        for (HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> seMap : assumptionsMap.values()) {
             for (double eValue : seMap.keySet()) {
                 result.addAll(seMap.get(eValue));
             }
@@ -130,21 +166,21 @@ public class SpectrumMatch extends IdentificationMatch {
      * Add a first hit.
      *
      * @param otherAdvocateId The index of the new advocate
-     * @param otherAssumption The new peptide assumption
+     * @param otherAssumption The new identification assumption
      */
-    public void addHit(int otherAdvocateId, PeptideAssumption otherAssumption) {
-        if (!firstHits.containsKey(otherAdvocateId) || 
-                !SearchEngine.isAscendingScore(otherAdvocateId) && firstHits.get(otherAdvocateId).getScore() > otherAssumption.getScore() ||
-                SearchEngine.isAscendingScore(otherAdvocateId) && firstHits.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
-            firstHits.put(otherAdvocateId, otherAssumption);
+    public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption) {
+        if (!firstHitsMap.containsKey(otherAdvocateId)
+                || !SearchEngine.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() > otherAssumption.getScore()
+                || SearchEngine.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
+            firstHitsMap.put(otherAdvocateId, otherAssumption);
         }
-        if (!assumptions.containsKey(otherAdvocateId)) {
-            assumptions.put(otherAdvocateId, new HashMap<Double, ArrayList<PeptideAssumption>>());
+        if (!assumptionsMap.containsKey(otherAdvocateId)) {
+            assumptionsMap.put(otherAdvocateId, new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>());
         }
-        if (!assumptions.get(otherAdvocateId).containsKey(otherAssumption.getScore())) {
-            assumptions.get(otherAdvocateId).put(otherAssumption.getScore(), new ArrayList<PeptideAssumption>());
+        if (!assumptionsMap.get(otherAdvocateId).containsKey(otherAssumption.getScore())) {
+            assumptionsMap.get(otherAdvocateId).put(otherAssumption.getScore(), new ArrayList<SpectrumIdentificationAssumption>());
         }
-        assumptions.get(otherAdvocateId).get(otherAssumption.getScore()).add(otherAssumption);
+        assumptionsMap.get(otherAdvocateId).get(otherAssumption.getScore()).add(otherAssumption);
         if (!advocates.contains(otherAdvocateId)) {
             advocates.add(otherAdvocateId);
         }
@@ -156,18 +192,21 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param advocateId the specified advocate index
      * @return the first hit
      */
-    public PeptideAssumption getFirstHit(int advocateId) {
-        return firstHits.get(advocateId);
+    public SpectrumIdentificationAssumption getFirstHit(int advocateId) {
+        if (firstHitsMap == null) { // backward compatibility check
+            update();
+        }
+        return firstHitsMap.get(advocateId);
     }
 
     /**
-     * Sets the best peptideAssumption according to the search engine.
+     * Sets the best assumption according to the search engine.
      *
      * @param advocateId the search engine index
-     * @param peptideAssumption the best assumption
+     * @param bestAssumption the best assumption
      */
-    public void setFirstHit(int advocateId, PeptideAssumption peptideAssumption) {
-        firstHits.put(advocateId, peptideAssumption);
+    public void setFirstHit(int advocateId, SpectrumIdentificationAssumption bestAssumption) {
+        firstHitsMap.put(advocateId, bestAssumption);
     }
 
     /**
@@ -214,29 +253,29 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Removes an assumption from the mapping
+     * Removes an assumption from the mapping. Note: this does not affect the first hit map.
      *
-     * @param peptideAssumption the peptide assumption to remove
+     * @param assumption the peptide assumption to remove
      */
-    public void removeAssumption(PeptideAssumption peptideAssumption) {
+    public void removeAssumption(SpectrumIdentificationAssumption assumption) {
         ArrayList<Integer> seToRemove = new ArrayList<Integer>();
-        for (int se : assumptions.keySet()) {
+        for (int se : assumptionsMap.keySet()) {
             ArrayList<Double> eValueToRemove = new ArrayList<Double>();
-            for (double eValue : assumptions.get(se).keySet()) {
-                assumptions.get(se).get(eValue).remove(peptideAssumption);
-                if (assumptions.get(se).get(eValue).isEmpty()) {
+            for (double eValue : assumptionsMap.get(se).keySet()) {
+                assumptionsMap.get(se).get(eValue).remove(assumption);
+                if (assumptionsMap.get(se).get(eValue).isEmpty()) {
                     eValueToRemove.add(eValue);
                 }
             }
             for (double eValue : eValueToRemove) {
-                assumptions.get(se).remove(eValue);
+                assumptionsMap.get(se).remove(eValue);
             }
-            if (assumptions.get(se).isEmpty()) {
+            if (assumptionsMap.get(se).isEmpty()) {
                 seToRemove.add(se);
             }
         }
         for (int se : seToRemove) {
-            assumptions.remove(se);
+            assumptionsMap.remove(se);
         }
     }
 
@@ -248,9 +287,12 @@ public class SpectrumMatch extends IdentificationMatch {
      * assumption
      */
     public boolean hasAssumption() {
-        for (int se : assumptions.keySet()) {
-            for (ArrayList<PeptideAssumption> assumptionsAtEvalue : assumptions.get(se).values()) {
-                if (!assumptionsAtEvalue.isEmpty()) {
+        if (assumptionsMap == null) { // backward compatibility check
+            update();
+        }
+        for (int se : assumptionsMap.keySet()) {
+            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtScore : assumptionsMap.get(se).values()) {
+                if (!assumptionsAtScore.isEmpty()) {
                     return true;
                 }
             }
@@ -267,8 +309,11 @@ public class SpectrumMatch extends IdentificationMatch {
      * peptide assumption for the given advocate
      */
     public boolean hasAssumption(int advocateId) {
-        if (assumptions.containsKey(advocateId)) {
-            for (ArrayList<PeptideAssumption> assumptionsAtEvalue : assumptions.get(advocateId).values()) {
+        if (assumptionsMap == null) { // backward compatibility check
+            update();
+        }
+        if (assumptionsMap.containsKey(advocateId)) {
+            for (ArrayList<SpectrumIdentificationAssumption> assumptionsAtEvalue : assumptionsMap.get(advocateId).values()) {
                 if (!assumptionsAtEvalue.isEmpty()) {
                     return true;
                 }

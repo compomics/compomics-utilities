@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
@@ -173,7 +174,7 @@ public class AScore {
 
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
-            SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+            PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
 
@@ -406,7 +407,7 @@ public class AScore {
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites, 
             MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SpectrumAnnotator spectrumAnnotator, PTM refPTM) {
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
 

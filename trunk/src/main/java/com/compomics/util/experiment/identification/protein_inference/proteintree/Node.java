@@ -445,7 +445,7 @@ public class Node implements Serializable {
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
                 String subSequence = proteinSequence.substring(startIndex, endIndex);
-                if (peptidePattern.matches(subSequence, peptidePatternLength, matchingType, massTolerance)) {
+                if (peptidePattern.matches(subSequence, matchingType, massTolerance)) {
                     ArrayList<Integer> indexes = results.get(subSequence);
                     if (indexes == null) {
                         indexes = new ArrayList<Integer>(0);

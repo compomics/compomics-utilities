@@ -1230,7 +1230,7 @@ public abstract class Identification extends ExperimentObject {
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
-        Peptide peptide = spectrumMatch.getBestAssumption().getPeptide();
+        Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
         String peptideKey = peptide.getKey();
         PeptideMatch peptideMatch;
 
@@ -1271,7 +1271,7 @@ public abstract class Identification extends ExperimentObject {
             if (!proteinMatch.getKey().equals(proteinKey)) {
                     throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
                             + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
-                            + SearchEngine.getName(spectrumMatch.getBestAssumption().getAdvocate()) + ".");
+                            + SearchEngine.getName(spectrumMatch.getBestPeptideAssumption().getAdvocate()) + ".");
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteins()) {

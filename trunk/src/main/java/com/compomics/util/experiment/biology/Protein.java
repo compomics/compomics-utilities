@@ -237,7 +237,7 @@ public class Protein extends ExperimentObject {
      * sequence
      */
     public ArrayList<Integer> getPeptideStart(String peptideSequence, AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        return pattern.getIndexes(sequence, patternLength, matchingType, massTolerance);
+        return pattern.getIndexes(sequence, matchingType, massTolerance);
     }
 
     /**
@@ -256,7 +256,7 @@ public class Protein extends ExperimentObject {
      */
     public boolean isNTerm(String peptideSequence, AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
         String subSequence = sequence.substring(0, peptideSequence.length());
-        return pattern.matches(subSequence, patternLength, matchingType, massTolerance);
+        return pattern.matches(subSequence, matchingType, massTolerance);
     }
 
     /**
@@ -275,7 +275,7 @@ public class Protein extends ExperimentObject {
      */
     public boolean isCTerm(String peptideSequence, AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
         String subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
-        return pattern.matches(subSequence, patternLength, matchingType, massTolerance);
+        return pattern.matches(subSequence, matchingType, massTolerance);
     }
 
     /**

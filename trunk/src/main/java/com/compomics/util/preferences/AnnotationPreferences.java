@@ -4,8 +4,12 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
+import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.experiment.identification.TagAssumption;
+import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -74,10 +78,18 @@ public class AnnotationPreferences implements Serializable {
     private double fragmentIonAccuracy;
     /**
      * The currently inspected peptide.
+     *
+     * @deprecated use the spectrumIdentificationAssumption
      */
     private Peptide currentPeptide;
     /**
+     * The currently annotated spectrumIdentificationAssumption
+     */
+    private SpectrumIdentificationAssumption spectrumIdentificationAssumption;
+    /**
      * The charge of the currently inspected precursor.
+     *
+     * @deprecated use the value in spectrumIdentificationAssumption
      */
     private int currentPrecursorCharge = 0;
     /**
@@ -119,8 +131,8 @@ public class AnnotationPreferences implements Serializable {
      * Sets the annotation settings for the current peptide and precursor
      * charge.
      *
-     * @param currentPeptide
-     * @param currentPrecursorCharge
+     * @param spectrumIdentificationAssumption the spectrum identification
+     * assumption
      * @param newSpectrum
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -131,17 +143,12 @@ public class AnnotationPreferences implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void setCurrentSettings(Peptide currentPeptide, int currentPrecursorCharge, boolean newSpectrum) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
-
-        this.currentPeptide = currentPeptide;
-        this.currentPrecursorCharge = currentPrecursorCharge;
-
+    public void setCurrentSettings(SpectrumIdentificationAssumption spectrumIdentificationAssumption, boolean newSpectrum) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+        this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
         if (newSpectrum && automaticAnnotation) {
             resetAutomaticAnnotation();
-        } else {
-            if (neutralLossesSequenceDependant) {
-                neutralLossesMap = SpectrumAnnotator.getDefaultLosses(currentPeptide);
-            }
+        } else if (neutralLossesSequenceDependant) {
+            neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption);
         }
     }
 
@@ -158,18 +165,16 @@ public class AnnotationPreferences implements Serializable {
      * @throws ClassNotFoundException
      */
     public void resetAutomaticAnnotation() throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
-
         selectedCharges.clear();
-
-        if (currentPrecursorCharge == 1) {
-            selectedCharges.add(currentPrecursorCharge);
+        int precusorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
+        if (precusorCharge == 1) {
+            selectedCharges.add(precusorCharge);
         } else {
-            for (int charge = 1; charge < currentPrecursorCharge; charge++) {
+            for (int charge = 1; charge < precusorCharge; charge++) {
                 selectedCharges.add(charge);
             }
         }
-
-        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(currentPeptide);
+        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption);
     }
 
     /**
@@ -352,7 +357,7 @@ public class AnnotationPreferences implements Serializable {
      * @return the current precursor charge
      */
     public int getCurrentPrecursorCharge() {
-        return currentPrecursorCharge;
+        return spectrumIdentificationAssumption.getIdentificationCharge().value;
     }
 
     /**

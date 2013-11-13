@@ -4,8 +4,13 @@ import com.compomics.util.experiment.biology.ions.ImmoniumIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -175,7 +180,6 @@ public class IonFactory {
                 result.add(new PeptideFragmentIon(PeptideFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass - getLossesMass(losses), losses));
             }
 
-
             int raa = sequence.length() - aa - 1;
             currentAA = AminoAcid.getAminoAcid(sequence.charAt(raa));
             rewindMass += currentAA.monoisotopicMass;
@@ -219,8 +223,175 @@ public class IonFactory {
     }
 
     /**
+     * This method returns the theoretic ions expected from a tag.
+     *
+     * /!\ this method will work only if the PMTs found in the tag are in the
+     * PTMFactory.
+     *
+     * @param tag The considered tag
+     * @return the expected fragment ions
+     */
+    public ArrayList<Ion> getFragmentIons(Tag tag) {
+
+        ArrayList<Ion> result = new ArrayList<Ion>();
+        ArrayList<String> taken = new ArrayList<String>();
+        ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
+        ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<NeutralLoss>();
+        possibleNeutralLosses.addAll(defaultNeutralLosses);
+
+        // We will account for up to two neutral losses per ion maximum
+        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);
+
+        taken.clear();
+
+        int ionNumberOffset = 0;
+        ArrayList<Double> massOffsets = new ArrayList<Double>();
+        massOffsets.add(0.0);
+        for (TagComponent tagComponent : tag.getContent()) {
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                ArrayList<Double> patternMasses = new ArrayList<Double>();
+                for (int i = 0; i < aminoAcidPattern.length(); i++) {
+                    ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
+                    for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i)) {
+                        double mass = aminoAcid.monoisotopicMass;
+                        for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
+                            PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
+                            mass += ptm.getMass();
+                        }
+                        if (!aminoAcidMasses.contains(mass)) {
+                            aminoAcidMasses.add(mass);
+                        }
+                    }
+                    for (double massOffset : massOffsets) {
+                        ArrayList<Double> newPatternMassess = new ArrayList<Double>();
+                        for (double patternMass : patternMasses) {
+                            for (double mass : aminoAcidMasses) {
+
+                                int faa = ionNumberOffset + i;
+                                double patternFragmentMass = patternMass + mass;
+                                double forwardMass = massOffset + patternFragmentMass;
+
+                                // add the a-ions
+                                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                                    result.add(new TagFragmentIon(TagFragmentIon.A_ION, faa, forwardMass - Atom.C.mass - Atom.O.mass - getLossesMass(losses), losses, massOffset));
+                                }
+
+                                // add the b-ions
+                                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                                    result.add(new TagFragmentIon(TagFragmentIon.B_ION, faa, forwardMass - getLossesMass(losses), losses, massOffset));
+                                }
+
+                                // add the c-ion
+                                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                                    result.add(new TagFragmentIon(TagFragmentIon.C_ION, faa, forwardMass + Atom.N.mass + 3 * Atom.H.mass - getLossesMass(losses), losses, massOffset));
+                                }
+
+                                if (!newPatternMassess.contains(patternFragmentMass)) {
+                                    newPatternMassess.add(patternFragmentMass);
+                                }
+                            }
+                        }
+                        patternMasses = newPatternMassess;
+                    }
+                }
+                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                for (double offsetMass : massOffsets) {
+                    for (double mass : patternMasses) {
+                        double newMass = offsetMass + mass;
+                        if (!newOffsetMasses.contains(newMass)) {
+                            newOffsetMasses.add(newMass);
+                        }
+                    }
+                }
+            } else {
+                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                for (double offsetMass : massOffsets) {
+                    newOffsetMasses.add(offsetMass + tagComponent.getMass());
+                }
+                massOffsets = newOffsetMasses;
+            }
+        }
+
+        ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
+        Collections.reverse(reversedTag);
+        ionNumberOffset = 0;
+        massOffsets.clear();
+        massOffsets.add(Atom.O.mass);
+        for (TagComponent tagComponent : reversedTag) {
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                ArrayList<Double> patternMasses = new ArrayList<Double>();
+                for (int i = 0; i < aminoAcidPattern.length(); i++) {
+                    ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
+                    for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i)) {
+                        double mass = aminoAcid.monoisotopicMass;
+                        for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
+                            PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
+                            mass += ptm.getMass();
+                        }
+                        if (!aminoAcidMasses.contains(mass)) {
+                            aminoAcidMasses.add(mass);
+                        }
+                    }
+                    for (double massOffset : massOffsets) {
+                        ArrayList<Double> newPatternMassess = new ArrayList<Double>();
+                        for (double patternMass : patternMasses) {
+                            for (double mass : aminoAcidMasses) {
+
+                                int faa = ionNumberOffset + i;
+                                double patternFragmentMass = patternMass + mass;
+                                double rewindMass = massOffset + patternFragmentMass;
+
+                                // add the a-ions
+                                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                                    result.add(new TagFragmentIon(TagFragmentIon.X_ION, faa, rewindMass + Atom.C.mass + Atom.O.mass - getLossesMass(losses), losses, massOffset));
+                                }
+
+                                // add the b-ions
+                                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                                    result.add(new TagFragmentIon(TagFragmentIon.Y_ION, faa, rewindMass + 2 * Atom.H.mass - getLossesMass(losses), losses, massOffset));
+                                }
+
+                                // add the c-ion
+                                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                                    result.add(new TagFragmentIon(TagFragmentIon.Z_ION, faa, rewindMass - Atom.N.mass - getLossesMass(losses), losses, massOffset));
+                                }
+
+                                if (!newPatternMassess.contains(patternFragmentMass)) {
+                                    newPatternMassess.add(patternFragmentMass);
+                                }
+                            }
+                        }
+                        patternMasses = newPatternMassess;
+                    }
+                }
+                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                for (double offsetMass : massOffsets) {
+                    for (double mass : patternMasses) {
+                        double newMass = offsetMass + mass;
+                        if (!newOffsetMasses.contains(newMass)) {
+                            newOffsetMasses.add(newMass);
+                        }
+                    }
+                }
+            } else {
+                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                for (double offsetMass : massOffsets) {
+                    newOffsetMasses.add(offsetMass + tagComponent.getMass());
+                }
+                massOffsets = newOffsetMasses;
+            }
+        }
+
+        result.addAll(reporterIons);
+        return result;
+    }
+
+    /**
      * Convenience method returning the possible neutral losses combination as
-     * accounted by the factory, i.e., for now up to two neutral losses per peak.
+     * accounted by the factory, i.e., for now up to two neutral losses per
+     * peak.
      *
      * @param possibleNeutralLosses the possible neutral losses
      * @return the possible combinations

@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -117,7 +118,7 @@ public class PhosphoRS {
             Collections.sort(possibleSites);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
 
-            SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+            PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             double p = getp(spectrum, mzTolerance);
 
@@ -292,7 +293,7 @@ public class PhosphoRS {
      *
      * @return the phosphoRS score
      */
-    private static double getPhosphoRsScore(Peptide peptide, MSnSpectrum spectrum, double p, SpectrumAnnotator spectrumAnnotator,
+    private static double getPhosphoRsScore(Peptide peptide, MSnSpectrum spectrum, double p, PeptideSpectrumAnnotator spectrumAnnotator,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
 
@@ -389,7 +390,7 @@ public class PhosphoRS {
      * @return a list of mz where we can possibly find a site determining ion
      */
     private static HashMap<Double, ArrayList<ArrayList<Integer>>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles,
-            String referencePtmName, SpectrumAnnotator spectrumAnnotator, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
+            String referencePtmName, PeptideSpectrumAnnotator spectrumAnnotator, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
             ArrayList<Integer> charges, int precursorCharge) {
 
         HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();

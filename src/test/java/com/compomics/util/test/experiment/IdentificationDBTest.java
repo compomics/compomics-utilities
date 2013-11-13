@@ -61,11 +61,11 @@ public class IdentificationDBTest extends TestCase {
 
         ArrayList<String> proteins = new ArrayList<String>();
         proteins.add(proteinKey);
-        testSpectrumMatch.getFirstHit(Advocate.PEPTIDE_SHAKER).getPeptide().setParentProteins(proteins);
+        ((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.PEPTIDE_SHAKER)).getPeptide().setParentProteins(proteins);
         idDB.updateMatch(testSpectrumMatch);
 
         testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
-        Assert.assertTrue(testSpectrumMatch.getFirstHit(Advocate.PEPTIDE_SHAKER).getPeptide().getParentProteins().get(0).equals(proteinKey));
+        Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.PEPTIDE_SHAKER)).getPeptide().getParentProteins().get(0).equals(proteinKey));
 
         testPeptideMatch = idDB.getPeptideMatch(peptideKey, true);
         Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));

@@ -14,35 +14,45 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PeptideAssumption extends ExperimentObject {
+public class PeptideAssumption extends SpectrumIdentificationAssumption {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 3606509518581203063L;
     /**
-     * The rank of the peptide assumption for the concerned spectrum.
-     */
-    private int rank;
-    /**
      * The theoretic peptide.
      */
     private Peptide peptide;
     /**
-     * The advocate.
+     * The advocate supporting this assumption.
+     *
+     * @deprecated use the SpectrumIdentificationAssumption attribute
      */
     private int advocate;
     /**
      * The charge used for identification.
+     *
+     * @deprecated use the SpectrumIdentificationAssumption attribute
      */
     private Charge identificationCharge;
     /**
+     * The rank of the peptide assumption for the concerned spectrum.
+     *
+     * @deprecated use the SpectrumIdentificationAssumption attribute
+     */
+    private int rank;
+    /**
      * The score, the lower the better. Ought to be renamed but kept for
      * backward compatibility
+     *
+     * @deprecated use the SpectrumIdentificationAssumption attribute
      */
     private double eValue;
     /**
-     * the corresponding file.
+     * the corresponding identification file.
+     *
+     * @deprecated use the SpectrumIdentificationAssumption attribute
      */
     private String file;
 
@@ -61,11 +71,11 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score, String identificationFile) {
         this.peptide = aPeptide;
-        this.rank = rank;
-        this.advocate = advocate;
-        this.identificationCharge = identificationCharge;
-        this.eValue = score;
-        this.file = identificationFile;
+        super.rank = rank;
+        super.advocate = advocate;
+        super.identificationCharge = identificationCharge;
+        super.score = score;
+        super.identificationFile = identificationFile;
     }
 
     /**
@@ -81,19 +91,10 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public PeptideAssumption(Peptide aPeptide, int rank, int advocate, Charge identificationCharge, double score) {
         this.peptide = aPeptide;
-        this.rank = rank;
-        this.advocate = advocate;
-        this.identificationCharge = identificationCharge;
-        this.eValue = score;
-    }
-
-    /**
-     * Get the identification rank.
-     *
-     * @return the identification rank
-     */
-    public int getRank() {
-        return rank;
+        super.rank = rank;
+        super.advocate = advocate;
+        super.identificationCharge = identificationCharge;
+        super.score = score;
     }
 
     /**
@@ -103,15 +104,6 @@ public class PeptideAssumption extends ExperimentObject {
      */
     public Peptide getPeptide() {
         return peptide;
-    }
-
-    /**
-     * Get the used advocate.
-     *
-     * @return the advocate index
-     */
-    public int getAdvocate() {
-        return advocate;
     }
 
     /**
@@ -152,7 +144,7 @@ public class PeptideAssumption extends ExperimentObject {
      * @return the theoretic m/z expected for this assumption
      */
     public double getTheoreticMz() {
-        return (peptide.getMass() + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
+        return (peptide.getMass() + getIdentificationCharge().value * ElementaryIon.proton.getTheoreticMass()) / getIdentificationCharge().value;
     }
 
     /**
@@ -166,6 +158,34 @@ public class PeptideAssumption extends ExperimentObject {
     }
 
     /**
+     * Returns the ion match.
+     *
+     * @param precursorPeak
+     * @return the ion match
+     */
+    public IonMatch getPrecursorMatch(Peak precursorPeak) {
+        return new IonMatch(precursorPeak, new PrecursorIon(peptide), getIdentificationCharge());
+    }
+
+    @Override
+    public int getRank() {
+        if (super.identificationCharge == null) { // backward compatibility check
+            return rank;
+        } else {
+            return super.rank;
+        }
+    }
+
+    @Override
+    public int getAdvocate() {
+        if (super.identificationCharge == null) { // backward compatibility check
+            return advocate;
+        } else {
+            return super.advocate;
+        }
+    }
+
+    /**
      * Returns the e-value assigned by the advocate.
      *
      * @deprecated use getScore instead
@@ -175,49 +195,30 @@ public class PeptideAssumption extends ExperimentObject {
         return eValue;
     }
 
-    /**
-     * Returns the score assigned by the advocate.
-     *
-     * @return the score
-     */
+    @Override
     public double getScore() {
-        return eValue;
+        if (super.identificationCharge == null) { // backward compatibility check
+            return eValue;
+        } else {
+            return super.score;
+        }
     }
 
-    /**
-     * Returns the file.
-     *
-     * @return the identification file
-     */
-    public String getFile() {
-        return file;
+    @Override
+    public String getIdentificationFile() {
+        if (super.identificationCharge == null) { // backward compatibility check
+            return file;
+        } else {
+            return super.identificationFile;
+        }
     }
 
-    /**
-     * Returns the charge used for identification.
-     *
-     * @return the charge used for identification
-     */
+    @Override
     public Charge getIdentificationCharge() {
-        return identificationCharge;
-    }
-
-    /**
-     * Set the rank of the PeptideAssumption.
-     *
-     * @param aRank the rank of the PeptideAssumptio
-     */
-    public void setRank(int aRank) {
-        rank = aRank;
-    }
-
-    /**
-     * Returns the ion match.
-     *
-     * @param precursorPeak
-     * @return the ion match
-     */
-    public IonMatch getPrecursorMatch(Peak precursorPeak) {
-        return new IonMatch(precursorPeak, new PrecursorIon(peptide), identificationCharge);
+        if (super.identificationCharge == null) { // backward compatibility check
+            return identificationCharge;
+        } else {
+            return super.identificationCharge;
+        }
     }
 }

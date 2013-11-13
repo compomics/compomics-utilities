@@ -23,7 +23,9 @@ public class ModificationMatch extends ExperimentObject {
      */
     private boolean variable;
     /**
-     * The location in the peptide sequence, 1 is the first residue.
+     * The location in the sequence, 1 is the first residue.
+     * 
+     * @deprecated use the index in the AminoAcidPattern instead
      */
     private int modifiedSite;
     /**
@@ -80,7 +82,8 @@ public class ModificationMatch extends ExperimentObject {
 
     /**
      * Getter for the modification site, 1 is the first amino acid.
-     *
+     * 
+     * @deprecated use the index in the AminoAcidPattern instead
      * @return the index of the modification in the sequence
      */
     public int getModificationSite() {
@@ -90,6 +93,7 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * Setter for the modification site, 1 is the first amino acid.
      *
+     * @deprecated use the index in the AminoAcidPattern instead
      * @param site the index of the modification in the sequence
      */
     public void setModificationSite(int site) {
@@ -136,5 +140,22 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setInferred(boolean inferred) {
         this.inferred = inferred;
+    }
+    
+    /**
+     * Indicates whether this modification match is the same of another one. The match is only compared based on the theoretic PTM and the variability. The localization and its confidence is not taken into account.
+     * 
+     * @param anotherModificationMatch another modification match
+     * 
+     * @return a boolean indicating whether both modification matches are the same.
+     */
+    public boolean isSameAs(ModificationMatch anotherModificationMatch) {
+        if (!theoreticPtm.equals(anotherModificationMatch.getTheoreticPtm())) {
+            return false;
+        }
+        if (variable != anotherModificationMatch.isVariable()) {
+            return false;
+        }
+        return true;
     }
 }

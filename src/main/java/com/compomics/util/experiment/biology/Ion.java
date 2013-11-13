@@ -28,6 +28,10 @@ public abstract class Ion extends ExperimentObject {
          */
         PEPTIDE_FRAGMENT_ION,
         /**
+         * A tag fragment ion
+         */
+        TAG_FRAGMENT_ION,
+        /**
          * Identifier for an MH ion. The number of H is not represented here.
          */
         PRECURSOR_ION,

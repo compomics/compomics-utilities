@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.ptm.ptmscores;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.refinementparameters.MascotScore;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class MDScore {
      * @return the MD score
      */
     public static Double getMDScore(SpectrumMatch spectrumMatch, ArrayList<String> ptms) {
-        return getMDScore(spectrumMatch, spectrumMatch.getBestAssumption().getPeptide(), ptms);
+        return getMDScore(spectrumMatch, spectrumMatch.getBestPeptideAssumption().getPeptide(), ptms);
     }
 
     /**
@@ -50,8 +51,9 @@ public class MDScore {
         Double firstScore = null, secondScore = null;
 
         if (spectrumMatch.getAllAssumptions(Advocate.MASCOT) != null) {
-            for (ArrayList<PeptideAssumption> peptideAssumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
-                for (PeptideAssumption peptideAssumption : peptideAssumptionList) {
+            for (ArrayList<SpectrumIdentificationAssumption> assumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
+                for (SpectrumIdentificationAssumption assumption : assumptionList) {
+                    PeptideAssumption peptideAssumption = (PeptideAssumption) assumption;
                     if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate)) {
                         MascotScore mascotScore = new MascotScore();
                         mascotScore = (MascotScore) peptideAssumption.getUrParam(mascotScore);

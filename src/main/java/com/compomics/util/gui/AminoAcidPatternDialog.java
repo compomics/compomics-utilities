@@ -590,7 +590,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, pattern.length());
+        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence);
 
         String result = "";
 

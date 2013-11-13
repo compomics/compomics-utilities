@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,7 +233,7 @@ public class PtmtableContent {
             }
         }
 
-        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+        PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons =
                 spectrumAnnotator.getExpectedIons(iontypes, neutralLosses, charges, precursorCharge, noModPeptide);
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
@@ -302,7 +303,7 @@ public class PtmtableContent {
         }
 
 
-        SpectrumAnnotator spectrumAnnotator = new SpectrumAnnotator();
+        PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         spectrumAnnotator.setPeptide(noModPeptide, precursorCharge);
         PeptideFragmentIon peptideFragmentIon;
 

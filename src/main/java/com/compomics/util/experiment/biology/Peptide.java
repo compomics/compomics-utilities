@@ -490,7 +490,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODAA:
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
-                    return pattern.matches(sequence, patternLength);
+                    return pattern.matches(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
@@ -500,7 +500,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matches(tempSequence, patternLength)) {
+                                if (pattern.matches(tempSequence)) {
                                     return true;
                                 }
                             }
@@ -523,7 +523,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODCPAA:
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
-                    return pattern.isEnding(sequence, patternLength);
+                    return pattern.isEnding(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
@@ -533,7 +533,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isEnding(tempSequence, patternLength)) {
+                                if (pattern.isEnding(tempSequence)) {
                                     return true;
                                 }
                             }
@@ -548,7 +548,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNPAA:
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
-                    return pattern.isStarting(sequence, patternLength);
+                    return pattern.isStarting(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
@@ -558,7 +558,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isStarting(tempSequence, patternLength)) {
+                                if (pattern.isStarting(tempSequence)) {
                                     return true;
                                 }
                             }
@@ -603,7 +603,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODAA:
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
-                    return pattern.getIndexes(sequence, patternLength);
+                    return pattern.getIndexes(sequence);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
@@ -613,8 +613,8 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matches(tempSequence, patternLength)) {
-                                    for (int tempIndex : pattern.getIndexes(tempSequence, patternLength)) {
+                                if (pattern.matches(tempSequence)) {
+                                    for (int tempIndex : pattern.getIndexes(tempSequence)) {
                                         Integer sequenceIndex = tempIndex - target;
                                         if (!possibleSites.contains(sequenceIndex)) {
                                             possibleSites.add(tempIndex);
@@ -638,7 +638,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODCPAA:
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
-                    if (pattern.isEnding(sequence, patternLength)) {
+                    if (pattern.isEnding(sequence)) {
                         possibleSites.add(sequence.length());
                     }
                     return possibleSites;
@@ -652,7 +652,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isEnding(tempSequence, patternLength)) {
+                                if (pattern.isEnding(tempSequence)) {
                                     possibleSites.add(sequence.length());
                                     return possibleSites;
                                 }
@@ -665,7 +665,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNPAA:
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
-                    if (pattern.isStarting(sequence, patternLength)) {
+                    if (pattern.isStarting(sequence)) {
                         possibleSites.add(1);
                     }
                     return possibleSites;
@@ -679,7 +679,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isStarting(tempSequence, patternLength)) {
+                                if (pattern.isStarting(tempSequence)) {
                                     possibleSites.add(1);
                                     return possibleSites;
                                 }
@@ -689,7 +689,6 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
         }
-
         return possibleSites;
     }
 
@@ -717,7 +716,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODAA:
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
-                    return pattern.getIndexes(sequence, patternLength);
+                    return pattern.getIndexes(sequence);
                 } else {
                     throw new IllegalArgumentException("Pattern " + pattern + " cannot be fully comprised in " + sequence);
                 }
@@ -733,7 +732,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODCPAA:
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
-                    if (pattern.isStarting(sequence, patternLength)) {
+                    if (pattern.isStarting(sequence)) {
                         possibleSites.add(sequence.length());
                     }
                     return possibleSites;
@@ -744,7 +743,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNPAA:
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
-                    if (pattern.isStarting(sequence, patternLength)) {
+                    if (pattern.isStarting(sequence)) {
                         possibleSites.add(1);
                     }
                     return possibleSites;
@@ -1053,7 +1052,6 @@ public class Peptide extends ExperimentObject {
             fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
         }
 
-        String sequence = peptide.sequence;
         String modifiedSequence = "";
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
@@ -1062,24 +1060,8 @@ public class Peptide extends ExperimentObject {
 
         modifiedSequence += peptide.getNTerminal() + "-";
 
-        for (int aa = 1; aa <= sequence.length(); aa++) {
-
-            if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence += getTaggedResidue(sequence.charAt(aa - 1), ptmName, modificationProfile, true, useHtmlColorCoding, useShortName);
-                }
-            } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence += getTaggedResidue(sequence.charAt(aa - 1), ptmName, modificationProfile, false, useHtmlColorCoding, useShortName);
-                }
-            } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : fixedModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence += getTaggedResidue(sequence.charAt(aa - 1), ptmName, modificationProfile, true, useHtmlColorCoding, useShortName);
-                }
-            } else {
-                modifiedSequence += sequence.charAt(aa - 1);
-            }
-        }
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptide.sequence);
+        modifiedSequence += AminoAcidPattern.getTaggedModifiedSequence(modificationProfile, aminoAcidPattern, mainModificationSites, secondaryModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
 
         modifiedSequence += "-" + peptide.getCTerminal();
 
@@ -1088,53 +1070,6 @@ public class Peptide extends ExperimentObject {
         }
 
         return modifiedSequence;
-    }
-
-    /**
-     * Returns the single residue as a tagged string (HTML color or PTM tag).
-     *
-     * @param residue the residue to tag
-     * @param ptmName the name of the PTM
-     * @param modificationProfile the modification profile
-     * @param mainPtm if true, white font is used on colored background, if
-     * false colored font on white background
-     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
-     * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
-     * @return the single residue as a tagged string
-     */
-    private static String getTaggedResidue(char residue, String ptmName, ModificationProfile modificationProfile, boolean mainPtm, boolean useHtmlColorCoding, boolean useShortName) {
-
-        String taggedResidue = "";
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-        PTM ptm = ptmFactory.getPTM(ptmName);
-
-        if (ptm.getType() == PTM.MODAA) {
-            if (!useHtmlColorCoding) {
-                if (useShortName) {
-                    taggedResidue += residue + "<" + ptmFactory.getShortName(ptmName) + ">";
-                } else {
-                    taggedResidue += residue + "<" + ptmName + ">";
-                }
-            } else {
-                Color ptmColor = modificationProfile.getColor(ptmName);
-                if (mainPtm) {
-                    taggedResidue
-                            += "<span style=\"color:#" + Util.color2Hex(Color.WHITE) + ";background:#" + Util.color2Hex(ptmColor) + "\">"
-                            + residue
-                            + "</span>";
-                } else {
-                    taggedResidue
-                            += "<span style=\"color:#" + Util.color2Hex(ptmColor) + ";background:#" + Util.color2Hex(Color.WHITE) + "\">"
-                            + residue
-                            + "</span>";
-                }
-            }
-        } else {
-            taggedResidue += residue;
-        }
-
-        return taggedResidue;
     }
 
     /**

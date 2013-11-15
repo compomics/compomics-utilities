@@ -221,27 +221,30 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         }
 
         if (theoreticalFragmentIons != null) {
-            for (Ion peptideIon : theoreticalFragmentIons) {
+            for (Ion fragmentIon : theoreticalFragmentIons) {
 
-                if (iontypes.containsKey(peptideIon.getType())
-                        && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
-                        && lossesValidated(neutralLosses, peptideIon)) {
+                if (iontypes.containsKey(fragmentIon.getType())
+                        && iontypes.get(fragmentIon.getType()).contains(fragmentIon.getSubType())
+                        && lossesValidated(neutralLosses, fragmentIon)) {
 
                     ArrayList<Integer> tempCharges;
 
                     // have to treat precursor charges separetly, as to not increase the max charge for the other ions
-                    if (peptideIon.getType() == Ion.IonType.PRECURSOR_ION) {
+                    if (fragmentIon.getType() == Ion.IonType.PRECURSOR_ION) {
                         tempCharges = precursorCharges;
                     } else {
                         tempCharges = charges;
                     }
 
+                    if (fragmentIon.getSubType() == 4 && fragmentIon.getNeutralLosses().isEmpty() ) {
+                        int i = 1;
+                    }
                     for (int charge : tempCharges) {
-                        if (chargeValidated(peptideIon, charge, precursorCharge)) {
-                            String key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
+                        if (chargeValidated(fragmentIon, charge, precursorCharge)) {
+                            String key = IonMatch.getPeakAnnotation(fragmentIon, new Charge(Charge.PLUS, charge));
                             if (!spectrumAnnotation.containsKey(key)
                                     && !unmatchedIons.contains(key)) {
-                                matchInSpectrum(peptideIon, charge);
+                                matchInSpectrum(fragmentIon, charge);
                             }
                             if (!unmatchedIons.contains(key)) {
                                 result.add(spectrumAnnotation.get(key));

@@ -69,7 +69,9 @@ public class Tag {
      * @param massGap the value of the mass gap
      */
     public void addMassGap(double massGap) {
-        content.add(new MassGap(massGap));
+        if (massGap != 0) {
+            content.add(new MassGap(massGap));
+        }
     }
 
     /**
@@ -78,15 +80,17 @@ public class Tag {
      * @param aminoAcidSequence the amino acid sequence with modifications
      */
     public void addAminoAcidSequence(AminoAcidPattern aminoAcidSequence) {
-        if (!content.isEmpty()) {
-            TagComponent lastComponent = content.get(content.size() - 1);
-            if (lastComponent instanceof AminoAcidPattern) {
-                AminoAcidPattern pattern = (AminoAcidPattern) lastComponent;
-                pattern.append(aminoAcidSequence);
-                return;
+        if (aminoAcidSequence.length() > 0) {
+            if (!content.isEmpty()) {
+                TagComponent lastComponent = content.get(content.size() - 1);
+                if (lastComponent instanceof AminoAcidPattern) {
+                    AminoAcidPattern pattern = (AminoAcidPattern) lastComponent;
+                    pattern.append(aminoAcidSequence);
+                    return;
+                }
             }
+            content.add(aminoAcidSequence);
         }
-        content.add(aminoAcidSequence);
     }
 
     /**
@@ -257,18 +261,21 @@ public class Tag {
             modifiedSequence += "<html>";
         }
 
-        modifiedSequence += tag.getNTerminal(includeTerminalGaps) + "-";
+        modifiedSequence += tag.getNTerminal(includeTerminalGaps);
 
-        for (TagComponent tagComponent : tag.getContent()) {
+        for (int i = 0; i < tag.getContent().size(); i++) {
+            TagComponent tagComponent = tag.getContent().get(i);
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                 modifiedSequence += aminoAcidPattern.getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, useShortName, excludeAllFixedPtms);
             } else {
-                modifiedSequence += tagComponent.asSequence();
+                if (includeTerminalGaps || i > 0 && i < tag.getContent().size() - 1) {
+                    modifiedSequence += tagComponent.asSequence();
+                }
             }
         }
 
-        modifiedSequence += "-" + tag.getCTerminal(includeTerminalGaps);
+        modifiedSequence += tag.getCTerminal(includeTerminalGaps);
 
         if (useHtmlColorCoding && includeHtmlStartEndTags) {
             modifiedSequence += "</html>";
@@ -299,9 +306,8 @@ public class Tag {
                     nTerm = ptmFactory.getShortName(modificationMatch.getTheoreticPtm());
                 }
             }
-
             nTerm = nTerm.replaceAll("-", " ");
-            return nTerm;
+            return nTerm + "-";
         } else if (firstComponent instanceof MassGap) {
             if (includeTerminalGaps) {
                 return firstComponent.asSequence();
@@ -335,9 +341,8 @@ public class Tag {
                     cTerm = ptmFactory.getShortName(modificationMatch.getTheoreticPtm());
                 }
             }
-
             cTerm = cTerm.replaceAll("-", " ");
-            return cTerm;
+            return "-" + cTerm;
         } else if (lastComponent instanceof MassGap) {
             if (includeTerminalGaps) {
                 return lastComponent.asSequence();
@@ -445,19 +450,19 @@ public class Tag {
         }
         return possibleSites;
     }
-    
+
     /**
      * Indicates whether this tag is the same as another tag
-     * 
+     *
      * @param anotherTag another tag
-     * 
+     *
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameAs(Tag anotherTag) {
         if (content.size() != anotherTag.getContent().size()) {
             return false;
         }
-        for (int i = 0 ; i < content.size() ; i++) {
+        for (int i = 0; i < content.size(); i++) {
             TagComponent component1 = content.get(i);
             TagComponent component2 = anotherTag.getContent().get(i);
             if (component1.isSameAs(component2)) {

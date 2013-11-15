@@ -3,11 +3,16 @@
  */
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.experiment.identification.tags.TagComponent;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
 import javax.swing.*;
@@ -866,6 +871,7 @@ public class SpectrumPanel extends GraphicsPanel {
 
         switch (ion.getType()) {
             case PEPTIDE_FRAGMENT_ION:
+            case TAG_FRAGMENT_ION:
                 switch (ion.getSubType()) {
                     case PeptideFragmentIon.A_ION:
                         if (ion.getNeutralLosses().size() == 1) {
@@ -1136,20 +1142,20 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aReverseIon the reverse de novo sequencing fragment ion type,
+     * @param aRewindIon the reverse de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
      * displayed
-     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
      * displayed
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, ArrayList<IonMatch> annotations,
-            int aForwardIon, int aReverseIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showReverseTags) {
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aReverseIon, aDeNovoCharge, showForwardTags, showReverseTags,
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags) {
+        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
                 0.9, 1.0, 0.2f, 0.2f, true);
     }
 
@@ -1162,28 +1168,28 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aReverseIon the reverse de novo sequencing fragment ion type,
+     * @param aRewindIon the reverse de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
      * displayed
-     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
      * displayed
      * @param forwardIonPercentHeight the percent height of the forward ion
      * annotation [0-1]
-     * @param reverseIonPercentHeight the percent height of the reverse ion
+     * @param rewindIonPercentHeight the percent height of the reverse ion
      * annotation [0-1]
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, ArrayList<IonMatch> annotations,
-            int aForwardIon, int aReverseIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showReverseTags,
-            double forwardIonPercentHeight, double reverseIonPercentHeight) {
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aReverseIon, aDeNovoCharge, showForwardTags, showReverseTags,
-                forwardIonPercentHeight, reverseIonPercentHeight, 0.2f, 0.2f, true);
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight) {
+        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, true);
     }
-    
+
     /**
      * Add reference areas annotating the de novo tags, using default alpha
      * levels of 0.2.
@@ -1193,27 +1199,117 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aReverseIon the reverse de novo sequencing fragment ion type,
+     * @param aRewindIon the reverse de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
      * displayed
-     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
      * displayed
      * @param forwardIonPercentHeight the percent height of the forward ion
      * annotation [0-1]
-     * @param reverseIonPercentHeight the percent height of the reverse ion
+     * @param rewindIonPercentHeight the percent height of the reverse ion
      * annotation [0-1]
-     * @param excludeFixedPtms are fixed PTMs to be annotated? 
+     * @param excludeFixedPtms are fixed PTMs to be annotated?
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, ArrayList<IonMatch> annotations,
-            int aForwardIon, int aReverseIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showReverseTags,
-            double forwardIonPercentHeight, double reverseIonPercentHeight, boolean excludeFixedPtms) {
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aReverseIon, aDeNovoCharge, showForwardTags, showReverseTags,
-                forwardIonPercentHeight, reverseIonPercentHeight, 0.2f, 0.2f, excludeFixedPtms);
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedPtms) {
+        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, excludeFixedPtms);
+    }
+
+    /**
+     * Add reference areas annotating the de novo tags, using default percent
+     * height of 0.9 for the forward ions and 1.0 for the reverse ions default
+     * alpha levels of 0.2. Fixed PTMs are not annotated.
+     *
+     * @param tag the current tag sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aRewindIon the reverse de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
+     * displayed
+     */
+    public void addAutomaticDeNovoSequencing(
+            Tag tag, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags) {
+        addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
+                0.9, 1.0, 0.2f, 0.2f, true);
+    }
+
+    /**
+     * Add reference areas annotating the de novo tags, using default alpha
+     * levels of 0.2. Fixed PTMs are not annotated.
+     *
+     * @param tag the current tag sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aRewindIon the reverse de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
+     * displayed
+     * @param forwardIonPercentHeight the percent height of the forward ion
+     * annotation [0-1]
+     * @param rewindIonPercentHeight the percent height of the reverse ion
+     * annotation [0-1]
+     */
+    public void addAutomaticDeNovoSequencing(
+            Tag tag, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight) {
+        addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, true);
+    }
+
+    /**
+     * Add reference areas annotating the de novo tags, using default alpha
+     * levels of 0.2.
+     *
+     * @param tag the current tag sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aRewindIon the reverse de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
+     * displayed
+     * @param forwardIonPercentHeight the percent height of the forward ion
+     * annotation [0-1]
+     * @param rewindIonPercentHeight the percent height of the reverse ion
+     * annotation [0-1]
+     * @param excludeFixedPtms are fixed PTMs to be annotated?
+     */
+    public void addAutomaticDeNovoSequencing(
+            Tag tag, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedPtms) {
+        addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, excludeFixedPtms);
     }
 
     /**
@@ -1224,31 +1320,31 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aReverseIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
      * displayed
-     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
      * displayed
      * @param forwardIonPercentHeight the percent height of the forward ion
      * annotation [0-1]
-     * @param reverseIonPercentHeight the percent height of the reverse ion
+     * @param rewindIonPercentHeight the percent height of the reverse ion
      * annotation [0-1]
      * @param forwardIonAlphaLevel alpha level of the forward ions
-     * @param reverseIonAlphaLevel alpha level of the reverse ions
-     * @param excludeFixedPtms are fixed PTMs to be annotated? 
+     * @param rewindIonAlphaLevel alpha level of the reverse ions
+     * @param excludeFixedPtms are fixed PTMs to be annotated?
      */
     public void addAutomaticDeNovoSequencing(
             Peptide currentPeptide, ArrayList<IonMatch> annotations,
-            int aForwardIon, int aReverseIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showReverseTags,
-            double forwardIonPercentHeight, double reverseIonPercentHeight,
-            float forwardIonAlphaLevel, float reverseIonAlphaLevel, boolean excludeFixedPtms) {
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight,
+            float forwardIonAlphaLevel, float rewindIonAlphaLevel, boolean excludeFixedPtms) {
 
         int forwardIon = aForwardIon;
-        int reverseIon = aReverseIon;
+        int reverseIon = aRewindIon;
         int deNovoCharge = aDeNovoCharge;
 
         IonMatch[] forwardIons = new IonMatch[currentPeptide.getSequence().length()];
@@ -1275,8 +1371,8 @@ public class SpectrumPanel extends GraphicsPanel {
 
         ArrayList<Integer> modifiedIndexes = currentPeptide.getModifiedIndexes(excludeFixedPtms);
 
-        // add reverse ion de novo tags (x, y or c)
-        if (showReverseTags) {
+        // add reverse ion de novo tags (x, y or z)
+        if (showRewindTags) {
 
             Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, reverseIon), false);
 
@@ -1292,8 +1388,8 @@ public class SpectrumPanel extends GraphicsPanel {
                     addReferenceAreaXAxis(new ReferenceArea(
                             "r" + i,
                             currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
-                            reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, reverseIonAlphaLevel, false, true, annotationColor, true,
-                            Color.lightGray, 0.2f, reverseIonPercentHeight));
+                            reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                            Color.lightGray, 0.2f, rewindIonPercentHeight));
                 }
             }
         }
@@ -1318,6 +1414,126 @@ public class SpectrumPanel extends GraphicsPanel {
                             forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
                             Color.lightGray, 0.2f, forwardIonPercentHeight));
                 }
+            }
+        }
+    }
+
+    /**
+     * Add reference areas annotating the de novo tags.
+     *
+     * @param tag the current tag sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showReverseTags if true, the reverse de novo sequencing tags are
+     * displayed
+     * @param forwardIonPercentHeight the percent height of the forward ion
+     * annotation [0-1]
+     * @param rewindIonPercentHeight the percent height of the reverse ion
+     * annotation [0-1]
+     * @param forwardIonAlphaLevel alpha level of the forward ions
+     * @param rewindIonAlphaLevel alpha level of the reverse ions
+     * @param excludeFixedPtms are fixed PTMs to be annotated?
+     */
+    public void addAutomaticDeNovoSequencing(
+            Tag tag, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showReverseTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight,
+            float forwardIonAlphaLevel, float rewindIonAlphaLevel, boolean excludeFixedPtms) {
+
+        int forwardIon = aForwardIon;
+        int rewindIon = aRewindIon;
+        int deNovoCharge = aDeNovoCharge;
+        // @TODO: include multiple ions
+        HashMap<Integer, IonMatch> forwardMap = new HashMap<Integer, IonMatch>();
+        HashMap<Integer, IonMatch> rewindMap = new HashMap<Integer, IonMatch>();
+        for (IonMatch ionMatch : annotations) {
+            if (ionMatch.ion.getType() == Ion.IonType.TAG_FRAGMENT_ION
+                    && ionMatch.ion.getNeutralLosses().isEmpty()
+                    && ionMatch.charge.value == deNovoCharge) {
+
+                TagFragmentIon fragmentIon = (TagFragmentIon) ionMatch.ion;
+                if (fragmentIon.getSubType() == forwardIon) {
+                    forwardMap.put(fragmentIon.getNumber(), ionMatch);
+                } else if (fragmentIon.getSubType() == rewindIon) {
+                    rewindMap.put(fragmentIon.getNumber(), ionMatch);
+                }
+            }
+        }
+
+        int aaIndex = 0;
+        for (TagComponent tagComponent : tag.getContent()) {
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+
+                // add forward ion de novo tags (a, b or c)
+                if (showForwardTags) {
+
+                    Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
+
+                    for (int i = 0; i < aminoAcidPattern.length(); i++) {
+                        aaIndex++;
+                        IonMatch ionMatch1 = forwardMap.get(aaIndex);
+                        IonMatch ionMatch2 = forwardMap.get(aaIndex + 1);
+                        if (ionMatch1 != null && ionMatch2 != null) {
+                            String mod = "";
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aaIndex + 1);
+                            if (!modificationMatches.isEmpty()) {
+                                mod = "*";
+                            }
+                            addReferenceAreaXAxis(new ReferenceArea(
+                                    "f" + aaIndex,
+                                    aminoAcidPattern.asSequence(aaIndex) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                                    Color.lightGray, 0.2f, rewindIonPercentHeight));
+                        }
+                    }
+                }
+            } else {
+                aaIndex++;
+            }
+        }
+        
+        ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
+        Collections.reverse(reversedTag);
+        aaIndex = 0;
+        for (TagComponent tagComponent : tag.getContent()) {
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+
+                // add forward ion de novo tags (x, y or z)
+                if (showForwardTags) {
+
+                    Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
+
+                    for (int i = aminoAcidPattern.length()-1; i >=0; i--) {
+                        aaIndex++;
+                        IonMatch ionMatch1 = rewindMap.get(aaIndex);
+                        IonMatch ionMatch2 = rewindMap.get(aaIndex + 1);
+                        if (ionMatch1 != null && ionMatch2 != null) {
+                            String mod = "";
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aaIndex + 1);
+                            if (!modificationMatches.isEmpty()) {
+                                mod = "*";
+                            }
+                            addReferenceAreaXAxis(new ReferenceArea(
+                                    "r" + aaIndex,
+                                    aminoAcidPattern.asSequence(aaIndex) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
+                                    Color.lightGray, 0.2f, forwardIonPercentHeight));
+                        }
+                    }
+                }
+            } else {
+                aaIndex++;
             }
         }
     }

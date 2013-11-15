@@ -208,6 +208,67 @@ public class IonMatch extends ExperimentObject {
                     result += "</html>";
                 }
                 return result;
+            case TAG_FRAGMENT_ION:
+                TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
+
+                if (html) {
+                    result += "<html>";
+                }
+                // add gap
+                if (tagFragmentIon.getMassGap() > 0 && tagFragmentIon.getSubNumber() == 1) {
+                    if (tagFragmentIon.getSubType() == TagFragmentIon.A_ION
+                            || tagFragmentIon.getSubType() == TagFragmentIon.B_ION
+                            || tagFragmentIon.getSubType() == TagFragmentIon.C_ION) {
+                        if (html) {
+                            result += "<sub>" + tagFragmentIon.getMassGap() + "</sub>";
+                        } else {
+                            result += tagFragmentIon.getMassGap() + "+";
+                        }
+                    }
+                }
+                // add type
+                result += ion.getSubTypeAsString();
+
+                // add fragment ion number
+                if (html) {
+                    result += "<sub>" + tagFragmentIon.getSubNumber() + "</sub>";
+                } else {
+                    result += tagFragmentIon.getSubNumber();
+                }
+
+                // add charge
+                result += charge.getChargeAsFormattedString();
+
+                // add any neutral losses
+                if (html) {
+                    String neutralLoss = ion.getNeutralLossesAsString();
+
+                    for (int i = 0; i < neutralLoss.length(); i++) {
+                        if (Character.isDigit(neutralLoss.charAt(i))) {
+                            result += "<sub>" + neutralLoss.charAt(i) + "</sub>";
+                        } else {
+                            result += neutralLoss.charAt(i);
+                        }
+                    }
+                } else {
+                    result += ion.getNeutralLossesAsString();
+                }
+                // add gap
+                if (tagFragmentIon.getMassGap() > 0 && tagFragmentIon.getSubNumber() == 1) {
+                    if (tagFragmentIon.getSubType() == TagFragmentIon.X_ION
+                            || tagFragmentIon.getSubType() == TagFragmentIon.Y_ION
+                            || tagFragmentIon.getSubType() == TagFragmentIon.Z_ION) {
+                        if (html) {
+                            result += "<sub>" + tagFragmentIon.getMassGap() + "</sub>";
+                        } else {
+                            result += "+" + tagFragmentIon.getMassGap();
+                        }
+                    }
+                }
+                if (html) {
+                    result += "</html>";
+                }
+                return result;
             case PRECURSOR_ION:
                 if (html) {
                     result += "<html>";

@@ -112,6 +112,8 @@ public abstract class Ion extends ExperimentObject {
                 return ImmoniumIon.getPossibleSubtypes();
             case PEPTIDE_FRAGMENT_ION:
                 return PeptideFragmentIon.getPossibleSubtypes();
+            case TAG_FRAGMENT_ION:
+                return TagFragmentIon.getPossibleSubtypes();
             case PRECURSOR_ION:
                 return PrecursorIon.getPossibleSubtypes();
             case REPORTER_ION:
@@ -213,6 +215,7 @@ public abstract class Ion extends ExperimentObject {
         result.add(IonType.GLYCON);
         result.add(IonType.IMMONIUM_ION);
         result.add(IonType.PEPTIDE_FRAGMENT_ION);
+        result.add(IonType.TAG_FRAGMENT_ION);
         result.add(IonType.PRECURSOR_ION);
         result.add(IonType.REPORTER_ION);
         return result;
@@ -237,6 +240,8 @@ public abstract class Ion extends ExperimentObject {
         switch (type) {
             case PEPTIDE_FRAGMENT_ION:
                 return "Peptide fragment ion";
+            case TAG_FRAGMENT_ION:
+                return "Tag fragment ion";
             case PRECURSOR_ION:
                 return "Precursor ion";
             case IMMONIUM_ION:
@@ -275,6 +280,8 @@ public abstract class Ion extends ExperimentObject {
                 return new ImmoniumIon(subType);
             case PEPTIDE_FRAGMENT_ION:
                 return new PeptideFragmentIon(subType, neutralLosses);
+            case TAG_FRAGMENT_ION:
+                return new TagFragmentIon(subType, neutralLosses);
             case PRECURSOR_ION:
                 return new PrecursorIon(neutralLosses);
             case REPORTER_ION:
@@ -302,6 +309,8 @@ public abstract class Ion extends ExperimentObject {
                 return new ImmoniumIon(subType);
             case PEPTIDE_FRAGMENT_ION:
                 return new PeptideFragmentIon(subType);
+            case TAG_FRAGMENT_ION:
+                return new TagFragmentIon(subType);
             case PRECURSOR_ION:
                 return new PrecursorIon();
             case REPORTER_ION:

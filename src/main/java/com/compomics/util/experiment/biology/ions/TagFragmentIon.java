@@ -22,35 +22,39 @@ public class TagFragmentIon extends Ion {
     /**
      * Identifier for an a ion.
      */
-    public static final int A_ION = 0;
+    public static final int A_ION = PeptideFragmentIon.A_ION;
     /**
      * Identifier for a b ion.
      */
-    public static final int B_ION = 1;
+    public static final int B_ION = PeptideFragmentIon.B_ION;
     /**
      * Identifier for a c ion.
      */
-    public static final int C_ION = 2;
+    public static final int C_ION = PeptideFragmentIon.C_ION;
     /**
      * Identifier for an x ion.
      */
-    public static final int X_ION = 3;
+    public static final int X_ION = PeptideFragmentIon.X_ION;
     /**
      * Identifier for a y ion.
      */
-    public static final int Y_ION = 4;
+    public static final int Y_ION = PeptideFragmentIon.Y_ION;
     /**
      * Identifier for a z ion.
      */
-    public static final int Z_ION = 5;
+    public static final int Z_ION = PeptideFragmentIon.Z_ION;
     /**
      * The neutral losses found on the ion.
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
-     * Position of the ion in the peptide for peptide ions.
+     * Position of the ion in the tag in amino acids considering gaps as an amino acid.
      */
     private int number = -1;
+    /**
+     * Position of the ion in the current sequence of amino acids.
+     */
+    private int subNumber = -1;
     /**
      * The type of fragment.
      */
@@ -65,10 +69,12 @@ public class TagFragmentIon extends Ion {
      * @param fragmentType the type of peptide fragment ion as indexed by the
      * static fields
      * @param number the number of the fragment ion
+     * @param subNumber the number of the fragment ion in the current amino acid sequence
      * @param mass the mass of the fragment ion
      * @param neutralLosses the neutral losses of the ion
+     * @param massGap the mass gap before this tag fragment ions
      */
-    public TagFragmentIon(int fragmentType, int number, double mass, ArrayList<NeutralLoss> neutralLosses, double massGap) {
+    public TagFragmentIon(int fragmentType, int number, int subNumber, double mass, ArrayList<NeutralLoss> neutralLosses, double massGap) {
         if (neutralLosses == null) {
             neutralLosses = new ArrayList<NeutralLoss>();
         }
@@ -77,6 +83,7 @@ public class TagFragmentIon extends Ion {
         this.theoreticMass = mass;
         this.neutralLosses.addAll(neutralLosses);
         this.number = number;
+        this.subNumber = subNumber;
         this.massGap = massGap;
     }
 
@@ -108,12 +115,21 @@ public class TagFragmentIon extends Ion {
     }
 
     /**
-     * Returns the number of the fragment in the sequence.
+     * Returns the number of the fragment in the tag.
      *
-     * @return the number of the fragment in the sequence
+     * @return the number of the fragment in the tag
      */
     public int getNumber() {
         return number;
+    }
+
+    /**
+     * Returns the number of the fragment in the current amino acid sequence.
+     *
+     * @return the number of the fragment in the current amino acid sequence
+     */
+    public int getSubNumber() {
+        return subNumber;
     }
 
     @Override
@@ -133,6 +149,19 @@ public class TagFragmentIon extends Ion {
      */
     public String getNameWithNumber() {
         return getSubTypeAsString() + getNumber() + getNeutralLossesAsString();
+    }
+    
+    /**
+     * Returns the name with number and mass gap. For example 110.0...b5-H2O.
+     * 
+     * @return the name with number
+     */
+    public String getNameWithGapAndNumber() {
+        if (massGap == 0 || subNumber > 1) {
+            return getNameWithNumber();
+        } else {
+            return massGap + "-" + getSubTypeAsString() + getNumber() + getNeutralLossesAsString();
+        }
     }
 
     @Override
@@ -264,5 +293,14 @@ public class TagFragmentIon extends Ion {
                 && anotherIon.getSubType() == subType
                 && ((PeptideFragmentIon) anotherIon).getNumber() == number
                 && anotherIon.getNeutralLossesAsString().equals(getNeutralLossesAsString());
+    }
+
+    /**
+     * Returns the mass gap comprised in this ion
+     * 
+     * @return the mass gap
+     */
+    public double getMassGap() {
+        return massGap;
     }
 }

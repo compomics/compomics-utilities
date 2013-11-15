@@ -11,6 +11,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -262,6 +263,20 @@ public abstract class SpectrumAnnotator {
                             default:
                                 throw new UnsupportedOperationException("Fragment ion type " + ion.getSubTypeAsString() + " not implemented in the spectrum annotator.");
                         }
+                    case TAG_FRAGMENT_ION:
+                        TagFragmentIon tagFragmentIon = ((TagFragmentIon) ion);
+                        switch (ion.getSubType()) {
+                            case TagFragmentIon.A_ION:
+                            case TagFragmentIon.B_ION:
+                            case TagFragmentIon.C_ION:
+                                return neutralLosses.getBStart(neutralLossRef) <= tagFragmentIon.getNumber();
+                            case TagFragmentIon.X_ION:
+                            case TagFragmentIon.Y_ION:
+                            case TagFragmentIon.Z_ION:
+                                return neutralLosses.getYStart(neutralLossRef) <= tagFragmentIon.getNumber();
+                            default:
+                                throw new UnsupportedOperationException("Fragment ion type " + ion.getSubTypeAsString() + " not implemented in the spectrum annotator.");
+                        }
                     default:
                         return true;
                 }
@@ -307,6 +322,9 @@ public abstract class SpectrumAnnotator {
             case PEPTIDE_FRAGMENT_ION:
                 PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) theoreticIon);
                 return charge <= peptideFragmentIon.getNumber() && (charge < precursorCharge || precursorCharge == 1);
+            case TAG_FRAGMENT_ION:
+                TagFragmentIon tagFragmentIon = ((TagFragmentIon) theoreticIon);
+                return charge <= tagFragmentIon.getNumber() && (charge < precursorCharge || precursorCharge == 1);
             case PRECURSOR_ION:
 //                if ((theoreticIon.getNeutralLossesAsString().lastIndexOf("TMT_C") != -1
 //                        || theoreticIon.getNeutralLossesAsString().lastIndexOf("iTRAQ_C") != -1)
@@ -422,6 +440,13 @@ public abstract class SpectrumAnnotator {
                     if (ion.getSubType() == PeptideFragmentIon.A_ION || ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.C_ION) {
                         ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
                     } else if (ion.getSubType() == PeptideFragmentIon.X_ION || ion.getSubType() == PeptideFragmentIon.Y_ION || ion.getSubType() == PeptideFragmentIon.Z_ION) {
+                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                    }
+                }
+                if (ion.getType() == IonType.TAG_FRAGMENT_ION) {
+                    if (ion.getSubType() == TagFragmentIon.A_ION || ion.getSubType() == TagFragmentIon.B_ION || ion.getSubType() == TagFragmentIon.C_ION) {
+                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                    } else if (ion.getSubType() == TagFragmentIon.X_ION || ion.getSubType() == TagFragmentIon.Y_ION || ion.getSubType() == TagFragmentIon.Z_ION) {
                         ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
                     }
                 }

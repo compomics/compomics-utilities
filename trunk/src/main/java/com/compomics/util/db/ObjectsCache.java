@@ -579,6 +579,15 @@ public class ObjectsCache {
     private String[] getKeyComponents(String cacheKey) {
         return cacheKey.split(cacheSeparator);
     }
+    
+    /**
+     * Indicates whether the cache is empty.
+     * 
+     * @return a boolean indicating whether the cache is empty
+     */
+    public boolean isEmpty() {
+        return loadedObjectsKeys.isEmpty();
+    }
 
     /**
      * Class representing a cache entry.

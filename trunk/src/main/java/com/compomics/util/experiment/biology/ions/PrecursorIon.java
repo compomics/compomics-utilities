@@ -63,13 +63,13 @@ public class PrecursorIon extends Ion {
     }
 
     /**
-     * Constructor.
-     *
-     * @param peptide the theoretic peptide
+     * Constructor for a generic ion without neutral losses.
+     * 
+     * @param theoreticMass the theoretic mass of the precursor
      */
-    public PrecursorIon(Peptide peptide) {
+    public PrecursorIon(double theoreticMass) {
+        this.theoreticMass = theoreticMass;
         type = IonType.PRECURSOR_ION;
-        this.theoreticMass = peptide.getMass();
     }
 
     @Override

@@ -6,7 +6,11 @@
 
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
+import com.compomics.util.experiment.biology.ions.PrecursorIon;
+import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -14,7 +18,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  *
  * @author Marc
  */
-public class SpectrumIdentificationAssumption extends ExperimentObject {
+public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
     /**
      * The rank of the peptide assumption for the concerned spectrum.
      */
@@ -83,6 +87,72 @@ public class SpectrumIdentificationAssumption extends ExperimentObject {
      */
     public Charge getIdentificationCharge() {
         return identificationCharge;
+    }
+    /**
+     * Returns the theoretic mass of the given assumption.
+     * 
+     * @return the theoretic mass of the given assumption
+     */
+    public abstract double getTheoreticMass();
+    
+    /**
+     * Returns the theoretic m/z
+     * @return the theoretic m/z
+     */
+    public double getTheoreticMz() {
+        return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * (identificationCharge.value - 1)) / identificationCharge.value;
+    }
+
+    /**
+     * Returns the precursor mass error (in ppm or Da). Note that the value is
+     * returns as (experimental mass - theoretical mass) and that negative
+     * values thus can occur. The isotopic error can subtracted and retrieved by
+     * the function getIsotopeNumber().
+     *
+     * @param measuredMZ the precursor m/z
+     * @param ppm if true the error is returns in ppm, false returns the error
+     * in Da
+     * @param subtractIsotope if true the isotope number will be subtracted from
+     * the theoretic mass
+     * @return the precursor mass error (in ppm or Da)
+     */
+    public double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, subtractIsotope);
+    }
+
+    /**
+     * Returns the precursor mass error (in ppm or Da). Note that the value is
+     * returns as (experimental mass - theoretical mass) and that negative
+     * values thus can occur. The isotopic error is subtracted and can be
+     * retrieved by the function getIsotopeNumber().
+     *
+     * @param measuredMZ the precursor m/z
+     * @param ppm if true the error is returns in ppm, false returns the error
+     * in Da
+     * @return the precursor mass error (in ppm or Da)
+     */
+    public double getDeltaMass(double measuredMZ, boolean ppm) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
+    }
+
+    /**
+     * Returns the precursor isotope number according to the number of protons.
+     *
+     * @param measuredMZ
+     * @return the precursor isotope number according to the number of protons
+     */
+    public int getIsotopeNumber(double measuredMZ) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber();
+    }
+
+    /**
+     * Returns the ion match.
+     *
+     * @param precursorPeak
+     * @return the ion match
+     */
+    public IonMatch getPrecursorMatch(Peak precursorPeak) {
+        return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge());
     }
     
 }

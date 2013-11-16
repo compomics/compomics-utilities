@@ -1,5 +1,6 @@
 package com.compomics.util.preferences.gui;
 
+import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.PTMScoringPreferences;
@@ -328,7 +329,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         ptmScoringPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PTM Scoring"));
         ptmScoringPanel.setOpaque(false);
 
-        scoreCmb.setModel(new DefaultComboBoxModel(PTMScoringPreferences.ProbabilisticScore.getPossibilitiesAsString()));
+        scoreCmb.setModel(new DefaultComboBoxModel(PtmScore.getScoreNames()));
 
         thresholdTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
@@ -375,17 +376,18 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                                     .addComponent(probabilisticScoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 185, Short.MAX_VALUE)
                                     .addComponent(scoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 185, Short.MAX_VALUE)
                                     .addComponent(neutralLossesCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(neutralLossesLabel)
-                            .addGroup(ptmScoringPanelLayout.createSequentialGroup()
-                                .addComponent(aScoreLabel)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                                 .addComponent(neutralLossesLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(thresholdCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(thresholdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(thresholdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ptmScoringPanelLayout.createSequentialGroup()
+                                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(neutralLossesLabel)
+                                    .addComponent(aScoreLabel))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(29, 29, 29))))
         );
         ptmScoringPanelLayout.setVerticalGroup(
@@ -527,7 +529,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             processingPreferences.setPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
             processingPreferences.setPsmFDR(new Double(psmFdrTxt.getText().trim()));
             ptmScoringPreferences.setProbabilitsticScoreCalculation(probabilisticScoreCmb.getSelectedIndex() == 0);
-            ptmScoringPreferences.setSelectedProbabilisticScore(PTMScoringPreferences.ProbabilisticScore.getProbabilisticScoreFromName(scoreCmb.getSelectedItem().toString()));
+            ptmScoringPreferences.setSelectedProbabilisticScore(PtmScore.getScore(scoreCmb.getSelectedItem().toString()));
             ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
             if (thresholdCmb.getSelectedIndex() == 0) {
                 ptmScoringPreferences.setEstimateFlr(true);

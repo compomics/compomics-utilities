@@ -268,7 +268,7 @@ public class IonFactory {
                         if (patternMasses.isEmpty()) {
                             for (double mass : aminoAcidMasses) {
                                 int aa = ionNumberOffset + i;
-                                int subaa = i + 1;
+                                int subaa = i+1;
                                 double forwardMass = massOffset + mass;
 
                                 // add the a-ions
@@ -294,7 +294,7 @@ public class IonFactory {
                             for (double patternMass : patternMasses) {
                                 for (double mass : aminoAcidMasses) {
                                     int aa = ionNumberOffset + i;
-                                    int subaa = i + 1;
+                                    int subaa = i+1;
                                     double patternFragmentMass = patternMass + mass;
                                     double forwardMass = massOffset + patternFragmentMass;
 
@@ -346,7 +346,7 @@ public class IonFactory {
         Collections.reverse(reversedTag);
         ionNumberOffset = 0;
         massOffsets.clear();
-        massOffsets.add(Atom.O.mass);
+        massOffsets.add(0.0);
         for (TagComponent tagComponent : reversedTag) {
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
@@ -375,19 +375,19 @@ public class IonFactory {
                                     gap = massOffset;
                                 }
 
-                                // add the a-ions
+                                // add the x-ions
                                 for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                    result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.mass + Atom.O.mass - getLossesMass(losses), losses, gap));
+                                    result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.mass + 2*Atom.O.mass - getLossesMass(losses), losses, gap));
                                 }
 
-                                // add the b-ions
+                                // add the y-ions
                                 for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                    result.add(new TagFragmentIon(TagFragmentIon.Y_ION, aa, subaa, rewindMass + 2 * Atom.H.mass - getLossesMass(losses), losses, gap));
+                                    result.add(new TagFragmentIon(TagFragmentIon.Y_ION, aa, subaa, rewindMass + 2 * Atom.H.mass + Atom.O.mass - getLossesMass(losses), losses, gap));
                                 }
 
-                                // add the c-ion
+                                // add the z-ion
                                 for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                    result.add(new TagFragmentIon(TagFragmentIon.Z_ION, aa, subaa, rewindMass - Atom.N.mass - getLossesMass(losses), losses, gap));
+                                    result.add(new TagFragmentIon(TagFragmentIon.Z_ION, aa, subaa, rewindMass - Atom.N.mass + Atom.O.mass - getLossesMass(losses), losses, gap));
                                 }
 
                                 if (!newPatternMassess.contains(mass)) {
@@ -406,19 +406,19 @@ public class IonFactory {
                                         gap = massOffset;
                                     }
 
-                                    // add the a-ions
+                                    // add the x-ions
                                     for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                        result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.mass + Atom.O.mass - getLossesMass(losses), losses, gap));
+                                        result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.mass + 2*Atom.O.mass - getLossesMass(losses), losses, gap));
                                     }
 
-                                    // add the b-ions
+                                    // add the y-ions
                                     for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                        result.add(new TagFragmentIon(TagFragmentIon.Y_ION, aa, subaa, rewindMass + 2 * Atom.H.mass - getLossesMass(losses), losses, gap));
+                                        result.add(new TagFragmentIon(TagFragmentIon.Y_ION, aa, subaa, rewindMass + 2 * Atom.H.mass + Atom.O.mass - getLossesMass(losses), losses, gap));
                                     }
 
-                                    // add the c-ion
+                                    // add the z-ion
                                     for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                        result.add(new TagFragmentIon(TagFragmentIon.Z_ION, aa, subaa, rewindMass - Atom.N.mass - getLossesMass(losses), losses, gap));
+                                        result.add(new TagFragmentIon(TagFragmentIon.Z_ION, aa, subaa, rewindMass - Atom.N.mass + Atom.O.mass - getLossesMass(losses), losses, gap));
                                     }
 
                                     if (!newPatternMassess.contains(patternFragmentMass)) {

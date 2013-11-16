@@ -236,9 +236,6 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                         tempCharges = charges;
                     }
 
-                    if (fragmentIon.getSubType() == 4 && fragmentIon.getNeutralLosses().isEmpty() ) {
-                        int i = 1;
-                    }
                     for (int charge : tempCharges) {
                         if (chargeValidated(fragmentIon, charge, precursorCharge)) {
                             String key = IonMatch.getPeakAnnotation(fragmentIon, new Charge(Charge.PLUS, charge));

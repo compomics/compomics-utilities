@@ -1479,21 +1479,21 @@ public class SpectrumPanel extends GraphicsPanel {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
 
-                    for (int i = 0; i < aminoAcidPattern.length(); i++) {
+                    for (int i = 0; i < aminoAcidPattern.length()-1; i++) {
                         aaIndex++;
                         IonMatch ionMatch1 = forwardMap.get(aaIndex);
                         IonMatch ionMatch2 = forwardMap.get(aaIndex + 1);
                         if (ionMatch1 != null && ionMatch2 != null) {
                             String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aaIndex + 1);
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(i + 2);
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "f" + aaIndex,
-                                    aminoAcidPattern.asSequence(aaIndex) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
-                                    Color.lightGray, 0.2f, rewindIonPercentHeight));
+                                    aminoAcidPattern.asSequence(i+1) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
+                                    Color.lightGray, 0.2f, forwardIonPercentHeight));
                         }
                     }
                 }
@@ -1505,12 +1505,12 @@ public class SpectrumPanel extends GraphicsPanel {
         ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
         Collections.reverse(reversedTag);
         aaIndex = 0;
-        for (TagComponent tagComponent : tag.getContent()) {
+        for (TagComponent tagComponent : reversedTag) {
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
 
-                // add forward ion de novo tags (x, y or z)
-                if (showForwardTags) {
+                // add reverse ion de novo tags (x, y or z)
+                if (showReverseTags) {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
 
@@ -1518,17 +1518,17 @@ public class SpectrumPanel extends GraphicsPanel {
                         aaIndex++;
                         IonMatch ionMatch1 = rewindMap.get(aaIndex);
                         IonMatch ionMatch2 = rewindMap.get(aaIndex + 1);
-                        if (ionMatch1 != null && ionMatch2 != null) {
+                        if (ionMatch1 != null && ionMatch2 != null && i>0) {
                             String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aaIndex + 1);
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(i);
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "r" + aaIndex,
-                                    aminoAcidPattern.asSequence(aaIndex) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
-                                    Color.lightGray, 0.2f, forwardIonPercentHeight));
+                                    aminoAcidPattern.asSequence(i-1) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                                    Color.lightGray, 0.2f, rewindIonPercentHeight));
                         }
                     }
                 }

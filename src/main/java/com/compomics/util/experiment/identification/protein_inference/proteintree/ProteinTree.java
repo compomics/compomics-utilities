@@ -1203,6 +1203,35 @@ public class ProteinTree {
     }
 
     /**
+     * reduces the node cache size by the given share. If less than 100 nodes are left they will all be removed.
+     *
+     * @param share the share of the cache to remove. 0.5 means 50%
+     */
+    public void reduceNodeCacheSize(double share) {
+        double limit = tree.size();
+        if (limit > 100) {
+            limit = share * limit;
+        }
+        for (int i = 0; i < limit; i++) {
+            int index = tagsInTree.size() - 1;
+            String tempTag = tagsInTree.get(index);
+            Node tempNode = tree.get(tempTag);
+            treeSize -= tempNode.getSize();
+            tree.remove(tempTag);
+            tagsInTree.remove(index);
+        }
+    }
+    
+    /**
+     * Returns the number of nodes currently loaded in cache.
+     * 
+     * @return the number of nodes currently loaded in cache
+     */
+    public int getNodesInCache() {
+        return tree.size();
+    }
+
+    /**
      * Returns a list of peptides matched using the given peptide sequence in
      * the given protein according the provided matching settings.
      *

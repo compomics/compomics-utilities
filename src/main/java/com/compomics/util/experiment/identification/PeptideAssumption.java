@@ -106,67 +106,6 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         return peptide;
     }
 
-    /**
-     * Returns the precursor mass error (in ppm or Da). Note that the value is
-     * returns as (experimental mass - theoretical mass) and that negative
-     * values thus can occur. The isotopic error can subtracted and retrieved by
-     * the function getIsotopeNumber().
-     *
-     * @param measuredMZ the precursor m/z
-     * @param ppm if true the error is returns in ppm, false returns the error
-     * in Da
-     * @param subtractIsotope if true the isotope number will be subtracted from
-     * the theoretic mass
-     * @return the precursor mass error (in ppm or Da)
-     */
-    public double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, subtractIsotope);
-    }
-
-    /**
-     * Returns the precursor mass error (in ppm or Da). Note that the value is
-     * returns as (experimental mass - theoretical mass) and that negative
-     * values thus can occur. The isotopic error is subtracted and can be
-     * retrieved by the function getIsotopeNumber().
-     *
-     * @param measuredMZ the precursor m/z
-     * @param ppm if true the error is returns in ppm, false returns the error
-     * in Da
-     * @return the precursor mass error (in ppm or Da)
-     */
-    public double getDeltaMass(double measuredMZ, boolean ppm) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
-    }
-
-    /**
-     * Returns the theoretic m/z expected for this assumption.
-     *
-     * @return the theoretic m/z expected for this assumption
-     */
-    public double getTheoreticMz() {
-        return (peptide.getMass() + getIdentificationCharge().value * ElementaryIon.proton.getTheoreticMass()) / getIdentificationCharge().value;
-    }
-
-    /**
-     * Returns the precursor isotope number according to the number of protons.
-     *
-     * @param measuredMZ
-     * @return the precursor isotope number according to the number of protons
-     */
-    public int getIsotopeNumber(double measuredMZ) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber();
-    }
-
-    /**
-     * Returns the ion match.
-     *
-     * @param precursorPeak
-     * @return the ion match
-     */
-    public IonMatch getPrecursorMatch(Peak precursorPeak) {
-        return new IonMatch(precursorPeak, new PrecursorIon(peptide), getIdentificationCharge());
-    }
-
     @Override
     public int getRank() {
         if (super.identificationCharge == null) { // backward compatibility check
@@ -220,5 +159,10 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         } else {
             return super.identificationCharge;
         }
+    }
+    
+    @Override
+    public double getTheoreticMass() {
+        return peptide.getMass();
     }
 }

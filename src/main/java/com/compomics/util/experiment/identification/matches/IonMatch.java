@@ -214,26 +214,25 @@ public class IonMatch extends ExperimentObject {
                 if (html) {
                     result += "<html>";
                 }
-                // add gap
-                if (tagFragmentIon.getMassGap() > 0 && tagFragmentIon.getSubNumber() == 1) {
-                    if (tagFragmentIon.getSubType() == TagFragmentIon.A_ION
-                            || tagFragmentIon.getSubType() == TagFragmentIon.B_ION
-                            || tagFragmentIon.getSubType() == TagFragmentIon.C_ION) {
-                        if (html) {
-                            result += "<sub>" + tagFragmentIon.getMassGap() + "</sub>";
-                        } else {
-                            result += tagFragmentIon.getMassGap() + "+";
-                        }
-                    }
-                }
                 // add type
                 result += ion.getSubTypeAsString();
 
-                // add fragment ion number
-                if (html) {
-                    result += "<sub>" + tagFragmentIon.getSubNumber() + "</sub>";
+                if (tagFragmentIon.getSubNumber() > 0) {
+                    // add fragment ion number
+                    if (html) {
+                        result += "<sub>" + tagFragmentIon.getSubNumber() + "</sub>";
+                    } else {
+                        result += tagFragmentIon.getSubNumber();
+                    }
                 } else {
-                    result += tagFragmentIon.getSubNumber();
+                    // add gap
+                    if (tagFragmentIon.getMassGap() > 0 && tagFragmentIon.getSubNumber() == 0) {
+                        if (html) {
+                            result += "<sub>(" + tagFragmentIon.getMassGap() + ")</sub>";
+                        } else {
+                            result += "(" + tagFragmentIon.getMassGap() + ")";
+                        }
+                    }
                 }
 
                 // add charge
@@ -253,18 +252,7 @@ public class IonMatch extends ExperimentObject {
                 } else {
                     result += ion.getNeutralLossesAsString();
                 }
-                // add gap
-                if (tagFragmentIon.getMassGap() > 0 && tagFragmentIon.getSubNumber() == 1) {
-                    if (tagFragmentIon.getSubType() == TagFragmentIon.X_ION
-                            || tagFragmentIon.getSubType() == TagFragmentIon.Y_ION
-                            || tagFragmentIon.getSubType() == TagFragmentIon.Z_ION) {
-                        if (html) {
-                            result += "<sub>" + tagFragmentIon.getMassGap() + "</sub>";
-                        } else {
-                            result += "+" + tagFragmentIon.getMassGap();
-                        }
-                    }
-                }
+
                 if (html) {
                     result += "</html>";
                 }

@@ -148,6 +148,25 @@ public class Tag {
         }
         return mass;
     }
+    
+    /**
+     * Returns the theoretic mass of the tag, eventually without terminal gaps.
+     * 
+     * @param includeCTermGap if true the C-terminal gap will be added if present
+     * @param includeNTermGap if true the N-terminal gap will be added if present
+     * 
+     * @return the theoretic mass of the tag
+     */
+    public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
+        double mass = getMass();
+        if (!includeCTermGap) {
+            mass -= getCTerminalGap();
+        }
+        if (!includeNTermGap) {
+            mass -= getNTerminalGap();
+        }
+        return mass;
+    }
 
     /**
      * Returns the N-terminal gap of the tag

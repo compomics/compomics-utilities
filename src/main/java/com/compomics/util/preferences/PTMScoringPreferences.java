@@ -1,5 +1,6 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.identification.ptm.PtmScore;
 import java.io.Serializable;
 
 /**
@@ -34,81 +35,10 @@ public class PTMScoringPreferences implements Serializable {
      * Boolean indicating whether a probabilitstic score is to be calculated.
      */
     private Boolean probabilitsticScoreCalculation = true;
-
-    /**
-     * List of implemented probabilistic scores.
-     */
-    public enum ProbabilisticScore {
-
-        AScore("A-score"),
-        PhosphoRS("PhosphoRS (beta)");
-        /**
-         * The name of the score.
-         */
-        private String name;
-
-        /**
-         * Constructor.
-         *
-         * @param name the name of the score
-         */
-        private ProbabilisticScore(String name) {
-            this.name = name;
-        }
-
-        /**
-         * Returns the name of the probabilistic score.
-         *
-         * @return the name of the probabilistic score
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Returns the probabilistic score corresponding to a name. Null if not
-         * found.
-         *
-         * @param name the name of the score of interest
-         *
-         * @return the corresponding probabilistic score
-         */
-        public static ProbabilisticScore getProbabilisticScoreFromName(String name) {
-            for (ProbabilisticScore probabilisticScore : getPossibilities()) {
-                if (probabilisticScore.getName().equals(name)) {
-                    return probabilisticScore;
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Returns a list of implemented probabilistic scores.
-         *
-         * @return a list of implemented probabilistic scores
-         */
-        public static ProbabilisticScore[] getPossibilities() {
-            return new ProbabilisticScore[]{AScore, PhosphoRS};
-        }
-
-        /**
-         * Returns a list of the names of the implemented probabilistic scores.
-         *
-         * @return a list of the names of the implemented probabilistic scores
-         */
-        public static String[] getPossibilitiesAsString() {
-            ProbabilisticScore[] possibilities = getPossibilities();
-            String[] result = new String[possibilities.length];
-            for (int i = 0; i < possibilities.length; i++) {
-                result[i] = possibilities[i].getName();
-            }
-            return result;
-        }
-    };
     /**
      * The probabilistic score selected.
      */
-    private ProbabilisticScore selectedProbabilisticScore = ProbabilisticScore.AScore;
+    private PtmScore selectedProbabilisticScore = PtmScore.AScore;
     /**
      * Boolean indicating whether the threshold should be FLR based.
      */
@@ -158,7 +88,7 @@ public class PTMScoringPreferences implements Serializable {
      *
      * @return the selected probabilistic score
      */
-    public ProbabilisticScore getSelectedProbabilisticScore() {
+    public PtmScore getSelectedProbabilisticScore() {
         return selectedProbabilisticScore;
     }
 
@@ -167,7 +97,7 @@ public class PTMScoringPreferences implements Serializable {
      *
      * @param selectedProbabilisticScore the selected probabilistic score
      */
-    public void setSelectedProbabilisticScore(ProbabilisticScore selectedProbabilisticScore) {
+    public void setSelectedProbabilisticScore(PtmScore selectedProbabilisticScore) {
         this.selectedProbabilisticScore = selectedProbabilisticScore;
     }
 

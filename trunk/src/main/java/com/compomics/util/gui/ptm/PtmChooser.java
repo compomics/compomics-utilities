@@ -1,44 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.gui.ptm;
 
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.renderers.JSparklinesBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.JSparklinesColorTableCellRenderer;
 import org.jfree.chart.plot.PlotOrientation;
 
 /**
- *
- * @author mva037
+ * A dialog for selecting from a list of PTMs.
+ * 
+ * @author Marc Vaudel
  */
 public class PtmChooser extends javax.swing.JDialog {
 
     /**
-     * boolean indicating whether the cancel button has been pressed
+     * Boolean indicating whether the cancel button has been pressed.
      */
     private boolean canceled = false;
     /**
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-/**
- * List of PTMs to display
- */    
+    /**
+     * List of PTMs to display.
+     */
     private ArrayList<String> ptmList = new ArrayList<String>();
     /**
      * The modification table column header tooltips.
      */
     private ArrayList<String> modificationTableToolTips;
+
     /**
-     * Creates new form PtmChooser. Note, all ptms shall be in the PTMFactory.
-     * 
+     * Creates new form PtmChooser. Note, all PTMs shall be in the PTMFactory.
+     *
      * @param parent the parent frame
      * @param ptmList list of PTMs to display
      * @param selectedPTMs PTM original selection
@@ -51,10 +50,10 @@ public class PtmChooser extends javax.swing.JDialog {
         setLocationRelativeTo(parent);
         setVisible(true);
     }
-    
+
     /**
      * Returns a list of PTMs selected by the user.
-     * 
+     *
      * @return a list of PTMs selected by the user
      */
     public ArrayList<String> getSelection() {
@@ -65,20 +64,24 @@ public class PtmChooser extends javax.swing.JDialog {
         }
         return result;
     }
-    
+
     /**
-     * Boolean indicating whether the cancel button was pressed by the user
-     * 
+     * Boolean indicating whether the cancel button was pressed by the user.
+     *
      * @return true if the cancel button was pressed
      */
     public boolean isCanceled() {
         return canceled;
     }
-    
+
     private void setUpGUI() {
+
+        // make sure that the scroll panes are see-through
+        ptmTableScrollPane.getViewport().setOpaque(false);
         
         double minMass = 0;
         double maxMass = 0;
+        
         for (String modification : ptmList) {
             PTM ptm = ptmFactory.getPTM(modification);
             double mass = ptm.getMass();
@@ -89,26 +92,23 @@ public class PtmChooser extends javax.swing.JDialog {
                 maxMass = mass;
             }
         }
-        
+
         ptmTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
         ptmTable.getColumn(" ").setMaxWidth(35);
-        
+
         ptmTable.getColumn("Mass").setMaxWidth(100);
         ptmTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, minMass, maxMass));
         ((JSparklinesBarChartTableCellRenderer) ptmTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 50);
-        
+
         modificationTableToolTips = new ArrayList<String>();
         modificationTableToolTips.add(null);
         modificationTableToolTips.add("Modification Name");
         modificationTableToolTips.add("Modification Mass");
         modificationTableToolTips.add("Default Modification");
-
-        
-        
     }
-    
+
     /**
-     * Table model for the ptm table.
+     * Table model for the PTM table.
      */
     private class PtmTable extends DefaultTableModel {
 
@@ -138,7 +138,7 @@ public class PtmChooser extends javax.swing.JDialog {
 
         @Override
         public Object getValueAt(int row, int column) {
-                    String ptmName = ptmList.get(row);
+            String ptmName = ptmList.get(row);
             switch (column) {
                 case 0:
                     return ptmFactory.getColor(ptmName);
@@ -177,75 +177,95 @@ public class PtmChooser extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        ptmTable = new javax.swing.JTable();
+        backgroundPanel = new javax.swing.JPanel();
+        ptmSelectionPanel = new javax.swing.JPanel();
+        ptmTableScrollPane = new javax.swing.JScrollPane();
+        ptmTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        return (String) modificationTableToolTips.get(realIndex);
+                    }
+                };
+            }
+        };
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(400, 400));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
-        jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("PTM selection"));
+        ptmSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PTM Selection"));
+        ptmSelectionPanel.setOpaque(false);
 
         ptmTable.setModel(new PtmTable());
-        jScrollPane1.setViewportView(ptmTable);
+        ptmTableScrollPane.setViewportView(ptmTable);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout ptmSelectionPanelLayout = new javax.swing.GroupLayout(ptmSelectionPanel);
+        ptmSelectionPanel.setLayout(ptmSelectionPanelLayout);
+        ptmSelectionPanelLayout.setHorizontalGroup(
+            ptmSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ptmSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                .addComponent(ptmTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        ptmSelectionPanelLayout.setVerticalGroup(
+            ptmSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ptmSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ptmTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ptmSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)))
+                .addContainerGap())
+        );
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ptmSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
                 .addContainerGap())
         );
 
@@ -253,32 +273,49 @@ public class PtmChooser extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    /**
+     * Save the selection and close the selection.
+     * 
+     * @param evt 
+     */
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_okButtonActionPerformed
 
-
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cancelButtonActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton okButton;
+    private javax.swing.JPanel ptmSelectionPanel;
     private javax.swing.JTable ptmTable;
+    private javax.swing.JScrollPane ptmTableScrollPane;
     // End of variables declaration//GEN-END:variables
 }

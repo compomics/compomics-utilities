@@ -139,20 +139,19 @@ public class SequenceFactory {
             defaultProteinTree.emptyCache();
         }
     }
-    
-    
+
     /**
-     * reduces the node cache size of the protein tree by the given share.
-     * 
+     * Reduces the node cache size of the protein tree by the given share.
+     *
      * @param share the share of the cache to remove. 0.5 means 50%
      */
     public void reduceNodeCacheSize(double share) {
         defaultProteinTree.reduceNodeCacheSize(share);
     }
-    
+
     /**
      * Returns the number of nodes currently loaded in cache.
-     * 
+     *
      * @return the number of nodes currently loaded in cache
      */
     public int getNodesInCache() {

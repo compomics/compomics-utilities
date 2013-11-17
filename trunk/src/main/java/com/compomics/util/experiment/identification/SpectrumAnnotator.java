@@ -1,24 +1,15 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.identification.spectrum_annotators.TagSpectrumAnnotator;
-import com.compomics.util.experiment.identification.tags.Tag;
-import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
@@ -535,7 +526,6 @@ public abstract class SpectrumAnnotator {
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges
-     * @param peptide The peptide of interest
      * @param precursorCharge The precursor charge
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings

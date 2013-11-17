@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.patient;
 
 import java.util.HashMap;
@@ -11,12 +6,12 @@ import java.util.HashMap;
  * This class groups the information about the patient from whom the sample is
  * taken
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Patient {
 
     /**
-     * The patient id
+     * The patient id,
      */
     private String id;
     /**
@@ -26,7 +21,7 @@ public class Patient {
     private HashMap<String, Comparable> patientInformationMap = new HashMap<String, Comparable>();
 
     /**
-     * Constructor
+     * Constructor,
      *
      * @param id the patient number
      */
@@ -35,7 +30,7 @@ public class Patient {
     }
 
     /**
-     * Returns the patient id
+     * Returns the patient id,
      *
      * @return the patient id
      */
@@ -44,7 +39,7 @@ public class Patient {
     }
 
     /**
-     * Adds patient information
+     * Adds patient information,
      *
      * @param patientInformation the type of patient information to add
      * @param value the value
@@ -54,7 +49,7 @@ public class Patient {
     }
 
     /**
-     * Returns patient information
+     * Returns patient information,
      *
      * @param patientInformation the type of patient information desired
      * @return the value for this patient. Null if not set.
@@ -62,5 +57,4 @@ public class Patient {
     public Comparable getPatientInformation(PatientInformation patientInformation) {
         return patientInformationMap.get(patientInformation.getType());
     }
-
 }

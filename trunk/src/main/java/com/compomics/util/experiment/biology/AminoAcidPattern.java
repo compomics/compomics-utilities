@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
-import static com.compomics.util.experiment.biology.Peptide.getTaggedModifiedSequence;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
@@ -31,7 +30,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     private Integer target;
     /**
-     * The length of the pattern, -1 if not set
+     * The length of the pattern, -1 if not set.
      */
     private int length = -1;
     /**
@@ -47,10 +46,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     /**
      * The modifications carried by the amino acid sequence at target amino
      * acids.
-     *
-     * @TODO: do we need modifications on excluded amino acids?
      */
-    private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
+    private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>(); // @TODO: do we need modifications on excluded amino acids?
 
     /**
      * Creates an empty pattern.
@@ -321,9 +318,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     public Pattern getAsStringPattern(ProteinMatch.MatchingType matchingType, Double massTolerance) {
 
         String regex = "";
-        int length = length();
+        int tempLength = length();
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < tempLength; i++) {
 
             ArrayList<AminoAcid> tempTarget = aaTargeted.get(i);
             ArrayList<String> toAdd = new ArrayList<String>();
@@ -476,7 +473,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(aminoAcidSequence);
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(aminoAcidSequence); // @TODO: should not use new here?
         return firstIndex(aminoAcidPattern, matchingType, massTolerance);
     }
 
@@ -506,7 +503,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(String sequence, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence);
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence); // @TODO: should not use new here?
         return firstIndex(aminoAcidPattern, matchingType, massTolerance, startIndex);
     }
 
@@ -523,7 +520,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public int firstIndex(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
 
-        int patternLength = length();
+        int patternLength = length(); // @TODO: should not use length here?
         int aminoAcidPatternLength = aminoAcidPattern.length();
         int lastIndex = aminoAcidPatternLength - patternLength;
 
@@ -700,7 +697,6 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
@@ -708,7 +704,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * with the pattern
      */
     public boolean isStarting(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        int patternLength = length();
+        int patternLength = length(); // @TODO: should not use length() here?
         return matches(aminoAcidSequence.substring(0, patternLength), matchingType, massTolerance);
     }
 
@@ -716,7 +712,6 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
@@ -724,7 +719,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * with the pattern
      */
     public boolean isStarting(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        int patternLength = length();
+        int patternLength = length(); // @TODO: should not use length() here?
         return matches(aminoAcidPattern.getSubPattern(0, patternLength), matchingType, massTolerance);
     }
 
@@ -1076,7 +1071,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     }
 
     /**
-     * Changes the localization of a modification match
+     * Changes the localization of a modification match.
      *
      * @param modificationMatch the modification match of interest
      * @param oldLocalization the old localization
@@ -1103,7 +1098,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * does not include html start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
-     * @param includeHtmlStartEndTags if true, start and end HTML tags are added
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @param excludeAllFixedPtms if true, all fixed PTMs are excluded
      * @return the modified sequence as a tagged string

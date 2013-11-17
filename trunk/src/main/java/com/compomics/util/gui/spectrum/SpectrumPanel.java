@@ -1142,8 +1142,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aRewindIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
@@ -1168,8 +1168,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aRewindIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
@@ -1199,8 +1199,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aRewindIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
@@ -1232,8 +1232,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aRewindIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
@@ -1258,8 +1258,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aRewindIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
@@ -1289,8 +1289,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aForwardIon the forward de novo sequencing fragment ion type,
      * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
      * PeptideFragmentIon.C_ION
-     * @param aRewindIon the reverse de novo sequencing fragment ion type,
-     * i.e., PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
      * PeptideFragmentIon.Z_ION
      * @param aDeNovoCharge the de novo sequencing charge
      * @param showForwardTags if true, the forward de novo sequencing tags are
@@ -1479,7 +1479,7 @@ public class SpectrumPanel extends GraphicsPanel {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
 
-                    for (int i = 0; i < aminoAcidPattern.length()-1; i++) {
+                    for (int i = 0; i < aminoAcidPattern.length() - 1; i++) {
                         aaIndex++;
                         IonMatch ionMatch1 = forwardMap.get(aaIndex);
                         IonMatch ionMatch2 = forwardMap.get(aaIndex + 1);
@@ -1491,7 +1491,7 @@ public class SpectrumPanel extends GraphicsPanel {
                             }
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "f" + aaIndex,
-                                    aminoAcidPattern.asSequence(i+1) + mod,
+                                    aminoAcidPattern.asSequence(i + 1) + mod,
                                     ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, forwardIonPercentHeight));
                         }
@@ -1501,7 +1501,7 @@ public class SpectrumPanel extends GraphicsPanel {
                 aaIndex++;
             }
         }
-        
+
         ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
         Collections.reverse(reversedTag);
         aaIndex = 0;
@@ -1514,11 +1514,11 @@ public class SpectrumPanel extends GraphicsPanel {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
 
-                    for (int i = aminoAcidPattern.length()-1; i >=0; i--) {
+                    for (int i = aminoAcidPattern.length() - 1; i >= 0; i--) {
                         aaIndex++;
                         IonMatch ionMatch1 = rewindMap.get(aaIndex);
                         IonMatch ionMatch2 = rewindMap.get(aaIndex + 1);
-                        if (ionMatch1 != null && ionMatch2 != null && i>0) {
+                        if (ionMatch1 != null && ionMatch2 != null && i > 0) {
                             String mod = "";
                             ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(i);
                             if (!modificationMatches.isEmpty()) {
@@ -1526,7 +1526,7 @@ public class SpectrumPanel extends GraphicsPanel {
                             }
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "r" + aaIndex,
-                                    aminoAcidPattern.asSequence(i-1) + mod,
+                                    aminoAcidPattern.asSequence(i - 1) + mod,
                                     ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, rewindIonPercentHeight));
                         }

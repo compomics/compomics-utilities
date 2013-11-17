@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.spectrum_annotators;
 
 import com.compomics.util.experiment.biology.AminoAcid;
@@ -11,7 +6,6 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
@@ -29,14 +23,14 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * Annotates a spectrum with information from a tag
+ * Annotates a spectrum with information from a tag.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
-     * The tag to annotate on the spectrum
+     * The tag to annotate on the spectrum.
      */
     private Tag tag;
 

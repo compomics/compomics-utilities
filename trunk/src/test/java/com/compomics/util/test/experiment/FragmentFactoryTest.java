@@ -25,17 +25,16 @@ import java.util.HashMap;
 public class FragmentFactoryTest extends TestCase {
 
     /**
-     * The fragment factory
+     * The fragment factory.
      */
     private IonFactory fragmentFactory = IonFactory.getInstance();
     /**
-     * the mass tolerance
+     * The mass tolerance.
      */
     private double tolerance = 0.01;
 
-    
     /**
-     * Tests the in sillico fragmentation of a peptide
+     * Tests the in sillico fragmentation of a peptide.
      */
     public void testPeptideFragmentation() {
 
@@ -365,9 +364,9 @@ public class FragmentFactoryTest extends TestCase {
             }
         }
     }
-    
+
     /**
-     * Tests the in sillico fragmentation of a tag
+     * Tests the in sillico fragmentation of a tag.
      */
     public void testTagFragmentation() {
 

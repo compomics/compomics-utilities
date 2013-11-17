@@ -44,15 +44,15 @@ public abstract class Ion extends ExperimentObject {
          */
         REPORTER_ION,
         /**
-         * Identifier for a glycon
+         * Identifier for a glycon.
          */
         GLYCON,
         /**
-         * Identifier for an elementary ion
+         * Identifier for an elementary ion.
          */
         ELEMENTARY_ION,
         /**
-         * This int is the identifier for an unknown ion.
+         * Identifier for an unknown ion.
          */
         UNKNOWN;
     }

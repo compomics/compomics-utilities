@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.experiment.identification.spectrum_annotators;
 
 import com.compomics.util.experiment.biology.Ion;
@@ -15,7 +9,6 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
-import static com.compomics.util.experiment.identification.SpectrumAnnotator.getSpectrumAnnotation;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -29,22 +22,24 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * Annotates a spectrum with peptide fragments
+ * Annotates a spectrum with peptide fragments.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
-    
+
     /**
      * The theoretic peptide to match.
      */
     private Peptide peptide;
+
     /**
-     * Constructor
+     * Constructor.
      */
     public PeptideSpectrumAnnotator() {
-        
+
     }
+
     /**
      * Sets a new peptide to match.
      *
@@ -233,7 +228,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         setPeptide(peptide, precursorCharge);
         return getExpectedIons(iontypes, neutralLosses, charges, precursorCharge);
     }
-    
+
     @Override
     public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
         return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm);

@@ -1203,7 +1203,8 @@ public class ProteinTree {
     }
 
     /**
-     * reduces the node cache size by the given share. If less than 100 nodes are left they will all be removed.
+     * Reduces the node cache size by the given share. If less than 100 nodes
+     * are left they will all be removed.
      *
      * @param share the share of the cache to remove. 0.5 means 50%
      */
@@ -1221,10 +1222,10 @@ public class ProteinTree {
             tagsInTree.remove(index);
         }
     }
-    
+
     /**
      * Returns the number of nodes currently loaded in cache.
-     * 
+     *
      * @return the number of nodes currently loaded in cache
      */
     public int getNodesInCache() {
@@ -1592,10 +1593,10 @@ public class ProteinTree {
                     }
 
                     String tag = new String(tagValue);
-                    ArrayList<Integer> indexes = tagToIndexesMap.get(tag);
+                    ArrayList<Integer> tempIndexes = tagToIndexesMap.get(tag);
 
-                    if (indexes != null) {
-                        indexes.add(i);
+                    if (tempIndexes != null) {
+                        tempIndexes.add(i);
                     }
                 }
             }

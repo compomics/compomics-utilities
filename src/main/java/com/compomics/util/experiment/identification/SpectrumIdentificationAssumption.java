@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
@@ -14,11 +8,12 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * Spectrum identification assumption made by an identification algorithm
+ * Spectrum identification assumption made by an identification algorithm.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
+
     /**
      * The rank of the peptide assumption for the concerned spectrum.
      */
@@ -32,13 +27,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     protected Charge identificationCharge;
     /**
-     * The (advocate specific) score used to rank this assumption
+     * The (advocate specific) score used to rank this assumption.
      */
     protected double score;
     /**
-     * the identification file.
+     * The identification file.
      */
     protected String identificationFile;
+
     /**
      * Get the identification rank.
      *
@@ -47,6 +43,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public int getRank() {
         return rank;
     }
+
     /**
      * Set the rank of the PeptideAssumption.
      *
@@ -55,6 +52,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public void setRank(int aRank) {
         rank = aRank;
     }
+
     /**
      * Get the used advocate.
      *
@@ -63,6 +61,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public int getAdvocate() {
         return advocate;
     }
+
     /**
      * Returns the score assigned by the advocate.
      *
@@ -71,6 +70,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public double getScore() {
         return score;
     }
+
     /**
      * Returns the identification file.
      *

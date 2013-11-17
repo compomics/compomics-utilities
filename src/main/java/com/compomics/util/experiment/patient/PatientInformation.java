@@ -1,29 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.experiment.patient;
 
 /**
- * Information about the patient
+ * Information about the patient.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PatientInformation {
-    
+
     /**
-     * The type of information, for example "Age"
+     * The type of information, for example "Age".
      */
     private String type;
     /**
-     * The description for example "Age at diagnostic"
+     * The description for example "Age at diagnostic".
      */
     private String description;
+
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param type the type of information
      * @param description the description of the information
      */
@@ -33,8 +28,8 @@ public class PatientInformation {
     }
 
     /**
-     * Returns the type of information
-     * 
+     * Returns the type of information.
+     *
      * @return the type of information
      */
     public String getType() {
@@ -42,8 +37,8 @@ public class PatientInformation {
     }
 
     /**
-     * Sets the type of information
-     * 
+     * Sets the type of information.
+     *
      * @param type the type of information
      */
     public void setType(String type) {
@@ -51,8 +46,8 @@ public class PatientInformation {
     }
 
     /**
-     * Returns the description of the information
-     * 
+     * Returns the description of the information.
+     *
      * @return the description of the information
      */
     public String getDescription() {
@@ -60,8 +55,8 @@ public class PatientInformation {
     }
 
     /**
-     * Sets the description of the information
-     * 
+     * Sets the description of the information.
+     *
      * @param description the description of the information
      */
     public void setDescription(String description) {

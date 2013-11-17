@@ -1,33 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.experiment.identification.ptm;
 
 import java.util.ArrayList;
 
 /**
- * An enum of the ptm scores
+ * An enum of the PTM scores.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public enum PtmScore {
-    
+
+    /**
+     * The A score.
+     */
     AScore(0, "A-score"),
+    /**
+     * The PhosphoRS score.
+     */
     PhosphoRS(1, "PhosphoRS");
     /**
-     * score id number
+     * Score id number.
      */
     private int id;
     /**
-     * score name
+     * Score name.
      */
     private String name;
+
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param id the id number
      * @param name the name
      */
@@ -35,25 +36,28 @@ public enum PtmScore {
         this.id = id;
         this.name = name;
     }
-/**
- * Returns the id number of the score.
- * 
- * @return the id number of the score
- */
+
+    /**
+     * Returns the id number of the score.
+     *
+     * @return the id number of the score
+     */
     public int getId() {
         return id;
     }
-/**
- * Returns the name of the score.
- * 
- * @return the name of the score
- */
+
+    /**
+     * Returns the name of the score.
+     *
+     * @return the name of the score
+     */
     public String getName() {
         return name;
     }
+
     /**
      * Returns a list of the implemented scores.
-     * 
+     *
      * @return a list of the implemented scores
      */
     public static ArrayList<PtmScore> getImplementedPtmScores() {
@@ -62,13 +66,12 @@ public enum PtmScore {
         result.add(PhosphoRS);
         return result;
     }
-    
+
     /**
-     * Returns the ptm score indexed by the given id
-     * 
-     * @param id the id number of the ptm score
-     * 
-     * @return the desired ptm score
+     * Returns the PTM score indexed by the given id.
+     *
+     * @param id the id number of the PTM score
+     * @return the desired PTM score
      */
     public static PtmScore getScore(int id) {
         for (PtmScore ptmScore : getImplementedPtmScores()) {
@@ -78,13 +81,12 @@ public enum PtmScore {
         }
         throw new IllegalArgumentException("Ptm score of id " + id + " not recognized.");
     }
-    
+
     /**
-     * Returns the ptm score of the given name.
-     * 
+     * Returns the PTM score of the given name.
+     *
      * @param name the name of the score
-     * 
-     * @return the desired ptm score
+     * @return the desired PTM score
      */
     public static PtmScore getScore(String name) {
         for (PtmScore ptmScore : getImplementedPtmScores()) {
@@ -94,10 +96,10 @@ public enum PtmScore {
         }
         throw new IllegalArgumentException("Ptm score of name " + name + " not recognized.");
     }
-    
+
     /**
      * Returns the different implemented scores as list of command line option
-     * 
+     *
      * @return the different implemented scores as list of command line option
      */
     public static String getCommandLineOptions() {
@@ -110,16 +112,16 @@ public enum PtmScore {
         }
         return result;
     }
-    
+
     /**
      * Returns a list containing the names of the implemented scores.
-     * 
+     *
      * @return a list containing the names of the implemented scores
      */
     public static String[] getScoreNames() {
         ArrayList<PtmScore> scores = getImplementedPtmScores();
         String[] names = new String[scores.size()];
-        for (int i = 0 ; i < scores.size() ; i++) {
+        for (int i = 0; i < scores.size(); i++) {
             names[i] = scores.get(i).getName();
         }
         return names;

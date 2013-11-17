@@ -1,24 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 
 /**
- * A fragment ion obtained from a tag
+ * A fragment ion obtained from a tag.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class TagFragmentIon extends Ion {
-    
+
     /**
      * Identifier for an a ion.
      */
@@ -48,7 +41,8 @@ public class TagFragmentIon extends Ion {
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
-     * Position of the ion in the tag in amino acids considering gaps as an amino acid.
+     * Position of the ion in the tag in amino acids considering gaps as an
+     * amino acid.
      */
     private int number = -1;
     /**
@@ -60,16 +54,18 @@ public class TagFragmentIon extends Ion {
      */
     private int subType;
     /**
-     * mass gap before this ion
+     * Mass gap before this ion.
      */
     private double massGap = 0;
+
     /**
      * Constructor.
      *
      * @param fragmentType the type of peptide fragment ion as indexed by the
      * static fields
      * @param number the number of the fragment ion
-     * @param subNumber the number of the fragment ion in the current amino acid sequence
+     * @param subNumber the number of the fragment ion in the current amino acid
+     * sequence
      * @param mass the mass of the fragment ion
      * @param neutralLosses the neutral losses of the ion
      * @param massGap the mass gap before this tag fragment ions
@@ -141,19 +137,19 @@ public class TagFragmentIon extends Ion {
     public String getName() {
         return getSubTypeAsString() + getNeutralLossesAsString();
     }
-    
+
     /**
      * Returns the name with number. For example b5-H2O.
-     * 
+     *
      * @return the name with number
      */
     public String getNameWithNumber() {
         return getSubTypeAsString() + getNumber() + getNeutralLossesAsString();
     }
-    
+
     /**
      * Returns the name with number and mass gap. For example 110.0...b5-H2O.
-     * 
+     *
      * @return the name with number
      */
     public String getNameWithGapAndNumber() {
@@ -296,8 +292,8 @@ public class TagFragmentIon extends Ion {
     }
 
     /**
-     * Returns the mass gap comprised in this ion
-     * 
+     * Returns the mass gap comprised in this ion.
+     *
      * @return the mass gap
      */
     public double getMassGap() {

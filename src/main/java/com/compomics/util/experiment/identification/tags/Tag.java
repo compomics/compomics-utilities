@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.tags;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
-import static com.compomics.util.experiment.biology.Peptide.getTaggedModifiedSequence;
-import com.compomics.util.experiment.biology.Protein;
-import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
@@ -19,30 +10,28 @@ import com.compomics.util.preferences.ModificationProfile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * This class represents a sequence mass tag
+ * This class represents a sequence mass tag.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Tag {
 
     /**
-     * The content of the tag
+     * The content of the tag.
      */
     private ArrayList<TagComponent> content = new ArrayList<TagComponent>();
 
     /**
-     * Constructor for an empty tag
+     * Constructor for an empty tag.
      */
     public Tag() {
 
     }
 
     /**
-     * Constructor for a tag consisting of a sequence tag between two mass tags
+     * Constructor for a tag consisting of a sequence tag between two mass tags.
      *
      * @param nTermGap the N-term mass gap
      * @param sequenceTag the sequence tag with modifications
@@ -64,7 +53,7 @@ public class Tag {
     }
 
     /**
-     * Adds a mass gap to the tag
+     * Adds a mass gap to the tag.
      *
      * @param massGap the value of the mass gap
      */
@@ -95,7 +84,7 @@ public class Tag {
 
     /**
      * Returns the tag as intelligible sequence of tag components. For example
-     * amino acid tags and mass gaps: <115.2>TAG<110.5>.
+     * amino acid tags and mass gaps: &lt;115.2&gt;TAG&lt;110.5&gt.
      *
      * @return The tag as intelligible sequence for display.
      */
@@ -137,7 +126,7 @@ public class Tag {
     }
 
     /**
-     * Returns the mass of the tag
+     * Returns the mass of the tag.
      *
      * @return the mass of the tag
      */
@@ -169,7 +158,7 @@ public class Tag {
     }
 
     /**
-     * Returns the N-terminal gap of the tag
+     * Returns the N-terminal gap of the tag.
      *
      * @return the N-terminal gap of the tag
      */
@@ -186,7 +175,7 @@ public class Tag {
     }
 
     /**
-     * Returns the C-terminal gap of the tag
+     * Returns the C-terminal gap of the tag.
      *
      * @return the C-terminal gap of the tag
      */
@@ -254,15 +243,8 @@ public class Tag {
      * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
+     * @param tag the tag
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
-     * @param peptide the peptide to annotate
-     * @param mainModificationSites the main variable modification sites in a
-     * map: aa number -> list of modifications (1 is the first AA) (can be null)
-     * @param secondaryModificationSites the secondary variable modification
-     * sites in a map: aa number -> list of modifications (1 is the first AA)
-     * (can be null)
-     * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number -> list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
@@ -376,6 +358,8 @@ public class Tag {
     /**
      * Returns the amino acid length of the tag when mass gaps are considered
      * like one amino acid
+     * 
+     * @return the amino acid length of the tag
      */
     public int getLengthInAminoAcid() {
         int length = 0;
@@ -471,10 +455,9 @@ public class Tag {
     }
 
     /**
-     * Indicates whether this tag is the same as another tag
+     * Indicates whether this tag is the same as another tag.
      *
      * @param anotherTag another tag
-     *
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameAs(Tag anotherTag) {

@@ -4,12 +4,9 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
-import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.experiment.identification.TagAssumption;
-import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -83,13 +80,13 @@ public class AnnotationPreferences implements Serializable {
      */
     private Peptide currentPeptide;
     /**
-     * The currently annotated spectrumIdentificationAssumption
+     * The currently annotated spectrumIdentificationAssumption.
      */
     private SpectrumIdentificationAssumption spectrumIdentificationAssumption;
     /**
      * The charge of the currently inspected precursor.
      *
-     * @deprecated use the value in spectrumIdentificationAssumption
+     * @deprecated use the value in spectrumIdentificationAssumption.
      */
     private int currentPrecursorCharge = 0;
     /**

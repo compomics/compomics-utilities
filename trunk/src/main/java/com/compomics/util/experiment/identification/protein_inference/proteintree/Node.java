@@ -73,7 +73,7 @@ public class Node implements Serializable {
      * sequence -> protein accession -> index in the protein. An empty map if
      * not found.
      *
-     * @param peptideSequence the given peptide sequence
+     * @param query the given amino acid pattern to query the tree
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
@@ -84,13 +84,125 @@ public class Node implements Serializable {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence,
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query,
+            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+        // Dirty fix for my poor handling of multiple threads
+        if (Runtime.getRuntime().availableProcessors() > 3) {
+            return getProteinMappingMultithreaded(query, matchingType, massTolerance);
+        } else {
+            return getProteinMappingSinglethreaded(query, matchingType, massTolerance);
+        }
+    }
+
+    /**
+     * Returns the protein mappings for the given peptide sequence. peptide
+     * sequence -> protein accession -> index in the protein. An empty map if
+     * not found.
+     *
+     * @param query the given amino acid pattern to query the tree
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the protein mapping for the given peptide sequence
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingSinglethreaded(AminoAcidPattern query,
+            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+        return getProteinMappingSinglethreaded(query, "", matchingType, massTolerance);
+    }
+
+    /**
+     * Returns the protein mappings for the given peptide sequence. peptide
+     * sequence -> protein accession -> index in the protein. An empty map if
+     * not found.
+     *
+     * @param query the given amino acid pattern to query the tree
+     * @param currentSequence the sequence found until now
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the protein mapping for the given peptide sequence
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingSinglethreaded(AminoAcidPattern query, String currentSequence,
             ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
-        if (depth == peptideSequence.length()) {
-            result.put(peptideSequence, getAllMappings());
+        if (depth == query.length()) {
+            result.put(currentSequence, getAllMappings());
+        } else if (accessions != null) {
+            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+            for (String accession : accessions.keySet()) {
+                Protein protein = sequenceFactory.getProtein(accession);
+                result.put(accession, matchInProtein(protein, accessions.get(accession), query, matchingType, massTolerance));
+            }
+        } else {
+            for (char aa : getNextAminoAcids(query, matchingType, massTolerance)) {
+                Node node = subtree.get(aa);
+                if (node != null) {
+                    String newSequence = currentSequence + aa;
+                    result.putAll(node.getProteinMappingSinglethreaded(query, newSequence, matchingType, massTolerance));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the protein mappings for the given peptide sequence. peptide
+     * sequence -> protein accession -> index in the protein. An empty map if
+     * not found.
+     *
+     * @param query the given amino acid pattern to query the tree
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the protein mapping for the given peptide sequence
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingMultithreaded(AminoAcidPattern query,
+            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+        return getProteinMappingMultithreaded(query, "", matchingType, massTolerance);
+    }
+
+    /**
+     * Returns the protein mappings for the given peptide sequence. peptide
+     * sequence -> protein accession -> index in the protein. An empty map if
+     * not found.
+     *
+     * @param query the given amino acid pattern to query the tree
+     * @param currentSequence the sequence found until now
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the protein mapping for the given peptide sequence
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingMultithreaded(AminoAcidPattern query, String currentSequence,
+            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+
+        if (depth == query.length()) {
+            result.put(currentSequence, getAllMappings());
         } else if (accessions != null) {
 
             int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
@@ -100,14 +212,14 @@ public class Node implements Serializable {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
 
             for (String accession : accessions.keySet()) {
-                Protein protein = sequenceFactory.getProtein(accession);    
+                Protein protein = sequenceFactory.getProtein(accession);
                 sequenceBuffer.add(protein);
                 seeds.put(accession, accessions.get(accession));
                 if (sequenceBuffer.size() == proteinBatchSize) {
                     while (sequenceMatchers.size() == nThreads) {
                         processFinishedMatchers(sequenceMatchers, result);
                     }
-                    SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, peptideSequence, matchingType, massTolerance);
+                    SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, query, matchingType, massTolerance);
                     new Thread(sequenceMatcher, "sequence indexing").start();
                     sequenceMatchers.add(sequenceMatcher);
                     sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
@@ -116,7 +228,7 @@ public class Node implements Serializable {
             }
 
             if (!sequenceBuffer.isEmpty()) {
-                SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, peptideSequence, matchingType, massTolerance);
+                SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, query, matchingType, massTolerance);
                 new Thread(sequenceMatcher, "sequence indexing").start();
                 sequenceMatchers.add(sequenceMatcher);
             }
@@ -125,10 +237,11 @@ public class Node implements Serializable {
                 processFinishedMatchers(sequenceMatchers, result);
             }
         } else {
-            for (char aa : getNextAminoAcids(peptideSequence, matchingType, massTolerance)) {
+            for (char aa : getNextAminoAcids(query, matchingType, massTolerance)) {
                 Node node = subtree.get(aa);
                 if (node != null) {
-                    result.putAll(node.getProteinMapping(peptideSequence, matchingType, massTolerance));
+                    String newSequence = currentSequence + aa;
+                    result.putAll(node.getProteinMappingMultithreaded(query, newSequence, matchingType, massTolerance));
                 }
             }
         }
@@ -189,36 +302,40 @@ public class Node implements Serializable {
     /**
      * Returns the possible next amino acids.
      *
-     * @param peptideSequence the peptide sequence
+     * @param peptideSequence the peptide sequence as amino acid pattern
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance
      *
      * @return the possible next amino acids
      */
-    private ArrayList<Character> getNextAminoAcids(String peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    private ArrayList<Character> getNextAminoAcids(AminoAcidPattern peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
 
-        char aa = peptideSequence.charAt(depth);
         ArrayList<Character> result = new ArrayList<Character>();
 
-        if (matchingType == ProteinMatch.MatchingType.string) {
-            result.add(aa);
-            return result;
-        }
+        for (AminoAcid aa : peptideSequence.getTargetedAA(depth)) {
 
-        AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (matchingType == ProteinMatch.MatchingType.string) {
+                result.add(aa.singleLetterCode.charAt(0));
+            } else {
 
-        for (char aaChar : aminoAcid.getSubAminoAcids()) {
-            result.add(aaChar);
-        }
+                for (char aaChar : aa.getSubAminoAcids()) {
+                    if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
+                        result.add(aaChar);
+                    }
+                }
 
-        for (char aaChar : aminoAcid.getCombinations()) {
-            result.add(aaChar);
-        }
+                for (char aaChar : aa.getCombinations()) {
+                    if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
+                        result.add(aaChar);
+                    }
+                }
 
-        if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
-            for (char aaChar : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
-                if (!result.contains(aaChar)) {
-                    result.add(aaChar);
+                if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                    for (char aaChar : aa.getIndistinguishibleAminoAcids(massTolerance)) {
+                        if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
+                            result.add(aaChar);
+                        }
+                    }
                 }
             }
         }
@@ -435,12 +552,11 @@ public class Node implements Serializable {
      * @throws InterruptedException
      */
     private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds,
-            AminoAcidPattern peptidePattern, int peptidePatternLength, int peptideLength, MatchingType matchingType, Double massTolerance)
+            AminoAcidPattern peptidePattern, MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
-
         String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
-
+        int peptideLength = peptidePattern.length();
         for (int startIndex : seeds) {
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
@@ -455,7 +571,6 @@ public class Node implements Serializable {
                 }
             }
         }
-
         return results;
     }
 
@@ -565,7 +680,7 @@ public class Node implements Serializable {
         /**
          * The peptide sequence to look for.
          */
-        private String peptideSequence;
+        private AminoAcidPattern peptidePattern;
         /**
          * The type of matching.
          */
@@ -586,14 +701,14 @@ public class Node implements Serializable {
          * @param proteins the proteins to look into
          * @param seeds the seed indexes where to look for in a map protein
          * accession -> list of indexes
-         * @param peptideSequence the peptide sequence to look for
+         * @param peptidePattern the peptide sequence to look for
          * @param matchingType the peptide to protein matching type
          * @param massTolerance the mass tolerance used for the matching
          */
-        public SequenceMatcher(ArrayList<Protein> proteins, HashMap<String, ArrayList<Integer>> seeds, String peptideSequence, MatchingType matchingType, Double massTolerance) {
+        public SequenceMatcher(ArrayList<Protein> proteins, HashMap<String, ArrayList<Integer>> seeds, AminoAcidPattern peptidePattern, MatchingType matchingType, Double massTolerance) {
             this.proteins = proteins;
             this.seeds = seeds;
-            this.peptideSequence = peptideSequence;
+            this.peptidePattern = peptidePattern;
             this.matchingType = matchingType;
             this.massTolerance = massTolerance;
         }
@@ -601,13 +716,10 @@ public class Node implements Serializable {
         @Override
         public synchronized void run() {
 
-            AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
-            int peptidePatternLength = peptidePattern.length();
-
             for (Protein protein : proteins) {
                 try {
                     String accession = protein.getAccession();
-                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptidePattern, peptidePatternLength, peptideSequence.length(), matchingType, massTolerance));
+                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptidePattern, matchingType, massTolerance));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 } catch (IllegalArgumentException ex) {

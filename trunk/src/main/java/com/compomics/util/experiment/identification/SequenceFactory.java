@@ -59,7 +59,7 @@ public class SequenceFactory {
     /**
      * Recognized flags for a decoy protein.
      */
-    private static final String[] decoyFlags = {"REVERSED", "RND", "SHUFFLED"};
+    private static final String[] decoyFlags = {"REVERSED", "RND", "SHUFFLED", "DECOY"};
     /**
      * HashMap of the currently calculated protein molecular weights.
      */

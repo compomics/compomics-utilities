@@ -1054,7 +1054,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private ArrayList<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException {
+    private ArrayList<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         int initialTagSize = componentsFactory.getInitialSize();
         ArrayList<String> result = new ArrayList<String>();
         for (int i = 0; i < initialTagSize; i++) {
@@ -1143,7 +1143,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException {
+    private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>(forwardResults.keySet().size());
 
@@ -1201,7 +1201,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
+    private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
         Node result = tree.get(tag);
 
@@ -1356,7 +1356,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException {
+    public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PeptideIterator();
     }
 
@@ -1417,7 +1417,7 @@ public class ProteinTree {
          * @throws IOException
          * @throws ClassNotFoundException
          */
-        private PeptideIterator() throws SQLException, IOException, ClassNotFoundException {
+        private PeptideIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
             initialTagSize = componentsFactory.getInitialSize();
             tags = TagFactory.getAminoAcidCombinations(initialTagSize);
         }
@@ -1596,7 +1596,6 @@ public class ProteinTree {
 
             try {
                 for (Protein protein : proteins) {
-
                     indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
 
                     if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
@@ -1612,6 +1611,8 @@ public class ProteinTree {
             } catch (IOException ex) {
                 ex.printStackTrace();
             } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
 
@@ -1652,7 +1653,7 @@ public class ProteinTree {
          * @param enzyme the enzyme restriction
          * @return all the positions of the given tags
          */
-        private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException {
+        private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
             HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());
             Integer initialTagSize = componentsFactory.getInitialSize();

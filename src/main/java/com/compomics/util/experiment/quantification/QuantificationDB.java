@@ -300,7 +300,7 @@ public class QuantificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public PsmQuantification getSpectrumMatch(String key) throws SQLException, IOException, ClassNotFoundException {
+    public PsmQuantification getSpectrumMatch(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getSpectrumMatchTable(key);
         return (PsmQuantification) objectsDB.retrieveObject(tableName, key, true);
     }
@@ -314,7 +314,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addSpectrumMatch(PsmQuantification spectrumMatch) throws SQLException, IOException {
+    public void addSpectrumMatch(PsmQuantification spectrumMatch) throws SQLException, IOException, InterruptedException {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
         if (!psmTables.contains(tableName)) {
@@ -340,7 +340,7 @@ public class QuantificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public PeptideQuantification getPeptideMatch(String key) throws SQLException, IOException, ClassNotFoundException {
+    public PeptideQuantification getPeptideMatch(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (PeptideQuantification) objectsDB.retrieveObject(peptideTableName, key, true);
     }
 
@@ -353,7 +353,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addPeptideMatch(PeptideQuantification peptideMatch) throws SQLException, IOException {
+    public void addPeptideMatch(PeptideQuantification peptideMatch) throws SQLException, IOException, InterruptedException {
         if (peptideMatchLoaded(peptideMatch.getKey())) {
             updatePeptideMatch(peptideMatch);
         } else {
@@ -373,7 +373,7 @@ public class QuantificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public ProteinQuantification getProteinMatch(String key) throws SQLException, IOException, ClassNotFoundException {
+    public ProteinQuantification getProteinMatch(String key) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (ProteinQuantification) objectsDB.retrieveObject(proteinTableName, key, true);
     }
 
@@ -386,7 +386,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addProteinMatch(ProteinQuantification proteinMatch) throws SQLException, IOException {
+    public void addProteinMatch(ProteinQuantification proteinMatch) throws SQLException, IOException, InterruptedException {
         if (proteinMatchLoaded(proteinMatch.getKey())) {
             updateProteinMatch(proteinMatch);
         } else {
@@ -407,7 +407,7 @@ public class QuantificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, true);
     }
@@ -422,7 +422,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         if (!psmParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);
@@ -444,7 +444,7 @@ public class QuantificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, true);
     }
@@ -459,7 +459,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         if (!peptideParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);
@@ -481,7 +481,7 @@ public class QuantificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getProteinMatchPArameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getProteinMatchPArameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, true);
     }
@@ -496,7 +496,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
         if (!proteinParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);
@@ -588,7 +588,7 @@ public class QuantificationDB implements Serializable {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addMatch(QuantificationMatch match) throws SQLException, IOException {
+    public void addMatch(QuantificationMatch match) throws SQLException, IOException, InterruptedException {
         switch (match.getType()) {
             case Spectrum:
                 addSpectrumMatch((PsmQuantification) match);

@@ -196,8 +196,9 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
      * loading data in the database
+     * @throws java.lang.InterruptedException
      */
-    public void saveNode(String tag, Node node) throws SQLException, IOException {
+    public void saveNode(String tag, Node node) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(nodeTable, tag, node, false);
     }
 
@@ -223,8 +224,9 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException
+     * @throws java.lang.InterruptedException
      */
-    public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException {
+    public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         if (tagsInTree != null && !tagsInTree.contains(tag)) {
             return null;
         }
@@ -270,8 +272,9 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws IOException
+     * @throws java.lang.InterruptedException
      */
-    public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException {
+    public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         return (Integer) objectsDB.retrieveObject(lengthTable, accession, true);
     }
 
@@ -281,8 +284,9 @@ public class ProteinTreeComponentsFactory {
      * @param size the initial tag size
      * @throws SQLException
      * @throws IOException
+     * @throws java.lang.InterruptedException
      */
-    public void saveInitialSize(int size) throws SQLException, IOException {
+    public void saveInitialSize(int size) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "initialSize", size, false);
     }
 
@@ -293,8 +297,9 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException {
+    public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
     }
 
@@ -328,8 +333,9 @@ public class ProteinTreeComponentsFactory {
      * @param completed
      * @throws SQLException
      * @throws IOException
+     * @throws java.lang.InterruptedException
      */
-    public void setImportComplete(boolean completed) throws SQLException, IOException {
+    public void setImportComplete(boolean completed) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "importComplete", completed, false);
     }
 
@@ -341,8 +347,9 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public boolean importComplete() throws SQLException, IOException, ClassNotFoundException {
+    public boolean importComplete() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "importComplete", true);
         if (result == null) {
             return false;
@@ -357,8 +364,9 @@ public class ProteinTreeComponentsFactory {
      * @param corrupted
      * @throws SQLException
      * @throws IOException
+     * @throws java.lang.InterruptedException
      */
-    public void setCorrupted(boolean corrupted) throws SQLException, IOException {
+    public void setCorrupted(boolean corrupted) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "corrupted", corrupted, false);
     }
 
@@ -370,8 +378,9 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException {
+    public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "corrupted", true);
         if (result == null) {
             return false;
@@ -386,8 +395,9 @@ public class ProteinTreeComponentsFactory {
      * @param version the version
      * @throws SQLException
      * @throws IOException
+     * @throws java.lang.InterruptedException
      */
-    public void setVersion(String version) throws SQLException, IOException {
+    public void setVersion(String version) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "version", version, false);
     }
 
@@ -398,8 +408,9 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public String getVersion() throws SQLException, IOException, ClassNotFoundException {
+    public String getVersion() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (String) objectsDB.retrieveObject(parametersTable, "version", true);
     }
 

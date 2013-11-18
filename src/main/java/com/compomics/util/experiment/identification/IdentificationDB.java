@@ -326,8 +326,9 @@ public class IdentificationDB implements Serializable {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public SpectrumMatch getSpectrumMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public SpectrumMatch getSpectrumMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getSpectrumMatchTable(key);
         return (SpectrumMatch) objectsDB.retrieveObject(tableName, key, useDB);
     }
@@ -340,8 +341,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException {
+    public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException, InterruptedException {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
         if (!psmTables.contains(tableName)) {
@@ -363,8 +365,9 @@ public class IdentificationDB implements Serializable {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public PeptideMatch getPeptideMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public PeptideMatch getPeptideMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (PeptideMatch) objectsDB.retrieveObject(peptideTableName, key, useDB);
     }
 
@@ -376,8 +379,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addPeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
+    public void addPeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(peptideTableName, peptideMatch.getKey(), peptideMatch, true);
     }
 
@@ -393,8 +397,9 @@ public class IdentificationDB implements Serializable {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public ProteinMatch getProteinMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public ProteinMatch getProteinMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (ProteinMatch) objectsDB.retrieveObject(proteinTableName, key, useDB);
     }
 
@@ -406,8 +411,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
+    public void addProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(proteinTableName, proteinMatch.getKey(), proteinMatch, true);
     }
 
@@ -419,8 +425,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addMatch(IdentificationMatch match) throws SQLException, IOException {
+    public void addMatch(IdentificationMatch match) throws SQLException, IOException, InterruptedException {
         switch (match.getType()) {
             case Spectrum:
                 addSpectrumMatch((SpectrumMatch) match);
@@ -720,8 +727,9 @@ public class IdentificationDB implements Serializable {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
@@ -735,8 +743,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getSpectrumParameterTable(key, urParameter);
         if (!psmParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);
@@ -758,8 +767,9 @@ public class IdentificationDB implements Serializable {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
@@ -773,8 +783,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         if (!peptideParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);
@@ -796,8 +807,9 @@ public class IdentificationDB implements Serializable {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
@@ -811,8 +823,9 @@ public class IdentificationDB implements Serializable {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
         if (!proteinParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);
@@ -828,6 +841,7 @@ public class IdentificationDB implements Serializable {
      * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * @param urParameter the match parameter
      * @return the match match
+     * @throws java.lang.InterruptedException
      * @deprecated use match specific mapping instead
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -836,7 +850,7 @@ public class IdentificationDB implements Serializable {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getMatchPArameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getMatchPArameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getParameterTable(urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
     }
@@ -846,13 +860,14 @@ public class IdentificationDB implements Serializable {
      *
      * @param key the protein key
      * @param urParameter the match parameter
+     * @throws java.lang.InterruptedException
      * @deprecated use match specific mapping instead
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getParameterTable(urParameter);
         if (!matchParametersTables.contains(tableName)) {
             objectsDB.addTable(tableName);

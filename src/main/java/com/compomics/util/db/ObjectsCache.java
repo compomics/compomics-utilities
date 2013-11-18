@@ -367,8 +367,9 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void saveObject(String entryKey) throws IOException, SQLException {
+    public void saveObject(String entryKey) throws IOException, SQLException, InterruptedException {
         saveObject(entryKey, true);
     }
 
@@ -384,8 +385,9 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException {
+    public void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException, InterruptedException {
         String[] splittedKey = getKeyComponents(entryKey);
         String dbName = splittedKey[0];
         String tableName = splittedKey[1];

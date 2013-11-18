@@ -167,13 +167,14 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the key of the parameter
      * @param urParameter the additional parameter
+     * @throws java.lang.InterruptedException
      * @deprecated use the database match specific methods instead
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (!isDB) {
             if (!urParameters.containsKey(key)) {
                 urParameters.put(key, new HashMap<String, UrParameter>());
@@ -190,6 +191,7 @@ public abstract class Identification extends ExperimentObject {
      * @param matchKey the match key
      * @param urParameter example of parameter to retrieve
      * @return the personalization parameter
+     * @throws java.lang.InterruptedException
      * @deprecated use the database match specific methods instead
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -198,7 +200,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
      */
-    public UrParameter getMatchParameter(String matchKey, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getMatchParameter(String matchKey, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (!isDB) {
             return urParameters.get(matchKey).get(ExperimentObject.getParameterKey(urParameter));
         } else {
@@ -432,8 +434,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getSpectrumMatchParameter(key, urParameter, true);
     }
 
@@ -451,8 +454,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getSpectrumMatchParameter(key, urParameter, useDB);
         } else {
@@ -469,8 +473,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (isDB) {
             identificationDB.addSpectrumMatchParameter(key, urParameter);
         } else {
@@ -490,8 +495,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getPeptideMatchParameter(key, urParameter, true);
     }
 
@@ -509,8 +515,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getPeptideMatchParameter(key, urParameter, useDB);
         } else {
@@ -527,8 +534,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (isDB) {
             identificationDB.addPeptideMatchParameter(key, urParameter);
         } else {
@@ -548,8 +556,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getProteinMatchParameter(key, urParameter, true);
     }
 
@@ -567,8 +576,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getProteinMatchParameter(key, urParameter, useDB);
         } else {
@@ -585,8 +595,9 @@ public abstract class Identification extends ExperimentObject {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
-    public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+    public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (isDB) {
             identificationDB.addProteinMatchParameter(key, urParameter);
         } else {
@@ -915,8 +926,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getSpectrumMatch(spectrumKey, true);
     }
 
@@ -935,8 +947,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public SpectrumMatch getSpectrumMatch(String spectrumKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public SpectrumMatch getSpectrumMatch(String spectrumKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getSpectrumMatch(spectrumKey, useDB);
         } else {
@@ -957,8 +970,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getPeptideMatch(peptideKey, true);
     }
 
@@ -977,8 +991,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public PeptideMatch getPeptideMatch(String peptideKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public PeptideMatch getPeptideMatch(String peptideKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getPeptideMatch(peptideKey, useDB);
         } else {
@@ -999,8 +1014,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getProteinMatch(proteinKey, true);
     }
 
@@ -1019,8 +1035,9 @@ public abstract class Identification extends ExperimentObject {
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException
      */
-    public ProteinMatch getProteinMatch(String proteinKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public ProteinMatch getProteinMatch(String proteinKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getProteinMatch(proteinKey, useDB);
         } else {
@@ -1039,8 +1056,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public boolean proteinDetailsInCache(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public boolean proteinDetailsInCache(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         ProteinMatch proteinMatch = getProteinMatch(proteinKey, false);
         if (proteinMatch != null) {
             PeptideMatch peptideMatch = getPeptideMatch(proteinMatch.getPeptideMatches().get(0), false);
@@ -1065,8 +1083,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
-    public boolean peptideDetailsInCache(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException {
+    public boolean peptideDetailsInCache(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         PeptideMatch peptideMatch = getPeptideMatch(peptideKey, false);
         if (peptideMatch != null) {
             SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
@@ -1146,8 +1165,9 @@ public abstract class Identification extends ExperimentObject {
      * saving the file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while saving the file
+     * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException {
+    public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
         boolean containsSpectrumKey = spectrumIdentificationMap.containsKey(spectrumFile);
@@ -1308,8 +1328,9 @@ public abstract class Identification extends ExperimentObject {
      * saving the file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while saving the file
+     * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException {
+    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
             addSpectrumMatch(spectrumMatch);
         }
@@ -1456,9 +1477,10 @@ public abstract class Identification extends ExperimentObject {
      * occurred while deserializing a match
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the database
+     * @throws java.lang.InterruptedException
      */
     public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache, File directory)
-            throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+            throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
         setIsDB(true);
         reference = newName;
         establishConnection(newDirectory, true, objectsCache);

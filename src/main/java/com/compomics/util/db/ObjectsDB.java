@@ -198,8 +198,9 @@ public class ObjectsDB implements Serializable {
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
+     * @throws java.lang.InterruptedException
      */
-    public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException {
+    public void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
 
@@ -578,8 +579,9 @@ public class ObjectsDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
-    public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException {
+    public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return retrieveObject(tableName, objectKey, useDB, true);
     }
 
@@ -601,8 +603,9 @@ public class ObjectsDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException 
      */
-    public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException {
+    public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
 

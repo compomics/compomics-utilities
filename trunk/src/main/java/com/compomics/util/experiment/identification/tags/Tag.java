@@ -138,13 +138,15 @@ public class Tag {
         }
         return mass;
     }
-    
+
     /**
      * Returns the theoretic mass of the tag, eventually without terminal gaps.
-     * 
-     * @param includeCTermGap if true the C-terminal gap will be added if present
-     * @param includeNTermGap if true the N-terminal gap will be added if present
-     * 
+     *
+     * @param includeCTermGap if true the C-terminal gap will be added if
+     * present
+     * @param includeNTermGap if true the N-terminal gap will be added if
+     * present
+     *
      * @return the theoretic mass of the tag
      */
     public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
@@ -359,7 +361,7 @@ public class Tag {
     /**
      * Returns the amino acid length of the tag when mass gaps are considered
      * like one amino acid
-     * 
+     *
      * @return the amino acid length of the tag
      */
     public int getLengthInAminoAcid() {
@@ -474,25 +476,28 @@ public class Tag {
         }
         return true;
     }
-    
+
     /**
-     * Returns the start and end indexes of the tag in the given sequence. Null if not found.
-     * 
-     * @TODO: implement PTMs
-     * 
+     * Returns the start and end indexes of the tag in the given sequence. Null
+     * if not found.
+     *
      * @param sequence the sequence where to look for the tag
      * @param tagIndex the index where the tag is located
-     * @param componentIndex the index of the component of the tag indexed by tagIndex in the content list
+     * @param componentIndex the index of the component of the tag indexed by
+     * tagIndex in the content list
      * @param matchingType the matching type to use
      * @param massTolerance the ms2 tolerance
-     * 
+     *
      * @return the start and end indexes of the tag
      */
-    public int[] matches(String sequence, int tagIndex, int componentIndex, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public int[] matches(String sequence, int tagIndex, int componentIndex, ProteinMatch.MatchingType matchingType, Double massTolerance) { // @TODO: implement PTMs
+
         int[] result = new int[2];
+
         // Check tag components to the N-term
         int aaIndex = tagIndex;
-        for (int i = componentIndex ; i >= 0 ; i--) {
+
+        for (int i = componentIndex; i >= 0; i--) {
             TagComponent tagComponent = content.get(i);
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
@@ -510,7 +515,7 @@ public class Tag {
                 double mass = 0;
                 while (--aaIndex >= 0 && mass <= tagComponent.getMass() + massTolerance) {
                     mass += AminoAcid.getAminoAcid(sequence.charAt(aaIndex)).monoisotopicMass;
-                    if (Math.abs(mass-tagComponent.getMass()) <= massTolerance) {
+                    if (Math.abs(mass - tagComponent.getMass()) <= massTolerance) {
                         found = true;
                     }
                 }
@@ -524,7 +529,7 @@ public class Tag {
         result[0] = aaIndex;
         // check tag components to the C-term
         aaIndex = tagIndex;
-        for (int i = componentIndex ; i < sequence.length() ; i++) {
+        for (int i = componentIndex; i < sequence.length(); i++) {
             TagComponent tagComponent = content.get(i);
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
@@ -542,7 +547,7 @@ public class Tag {
                 double mass = 0;
                 while (++aaIndex < sequence.length() && mass <= tagComponent.getMass() + massTolerance) {
                     mass += AminoAcid.getAminoAcid(sequence.charAt(aaIndex)).monoisotopicMass;
-                    if (Math.abs(mass-tagComponent.getMass()) <= massTolerance) {
+                    if (Math.abs(mass - tagComponent.getMass()) <= massTolerance) {
                         found = true;
                     }
                 }

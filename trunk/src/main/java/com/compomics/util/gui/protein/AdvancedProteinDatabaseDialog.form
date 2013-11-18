@@ -3,6 +3,7 @@
 <Form version="1.3" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="title" type="java.lang.String" value="Database Details"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -103,8 +104,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="clearDatabaseFolderButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="browseDatabaseFolderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="clearDatabaseFolderButton" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="browseDatabaseFolderButton" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="databasesFolderTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -135,7 +136,6 @@
             <Component class="javax.swing.JTextField" name="databasesFolderTxt">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

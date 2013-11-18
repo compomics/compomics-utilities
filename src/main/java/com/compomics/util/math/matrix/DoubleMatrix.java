@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.math.matrix;
 
 import java.util.ArrayList;
@@ -11,9 +6,11 @@ import java.util.ArrayList;
  * Implementation of a matrix for double objects. Warning: all indexes start
  * from 0.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class DoubleMatrix {
+    
+    // @TODO: add javadoc
 
     private int nLines = 0;
 
@@ -65,7 +62,7 @@ public class DoubleMatrix {
         }
         nLines++;
     }
-    
+
     public void setLine(int lineIndex, ArrayList<Double> line) {
         if (line == null) {
             throw new IllegalArgumentException("Attempting to add null line to matrix.");
@@ -82,14 +79,14 @@ public class DoubleMatrix {
             column.set(lineIndex, line.get(i));
         }
     }
-    
+
     public void setColumn(int columnIndex, ArrayList<Double> column) {
         if (column == null) {
             throw new IllegalArgumentException("Attempting to add null column to matrix.");
         }
         int columnSize = column.size();
         if (columnSize != getNLines()) {
-            throw new IllegalArgumentException("Impossible to add line of length " + columnSize + " in matrix of width " + getNLines()+ ".");
+            throw new IllegalArgumentException("Impossible to add line of length " + columnSize + " in matrix of width " + getNLines() + ".");
         }
         if (columnIndex >= getNColumns()) {
             throw new IllegalArgumentException("Impossible to add line at index " + columnIndex + " in matrix of length " + getNColumns() + ".");
@@ -146,7 +143,7 @@ public class DoubleMatrix {
     public Double getValueAt(int lineIndex, int columnIndex) {
         return content.get(columnIndex).get(lineIndex);
     }
-    
+
     public void setValueAt(int lineIndex, int columnIndex, Double value) {
         if (columnIndex >= content.size()) {
             throw new IllegalArgumentException("Column index " + columnIndex + " larger than matrix capacity " + content.size() + ".");
@@ -301,19 +298,18 @@ public class DoubleMatrix {
                 }
             }
         }
-        return score/nLines;
+        return score / nLines;
     }
-    
+
     public void linePermutation(int line1, int line2) {
         ArrayList<Double> tempLine = getLine(line2);
         setLine(line2, getLine(line1));
         setLine(line1, tempLine);
     }
-    
+
     public void columnPermutation(int column1, int column2) {
         ArrayList<Double> tempColumn = getColumn(column2);
         setColumn(column2, getColumn(column1));
         setColumn(column1, tempColumn);
     }
-
 }

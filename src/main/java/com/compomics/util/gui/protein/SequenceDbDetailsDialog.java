@@ -101,11 +101,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             }
             sizeTxt.setText(nSequences);
             if (fastaIndex.isConcatenatedTargetDecoy()) {
-                decoyFlagTxt.setEnabled(true);
+                decoyFlagTxt.setEditable(true);
                 decoyFlagTxt.setText(fastaIndex.getDecoyTag());
             } else {
                 decoyFlagTxt.setText("");
-                decoyFlagTxt.setEnabled(false);
+                decoyFlagTxt.setEditable(false);
             }
             decoyButton.setEnabled(!sequenceFactory.concatenatedTargetDecoy() && dbEditable);
             browseButton.setEnabled(dbEditable);
@@ -302,7 +302,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                             + "Add decoys?", "Add Decoy Sequences?", JOptionPane.YES_NO_OPTION);
 
                     if (value == JOptionPane.NO_OPTION) {
-                        decoyFlagTxt.setEnabled(false);
+                        decoyFlagTxt.setEditable(false);
                     } else if (value == JOptionPane.YES_OPTION) {
                         generateTargetDecoyDatabase(finalFile, progressDialog);
                     }
@@ -645,6 +645,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     .addComponent(sizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        databaseInformationPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {advancedButton, browseButton, decoyButton});
 
         previewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Preview"));
         previewPanel.setOpaque(false);

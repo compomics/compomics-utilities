@@ -204,7 +204,11 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the targeted amino acids
      */
     public ArrayList<AminoAcid> getTargetedAA(int index) {
-        return aaTargeted.get(index);
+        ArrayList<AminoAcid> result = aaTargeted.get(index);
+        if (result == null) {
+            result = new ArrayList<AminoAcid>();
+        }
+        return result;
     }
 
     /**
@@ -215,7 +219,11 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the excluded amino acids
      */
     public ArrayList<AminoAcid> getExcludedAA(int index) {
-        return aaExcluded.get(index);
+        ArrayList<AminoAcid> result = aaExcluded.get(index);
+        if (result == null) {
+            result = new ArrayList<AminoAcid>();
+        }
+        return result;
     }
 
     /**

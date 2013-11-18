@@ -822,7 +822,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public int length() {
 
-        if (length == -1) {
+        if (length == -1 || length == 0) { //we need to check the 0 case every time due to backward compatibility issues
             if (aaTargeted.isEmpty() && aaExcluded.isEmpty()) {
                 length = 0;
             } else if (aaTargeted.isEmpty()) {
@@ -1024,9 +1024,12 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the modifications found at a given localization as a list.
      */
     public ArrayList<ModificationMatch> getModificationsAt(int localization) {
-        ArrayList<ModificationMatch> result = targetModifications.get(localization);
-        if (result == null) {
-            return new ArrayList<ModificationMatch>();
+        ArrayList<ModificationMatch> result = new ArrayList<ModificationMatch>();
+        if (targetModifications != null) {
+            ArrayList<ModificationMatch> tempResult = targetModifications.get(localization);
+            if (tempResult != null) {
+                result = tempResult;
+            }
         }
         return result;
     }

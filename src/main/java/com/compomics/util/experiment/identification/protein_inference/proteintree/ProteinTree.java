@@ -871,7 +871,7 @@ public class ProteinTree {
                 for (String tag : initialTags) {
                     Node node = getNode(tag);
                     if (node != null) {
-                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptidePattern, matchingType, massTolerance);
+                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptidePattern, tag, matchingType, massTolerance);
                         for (String tagSequence : tagResults.keySet()) {
                             HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence);
                             HashMap<String, ArrayList<Integer>> tagMapping = tagResults.get(tagSequence);
@@ -1062,7 +1062,6 @@ public class ProteinTree {
                 if (result.isEmpty()) {
                     if (matchingType == MatchingType.string) {
                         result.add(aminoAcid.singleLetterCode);
-                        return result;
                     } else {
                         for (char newAa : aminoAcid.getSubAminoAcids()) {
                             if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
@@ -1096,7 +1095,6 @@ public class ProteinTree {
                     for (String sequence : result) {
                         if (matchingType == MatchingType.string) {
                             newResults.add(sequence + aminoAcid.singleLetterCode);
-                            return result;
                         } else {
                             for (char newAa : aminoAcid.getSubAminoAcids()) {
                                 if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {

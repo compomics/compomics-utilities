@@ -32,7 +32,6 @@ public class ProteinTreeTest extends TestCase {
  */
     public void testProteinTree() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
 
-        System.out.println("Regular test");
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences);

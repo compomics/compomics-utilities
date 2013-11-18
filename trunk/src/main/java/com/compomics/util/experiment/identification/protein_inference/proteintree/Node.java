@@ -74,6 +74,7 @@ public class Node implements Serializable {
      * not found.
      *
      * @param query the given amino acid pattern to query the tree
+     * @param initialTag the initial tag of this query
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
@@ -84,35 +85,14 @@ public class Node implements Serializable {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query,
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query, String initialTag, 
             ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
         // Dirty fix for my poor handling of multiple threads
         if (Runtime.getRuntime().availableProcessors() > 3) {
-            return getProteinMappingMultithreaded(query, matchingType, massTolerance);
+            return getProteinMappingMultithreaded(query, initialTag, matchingType, massTolerance);
         } else {
-            return getProteinMappingSinglethreaded(query, matchingType, massTolerance);
+            return getProteinMappingSinglethreaded(query, initialTag, matchingType, massTolerance);
         }
-    }
-
-    /**
-     * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
-     * not found.
-     *
-     * @param query the given amino acid pattern to query the tree
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
-     *
-     * @return the protein mapping for the given peptide sequence
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingSinglethreaded(AminoAcidPattern query,
-            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
-        return getProteinMappingSinglethreaded(query, "", matchingType, massTolerance);
     }
 
     /**
@@ -156,27 +136,6 @@ public class Node implements Serializable {
         }
 
         return result;
-    }
-
-    /**
-     * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
-     * not found.
-     *
-     * @param query the given amino acid pattern to query the tree
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
-     *
-     * @return the protein mapping for the given peptide sequence
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingMultithreaded(AminoAcidPattern query,
-            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
-        return getProteinMappingMultithreaded(query, "", matchingType, massTolerance);
     }
 
     /**

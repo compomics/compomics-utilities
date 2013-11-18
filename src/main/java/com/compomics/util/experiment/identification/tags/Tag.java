@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.tags;
 
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -472,5 +473,87 @@ public class Tag {
             }
         }
         return true;
+    }
+    
+    /**
+     * Returns the start and end indexes of the tag in the given sequence. Null if not found.
+     * 
+     * @TODO: implement PTMs
+     * 
+     * @param sequence the sequence where to look for the tag
+     * @param tagIndex the index where the tag is located
+     * @param componentIndex the index of the component of the tag indexed by tagIndex in the content list
+     * @param matchingType the matching type to use
+     * @param massTolerance the ms2 tolerance
+     * 
+     * @return the start and end indexes of the tag
+     */
+    public int[] matches(String sequence, int tagIndex, int componentIndex, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+        int[] result = new int[2];
+        // Check tag components to the N-term
+        int aaIndex = tagIndex;
+        for (int i = componentIndex ; i >= 0 ; i--) {
+            TagComponent tagComponent = content.get(i);
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                int startIndex = aaIndex - aminoAcidPattern.length();
+                if (startIndex < 0) {
+                    return null;
+                }
+                String subSequence = sequence.substring(startIndex, aaIndex);
+                if (!aminoAcidPattern.matches(subSequence, matchingType, massTolerance)) {
+                    return null;
+                }
+                aaIndex = startIndex;
+            } else if (tagComponent instanceof MassGap) {
+                boolean found = false;
+                double mass = 0;
+                while (--aaIndex >= 0 && mass <= tagComponent.getMass() + massTolerance) {
+                    mass += AminoAcid.getAminoAcid(sequence.charAt(aaIndex)).monoisotopicMass;
+                    if (Math.abs(mass-tagComponent.getMass()) <= massTolerance) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    return null;
+                }
+            } else {
+                throw new IllegalArgumentException("Tag component " + tagComponent.getClass() + " not implemented for sequence mating.");
+            }
+        }
+        result[0] = aaIndex;
+        // check tag components to the C-term
+        aaIndex = tagIndex;
+        for (int i = componentIndex ; i < sequence.length() ; i++) {
+            TagComponent tagComponent = content.get(i);
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                int endIndex = aaIndex - aminoAcidPattern.length();
+                if (endIndex >= sequence.length()) {
+                    return null;
+                }
+                String subSequence = sequence.substring(aaIndex, endIndex);
+                if (!aminoAcidPattern.matches(subSequence, matchingType, massTolerance)) {
+                    return null;
+                }
+                aaIndex = endIndex;
+            } else if (tagComponent instanceof MassGap) {
+                boolean found = false;
+                double mass = 0;
+                while (++aaIndex < sequence.length() && mass <= tagComponent.getMass() + massTolerance) {
+                    mass += AminoAcid.getAminoAcid(sequence.charAt(aaIndex)).monoisotopicMass;
+                    if (Math.abs(mass-tagComponent.getMass()) <= massTolerance) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    return null;
+                }
+            } else {
+                throw new IllegalArgumentException("Tag component " + tagComponent.getClass() + " not implemented for sequence mating.");
+            }
+        }
+        result[1] = aaIndex;
+        return result;
     }
 }

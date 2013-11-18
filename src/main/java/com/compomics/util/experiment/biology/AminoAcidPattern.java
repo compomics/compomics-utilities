@@ -1175,8 +1175,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
         String modifiedSequence = "";
 
         for (int aa = 1; aa <= aminoAcidPattern.length(); aa++) {
-            
-            int patternIndex = aa-1;
+
+            int patternIndex = aa - 1;
 
             if (aminoAcidPattern.getNTargetedAA(patternIndex) > 1 && aminoAcidPattern.getNExcludedAA(patternIndex) > 0) {
                 modifiedSequence += "[";
@@ -1272,6 +1272,33 @@ public class AminoAcidPattern implements Serializable, TagComponent {
             taggedResidue += residue;
         }
         return taggedResidue;
+    }
+
+    /**
+     * Returns all possible sequences which can be obtained from the targeted
+     * amino acids.
+     *
+     * @return all possible sequences which can be obtained from the targeted
+     * amino acids
+     */
+    public ArrayList<String> getAllPossibleSequences() {
+        ArrayList<String> results = new ArrayList<String>();
+        for (int i = 0; i < length(); i++) {
+            if (results.isEmpty()) {
+                for (AminoAcid aminoAcid : aaTargeted.get(i)) {
+                    results.add(aminoAcid.singleLetterCode);
+                }
+            } else {
+                ArrayList<String> newResult = new ArrayList<String>();
+                for (AminoAcid aminoAcid : aaTargeted.get(i)) {
+                    for (String sequence : results) {
+                        newResult.add(sequence + aminoAcid.singleLetterCode);
+                    }
+                }
+                results = newResult;
+            }
+        }
+        return results;
     }
 
     @Override

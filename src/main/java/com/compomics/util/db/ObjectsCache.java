@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -39,9 +40,9 @@ public class ObjectsCache {
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
     /**
-     * Map of the loaded objects with the most used matches in the end.
+     * list of the loaded objects with the most used matches in the end.
      */
-    private ArrayList<String> loadedObjectsKeys = new ArrayList<String>();
+    private LinkedBlockingDeque<String> loadedObjectsKeys = new LinkedBlockingDeque<String>();
     /**
      * Separator used to concatenate strings.
      */
@@ -50,10 +51,6 @@ public class ObjectsCache {
      * The standard batch size for saving objects in databases.
      */
     private int batchSize = 1000; // @TODO: find the optimal batch size
-    /**
-     * Boolean indicating whether a thread is updating the cache.
-     */
-    private boolean updatingCache = false;
 
     /**
      * Constructor.
@@ -163,12 +160,10 @@ public class ObjectsCache {
      */
     public void removeObject(String dbName, String tableName, String objectKey) {
         String cacheKey = getCacheKey(dbName, tableName, objectKey);
-        updatingCache = true;
         loadedObjectsKeys.remove(cacheKey);
         if (loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName)) {
             loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
         }
-        updatingCache = false;
     }
 
     /**
@@ -198,20 +193,6 @@ public class ObjectsCache {
     public Object getObject(String dbName, String tableName, String objectKey) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
         if (entry != null) {
-            if (!memoryCheck()) {
-                // if we are encountering memory issues, put the most used object at the back so that they stay in cache
-                String entryKey = getCacheKey(dbName, tableName, objectKey);
-                    for (int i = 0; i <= Math.min(100000, loadedObjectsKeys.size() / 2); i++) {
-                        if (updatingCache) {
-                            break;
-                        }
-                        if (entryKey.equals(loadedObjectsKeys.get(i))) {
-                            loadedObjectsKeys.remove(i);
-                            loadedObjectsKeys.add(entryKey);
-                            break;
-                        }
-                    }
-            }
             return entry.getObject();
         } else {
             return null;
@@ -251,7 +232,7 @@ public class ObjectsCache {
      * @throws IOException
      * @throws SQLException
      */
-    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException {
+    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (dbName.contains(cacheSeparator)) {
             throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
         } else if (tableName.contains(cacheSeparator)) {
@@ -358,7 +339,6 @@ public class ObjectsCache {
         }
         if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
             if (clearEntries) {
-                updatingCache = true;
                 for (String entryKey : entryKeys) {
                     String[] splittedKey = getKeyComponents(entryKey);
                     String dbName = splittedKey[0];
@@ -373,7 +353,6 @@ public class ObjectsCache {
                         loadedObjectsMap.remove(dbName);
                     }
                 }
-                updatingCache = false;
             }
         }
     }
@@ -432,7 +411,6 @@ public class ObjectsCache {
             }
         }
         if (clearEntry) {
-            updatingCache = true;
             loadedObjectsKeys.remove(entryKey);
             loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
             if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
@@ -441,7 +419,6 @@ public class ObjectsCache {
             if (loadedObjectsMap.get(dbName).isEmpty()) {
                 loadedObjectsMap.remove(dbName);
             }
-            updatingCache = false;
         }
     }
 
@@ -453,14 +430,15 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void updateCache() throws IOException, SQLException {
+    public void updateCache() throws IOException, SQLException, InterruptedException {
         while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize
                 || automatedMemoryManagement && !memoryCheck()) {
             int toRemove = Math.min(batchSize, loadedObjectsKeys.size() / 2);
             if (toRemove <= 1) {
-                saveObject(loadedObjectsKeys.get(0));
+                saveObject(loadedObjectsKeys.take());
             } else {
-                ArrayList<String> keysToRemove = new ArrayList<String>(loadedObjectsKeys.subList(0, toRemove));
+                ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+                loadedObjectsKeys.drainTo(keysToRemove, toRemove);
                 saveObjects(keysToRemove);
             }
             if (loadedObjectsKeys.isEmpty()) {
@@ -483,7 +461,8 @@ public class ObjectsCache {
      */
     public void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException {
         int toRemove = (int) (share * loadedObjectsKeys.size());
-        ArrayList<String> keysToRemove = new ArrayList<String>(loadedObjectsKeys.subList(0, toRemove));
+                ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+                loadedObjectsKeys.drainTo(keysToRemove, toRemove);
         saveObjects(keysToRemove, waitingHandler);
     }
 

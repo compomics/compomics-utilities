@@ -1,12 +1,16 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
 import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.identification.TagFactory;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
+import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -860,12 +864,14 @@ public class ProteinTree {
                 }
 
                 result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-                ArrayList<String> initialTags = getInitialTags(peptideSequence, matchingType, massTolerance);
+                
+                AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
+                ArrayList<String> initialTags = getInitialTags(peptidePattern, matchingType, massTolerance);
 
                 for (String tag : initialTags) {
                     Node node = getNode(tag);
                     if (node != null) {
-                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideSequence, matchingType, massTolerance);
+                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptidePattern, matchingType, massTolerance);
                         for (String tagSequence : tagResults.keySet()) {
                             HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence);
                             HashMap<String, ArrayList<Integer>> tagMapping = tagResults.get(tagSequence);
@@ -939,6 +945,71 @@ public class ProteinTree {
     }
 
     /**
+     * Returns the protein mappings for the given peptide sequence. peptide
+     * sequence -> protein accession -> index in the protein. An empty map if
+     * not found.
+     *
+     * @param tag the tag to look for in the tree. Must contain a consecutive amino acid sequence of longer or equal size than the initialTagSize of the tree.
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
+     * @return the protein mapping for the given peptide sequence
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag,
+            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+
+        int initialTagSize = componentsFactory.getInitialSize();
+        AminoAcidPattern longestAminoAcidPattern = new AminoAcidPattern();
+        int componentIndex = -1;
+        for (int i = 0; i < tag.getContent().size(); i++) {
+            TagComponent tagComponent = tag.getContent().get(i);
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                if (aminoAcidPattern.length() >= initialTagSize && aminoAcidPattern.length() > longestAminoAcidPattern.length()) {
+                    componentIndex = i;
+                    longestAminoAcidPattern = aminoAcidPattern;
+                }
+            }
+        }
+        if (componentIndex == -1) {
+            throw new IllegalArgumentException("No tag longer than " + initialTagSize + "was found for tag " + tag + ".");
+        }
+        HashMap<String, HashMap<String, ArrayList<Integer>>> seeds = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+        for (String sequence : longestAminoAcidPattern.getAllPossibleSequences()) {
+            seeds.putAll(getProteinMapping(sequence, matchingType, massTolerance));
+        }
+        HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+        for (String tagSeed : seeds.keySet()) {
+            for (String accession : seeds.get(tagSeed).keySet()) {
+                String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
+                for (int seedIndex : seeds.get(tagSeed).get(accession)) {
+                    int[] indexes = tag.matches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance);
+                    if (indexes != null) {
+                        String peptideSequence = proteinSequence.substring(indexes[0], indexes[1]);
+                        HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptideSequence);
+                        if (proteinToIndexMap == null) {
+                            proteinToIndexMap = new HashMap<String, ArrayList<Integer>>();
+                            results.put(peptideSequence, proteinToIndexMap);
+                        }
+                        ArrayList<Integer> peptideIndexes = proteinToIndexMap.get(accession);
+                        if (peptideIndexes == null) {
+                            peptideIndexes = new ArrayList<Integer>();
+                            proteinToIndexMap.put(accession, peptideIndexes);
+                        }
+                        peptideIndexes.add(indexes[0]);
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    /**
      * Batch loads the nodes needed for a peptide mapping.
      *
      * @param peptideSequence the sequence of the peptide
@@ -952,9 +1023,11 @@ public class ProteinTree {
      */
     private void batchLoadNodes(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        ArrayList<String> tags = getInitialTags(peptideSequence, matchingType, massTolerance);
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
+        ArrayList<String> tags = getInitialTags(aminoAcidPattern, matchingType, massTolerance);
         String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-        tags.addAll(getInitialTags(reversedSequence, matchingType, massTolerance));
+        aminoAcidPattern = new AminoAcidPattern(reversedSequence);
+        tags.addAll(getInitialTags(aminoAcidPattern, matchingType, massTolerance));
         ArrayList<String> toLoad = new ArrayList<String>();
 
         for (String tag : tags) {
@@ -981,75 +1054,82 @@ public class ProteinTree {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private ArrayList<String> getInitialTags(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException {
-
+    private ArrayList<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException {
         int initialTagSize = componentsFactory.getInitialSize();
-        ArrayList<String> tempTags, result = new ArrayList<String>();
-
-        if (matchingType == MatchingType.string) {
-            result.add(peptideSequence.substring(0, initialTagSize));
-            return result;
-        }
-
+        ArrayList<String> result = new ArrayList<String>();
         for (int i = 0; i < initialTagSize; i++) {
-
-            char aa = peptideSequence.charAt(i);
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-
-            if (aminoAcid == null) {
-                throw new IllegalArgumentException("Unknown amino acid " + aa + " found in peptide sequence " + peptideSequence + ".");
-            }
-
-            tempTags = new ArrayList<String>(result);
-            result.clear();
-
-            if (tempTags.isEmpty()) {
-                for (char newAa : aminoAcid.getSubAminoAcids()) {
-                    String newTag = String.valueOf(newAa);
-                    if (!result.contains(newTag)) {
-                        result.add(newTag);
-                    }
-                }
-                for (char newAa : aminoAcid.getCombinations()) {
-                    String newTag = String.valueOf(newAa);
-                    if (!result.contains(newTag)) {
-                        result.add(newTag);
-                    }
-                }
-                if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                    for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
-                        String newTag = String.valueOf(newAa);
-                        if (!result.contains(newTag)) {
-                            result.add(newTag);
+            for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i)) {
+                if (result.isEmpty()) {
+                    if (matchingType == MatchingType.string) {
+                        result.add(aminoAcid.singleLetterCode);
+                        return result;
+                    } else {
+                        for (char newAa : aminoAcid.getSubAminoAcids()) {
+                            if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
+                                String newTag = String.valueOf(newAa);
+                                if (!result.contains(newTag)) {
+                                    result.add(newTag);
+                                }
+                            }
                         }
-                    }
-                }
-            } else {
-                for (String sequence : tempTags) {
-                    for (char newAa : aminoAcid.getSubAminoAcids()) {
-                        String newTag = sequence + newAa;
-                        if (!result.contains(newTag)) {
-                            result.add(newTag);
+                        for (char newAa : aminoAcid.getCombinations()) {
+                            if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
+                                String newTag = String.valueOf(newAa);
+                                if (!result.contains(newTag)) {
+                                    result.add(newTag);
+                                }
+                            }
                         }
-                    }
-                    for (char newAa : aminoAcid.getCombinations()) {
-                        String newTag = sequence + newAa;
-                        if (!result.contains(newTag)) {
-                            result.add(newTag);
-                        }
-                    }
-                    if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                        for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
-                            String newTag = sequence + newAa;
-                            if (!result.contains(newTag)) {
-                                result.add(newTag);
+                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                            for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                                if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
+                                    String newTag = String.valueOf(newAa);
+                                    if (!result.contains(newTag)) {
+                                        result.add(newTag);
+                                    }
+                                }
                             }
                         }
                     }
+                } else {
+                    ArrayList<String> newResults = new ArrayList<String>();
+                    for (String sequence : result) {
+                        if (matchingType == MatchingType.string) {
+                            newResults.add(sequence + aminoAcid.singleLetterCode);
+                            return result;
+                        } else {
+                            for (char newAa : aminoAcid.getSubAminoAcids()) {
+                                if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
+                                    String newTag = sequence + newAa;
+                                    if (!newResults.contains(newTag)) {
+                                        newResults.add(newTag);
+                                    }
+                                }
+                            }
+                            for (char newAa : aminoAcid.getCombinations()) {
+                                if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
+                                    String newTag = sequence + newAa;
+                                    if (!newResults.contains(newTag)) {
+                                        newResults.add(newTag);
+                                    }
+                                }
+                            }
+                            if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                                for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                                    if (!aminoAcidPattern.getExcludedAA(i).contains(AminoAcid.getAminoAcid(newAa))) {
+                                        String newTag = sequence + newAa;
+                                        if (!newResults.contains(newTag)) {
+                                            newResults.add(newTag);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    result = newResults;
                 }
             }
         }
-
         return result;
     }
 

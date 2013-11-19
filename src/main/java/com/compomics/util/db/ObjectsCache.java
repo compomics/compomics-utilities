@@ -345,12 +345,18 @@ public class ObjectsCache {
                     String tableName = splittedKey[1];
                     String objectKey = splittedKey[2];
                     loadedObjectsKeys.remove(entryKey);
-                    loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
-                    if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
-                        loadedObjectsMap.get(dbName).remove(tableName);
-                    }
-                    if (loadedObjectsMap.get(dbName).isEmpty()) {
-                        loadedObjectsMap.remove(dbName);
+                    HashMap<String, HashMap<String, CacheEntry>> dbMap = loadedObjectsMap.get(dbName);
+                    if (dbMap != null) {
+                        HashMap<String, CacheEntry> tableMap = dbMap.get(tableName);
+                        if (tableMap != null) {
+                            tableMap.remove(objectKey);
+                            if (tableMap.isEmpty()) {
+                                dbMap.remove(tableName);
+                            }
+                        }
+                        if (dbMap.isEmpty()) {
+                            loadedObjectsMap.remove(dbName);
+                        }
                     }
                 }
             }

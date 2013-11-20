@@ -65,13 +65,13 @@ public abstract class AminoAcid implements Serializable {
     /**
      * The amino acid one letter codes as char array.
      */
-    private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 
-            'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
+    private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
+        'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
     /**
      * The amino acid one letter codes as string array.
      */
-    public static final String[] aminoAcidStrings = new String[]{"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", 
-            "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
+    public static final String[] aminoAcidStrings = new String[]{"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N",
+        "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
 
     /**
      * Convenience method returning an array of all implemented amino-acids
@@ -176,8 +176,9 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
-     * In case of a combination of amino acids, returns the comprised amino acids or amino acid groups
-     * represented by their single letter code. Example: Z -> {G, Q}.
+     * In case of a combination of amino acids, returns the comprised amino
+     * acids or amino acid groups represented by their single letter code.
+     * Example: Z -> {G, Q}.
      *
      * @return the actual amino acids
      */
@@ -215,38 +216,44 @@ public abstract class AminoAcid implements Serializable {
         }
         return results;
     }
-    
+
     /**
-     * Returns a matching amino acid using the given matching type and massTolerance. The amino acid is unique for indistinguishable amino acids when considered as such, then for instance I is returned for both I and L. The first of the aminoAcidStrings array is returned.
-     * 
+     * Returns a matching amino acid using the given matching type and
+     * massTolerance. The amino acid is unique for indistinguishable amino acids
+     * when considered as such, then for instance I is returned for both I and
+     * L. The first of the aminoAcidStrings array is returned.
+     *
      * @param aminoAcid the single letter code of the amino acid of interest
      * @param matchingType the matching type
      * @param massTolerance the ms2 mass tolerance
-     * 
-     * @return a matching amino acid using the given matching type and massTolerance
+     *
+     * @return a matching amino acid using the given matching type and
+     * massTolerance
      */
     public static String getMatchingAminoAcid(String aminoAcid, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         AminoAcidPattern aaPattern = new AminoAcidPattern(aminoAcid);
-            for (String candidateAA : aminoAcidStrings) {
-                if (aaPattern.matches(candidateAA, matchingType, massTolerance)) {
-                    return candidateAA;
-                }
+        for (String candidateAA : aminoAcidStrings) {
+            if (aaPattern.matches(candidateAA, matchingType, massTolerance)) {
+                return candidateAA;
             }
-            throw new IllegalArgumentException("No unique amino acid found for amino acid " + aminoAcid);
+        }
+        throw new IllegalArgumentException("No unique amino acid found for amino acid " + aminoAcid);
     }
-    
+
     /**
-     * Returns the matching sequence of a given sequence. For example both PEPTLDE and PEPTIDE will return PEPTIDE when I and L are considered as indistinguishable. See getMatchingAminoAcid for more details.
-     * 
+     * Returns the matching sequence of a given sequence. For example both
+     * PEPTLDE and PEPTIDE will return PEPTIDE when I and L are considered as
+     * indistinguishable. See getMatchingAminoAcid for more details.
+     *
      * @param sequence the sequence of interest
      * @param matchingType the matching type
      * @param massTolerance the ms2 mass tolerance
-     * 
+     *
      * @return the matching sequence
      */
     public static String getMatchingSequence(String sequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         StringBuilder stringBuilder = new StringBuilder(sequence.length());
-        for (int i = 0 ; i < sequence.length() ; i++) {
+        for (int i = 0; i < sequence.length(); i++) {
             String aa = String.valueOf(sequence.charAt(i));
             aa = getMatchingAminoAcid(aa, matchingType, massTolerance);
             stringBuilder.append(aa);

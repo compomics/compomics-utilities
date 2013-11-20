@@ -861,7 +861,7 @@ public class PTMFactory implements Serializable {
      * @throws ClassNotFoundException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
-            double modificationMass, double massTolerance, ProteinMatch.MatchingType matchingType) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException {
+            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
@@ -905,7 +905,7 @@ public class PTMFactory implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
@@ -935,8 +935,7 @@ public class PTMFactory implements Serializable {
      * @param peptide the peptide
      * @param aminoAcidPattern the amino acid pattern
      * @param patternLength the peptide length
-     * @param matchingType the matching type to map the peptide sequence onto
-     * the protein sequence for modifications
+     * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise. (Only useful when
      * considering modifications targeting a motif comprising interchangeable
@@ -951,7 +950,7 @@ public class PTMFactory implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, AminoAcidPattern aminoAcidPattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance)
+    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, AminoAcidPattern aminoAcidPattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();

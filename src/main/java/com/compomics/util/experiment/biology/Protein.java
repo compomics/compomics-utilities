@@ -236,7 +236,7 @@ public class Protein extends ExperimentObject {
      * @return the list of indexes where a peptide can be found in a protein
      * sequence
      */
-    public ArrayList<Integer> getPeptideStart(String peptideSequence, AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getPeptideStart(String peptideSequence, AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         return pattern.getIndexes(sequence, matchingType, massTolerance);
     }
 
@@ -254,7 +254,7 @@ public class Protein extends ExperimentObject {
      * @return a boolean indicating whether the protein starts with the given
      * peptide
      */
-    public boolean isNTerm(String peptideSequence, AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean isNTerm(String peptideSequence, AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         String subSequence = sequence.substring(0, peptideSequence.length());
         return pattern.matches(subSequence, matchingType, massTolerance);
     }
@@ -273,7 +273,7 @@ public class Protein extends ExperimentObject {
      * @return a boolean indicating whether the protein ends with the given
      * peptide
      */
-    public boolean isCTerm(String peptideSequence, AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean isCTerm(String peptideSequence, AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         String subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
         return pattern.matches(subSequence, matchingType, massTolerance);
     }
@@ -299,7 +299,7 @@ public class Protein extends ExperimentObject {
      *
      * @throws IOException
      */
-    public boolean isEnzymaticPeptide(String peptideSequence, AminoAcidPattern pattern, int patternLength, Enzyme enzyme, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException {
+    public boolean isEnzymaticPeptide(String peptideSequence, AminoAcidPattern pattern, int patternLength, Enzyme enzyme, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException {
 
         // get the surrounding amino acids
         HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, pattern, patternLength, 1, matchingType, massTolerance);
@@ -343,7 +343,7 @@ public class Protein extends ExperimentObject {
      * @throws IOException Exception thrown whenever an error occurred while
      * parsing the protein sequence
      */
-    public HashMap<Integer, String[]> getSurroundingAA(String peptide, AminoAcidPattern pattern, int patternLength, int nAA, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException {
+    public HashMap<Integer, String[]> getSurroundingAA(String peptide, AminoAcidPattern pattern, int patternLength, int nAA, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException {
 
         ArrayList<Integer> startIndexes = getPeptideStart(peptide, pattern, patternLength, matchingType, massTolerance);
         HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();

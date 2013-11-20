@@ -398,7 +398,7 @@ public class Tag {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance)
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
@@ -490,7 +490,7 @@ public class Tag {
      *
      * @return the start and end indexes of the tag
      */
-    public int[] matches(String sequence, int tagIndex, int componentIndex, ProteinMatch.MatchingType matchingType, Double massTolerance) { // @TODO: implement PTMs
+    public int[] matches(String sequence, int tagIndex, int componentIndex, AminoAcidPattern.MatchingType matchingType, Double massTolerance) { // @TODO: implement PTMs
 
         int[] result = new int[2];
 

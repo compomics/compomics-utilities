@@ -36,14 +36,14 @@ public class AminoAcidPatternTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == 2);
         input = "IJX";
         AminoAcidPattern pattern = new AminoAcidPattern("IJX");
-        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        Assert.assertTrue(pattern.matches(input, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5));
         pattern = new AminoAcidPattern("IIX");
-        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        Assert.assertTrue(pattern.matches(input, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5));
         pattern = new AminoAcidPattern("JJX");
-        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        Assert.assertTrue(pattern.matches(input, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5));
         pattern = new AminoAcidPattern("JJJ");
-        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        Assert.assertTrue(pattern.matches(input, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5));
         pattern = new AminoAcidPattern("XXX");
-        Assert.assertTrue(pattern.matches(input, ProteinMatch.MatchingType.indistiguishibleAminoAcids, 0.5));
+        Assert.assertTrue(pattern.matches(input, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5));
     }
 }

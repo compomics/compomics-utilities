@@ -1,5 +1,6 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -150,7 +151,7 @@ public class IdFilter implements Serializable {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public boolean validateProteins(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return validateProteins(peptide, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
     }
 
@@ -170,7 +171,7 @@ public class IdFilter implements Serializable {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public boolean validateProteins(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree)
+    public boolean validateProteins(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         ArrayList<String> accessions = peptide.getParentProteins(matchingType, massTolerance, proteinTree);
@@ -203,7 +204,7 @@ public class IdFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean validateModifications(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
 
         // check it it's an unknown peptide
         if (unknownPtm) {

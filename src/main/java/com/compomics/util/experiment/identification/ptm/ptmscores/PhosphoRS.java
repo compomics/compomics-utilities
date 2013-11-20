@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
@@ -106,7 +107,7 @@ public class PhosphoRS {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
         for (PTM ptm : ptms) {
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm, ProteinMatch.MatchingType.string, null)) {
+            for (int potentialSite : peptide.getPotentialModificationSites(ptm, AminoAcidPattern.MatchingType.string, null)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
                 }

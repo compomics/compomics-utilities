@@ -2,13 +2,13 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.AminoAcidPattern.MatchingType;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.math.BasicMathFunctions;
@@ -961,7 +961,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag,
-            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = new AminoAcidPattern();

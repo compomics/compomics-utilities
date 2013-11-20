@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -27,11 +28,14 @@ public class MDScore {
      *
      * @param spectrumMatch the spectrum match of interest
      * @param ptms the names of the PTMs to score
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
      *
      * @return the MD score
      */
-    public static Double getMDScore(SpectrumMatch spectrumMatch, ArrayList<String> ptms) {
-        return getMDScore(spectrumMatch, spectrumMatch.getBestPeptideAssumption().getPeptide(), ptms);
+    public static Double getMDScore(SpectrumMatch spectrumMatch, ArrayList<String> ptms, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        return getMDScore(spectrumMatch, spectrumMatch.getBestPeptideAssumption().getPeptide(), ptms, matchingType, massTolerance);
     }
 
     /**
@@ -42,10 +46,13 @@ public class MDScore {
      * @param peptideCandidate the peptide of interest
      * @param spectrumMatch the spectrum match of interest
      * @param ptms the names of the PTMs to score
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
      *
      * @return the MD score
      */
-    public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate, ArrayList<String> ptms) {
+    public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate, ArrayList<String> ptms, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
 
         HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
         Double firstScore = null, secondScore = null;
@@ -54,7 +61,7 @@ public class MDScore {
             for (ArrayList<SpectrumIdentificationAssumption> assumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
                 for (SpectrumIdentificationAssumption assumption : assumptionList) {
                     PeptideAssumption peptideAssumption = (PeptideAssumption) assumption;
-                    if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate)) {
+                    if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate, matchingType, massTolerance)) {
                         MascotScore mascotScore = new MascotScore();
                         mascotScore = (MascotScore) peptideAssumption.getUrParam(mascotScore);
                         Double score = mascotScore.getScore();

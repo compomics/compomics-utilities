@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_annotators;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
@@ -47,7 +48,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param precursorCharge the new precursor charge
      */
     public void setPeptide(Peptide peptide, int precursorCharge) {
-        if (this.peptide == null || !this.peptide.isSameAs(peptide) || !this.peptide.sameModificationsAs(peptide) || this.precursorCharge != precursorCharge) {
+        if (this.peptide == null || !this.peptide.getKey().equals(peptide.getKey()) || !this.peptide.sameModificationsAs(peptide) || this.precursorCharge != precursorCharge) {
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
             theoreticalFragmentIons = fragmentFactory.getFragmentIons(peptide);
@@ -314,7 +315,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
             }
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, ProteinMatch.MatchingType.string, Double.NaN);
+                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, AminoAcidPattern.MatchingType.string, Double.NaN);
                 if (!indexes.isEmpty()) {
                     Collections.sort(indexes);
                     modMin = indexes.get(0);

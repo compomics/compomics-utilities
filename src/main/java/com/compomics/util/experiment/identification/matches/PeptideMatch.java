@@ -21,6 +21,10 @@ public class PeptideMatch extends IdentificationMatch {
      */
     private Peptide theoreticPeptide;
     /**
+     * The key of the match
+     */
+    private String matchKey;
+    /**
      * The key of the main match, typically of the highest score.
      */
     private String mainMatchKey;
@@ -41,16 +45,21 @@ public class PeptideMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
+        if (matchKey == null) { // needed for backward compatibility
         return theoreticPeptide.getKey();
+        }
+            return matchKey;
     }
 
     /**
      * Constructor for the peptide match.
      *
      * @param peptide the matching peptide
+     * @param matchKey the key of the match as referenced in the identification.
      */
-    public PeptideMatch(Peptide peptide) {
+    public PeptideMatch(Peptide peptide, String matchKey) {
         theoreticPeptide = peptide;
+        this.matchKey = matchKey;
     }
 
     /**
@@ -58,11 +67,13 @@ public class PeptideMatch extends IdentificationMatch {
      *
      * @param peptide The matching peptide
      * @param spectrumMatchKey The key of the main spectrum match
+     * @param matchKey the key of the match as referenced in the identification.
      */
-    public PeptideMatch(Peptide peptide, String spectrumMatchKey) {
+    public PeptideMatch(Peptide peptide, String spectrumMatchKey, String matchKey) {
         theoreticPeptide = peptide;
         mainMatchKey = spectrumMatchKey;
         spectrumMatches.add(spectrumMatchKey);
+        this.matchKey = matchKey;
     }
 
     /**

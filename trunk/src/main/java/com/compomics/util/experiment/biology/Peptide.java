@@ -209,19 +209,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Getter for the parent proteins.
-     *
-     * @return the parent proteins
-     * @throws IOException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     */
-    public ArrayList<String> getParentProteins() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return getParentProteins(false, null, null, null);
-    }
-
-    /**
      * Returns the parent proteins and eventually remaps the peptide to the
      * protein using the default protein tree.
      *
@@ -237,7 +224,10 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException
      * @throws SQLException
      */
-    public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
+    public ArrayList<String> getParentProteins(boolean remap, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
+        if (!remap || parentProteins != null) { // avoid building the tree if not necessary
+            return parentProteins;
+        }
         return getParentProteins(remap, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
     }
 
@@ -256,7 +246,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException
      * @throws SQLException
      */
-    public ArrayList<String> getParentProteins(ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    public ArrayList<String> getParentProteins(AminoAcidPattern.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, matchingType, massTolerance, proteinTree);
     }
 
@@ -275,7 +265,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException
      * @throws SQLException
      */
-    public ArrayList<String> getParentProteins(ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    public ArrayList<String> getParentProteins(AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, matchingType, massTolerance);
     }
 
@@ -297,7 +287,7 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException
      * @throws SQLException
      */
-    public ArrayList<String> getParentProteins(boolean remap, ProteinMatch.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    public ArrayList<String> getParentProteins(boolean remap, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         if (remap && parentProteins == null) {
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
             parentProteins = new ArrayList<String>();
@@ -316,6 +306,15 @@ public class Peptide extends ExperimentObject {
         }
         return parentProteins;
     }
+    
+    /**
+     * Returns the parent proteins without remapping them. Null if none mapped.
+     * 
+     * @return an ArrayList containing the parent proteins
+     */
+    public ArrayList<String> getParentProteinsNoRemapping() {
+        return parentProteins;
+    }
 
     /**
      * Sets the parent proteins.
@@ -326,9 +325,22 @@ public class Peptide extends ExperimentObject {
     public void setParentProteins(ArrayList<String> parentProteins) {
         this.parentProteins = parentProteins;
     }
+    
+    /**
+     * Returns a unique key for the peptide when considering the given matching type and mass tolerance. when ambiguity the first amino acid according to AminoAcid.getAminoAcidsList() will be selected. For example the matching key of peptide PEPTLDE_mod1_mod2 is PEPTIDE_mod1_mod2
+     * 
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance
+     * 
+     * @return a key unique to the given matching type
+     */
+    public String getMatchingKey(AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        String matchingSequence = AminoAcid.getMatchingSequence(sequence, matchingType, massTolerance);
+        return getKey(matchingSequence, modifications);
+    }
 
     /**
-     * Returns the index of a peptide. index = SEQUENCE_mod1_mod2 with
+     * Returns the reference key of a peptide. index = SEQUENCE_mod1_mod2 with
      * modifications ordered alphabetically.
      *
      * @return the index of a peptide
@@ -336,6 +348,38 @@ public class Peptide extends ExperimentObject {
     public String getKey() {
         ArrayList<String> tempModifications = new ArrayList<String>();
         for (ModificationMatch mod : getModificationMatches()) {
+            if (mod.isVariable()) {
+                if (mod.getTheoreticPtm() != null) {
+                    if (mod.isConfident() || mod.isInferred()) {
+                        tempModifications.add(mod.getTheoreticPtm() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
+                    } else {
+                        tempModifications.add(mod.getTheoreticPtm());
+                    }
+                } else {
+                    tempModifications.add("unknown-modification");
+                }
+            }
+        }
+        Collections.sort(tempModifications);
+        String result = sequence;
+        for (String mod : tempModifications) {
+            result += MODIFICATION_SEPARATOR + mod;
+        }
+        return result;
+    }
+
+    /**
+     * Returns the reference key of a peptide. key = SEQUENCE_mod1_mod2 with
+     * modifications ordered alphabetically.
+     *
+     * @param sequence the sequence of the peptide
+     * @param modificationMatches list of modification matches
+     * 
+     * @return the index of a peptide
+     */
+    public static String getKey(String sequence, ArrayList<ModificationMatch> modificationMatches) {
+        ArrayList<String> tempModifications = new ArrayList<String>();
+        for (ModificationMatch mod : modificationMatches) {
             if (mod.isVariable()) {
                 if (mod.getTheoreticPtm() != null) {
                     if (mod.isConfident() || mod.isInferred()) {
@@ -481,7 +525,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public boolean isModifiable(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean isModifiable(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         AminoAcidPattern pattern = ptm.getPattern();
         int patternLength = pattern.length();
@@ -592,7 +636,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, ProteinMatch.MatchingType matchingType, Double massTolerance)
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
@@ -756,28 +800,19 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * A method which compares two peptides. Two same peptides present the same
-     * sequence and same modifications. The localization of the modification is
-     * accounted only if the PTM is modification matches are confidently
-     * localized.
-     *
-     * @param anotherPeptide another peptide
-     * @return a boolean indicating if the other peptide is the same.
-     */
-    public boolean isSameAs(Peptide anotherPeptide) {
-        return getKey().equals(anotherPeptide.getKey());
-    }
-
-    /**
      * Indicates whether another peptide has the same sequence and modification
      * status without accounting for modification localization.
      *
      * @param anotherPeptide the other peptide to compare to this instance
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a boolean indicating whether the other peptide has the same
      * sequence and modification status.
      */
-    public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide) {
-        return isSameSequence(anotherPeptide) && isSameModificationStatus(anotherPeptide);
+    public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        return isSameSequence(anotherPeptide, matchingType, massTolerance) && isSameModificationStatus(anotherPeptide);
     }
 
     /**
@@ -785,11 +820,16 @@ public class Peptide extends ExperimentObject {
      * sequence as the given peptide
      *
      * @param anotherPeptide the other peptide to compare
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * 
      * @return a boolean indicating whether the other peptide has the same
      * sequence
      */
-    public boolean isSameSequence(Peptide anotherPeptide) {
-        return sequence.equals(anotherPeptide.getSequence());
+    public boolean isSameSequence(Peptide anotherPeptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        AminoAcidPattern pattern = new AminoAcidPattern(anotherPeptide.getSequence());
+        return pattern.length() == sequence.length() && pattern.matches(sequence, matchingType, massTolerance);
     }
 
     /**
@@ -1185,7 +1225,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<String> isNterm(AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<String> isNterm(AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
         for (String accession : parentProteins) {
@@ -1220,7 +1260,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<String> isCterm(AminoAcidPattern pattern, int patternLength, ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<String> isCterm(AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
         for (String accession : parentProteins) {
@@ -1267,7 +1307,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns a version of the peptide which does not contain the inspected
-     * PTMs without protein mapping.
+     * PTMs.
      *
      * @param peptide the original peptide
      * @param ptms list of inspected PTMs
@@ -1280,31 +1320,9 @@ public class Peptide extends ExperimentObject {
      * @throws SQLException
      */
     public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return getNoModPeptide(peptide, ptms, false);
-    }
-
-    /**
-     * Returns a version of the peptide which does not contain the inspected
-     * PTMs.
-     *
-     * @param peptide the original peptide
-     * @param ptms list of inspected PTMs
-     * @param includeParentProteins if false the parent protein of the peptide
-     * will not be set
-     *
-     * @return a not modified version of the peptide
-     *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws SQLException
-     */
-    public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms, boolean includeParentProteins) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
-        if (includeParentProteins) {
-            noModPeptide.setParentProteins(peptide.getParentProteins());
-        }
+            noModPeptide.setParentProteins(peptide.getParentProteinsNoRemapping());
 
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
             boolean found = false;

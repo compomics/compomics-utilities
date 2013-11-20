@@ -1,10 +1,12 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -320,5 +322,9 @@ public class SpectrumMatch extends IdentificationMatch {
             }
         }
         return false;
+    }
+    
+    public void getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        
     }
 }

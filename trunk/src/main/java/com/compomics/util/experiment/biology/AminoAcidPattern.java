@@ -42,12 +42,31 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * The list of excluded amino acids at a given index For trypsin: 0 -> {} 1
      * -> {P}
      */
-    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>();
+    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(); // @TODO: get rid of this and use ontly targeted
     /**
      * The modifications carried by the amino acid sequence at target amino
      * acids.
      */
     private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>(); // @TODO: do we need modifications on excluded amino acids?
+
+    /**
+     * The different types of amino acid matching.
+     */
+    public static enum MatchingType {
+
+        /**
+         * Matches character strings only.
+         */
+        string,
+        /**
+         * Matches amino acids.
+         */
+        aminoAcid,
+        /**
+         * Matches amino acids of indistinguishable masses.
+         */
+        indistiguishibleAminoAcids;
+    }
 
     /**
      * Creates an empty pattern.
@@ -310,7 +329,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the amino acid pattern as java string pattern
      */
     public Pattern getAsStringPattern() {
-        return getAsStringPattern(ProteinMatch.MatchingType.string, null);
+        return getAsStringPattern(MatchingType.string, null);
     }
 
     /**
@@ -323,7 +342,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return the amino acid pattern as java string pattern
      */
-    public Pattern getAsStringPattern(ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public Pattern getAsStringPattern(MatchingType matchingType, Double massTolerance) {
 
         String regex = "";
         int tempLength = length();
@@ -340,7 +359,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                     if (!toAdd.contains(aa.singleLetterCode)) {
                         toAdd.add(aa.singleLetterCode);
                     }
-                    if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                    if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
                         for (char tempAa : aa.getSubAminoAcids()) {
                             String value = tempAa + "";
                             if (!toAdd.contains(value)) {
@@ -353,7 +372,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                                 toAdd.add(value);
                             }
                         }
-                        if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
                             for (char tempAa : aa.getIndistinguishibleAminoAcids(massTolerance)) {
                                 String value = tempAa + "";
                                 if (!toAdd.contains(value)) {
@@ -401,7 +420,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(String input) {
-        return getIndexes(input, ProteinMatch.MatchingType.string, Double.NaN);
+        return getIndexes(input, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -414,7 +433,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(AminoAcidPattern input) {
-        return getIndexes(input, ProteinMatch.MatchingType.string, Double.NaN);
+        return getIndexes(input, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -427,7 +446,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getIndexes(String input, MatchingType matchingType, Double massTolerance) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         int index = 0;
         while ((index = firstIndex(input, matchingType, massTolerance, index)) >= 0) {
@@ -447,7 +466,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(AminoAcidPattern input, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getIndexes(AminoAcidPattern input, MatchingType matchingType, Double massTolerance) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         int index = 0;
         while ((index = firstIndex(input, matchingType, massTolerance, index)) >= 0) {
@@ -467,7 +486,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * amino-acid sequence
      */
     public boolean matches(String aminoAcidSequence) {
-        return matches(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+        return matches(aminoAcidSequence, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -480,8 +499,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(aminoAcidSequence); // @TODO: should not use new here?
+    public int firstIndex(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(aminoAcidSequence);
         return firstIndex(aminoAcidPattern, matchingType, massTolerance);
     }
 
@@ -495,7 +514,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
         return firstIndex(aminoAcidPattern, matchingType, massTolerance, 0);
     }
 
@@ -510,8 +529,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String sequence, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence); // @TODO: should not use new here?
+    public int firstIndex(String sequence, MatchingType matchingType, Double massTolerance, int startIndex) {
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence);
         return firstIndex(aminoAcidPattern, matchingType, massTolerance, startIndex);
     }
 
@@ -526,9 +545,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance, int startIndex) {
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance, int startIndex) {
 
-        int patternLength = length(); // @TODO: should not use length here?
+        int patternLength = length();
         int aminoAcidPatternLength = aminoAcidPattern.length();
         int lastIndex = aminoAcidPatternLength - patternLength;
 
@@ -552,7 +571,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                                 break;
                             }
 
-                            if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                            if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
 
                                 for (char tempAA : vetoAA.getSubAminoAcids()) {
                                     if (aa == tempAA) {
@@ -572,7 +591,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                                     }
                                 }
 
-                                if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                                if (matchingType == MatchingType.indistiguishibleAminoAcids) {
                                     for (char tempAA : vetoAA.getIndistinguishibleAminoAcids(massTolerance)) {
                                         if (aa == tempAA) {
                                             reject = true;
@@ -599,7 +618,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                             if (aa == targetedAA.singleLetterCode.charAt(0)) {
                                 found = true;
                                 break;
-                            } else if (matchingType == ProteinMatch.MatchingType.aminoAcid || matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                            } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
 
                                 for (char tempAA : targetedAA.getSubAminoAcids()) {
                                     if (aa == tempAA) {
@@ -619,7 +638,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                                     }
                                 }
 
-                                if (!found && matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                                if (!found && matchingType == MatchingType.indistiguishibleAminoAcids) {
                                     for (char tempAA : targetedAA.getIndistinguishibleAminoAcids(massTolerance)) {
                                         if (aa == tempAA) {
                                             found = true;
@@ -657,7 +676,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino-acid sequence
      */
-    public boolean matches(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean matches(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
         return firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
     }
 
@@ -671,7 +690,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino-acid sequence
      */
-    public boolean matches(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean matches(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
         return firstIndex(aminoAcidPattern, matchingType, massTolerance) >= 0;
     }
 
@@ -685,7 +704,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * with the pattern
      */
     public boolean isStarting(String aminoAcidSequence) {
-        return isStarting(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+        return isStarting(aminoAcidSequence, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -698,7 +717,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * with the pattern
      */
     public boolean isStarting(AminoAcidPattern aminoAcidPattern) {
-        return isStarting(aminoAcidPattern, ProteinMatch.MatchingType.string, Double.NaN);
+        return isStarting(aminoAcidPattern, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -711,7 +730,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean isStarting(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
         int patternLength = length(); // @TODO: should not use length() here?
         return matches(aminoAcidSequence.substring(0, patternLength), matchingType, massTolerance);
     }
@@ -726,8 +745,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance) {
-        int patternLength = length(); // @TODO: should not use length() here?
+    public boolean isStarting(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
+        int patternLength = length();
         return matches(aminoAcidPattern.getSubPattern(0, patternLength), matchingType, massTolerance);
     }
 
@@ -741,7 +760,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * with the pattern
      */
     public boolean isEnding(String aminoAcidSequence) {
-        return isEnding(aminoAcidSequence, ProteinMatch.MatchingType.string, Double.NaN);
+        return isEnding(aminoAcidSequence, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -754,7 +773,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * with the pattern
      */
     public boolean isEnding(AminoAcidPattern aminoAcidPattern) {
-        return isEnding(aminoAcidPattern, ProteinMatch.MatchingType.string, Double.NaN);
+        return isEnding(aminoAcidPattern, MatchingType.string, Double.NaN);
     }
 
     /**
@@ -767,7 +786,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(AminoAcidPattern aminoAcidPattern, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean isEnding(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
         int patternLength = length();
         return matches(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength), matchingType, massTolerance);
     }
@@ -782,7 +801,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    public boolean isEnding(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
         int patternLength = length();
         return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), matchingType, massTolerance);
     }

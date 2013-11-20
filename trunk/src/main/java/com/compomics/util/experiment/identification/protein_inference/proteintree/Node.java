@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch.MatchingType;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class Node implements Serializable {
      * @throws ClassNotFoundException
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query, String initialTag, 
-            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
         // Dirty fix for my poor handling of multiple threads
         if (Runtime.getRuntime().availableProcessors() > 3) {
             return getProteinMappingMultithreaded(query, initialTag, matchingType, massTolerance);
@@ -113,7 +112,7 @@ public class Node implements Serializable {
      * @throws ClassNotFoundException
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingSinglethreaded(AminoAcidPattern query, String currentSequence,
-            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
@@ -121,9 +120,20 @@ public class Node implements Serializable {
             result.put(currentSequence, getAllMappings());
         } else if (accessions != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+            HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
             for (String accession : accessions.keySet()) {
                 Protein protein = sequenceFactory.getProtein(accession);
-                result.put(accession, matchInProtein(protein, accessions.get(accession), query, matchingType, massTolerance));
+                indexes.put(accession, matchInProtein(protein, accessions.get(accession), query, matchingType, massTolerance));
+            }
+            for (String accession : indexes.keySet()) {
+                for (String tempSequence : indexes.get(accession).keySet()) {
+                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
+                    if (mapping == null) {
+                        mapping = new HashMap<String, ArrayList<Integer>>(1);
+                        result.put(tempSequence, mapping);
+                    }
+                    mapping.put(accession, indexes.get(accession).get(tempSequence));
+                }
             }
         } else {
             for (char aa : getNextAminoAcids(query, matchingType, massTolerance)) {
@@ -156,7 +166,7 @@ public class Node implements Serializable {
      * @throws ClassNotFoundException
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingMultithreaded(AminoAcidPattern query, String currentSequence,
-            ProteinMatch.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
@@ -267,13 +277,13 @@ public class Node implements Serializable {
      *
      * @return the possible next amino acids
      */
-    private ArrayList<Character> getNextAminoAcids(AminoAcidPattern peptideSequence, ProteinMatch.MatchingType matchingType, Double massTolerance) {
+    private ArrayList<Character> getNextAminoAcids(AminoAcidPattern peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
 
         ArrayList<Character> result = new ArrayList<Character>();
 
         for (AminoAcid aa : peptideSequence.getTargetedAA(depth)) {
 
-            if (matchingType == ProteinMatch.MatchingType.string) {
+            if (matchingType == AminoAcidPattern.MatchingType.string) {
                 result.add(aa.singleLetterCode.charAt(0));
             } else {
 
@@ -289,7 +299,7 @@ public class Node implements Serializable {
                     }
                 }
 
-                if (matchingType == ProteinMatch.MatchingType.indistiguishibleAminoAcids) {
+                if (matchingType == AminoAcidPattern.MatchingType.indistiguishibleAminoAcids) {
                     for (char aaChar : aa.getIndistinguishibleAminoAcids(massTolerance)) {
                         if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
                             result.add(aaChar);
@@ -511,7 +521,7 @@ public class Node implements Serializable {
      * @throws InterruptedException
      */
     private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds,
-            AminoAcidPattern peptidePattern, MatchingType matchingType, Double massTolerance)
+            AminoAcidPattern peptidePattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
         String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
@@ -643,7 +653,7 @@ public class Node implements Serializable {
         /**
          * The type of matching.
          */
-        private MatchingType matchingType;
+        private AminoAcidPattern.MatchingType matchingType;
         /**
          * The mass tolerance at the MS2 level.
          */
@@ -664,7 +674,7 @@ public class Node implements Serializable {
          * @param matchingType the peptide to protein matching type
          * @param massTolerance the mass tolerance used for the matching
          */
-        public SequenceMatcher(ArrayList<Protein> proteins, HashMap<String, ArrayList<Integer>> seeds, AminoAcidPattern peptidePattern, MatchingType matchingType, Double massTolerance) {
+        public SequenceMatcher(ArrayList<Protein> proteins, HashMap<String, ArrayList<Integer>> seeds, AminoAcidPattern peptidePattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
             this.proteins = proteins;
             this.seeds = seeds;
             this.peptidePattern = peptidePattern;

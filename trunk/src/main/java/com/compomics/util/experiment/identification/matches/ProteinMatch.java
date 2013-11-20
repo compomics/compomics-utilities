@@ -49,25 +49,6 @@ public class ProteinMatch extends IdentificationMatch {
     public static final double maxX = 0.25;
 
     /**
-     * The different types of peptide to protein amino acid matching.
-     */
-    public static enum MatchingType {
-
-        /**
-         * Matches character strings only.
-         */
-        string,
-        /**
-         * Matches amino acids.
-         */
-        aminoAcid,
-        /**
-         * Matches amino acids of indistinguishable masses.
-         */
-        indistiguishibleAminoAcids;
-    }
-
-    /**
      * Constructor for the protein match.
      */
     public ProteinMatch() {
@@ -92,9 +73,17 @@ public class ProteinMatch extends IdentificationMatch {
      * peptide
      *
      * @param peptide the corresponding peptide match
+     * @param peptideMatchKey the key of the peptide match
+     * 
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
+     * 
+     * 
      */
-    public ProteinMatch(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        ArrayList<String> parentProteins = peptide.getParentProteins();
+    public ProteinMatch(Peptide peptide, String peptideMatchKey) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        ArrayList<String> parentProteins = peptide.getParentProteinsNoRemapping();
         if (parentProteins == null || parentProteins.isEmpty()) {
             throw new IllegalArgumentException("Peptide " + peptide.getSequence() + " presents no parent protein.");
         }
@@ -105,7 +94,7 @@ public class ProteinMatch extends IdentificationMatch {
             }
         }
         mainMatch = parentProteins.get(0);
-        peptideMatches.add(peptide.getKey());
+        peptideMatches.add(peptideMatchKey);
     }
 
     /**
@@ -225,7 +214,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public static String getProteinMatchKey(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> accessions = new ArrayList<String>(),
-                originalAccessions = peptide.getParentProteins();
+                originalAccessions = peptide.getParentProteinsNoRemapping();
         if (originalAccessions == null) {
             throw new IllegalArgumentException("Proteins not set for peptide " + peptide.getKey() + ".");
         }
@@ -388,7 +377,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return true if the main accession generates an enzymatic peptide
      */
-    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatches) {
             String peptideSequence = Peptide.getSequence(peptideKey);

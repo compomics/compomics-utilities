@@ -1160,15 +1160,23 @@ public class SequenceFactory {
         if (defaultProteinTree == null) {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
-            int memoryPreference = 3 * userPreferences.getMemoryPreference() / 4;
-            defaultProteinTree = new ProteinTree(memoryPreference);
+            int memoryPreference = userPreferences.getMemoryPreference();
+            int memoryAllocated = 3*memoryPreference / 4;
+            int cacheSize = 250000;
+            if (memoryPreference < 2500) {
+                cacheSize = 5000;
+            } else if (memoryPreference < 10000) {
+                cacheSize = 25000;
+            }
+            
+            defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
 
             int tagLength = 3;
             defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress);
             emptyCache();
 
             int treeSize = memoryPreference / 4;
-            defaultProteinTree.setCacheSize(treeSize);
+            defaultProteinTree.setMemoryAllocation(treeSize);
 
             // close and delete the database if the process was canceled
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {

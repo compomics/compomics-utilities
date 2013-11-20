@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
@@ -324,7 +323,14 @@ public class SpectrumMatch extends IdentificationMatch {
         return false;
     }
     
+    /**
+     * Get the peptides from the tags.
+     * 
+     * @param proteinTree
+     * @param matchingType
+     * @param massTolerance 
+     */
     public void getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        
+        // @TODO: implement me
     }
 }

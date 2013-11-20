@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
-import com.compomics.util.experiment.identification.SequenceFactory;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +20,7 @@ public class PeptideMatch extends IdentificationMatch {
      */
     private Peptide theoreticPeptide;
     /**
-     * The key of the match
+     * The key of the match.
      */
     private String matchKey;
     /**
@@ -46,9 +45,9 @@ public class PeptideMatch extends IdentificationMatch {
     @Override
     public String getKey() {
         if (matchKey == null) { // needed for backward compatibility
-        return theoreticPeptide.getKey();
+            return theoreticPeptide.getKey();
         }
-            return matchKey;
+        return matchKey;
     }
 
     /**

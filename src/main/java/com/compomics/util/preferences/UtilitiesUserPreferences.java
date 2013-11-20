@@ -207,7 +207,7 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Returns the preferred upper memory limit.
+     * Returns the preferred upper memory limit in MB.
      *
      * @return the preferred upper memory limit
      */

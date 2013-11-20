@@ -36,7 +36,7 @@ public class ProteinTreeTest extends TestCase {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences);
 
-        ProteinTree proteinTree = new ProteinTree(1000);
+        ProteinTree proteinTree = new ProteinTree(1000, 1000);
         proteinTree.initiateTree(3, 500, 15, null, true, false);
         
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();

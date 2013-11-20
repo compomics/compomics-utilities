@@ -19,10 +19,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -52,7 +54,7 @@ public class ProteinTree {
     /**
      * List of the nodes in tree.
      */
-    private ArrayList<String> tagsInTree = new ArrayList<String>();
+    private ArrayDeque<String> tagsInTree = new ArrayDeque<String>();
     /**
      * The size of the tree in memory in accession*node.
      */
@@ -80,11 +82,11 @@ public class ProteinTree {
     /**
      * Cache of the last queried peptides.
      */
-    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache;
     /**
      * Peptide sequences in cache.
      */
-    private ArrayList<String> lastQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
+    private ArrayDeque<String> lastQueriedPeptidesCacheContent = new ArrayDeque<String>(cacheSize);
     /**
      * Time in ms after which a query is considered as slow.
      */
@@ -92,11 +94,11 @@ public class ProteinTree {
     /**
      * Cache of the last queried peptides where the query took long.
      */
-    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
+    private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastSlowQueriedPeptidesCache;
     /**
      * Peptide sequences in slow cache.
      */
-    private ArrayList<String> lastSlowQueriedPeptidesCacheContent = new ArrayList<String>(cacheSize);
+    private ArrayDeque<String> lastSlowQueriedPeptidesCacheContent = new ArrayDeque<String>(cacheSize);
     /**
      * The version of the protein tree.
      */
@@ -123,11 +125,16 @@ public class ProteinTree {
      *
      * @param memoryAllocation the number of MB available for the tree in
      * memory.
+     * @param cacheSize the peptide queries caches size (note, there are two of them)
+     * 
      * @throws IOException
      */
-    public ProteinTree(int memoryAllocation) throws IOException {
+    public ProteinTree(int memoryAllocation, int cacheSize) throws IOException {
 
         this.memoryAllocation = memoryAllocation;
+        this.cacheSize = cacheSize;
+        lastSlowQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
+        lastQueriedPeptidesCache = new HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>>(cacheSize);
 
         if (debugSpeed) {
             try {
@@ -136,6 +143,24 @@ public class ProteinTree {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Returns the memory allocation.
+     * 
+     * @return the memory allocation
+     */
+    public int getMemoryAllocation() {
+        return memoryAllocation;
+    }
+
+    /**
+     * Sets the memory allocation.
+     * 
+     * @param memoryAllocation the memory allocation
+     */
+    public void setMemoryAllocation(int memoryAllocation) {
+        this.memoryAllocation = memoryAllocation;
     }
 
     /**
@@ -824,32 +849,14 @@ public class ProteinTree {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = lastQueriedPeptidesCache.get(peptideSequence);
 
-        if (result != null) {
-            lastQueriedPeptidesCacheContent.remove(peptideSequence);
-            lastQueriedPeptidesCacheContent.add(peptideSequence);
-        } else {
-
+        if (result == null) {
             result = lastSlowQueriedPeptidesCache.get(peptideSequence);
-
-            if (result != null) {
-                lastSlowQueriedPeptidesCacheContent.remove(peptideSequence);
-                lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
-            } else {
-
+            if (result == null) {
                 if (sequenceFactory.isDefaultReversed()) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
                     result = lastQueriedPeptidesCache.get(reversedSequence);
-                    if (result != null) {
-                        lastQueriedPeptidesCacheContent.remove(peptideSequence);
-                        lastQueriedPeptidesCacheContent.add(peptideSequence);
-                    } else {
-
+                    if (result == null) {
                         result = lastSlowQueriedPeptidesCache.get(reversedSequence);
-
-                        if (result != null) {
-                            lastSlowQueriedPeptidesCacheContent.remove(peptideSequence);
-                            lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
-                        }
                     }
                     if (result != null) {
                         return getReversedResults(result);
@@ -924,17 +931,15 @@ public class ProteinTree {
                         lastQueriedPeptidesCache.put(peptideSequence, result);
                         lastQueriedPeptidesCacheContent.add(peptideSequence);
                         if (lastQueriedPeptidesCacheContent.size() > cacheSize) {
-                            String key = lastQueriedPeptidesCacheContent.get(0);
+                            String key = lastQueriedPeptidesCacheContent.pollLast();
                             lastQueriedPeptidesCache.remove(key);
-                            lastQueriedPeptidesCacheContent.remove(0);
                         }
                     } else {
                         lastSlowQueriedPeptidesCache.put(peptideSequence, result);
                         lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
                         if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
-                            String key = lastSlowQueriedPeptidesCacheContent.get(0);
+                            String key = lastSlowQueriedPeptidesCacheContent.pollLast();
                             lastSlowQueriedPeptidesCache.remove(key);
-                            lastSlowQueriedPeptidesCacheContent.remove(0);
                         }
                     }
                 }
@@ -1212,17 +1217,15 @@ public class ProteinTree {
                 long capacity = memoryAllocation * cacheScale;
 
                 while (treeSize > capacity && !tagsInTree.isEmpty()) {
-                    int index = tagsInTree.size() - 1;
-                    String tempTag = tagsInTree.get(index);
+                    String tempTag = tagsInTree.pollLast();
                     Node tempNode = tree.get(tempTag);
                     treeSize -= tempNode.getSize();
                     tree.remove(tempTag);
-                    tagsInTree.remove(index);
                 }
 
                 tree.put(tag, result);
                 treeSize += result.getSize();
-                tagsInTree.add(0, tag);
+                tagsInTree.addFirst(tag);
             }
         }
 
@@ -1292,12 +1295,10 @@ public class ProteinTree {
             limit = share * limit;
         }
         for (int i = 0; i < limit; i++) {
-            int index = tagsInTree.size() - 1;
-            String tempTag = tagsInTree.get(index);
+            String tempTag = tagsInTree.pollLast();
             Node tempNode = tree.get(tempTag);
             treeSize -= tempNode.getSize();
             tree.remove(tempTag);
-            tagsInTree.remove(index);
         }
     }
 

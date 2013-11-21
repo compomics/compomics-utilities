@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
  * This class represent a tag assumption made by an identification algorithm
@@ -10,7 +11,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
  *
  * @author Marc Vaudel
  */
-public class TagAssumption extends SpectrumIdentificationAssumption {
+public class TagAssumption extends SpectrumIdentificationAssumption implements UrParameter {
 
     /**
      * List of mass gaps.
@@ -72,5 +73,15 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + ElementaryIon.proton.getTheoreticMass() * (identificationCharge.value - 1)) / identificationCharge.value;
+    }
+
+    @Override
+    public String getFamilyName() {
+        return "deNovo";
+    }
+
+    @Override
+    public int getIndex() {
+        return 2;
     }
 }

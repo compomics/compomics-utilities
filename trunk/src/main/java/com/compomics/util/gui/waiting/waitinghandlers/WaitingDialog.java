@@ -1,9 +1,6 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.Protein;
-import static com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree.proteinBatchSize;
 import com.compomics.util.gui.DummyFrame;
 import com.compomics.util.waiting.WaitingActionListener;
 import com.compomics.util.waiting.WaitingHandler;
@@ -18,13 +15,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
@@ -104,15 +97,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private WaitingActionListener waitingActionListener = null;
     /**
-     * Buffer for the text pane
+     * Buffer for the text pane.
      */
     private LinkedBlockingDeque<String> reportBuffer = new LinkedBlockingDeque<String>();
     /**
-     * boolean indicating whether we are reporting something in the text pane
+     * Boolean indicating whether we are reporting something in the text pane.
      */
     private boolean reporting = false;
     /**
-     * The time of the last update
+     * The time of the last update.
      */
     private long lastUpdate = System.currentTimeMillis();
 
@@ -956,7 +949,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     /**
-     * prints the reports in the buffer
+     * Prints the reports in the buffer.
      */
     private void printReportBuffer() {
         long time = System.currentTimeMillis();

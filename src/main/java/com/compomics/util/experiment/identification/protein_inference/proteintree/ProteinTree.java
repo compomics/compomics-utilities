@@ -4,16 +4,20 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidPattern.MatchingType;
 import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.identification.TagFactory;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
+import java.awt.print.Paper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -125,8 +129,9 @@ public class ProteinTree {
      *
      * @param memoryAllocation the number of MB available for the tree in
      * memory.
-     * @param cacheSize the peptide queries caches size (note, there are two of them)
-     * 
+     * @param cacheSize the peptide queries caches size (note, there are two of
+     * them)
+     *
      * @throws IOException
      */
     public ProteinTree(int memoryAllocation, int cacheSize) throws IOException {
@@ -147,7 +152,7 @@ public class ProteinTree {
 
     /**
      * Returns the memory allocation.
-     * 
+     *
      * @return the memory allocation
      */
     public int getMemoryAllocation() {
@@ -156,7 +161,7 @@ public class ProteinTree {
 
     /**
      * Sets the memory allocation.
-     * 
+     *
      * @param memoryAllocation the memory allocation
      */
     public void setMemoryAllocation(int memoryAllocation) {
@@ -871,7 +876,7 @@ public class ProteinTree {
                 }
 
                 result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-                
+
                 AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
                 ArrayList<String> initialTags = getInitialTags(peptidePattern, matchingType, massTolerance);
 
@@ -954,10 +959,14 @@ public class ProteinTree {
      * sequence -> protein accession -> index in the protein. An empty map if
      * not found.
      *
-     * @param tag the tag to look for in the tree. Must contain a consecutive amino acid sequence of longer or equal size than the initialTagSize of the tree.
+     * @param tag the tag to look for in the tree. Must contain a consecutive
+     * amino acid sequence of longer or equal size than the initialTagSize of
+     * the tree.
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param fixedModifications the fixed modifications to consider
+     * @param variableModifications the variable modifications to consider
      *
      * @return the protein mapping for the given peptide sequence
      *
@@ -965,8 +974,8 @@ public class ProteinTree {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag,
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = new AminoAcidPattern();
@@ -988,25 +997,28 @@ public class ProteinTree {
         for (String sequence : longestAminoAcidPattern.getAllPossibleSequences()) {
             seeds.putAll(getProteinMapping(sequence, matchingType, massTolerance));
         }
-        HashMap<String, HashMap<String, ArrayList<Integer>>> results = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> results = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         for (String tagSeed : seeds.keySet()) {
             for (String accession : seeds.get(tagSeed).keySet()) {
                 String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                 for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                    int[] indexes = tag.matches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance);
-                    if (indexes != null) {
-                        String peptideSequence = proteinSequence.substring(indexes[0], indexes[1]);
-                        HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptideSequence);
-                        if (proteinToIndexMap == null) {
-                            proteinToIndexMap = new HashMap<String, ArrayList<Integer>>();
-                            results.put(peptideSequence, proteinToIndexMap);
+                    HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications);
+                    if (!matches.isEmpty()) {
+                        for (int aa : matches.keySet()) {
+                            for (Peptide peptide : matches.get(aa)) {
+                                HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);
+                                if (proteinToIndexMap == null) {
+                                    proteinToIndexMap = new HashMap<String, ArrayList<Integer>>();
+                                    results.put(peptide, proteinToIndexMap);
+                                }
+                                ArrayList<Integer> peptideIndexes = proteinToIndexMap.get(accession);
+                                if (peptideIndexes == null) {
+                                    peptideIndexes = new ArrayList<Integer>();
+                                    proteinToIndexMap.put(accession, peptideIndexes);
+                                }
+                                peptideIndexes.add(aa);
+                            }
                         }
-                        ArrayList<Integer> peptideIndexes = proteinToIndexMap.get(accession);
-                        if (peptideIndexes == null) {
-                            peptideIndexes = new ArrayList<Integer>();
-                            proteinToIndexMap.put(accession, peptideIndexes);
-                        }
-                        peptideIndexes.add(indexes[0]);
                     }
                 }
             }

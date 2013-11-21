@@ -1,14 +1,21 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.advocates.SearchEngine;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class models a spectrum match.
@@ -254,7 +261,8 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Removes an assumption from the mapping. Note: this does not affect the first hit map.
+     * Removes an assumption from the mapping. Note: this does not affect the
+     * first hit map.
      *
      * @param assumption the peptide assumption to remove
      */
@@ -322,15 +330,53 @@ public class SpectrumMatch extends IdentificationMatch {
         }
         return false;
     }
-    
+
     /**
-     * Get the peptides from the tags.
-     * 
-     * @param proteinTree
-     * @param matchingType
-     * @param massTolerance 
+     * Creates a peptide based spectrum match where peptide assumptions are
+     * deduced from tag assumptions. The original tag assumption is added to the
+     * peptide match as refinement parameter
+     *
+     * @param proteinTree the protein tree to use to map tags to peptides
+     * @param matchingType the sequence matching type
+     * @param massTolerance the mass tolerance to use
+     * @param scoreInAscendingOrder boolean indicating whether the tag score is
+     * in the ascending order; ie the higher the score, the better the match.
+     * @param fixedModifications the fixed modifications to account for
+     * @param variableModifications the variable modifications to account for
+     *
+     * @return a new spectrum match containing the peptide assumptions made from
+     * the tag assumptions.
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws SQLException
      */
-    public void getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        // @TODO: implement me
+    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance, boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
+        for (int advocateId : assumptionsMap.keySet()) {
+            int rank = 1;
+            ArrayList<Double> scores = new ArrayList<Double>(assumptionsMap.get(advocateId).keySet());
+            if (scoreInAscendingOrder) {
+                Collections.sort(scores);
+            } else {
+                Collections.sort(scores, Collections.reverseOrder());
+            }
+            for (double score : scores) {
+                ArrayList<SpectrumIdentificationAssumption> originalAssumptions = assumptionsMap.get(advocateId).get(score);
+                for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
+                    if (assumption instanceof TagAssumption) {
+                        TagAssumption tagAssumption = (TagAssumption) assumption;
+                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications);
+                        for (Peptide peptide : proteinMapping.keySet()) {
+                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?
+                            peptideAssumption.addUrParam(tagAssumption);
+                            spectrumMatch.addHit(advocateId, peptideAssumption);
+                        }
+                    }
+                }
+            }
+        }
+        return spectrumMatch;
     }
 }

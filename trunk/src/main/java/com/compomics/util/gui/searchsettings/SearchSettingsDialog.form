@@ -783,8 +783,8 @@
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseReleased"/>
                             <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseExited"/>
+                            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseReleased"/>
                             <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseMoved"/>
                           </Events>
                           <AuxValues>

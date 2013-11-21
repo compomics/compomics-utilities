@@ -158,23 +158,16 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         fixedModsTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
         variableModsTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
-        modificationsTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
 
         fixedModsTable.getColumn(" ").setMaxWidth(35);
         fixedModsTable.getColumn(" ").setMinWidth(35);
         variableModsTable.getColumn(" ").setMaxWidth(35);
         variableModsTable.getColumn(" ").setMinWidth(35);
-        modificationsTable.getColumn(" ").setMaxWidth(35);
-        modificationsTable.getColumn(" ").setMinWidth(35);
-        modificationsTable.getColumn("  ").setMaxWidth(30);
-        modificationsTable.getColumn("  ").setMinWidth(30);
 
         fixedModsTable.getColumn("Mass").setMaxWidth(100);
         fixedModsTable.getColumn("Mass").setMinWidth(100);
         variableModsTable.getColumn("Mass").setMaxWidth(100);
         variableModsTable.getColumn("Mass").setMinWidth(100);
-        modificationsTable.getColumn("Mass").setMaxWidth(100);
-        modificationsTable.getColumn("Mass").setMinWidth(100);
 
         modificationTableToolTips = new ArrayList<String>();
         modificationTableToolTips.add(null);
@@ -182,7 +175,26 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         modificationTableToolTips.add("Modification Mass");
         modificationTableToolTips.add("Default Modification");
 
+        setAllModificationTableProperties();
+
         loadModificationsInGUI();
+    }
+
+    /**
+     * Set the properties of the all modification table.
+     */
+    private void setAllModificationTableProperties() {
+        modificationsTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
+        modificationsTable.getColumn(" ").setMaxWidth(35);
+        modificationsTable.getColumn(" ").setMinWidth(35);
+        modificationsTable.getColumn("Mass").setMaxWidth(100);
+        modificationsTable.getColumn("Mass").setMinWidth(100);
+
+        if (modificationsListCombo.getSelectedIndex() == 1) {
+            modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
+            modificationsTable.getColumn("  ").setMaxWidth(30);
+            modificationsTable.getColumn("  ").setMinWidth(30);
+        }
     }
 
     /**
@@ -913,6 +925,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param evt
      */
     private void browseConfigurationButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseConfigurationButton2ActionPerformed
+
+        // @TODO: check if search params file and only load search params!!!
         // First check whether a file has already been selected.
         // If so, start from that file's parent.
         File startLocation = new File(searchSettingsDialogParent.getLastSelectedFolder());
@@ -933,7 +947,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
             @Override
             public String getDescription() {
-                return "SearchGUI search parameters";
+                return "SearchGUI search parameters (.paramaters)";
             }
         };
         fc.setFileFilter(filter);
@@ -1459,7 +1473,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
                 }
-            } else if (column == modificationsTable.getColumn("  ").getModelIndex() && modificationsTable.getValueAt(row, column) != null) {
+            } else if (modificationsListCombo.getSelectedIndex() == 1 
+                    && column == modificationsTable.getColumn("  ").getModelIndex() 
+                    && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
                 String ptmName = (String) modificationsTable.getValueAt(row, 1);
@@ -2012,7 +2028,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
                     @Override
                     public String getDescription() {
-                        return "SearchGUI search parameters";
+                        return "SearchGUI search parameters (.parameters)";
                     }
                 };
                 fc.setFileFilter(filter);
@@ -2407,8 +2423,51 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         Arrays.sort(allModificationsAsArray);
 
-        DefaultTableModel modsModel = (DefaultTableModel) modificationsTable.getModel();
-        modsModel.getDataVector().removeAllElements();
+        if (modificationsListCombo.getSelectedIndex() == 0) {
+            modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{
+                        " ", "Name", "Mass"
+                    }
+            ) {
+                Class[] types = new Class[]{
+                    java.lang.Object.class, java.lang.String.class, java.lang.Double.class
+                };
+                boolean[] canEdit = new boolean[]{
+                    false, false, false
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+            });
+        } else {
+            modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{
+                        " ", "Name", "Mass", "  "
+                    }
+            ) {
+                Class[] types = new Class[]{
+                    java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+                };
+                boolean[] canEdit = new boolean[]{
+                    false, false, false, true
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+            });
+        }
 
         for (String mod : allModificationsAsArray) {
             ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{ptmFactory.getColor(mod), mod, ptmFactory.getPTM(mod).getMass(), searchSettingsDialogParent.getModificationUse().contains(mod)});
@@ -2429,7 +2488,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         }
 
-        modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
+        setAllModificationTableProperties();
+
         modificationsTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, minMass, maxMass));
         ((JSparklinesBarChartTableCellRenderer) modificationsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 50);
         fixedModsTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, minMass, maxMass));
@@ -2465,7 +2525,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private void updateListToolTip(JList list, java.awt.event.MouseEvent evt) {
 
         // @TODO: reimplement me??
-
         String toolTip = null;
 
         int index = list.locationToIndex(evt.getPoint());
@@ -2499,7 +2558,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             } else if (ptm.getType() == PTM.MODAA) {
                 residuesAsString += ptm.getPattern().toString();
             }
-
 
             toolTip = "<html>"
                     + "<table border=\"0\">"

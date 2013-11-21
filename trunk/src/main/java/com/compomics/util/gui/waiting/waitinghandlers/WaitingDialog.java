@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
@@ -109,6 +111,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * boolean indicating whether we are reporting something in the text pane
      */
     private boolean reporting = false;
+    /**
+     * The time of the last update
+     */
+    private long lastUpdate = System.currentTimeMillis();
 
     /**
      * Creates a new WaitingDialog.
@@ -850,10 +856,16 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private javax.swing.JScrollPane tipOfTheDayScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Set the process as finished.
-     */
-    public void setRunFinished() {
+    @Override
+    public synchronized void setRunFinished() {
+        try {
+            while (!reportBuffer.isEmpty()) {
+                printReportBuffer();
+                wait(100);
+            }
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
         runFinished = true;
         okButton.setText("OK");
         progressBar.setIndeterminate(false);
@@ -887,6 +899,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * Set the process as canceled.
      */
     public void setRunCanceled() {
+
+        try {
+            while (!reportBuffer.isEmpty()) {
+                printReportBuffer();
+                wait(100);
+            }
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
 
         if (!runCanceled) {
             runCanceled = true;
@@ -938,7 +959,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * prints the reports in the buffer
      */
     private void printReportBuffer() {
-        if (!reporting) {
+        long time = System.currentTimeMillis();
+        if (!reporting && time - lastUpdate > 100) {
             reporting = true;
             StringBuffer buffer = new StringBuffer();
             while (!reportBuffer.isEmpty()) {
@@ -948,6 +970,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             reportEditorPane.setText("<html>" + getReportWithoutHtml() + buffer + "</html>");
             reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
             reporting = false;
+            lastUpdate = System.currentTimeMillis();
         }
     }
 

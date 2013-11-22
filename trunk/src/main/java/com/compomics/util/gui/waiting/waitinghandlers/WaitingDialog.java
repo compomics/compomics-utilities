@@ -851,14 +851,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     @Override
     public synchronized void setRunFinished() {
-        try {
-            while (!reportBuffer.isEmpty()) {
                 printReportBuffer();
-                wait(100);
-            }
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
         runFinished = true;
         okButton.setText("OK");
         progressBar.setIndeterminate(false);
@@ -893,14 +886,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public void setRunCanceled() {
 
-        try {
-            while (!reportBuffer.isEmpty()) {
                 printReportBuffer();
-                wait(100);
-            }
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
 
         if (!runCanceled) {
             runCanceled = true;
@@ -955,12 +941,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         long time = System.currentTimeMillis();
         if (!reporting && time - lastUpdate > 100) {
             reporting = true;
-            StringBuffer buffer = new StringBuffer();
+            StringBuffer buffer = new StringBuffer("<html>");
+            buffer.append(getReportWithoutHtml());
             while (!reportBuffer.isEmpty()) {
                 String report = reportBuffer.pollFirst();
                 buffer.append(report);
             }
-            reportEditorPane.setText("<html>" + getReportWithoutHtml() + buffer + "</html>");
+            buffer.append("</html>");
+            reportEditorPane.setText(buffer.toString());
             reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
             reporting = false;
             lastUpdate = System.currentTimeMillis();

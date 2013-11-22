@@ -28,7 +28,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * The index of the amino acid of interest if there is one. Can be a
      * modification site or a cleavage site. For trypsin: 0.
      */
-    private int target = 0;
+    private Integer target = 0;
     /**
      * The length of the pattern, -1 if not set.
      */

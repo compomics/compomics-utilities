@@ -28,7 +28,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * The index of the amino acid of interest if there is one. Can be a
      * modification site or a cleavage site. For trypsin: 0.
      */
-    private Integer target;
+    private int target = 0;
     /**
      * The length of the pattern, -1 if not set.
      */
@@ -37,17 +37,17 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * The list of targeted amino acids at a given index. For trypsin: 0 -> {R,
      * K} 1 -> {}
      */
-    private HashMap<Integer, ArrayList<AminoAcid>> aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>();
+    private HashMap<Integer, ArrayList<AminoAcid>> aaTargeted = null;
     /**
      * The list of excluded amino acids at a given index For trypsin: 0 -> {} 1
      * -> {P}
      */
-    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(); // @TODO: get rid of this and use ontly targeted
+    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = null; // @TODO: get rid of this and use ontly targeted
     /**
      * The modifications carried by the amino acid sequence at target amino
      * acids.
      */
-    private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>(); // @TODO: do we need modifications on excluded amino acids?
+    private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = null; // @TODO: do we need modifications on excluded amino acids?
 
     /**
      * The different types of amino acid matching.
@@ -69,12 +69,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     }
 
     /**
-     * Creates an empty pattern.
+     * Creates a blank pattern. All maps are null.
      */
     public AminoAcidPattern() {
-        target = 0;
-        aaTargeted.put(0, new ArrayList<AminoAcid>());
-        aaExcluded.put(0, new ArrayList<AminoAcid>());
     }
 
     /**
@@ -83,17 +80,15 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @param sequence a sequence of targeted amino acids
      */
     public AminoAcidPattern(String sequence) {
-
-        target = 0;
-        aaExcluded.put(0, new ArrayList<AminoAcid>());
-
+        aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(sequence.length());
         for (int i = 0; i < sequence.length(); i++) {
             char letter = sequence.charAt(i);
             AminoAcid aa = AminoAcid.getAminoAcid(letter);
-            ArrayList<AminoAcid> list = new ArrayList<AminoAcid>();
+            ArrayList<AminoAcid> list = new ArrayList<AminoAcid>(1);
             list.add(aa);
             aaTargeted.put(i, list);
         }
+        length = sequence.length();
     }
 
     /**
@@ -102,13 +97,46 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @param aminoAcidPattern the other pattern
      */
     public AminoAcidPattern(AminoAcidPattern aminoAcidPattern) {
-
         target = aminoAcidPattern.getTarget();
-
-        for (int index = 0; index < aminoAcidPattern.length(); index++) {
-            aaTargeted.put(index, aminoAcidPattern.getTargetedAA(index));
-            aaExcluded.put(index, aminoAcidPattern.getExcludedAA(index));
+        HashMap<Integer, ArrayList<AminoAcid>> otherTargets = aminoAcidPattern.getAaTargeted();
+        if (otherTargets != null) {
+            aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(otherTargets.size());
+            for (int index : otherTargets.keySet()) {
+                aaTargeted.put(index, (ArrayList<AminoAcid>) otherTargets.get(index).clone());
+            }
         }
+        HashMap<Integer, ArrayList<AminoAcid>> otherExcluded = aminoAcidPattern.getAaExcluded();
+        if (otherExcluded != null) {
+            aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(otherExcluded.size());
+            for (int index : otherExcluded.keySet()) {
+                aaExcluded.put(index, (ArrayList<AminoAcid>) otherExcluded.get(index).clone());
+            }
+        }
+        HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = aminoAcidPattern.getModificationMatches();
+        if (modificationMatches != null) {
+            targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>(modificationMatches.size());
+            for (int index : modificationMatches.keySet()) {
+                targetModifications.put(index, (ArrayList<ModificationMatch>) modificationMatches.get(index).clone());
+            }
+        }
+    }
+
+    /**
+     * Returns the map of targeted amino acids. Null if not set.
+     *
+     * @return the map of targeted amino acids
+     */
+    public HashMap<Integer, ArrayList<AminoAcid>> getAaTargeted() {
+        return aaTargeted;
+    }
+
+    /**
+     * Returns the map of excluded amino acids. Null if not set.
+     *
+     * @return the map of excluded amino acids
+     */
+    public HashMap<Integer, ArrayList<AminoAcid>> getAaExcluded() {
+        return aaExcluded;
     }
 
     /**
@@ -120,11 +148,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * not recognized as amino acid
      */
     public AminoAcidPattern(ArrayList<String> targetTesidues) throws IllegalArgumentException {
-
-        target = 0;
-        Collections.sort(targetTesidues);
-        ArrayList<AminoAcid> aminoAcids = new ArrayList<AminoAcid>();
-
+        ArrayList<AminoAcid> aminoAcids = new ArrayList<AminoAcid>(targetTesidues.size());
         for (String letter : targetTesidues) {
             AminoAcid aa = AminoAcid.getAminoAcid(letter);
             if (aa != null) {
@@ -133,8 +157,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                 throw new IllegalArgumentException("Amino acid not recognized " + letter + ".");
             }
         }
-
+        aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(1);
         aaTargeted.put(0, aminoAcids);
+        length = 1;
     }
 
     /**
@@ -195,22 +220,20 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the targeted amino acids at position "target"
      */
     public ArrayList<AminoAcid> getAminoAcidsAtTarget() {
-
-        if (aaTargeted.containsKey(target)) {
-            return aaTargeted.get(target);
-        }
-
-        return new ArrayList<AminoAcid>();
+        return getTargetedAA(target);
     }
 
     /**
      * Sets the amino acids targeted at a given index. The first amino acid is
-     * 0.
+     * 0. Previous value will be silently overwritten.
      *
      * @param index the index in the pattern
      * @param targets the amino acids targeted
      */
     public void setTargeted(int index, ArrayList<AminoAcid> targets) {
+        if (aaTargeted == null) {
+            aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(1);
+        }
         aaTargeted.put(index, targets);
         length = -1;
     }
@@ -223,11 +246,13 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the targeted amino acids
      */
     public ArrayList<AminoAcid> getTargetedAA(int index) {
-        ArrayList<AminoAcid> result = aaTargeted.get(index);
-        if (result == null) {
-            result = new ArrayList<AminoAcid>();
+        if (aaTargeted != null) {
+            ArrayList<AminoAcid> result = aaTargeted.get(index);
+            if (result != null) {
+                return result;
+            }
         }
-        return result;
+        return new ArrayList<AminoAcid>();
     }
 
     /**
@@ -238,11 +263,13 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the excluded amino acids
      */
     public ArrayList<AminoAcid> getExcludedAA(int index) {
-        ArrayList<AminoAcid> result = aaExcluded.get(index);
-        if (result == null) {
-            result = new ArrayList<AminoAcid>();
+        if (aaExcluded != null) {
+            ArrayList<AminoAcid> result = aaExcluded.get(index);
+            if (result != null) {
+                return result;
+            }
         }
-        return result;
+        return new ArrayList<AminoAcid>();
     }
 
     /**
@@ -254,10 +281,10 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the number of excluded amino acids
      */
     public int getNTargetedAA(int index) {
-        ArrayList<AminoAcid> aas = getTargetedAA(index);
-        if (aas == null) {
+        if (aaTargeted == null) {
             return 0;
         }
+        ArrayList<AminoAcid> aas = getTargetedAA(index);
         return aas.size();
     }
 
@@ -270,6 +297,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the number of excluded amino acids
      */
     public int getNExcludedAA(int index) {
+        if (aaExcluded == null) {
+            return 0;
+        }
         ArrayList<AminoAcid> aas = getExcludedAA(index);
         if (aas == null) {
             return 0;
@@ -280,11 +310,15 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     /**
      * Sets the amino acids excluded at a given index. There shall be no
      * excluded amino acid at the targeted index. The first amino acid is 0.
+     * Previous value will be silently overwritten.
      *
      * @param index the index in the pattern
      * @param exclusions the amino acids excluded
      */
     public void setExcluded(int index, ArrayList<AminoAcid> exclusions) {
+        if (aaExcluded == null) {
+            aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(1);
+        }
         aaExcluded.put(index, exclusions);
         length = -1;
     }
@@ -296,29 +330,46 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public void removeAA(int index) {
 
-        ArrayList<Integer> indexes = new ArrayList<Integer>(aaTargeted.keySet());
-        Collections.sort(indexes);
-
-        for (int aa : indexes) {
-            if (aa >= index) {
-                if (aa > index) {
-                    aaTargeted.put(aa - 1, aaTargeted.get(aa));
+        if (aaTargeted != null) {
+            ArrayList<Integer> indexes = new ArrayList<Integer>(aaTargeted.keySet());
+            Collections.sort(indexes);
+            for (int aa : indexes) {
+                if (aa >= index) {
+                    if (aa > index) {
+                        aaTargeted.put(aa - 1, aaTargeted.get(aa));
+                    }
+                    aaTargeted.remove(aa);
                 }
-                aaTargeted.remove(aa);
             }
         }
 
-        indexes = new ArrayList<Integer>(aaExcluded.keySet());
-        Collections.sort(indexes);
-
-        for (int aa : indexes) {
-            if (aa >= index) {
-                if (aa > index) {
-                    aaExcluded.put(aa - 1, aaExcluded.get(aa));
+        if (aaExcluded != null) {
+            ArrayList<Integer> indexes = new ArrayList<Integer>(aaExcluded.keySet());
+            Collections.sort(indexes);
+            for (int aa : indexes) {
+                if (aa >= index) {
+                    if (aa > index) {
+                        aaExcluded.put(aa - 1, aaExcluded.get(aa));
+                    }
+                    aaExcluded.remove(aa);
                 }
-                aaExcluded.remove(aa);
             }
         }
+
+        if (targetModifications != null) {
+            ArrayList<Integer> indexes = new ArrayList<Integer>(targetModifications.keySet());
+            Collections.sort(indexes);
+            int ptmIndex = index + 1;
+            for (int aa : indexes) {
+                if (aa >= ptmIndex) {
+                    if (aa > ptmIndex) {
+                        targetModifications.put(aa - 1, targetModifications.get(aa));
+                    }
+                    aaExcluded.remove(aa);
+                }
+            }
+        }
+
         length = -1;
     }
 
@@ -349,34 +400,37 @@ public class AminoAcidPattern implements Serializable, TagComponent {
 
         for (int i = 0; i < tempLength; i++) {
 
-            ArrayList<AminoAcid> tempTarget = aaTargeted.get(i);
             ArrayList<String> toAdd = new ArrayList<String>();
 
-            if (tempTarget == null || tempTarget.isEmpty()) {
-                toAdd.addAll(AminoAcid.getAminoAcidsList());
-            } else {
-                for (AminoAcid aa : tempTarget) {
-                    if (!toAdd.contains(aa.singleLetterCode)) {
-                        toAdd.add(aa.singleLetterCode);
-                    }
-                    if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
-                        for (char tempAa : aa.getSubAminoAcids()) {
-                            String value = tempAa + "";
-                            if (!toAdd.contains(value)) {
-                                toAdd.add(value);
-                            }
+            if (aaTargeted != null) {
+                ArrayList<AminoAcid> tempTarget = aaTargeted.get(i);
+
+                if (tempTarget == null || tempTarget.isEmpty()) {
+                    toAdd.addAll(AminoAcid.getAminoAcidsList());
+                } else {
+                    for (AminoAcid aa : tempTarget) {
+                        if (!toAdd.contains(aa.singleLetterCode)) {
+                            toAdd.add(aa.singleLetterCode);
                         }
-                        for (char tempAa : aa.getCombinations()) {
-                            String value = tempAa + "";
-                            if (!toAdd.contains(value)) {
-                                toAdd.add(value);
-                            }
-                        }
-                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                            for (char tempAa : aa.getIndistinguishibleAminoAcids(massTolerance)) {
+                        if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
+                            for (char tempAa : aa.getSubAminoAcids()) {
                                 String value = tempAa + "";
                                 if (!toAdd.contains(value)) {
                                     toAdd.add(value);
+                                }
+                            }
+                            for (char tempAa : aa.getCombinations()) {
+                                String value = tempAa + "";
+                                if (!toAdd.contains(value)) {
+                                    toAdd.add(value);
+                                }
+                            }
+                            if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                                for (char tempAa : aa.getIndistinguishibleAminoAcids(massTolerance)) {
+                                    String value = tempAa + "";
+                                    if (!toAdd.contains(value)) {
+                                        toAdd.add(value);
+                                    }
                                 }
                             }
                         }
@@ -386,12 +440,14 @@ public class AminoAcidPattern implements Serializable, TagComponent {
 
             Collections.sort(toAdd);
             ArrayList<String> restrictions = new ArrayList<String>();
-            ArrayList<AminoAcid> exclude = aaExcluded.get(i);
+            if (aaExcluded != null) {
+                ArrayList<AminoAcid> exclude = aaExcluded.get(i);
 
-            if (exclude != null) {
-                for (AminoAcid aa : exclude) {
-                    if (!restrictions.contains(aa.singleLetterCode)) {
-                        restrictions.add(aa.singleLetterCode);
+                if (exclude != null) {
+                    for (AminoAcid aa : exclude) {
+                        if (!restrictions.contains(aa.singleLetterCode)) {
+                            restrictions.add(aa.singleLetterCode);
+                        }
                     }
                 }
             }
@@ -500,8 +556,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(aminoAcidSequence);
-        return firstIndex(aminoAcidPattern, matchingType, massTolerance);
+        return firstIndex(aminoAcidSequence, matchingType, massTolerance, 0);
     }
 
     /**
@@ -522,16 +577,42 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
-     * @param sequence the amino-acid sequence to look into
+     * @param aminoAcidSequence the amino-acid sequence to look into
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * @param startIndex the start index where to start looking for
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String sequence, MatchingType matchingType, Double massTolerance, int startIndex) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence);
-        return firstIndex(aminoAcidPattern, matchingType, massTolerance, startIndex);
+    public int firstIndex(String aminoAcidSequence, MatchingType matchingType, Double massTolerance, int startIndex) {
+
+        int patternLength = length();
+        int aminoAcidPatternLength = aminoAcidSequence.length();
+        int lastIndex = aminoAcidPatternLength - patternLength;
+
+        for (int i = startIndex; i <= lastIndex; i++) {
+            boolean match = true;
+
+            for (int j = 0; j < patternLength; j++) {
+                char aa = aminoAcidSequence.charAt(i+j);
+                boolean reject = isExcluded(aa, j, matchingType, massTolerance);
+                if (reject) {
+                    match = false;
+                } else {
+                    boolean targeted = isTargeted(aa, j, matchingType, massTolerance);
+                    if (!targeted) {
+                        match = false;
+                    }
+                }
+                if (!match) {
+                    break;
+                }
+            }
+            if (match) {
+                return i + target;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -553,109 +634,21 @@ public class AminoAcidPattern implements Serializable, TagComponent {
 
         for (int i = startIndex; i <= lastIndex; i++) {
             boolean match = true;
-
             for (int j = 0; j < patternLength; j++) {
-
+                boolean aaMatched = false;
                 for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i + j)) {
-
                     char aa = aminoAcid.singleLetterCode.charAt(0);
-
-                    boolean reject = false;
-                    ArrayList<AminoAcid> aaList = aaExcluded.get(j);
-
-                    if (aaList != null && !aaList.isEmpty()) {
-                        for (AminoAcid vetoAA : aaList) {
-
-                            if (aa == vetoAA.singleLetterCode.charAt(0)) {
-                                reject = true;
-                                break;
-                            }
-
-                            if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
-
-                                for (char tempAA : vetoAA.getSubAminoAcids()) {
-                                    if (aa == tempAA) {
-                                        reject = true;
-                                        break;
-                                    }
-                                }
-
-                                if (reject) {
-                                    break;
-                                }
-
-                                for (char tempAA : vetoAA.getCombinations()) {
-                                    if (aa == tempAA) {
-                                        reject = true;
-                                        break;
-                                    }
-                                }
-
-                                if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                                    for (char tempAA : vetoAA.getIndistinguishibleAminoAcids(massTolerance)) {
-                                        if (aa == tempAA) {
-                                            reject = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (reject) {
-                            match = false;
-                            break;
-                        }
-                    }
-
-                    aaList = aaTargeted.get(j);
-
-                    if (aaList != null && !aaList.isEmpty()) {
-
-                        boolean found = false;
-
-                        for (AminoAcid targetedAA : aaList) {
-                            if (aa == targetedAA.singleLetterCode.charAt(0)) {
-                                found = true;
-                                break;
-                            } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
-
-                                for (char tempAA : targetedAA.getSubAminoAcids()) {
-                                    if (aa == tempAA) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-
-                                if (found) {
-                                    break;
-                                }
-
-                                for (char tempAA : targetedAA.getCombinations()) {
-                                    if (aa == tempAA) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!found && matchingType == MatchingType.indistiguishibleAminoAcids) {
-                                    for (char tempAA : targetedAA.getIndistinguishibleAminoAcids(massTolerance)) {
-                                        if (aa == tempAA) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (!found) {
-                            match = false;
+                    boolean reject = isExcluded(aa, j, matchingType, massTolerance);
+                    if (!reject) {
+                        boolean targeted = isTargeted(aa, j, matchingType, massTolerance);
+                        if (targeted) {
+                            aaMatched = true;
                             break;
                         }
                     }
                 }
-                if (!match) {
+                if (!aaMatched) {
+                    match = false;
                     break;
                 }
             }
@@ -664,6 +657,112 @@ public class AminoAcidPattern implements Serializable, TagComponent {
             }
         }
         return -1;
+    }
+
+    /**
+     * Indicates whether the given amino acid at the given index of the pattern
+     * is targeted.
+     *
+     * @param aa the amino acid as character
+     * @param index the index in the pattern
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return true if the given amino acid at the given index of the pattern is
+     * targeted
+     */
+    public boolean isTargeted(char aa, int index, MatchingType matchingType, Double massTolerance) {
+
+        if (aaTargeted != null) {
+
+            ArrayList<AminoAcid> aaList = aaTargeted.get(index);
+
+            if (aaList != null && !aaList.isEmpty()) {
+
+                for (AminoAcid targetedAA : aaList) {
+                    if (aa == targetedAA.singleLetterCode.charAt(0)) {
+                        return true;
+                    } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
+
+                        for (char tempAA : targetedAA.getSubAminoAcids()) {
+                            if (aa == tempAA) {
+                                return true;
+                            }
+                        }
+
+                        for (char tempAA : targetedAA.getCombinations()) {
+                            if (aa == tempAA) {
+                                return true;
+                            }
+                        }
+
+                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                            for (char tempAA : targetedAA.getIndistinguishibleAminoAcids(massTolerance)) {
+                                if (aa == tempAA) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Indicates whether the given amino acid at the given index of the pattern
+     * shall be excluded.
+     *
+     * @param aa the amino acid as character
+     * @param index the index in the pattern
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return true if the given amino acid at the given index of the pattern
+     * shall be excluded
+     */
+    public boolean isExcluded(char aa, int index, MatchingType matchingType, Double massTolerance) {
+
+        if (aaExcluded != null) {
+
+            ArrayList<AminoAcid> aaList = aaExcluded.get(index);
+
+            if (aaList != null && !aaList.isEmpty()) {
+                for (AminoAcid vetoAA : aaList) {
+
+                    if (aa == vetoAA.singleLetterCode.charAt(0)) {
+                        return true;
+                    }
+
+                    if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
+
+                        for (char tempAA : vetoAA.getSubAminoAcids()) {
+                            if (aa == tempAA) {
+                                return true;
+                            }
+                        }
+
+                        for (char tempAA : vetoAA.getCombinations()) {
+                            if (aa == tempAA) {
+                                return true;
+                            }
+                        }
+
+                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                            for (char tempAA : vetoAA.getIndistinguishibleAminoAcids(massTolerance)) {
+                                if (aa == tempAA) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -747,7 +846,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public boolean isStarting(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
         int patternLength = length();
-        return matches(aminoAcidPattern.getSubPattern(0, patternLength), matchingType, massTolerance);
+        return matches(aminoAcidPattern.getSubPattern(0, patternLength, false), matchingType, massTolerance);
     }
 
     /**
@@ -788,7 +887,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public boolean isEnding(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
         int patternLength = length();
-        return matches(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength), matchingType, massTolerance);
+        return matches(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), matchingType, massTolerance);
     }
 
     /**
@@ -840,13 +939,12 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * @return the length of the pattern in amino acids
      */
     public int length() {
-
         if (length == -1 || length == 0) { //we need to check the 0 case every time due to backward compatibility issues
-            if (aaTargeted.isEmpty() && aaExcluded.isEmpty()) {
+            if ((aaTargeted == null || aaTargeted.isEmpty()) && (aaExcluded == null || aaExcluded.isEmpty())) {
                 length = 0;
-            } else if (aaTargeted.isEmpty()) {
+            } else if (aaTargeted == null || aaTargeted.isEmpty()) {
                 length = Collections.max(aaExcluded.keySet()) + 1;
-            } else if (aaExcluded.isEmpty()) {
+            } else if (aaExcluded == null || aaExcluded.isEmpty()) {
                 length = Collections.max(aaTargeted.keySet()) + 1;
             } else {
                 length = Math.max(Collections.max(aaTargeted.keySet()), Collections.max(aaExcluded.keySet())) + 1;
@@ -900,32 +998,55 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public void merge(AminoAcidPattern otherPattern) {
 
-        for (int i = 0; i < otherPattern.length(); i++) {
-
-            if (otherPattern.getNExcludedAA(i) > 0) {
-                if (aaExcluded.get(i) == null) {
-                    aaExcluded.put(i, new ArrayList<AminoAcid>());
-                }
-                for (AminoAcid aa : otherPattern.getExcludedAA(i)) {
-                    if (!aaExcluded.get(i).contains(aa)) {
-                        aaExcluded.get(i).add(aa);
+        HashMap<Integer, ArrayList<AminoAcid>> otherExclusionMap = otherPattern.getAaExcluded();
+        if (otherExclusionMap != null) {
+            for (int i : otherExclusionMap.keySet()) {
+                ArrayList<AminoAcid> otherAAs = otherPattern.getExcludedAA(i);
+                if (!otherAAs.isEmpty()) {
+                    if (aaExcluded == null) {
+                        aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(otherExclusionMap.size());
                     }
-                }
-            }
-
-            if (otherPattern.getNTargetedAA(i) > 0) {
-                if (aaTargeted.get(i) == null) {
-                    aaTargeted.put(i, new ArrayList<AminoAcid>());
-                }
-                for (AminoAcid aa : otherPattern.getTargetedAA(i)) {
-                    if (!aaTargeted.get(i).contains(aa)) {
-                        aaTargeted.get(i).add(aa);
+                    ArrayList<AminoAcid> excludedAA = aaExcluded.get(i);
+                    if (excludedAA == null) {
+                        aaExcluded.put(i, (ArrayList<AminoAcid>) otherAAs.clone());
+                    } else {
+                        for (AminoAcid aa : otherAAs) {
+                            if (!excludedAA.contains(aa)) {
+                                excludedAA.add(aa);
+                            }
+                        }
                     }
                 }
             }
         }
-        for (int i : otherPattern.getModificationMatches().keySet()) {
-            addModificationMatches(i, otherPattern.getModificationMatches().get(i));
+
+        HashMap<Integer, ArrayList<AminoAcid>> otherInclusionMap = otherPattern.getAaTargeted();
+        if (otherInclusionMap != null) {
+            for (int i : otherInclusionMap.keySet()) {
+                ArrayList<AminoAcid> otherAAs = otherPattern.getExcludedAA(i);
+                if (!otherAAs.isEmpty()) {
+                    if (aaTargeted == null) {
+                        aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(otherInclusionMap.size());
+                    }
+                    ArrayList<AminoAcid> targetedAA = aaTargeted.get(i);
+                    if (targetedAA == null) {
+                        aaTargeted.put(i, (ArrayList<AminoAcid>) otherAAs.clone());
+                    } else {
+                        for (AminoAcid aa : otherAAs) {
+                            if (!targetedAA.contains(aa)) {
+                                targetedAA.add(aa);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = otherPattern.getModificationMatches();
+        if (modificationMatches != null) {
+            for (int i : modificationMatches.keySet()) {
+                addModificationMatches(i, otherPattern.getModificationMatches().get(i));
+            }
         }
         length = -1;
     }
@@ -937,13 +1058,36 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      */
     public void append(AminoAcidPattern otherPattern) {
         int patternLength = length();
-        for (int i = 0; i < otherPattern.length(); i++) {
-            int index = patternLength + i;
-            aaExcluded.put(index, new ArrayList<AminoAcid>(otherPattern.getExcludedAA(i)));
-            aaTargeted.put(index, new ArrayList<AminoAcid>(otherPattern.getTargetedAA(i)));
+        HashMap<Integer, ArrayList<AminoAcid>> otherExclusionMap = otherPattern.getAaExcluded();
+        if (otherExclusionMap != null) {
+            if (aaExcluded == null) {
+                aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(otherExclusionMap.size());
+            }
+            for (int i : otherExclusionMap.keySet()) {
+                int index = patternLength + i;
+                aaExcluded.put(index, (ArrayList<AminoAcid>) otherExclusionMap.get(i).clone());
+            }
         }
-        for (int i : otherPattern.getModificationMatches().keySet()) {
-            addModificationMatches(i + patternLength, otherPattern.getModificationMatches().get(i));
+        HashMap<Integer, ArrayList<AminoAcid>> otherTargetedMap = otherPattern.getAaTargeted();
+        if (otherTargetedMap != null) {
+            if (aaTargeted == null) {
+                aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(otherTargetedMap.size());
+            }
+            for (int i : otherTargetedMap.keySet()) {
+                int index = patternLength + i;
+                aaTargeted.put(index, (ArrayList<AminoAcid>) otherTargetedMap.get(i).clone());
+            }
+        }
+
+        HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = otherPattern.getModificationMatches();
+        if (modificationMatches != null) {
+            for (int i : modificationMatches.keySet()) {
+                int newIndex = i + patternLength;
+                for (ModificationMatch oldModificationMatch : modificationMatches.get(i)) {
+                    ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getTheoreticPtm(), oldModificationMatch.isVariable(), newIndex);
+                    addModificationMatch(newIndex, newModificationMatch);
+                }
+            }
         }
         length = patternLength + otherPattern.length();
     }
@@ -1057,7 +1201,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Clears the list of imported modification matches.
      */
     public void clearModificationMatches() {
-        targetModifications.clear();
+        if (targetModifications != null) {
+            targetModifications.clear();
+        }
     }
 
     /**
@@ -1071,6 +1217,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
         int index = localization - 1;
         if (index < 0) {
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
+        }
+        if (targetModifications == null) {
+            targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
         }
         ArrayList<ModificationMatch> modificationMatches = targetModifications.get(localization);
         if (modificationMatches == null) {
@@ -1092,6 +1241,9 @@ public class AminoAcidPattern implements Serializable, TagComponent {
         if (index < 0) {
             throw new IllegalArgumentException("Wrong modification target index " + localization + ", 1 is the first amino acid for PTM localization.");
         }
+        if (targetModifications == null) {
+            targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>();
+        }
         ArrayList<ModificationMatch> modificationMatchesAtIndex = targetModifications.get(localization);
         if (modificationMatchesAtIndex == null) {
             modificationMatchesAtIndex = new ArrayList<ModificationMatch>();
@@ -1112,7 +1264,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
         if (oldIndex < 0) {
             throw new IllegalArgumentException("Wrong modification old target index " + oldLocalization + ", 1 is the first amino acid for PTM localization.");
         }
-        if (!targetModifications.containsKey(oldIndex) || !targetModifications.get(oldIndex).contains(modificationMatch)) {
+        if (targetModifications == null || !targetModifications.containsKey(oldIndex) || !targetModifications.get(oldIndex).contains(modificationMatch)) {
             throw new IllegalArgumentException("Modification match " + modificationMatch + " not found at index " + oldLocalization + ".");
         }
         targetModifications.get(oldIndex).remove(modificationMatch);
@@ -1139,26 +1291,28 @@ public class AminoAcidPattern implements Serializable, TagComponent {
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
-        for (int modSite : targetModifications.keySet()) {
-            for (ModificationMatch modificationMatch : targetModifications.get(modSite)) {
-                String modName = modificationMatch.getTheoreticPtm();
-                if (modificationMatch.isVariable()) {
-                    if (modificationMatch.isConfident()) {
-                        if (!mainModificationSites.containsKey(modSite)) {
-                            mainModificationSites.put(modSite, new ArrayList<String>());
+        if (targetModifications != null) {
+            for (int modSite : targetModifications.keySet()) {
+                for (ModificationMatch modificationMatch : targetModifications.get(modSite)) {
+                    String modName = modificationMatch.getTheoreticPtm();
+                    if (modificationMatch.isVariable()) {
+                        if (modificationMatch.isConfident()) {
+                            if (!mainModificationSites.containsKey(modSite)) {
+                                mainModificationSites.put(modSite, new ArrayList<String>());
+                            }
+                            mainModificationSites.get(modSite).add(modName);
+                        } else {
+                            if (!secondaryModificationSites.containsKey(modSite)) {
+                                secondaryModificationSites.put(modSite, new ArrayList<String>());
+                            }
+                            secondaryModificationSites.get(modSite).add(modName);
                         }
-                        mainModificationSites.get(modSite).add(modName);
-                    } else {
-                        if (!secondaryModificationSites.containsKey(modSite)) {
-                            secondaryModificationSites.put(modSite, new ArrayList<String>());
+                    } else if (!excludeAllFixedPtms) {
+                        if (!fixedModificationSites.containsKey(modSite)) {
+                            fixedModificationSites.put(modSite, new ArrayList<String>());
                         }
-                        secondaryModificationSites.get(modSite).add(modName);
+                        fixedModificationSites.get(modSite).add(modName);
                     }
-                } else if (!excludeAllFixedPtms) {
-                    if (!fixedModificationSites.containsKey(modSite)) {
-                        fixedModificationSites.put(modSite, new ArrayList<String>());
-                    }
-                    fixedModificationSites.get(modSite).add(modName);
                 }
             }
         }
@@ -1306,27 +1460,54 @@ public class AminoAcidPattern implements Serializable, TagComponent {
 
     /**
      * Returns all possible sequences which can be obtained from the targeted
-     * amino acids.
+     * amino acids. Missing amino acids will be denoted as 'X'. This does not
+     * implement excluded amino acids.
      *
      * @return all possible sequences which can be obtained from the targeted
      * amino acids
      */
     public ArrayList<String> getAllPossibleSequences() {
-        ArrayList<String> results = new ArrayList<String>();
+        ArrayList<StringBuilder> stringBuilders = new ArrayList<StringBuilder>();
         for (int i = 0; i < length(); i++) {
-            if (results.isEmpty()) {
-                for (AminoAcid aminoAcid : aaTargeted.get(i)) {
-                    results.add(aminoAcid.singleLetterCode);
+            if (stringBuilders.isEmpty()) {
+                if (aaTargeted != null) {
+                    ArrayList<AminoAcid> aminoAcids = aaTargeted.get(i);
+                    if (aminoAcids != null && !aminoAcids.isEmpty()) {
+                        for (AminoAcid aminoAcid : aminoAcids) {
+                            stringBuilders.add(new StringBuilder(aminoAcid.singleLetterCode));
+                        }
+                    } else {
+                        stringBuilders.add(new StringBuilder("X"));
+                    }
+                } else {
+                    stringBuilders.add(new StringBuilder("X"));
                 }
             } else {
-                ArrayList<String> newResult = new ArrayList<String>();
-                for (AminoAcid aminoAcid : aaTargeted.get(i)) {
-                    for (String sequence : results) {
-                        newResult.add(sequence + aminoAcid.singleLetterCode);
+                ArrayList<StringBuilder> newBuilders = new ArrayList<StringBuilder>();
+                for (StringBuilder stringBuilder : stringBuilders) {
+                    StringBuilder newBuilder = new StringBuilder(stringBuilder);
+                    if (aaTargeted != null) {
+                        ArrayList<AminoAcid> aminoAcids = aaTargeted.get(i);
+                        if (aminoAcids != null && !aminoAcids.isEmpty()) {
+                            for (AminoAcid aminoAcid : aaTargeted.get(i)) {
+                                newBuilder.append(aminoAcid.singleLetterCode);
+                                newBuilders.add(newBuilder);
+                            }
+                        } else {
+                            newBuilder.append("X");
+                            newBuilders.add(newBuilder);
+                        }
+                    } else {
+                        newBuilder.append("X");
+                        newBuilders.add(newBuilder);
                     }
                 }
-                results = newResult;
+                stringBuilders = newBuilders;
             }
+        }
+        ArrayList<String> results = new ArrayList<String>(stringBuilders.size());
+        for (StringBuilder stringBuilder : stringBuilders) {
+            results.add(stringBuilder.toString());
         }
         return results;
     }
@@ -1335,16 +1516,23 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     public Double getMass() {
         double mass = 0;
         for (int i = 0; i < length(); i++) {
-            if (getNTargetedAA(i) == 1) {
-                mass += getTargetedAA(i).get(0).monoisotopicMass;
+            if (aaTargeted != null) {
+                ArrayList<AminoAcid> aminoAcids = aaTargeted.get(i);
+                if (aminoAcids.size() != 1) {
+                    mass += getTargetedAA(i).get(0).monoisotopicMass;
+                } else {
+                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino-acid pattern" + asSequence() + ". " + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid map.");
+                }
             } else {
-                throw new IllegalArgumentException("Impossible to estimate the mass of the amino-acid pattern" + asSequence() + ". " + getNTargetedAA(i) + " possibilities at index " + i + ".");
+                throw new IllegalArgumentException("Impossible to estimate the mass of the amino-acid pattern" + asSequence() + ". null as targeted amino acid map.");
             }
-            ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i);
-            if (modificationAtIndex != null) {
-                for (ModificationMatch modificationMatch : modificationAtIndex) {
-                    PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
-                    mass += ptm.getMass();
+            if (targetModifications != null) {
+                ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i);
+                if (modificationAtIndex != null) {
+                    for (ModificationMatch modificationMatch : modificationAtIndex) {
+                        PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
+                        mass += ptm.getMass();
+                    }
                 }
             }
         }
@@ -1356,18 +1544,47 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      *
      * @param startIndex the start index, inclusive (0 is the first amino acid)
      * @param endIndex the end index, inclusive
+     * @param updateTarget boolean indicating whether the target of the pattern
+     * shall be updated. If yes it will be shifted by startIndex, simply copied
+     * otherwise.
      *
      * @return a sub pattern
      */
-    public AminoAcidPattern getSubPattern(int startIndex, int endIndex) {
+    public AminoAcidPattern getSubPattern(int startIndex, int endIndex, boolean updateTarget) {
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern();
-        for (int i = startIndex; i <= endIndex; i++) {
-            aminoAcidPattern.setTargeted(i - startIndex, getTargetedAA(i));
-            aminoAcidPattern.setExcluded(i - startIndex, getExcludedAA(i));
+        if (aaTargeted != null) {
+            for (int i : aaTargeted.keySet()) {
+                if (i >= startIndex && i <= endIndex) {
+                    ArrayList<AminoAcid> aminoAcids = (ArrayList<AminoAcid>) aaTargeted.get(i).clone();
+                    aminoAcidPattern.setTargeted(i - startIndex, aminoAcids);
+                }
+            }
         }
-        aminoAcidPattern.setTarget(getTarget() - startIndex);
-        for (int i : targetModifications.keySet()) {
-            aminoAcidPattern.addModificationMatches(i - startIndex, targetModifications.get(i));
+        if (aaExcluded != null) {
+            for (int i : aaExcluded.keySet()) {
+                if (i >= startIndex && i <= endIndex) {
+                    ArrayList<AminoAcid> aminoAcids = (ArrayList<AminoAcid>) aaExcluded.get(i).clone();
+                    aminoAcidPattern.setTargeted(i - startIndex, aminoAcids);
+                }
+            }
+        }
+        if (updateTarget) {
+            aminoAcidPattern.setTarget(getTarget() - startIndex);
+        } else {
+            aminoAcidPattern.setTarget(getTarget());
+        }
+        if (targetModifications != null) {
+            for (int i : targetModifications.keySet()) {
+                if (i >= startIndex && i <= endIndex) {
+                    int index = i - startIndex;
+                    ArrayList<ModificationMatch> modificationMatches = targetModifications.get(i);
+                    ArrayList<ModificationMatch> newMatches = new ArrayList<ModificationMatch>(modificationMatches.size());
+                    for (ModificationMatch modificationMatch : modificationMatches) {
+                        newMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), index));
+                    }
+                    aminoAcidPattern.addModificationMatches(index, newMatches);
+                }
+            }
         }
         return aminoAcidPattern;
     }
@@ -1376,21 +1593,14 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Returns a sub pattern of the pattern.
      *
      * @param startIndex the start index, inclusive (0 is the first amino acid)
+     * @param updateTarget boolean indicating whether the target of the pattern
+     * shall be updated. If yes it will be shifted by startIndex, simply copied
+     * otherwise.
      *
      * @return a sub pattern
      */
-    public AminoAcidPattern getSubPattern(int startIndex) {
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern();
-        int patternLength = length();
-        for (int i = startIndex; i <= patternLength; i++) {
-            aminoAcidPattern.setTargeted(i - startIndex, getTargetedAA(i));
-            aminoAcidPattern.setExcluded(i - startIndex, getExcludedAA(i));
-        }
-        aminoAcidPattern.setTarget(getTarget() - startIndex);
-        for (int i : targetModifications.keySet()) {
-            aminoAcidPattern.addModificationMatches(i - startIndex, targetModifications.get(i));
-        }
-        return aminoAcidPattern;
+    public AminoAcidPattern getSubPattern(int startIndex, boolean updateTarget) {
+        return getSubPattern(startIndex, length(), updateTarget);
     }
 
     @Override

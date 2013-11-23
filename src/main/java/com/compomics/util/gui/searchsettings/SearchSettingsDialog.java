@@ -926,20 +926,18 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      */
     private void browseConfigurationButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseConfigurationButton2ActionPerformed
 
-        // @TODO: check if search params file and only load search params!!!
-        // First check whether a file has already been selected.
-        // If so, start from that file's parent.
+        // First check whether a file has already been selected. If so, start from that file's parent.
         File startLocation = new File(searchSettingsDialogParent.getLastSelectedFolder());
         if (configurationFileTxt_parameters.getText() != null && new File(configurationFileTxt_parameters.getText()).exists()) {
             File temp = new File(configurationFileTxt_parameters.getText());
             startLocation = temp.getParentFile();
         }
+
         JFileChooser fc = new JFileChooser(startLocation);
 
         FileFilter filter = new FileFilter() {
             @Override
             public boolean accept(File myFile) {
-
                 return myFile.getName().toLowerCase().endsWith(".properties")
                         || myFile.getName().toLowerCase().endsWith(".parameters")
                         || myFile.isDirectory();
@@ -947,47 +945,59 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
             @Override
             public String getDescription() {
-                return "SearchGUI search parameters (.paramaters)";
+                return "SearchGUI settings file (.paramaters)";
             }
         };
+
         fc.setFileFilter(filter);
         int result = fc.showOpenDialog(this);
+
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
+            String fileName = file.getName();
             searchSettingsDialogParent.setLastSelectedFolder(file.getAbsolutePath());
-            try {
-                searchParameters = SearchParameters.getIdentificationParameters(file);
-                loadModifications();
-                setScreenProps();
-            } catch (Exception e) {
+
+            if (fileName.endsWith(".parameters") || fileName.endsWith(".properties")) {
+
                 try {
-                    // Old school format, overwrite old file
-                    Properties props = loadProperties(file);
-                    searchParameters = IdentificationParametersReader.getSearchParameters(props, searchSettingsDialogParent.getUserModificationsFile());
+                    searchParameters = SearchParameters.getIdentificationParameters(file);
+                    loadModifications();
                     setScreenProps();
-                    String fileName = file.getName();
-                    if (fileName.endsWith(".properties")) {
-                        String newName = fileName.substring(0, fileName.lastIndexOf(".")) + ".parameters";
-                        try {
-                            file.delete();
-                        } catch (Exception deleteException) {
-                            deleteException.printStackTrace();
+                } catch (Exception e) {
+                    try {
+                        // Old school format, overwrite old file
+                        Properties props = loadProperties(file);
+                        searchParameters = IdentificationParametersReader.getSearchParameters(props, searchSettingsDialogParent.getUserModificationsFile());
+                        setScreenProps();
+
+                        if (fileName.endsWith(".properties")) {
+                            String newName = fileName.substring(0, fileName.lastIndexOf(".")) + ".parameters";
+                            try {
+                                file.delete();
+                            } catch (Exception deleteException) {
+                                deleteException.printStackTrace();
+                            }
+                            file = new File(file.getParentFile(), newName);
                         }
-                        file = new File(file.getParentFile(), newName);
+                        SearchParameters.saveIdentificationParameters(searchParameters, file);
+                    } catch (Exception saveException) {
+                        e.printStackTrace();
+                        saveException.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error occured while reading " + file + ". Please verify the search paramters.", "File Error", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                    SearchParameters.saveIdentificationParameters(searchParameters, file);
-                } catch (Exception saveException) {
-                    e.printStackTrace();
-                    saveException.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error occured while reading " + file + ". Please verify the search paramters.", "File Error", JOptionPane.ERROR_MESSAGE);
                 }
+
+                parametersFile = file;
+                configurationFileTxt_parameters.setText(parametersFile.getAbsolutePath());
+                searchParameters = getSearchParameters();
+                searchParameters.setParametersFile(parametersFile);
+                searchSettingsDialogParent.setSearchParameters(searchParameters);
+                validateParametersInput(true);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a valid search settings file (.paramaters).", "File Error", JOptionPane.INFORMATION_MESSAGE);
             }
-            parametersFile = file;
-            configurationFileTxt_parameters.setText(parametersFile.getAbsolutePath());
-            searchParameters = getSearchParameters();
-            searchParameters.setParametersFile(parametersFile);
-            searchSettingsDialogParent.setSearchParameters(searchParameters);
-            validateParametersInput(true);
         }
     }//GEN-LAST:event_browseConfigurationButton2ActionPerformed
 
@@ -1473,8 +1483,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
                 }
-            } else if (modificationsListCombo.getSelectedIndex() == 1 
-                    && column == modificationsTable.getColumn("  ").getModelIndex() 
+            } else if (modificationsListCombo.getSelectedIndex() == 1
+                    && column == modificationsTable.getColumn("  ").getModelIndex()
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
@@ -2021,14 +2031,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 FileFilter filter = new FileFilter() {
                     @Override
                     public boolean accept(File myFile) {
-
-                        return myFile.getName().toLowerCase().endsWith(".parameters")
-                                || myFile.isDirectory();
+                        return myFile.getName().toLowerCase().endsWith(".parameters") || myFile.isDirectory();
                     }
 
                     @Override
                     public String getDescription() {
-                        return "SearchGUI search parameters (.parameters)";
+                        return "SearchGUI settings file (.parameters)";
                     }
                 };
                 fc.setFileFilter(filter);

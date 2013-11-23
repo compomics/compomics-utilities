@@ -2,7 +2,6 @@ package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;

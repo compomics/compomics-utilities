@@ -67,7 +67,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return the name of the file containing the spectrum
      */
     public static String getSpectrumFile(String spectrumKey) {
-        return spectrumKey.split(SPECTRUM_KEY_SPLITTER)[0];
+        return spectrumKey.substring(0, spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER)).trim();
     }
 
     /**
@@ -78,7 +78,7 @@ public abstract class Spectrum extends ExperimentObject {
      * @return the title of the spectrum
      */
     public static String getSpectrumTitle(String spectrumKey) {
-        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + 5).trim();
+        return spectrumKey.substring(spectrumKey.indexOf(SPECTRUM_KEY_SPLITTER) + SPECTRUM_KEY_SPLITTER.length()).trim();
     }
 
     /**

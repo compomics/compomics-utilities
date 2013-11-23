@@ -36,7 +36,7 @@ public class IdentificationDBTest extends TestCase {
         cache.setCacheSize(0);
         IdentificationDB idDB = new IdentificationDB(path, "testId", true, cache);
 
-        String spectrumKey = "test spectrum match";
+        String spectrumKey = "spectrum_file_cus_spectrum_title";
         String peptideKey = "PEPTIDE";
         String proteinKey = "test_protein";
         SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);

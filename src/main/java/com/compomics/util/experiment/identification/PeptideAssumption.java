@@ -1,12 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.biology.ions.PrecursorIon;
-import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * This object will models the assumption made by an advocate.
@@ -44,13 +39,13 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     private int rank;
     /**
      * The score, the lower the better. Ought to be renamed but kept for
-     * backward compatibility
+     * backward compatibility.
      *
      * @deprecated use the SpectrumIdentificationAssumption attribute
      */
     private double eValue;
     /**
-     * the corresponding identification file.
+     * The corresponding identification file.
      *
      * @deprecated use the SpectrumIdentificationAssumption attribute
      */

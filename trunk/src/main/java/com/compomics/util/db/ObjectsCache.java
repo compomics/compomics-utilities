@@ -305,8 +305,12 @@ public class ObjectsCache {
      */
     public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
         if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressCounter(2 * entryKeys.size());
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.resetSecondaryProgressCounter();
+            if (clearEntries) {
+                waitingHandler.setMaxSecondaryProgressCounter(3 * entryKeys.size());
+            } else {
+                waitingHandler.setMaxSecondaryProgressCounter(2 * entryKeys.size());
+            }
         }
         // temporary map for batch saving
         HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
@@ -324,7 +328,9 @@ public class ObjectsCache {
                     toSave.get(dbName).put(tableName, new HashMap<String, Object>());
                 }
                 toSave.get(dbName).get(tableName).put(objectKey, entry.getObject());
-            } else if (waitingHandler != null) {
+            }
+
+            if (waitingHandler != null) {
                 waitingHandler.increaseSecondaryProgressCounter();
                 if (waitingHandler.isRunCanceled()) {
                     return;
@@ -356,6 +362,13 @@ public class ObjectsCache {
                         }
                         if (dbMap.isEmpty()) {
                             loadedObjectsMap.remove(dbName);
+                        }
+                    }
+
+                    if (waitingHandler != null) {
+                        waitingHandler.increaseSecondaryProgressCounter();
+                        if (waitingHandler.isRunCanceled()) {
+                            return;
                         }
                     }
                 }
@@ -469,8 +482,8 @@ public class ObjectsCache {
      */
     public void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException {
         int toRemove = (int) (share * loadedObjectsKeys.size());
-                ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
-                loadedObjectsKeys.drainTo(keysToRemove, toRemove);
+        ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+        loadedObjectsKeys.drainTo(keysToRemove, toRemove);
         saveObjects(keysToRemove, waitingHandler);
     }
 
@@ -566,10 +579,10 @@ public class ObjectsCache {
     private String[] getKeyComponents(String cacheKey) {
         return cacheKey.split(cacheSeparator);
     }
-    
+
     /**
      * Indicates whether the cache is empty.
-     * 
+     *
      * @return a boolean indicating whether the cache is empty
      */
     public boolean isEmpty() {

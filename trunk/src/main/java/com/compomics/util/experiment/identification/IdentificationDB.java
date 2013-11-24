@@ -452,6 +452,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
@@ -471,6 +472,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -494,6 +496,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -516,6 +519,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
@@ -535,6 +539,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -556,6 +561,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         objectsDB.loadObjects(proteinTableName, waitingHandler);
@@ -573,6 +579,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
         if (waitingHandler != null) {
@@ -593,6 +600,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
         objectsDB.loadObjects(peptideTableName, waitingHandler);
@@ -610,6 +618,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
@@ -628,6 +637,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -667,6 +677,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException
      */
     public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");

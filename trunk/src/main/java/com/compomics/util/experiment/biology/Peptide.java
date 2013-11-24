@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.protein_inference.proteintre
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 
-import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;

@@ -945,7 +945,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
             @Override
             public String getDescription() {
-                return "SearchGUI settings file (.paramaters)";
+                return "SearchGUI settings file (.parameters)";
             }
         };
 

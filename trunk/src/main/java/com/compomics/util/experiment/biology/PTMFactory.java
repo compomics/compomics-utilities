@@ -158,7 +158,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the standard search compatible PTM corresponding to this pattern.
-     * i.e. a pattern targeting a single amino-acid and not a complex pattern.
+     * i.e. a pattern targeting a single amino acid and not a complex pattern.
      *
      * @param modification the modification of interest
      * @return a search compatible modification
@@ -173,7 +173,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Returns the standard search compatible PTM corresponding to this pattern,
-     * i.e., a pattern targeting a single amino-acid and not a complex pattern.
+     * i.e., a pattern targeting a single amino acid and not a complex pattern.
      *
      * @param modificationName the name of the modification of interest
      * @return a search compatible modification

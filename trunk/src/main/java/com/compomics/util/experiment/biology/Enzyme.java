@@ -25,19 +25,19 @@ public class Enzyme extends ExperimentObject {
      */
     private String name;
     /*
-     * The amino-acids before cleavage.
+     * The amino acids before cleavage.
      */
     private ArrayList<Character> aminoAcidBefore = new ArrayList<Character>();
     /*
-     * The amino-acids after cleavage.
+     * The amino acids after cleavage.
      */
     private ArrayList<Character> aminoAcidAfter = new ArrayList<Character>();
     /*
-     * The restriction amino-acids before cleavage.
+     * The restriction amino acids before cleavage.
      */
     private ArrayList<Character> restrictionBefore = new ArrayList<Character>();
     /*
-     * The restriction amino-acids after cleavage.
+     * The restriction amino acids after cleavage.
      */
     private ArrayList<Character> restrictionAfter = new ArrayList<Character>();
     /**
@@ -51,13 +51,13 @@ public class Enzyme extends ExperimentObject {
      *
      * @param id the enzyme id which should be OMSSA compatible.
      * @param name the name of the enzyme
-     * @param aminoAcidBefore the amino-acids which can be found before the
+     * @param aminoAcidBefore the amino acids which can be found before the
      * cleavage
-     * @param restrictionBefore the amino-acids which should not be found before
+     * @param restrictionBefore the amino acids which should not be found before
      * the cleavage
-     * @param aminoAcidAfter the amino-acids which should be found after the
+     * @param aminoAcidAfter the amino acids which should be found after the
      * cleavage
-     * @param restrictionAfter the amino-acids which should not be found after
+     * @param restrictionAfter the amino acids which should not be found after
      * the cleavage
      */
     public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
@@ -69,13 +69,13 @@ public class Enzyme extends ExperimentObject {
      *
      * @param id the enzyme id which should be OMSSA compatible.
      * @param name the name of the enzyme
-     * @param aminoAcidBefore the amino-acids which can be found before the
+     * @param aminoAcidBefore the amino acids which can be found before the
      * cleavage
-     * @param restrictionBefore the amino-acids which should not be found before
+     * @param restrictionBefore the amino acids which should not be found before
      * the cleavage
-     * @param aminoAcidAfter the amino-acids which should be found after the
+     * @param aminoAcidAfter the amino acids which should be found after the
      * cleavage
-     * @param restrictionAfter the amino-acids which should not be found after
+     * @param restrictionAfter the amino acids which should not be found after
      * the cleavage
      * @param isSemiSpecific if true, the enzyme is considered as semi-specific,
      * meaning that only one end of the resulting peptide has to be enzymatic

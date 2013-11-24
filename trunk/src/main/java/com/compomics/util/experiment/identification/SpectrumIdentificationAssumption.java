@@ -96,7 +96,8 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public abstract double getTheoreticMass();
     
     /**
-     * Returns the theoretic m/z
+     * Returns the theoretic m/z.
+     * 
      * @return the theoretic m/z
      */
     public double getTheoreticMz() {

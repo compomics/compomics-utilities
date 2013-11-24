@@ -40,7 +40,7 @@ public class PhosphoRS {
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
-     * locations. 0 is the first amino-acid. Note that PTMs found on peptides
+     * locations. 0 is the first amino acid. Note that PTMs found on peptides 
      * must be loaded in the PTM factory.
      *
      * @param peptide The peptide of interest

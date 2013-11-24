@@ -17,7 +17,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.LinkedBlockingDeque;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
@@ -96,18 +95,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * The waiting action listener.
      */
     private WaitingActionListener waitingActionListener = null;
-    /**
-     * Buffer for the text pane.
-     */
-    private LinkedBlockingDeque<String> reportBuffer = new LinkedBlockingDeque<String>();
-    /**
-     * Boolean indicating whether we are reporting something in the text pane.
-     */
-    private boolean reporting = false;
-    /**
-     * The time of the last update.
-     */
-    private long lastUpdate = System.currentTimeMillis();
 
     /**
      * Creates a new WaitingDialog.
@@ -255,6 +242,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     public void resetPrimaryProgressCounter() {
 
         // @TODO: perhaps this should be added to the waiting handler interface?
+
         progressBar.setIndeterminate(false);
         progressBar.setStringPainted(true);
         progressBar.setValue(0);
@@ -294,6 +282,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         // this split pane trick should not be needed, but if not used the look and feel of the
         // indeterminate progress bar changes when moving back and forth between the two...
+
         if (indeterminate) {
             secondaryProgressBarSplitPane.setDividerLocation(secondaryProgressBarSplitPane.getWidth());
         } else {
@@ -849,9 +838,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private javax.swing.JScrollPane tipOfTheDayScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public synchronized void setRunFinished() {
-                printReportBuffer();
+    /**
+     * Set the process as finished.
+     */
+    public void setRunFinished() {
         runFinished = true;
         okButton.setText("OK");
         progressBar.setIndeterminate(false);
@@ -886,8 +876,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public void setRunCanceled() {
 
-                printReportBuffer();
-
         if (!runCanceled) {
             runCanceled = true;
             if (waitingActionListener != null) {
@@ -917,59 +905,35 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     @Override
     public void appendReport(String report, boolean includeDate, boolean addNewLine) {
+
         if (includeDate) {
             Date date = new Date();
-            if (addNewLine) {
-                reportBuffer.addLast(date + tabHtml + report + "<br>");
-            } else {
-                reportBuffer.addLast(date + tabHtml + report);
-            }
+            reportEditorPane.setText("<html>" + getReportWithoutHtml() + date + tabHtml + report + "</html>");
         } else {
-            if (addNewLine) {
-                reportBuffer.addLast(report);
-            } else {
-                reportBuffer.addLast(report + "<br>");
-            }
+            reportEditorPane.setText("<html>" + getReportWithoutHtml() + report + "</html>");
         }
-        printReportBuffer();
+
+        if (addNewLine) {
+            reportEditorPane.setText("<html>" + getReportWithoutHtml() + "<br>" + "</html>");
+        }
+        
+        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() -1);
     }
 
     /**
-     * Prints the reports in the buffer.
-     */
-    private void printReportBuffer() {
-        long time = System.currentTimeMillis();
-        if (!reporting && time - lastUpdate > 100) {
-            reporting = true;
-            StringBuffer buffer = new StringBuffer("<html>");
-            buffer.append(getReportWithoutHtml());
-            while (!reportBuffer.isEmpty()) {
-                String report = reportBuffer.pollFirst();
-                buffer.append(report);
-            }
-            buffer.append("</html>");
-            reportEditorPane.setText(buffer.toString());
-            reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
-            reporting = false;
-            lastUpdate = System.currentTimeMillis();
-        }
-    }
-
-    /**
-     * Append two tabs to the report. No new line. Note: use carefully when
-     * multithreading.
+     * Append two tabs to the report. No new line.
      */
     public void appendReportNewLineNoDate() {
-        reportBuffer.addLast(tabHtml);
-        printReportBuffer();
+        reportEditorPane.setText("<html>" + getReportWithoutHtml() + tabHtml + "</html>");
+        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() -1);
     }
 
     /**
-     * Append a new line to the report. Note: use carefully when multithreading.
+     * Append a new line to the report.
      */
     public void appendReportEndLine() {
-        reportBuffer.addLast("<br>");
-        printReportBuffer();
+        reportEditorPane.setText("<html>" + getReportWithoutHtml() + "<br>" + "</html>");
+        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() -1);
     }
 
     /**
@@ -1264,5 +1228,4 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     public int getMaxSecondaryProgressCounter() {
         return secondaryJProgressBar.getMaximum();
     }
-
 }

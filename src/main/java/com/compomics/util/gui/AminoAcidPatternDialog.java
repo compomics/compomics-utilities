@@ -13,7 +13,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.Toolkit;
 
 /**
- * This dialog allows the design and test of amino-acid patterns. (see class
+ * This dialog allows the design and test of amino acid patterns. (see class
  * com.compomics.util.experiment.biology.AminoAcidPattern)
  *
  * @author Marc Vaudel
@@ -566,7 +566,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 for (int i = 0; i < input.length(); i++) {
                     AminoAcid aminoAcid = AminoAcid.getAminoAcid(input.charAt(i));
                     if (aminoAcid == null) {
-                        throw new IllegalArgumentException("Cannot parse " + input.charAt(i) + " into an amino-acid");
+                        throw new IllegalArgumentException("Cannot parse " + input.charAt(i) + " into an amino acid");
                     } else {
                         result.add(aminoAcid);
                     }

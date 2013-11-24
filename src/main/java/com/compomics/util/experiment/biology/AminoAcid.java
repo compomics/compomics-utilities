@@ -74,19 +74,19 @@ public abstract class AminoAcid implements Serializable {
         "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
 
     /**
-     * Convenience method returning an array of all implemented amino-acids
+     * Convenience method returning an array of all implemented amino acids
      * represented by their singe letter code.
      *
-     * @return an array of all implemented amino-acids
+     * @return an array of all implemented amino acids
      */
     public static char[] getAminoAcids() {
         return aminoAcidChars;
     }
 
     /**
-     * Convenience method returning an arrayList of all implemented amino-acids.
+     * Convenience method returning an arrayList of all implemented amino acids.
      *
-     * @return an arrayList of all implemented amino-acids represented by their
+     * @return an arrayList of all implemented amino acids represented by their
      * character
      */
     public static ArrayList<String> getAminoAcidsList() {
@@ -206,7 +206,7 @@ public abstract class AminoAcid implements Serializable {
      */
     public ArrayList<Character> getIndistinguishibleAminoAcids(Double massTolerance) {
         if (massTolerance == null || massTolerance == Double.NaN || massTolerance == Double.NEGATIVE_INFINITY || massTolerance == Double.POSITIVE_INFINITY) {
-            throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino-acids comparison.");
+            throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
         }
         ArrayList<Character> results = new ArrayList<Character>();
         for (char aa : getAminoAcids()) {

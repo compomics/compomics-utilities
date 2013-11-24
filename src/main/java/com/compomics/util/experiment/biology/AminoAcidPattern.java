@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
- * An amino acid pattern is a sequence of amino-acids. For example for trypsin:
+ * An amino acid pattern is a sequence of amino acids. For example for trypsin:
  * Target R or K not followed by P. the Indexing starts with 0.
  *
  * @author Marc Vaudel
@@ -532,13 +532,13 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino-acid sequence
+     * Indicates whether the pattern is found in the given amino acid sequence
      * using default single letter code of amino acids.
      *
-     * @param aminoAcidSequence the amino-acid sequence
+     * @param aminoAcidSequence the amino acid sequence
      *
      * @return a boolean indicating whether the pattern is found in the given
-     * amino-acid sequence
+     * amino acid sequence
      */
     public boolean matches(String aminoAcidSequence) {
         return matches(aminoAcidSequence, MatchingType.string, Double.NaN);
@@ -548,7 +548,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
-     * @param aminoAcidSequence the amino-acid sequence to look into
+     * @param aminoAcidSequence the amino acid sequence to look into
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
@@ -562,7 +562,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
-     * @param aminoAcidPattern the amino-acid sequence to look into
+     * @param aminoAcidPattern the amino acid sequence to look into
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
@@ -576,7 +576,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
-     * @param aminoAcidSequence the amino-acid sequence to look into
+     * @param aminoAcidSequence the amino acid sequence to look into
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * @param startIndex the start index where to start looking for
@@ -618,7 +618,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
-     * @param aminoAcidPattern the amino-acid sequence to look into
+     * @param aminoAcidPattern the amino acid sequence to look into
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * @param startIndex the start index where to start looking for
@@ -765,28 +765,28 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino-acid sequence.
+     * Indicates whether the pattern is found in the given amino acid sequence.
      *
-     * @param aminoAcidSequence the amino-acid sequence
+     * @param aminoAcidSequence the amino acid sequence
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
      * @return a boolean indicating whether the pattern is found in the given
-     * amino-acid sequence
+     * amino acid sequence
      */
     public boolean matches(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
         return firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino-acid sequence.
+     * Indicates whether the pattern is found in the given amino acid sequence.
      *
-     * @param aminoAcidPattern the amino-acid sequence
+     * @param aminoAcidPattern the amino acid sequence
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      *
      * @return a boolean indicating whether the pattern is found in the given
-     * amino-acid sequence
+     * amino acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
         return firstIndex(aminoAcidPattern, matchingType, massTolerance) >= 0;
@@ -954,7 +954,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
 
     /**
      * Computes a pattern which can be searched by standard search engines,
-     * i.e., a pattern targeting a single amino-acid and not a complex pattern.
+     * i.e., a pattern targeting a single amino acid and not a complex pattern.
      *
      * @return a pattern which can be searched by standard search engines
      */
@@ -1206,7 +1206,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     }
 
     /**
-     * Adds a modification to one of the amino-acid pattern.
+     * Adds a modification to one of the amino acid pattern.
      *
      * @param localization the index of the amino acid retained as target of the
      * modification. 1 is the first amino acid.
@@ -1229,7 +1229,7 @@ public class AminoAcidPattern implements Serializable, TagComponent {
     }
 
     /**
-     * Adds a list of modifications to one of the amino-acid pattern.
+     * Adds a list of modifications to one of the amino acid pattern.
      *
      * @param localization the index of the amino acid retained as target of the
      * modification. 1 is the first amino acid.
@@ -1517,13 +1517,14 @@ public class AminoAcidPattern implements Serializable, TagComponent {
         for (int i = 0; i < length(); i++) {
             if (aaTargeted != null) {
                 ArrayList<AminoAcid> aminoAcids = aaTargeted.get(i);
-                if (aminoAcids.size() != 1) {
+                if (aminoAcids.size() == 1) {
                     mass += getTargetedAA(i).get(0).monoisotopicMass;
                 } else {
-                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino-acid pattern" + asSequence() + ". " + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid map.");
+                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() 
+                            + ". " + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid map.");
                 }
             } else {
-                throw new IllegalArgumentException("Impossible to estimate the mass of the amino-acid pattern" + asSequence() + ". null as targeted amino acid map.");
+                throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". null as targeted amino acid map.");
             }
             if (targetModifications != null) {
                 ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i);

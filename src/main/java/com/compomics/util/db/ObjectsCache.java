@@ -231,6 +231,7 @@ public class ObjectsCache {
      * @param modifiedOrNew true if the object is modified or new
      * @throws IOException
      * @throws SQLException
+     * @throws java.lang.InterruptedException
      */
     public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (dbName.contains(cacheSeparator)) {
@@ -450,6 +451,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
+     * @throws java.lang.InterruptedException
      */
     public void updateCache() throws IOException, SQLException, InterruptedException {
         while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize

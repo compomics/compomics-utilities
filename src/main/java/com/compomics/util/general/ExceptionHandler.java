@@ -20,14 +20,22 @@ public class ExceptionHandler {
      * The parent frame used to display feedback.
      */
     private JFrame parent = null;
+    /**
+     * The tool issues page, e.g.,
+     * http://code.google.com/p/peptide-shaker/issues/list.
+     */
+    private String toolIssuesPage;
 
     /**
      * Constructor.
      *
      * @param parent the parent frame used to display feedback
+     * @param toolIssuesPage the tool issues page, e.g.,
+     * http://code.google.com/p/peptide-shaker/issues/list
      */
-    public ExceptionHandler(JFrame parent) {
+    public ExceptionHandler(JFrame parent, String toolIssuesPage) {
         this.parent = parent;
+        this.toolIssuesPage = toolIssuesPage;
     }
 
     /**
@@ -53,11 +61,19 @@ public class ExceptionHandler {
                             + "This message will appear only once."),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (getExceptionType(e).equals("Serialization")) {
-                    JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
-                            e.getLocalizedMessage() + "<br>"
-                            + "Please see our <a href=\"http://code.google.com/p/peptide-shaker/#Troubleshooting\">troubleshooting section</a>.<br>"
-                            + "This message will appear only once."),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    if (toolIssuesPage != null) {
+                        JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                                e.getLocalizedMessage() + "<br>"
+                                + "Please <a href=\"" + toolIssuesPage + "\">contact the developers</a>.<br>"
+                                + "This message will appear only once."),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                                e.getLocalizedMessage() + "<br>"
+                                + "Please contact the developers.<br>"
+                                + "This message will appear only once."),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
 
                     String error = "";
@@ -66,10 +82,21 @@ public class ExceptionHandler {
                         error = ": " + e.getLocalizedMessage();
                     }
 
-                    JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
-                            "An error occured: " + error + ".<br>"
-                            + "If the problem persists, please <a href=\"http://code.google.com/p/peptide-shaker/issues/list\">contact the developers</a>."),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    if (!error.endsWith(".")) {
+                        error += ".";
+                    }
+
+                    if (toolIssuesPage != null) {
+                        JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                                "An error occured: " + error + "<br>"
+                                + "If the problem persists, please <a href=\"" + toolIssuesPage + "\">contact the developers</a>."),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
+                                "An error occured: " + error + "<br>"
+                                + "If the problem persists, please contact the developers."),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }

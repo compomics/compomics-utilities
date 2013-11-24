@@ -165,7 +165,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
      * Returns the ion matches corresponding to fragment ions indexed by amino
-     * acid number in the sequence. 1 is first amino-acid.
+     * acid number in the sequence. 1 is first amino acid.
      *
      * @param iontypes The expected ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->

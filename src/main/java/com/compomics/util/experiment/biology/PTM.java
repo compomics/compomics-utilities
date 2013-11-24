@@ -63,7 +63,7 @@ public class PTM extends ExperimentObject {
      * The residues affected by this modification. '[' denotes N-term and ']'
      * C-term.
      *
-     * @deprecated use amino-acid pattern instead
+     * @deprecated use amino acid pattern instead
      */
     private ArrayList<String> residuesArray = new ArrayList<String>();
     /**

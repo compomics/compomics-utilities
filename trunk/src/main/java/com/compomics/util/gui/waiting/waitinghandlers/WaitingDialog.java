@@ -902,7 +902,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public void appendReport(String report, boolean includeDate, boolean addNewLine) {
+    public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
 
         String reportWithoutHtml = getReportWithoutHtml();
 

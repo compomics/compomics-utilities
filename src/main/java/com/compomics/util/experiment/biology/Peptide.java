@@ -288,7 +288,7 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<String> getParentProteins(boolean remap, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         if (remap && parentProteins == null) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance);
+            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance, true);
             parentProteins = new ArrayList<String>();
             for (String peptideSequence : proteinMapping.keySet()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();

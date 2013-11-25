@@ -1,9 +1,11 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,37 +74,11 @@ public class Node implements Serializable {
      * not found.
      *
      * @param query the given amino acid pattern to query the tree
-     * @param initialTag the initial tag of this query
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
-     *
-     * @return the protein mapping for the given peptide sequence
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query, String initialTag, 
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
-        // Dirty fix for my poor handling of multiple threads
-        if (Runtime.getRuntime().availableProcessors() > 3) {
-            return getProteinMappingMultithreaded(query, initialTag, matchingType, massTolerance);
-        } else {
-            return getProteinMappingSinglethreaded(query, initialTag, matchingType, massTolerance);
-        }
-    }
-
-    /**
-     * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
-     * not found.
-     *
-     * @param query the given amino acid pattern to query the tree
      * @param currentSequence the sequence found until now
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param limitXs if true the share of Xs in the peptide sequences will be limited in order to increase sequencing speed.
      *
      * @return the protein mapping for the given peptide sequence
      *
@@ -110,8 +86,8 @@ public class Node implements Serializable {
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingSinglethreaded(AminoAcidPattern query, String currentSequence,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query, String currentSequence,
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance, boolean limitXs) throws IOException, InterruptedException, ClassNotFoundException {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
@@ -139,132 +115,14 @@ public class Node implements Serializable {
                 Node node = subtree.get(aa);
                 if (node != null) {
                     String newSequence = currentSequence + aa;
-                    result.putAll(node.getProteinMappingSinglethreaded(query, newSequence, matchingType, massTolerance));
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
-     * not found.
-     *
-     * @param query the given amino acid pattern to query the tree
-     * @param currentSequence the sequence found until now
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
-     *
-     * @return the protein mapping for the given peptide sequence
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingMultithreaded(AminoAcidPattern query, String currentSequence,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException {
-
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-
-        if (depth == query.length()) {
-            result.put(currentSequence, getAllMappings());
-        } else if (accessions != null) {
-
-            int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
-            ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
-            HashMap<String, ArrayList<Integer>> seeds = new HashMap<String, ArrayList<Integer>>(proteinBatchSize);
-            ArrayList<SequenceMatcher> sequenceMatchers = new ArrayList<SequenceMatcher>(nThreads);
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-
-            for (String accession : accessions.keySet()) {
-                Protein protein = sequenceFactory.getProtein(accession);
-                sequenceBuffer.add(protein);
-                seeds.put(accession, accessions.get(accession));
-                if (sequenceBuffer.size() == proteinBatchSize) {
-                    while (sequenceMatchers.size() == nThreads) {
-                        processFinishedMatchers(sequenceMatchers, result);
+                    double xShare = ((double) Util.getOccurrence(newSequence, 'X')) / query.length();
+                    if (!limitXs || xShare <= ProteinMatch.maxX) {
+                        result.putAll(node.getProteinMapping(query, newSequence, matchingType, massTolerance, limitXs));
                     }
-                    SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, query, matchingType, massTolerance);
-                    new Thread(sequenceMatcher, "sequence indexing").start();
-                    sequenceMatchers.add(sequenceMatcher);
-                    sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
-                    seeds = new HashMap<String, ArrayList<Integer>>(proteinBatchSize);
-                }
-            }
-
-            if (!sequenceBuffer.isEmpty()) {
-                SequenceMatcher sequenceMatcher = new SequenceMatcher(sequenceBuffer, seeds, query, matchingType, massTolerance);
-                new Thread(sequenceMatcher, "sequence indexing").start();
-                sequenceMatchers.add(sequenceMatcher);
-            }
-
-            while (!sequenceMatchers.isEmpty()) {
-                processFinishedMatchers(sequenceMatchers, result);
-            }
-        } else {
-            for (char aa : getNextAminoAcids(query, matchingType, massTolerance)) {
-                Node node = subtree.get(aa);
-                if (node != null) {
-                    String newSequence = currentSequence + aa;
-                    result.putAll(node.getProteinMappingMultithreaded(query, newSequence, matchingType, massTolerance));
                 }
             }
         }
-
         return result;
-    }
-
-    /**
-     * Stores the result of the finished indexers and updates the list. Waits if
-     * none is finished.
-     *
-     * @param sequenceIndexers the sequence indexers
-     * @param result a map where to store the results
-     *
-     * @throws InterruptedException
-     */
-    private synchronized void processFinishedMatchers(ArrayList<SequenceMatcher> sequenceMatchers, HashMap<String, HashMap<String, ArrayList<Integer>>> result) throws InterruptedException {
-
-        listening = false;
-        ArrayList<SequenceMatcher> done = new ArrayList<SequenceMatcher>();
-
-        for (SequenceMatcher sequenceMatcher : sequenceMatchers) {
-            if (sequenceMatcher.isFinished()) {
-                done.add(sequenceMatcher);
-            }
-        }
-
-        if (done.isEmpty()) {
-            listening = true;
-            wait();
-            for (SequenceMatcher sequenceMatcher : sequenceMatchers) {
-                if (sequenceMatcher.isFinished()) {
-                    done.add(sequenceMatcher);
-                }
-            }
-        }
-
-        listening = true;
-
-        for (SequenceMatcher sequenceMatcher : done) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = sequenceMatcher.getIndexes();
-            for (String accession : indexes.keySet()) {
-                for (String tempSequence : indexes.get(accession).keySet()) {
-                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
-                    if (mapping == null) {
-                        mapping = new HashMap<String, ArrayList<Integer>>(1);
-                        result.put(tempSequence, mapping);
-                    }
-                    mapping.put(accession, indexes.get(accession).get(tempSequence));
-                }
-            }
-            sequenceMatcher.clear();
-        }
-
-        sequenceMatchers.removeAll(done);
     }
 
     /**
@@ -612,128 +470,6 @@ public class Node implements Serializable {
             return subtree.get(aa);
         } else {
             throw new IllegalArgumentException("depth " + depth + " longer than sequence " + sequence + ".");
-        }
-    }
-
-    /**
-     * Notifies the tree that a runnable has finished working.
-     *
-     * @throws InterruptedException
-     */
-    private synchronized void runnableFinished() throws InterruptedException {
-        while (!listening) {
-            wait(10);
-        }
-        notify();
-    }
-
-    /**
-     * Runnable used for matching peptides on protein sequences.
-     */
-    private class SequenceMatcher implements Runnable {
-
-        /**
-         * The proteins to process.
-         */
-        private ArrayList<Protein> proteins;
-        /**
-         * Boolean indicating whether the thread shall be interrupted.
-         */
-        private boolean finished = false;
-        /**
-         * The seed indexes where to look for the peptide in a map. Protein
-         * accession -> list of seed indexes.
-         */
-        private HashMap<String, ArrayList<Integer>> seeds;
-        /**
-         * The peptide sequence to look for.
-         */
-        private AminoAcidPattern peptidePattern;
-        /**
-         * The type of matching.
-         */
-        private AminoAcidPattern.MatchingType matchingType;
-        /**
-         * The mass tolerance at the MS2 level.
-         */
-        private Double massTolerance;
-        /**
-         * The result of the indexing. protein accession -> peptide found ->
-         * list of indexes where the peptide is found.
-         */
-        private HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>(proteinBatchSize);
-
-        /**
-         * Constructor.
-         *
-         * @param proteins the proteins to look into
-         * @param seeds the seed indexes where to look for in a map protein
-         * accession -> list of indexes
-         * @param peptidePattern the peptide sequence to look for
-         * @param matchingType the peptide to protein matching type
-         * @param massTolerance the mass tolerance used for the matching
-         */
-        public SequenceMatcher(ArrayList<Protein> proteins, HashMap<String, ArrayList<Integer>> seeds, AminoAcidPattern peptidePattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-            this.proteins = proteins;
-            this.seeds = seeds;
-            this.peptidePattern = peptidePattern;
-            this.matchingType = matchingType;
-            this.massTolerance = massTolerance;
-        }
-
-        @Override
-        public synchronized void run() {
-
-            for (Protein protein : proteins) {
-                try {
-                    String accession = protein.getAccession();
-                    indexes.put(accession, matchInProtein(protein, seeds.get(accession), peptidePattern, matchingType, massTolerance));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (IllegalArgumentException ex) {
-                    ex.printStackTrace();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                } catch (ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            finished = true;
-
-            try {
-                runnableFinished();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        /**
-         * Indicates whether the run is finished.
-         *
-         * @return true if the thread is finished.
-         */
-        public boolean isFinished() {
-            return finished;
-        }
-
-        /**
-         * Returns the indexes: protein accession -> tag -> indexes of the tag
-         * on the protein sequence
-         *
-         * @return the indexes
-         */
-        public HashMap<String, HashMap<String, ArrayList<Integer>>> getIndexes() {
-            return indexes;
-        }
-
-        /**
-         * Clears the content of the runnable.
-         */
-        public void clear() {
-            proteins.clear();
-            seeds.clear();
-            indexes.clear();
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.identification.advocates.SearchEngine;
+import com.compomics.util.experiment.identification.advocates.SpectrumIdentificationAlgorithm;
 import com.compomics.util.experiment.identification.advocates.PostProcessor;
 
 import java.util.ArrayList;
@@ -48,13 +48,13 @@ public class AdvocateFactory {
     public Advocate getAdvocate(int index) {
         switch (index) {
             case Advocate.MASCOT:
-                return new SearchEngine(Advocate.MASCOT);
+                return new SpectrumIdentificationAlgorithm(Advocate.MASCOT);
             case Advocate.OMSSA:
-                return new SearchEngine(Advocate.OMSSA);
+                return new SpectrumIdentificationAlgorithm(Advocate.OMSSA);
             case Advocate.XTANDEM:
-                return new SearchEngine(Advocate.XTANDEM);
+                return new SpectrumIdentificationAlgorithm(Advocate.XTANDEM);
             case Advocate.ANDROMEDA:
-                return new SearchEngine(Advocate.ANDROMEDA);
+                return new SpectrumIdentificationAlgorithm(Advocate.ANDROMEDA);
             case Advocate.PEPTIZER:
                 return new PostProcessor(Advocate.PEPTIZER);
             case Advocate.PEPTIDE_SHAKER:
@@ -71,10 +71,10 @@ public class AdvocateFactory {
      */
     public ArrayList<Advocate> getPossibilities() {
         ArrayList<Advocate> possibilities = new ArrayList<Advocate>();
-        possibilities.add(new SearchEngine(Advocate.MASCOT));
-        possibilities.add(new SearchEngine(Advocate.OMSSA));
-        possibilities.add(new SearchEngine(Advocate.XTANDEM));
-        possibilities.add(new SearchEngine(Advocate.ANDROMEDA));
+        possibilities.add(new SpectrumIdentificationAlgorithm(Advocate.MASCOT));
+        possibilities.add(new SpectrumIdentificationAlgorithm(Advocate.OMSSA));
+        possibilities.add(new SpectrumIdentificationAlgorithm(Advocate.XTANDEM));
+        possibilities.add(new SpectrumIdentificationAlgorithm(Advocate.ANDROMEDA));
         possibilities.add(new PostProcessor(Advocate.PEPTIZER));
         possibilities.add(new PostProcessor(Advocate.PEPTIDE_SHAKER));
         return possibilities;

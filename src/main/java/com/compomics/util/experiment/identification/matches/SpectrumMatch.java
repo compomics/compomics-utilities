@@ -7,7 +7,7 @@ import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.TagAssumption;
-import com.compomics.util.experiment.identification.advocates.SearchEngine;
+import com.compomics.util.experiment.identification.advocates.SpectrumIdentificationAlgorithm;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -178,8 +178,8 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption) {
         if (!firstHitsMap.containsKey(otherAdvocateId)
-                || !SearchEngine.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() > otherAssumption.getScore()
-                || SearchEngine.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
+                || !SpectrumIdentificationAlgorithm.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() > otherAssumption.getScore()
+                || SpectrumIdentificationAlgorithm.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
             firstHitsMap.put(otherAdvocateId, otherAssumption);
         }
         if (!assumptionsMap.containsKey(otherAdvocateId)) {
@@ -367,7 +367,7 @@ public class SpectrumMatch extends IdentificationMatch {
                 for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
-                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications);
+                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true);
                         for (Peptide peptide : proteinMapping.keySet()) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?
                             peptideAssumption.addUrParam(tagAssumption);

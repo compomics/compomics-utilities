@@ -1,7 +1,11 @@
 package com.compomics.util.test.experiment;
 
+import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
+import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,25 +24,25 @@ import junit.framework.TestCase;
  * @author Kenneth Verheggen
  */
 public class ProteinTreeTest extends TestCase {
-    
-/**
- * Tests the import and the mapping of few sequences.
- * 
- * @throws FileNotFoundException
- * @throws IOException
- * @throws ClassNotFoundException
- * @throws SQLException
- * @throws InterruptedException 
- */
-    public void testProteinTree() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+
+    /**
+     * Tests the import and the mapping of a few peptide sequences.
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws InterruptedException
+     */
+    public void testPeptideToProteinMapping() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
 
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
-        proteinTree.initiateTree(3, 500, 15, null, true, false);
-        
+        proteinTree.initiateTree(3, 50, 50, null, true, false);
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         utilitiesUserPreferences.clearProteinTreeImportTimes();
         utilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
@@ -65,5 +69,58 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
+    }
+    
+    public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException {
+        File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        sequenceFactory.loadFastaFile(sequences);
+
+        ProteinTree proteinTree = new ProteinTree(1000, 1000);
+        proteinTree.initiateTree(3, 50, 50, null, true, false);
+        
+        // TESTMRITESTCKTESTK
+        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern("LTEST");
+        double nTermGap = AminoAcid.R.monoisotopicMass + AminoAcid.M.monoisotopicMass + AminoAcid.T.monoisotopicMass;
+        double cTermGap = AminoAcid.C.monoisotopicMass + AminoAcid.K.monoisotopicMass;
+        Tag tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        
+        ArrayList<String> fixedModifications = new ArrayList<String>();
+        fixedModifications.add("carbamidomethyl c");
+        ArrayList<String> variableModifications = new ArrayList<String>();
+        variableModifications.add("oxidation of m");
+        variableModifications.add("pyro-cmc");
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        Assert.assertTrue(proteinMapping.isEmpty());
+        
+        cTermGap += 57.02;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        Assert.assertTrue(proteinMapping.size() == 1);
+        ArrayList<Peptide> peptides = new ArrayList<Peptide>(proteinMapping.keySet());
+        ArrayList<Integer> indexes = proteinMapping.get(peptides.get(0)).get("test");
+        Assert.assertTrue(indexes.size() == 1);
+        Assert.assertTrue(indexes.get(0) == 3);
+        
+        nTermGap += 15.99;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        Assert.assertTrue(proteinMapping.size() == 1);
+        peptides = new ArrayList<Peptide>(proteinMapping.keySet());
+        indexes = proteinMapping.get(peptides.get(0)).get("test");
+        Assert.assertTrue(indexes.size() == 1);
+        Assert.assertTrue(indexes.get(0) == 3);
+        
+        aminoAcidPattern = new AminoAcidPattern("TEST");
+        nTermGap = AminoAcid.K.monoisotopicMass + AminoAcid.C.monoisotopicMass + 57.02 - 17.0265;
+        cTermGap = AminoAcid.K.monoisotopicMass;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        
+        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        Assert.assertTrue(proteinMapping.size() == 1);
+        peptides = new ArrayList<Peptide>(proteinMapping.keySet());
+        indexes = proteinMapping.get(peptides.get(0)).get("test");
+        Assert.assertTrue(indexes.size() == 1);
+        Assert.assertTrue(indexes.get(0) == 11);
     }
 }

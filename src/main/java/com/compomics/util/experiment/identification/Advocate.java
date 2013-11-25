@@ -41,6 +41,10 @@ public interface Advocate extends Serializable {
      * PepNovo
      */
     public static final int PEPNOVO = 6;
+    /**
+     * DeNovoGUI
+     */
+    public static final int DENOVOGUI = 7;
 
     /**
      * Getter for the name of the Advocate.
@@ -55,4 +59,5 @@ public interface Advocate extends Serializable {
      * @return the index of the advocate
      */
     public int getId();
+
 }

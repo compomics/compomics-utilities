@@ -242,7 +242,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     public void resetPrimaryProgressCounter() {
 
         // @TODO: perhaps this should be added to the waiting handler interface?
-
         progressBar.setIndeterminate(false);
         progressBar.setStringPainted(true);
         progressBar.setValue(0);
@@ -282,7 +281,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         // this split pane trick should not be needed, but if not used the look and feel of the
         // indeterminate progress bar changes when moving back and forth between the two...
-
         if (indeterminate) {
             secondaryProgressBarSplitPane.setDividerLocation(secondaryProgressBarSplitPane.getWidth());
         } else {
@@ -641,7 +639,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
             @Override
             public String getDescription() {
-                return "Supported formats: Html (.html)";
+                return "Supported formats: html (.html)";
             }
         };
 
@@ -906,18 +904,24 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     @Override
     public void appendReport(String report, boolean includeDate, boolean addNewLine) {
 
+        String reportWithoutHtml = getReportWithoutHtml();
+
         if (includeDate) {
             Date date = new Date();
-            reportEditorPane.setText("<html>" + getReportWithoutHtml() + date + tabHtml + report + "</html>");
+            if (addNewLine) {
+                reportEditorPane.setText("<html>" + reportWithoutHtml + date + tabHtml + report + "<br></html>");
+            } else {
+                reportEditorPane.setText("<html>" + reportWithoutHtml + date + tabHtml + report + "</html>");
+            }
         } else {
-            reportEditorPane.setText("<html>" + getReportWithoutHtml() + report + "</html>");
+            if (addNewLine) {
+                reportEditorPane.setText("<html>" + reportWithoutHtml + report + "<br></html>");
+            } else {
+                reportEditorPane.setText("<html>" + reportWithoutHtml + report + "</html>");
+            }
         }
 
-        if (addNewLine) {
-            reportEditorPane.setText("<html>" + getReportWithoutHtml() + "<br>" + "</html>");
-        }
-        
-        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() -1);
+        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
     }
 
     /**
@@ -925,7 +929,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public void appendReportNewLineNoDate() {
         reportEditorPane.setText("<html>" + getReportWithoutHtml() + tabHtml + "</html>");
-        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() -1);
+        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
     }
 
     /**
@@ -933,7 +937,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public void appendReportEndLine() {
         reportEditorPane.setText("<html>" + getReportWithoutHtml() + "<br>" + "</html>");
-        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() -1);
+        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
     }
 
     /**
@@ -994,10 +998,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * Make the dialog shake when the process has completed.
      */
     public void startShake() {
-        final long startTime;
 
         naturalLocation = this.getLocation();
-        startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
 
         dialog = this;
 

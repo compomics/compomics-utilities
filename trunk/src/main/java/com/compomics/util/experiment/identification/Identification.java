@@ -5,7 +5,7 @@ import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
-import com.compomics.util.experiment.identification.advocates.SearchEngine;
+import com.compomics.util.experiment.identification.advocates.SpectrumIdentificationAlgorithm;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -1134,10 +1134,10 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the spectrum identifications for a given spectrum file name.
+     * Returns the keys of the spectrum identifications for a given spectrum file name.
      *
      * @param spectrumFile the name of the spectrum file
-     * @return the corresponding list of identifications
+     * @return the corresponding list of spectrum matches keys. See Spectrum.getKey() for more details.
      */
     public ArrayList<String> getSpectrumIdentification(String spectrumFile) {
         return spectrumIdentificationMap.get(spectrumFile);
@@ -1304,7 +1304,7 @@ public abstract class Identification extends ExperimentObject {
             if (!proteinMatch.getKey().equals(proteinKey)) {
                     throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
                             + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
-                            + SearchEngine.getName(spectrumMatch.getBestPeptideAssumption().getAdvocate()) + ".");
+                            + SpectrumIdentificationAlgorithm.getName(spectrumMatch.getBestPeptideAssumption().getAdvocate()) + ".");
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteinsNoRemapping()) {

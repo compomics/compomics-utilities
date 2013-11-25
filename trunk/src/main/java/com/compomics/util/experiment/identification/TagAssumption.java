@@ -19,6 +19,12 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     private Tag tag;
 
     /**
+     * Constructor for en empty assumption.
+     */
+    public TagAssumption() {
+    }
+
+    /**
      * Constructor.
      *
      * @param advocate the advocate supporting this assumption

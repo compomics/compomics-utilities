@@ -4,12 +4,11 @@ import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * This class models a search engine. For now only Mascot, OMSSA and X!Tandem
- * are implemented.
+ * This class represents a spectrum identification algorithm.
  *
  * @author Marc Vaudel
  */
-public class SearchEngine extends ExperimentObject implements Advocate {
+public class SpectrumIdentificationAlgorithm extends ExperimentObject implements Advocate {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.
@@ -23,7 +22,7 @@ public class SearchEngine extends ExperimentObject implements Advocate {
     /**
      * Constructor for a search engine.
      */
-    public SearchEngine() {
+    public SpectrumIdentificationAlgorithm() {
     }
 
     /**
@@ -31,7 +30,7 @@ public class SearchEngine extends ExperimentObject implements Advocate {
      *
      * @param searchEngineId the search engine index
      */
-    public SearchEngine(int searchEngineId) {
+    public SpectrumIdentificationAlgorithm(int searchEngineId) {
         id = searchEngineId;
     }
 

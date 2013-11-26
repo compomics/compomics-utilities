@@ -34,4 +34,55 @@
         <MSModSpec_unimod>00</MSModSpec_unimod>
         <MSModSpec_psi-ms>testMod</MSModSpec_psi-ms>
     </MSModSpec>
+    <MSModSpec>
+        <MSModSpec_mod>
+            <MSMod value="carbamidomethylc">2</MSMod>
+        </MSModSpec_mod>
+        <MSModSpec_type>
+            <MSModType value="modaa">0</MSModType>
+        </MSModSpec_type>
+        <MSModSpec_name>carbamidomethyl C</MSModSpec_name>
+        <MSModSpec_monomass>57.021464</MSModSpec_monomass>
+        <MSModSpec_averagemass>57.0513</MSModSpec_averagemass>
+        <MSModSpec_n15mass>0</MSModSpec_n15mass>
+        <MSModSpec_residues>
+            <MSModSpec_residues_E>C</MSModSpec_residues_E>
+        </MSModSpec_residues>
+        <MSModSpec_unimod>4</MSModSpec_unimod>
+        <MSModSpec_psi-ms>Carbamidomethyl</MSModSpec_psi-ms>
+    </MSModSpec>
+    <MSModSpec>
+        <MSModSpec_mod>
+            <MSMod value="oxym">3</MSMod>
+        </MSModSpec_mod>
+        <MSModSpec_type>
+            <MSModType value="modaa">0</MSModType>
+        </MSModSpec_type>
+        <MSModSpec_name>oxidation of M</MSModSpec_name>
+        <MSModSpec_monomass>15.994915</MSModSpec_monomass>
+        <MSModSpec_averagemass>15.9994</MSModSpec_averagemass>
+        <MSModSpec_n15mass>0</MSModSpec_n15mass>
+        <MSModSpec_residues>
+            <MSModSpec_residues_E>M</MSModSpec_residues_E>
+        </MSModSpec_residues>
+        <MSModSpec_unimod>35</MSModSpec_unimod>
+        <MSModSpec_psi-ms>Oxidation</MSModSpec_psi-ms>
+    </MSModSpec>
+    <MSModSpec>
+        <MSModSpec_mod>
+            <MSMod value="ntermpeppyrocmc">4</MSMod>
+        </MSModSpec_mod>
+        <MSModSpec_type>
+            <MSModType value="modnpaa">6</MSModType>
+        </MSModSpec_type>
+        <MSModSpec_name>pyro-cmC</MSModSpec_name>
+        <MSModSpec_monomass>-17.026549</MSModSpec_monomass>
+        <MSModSpec_averagemass>-17.0305</MSModSpec_averagemass>
+        <MSModSpec_n15mass>0</MSModSpec_n15mass>
+        <MSModSpec_residues>
+            <MSModSpec_residues_E>C</MSModSpec_residues_E>
+        </MSModSpec_residues>
+        <MSModSpec_unimod>385</MSModSpec_unimod>
+        <MSModSpec_psi-ms>Ammonia-loss</MSModSpec_psi-ms>
+    </MSModSpec>
 </MSModSpecSet>

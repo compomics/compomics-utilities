@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.experiment.io.identifications.IdentificationParametersReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -121,6 +120,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         formComponentResized(null);
         setLocationRelativeTo(parentFrame);
 
+        if (searchParameters.getParametersFile() != null) {
+            setTitle("Search Settings - " + searchParameters.getParametersFile().getName());
+        }
+
         if (setVisible) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -147,7 +150,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         fragmentIon2Cmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         precursorIonUnit.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        ((TitledBorder) configurationFilePanelSettings.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Configuration File" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
         ((TitledBorder) dataBasePanelSettings.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Database" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
         ((TitledBorder) modificationsPanel.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Modifications" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
         ((TitledBorder) proteaseAndFragmentationPanel.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Protease & Fragmentation" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
@@ -214,12 +216,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        configurationFilePanelSettings = new javax.swing.JPanel();
-        configurationFileLbl2 = new javax.swing.JLabel();
-        browseConfigurationButton2 = new javax.swing.JButton();
-        configurationFileTxt_parameters = new javax.swing.JTextField();
-        saveConfiguration = new javax.swing.JButton();
-        saveConfigurationAs = new javax.swing.JButton();
         proteaseAndFragmentationPanel = new javax.swing.JPanel();
         enzymeLabel = new javax.swing.JLabel();
         enzymesCmb = new javax.swing.JComboBox();
@@ -279,7 +275,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Search Settings");
-        setMinimumSize(new java.awt.Dimension(800, 700));
+        setMinimumSize(new java.awt.Dimension(800, 600));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -287,67 +283,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        configurationFilePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings File"));
-        configurationFilePanelSettings.setOpaque(false);
-
-        configurationFileLbl2.setText("Settings File");
-
-        browseConfigurationButton2.setText("Load");
-        browseConfigurationButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseConfigurationButton2ActionPerformed(evt);
-            }
-        });
-
-        configurationFileTxt_parameters.setEditable(false);
-
-        saveConfiguration.setText("Save");
-        saveConfiguration.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveConfigurationActionPerformed(evt);
-            }
-        });
-
-        saveConfigurationAs.setText("Save As");
-        saveConfigurationAs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveConfigurationAsActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout configurationFilePanelSettingsLayout = new javax.swing.GroupLayout(configurationFilePanelSettings);
-        configurationFilePanelSettings.setLayout(configurationFilePanelSettingsLayout);
-        configurationFilePanelSettingsLayout.setHorizontalGroup(
-            configurationFilePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, configurationFilePanelSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(configurationFileLbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(configurationFileTxt_parameters)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(browseConfigurationButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveConfiguration)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveConfigurationAs, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        configurationFilePanelSettingsLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {browseConfigurationButton2, saveConfiguration, saveConfigurationAs});
-
-        configurationFilePanelSettingsLayout.setVerticalGroup(
-            configurationFilePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(configurationFilePanelSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(configurationFilePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(configurationFileLbl2)
-                    .addComponent(configurationFileTxt_parameters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveConfigurationAs)
-                    .addComponent(saveConfiguration)
-                    .addComponent(browseConfigurationButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         proteaseAndFragmentationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Enzyme & Fragmentation"));
         proteaseAndFragmentationPanel.setOpaque(false);
@@ -483,7 +418,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         dataBasePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Database"));
         dataBasePanelSettings.setOpaque(false);
 
-        databaseSettingsLbl.setText("Database (FASTA)*");
+        databaseSettingsLbl.setText("Database (FASTA)");
 
         databaseSettingsTxt.setEditable(false);
 
@@ -600,7 +535,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                        .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                         .addGap(242, 242, 242))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -694,7 +629,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             .addComponent(variableModificationsLabel)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+                .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addVariableModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -752,11 +687,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         });
         modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                modificationsTableMouseReleased(evt);
-            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 modificationsTableMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseReleased(evt);
             }
         });
         modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -792,7 +727,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             availableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
             .addGroup(availableModsPanelLayout.createSequentialGroup()
-                .addComponent(modificationsListCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(modificationsListCombo, 0, 317, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openModificationSettingsJButton)
                 .addGap(2, 2, 2))
@@ -813,7 +748,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             modificationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(modificationsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(modificationTypesSplitPane)
+                .addComponent(modificationTypesSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(availableModsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -827,8 +762,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 .addContainerGap())
         );
 
+        modificationsLayeredPane.add(modificationsPanel);
         modificationsPanel.setBounds(0, 0, 800, 318);
-        modificationsLayeredPane.add(modificationsPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -870,7 +805,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(configurationFilePanelSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -890,8 +824,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(configurationFilePanelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
@@ -918,106 +850,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Loads settings from a parameters file.
-     *
-     * @param evt
-     */
-    private void browseConfigurationButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseConfigurationButton2ActionPerformed
-
-        // First check whether a file has already been selected. If so, start from that file's parent.
-        File startLocation = new File(searchSettingsDialogParent.getLastSelectedFolder());
-        if (configurationFileTxt_parameters.getText() != null && new File(configurationFileTxt_parameters.getText()).exists()) {
-            File temp = new File(configurationFileTxt_parameters.getText());
-            startLocation = temp.getParentFile();
-        }
-
-        JFileChooser fc = new JFileChooser(startLocation);
-
-        FileFilter filter = new FileFilter() {
-            @Override
-            public boolean accept(File myFile) {
-                return myFile.getName().toLowerCase().endsWith(".properties")
-                        || myFile.getName().toLowerCase().endsWith(".parameters")
-                        || myFile.isDirectory();
-            }
-
-            @Override
-            public String getDescription() {
-                return "SearchGUI settings file (.parameters)";
-            }
-        };
-
-        fc.setFileFilter(filter);
-        int result = fc.showOpenDialog(this);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            String fileName = file.getName();
-            searchSettingsDialogParent.setLastSelectedFolder(file.getAbsolutePath());
-
-            if (fileName.endsWith(".parameters") || fileName.endsWith(".properties")) {
-
-                try {
-                    searchParameters = SearchParameters.getIdentificationParameters(file);
-                    loadModifications();
-                    setScreenProps();
-                } catch (Exception e) {
-                    try {
-                        // Old school format, overwrite old file
-                        Properties props = loadProperties(file);
-                        searchParameters = IdentificationParametersReader.getSearchParameters(props, searchSettingsDialogParent.getUserModificationsFile());
-                        setScreenProps();
-
-                        if (fileName.endsWith(".properties")) {
-                            String newName = fileName.substring(0, fileName.lastIndexOf(".")) + ".parameters";
-                            try {
-                                file.delete();
-                            } catch (Exception deleteException) {
-                                deleteException.printStackTrace();
-                            }
-                            file = new File(file.getParentFile(), newName);
-                        }
-                        SearchParameters.saveIdentificationParameters(searchParameters, file);
-                    } catch (Exception saveException) {
-                        e.printStackTrace();
-                        saveException.printStackTrace();
-                        JOptionPane.showMessageDialog(this, "Error occured while reading " + file + ". Please verify the search paramters.", "File Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }
-
-                parametersFile = file;
-                configurationFileTxt_parameters.setText(parametersFile.getAbsolutePath());
-                searchParameters = getSearchParameters();
-                searchParameters.setParametersFile(parametersFile);
-                searchSettingsDialogParent.setSearchParameters(searchParameters);
-                validateParametersInput(true);
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a valid search settings file (.paramaters).", "File Error", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_browseConfigurationButton2ActionPerformed
-
-    /**
-     * Saves the parameters to file.
-     *
-     * @param evt
-     */
-    private void saveConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigurationActionPerformed
-        savePressed();
-    }//GEN-LAST:event_saveConfigurationActionPerformed
-
-    /**
-     * Saves the parameters to file.
-     *
-     * @param evt
-     */
-    private void saveConfigurationAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigurationAsActionPerformed
-        saveAsPressed();
-    }//GEN-LAST:event_saveConfigurationAsActionPerformed
 
     /**
      * Validates the parameters.
@@ -1312,17 +1144,21 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         SearchParameters tempSearchParameters = getSearchParameters();
 
-        if (configurationFileTxt_parameters.getText().length() == 0) {
-            tempSearchParameters.setParametersFile(null);
-            searchSettingsDialogParent.setSearchParameters(tempSearchParameters);
-            dispose();
-        } else {
-            if (!searchSettingsDialogParent.getSearchParameters().equals(tempSearchParameters)) {
+        if (!searchSettingsDialogParent.getSearchParameters().equals(tempSearchParameters)) {
 
-                int value = JOptionPane.showConfirmDialog(this, "The search parameters have been changed."
-                        + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
+            int value = JOptionPane.showConfirmDialog(this, "The search parameters have changed."
+                    + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                if (value == JOptionPane.YES_OPTION) {
+            if (value == JOptionPane.YES_OPTION) {
+
+                // no params file > have the user select a file
+                if (tempSearchParameters.getParametersFile() == null) {
+                    saveAsPressed();
+                    tempSearchParameters = getSearchParameters(); // see if the settings have changed
+                }
+
+                if (tempSearchParameters.getParametersFile() != null) {
+
                     try {
                         SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
                         searchSettingsDialogParent.setSearchParameters(tempSearchParameters);
@@ -1336,12 +1172,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                                 + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
                         e.printStackTrace();
                     }
-                } else if (value == JOptionPane.NO_OPTION) {
-                    dispose(); // reject the changes
                 }
-            } else {
-                dispose(); // no changes
+            } else if (value == JOptionPane.NO_OPTION) {
+                dispose(); // reject the changes
             }
+        } else {
+            dispose(); // no changes
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -1636,11 +1472,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private javax.swing.JButton addVariableModification;
     private javax.swing.JPanel availableModsPanel;
     private javax.swing.JPanel backgroundPanel;
-    private javax.swing.JButton browseConfigurationButton2;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel configurationFileLbl2;
-    private javax.swing.JPanel configurationFilePanelSettings;
-    private javax.swing.JTextField configurationFileTxt_parameters;
     private javax.swing.JPanel dataBasePanelSettings;
     private javax.swing.JLabel databaseSettingsLbl;
     private javax.swing.JTextField databaseSettingsTxt;
@@ -1678,8 +1510,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private javax.swing.JPanel proteaseAndFragmentationPanel;
     private javax.swing.JButton removeFixedModification;
     private javax.swing.JButton removeVariableModification;
-    private javax.swing.JButton saveConfiguration;
-    private javax.swing.JButton saveConfigurationAs;
     private javax.swing.JLabel variableModificationsLabel;
     private javax.swing.JScrollPane variableModsJScrollPane;
     private javax.swing.JTable variableModsTable;
@@ -1765,7 +1595,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private void setScreenProps() {
 
         if (searchParameters.getParametersFile() != null) {
-            configurationFileTxt_parameters.setText(searchParameters.getParametersFile().getAbsolutePath());
             parametersFile = searchParameters.getParametersFile();
         }
 
@@ -2019,9 +1848,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             // If so, start from that file's parent.
             File startLocation = new File(searchSettingsDialogParent.getLastSelectedFolder());
 
-            if (configurationFileTxt_parameters.getText() != null && !configurationFileTxt_parameters.getText().trim().equals("")) {
-                File temp = new File(configurationFileTxt_parameters.getText());
-                startLocation = temp.getParentFile();
+            if (searchParameters.getParametersFile() != null) {
+                startLocation = searchParameters.getParametersFile();
             }
 
             boolean complete = false;
@@ -2068,7 +1896,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
 
             savePressed();
-            configurationFileTxt_parameters.setText(parametersFile.getPath());
             searchParameters.setParametersFile(parametersFile);
         }
     }
@@ -2374,8 +2201,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         charge = new Integer(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, charge));
 
-        if (configurationFileTxt_parameters.getText().length() > 0) {
-            tempSearchParameters.setParametersFile(new File(configurationFileTxt_parameters.getText()));
+        if (searchParameters.getParametersFile() != null) {
+            tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         }
 
         ptmFactory.setSearchedOMSSAIndexes(tempSearchParameters.getModificationProfile());

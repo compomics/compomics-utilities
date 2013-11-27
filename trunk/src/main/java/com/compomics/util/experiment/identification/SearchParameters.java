@@ -9,6 +9,7 @@ import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import no.uib.jsparklines.data.XYDataPoint;
 
 /**
@@ -161,6 +162,10 @@ public class SearchParameters implements Serializable {
      * Indicates whether a blast query shall be generated (DeNovoGUI setting).
      */
     private Boolean generateQuery = false;
+    /**
+     * A map from the PepNovo PTM symbols to the utilities PTM names.
+     */
+    private Map<String, String> pepNovoPtmMap;
 
     /**
      * Constructor.
@@ -347,11 +352,11 @@ public class SearchParameters implements Serializable {
      */
     public static String[] getIons() {
         String[] ions = new String[forwardIons.length + rewindIons.length];
-        for (int i = 0; i < forwardIons.length; i++) {
-            ions[ions.length] = forwardIons[i];
+        for (String forwardIon1 : forwardIons) {
+            ions[ions.length] = forwardIon1;
         }
-        for (int i = 0; i < rewindIons.length; i++) {
-            ions[ions.length] = rewindIons[i];
+        for (String rewindIon1 : rewindIons) {
+            ions[ions.length] = rewindIon1;
         }
         return ions;
     }
@@ -746,7 +751,7 @@ public class SearchParameters implements Serializable {
     /**
      * Returns the search parameters as a string.
      *
-     * @param html use html formatting
+     * @param html use HTML formatting
      * @return the search parameters as a string
      */
     public String toString(boolean html) {
@@ -789,7 +794,7 @@ public class SearchParameters implements Serializable {
                     output.append(ptm);
                     first = false;
                 } else {
-                    output.append("//" + ptm);
+                    output.append("//").append(ptm);
                 }
             }
         }
@@ -804,7 +809,7 @@ public class SearchParameters implements Serializable {
                     output.append(ptm);
                     first = false;
                 } else {
-                    output.append("//" + ptm);
+                    output.append("//").append(ptm);
                 }
             }
         }
@@ -819,7 +824,7 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("PRECURSOR_MASS_TOLERANCE_UNIT=");
-        if (currentPrecursorAccuracyType == currentPrecursorAccuracyType.PPM) {
+        if (currentPrecursorAccuracyType == PrecursorAccuracyType.PPM) {
             output.append("ppm");
         } else {
             output.append("Da");
@@ -1131,5 +1136,23 @@ public class SearchParameters implements Serializable {
      */
     public void setGenerateQuery(Boolean generateQuery) {
         this.generateQuery = generateQuery;
+    }
+
+    /**
+     * Returns the PepNovo to utilities PTM map. Null if not set.
+     * 
+     * @return the PepNovo to utilities PTM map, null if not set
+     */
+    public Map<String, String> getPepNovoPtmMap() {
+        return pepNovoPtmMap;
+    }
+
+    /**
+     * Set the PepNovo to utilities PTM map
+     * 
+     * @param pepNovoPtmMap the pepNovoPtmMap to set
+     */
+    public void setPepNovoPtmMap(Map<String, String> pepNovoPtmMap) {
+        this.pepNovoPtmMap = pepNovoPtmMap;
     }
 }

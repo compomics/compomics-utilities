@@ -1520,7 +1520,8 @@ public class AminoAcidPattern implements Serializable, TagComponent {
                 if (aminoAcids.size() == 1) {
                     mass += getTargetedAA(i).get(0).monoisotopicMass;
                 } else {
-                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino-acid pattern " + asSequence() + ". " + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid.");
+                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". " 
+                            + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid.");
                 }
             } else {
                 throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". null as targeted amino acid map.");

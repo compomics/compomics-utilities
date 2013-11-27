@@ -12,6 +12,8 @@ import javax.swing.Timer;
  * @author Harald Barsnes
  */
 public class SwingUtils {
+    
+    // @TODO: requires java 7, hence not in use at the moment, see the lines that are commented out
 
     /**
      * Creates an animation to fade the dialog opacity from 0 to 1. Using a
@@ -39,14 +41,14 @@ public class SwingUtils {
             @Override
             public void actionPerformed(ActionEvent e) {
                 opacity += incrementSize;
-                dialog.setOpacity(Math.min(opacity, 1));
+                //dialog.setOpacity(Math.min(opacity, 1)); // requires java 1.7
                 if (opacity >= 1) {
                     timer.stop();
                 }
             }
         });
 
-        dialog.setOpacity(0);
+        //dialog.setOpacity(0); // requires java 1.7
         timer.start();
         dialog.setVisible(true);
     }
@@ -78,7 +80,7 @@ public class SwingUtils {
             @Override
             public void actionPerformed(ActionEvent e) {
                 opacity -= incrementSize;
-                dialog.setOpacity(Math.max(opacity, 0));
+                //dialog.setOpacity(Math.max(opacity, 0)); // requires java 1.7
                 if (opacity < 0) {
                     timer.stop();
                     dialog.dispose();
@@ -86,7 +88,7 @@ public class SwingUtils {
             }
         });
 
-        dialog.setOpacity(1);
+        //dialog.setOpacity(1); // requires java 1.7
         timer.start();
     }
 
@@ -122,7 +124,7 @@ public class SwingUtils {
 
                 if (!displayed) {
                     opacity += incrementSize;
-                    dialog.setOpacity(Math.min(opacity, 1));
+                    //dialog.setOpacity(Math.min(opacity, 1)); // requires java 1.7
                     if (opacity >= 1) {
                         timer.setDelay(displayTime);
                         displayed = true;
@@ -130,7 +132,7 @@ public class SwingUtils {
                 } else {
                     timer.setDelay(delay);
                     opacity -= incrementSize;
-                    dialog.setOpacity(Math.max(opacity, 0));
+                    //dialog.setOpacity(Math.max(opacity, 0)); // requires java 1.7
                     if (opacity < 0) {
                         timer.stop();
                         dialog.dispose();
@@ -139,7 +141,7 @@ public class SwingUtils {
             }
         });
 
-        dialog.setOpacity(0);
+        //dialog.setOpacity(0); // requires java 1.7
         timer.start();
         dialog.setVisible(true);
     }

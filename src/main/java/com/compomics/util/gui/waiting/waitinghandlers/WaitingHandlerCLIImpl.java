@@ -42,47 +42,47 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     protected String iReport = "";
 
     @Override
-    public void setMaxPrimaryProgressCounter(int maxProgressValue) {
+    public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
         primaryMaxProgressCounter = maxProgressValue;
     }
 
     @Override
-    public void increasePrimaryProgressCounter() {
+    public synchronized void increasePrimaryProgressCounter() {
         primaryProgressCounter++;
     }
 
     @Override
-    public void increasePrimaryProgressCounter(int amount) {
+    public synchronized void increasePrimaryProgressCounter(int amount) {
         primaryProgressCounter += amount;
     }
 
     @Override
-    public void setMaxSecondaryProgressCounter(int maxProgressValue) {
+    public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
         secondaryMaxProgressCounter = maxProgressValue;
     }
 
     @Override
-    public void resetSecondaryProgressCounter() {
+    public synchronized void resetSecondaryProgressCounter() {
         secondaryProgressCounter = 0;
     }
 
     @Override
-    public void increaseSecondaryProgressCounter() {
+    public synchronized void increaseSecondaryProgressCounter() {
         secondaryProgressCounter++;
     }
 
     @Override
-    public void setSecondaryProgressCounter(int value) {
+    public synchronized void setSecondaryProgressCounter(int value) {
         secondaryProgressCounter = value;
     }
 
     @Override
-    public void increaseSecondaryProgressCounter(int amount) {
+    public synchronized void increaseSecondaryProgressCounter(int amount) {
         secondaryProgressCounter += amount;
     }
 
     @Override
-    public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
+    public synchronized void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
         secondaryProgressCounter = -1;
     }
 
@@ -97,7 +97,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public void appendReport(String report, boolean includeDate, boolean addNewLine) {
+    public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
 
         String tempReport = report;
 
@@ -115,13 +115,13 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public void appendReportNewLineNoDate() {
+    public synchronized void appendReportNewLineNoDate() {
         iReport = iReport + System.getProperty("line.separator");
         System.out.append(System.getProperty("line.separator"));
     }
 
     @Override
-    public void appendReportEndLine() {
+    public synchronized void appendReportEndLine() {
         iReport = iReport + System.getProperty("line.separator");
         System.out.append(System.getProperty("line.separator"));
     }
@@ -142,7 +142,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
+    public synchronized void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
         if (indeterminate) {
             primaryProgressCounter = -1;
         }
@@ -159,27 +159,27 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public void resetPrimaryProgressCounter() {
+    public synchronized void resetPrimaryProgressCounter() {
         primaryProgressCounter = 0;
     }
     
     @Override
-    public int getPrimaryProgressCounter(){
+    public synchronized int getPrimaryProgressCounter(){
         return primaryProgressCounter;
     }
 
     @Override
-    public int getMaxPrimaryProgressCounter(){
+    public synchronized int getMaxPrimaryProgressCounter(){
         return primaryMaxProgressCounter;
     }
 
     @Override
-    public int getSecondaryProgressCounter(){
+    public synchronized int getSecondaryProgressCounter(){
         return secondaryProgressCounter;
     }
 
     @Override
-    public int getMaxSecondaryProgressCounter(){
+    public synchronized int getMaxSecondaryProgressCounter(){
         return secondaryMaxProgressCounter;
     }
 }

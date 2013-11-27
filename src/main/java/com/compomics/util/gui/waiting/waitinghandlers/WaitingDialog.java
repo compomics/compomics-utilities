@@ -196,14 +196,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param maxProgressValue the max value
      */
-    public void setMaxPrimaryProgressCounter(int maxProgressValue) {
+    public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
         progressBar.setMaximum(maxProgressValue);
     }
 
     /**
      * Increase the progress bar value by one "counter".
      */
-    public void increasePrimaryProgressCounter() {
+    public synchronized void increasePrimaryProgressCounter() {
         progressBar.setValue(progressBar.getValue() + 1);
     }
 
@@ -212,7 +212,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param amount the amount to increase the value by
      */
-    public void increasePrimaryProgressCounter(int amount) {
+    public synchronized void increasePrimaryProgressCounter(int amount) {
         progressBar.setValue(progressBar.getValue() + amount);
     }
 
@@ -222,7 +222,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param maxProgressValue the max value
      */
-    public void setMaxSecondaryProgressCounter(int maxProgressValue) {
+    public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
         secondaryJProgressBar.setValue(0);
         secondaryJProgressBar.setMaximum(maxProgressValue);
     }
@@ -230,7 +230,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Reset the secondary progress bar value to 0.
      */
-    public void resetSecondaryProgressCounter() {
+    public synchronized void resetSecondaryProgressCounter() {
         secondaryJProgressBar.setIndeterminate(false);
         secondaryJProgressBar.setStringPainted(true);
         secondaryJProgressBar.setValue(0);
@@ -239,7 +239,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Reset the primary progress bar value to 0.
      */
-    public void resetPrimaryProgressCounter() {
+    public synchronized void resetPrimaryProgressCounter() {
 
         // @TODO: perhaps this should be added to the waiting handler interface?
         progressBar.setIndeterminate(false);
@@ -250,7 +250,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Increase the secondary progress bar value by one "counter".
      */
-    public void increaseSecondaryProgressCounter() {
+    public synchronized void increaseSecondaryProgressCounter() {
         secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + 1);
     }
 
@@ -259,7 +259,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param value the progress value
      */
-    public void setSecondaryProgressCounter(int value) {
+    public synchronized void setSecondaryProgressCounter(int value) {
         secondaryJProgressBar.setValue(value);
     }
 
@@ -268,7 +268,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param amount the amount to increase the value by
      */
-    public void increaseSecondaryProgressCounter(int amount) {
+    public synchronized void increaseSecondaryProgressCounter(int amount) {
         secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + amount);
     }
 
@@ -927,7 +927,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Append two tabs to the report. No new line.
      */
-    public void appendReportNewLineNoDate() {
+    public synchronized void appendReportNewLineNoDate() {
         reportEditorPane.setText("<html>" + getReportWithoutHtml() + tabHtml + "</html>");
         reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
     }
@@ -935,7 +935,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Append a new line to the report.
      */
-    public void appendReportEndLine() {
+    public synchronized void appendReportEndLine() {
         reportEditorPane.setText("<html>" + getReportWithoutHtml() + "<br>" + "</html>");
         reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
     }
@@ -955,7 +955,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @return true if the run is canceled
      */
-    public boolean isRunCanceled() {
+    public synchronized boolean isRunCanceled() {
         return runCanceled;
     }
 
@@ -1152,7 +1152,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
 
         output.append("# ------------------------------------------------------------------<br><br><br>");
-
         output.append(getReportWithoutHtml());
 
         return output.toString();
@@ -1213,22 +1212,22 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public int getPrimaryProgressCounter() {
+    public synchronized int getPrimaryProgressCounter() {
         return progressBar.getValue();
     }
 
     @Override
-    public int getMaxPrimaryProgressCounter() {
+    public synchronized int getMaxPrimaryProgressCounter() {
         return progressBar.getMaximum();
     }
 
     @Override
-    public int getSecondaryProgressCounter() {
+    public synchronized int getSecondaryProgressCounter() {
         return secondaryJProgressBar.getValue();
     }
 
     @Override
-    public int getMaxSecondaryProgressCounter() {
+    public synchronized int getMaxSecondaryProgressCounter() {
         return secondaryJProgressBar.getMaximum();
     }
 }

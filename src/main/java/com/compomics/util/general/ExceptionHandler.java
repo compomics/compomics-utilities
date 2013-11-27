@@ -79,7 +79,7 @@ public class ExceptionHandler {
                     String error = "";
 
                     if (e.getLocalizedMessage() != null) {
-                        error = ": " + e.getLocalizedMessage();
+                        error = e.getLocalizedMessage();
                     }
 
                     if (!error.endsWith(".")) {

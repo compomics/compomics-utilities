@@ -856,6 +856,11 @@ public abstract class Identification extends ExperimentObject {
      * exists
      */
     public boolean matchExists(String matchKey) {
+
+        if (matchKey == null || matchKey.length() == 0) {
+            return false;
+        }
+
         String fileName = Spectrum.getSpectrumFile(matchKey);
         ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
         if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
@@ -1134,10 +1139,12 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the keys of the spectrum identifications for a given spectrum file name.
+     * Returns the keys of the spectrum identifications for a given spectrum
+     * file name.
      *
      * @param spectrumFile the name of the spectrum file
-     * @return the corresponding list of spectrum matches keys. See Spectrum.getKey() for more details.
+     * @return the corresponding list of spectrum matches keys. See
+     * Spectrum.getKey() for more details.
      */
     public ArrayList<String> getSpectrumIdentification(String spectrumFile) {
         return spectrumIdentificationMap.get(spectrumFile);
@@ -1206,9 +1213,10 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler displaying the progress. Can be
      * null. The progress will be displayed as secondary.
-     * @param matchingType the amino acid matching type to use to create peptide matches
+     * @param matchingType the amino acid matching type to use to create peptide
+     * matches
      * @param massTolerance the mass tolerance
-     * 
+     *
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws IOException
@@ -1237,14 +1245,16 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Creates the peptides and protein instances based on the given spectrum
      * match. Note that the attribute bestAssumption should be set for every
-     * spectrum match at this point and peptides should be mapped to proteins. This operation will be very slow if the
-     * cache is already full.
-     * Note: if proteins are not set for a peptide they will be assigned using the default protein tree and the given matching parameters.
+     * spectrum match at this point and peptides should be mapped to proteins.
+     * This operation will be very slow if the cache is already full. Note: if
+     * proteins are not set for a peptide they will be assigned using the
+     * default protein tree and the given matching parameters.
      *
      * @param spectrumMatchKey The key of the spectrum match to add
-     * @param matchingType the amino acid matching type to use to create peptide matches
+     * @param matchingType the amino acid matching type to use to create peptide
+     * matches
      * @param massTolerance the mass tolerance
-     * 
+     *
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -1302,9 +1312,9 @@ public abstract class Identification extends ExperimentObject {
         } else {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide(), peptideKey);
             if (!proteinMatch.getKey().equals(proteinKey)) {
-                    throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
-                            + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
-                            + SpectrumIdentificationAlgorithm.getName(spectrumMatch.getBestPeptideAssumption().getAdvocate()) + ".");
+                throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
+                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
+                        + SpectrumIdentificationAlgorithm.getName(spectrumMatch.getBestPeptideAssumption().getAdvocate()) + ".");
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteinsNoRemapping()) {
@@ -1597,7 +1607,8 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the keys of the protein matches where a peptide can be found. Note: proteins have to be set for the peptide.
+     * Returns the keys of the protein matches where a peptide can be found.
+     * Note: proteins have to be set for the peptide.
      *
      * @param peptide the peptide of interest
      * @return the keys of the protein matches

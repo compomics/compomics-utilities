@@ -604,7 +604,7 @@ public class ObjectsDB implements Serializable {
      * object is not found when deserializing it.
      * @throws java.lang.InterruptedException 
      */
-    public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public synchronized Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         String correctedKey = correctKey(tableName, objectKey);
 

@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
  *
  * @author Marc Vaudel
  */
-public class AminoAcidPattern implements Serializable, TagComponent {
+public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Serial number for backward compatibility.

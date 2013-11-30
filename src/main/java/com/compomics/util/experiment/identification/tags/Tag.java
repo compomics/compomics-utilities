@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class Tag {
+public class Tag extends ExperimentObject {
 
     /**
      * The content of the tag.

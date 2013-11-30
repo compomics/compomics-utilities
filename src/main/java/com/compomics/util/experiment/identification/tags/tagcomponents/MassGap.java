@@ -1,13 +1,14 @@
 package com.compomics.util.experiment.identification.tags.tagcomponents;
 
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * An undefined mass gap.
  *
  * @author Marc
  */
-public class MassGap implements TagComponent {
+public class MassGap extends ExperimentObject implements TagComponent {
 
     /**
      * The value of the mass gap.

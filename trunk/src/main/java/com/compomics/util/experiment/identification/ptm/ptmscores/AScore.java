@@ -57,7 +57,7 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException  
      */
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
@@ -90,7 +90,7 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException  
      */
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
@@ -127,7 +127,7 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException  
      */
-    public static HashMap<ArrayList<Integer>, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) 
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -163,7 +163,7 @@ public class AScore {
             }
         }
 
-        HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
+        HashMap<Integer, Double> result = new HashMap<Integer, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         for (PTM ptm : ptms) {
             for (int potentialSite : peptide.getPotentialModificationSites(ptm, AminoAcidPattern.MatchingType.string, null)) {
@@ -307,29 +307,26 @@ public class AScore {
             }
 
             if (p1 == p2) {
-                result.put(peptideScoreToPostitionMap.get(scores.get(0)), 0.0);
+                result.put(posMin, 0.0);
+                result.put(posMax, 0.0);
             } else if (p1 < p2) {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
                 modificationProfile.add(posMin);
                 double score1 = -10 * Math.log10(p1);
                 double score2 = -10 * Math.log10(p2);
                 double score = score1 - score2;
-                result.put(modificationProfile, score);
+                result.put(posMin, score);
             } else {
                 ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
                 modificationProfile.add(posMax);
                 double score1 = -10 * Math.log10(p1);
                 double score2 = -10 * Math.log10(p2);
                 double score = score2 - score1;
-                result.put(modificationProfile, score);
+                result.put(posMax, score);
             }
         } else if (possibleSites.size() == nPTM) {
-            ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
             for (int pos : possibleSites) {
-                modificationProfile.add(pos);
-            }
-            if (possibleSites.size() > 0) {
-                result.put(modificationProfile, 100.0);
+                result.put(pos, 100.0);
             }
         } else {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during A-score calculation. Peptide key: " + peptide.getKey());
@@ -383,7 +380,7 @@ public class AScore {
             }
             if (!result.containsKey(peptideScore)) {
                 result.put(peptideScore, new ArrayList<Integer>());
-            }
+        }
             result.get(peptideScore).add(pos);
         }
         return result;

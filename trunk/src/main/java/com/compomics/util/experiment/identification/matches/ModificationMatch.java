@@ -25,7 +25,7 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * The location in the sequence, 1 is the first residue.
      *
-     * @deprecated use the index in the AminoAcidPattern instead
+     * @TODO: in the future try to use the AminoAcidPattern instead
      */
     private int modifiedSite;
     /**
@@ -83,7 +83,6 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * Getter for the modification site, 1 is the first amino acid.
      *
-     * @deprecated use the index in the AminoAcidPattern instead
      * @return the index of the modification in the sequence
      */
     public int getModificationSite() {
@@ -93,7 +92,6 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * Setter for the modification site, 1 is the first amino acid.
      *
-     * @deprecated use the index in the AminoAcidPattern instead
      * @param site the index of the modification in the sequence
      */
     public void setModificationSite(int site) {

@@ -23,7 +23,7 @@ public class ModificationProfile {
      */
     private String ptmName;
     /**
-     * The PTM profile. Delta scores in the first row and a score in the second row, 
+     * The PTM profile. Delta score in the first row and A-score in the second row, 
      * i.e., [d1][DELTA_SCORE_ROW_INDEX] and [a1][A_SCORE_ROW_INDEX].
      */
     private double[][] profile;
@@ -35,7 +35,7 @@ public class ModificationProfile {
     /**
      * Modification profile constructor.
      * 
-     * @param ptmName   the PTM namr
+     * @param ptmName   the PTM name
      * @param profile   the PTM profile
      * @param color     the PTM color
      */

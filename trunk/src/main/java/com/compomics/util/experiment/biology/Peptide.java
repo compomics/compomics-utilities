@@ -436,6 +436,25 @@ public class Peptide extends ExperimentObject {
         String test = peptideKey + MODIFICATION_SEPARATOR;
         return test.split(modification).length - 1;
     }
+    
+    /**
+     * Returns the number of variable modifications found with the given mass.
+     * 
+     * @param modificationMass the mass of the modification
+     * @return the number of occurrences of this modification
+     */
+    public int getNVariableModifications(double modificationMass) {
+        int n = 0;
+        for (ModificationMatch modificationMatch : modifications) {
+            if (modificationMatch.isVariable()) {
+                PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
+                if (ptm.getMass() == modificationMass) {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
 
     /**
      * Returns the list of modifications confidently localized or inferred for

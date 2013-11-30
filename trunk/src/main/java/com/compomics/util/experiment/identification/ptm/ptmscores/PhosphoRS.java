@@ -55,7 +55,7 @@ public class PhosphoRS {
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
      *
-     * @return a map sites -> phosphoRS sequence probability
+     * @return a map site -> phosphoRS site probability
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -67,7 +67,7 @@ public class PhosphoRS {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static HashMap<ArrayList<Integer>, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
+    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -103,7 +103,7 @@ public class PhosphoRS {
             }
         }
 
-        HashMap<ArrayList<Integer>, Double> result = new HashMap<ArrayList<Integer>, Double>();
+        HashMap<ArrayList<Integer>, Double> profileToScoreMap = new HashMap<ArrayList<Integer>, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
         for (PTM ptm : ptms) {
@@ -266,16 +266,28 @@ public class PhosphoRS {
 
             for (ArrayList<Integer> profile : possibleProfiles) {
                 double phosphoRsProbability = pInvMap.get(profile) / pInvTotal * 100; //in percent
-                result.put(profile, phosphoRsProbability);
+                profileToScoreMap.put(profile, phosphoRsProbability);
             }
 
         } else if (possibleSites.size() == nPTM) {
-            result.put(possibleSites, 100.0);
+            profileToScoreMap.put(possibleSites, 100.0);
         } else {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during A-score calculation. Peptide key: " + peptide.getKey());
         }
+        
+        HashMap<Integer, Double> scores = new HashMap<Integer, Double>();
+        for (ArrayList<Integer> profile : profileToScoreMap.keySet()) {
+            double score = profileToScoreMap.get(profile);
+            for (Integer site : profile) {
+                if (!scores.containsKey(site)) {
+                    scores.put(site, score);
+                } else {
+                    scores.put(site, scores.get(site) + score);
+                }
+            }
+        }
 
-        return result;
+        return scores;
     }
 
     /**

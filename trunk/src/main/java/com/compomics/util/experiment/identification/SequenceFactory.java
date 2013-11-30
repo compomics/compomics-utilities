@@ -1161,14 +1161,14 @@ public class SequenceFactory {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
             int memoryPreference = userPreferences.getMemoryPreference();
-            int memoryAllocated = 3*memoryPreference / 4;
+            int memoryAllocated = 3 * memoryPreference / 4;
             int cacheSize = 250000;
             if (memoryPreference < 2500) {
                 cacheSize = 5000;
             } else if (memoryPreference < 10000) {
                 cacheSize = 25000;
             }
-            
+
             defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
 
             int tagLength = 3;

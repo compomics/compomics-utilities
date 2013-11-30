@@ -5,20 +5,17 @@ import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidPattern.MatchingType;
 import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.identification.TagFactory;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
-import java.awt.print.Paper;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -29,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -275,6 +271,10 @@ public class ProteinTree {
             throw e;
         }
 
+        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+            return;
+        }
+
         try {
             componentsFactory.loadTags();
         } catch (Exception e) {
@@ -454,6 +454,10 @@ public class ProteinTree {
         tagsInTree.addAll(tree.keySet());
         for (Node node : tree.values()) {
             treeSize += node.getSize();
+        }
+
+        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+            return;
         }
 
         componentsFactory.setVersion(version);
@@ -1622,6 +1626,11 @@ public class ProteinTree {
 
             try {
                 for (Protein protein : proteins) {
+
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        return;
+                    }
+
                     indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
 
                     if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {

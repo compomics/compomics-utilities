@@ -669,7 +669,7 @@ public class ProteinTree {
 
     /**
      * Clears the finished raw node splitters from a given list or wait for one
-     * to finish and batch saves the splitted nodes
+     * to finish and batch saves the splitted nodes.
      *
      * @param nodeProcessors the node processors of interest
      *
@@ -1385,6 +1385,7 @@ public class ProteinTree {
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
     public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PeptideIterator();

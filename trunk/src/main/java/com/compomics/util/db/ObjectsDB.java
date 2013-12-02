@@ -169,7 +169,7 @@ public class ObjectsDB implements Serializable {
      */
     public void addTable(String tableName) throws SQLException {
         if (debugInteractions) {
-            System.out.println("Inserting table, table:" + tableName);
+            System.out.println("Inserting table, table: " + tableName);
         }
         Statement stmt = dbConnection.createStatement();
         try {

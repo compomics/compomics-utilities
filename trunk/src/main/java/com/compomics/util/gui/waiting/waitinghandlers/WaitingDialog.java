@@ -1060,29 +1060,32 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
 
-                // resize the report area
-                layeredPane.getComponent(1).setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
+                if (layeredPane.getComponentCount() == 2) { // check if the dialog has been canceled
+                
+                    // resize the report area
+                    layeredPane.getComponent(1).setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
 
-                // move the tip of the day panel
-                layeredPane.getComponent(0).setBounds(layeredPane.getWidth() - 255, layeredPane.getHeight() - 300, 230, 280);
+                    // move the tip of the day panel
+                    layeredPane.getComponent(0).setBounds(layeredPane.getWidth() - 255, layeredPane.getHeight() - 300, 230, 280);
 
-                layeredPane.revalidate();
-                layeredPane.repaint();
+                    layeredPane.revalidate();
+                    layeredPane.repaint();
 
-                // resize the tip of the day panel
-                tipOfTheDayLayeredPane.getComponent(2).setBounds(0, 0, tipOfTheDayLayeredPane.getWidth(), tipOfTheDayLayeredPane.getHeight());
+                    // resize the tip of the day panel
+                    tipOfTheDayLayeredPane.getComponent(2).setBounds(0, 0, tipOfTheDayLayeredPane.getWidth(), tipOfTheDayLayeredPane.getHeight());
 
-                //move the buttons
-                tipOfTheDayLayeredPane.getComponent(0).setBounds(
-                        tipOfTheDayLayeredPane.getWidth() - 40, -2,
-                        tipOfTheDayLayeredPane.getComponent(0).getWidth(), tipOfTheDayLayeredPane.getComponent(0).getHeight());
+                    // move the buttons
+                    tipOfTheDayLayeredPane.getComponent(0).setBounds(
+                            tipOfTheDayLayeredPane.getWidth() - 40, -2,
+                            tipOfTheDayLayeredPane.getComponent(0).getWidth(), tipOfTheDayLayeredPane.getComponent(0).getHeight());
 
-                tipOfTheDayLayeredPane.getComponent(1).setBounds(
-                        tipOfTheDayLayeredPane.getWidth() - 40, tipOfTheDayLayeredPane.getHeight() - 35,
-                        tipOfTheDayLayeredPane.getComponent(1).getWidth(), tipOfTheDayLayeredPane.getComponent(1).getHeight());
+                    tipOfTheDayLayeredPane.getComponent(1).setBounds(
+                            tipOfTheDayLayeredPane.getWidth() - 40, tipOfTheDayLayeredPane.getHeight() - 35,
+                            tipOfTheDayLayeredPane.getComponent(1).getWidth(), tipOfTheDayLayeredPane.getComponent(1).getHeight());
 
-                tipOfTheDayLayeredPane.revalidate();
-                tipOfTheDayLayeredPane.repaint();
+                    tipOfTheDayLayeredPane.revalidate();
+                    tipOfTheDayLayeredPane.repaint();
+                }
             }
         });
     }

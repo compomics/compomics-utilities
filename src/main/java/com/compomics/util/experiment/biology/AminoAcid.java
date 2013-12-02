@@ -119,59 +119,85 @@ public abstract class AminoAcid implements Serializable {
     public static AminoAcid getAminoAcid(char letter) {
         switch (letter) {
             case 'A':
+            case 'a':
                 return AminoAcid.A;
             case 'C':
+            case 'c':
                 return AminoAcid.C;
             case 'D':
+            case 'd':
                 return AminoAcid.D;
             case 'E':
+            case 'e':
                 return AminoAcid.E;
             case 'F':
+            case 'f':
                 return AminoAcid.F;
             case 'G':
+            case 'g':
                 return AminoAcid.G;
             case 'H':
+            case 'h':
                 return AminoAcid.H;
             case 'I':
+            case 'i':
                 return AminoAcid.I;
             case 'K':
+            case 'k':
                 return AminoAcid.K;
             case 'L':
+            case 'l':
                 return AminoAcid.L;
             case 'M':
+            case 'm':
                 return AminoAcid.M;
             case 'N':
+            case 'n':
                 return AminoAcid.N;
             case 'P':
+            case 'p':
                 return AminoAcid.P;
             case 'Q':
+            case 'q':
                 return AminoAcid.Q;
             case 'R':
+            case 'r':
                 return AminoAcid.R;
             case 'S':
+            case 's':
                 return AminoAcid.S;
             case 'T':
+            case 't':
                 return AminoAcid.T;
             case 'V':
+            case 'v':
                 return AminoAcid.V;
             case 'W':
+            case 'w':
                 return AminoAcid.W;
             case 'Y':
+            case 'y':
                 return AminoAcid.Y;
             case 'B':
+            case 'b':
                 return AminoAcid.B;
             case 'Z':
+            case 'z':
                 return AminoAcid.Z;
             case 'X':
+            case 'x':
                 return AminoAcid.X;
             case 'U':
+            case 'u':
                 return AminoAcid.U;
             case 'J':
+            case 'j':
                 return AminoAcid.J;
             case 'O':
+            case 'o':
                 return AminoAcid.O;
             default:
-                return null;
+                throw new IllegalArgumentException("No amino acid found for letter " + letter + ".");
         }
     }
 

@@ -98,7 +98,7 @@ public enum PtmScore {
     }
 
     /**
-     * Returns the different implemented scores as list of command line option
+     * Returns the different implemented scores as list of command line option.
      *
      * @return the different implemented scores as list of command line option
      */

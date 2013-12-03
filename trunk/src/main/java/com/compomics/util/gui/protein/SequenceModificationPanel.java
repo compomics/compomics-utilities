@@ -65,11 +65,11 @@ public class SequenceModificationPanel extends JPanel {
      */
     private boolean isModifiedSequence;
     /**
-     * The name of the score above of the sequence
+     * The name of the score above of the sequence.
      */
     private String score1Name;
     /**
-     * The name of the score under of the sequence
+     * The name of the score under of the sequence.
      */
     private String score2Name;
 

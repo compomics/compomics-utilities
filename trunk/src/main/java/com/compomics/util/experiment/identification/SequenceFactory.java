@@ -1193,7 +1193,7 @@ public class SequenceFactory {
      *
      * @return true of the deletion was a success
      */
-    public boolean deleteProteinTree() {
+    public synchronized boolean deleteProteinTree() {
         if (defaultProteinTree != null) {
             try {
                 defaultProteinTree.close();
@@ -1204,7 +1204,9 @@ public class SequenceFactory {
                 e.printStackTrace();
                 return false;
             }
-            return defaultProteinTree.deleteDb();
+            if (defaultProteinTree != null) {
+                return defaultProteinTree.deleteDb();
+            }
         }
         return true;
     }

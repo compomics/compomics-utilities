@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -15,7 +14,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class models a spectrum match.
@@ -97,24 +95,6 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public SpectrumMatch(String spectrumKey) {
         this.spectrumKey = spectrumKey;
-    }
-
-    /**
-     * Getter for the best peptide assumption.
-     *
-     * @return the best assumption for the spectrum
-     */
-    public PeptideAssumption getBestAssumption() {
-        return getBestPeptideAssumption();
-    }
-
-    /**
-     * Setter for the best peptide assumption.
-     *
-     * @param bestAssumption the best assumption for the spectrum
-     */
-    public void setBestAssumption(PeptideAssumption bestAssumption) {
-        this.bestAssumption = bestAssumption;
     }
 
     /**
@@ -370,24 +350,33 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance, boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance, 
+            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications) 
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
+        
         for (int advocateId : assumptionsMap.keySet()) {
+            
             int rank = 1;
             ArrayList<Double> scores = new ArrayList<Double>(assumptionsMap.get(advocateId).keySet());
+            
             if (scoreInAscendingOrder) {
                 Collections.sort(scores);
             } else {
                 Collections.sort(scores, Collections.reverseOrder());
             }
+            
             for (double score : scores) {
                 ArrayList<SpectrumIdentificationAssumption> originalAssumptions = assumptionsMap.get(advocateId).get(score);
                 for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
-                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true);
+                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = 
+                                proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true);
                         for (Peptide peptide : proteinMapping.keySet()) {
-                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?
+                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, 
+                                    assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?
                             peptideAssumption.addUrParam(tagAssumption);
                             spectrumMatch.addHit(advocateId, peptideAssumption);
                         }
@@ -395,6 +384,7 @@ public class SpectrumMatch extends IdentificationMatch {
                 }
             }
         }
+        
         return spectrumMatch;
     }
 }

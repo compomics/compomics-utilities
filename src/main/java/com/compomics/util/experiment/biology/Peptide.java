@@ -1360,18 +1360,4 @@ public class Peptide extends ExperimentObject {
 
         return noModPeptide;
     }
-
-    /**
-     * Getter for the parent proteins.
-     *
-     * @return the parent proteins
-     * @throws IOException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     */
-    public ArrayList<String> getParentProteins() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return getParentProteins(false, null, null, null);
-    }
-
 }

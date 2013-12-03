@@ -132,7 +132,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     @Override
     public double getScore() {
         if (super.identificationCharge == null) { // backward compatibility check
-            return score;
+            return eValue;
         } else {
             return super.score;
         }

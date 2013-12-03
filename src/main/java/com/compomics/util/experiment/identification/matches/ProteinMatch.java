@@ -211,6 +211,10 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptide the considered peptide
      * @return the protein match key
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
     public static String getProteinMatchKey(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> accessions = new ArrayList<String>(),
@@ -377,7 +381,8 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return true if the main accession generates an enzymatic peptide
      */
-    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, AminoAcidPattern.MatchingType matchingType, Double massTolerance) 
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatches) {
             String peptideSequence = Peptide.getSequence(peptideKey);
@@ -394,26 +399,4 @@ public class ProteinMatch extends IdentificationMatch {
     public MatchType getType() {
         return MatchType.Protein;
     }
-
-    /**
-     * Constructor for the protein match. Note: proteins must be set for the
-     * peptide
-     *
-     * @param peptide the corresponding peptide match
-     */
-    public ProteinMatch(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        ArrayList<String> parentProteins = peptide.getParentProteins();
-        if (parentProteins == null || parentProteins.isEmpty()) {
-            throw new IllegalArgumentException("Peptide " + peptide.getSequence() + " presents no parent protein.");
-        }
-        Collections.sort(parentProteins);
-        for (String protein : parentProteins) {
-            if (!theoreticProtein.contains(protein)) {
-                theoreticProtein.add(protein);
-            }
-        }
-        mainMatch = parentProteins.get(0);
-        peptideMatches.add(peptide.getKey());
-    }
-
 }

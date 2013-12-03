@@ -305,10 +305,10 @@ public class Peptide extends ExperimentObject {
         }
         return parentProteins;
     }
-    
+
     /**
      * Returns the parent proteins without remapping them. Null if none mapped.
-     * 
+     *
      * @return an ArrayList containing the parent proteins
      */
     public ArrayList<String> getParentProteinsNoRemapping() {
@@ -324,13 +324,16 @@ public class Peptide extends ExperimentObject {
     public void setParentProteins(ArrayList<String> parentProteins) {
         this.parentProteins = parentProteins;
     }
-    
+
     /**
-     * Returns a unique key for the peptide when considering the given matching type and mass tolerance. when ambiguity the first amino acid according to AminoAcid.getAminoAcidsList() will be selected. For example the matching key of peptide PEPTLDE_mod1_mod2 is PEPTIDE_mod1_mod2
-     * 
+     * Returns a unique key for the peptide when considering the given matching
+     * type and mass tolerance. when ambiguity the first amino acid according to
+     * AminoAcid.getAminoAcidsList() will be selected. For example the matching
+     * key of peptide PEPTLDE_mod1_mod2 is PEPTIDE_mod1_mod2
+     *
      * @param matchingType the amino acid matching type
      * @param massTolerance the mass tolerance
-     * 
+     *
      * @return a key unique to the given matching type
      */
     public String getMatchingKey(AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
@@ -373,7 +376,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param sequence the sequence of the peptide
      * @param modificationMatches list of modification matches
-     * 
+     *
      * @return the index of a peptide
      */
     public static String getKey(String sequence, ArrayList<ModificationMatch> modificationMatches) {
@@ -436,10 +439,10 @@ public class Peptide extends ExperimentObject {
         String test = peptideKey + MODIFICATION_SEPARATOR;
         return test.split(modification).length - 1;
     }
-    
+
     /**
      * Returns the number of variable modifications found with the given mass.
-     * 
+     *
      * @param modificationMass the mass of the modification
      * @return the number of occurrences of this modification
      */
@@ -825,7 +828,7 @@ public class Peptide extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a boolean indicating whether the other peptide has the same
      * sequence and modification status.
      */
@@ -841,7 +844,7 @@ public class Peptide extends ExperimentObject {
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * 
+     *
      * @return a boolean indicating whether the other peptide has the same
      * sequence
      */
@@ -1340,7 +1343,7 @@ public class Peptide extends ExperimentObject {
     public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
-            noModPeptide.setParentProteins(peptide.getParentProteinsNoRemapping());
+        noModPeptide.setParentProteins(peptide.getParentProteinsNoRemapping());
 
         for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
             boolean found = false;
@@ -1357,4 +1360,18 @@ public class Peptide extends ExperimentObject {
 
         return noModPeptide;
     }
+
+    /**
+     * Getter for the parent proteins.
+     *
+     * @return the parent proteins
+     * @throws IOException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public ArrayList<String> getParentProteins() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        return getParentProteins(false, null, null, null);
+    }
+
 }

@@ -74,13 +74,13 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptide the corresponding peptide match
      * @param peptideMatchKey the key of the peptide match
-     * 
+     *
      * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InterruptedException
-     * 
-     * 
+     *
+     *
      */
     public ProteinMatch(Peptide peptide, String peptideMatchKey) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> parentProteins = peptide.getParentProteinsNoRemapping();
@@ -394,4 +394,26 @@ public class ProteinMatch extends IdentificationMatch {
     public MatchType getType() {
         return MatchType.Protein;
     }
+
+    /**
+     * Constructor for the protein match. Note: proteins must be set for the
+     * peptide
+     *
+     * @param peptide the corresponding peptide match
+     */
+    public ProteinMatch(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        ArrayList<String> parentProteins = peptide.getParentProteins();
+        if (parentProteins == null || parentProteins.isEmpty()) {
+            throw new IllegalArgumentException("Peptide " + peptide.getSequence() + " presents no parent protein.");
+        }
+        Collections.sort(parentProteins);
+        for (String protein : parentProteins) {
+            if (!theoreticProtein.contains(protein)) {
+                theoreticProtein.add(protein);
+            }
+        }
+        mainMatch = parentProteins.get(0);
+        peptideMatches.add(peptide.getKey());
+    }
+
 }

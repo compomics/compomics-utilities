@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * A panel for displaying modification profiles. (Based on the SequenceFragmentationPanel.)
+ * A panel for displaying modification profiles. (Based on the
+ * SequenceFragmentationPanel.)
  *
  * @author Harald Barsnes
  * @author Kenny Helsens
@@ -20,8 +21,8 @@ import java.util.Iterator;
 public class SequenceModificationPanel extends JPanel {
 
     /**
-     * A map of the rectangles used to draw each profile peak. This map is 
-     * later used for the tooltip for each peak.
+     * A map of the rectangles used to draw each profile peak. This map is later
+     * used for the tooltip for each peak.
      */
     private HashMap<String, Rectangle> fragmentIonRectangles;
     /**
@@ -57,26 +58,40 @@ public class SequenceModificationPanel extends JPanel {
      */
     private final int iYStart = 10;
     /**
-     * This boolean holds whether or not the given sequence is a modified 
+     * This boolean holds whether or not the given sequence is a modified
      * sequence or a normal peptide sequence.
      *
-     * Normal: KENNY
-     * Modified: NH2-K<Ace>ENNY-COOH
+     * Normal: KENNY Modified: NH2-K<Ace>ENNY-COOH
      */
     private boolean isModifiedSequence;
+    /**
+     * The name of the score above of the sequence
+     */
+    private String score1Name;
+    /**
+     * The name of the score under of the sequence
+     */
+    private String score2Name;
 
     /**
      * Creates a new SequenceFragmentationPanel.
      *
-     * @param aSequence                  String with the Modified Sequence of a peptide identification.
-     * @param profiles                   ArrayList with the modification profiles.
-     * @param boolModifiedSequence       boolean describing the sequence. This constructor can be used to enter a ModifiedSequence or a normal sequence.
-     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
+     * @param aSequence String with the Modified Sequence of a peptide
+     * identification.
+     * @param profiles ArrayList with the modification profiles.
+     * @param boolModifiedSequence boolean describing the sequence. This
+     * constructor can be used to enter a ModifiedSequence or a normal sequence.
+     * @param score1Name the name of the score above of the sequence
+     * @param score2Name the name of the score under the sequence
+     * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
+     * returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceModificationPanel(String aSequence, ArrayList<ModificationProfile> profiles, boolean boolModifiedSequence) throws HeadlessException {
+    public SequenceModificationPanel(String aSequence, ArrayList<ModificationProfile> profiles, boolean boolModifiedSequence, String score1Name, String score2Name) throws HeadlessException {
         super();
+        this.score1Name = score1Name;
+        this.score2Name = score2Name;
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(aSequence);
         this.profiles = profiles;
@@ -96,8 +111,9 @@ public class SequenceModificationPanel extends JPanel {
     /**
      * Paints the SequenceModificationPanel.
      *
-     * Based on the given ModifiedSequence Components and Modification profile, a visualisation 
-     * is drawn on a Graphics object showing the profile above the sequence.
+     * Based on the given ModifiedSequence Components and Modification profile,
+     * a visualisation is drawn on a Graphics object showing the profile above
+     * the sequence.
      *
      * @param g the specified Graphics window
      * @see java.awt.Component#update(java.awt.Graphics)
@@ -120,24 +136,22 @@ public class SequenceModificationPanel extends JPanel {
         Double aboveSequenceHeight = yLocation - lFontHeight * 0.5;
         Double belowSequenceHeight = yLocation + lFontHeight * 0.15;
 
-        
         // find max a score
         double maxAScore = 0;
-        
+
         for (int i = 0; i < iSequenceComponents.length; i++) {
             for (int j = 0; j < profiles.size(); j++) {
-             
+
                 ModificationProfile currentModificationProfile = profiles.get(j);
-                
-                if (maxAScore < currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX]) {
-                    maxAScore = currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX];
+
+                if (maxAScore < currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_2_ROW_INDEX]) {
+                    maxAScore = currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_2_ROW_INDEX];
                 }
             }
         }
-        
-        
+
         for (int i = 0; i < iSequenceComponents.length; i++) {
-            
+
             // reset base color to black.
             g2.setColor(Color.black);
 
@@ -151,31 +165,31 @@ public class SequenceModificationPanel extends JPanel {
             if (i == 0) {
                 xLocation += g2.getFontMetrics().stringWidth(iSequenceComponents[i]) - g2.getFontMetrics().stringWidth("X");
             }
-            
+
             // draw bars below the sequence
             for (int j = 0; j < profiles.size(); j++) {
 
                 ModificationProfile currentModificationProfile = profiles.get(j);
 
-                if (currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] > 0) {
-                    g2.setColor(currentModificationProfile.getColor());
+                if (currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_2_ROW_INDEX] > 0) {
+                g2.setColor(currentModificationProfile.getColor());
 
-                    int lBarHeight = (int) ((currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX] / maxAScore) * iMaxBarHeight);
-                    if (lBarHeight < 5) {
-                        lBarHeight = 7;
-                    }
-
-                    int barStart = belowSequenceHeight.intValue() + 1;
-
-                    Rectangle tempRectangle = new Rectangle(xLocation+1, barStart, g2.getFontMetrics().stringWidth("X")-2, lBarHeight);
-
-                    g2.fill(tempRectangle);
-                    fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
-                            + " [a-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.A_SCORE_ROW_INDEX], 2) + "]",
-                            tempRectangle);
-
-                    g2.setColor(Color.black);
+                int lBarHeight = (int) ((currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_2_ROW_INDEX] / maxAScore) * iMaxBarHeight);
+                if (lBarHeight < 5) {
+                    lBarHeight = 7;
                 }
+
+                int barStart = belowSequenceHeight.intValue() + 1;
+
+                Rectangle tempRectangle = new Rectangle(xLocation + 1, barStart, g2.getFontMetrics().stringWidth("X") - 2, lBarHeight);
+
+                g2.fill(tempRectangle);
+                fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
+                        + " [" + score2Name + ": " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_2_ROW_INDEX], 2) + "]",
+                        tempRectangle);
+
+                g2.setColor(Color.black);
+            }
             }
 
             // draw bars above the sequence
@@ -183,23 +197,23 @@ public class SequenceModificationPanel extends JPanel {
 
                 ModificationProfile currentModificationProfile = profiles.get(j);
 
-                if (currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] > 0) {
-                    g2.setColor(currentModificationProfile.getColor());
+                if (currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_1_ROW_INDEX] > 0) {
+                g2.setColor(currentModificationProfile.getColor());
 
-                    int lBarHeight = (int) ((currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX] / 100) * iMaxBarHeight);
-                    if (lBarHeight < 5) {
-                        lBarHeight = 7;
-                    }
-
-                    int barStart = aboveSequenceHeight.intValue() - 2 - lBarHeight;
-                    Rectangle tempRectangle = new Rectangle(xLocation+1, barStart, g2.getFontMetrics().stringWidth("X")-2, lBarHeight);
-                    g2.fill(tempRectangle);
-                    fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
-                            + " [d-score: " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.DELTA_SCORE_ROW_INDEX], 2) + "]",
-                            tempRectangle);
-
-                    g2.setColor(Color.black);
+                int lBarHeight = (int) ((currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_1_ROW_INDEX] / 100) * iMaxBarHeight);
+                if (lBarHeight < 5) {
+                    lBarHeight = 7;
                 }
+
+                int barStart = aboveSequenceHeight.intValue() - 2 - lBarHeight;
+                Rectangle tempRectangle = new Rectangle(xLocation + 1, barStart, g2.getFontMetrics().stringWidth("X") - 2, lBarHeight);
+                g2.fill(tempRectangle);
+                fragmentIonRectangles.put(currentModificationProfile.getPtmName() + " (" + (i + 1) + ")"
+                        + " [" + score1Name + ": " + Util.roundDouble(currentModificationProfile.getProfile()[i][ModificationProfile.SCORE_1_ROW_INDEX], 2) + "]",
+                        tempRectangle);
+
+                g2.setColor(Color.black);
+            }
             }
 
             xLocation = tempXLocation;
@@ -215,18 +229,14 @@ public class SequenceModificationPanel extends JPanel {
     }
 
     /**
-     * This method can parse a modified sequence String into a String[] with different components.
+     * This method can parse a modified sequence String into a String[] with
+     * different components.
      *
      * @param aSequence String with the Modified sequence of a peptideHit.
-     * @return the modified sequence of the peptidehit in a String[].
-     *         Example:
-     *         The peptide Ace-K<AceD3>ENNYR-COOH will return a String[] with
-     *         [0]Ace-K<AceD3>
-     *         [1]E
-     *         [2]N
-     *         [3]N
-     *         [4]Y
-     *         [5]R-COOH
+     * @return the modified sequence of the peptidehit in a String[]. Example:
+     * The peptide Ace-K<AceD3>ENNYR-COOH will return a String[] with
+     * [0]Ace-K<AceD3>
+     * [1]E [2]N [3]N [4]Y [5]R-COOH
      */
     private String[] parseSequenceIntoComponents(String aSequence) {
 
@@ -331,9 +341,9 @@ public class SequenceModificationPanel extends JPanel {
     /**
      * Set the Sequence for the SequenceFragmentationPanel.
      *
-     * @param lSequence            String with peptide sequence.
-     * @param boolModifiedSequence Boolean whether lSequence is a Modified Sequence
-     *                             "NH2-K<Ace>ENNY-COOH" or a Flat Sequence "KENNY".
+     * @param lSequence String with peptide sequence.
+     * @param boolModifiedSequence Boolean whether lSequence is a Modified
+     * Sequence "NH2-K<Ace>ENNY-COOH" or a Flat Sequence "KENNY".
      */
     public void setSequence(String lSequence, boolean boolModifiedSequence) {
         isModifiedSequence = boolModifiedSequence;
@@ -341,9 +351,8 @@ public class SequenceModificationPanel extends JPanel {
     }
 
     /**
-     * If the mouse hovers over one of the fragment ion peaks the tooltip is 
-     * set to the fragment ion type and number. If not the tooltip is set 
-     * to null.
+     * If the mouse hovers over one of the fragment ion peaks the tooltip is set
+     * to the fragment ion type and number. If not the tooltip is set to null.
      */
     private void mouseMovedHandler(MouseEvent me) {
 

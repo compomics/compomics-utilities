@@ -4,27 +4,27 @@ package com.compomics.util.gui.protein;
 import java.awt.Color;
 
 /**
- * A simple modofication profile object.
+ * A simple modification profile object.
  * 
  * @author Harald Barsnes
  */
 public class ModificationProfile {
 
     /**
-     * The delta score row index.
+     * The score above the sequence row index.
      */
-    public static final int DELTA_SCORE_ROW_INDEX = 0;
+    public static final int SCORE_1_ROW_INDEX = 0;
     /**
-     * The a score row index.
+     * The score under the sequence row index.
      */
-    public static final int A_SCORE_ROW_INDEX = 1;
+    public static final int SCORE_2_ROW_INDEX = 1;
     /**
      * The PTM name.
      */
     private String ptmName;
     /**
      * The PTM profile. Delta score in the first row and A-score in the second row, 
-     * i.e., [d1][DELTA_SCORE_ROW_INDEX] and [a1][A_SCORE_ROW_INDEX].
+     * i.e., [d1][SCORE_1_ROW_INDEX] and [a1][SCORE_2_ROW_INDEX].
      */
     private double[][] profile;
     /**
@@ -65,7 +65,7 @@ public class ModificationProfile {
 
     /**
      * Returns the profile. Delta scores in the first row and a score in the second row, 
-     * i.e., [d1][DELTA_SCORE_ROW_INDEX] and [a1][A_SCORE_ROW_INDEX].
+     * i.e., [d1][SCORE_1_ROW_INDEX] and [a1][SCORE_2_ROW_INDEX].
      * 
      * @return the profile
      */
@@ -75,7 +75,7 @@ public class ModificationProfile {
 
     /**
      * Sets the profile. Delta scores in the first row and a score in the second row, 
-     * i.e., [d1][DELTA_SCORE_ROW_INDEX] and [a1][A_SCORE_ROW_INDEX].
+     * i.e., [d1][SCORE_1_ROW_INDEX] and [a1][SCORE_2_ROW_INDEX].
      * 
      * @param profile the profile to set
      */

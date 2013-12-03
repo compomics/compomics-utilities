@@ -104,6 +104,24 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return the best assumption for the spectrum
      */
+    public PeptideAssumption getBestAssumption() {
+        return getBestPeptideAssumption();
+    }
+
+    /**
+     * Setter for the best peptide assumption.
+     *
+     * @param bestAssumption the best assumption for the spectrum
+     */
+    public void setBestAssumption(PeptideAssumption bestAssumption) {
+        this.bestAssumption = bestAssumption;
+    }
+
+    /**
+     * Getter for the best peptide assumption.
+     *
+     * @return the best assumption for the spectrum
+     */
     public PeptideAssumption getBestPeptideAssumption() {
         return bestAssumption;
     }

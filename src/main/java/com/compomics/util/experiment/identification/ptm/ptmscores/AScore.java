@@ -45,8 +45,11 @@ public class AScore {
      * @param charges The fragment ions charges to look for
      * @param precursorCharge The precursor charge
      * @param mzTolerance The m/z tolerance to use
+     * @param matchingType the amino acid matching type to use to map PTMs on peptides
+     * 
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -58,9 +61,9 @@ public class AScore {
      * @throws SQLException  
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false);
+        return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false, matchingType);
     }
 
     /**
@@ -78,8 +81,11 @@ public class AScore {
      * @param charges The fragment ions charges to look for
      * @param precursorCharge The precursor charge
      * @param mzTolerance The m/z tolerance to use
+     * @param matchingType the amino acid matching type to use to map PTMs on peptides
+     * 
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -91,9 +97,9 @@ public class AScore {
      * @throws SQLException  
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance)
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true);
+        return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true, matchingType);
     }
 
     /**
@@ -110,9 +116,10 @@ public class AScore {
      * @param neutralLosses The neutral losses to look for
      * @param charges The fragment ions charges to look for
      * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
+     * @param mzTolerance The MS2 m/z tolerance to use
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
+     * @param matchingType the amino acid matching type to use to map PTMs on peptides
      * 
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
@@ -129,7 +136,7 @@ public class AScore {
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses) 
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, AminoAcidPattern.MatchingType matchingType) 
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
@@ -166,7 +173,7 @@ public class AScore {
         HashMap<Integer, Double> result = new HashMap<Integer, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         for (PTM ptm : ptms) {
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm, AminoAcidPattern.MatchingType.string, null)) {
+            for (int potentialSite : peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
                 }

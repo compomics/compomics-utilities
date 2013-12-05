@@ -18,6 +18,7 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -241,14 +242,18 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * are in the PTMFactory.
      *
      * @param peptide the peptide of interest
+     * @param matchingType the matching type to map ptms on the peptide sequence
+     * @param mzTolerance the ms2 m/z tolerance to use
+     * 
      * @return the expected possible neutral losses
+     * 
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -315,7 +320,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
             }
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, AminoAcidPattern.MatchingType.string, Double.NaN);
+                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance);
                 if (!indexes.isEmpty()) {
                     Collections.sort(indexes);
                     modMin = indexes.get(0);

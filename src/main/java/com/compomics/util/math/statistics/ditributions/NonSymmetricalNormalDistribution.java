@@ -3,6 +3,7 @@ package com.compomics.util.math.statistics.ditributions;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
+import org.apache.commons.math.MathException;
 
 /**
  * This class represents a non symmetrical normal distribution.
@@ -69,7 +70,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) {
+    public Double getCumulativeProbabilityAt(double x) throws MathException {
         if (x >= mean) {
             return distributionUp.getCumulativeProbabilityAt(x);
         } else {
@@ -88,11 +89,29 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) {
+    public Double getValueAtCumulativeProbability(double p) throws MathException {
         if (p < 0.5) {
             return distributionDown.getValueAtCumulativeProbability(p);
         } else {
             return distributionUp.getValueAtCumulativeProbability(p);
+        }
+    }
+
+    @Override
+    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
+        if (x > mean) {
+        return distributionUp.getCumulativeProbabilityAt(x);
+        } else {
+            return distributionDown.getCumulativeProbabilityAt(x);
+        }
+    }
+
+    @Override
+    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException {
+        if (p < 0.5) {
+            return distributionUp.getValueAtDescendingCumulativeProbability(p);
+        } else {
+            return distributionDown.getValueAtDescendingCumulativeProbability(p);
         }
     }
 }

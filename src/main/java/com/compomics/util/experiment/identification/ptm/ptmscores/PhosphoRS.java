@@ -54,6 +54,7 @@ public class PhosphoRS {
      * @param mzTolerance The m/z tolerance to use
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
+     * @param matchingType the amino acid matching type to use to map PTMs on peptides
      *
      * @return a map site -> phosphoRS site probability
      *
@@ -69,7 +70,7 @@ public class PhosphoRS {
      */
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses)
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
@@ -107,7 +108,7 @@ public class PhosphoRS {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
         for (PTM ptm : ptms) {
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm, AminoAcidPattern.MatchingType.string, null)) {
+            for (int potentialSite : peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
                 }

@@ -546,7 +546,7 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public boolean isModifiable(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public boolean isModifiable(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         AminoAcidPattern pattern = ptm.getPattern();
         int patternLength = pattern.length();
@@ -560,7 +560,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, pattern, patternLength, matchingType, massTolerance)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -578,11 +578,11 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNP:
                 return true;
             case PTM.MODC:
-                return !isCterm(pattern, patternLength, matchingType, massTolerance).isEmpty();
+                return !isCterm(matchingType, massTolerance).isEmpty();
             case PTM.MODN:
-                return !isNterm(pattern, patternLength, matchingType, massTolerance).isEmpty();
+                return !isNterm(matchingType, massTolerance).isEmpty();
             case PTM.MODCAA:
-                if (isCterm(pattern, patternLength, matchingType, massTolerance).isEmpty()) {
+                if (isCterm(matchingType, massTolerance).isEmpty()) {
                     return false;
                 }
             case PTM.MODCPAA:
@@ -593,7 +593,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, pattern, patternLength, matchingType, massTolerance)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -607,7 +607,7 @@ public class Peptide extends ExperimentObject {
                     return false;
                 }
             case PTM.MODNAA:
-                if (isNterm(pattern, patternLength, matchingType, massTolerance).isEmpty()) {
+                if (isNterm(matchingType, massTolerance).isEmpty()) {
                     return false;
                 }
             case PTM.MODNPAA:
@@ -618,7 +618,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, pattern, patternLength, matchingType, massTolerance)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -641,6 +641,44 @@ public class Peptide extends ExperimentObject {
      * is the first amino acid. An empty list is returned if no possibility was
      * found. This method does not account for protein terminal modifications.
      *
+     * @param ptmMass the mass of the potential PTM
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param modificationProfile the modification profile of the identification
+     *
+     * @return a list of potential modification sites
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
+     */
+    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ModificationProfile modificationProfile)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+        ArrayList<Integer> sites = new ArrayList<Integer>();
+        for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
+            PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+            if (Math.abs(ptm.getMass() - ptmMass) < massTolerance) {
+                for (int site : getPotentialModificationSites(ptm, matchingType, massTolerance)) {
+                    if (!sites.contains(site)) {
+                        sites.add(site);
+                    }
+                }
+            }
+        }
+        return sites;
+    }
+
+    /**
+     * Returns the potential modification sites as an ordered list of string. 1
+     * is the first amino acid. An empty list is returned if no possibility was
+     * found.
+     *
      * @param ptm the PTM considered
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
@@ -658,7 +696,7 @@ public class Peptide extends ExperimentObject {
      * @throws ClassNotFoundException
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         AminoAcidPattern pattern = ptm.getPattern();
@@ -673,7 +711,7 @@ public class Peptide extends ExperimentObject {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
                         Protein protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, pattern, patternLength, matchingType, massTolerance)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -692,14 +730,23 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
             case PTM.MODC:
+                if (!isCterm(matchingType, massTolerance).isEmpty()) {
+                    return possibleSites;
+                }
             case PTM.MODCP:
                 possibleSites.add(sequence.length());
                 return possibleSites;
             case PTM.MODN:
+                if (!isNterm(matchingType, massTolerance).isEmpty()) {
+                    return possibleSites;
+                }
             case PTM.MODNP:
                 possibleSites.add(1);
                 return possibleSites;
             case PTM.MODCAA:
+                if (!isCterm(matchingType, massTolerance).isEmpty()) {
+                    return possibleSites;
+                }
             case PTM.MODCPAA:
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
@@ -712,7 +759,7 @@ public class Peptide extends ExperimentObject {
                     Protein protein;
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, pattern, patternLength, matchingType, massTolerance)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -727,6 +774,9 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
             case PTM.MODNAA:
+                if (!isNterm(matchingType, massTolerance).isEmpty()) {
+                    return possibleSites;
+                }
             case PTM.MODNPAA:
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
@@ -739,7 +789,7 @@ public class Peptide extends ExperimentObject {
                     Protein protein;
                     for (String accession : parentProteins) {
                         protein = sequenceFactory.getProtein(accession);
-                        for (int index : protein.getPeptideStart(sequence, pattern, patternLength, matchingType, massTolerance)) {
+                        for (int index : protein.getPeptideStart(sequence, matchingType, massTolerance)) {
                             int beginIndex = index - target - 1;
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
@@ -765,10 +815,14 @@ public class Peptide extends ExperimentObject {
      * (single amino acid or terminal patterns smaller than the sequence).
      * Otherwise an IllegalArgumentException will be thrown. Use the non static
      * method then.
+     * 
+     * @deprecated use getPotentialModificationSites(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
      *
      * @param sequence the sequence of the peptide of interest
      * @param ptm the PTM considered
+     * 
      * @return a list of potential modification sites
+     * 
      * @throws IllegalArgumentException
      */
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) throws IllegalArgumentException {
@@ -1227,9 +1281,8 @@ public class Peptide extends ExperimentObject {
      * Returns a list of proteins where this peptide can be found in the
      * N-terminus. The proteins must be accessible via the sequence factory. If
      * none found, an empty list is returned.
+     * Warning: if the parent proteins are not set, they will be set using the default protein tree and the given matching type and mass tolerance
      *
-     * @param pattern the amino acid pattern
-     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
@@ -1246,12 +1299,15 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<String> isNterm(AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<String> isNterm(AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
+        if (parentProteins == null) {
+            getParentProteins(matchingType, massTolerance);
+        }
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isNTerm(sequence, pattern, patternLength, matchingType, massTolerance)) {
+            if (protein.isNTerm(sequence, matchingType, massTolerance)) {
                 result.add(accession);
             }
         }
@@ -1262,9 +1318,8 @@ public class Peptide extends ExperimentObject {
      * Returns a list of proteins where this peptide can be found in the
      * C-terminus. The proteins must be accessible via the sequence factory. If
      * none found, an empty list is returned.
+     * Warning: if the parent proteins are not set, they will be set using the default protein tree and the given matching type and mass tolerance
      *
-     * @param pattern the amino acid pattern
-     * @param patternLength the pattern length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
@@ -1281,12 +1336,15 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public ArrayList<String> isCterm(AminoAcidPattern pattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public ArrayList<String> isCterm(AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
+        if (parentProteins == null) {
+            getParentProteins(matchingType, massTolerance);
+        }
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isCTerm(sequence, pattern, patternLength, matchingType, massTolerance)) {
+            if (protein.isCTerm(sequence, matchingType, massTolerance)) {
                 result.add(accession);
             }
         }

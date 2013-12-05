@@ -201,10 +201,11 @@ public class IdFilter implements Serializable {
      * @param matchingType the peptide-protein matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param modificationProfile the modification profile of the identification
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean validateModifications(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ModificationProfile modificationProfile) {
 
         // check it it's an unknown peptide
         if (unknownPtm) {
@@ -219,25 +220,25 @@ public class IdFilter implements Serializable {
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
         // get the variable ptms and the number of times they occur
-        HashMap<String, ArrayList<ModificationMatch>> modMatches = new HashMap<String, ArrayList<ModificationMatch>>();
+        HashMap<Double, Integer> modMatches = new HashMap<Double, Integer>();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
             if (modMatch.isVariable()) {
                 String modName = modMatch.getTheoreticPtm();
                 PTM ptm = ptmFactory.getPTM(modName);
-                if (ptm.getType() == PTM.MODAA) {
-                    if (!modMatches.containsKey(modName)) {
-                        modMatches.put(modName, new ArrayList<ModificationMatch>());
+                double mass = ptm.getMass();
+                    if (!modMatches.containsKey(mass)) {
+                        modMatches.put(mass, 1);
+                    } else {
+                    modMatches.put(mass, modMatches.get(mass) + 1);
                     }
-                    modMatches.get(modName).add(modMatch);
                 }
             }
-        }
 
         // check if there are more ptms than ptm sites
-        for (String modName : modMatches.keySet()) {
+        for (double mass : modMatches.keySet()) {
             try {
-                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(ptmFactory.getPTM(modName), matchingType, massTolerance);
-                if (possiblePositions.size() < modMatches.get(modName).size()) {
+                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, matchingType, massTolerance, modificationProfile);
+                if (possiblePositions.size() < modMatches.get(mass)) {
                     return false;
                 }
             } catch (Exception e) {

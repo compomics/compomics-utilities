@@ -387,8 +387,7 @@ public class ProteinMatch extends IdentificationMatch {
         for (String peptideKey : peptideMatches) {
             String peptideSequence = Peptide.getSequence(peptideKey);
             Protein protein = sequenceFactory.getProtein(accession);
-            AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
-            if (protein.isEnzymaticPeptide(peptideSequence, aminoAcidPattern, aminoAcidPattern.length(), enzyme, matchingType, massTolerance)) {
+            if (protein.isEnzymaticPeptide(peptideSequence, enzyme, matchingType, massTolerance)) {
                 return true;
             }
         }

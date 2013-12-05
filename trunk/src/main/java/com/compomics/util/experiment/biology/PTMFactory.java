@@ -11,6 +11,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -860,7 +861,7 @@ public class PTMFactory implements Serializable {
      * @throws ClassNotFoundException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
-            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException {
+            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
@@ -868,10 +869,12 @@ public class PTMFactory implements Serializable {
             PTM ptm = getPTM(ptmName);
             if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance) {
                 for (int site : peptide.getPotentialModificationSites(ptm, matchingType, massTolerance)) {
-                    if (!mapping.containsKey(site)) {
-                        mapping.put(site, new ArrayList<String>());
+                    ArrayList<String> modifications = mapping.get(site);
+                    if (modifications == null) {
+                        modifications = new ArrayList<String>();
+                        mapping.put(site, modifications);
                     }
-                    mapping.get(site).add(ptmName);
+                    modifications.add(ptmName);
                 }
             }
         }
@@ -904,25 +907,10 @@ public class PTMFactory implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
-
-        PTM secondaryPTM, referencePTM = getPTM(ptmName);
-        for (String variableModification : modificationProfile.getAllNotFixedModifications()) {
-            secondaryPTM = getPTM(variableModification);
-            if (secondaryPTM.getMass() == referencePTM.getMass()) {
-                PTM ptm = getPTM(variableModification);
-                for (int site : peptide.getPotentialModificationSites(ptm, matchingType, massTolerance)) {
-                    if (!mapping.containsKey(site)) {
-                        mapping.put(site, new ArrayList<String>());
-                    }
-                    mapping.get(site).add(ptmName);
-                }
-            }
-        }
-
-        return mapping;
+                PTM ptm = getPTM(ptmName);
+        return getExpectedPTMs(modificationProfile, peptide, ptm.getMass(), massTolerance, matchingType);
     }
 
     /**
@@ -949,8 +937,8 @@ public class PTMFactory implements Serializable {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, AminoAcidPattern aminoAcidPattern, int patternLength, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
@@ -975,22 +963,20 @@ public class PTMFactory implements Serializable {
                     }
                 }
             } else if (ptm.getType() == PTM.MODC) {
-                if (!peptide.isCterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
+                if (!peptide.isCterm(matchingType, massTolerance).isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
                 }
             } else if (ptm.getType() == PTM.MODN) {
-                if (!peptide.isNterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
+                if (!peptide.isNterm(matchingType, massTolerance).isEmpty()) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             } else if (ptm.getType() == PTM.MODCAA) {
                 String sequence = peptide.getSequence();
-                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(sequence.length()) 
-                        && !peptide.isCterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(sequence.length())) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
                 }
             } else if (ptm.getType() == PTM.MODNAA) {
-                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(1) 
-                        && !peptide.isNterm(aminoAcidPattern, patternLength, matchingType, massTolerance).isEmpty()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(1)) {
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
                 }
             } else if (ptm.getType() == PTM.MODCP) {

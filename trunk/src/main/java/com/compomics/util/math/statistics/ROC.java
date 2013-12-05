@@ -1,5 +1,7 @@
 package com.compomics.util.math.statistics;
 
+import org.apache.commons.math.MathException;
+
 /**
  * This class can be used to draw ROC curves.
  *
@@ -33,11 +35,14 @@ public class ROC {
      * number of true healthy for a given type 1 error, the number of false
      * healthy.
      *
-     * @param specificity the specificity (0.1 is 10%);
-     * @return the sensitivity at the given specificity (0.1 is 10%);
+     * @param specificity the specificity (0.1 is 10%)
+     * 
+     * @return the sensitivity at the given specificity (0.1 is 10%)
+     * 
+     * @throws org.apache.commons.math.MathException
      */
-    public double getValueAt(double specificity) {
-        double x = distributionPatient.getMinValueForProbability(specificity);
+    public double getValueAt(double specificity) throws MathException {
+        double x = distributionPatient.getValueAtCumulativeProbability(specificity);
         return distributionControl.getCumulativeProbabilityAt(x);
     }
 }

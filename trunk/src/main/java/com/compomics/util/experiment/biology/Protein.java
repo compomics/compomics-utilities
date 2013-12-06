@@ -253,7 +253,8 @@ public class Protein extends ExperimentObject {
      */
     public boolean isNTerm(String peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
-        return aminoAcidPattern.firstIndex(peptideSequence, matchingType, massTolerance) == 0;
+        int firstIndex = aminoAcidPattern.firstIndex(sequence, matchingType, massTolerance);
+        return firstIndex == 0 || firstIndex == 1 && sequence.charAt(0) == 'M';
     }
 
     /**

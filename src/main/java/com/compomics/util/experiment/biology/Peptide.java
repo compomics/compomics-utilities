@@ -730,21 +730,21 @@ public class Peptide extends ExperimentObject {
                 }
                 return possibleSites;
             case PTM.MODC:
-                if (!isCterm(matchingType, massTolerance).isEmpty()) {
+                if (isCterm(matchingType, massTolerance).isEmpty()) {
                     return possibleSites;
                 }
             case PTM.MODCP:
                 possibleSites.add(sequence.length());
                 return possibleSites;
             case PTM.MODN:
-                if (!isNterm(matchingType, massTolerance).isEmpty()) {
+                if (isNterm(matchingType, massTolerance).isEmpty()) {
                     return possibleSites;
                 }
             case PTM.MODNP:
                 possibleSites.add(1);
                 return possibleSites;
             case PTM.MODCAA:
-                if (!isCterm(matchingType, massTolerance).isEmpty()) {
+                if (isCterm(matchingType, massTolerance).isEmpty()) {
                     return possibleSites;
                 }
             case PTM.MODCPAA:
@@ -774,7 +774,7 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
             case PTM.MODNAA:
-                if (!isNterm(matchingType, massTolerance).isEmpty()) {
+                if (isNterm(matchingType, massTolerance).isEmpty()) {
                     return possibleSites;
                 }
             case PTM.MODNPAA:

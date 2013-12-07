@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.io.IOException;

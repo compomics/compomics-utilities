@@ -708,6 +708,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 return true;
             }
         }
+
         return false;
     }
 

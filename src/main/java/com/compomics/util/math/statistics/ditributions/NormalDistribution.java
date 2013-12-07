@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.math.statistics.ditributions;
 
 import com.compomics.util.math.BasicMathFunctions;
@@ -13,27 +7,29 @@ import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.NormalDistributionImpl;
 
 /**
- * This class represtents a normal distribution. A dirac if the standard deviation is null.
+ * This class represents a normal distribution. A diract if the standard
+ * deviation is null.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class NormalDistribution implements Distribution {
- 
+
     /**
-     * The apache normal distribution implementation
+     * The apache normal distribution implementation.
      */
     private NormalDistributionImpl normalDistributionImpl;
     /**
-     * The mean of the distribution
+     * The mean of the distribution.
      */
     private double mean;
     /**
-     * The standard deviation of the distribution
+     * The standard deviation of the distribution.
      */
     private double std;
+
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param mean the mean
      * @param std the standard deviation
      */
@@ -41,30 +37,34 @@ public class NormalDistribution implements Distribution {
         this.mean = mean;
         this.std = std;
         if (std > 0) {
-        this.normalDistributionImpl = new NormalDistributionImpl(mean, std);
+            this.normalDistributionImpl = new NormalDistributionImpl(mean, std);
         }
     }
-    
+
     /**
-     * Returns the normal distribution corresponding to a given list of double calibrated on mean and standard deviation.
-     * 
+     * Returns the normal distribution corresponding to a given list of double
+     * calibrated on mean and standard deviation.
+     *
      * @param input the input as a list of double
-     * 
-     * @return the normal distribution calibrated on the mean and standard deviation
+     *
+     * @return the normal distribution calibrated on the mean and standard
+     * deviation
      */
     public static NormalDistribution getNormalDistribution(ArrayList<Double> input) {
         return new NormalDistribution(BasicMathFunctions.mean(input), BasicMathFunctions.std(input));
     }
-    
+
     /**
-     * Returns the normal distribution corresponding to a given list of double calibrated on median and 34.1% percentile to median distance
-     * 
+     * Returns the normal distribution corresponding to a given list of double
+     * calibrated on median and 34.1% percentile to median distance
+     *
      * @param input the input as list of double
-     * 
-     * @return a normal distribution calibrated on median and 34.1% percentile to median distance
+     *
+     * @return a normal distribution calibrated on median and 34.1% percentile
+     * to median distance
      */
     public static NormalDistribution getRobustNormalDistribution(ArrayList<Double> input) {
-        double std = (BasicMathFunctions.percentile(input, 0.841) - BasicMathFunctions.percentile(input, 0.159))/2;
+        double std = (BasicMathFunctions.percentile(input, 0.841) - BasicMathFunctions.percentile(input, 0.159)) / 2;
         return new NormalDistribution(BasicMathFunctions.median(input), std);
     }
 
@@ -77,7 +77,7 @@ public class NormalDistribution implements Distribution {
                 return 0.0;
             }
         }
-        return Math.pow(Math.E, -Math.pow(x-mean, 2)/(2*Math.pow(std, 2)))/(std*Math.pow(2*Math.PI, 0.5));
+        return Math.pow(Math.E, -Math.pow(x - mean, 2) / (2 * Math.pow(std, 2))) / (std * Math.pow(2 * Math.PI, 0.5));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class NormalDistribution implements Distribution {
         if (std == 0) {
             return mean;
         }
-        return mean + Math.pow(-2*Math.pow(std, 2)*Math.log(std*p*Math.pow(2*Math.PI, 0.5)), 0.5);
+        return mean + Math.pow(-2 * Math.pow(std, 2) * Math.log(std * p * Math.pow(2 * Math.PI, 0.5)), 0.5);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class NormalDistribution implements Distribution {
         if (std == 0) {
             return mean;
         }
-        return mean - Math.pow(-2*Math.pow(std, 2)*Math.log(std*p*Math.pow(2*Math.PI, 0.5)), 0.5);
+        return mean - Math.pow(-2 * Math.pow(std, 2) * Math.log(std * p * Math.pow(2 * Math.PI, 0.5)), 0.5);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class NormalDistribution implements Distribution {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (p < 0.5) {
                 return -Double.MAX_VALUE;
-            } else if (p== 0.5) {
+            } else if (p == 0.5) {
                 return mean;
             } else {
                 return Double.MAX_VALUE;
@@ -147,7 +147,7 @@ public class NormalDistribution implements Distribution {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (p < 0.5) {
                 return Double.MAX_VALUE;
-            } else if (p== 0.5) {
+            } else if (p == 0.5) {
                 return mean;
             } else {
                 return -Double.MAX_VALUE;
@@ -155,5 +155,4 @@ public class NormalDistribution implements Distribution {
         }
         return getValueAtCumulativeProbability(p);
     }
-    
 }

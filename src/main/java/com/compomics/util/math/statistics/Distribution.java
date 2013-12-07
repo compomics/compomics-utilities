@@ -28,7 +28,8 @@ public interface Distribution {
     public Double getCumulativeProbabilityAt(double x) throws MathException;
 
     /**
-     * Returns the cumulative density function value at a given position when starting from the high values.
+     * Returns the cumulative density function value at a given position when
+     * starting from the high values.
      *
      * @param x the position of interest
      * @return the value of the density function at the give position

@@ -920,8 +920,6 @@ public class PTMFactory implements Serializable {
      *
      * @param modificationProfile
      * @param peptide the peptide
-     * @param aminoAcidPattern the amino acid pattern
-     * @param patternLength the peptide length
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids'. Can be null otherwise. (Only useful when
@@ -936,6 +934,7 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {

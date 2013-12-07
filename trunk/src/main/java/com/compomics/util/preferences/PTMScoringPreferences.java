@@ -89,6 +89,9 @@ public class PTMScoringPreferences implements Serializable {
      * @return the selected probabilistic score
      */
     public PtmScore getSelectedProbabilisticScore() {
+        if (selectedProbabilisticScore == null) {
+            return PtmScore.AScore; // backward compatibility
+        }
         return selectedProbabilisticScore;
     }
 
@@ -102,7 +105,7 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
-     * Indicates whether the threshold is FLR based
+     * Indicates whether the threshold is FLR based.
      *
      * @return a boolean indicating whether the threshold is FLR based
      */

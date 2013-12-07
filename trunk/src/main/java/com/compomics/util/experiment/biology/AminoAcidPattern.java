@@ -6,7 +6,6 @@ import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

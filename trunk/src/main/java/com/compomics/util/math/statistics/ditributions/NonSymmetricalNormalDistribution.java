@@ -21,7 +21,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      */
     private double stdDown;
     /**
-     * The mean
+     * The mean.
      */
     private double mean;
     /**

@@ -286,10 +286,14 @@ public class Peptide extends ExperimentObject {
      * @throws InterruptedException
      * @throws SQLException
      */
-    public ArrayList<String> getParentProteins(boolean remap, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    public ArrayList<String> getParentProteins(boolean remap, AminoAcidPattern.MatchingType matchingType, Double massTolerance,
+            ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+
         if (remap && parentProteins == null) {
+
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, matchingType, massTolerance, true);
             parentProteins = new ArrayList<String>();
+
             for (String peptideSequence : proteinMapping.keySet()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
                 if (xShare <= ProteinMatch.maxX) {
@@ -301,8 +305,10 @@ public class Peptide extends ExperimentObject {
                     }
                 }
             }
+
             Collections.sort(parentProteins);
         }
+
         return parentProteins;
     }
 
@@ -545,8 +551,10 @@ public class Peptide extends ExperimentObject {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public boolean isModifiable(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public boolean isModifiable(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         AminoAcidPattern pattern = ptm.getPattern();
         int patternLength = pattern.length();
@@ -657,6 +665,7 @@ public class Peptide extends ExperimentObject {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ModificationProfile modificationProfile)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -694,6 +703,7 @@ public class Peptide extends ExperimentObject {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -815,14 +825,15 @@ public class Peptide extends ExperimentObject {
      * (single amino acid or terminal patterns smaller than the sequence).
      * Otherwise an IllegalArgumentException will be thrown. Use the non static
      * method then.
-     * 
-     * @deprecated use getPotentialModificationSites(PTM ptm, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+     *
+     * @deprecated use getPotentialModificationSites(PTM ptm,
+     * AminoAcidPattern.MatchingType matchingType, Double massTolerance)
      *
      * @param sequence the sequence of the peptide of interest
      * @param ptm the PTM considered
-     * 
+     *
      * @return a list of potential modification sites
-     * 
+     *
      * @throws IllegalArgumentException
      */
     public static ArrayList<Integer> getPotentialModificationSites(String sequence, PTM ptm) throws IllegalArgumentException {
@@ -1280,8 +1291,9 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns a list of proteins where this peptide can be found in the
      * N-terminus. The proteins must be accessible via the sequence factory. If
-     * none found, an empty list is returned.
-     * Warning: if the parent proteins are not set, they will be set using the default protein tree and the given matching type and mass tolerance
+     * none found, an empty list is returned. Warning: if the parent proteins
+     * are not set, they will be set using the default protein tree and the
+     * given matching type and mass tolerance
      *
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
@@ -1298,27 +1310,34 @@ public class Peptide extends ExperimentObject {
      * while reading the protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public ArrayList<String> isNterm(AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public ArrayList<String> isNterm(AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
+
         if (parentProteins == null) {
             getParentProteins(matchingType, massTolerance);
         }
+
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
             if (protein.isNTerm(sequence, matchingType, massTolerance)) {
                 result.add(accession);
             }
         }
+
         return result;
     }
 
     /**
      * Returns a list of proteins where this peptide can be found in the
      * C-terminus. The proteins must be accessible via the sequence factory. If
-     * none found, an empty list is returned.
-     * Warning: if the parent proteins are not set, they will be set using the default protein tree and the given matching type and mass tolerance
+     * none found, an empty list is returned. Warning: if the parent proteins
+     * are not set, they will be set using the default protein tree and the
+     * given matching type and mass tolerance
      *
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
@@ -1335,19 +1354,25 @@ public class Peptide extends ExperimentObject {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public ArrayList<String> isCterm(AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public ArrayList<String> isCterm(AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         ArrayList<String> result = new ArrayList<String>();
+
         if (parentProteins == null) {
             getParentProteins(matchingType, massTolerance);
         }
+
         for (String accession : parentProteins) {
             Protein protein = sequenceFactory.getProtein(accession);
             if (protein.isCTerm(sequence, matchingType, massTolerance)) {
                 result.add(accession);
             }
         }
+
         return result;
     }
 

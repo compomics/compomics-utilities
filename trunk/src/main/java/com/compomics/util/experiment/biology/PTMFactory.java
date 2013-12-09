@@ -859,9 +859,11 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
-            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
+            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType) 
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
@@ -906,10 +908,11 @@ public class PTMFactory implements Serializable {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
-                PTM ptm = getPTM(ptmName);
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, AminoAcidPattern.MatchingType matchingType,
+            Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+        PTM ptm = getPTM(ptmName);
         return getExpectedPTMs(modificationProfile, peptide, ptm.getMass(), massTolerance, matchingType);
     }
 
@@ -1028,7 +1031,6 @@ public class PTMFactory implements Serializable {
         for (String ptmName : defaultMods) {
 
             // @TODO: I hate hard coding this, any more elegant approach welcome...
-
             if (ptmName.contains("phospho")) {
                 PTM ptm = ptmMap.get(ptmName);
                 if (ptmName.contains(" s")
@@ -1089,11 +1091,10 @@ public class PTMFactory implements Serializable {
         for (String ptmName : defaultMods) {
 
             // @TODO: remove the hard coding...
-
             if (ptmName.contains("itraq")) {
                 PTM ptm = ptmMap.get(ptmName);
                 if (ptm.getReporterIons().isEmpty()) {
-                    
+
                     ptm.addReporterIon(ReporterIon.iTRAQ114);
                     ptm.addReporterIon(ReporterIon.iTRAQ115);
                     ptm.addReporterIon(ReporterIon.iTRAQ116);
@@ -1359,7 +1360,6 @@ public class PTMFactory implements Serializable {
     public String convertPridePtm(String pridePtmName, ModificationProfile modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
 
         // @TODO: add more mappings
-
         String prideParametersReport = "";
 
         // special cases for when multiple ptms are needed
@@ -1436,7 +1436,6 @@ public class PTMFactory implements Serializable {
         } else {
 
             // single ptm mapping
-
             String utilitiesPtmName = convertPridePtmToUtilitiesPtm(pridePtmName);
 
             if (utilitiesPtmName != null) {

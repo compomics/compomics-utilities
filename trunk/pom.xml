@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.19.6</version>
+    <version>3.19.7</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -52,6 +52,15 @@
             </roles>
         </developer>
         <developer>
+            <name>Marc Vaudel</name>
+            <id>marc</id>
+            <email>marc.vaudel AT biomed.uib.no</email>
+            <organization>University of Bergen</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
             <name>Kenny Helsens</name>
             <id>kenny</id>
             <email>kenny.helsens AT UGent.be</email>
@@ -65,15 +74,6 @@
             <id>kenny</id>
             <email>niklaas.colaert AT UGent.be</email>
             <organization>University of Ghent</organization>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Marc Vaudel</name>
-            <id>marc</id>
-            <email>marc.vaudel AT biomed.uib.no</email>
-            <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>
             </roles>

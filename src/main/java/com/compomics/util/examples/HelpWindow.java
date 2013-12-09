@@ -115,7 +115,7 @@ public class HelpWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         closeJButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        textEditorScrollPane = new javax.swing.JScrollPane();
         textJEditorPane = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -129,9 +129,9 @@ public class HelpWindow extends javax.swing.JFrame {
             }
         });
 
-        textJEditorPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        textJEditorPane.setContentType("text/html");
         textJEditorPane.setEditable(false);
+        textJEditorPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        textJEditorPane.setContentType("text/html"); // NOI18N
         textJEditorPane.setMinimumSize(new java.awt.Dimension(10, 10));
         textJEditorPane.setPreferredSize(new java.awt.Dimension(10, 10));
         textJEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
@@ -139,7 +139,7 @@ public class HelpWindow extends javax.swing.JFrame {
                 textJEditorPaneHyperlinkUpdate(evt);
             }
         });
-        jScrollPane1.setViewportView(textJEditorPane);
+        textEditorScrollPane.setViewportView(textJEditorPane);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,7 +148,7 @@ public class HelpWindow extends javax.swing.JFrame {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .add(textEditorScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .add(closeJButton))
                 .addContainerGap())
         );
@@ -156,7 +156,7 @@ public class HelpWindow extends javax.swing.JFrame {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                .add(textEditorScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(closeJButton)
                 .addContainerGap())
@@ -200,7 +200,7 @@ public class HelpWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_textJEditorPaneHyperlinkUpdate
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeJButton;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane textEditorScrollPane;
     private javax.swing.JEditorPane textJEditorPane;
     // End of variables declaration//GEN-END:variables
 }

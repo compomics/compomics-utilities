@@ -155,5 +155,4 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public IonMatch getPrecursorMatch(Peak precursorPeak) {
         return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge());
     }
-    
 }

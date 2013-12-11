@@ -8,7 +8,6 @@ import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
-import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

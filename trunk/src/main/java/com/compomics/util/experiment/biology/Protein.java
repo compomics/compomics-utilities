@@ -251,9 +251,15 @@ public class Protein extends ExperimentObject {
      * peptide
      */
     public boolean isNTerm(String peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        String subSequence = sequence.substring(0, peptideSequence.length());
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
-        int firstIndex = aminoAcidPattern.firstIndex(sequence, matchingType, massTolerance);
-        return firstIndex == 0 || firstIndex == 1 && sequence.charAt(0) == 'M';
+        if (aminoAcidPattern.matches(subSequence, matchingType, massTolerance)) {
+            return true;
+        }
+        subSequence = sequence.substring(0, peptideSequence.length()+1);
+        AminoAcidPattern mAminoAcidPattern = new AminoAcidPattern("M");
+        mAminoAcidPattern.append(aminoAcidPattern);
+        return mAminoAcidPattern.matches(subSequence, matchingType, massTolerance);
     }
 
     /**

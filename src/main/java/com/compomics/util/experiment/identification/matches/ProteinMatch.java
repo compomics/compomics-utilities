@@ -178,14 +178,16 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Convenience method indicating whether a match is decoy based on the match
-     * key.
+     * key. 
+     * Note: the sequence database should be loaded in the sequence factory
      *
      * @param key the match key
      * @return a boolean indicating whether a match is decoy
      */
     public static boolean isDecoy(String key) {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String accession : getAccessions(key)) {
-            if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
+            if (sequenceFactory.isDecoyAccession(accession)) {
                 return true;
             }
         }

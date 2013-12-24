@@ -1,23 +1,32 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.quantification.Quantification;
 import com.compomics.util.experiment.biology.Sample;
+import com.compomics.util.experiment.quantification.Quantification;
+import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
- * This class will contain quantification results.
+ * This class contains quantification parameters.
  * 
  * @author Marc Vaudel
  */
 public class ReporterIonQuantification extends Quantification {
 
     /**
-     * The sample assignement to the various ions indexed by their static
-     * indexes.
+     * The sample assignment to the various ions indexed by their index.
      */
     private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
+    /**
+     * List of control samples. The index should be the same as for the sample assignment.
+     */
+    private ArrayList<Integer> controlSamples;
+    /**
+     * List of normalisation factors. The index should be the same as for the sample assignment.
+     */
+    private HashMap<Integer, Double> normalisationFactors = new HashMap<Integer, Double>();
     /**
      * The reporter method.
      */
@@ -66,7 +75,7 @@ public class ReporterIonQuantification extends Quantification {
         }
         return null;
     }
-
+    
     /**
      * returns the reporter method used.
      *
@@ -95,5 +104,73 @@ public class ReporterIonQuantification extends Quantification {
      */
     public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
         return Util.removeForbiddenCharacters(experimentReference + "_" + sampleReference + "_" + replicateNumber + "_reporterQuant");
+    }
+
+    /**
+     * Returns the indexes of the samples labelled as control.
+     * 
+     * @return the indexes of the samples labelled as control
+     */
+    public ArrayList<Integer> getControlSamples() {
+        return controlSamples;
+    }
+
+    /**
+     * Sets the indexes of the samples labelled as control.
+     * 
+     * @param controlSamples the indexes of the samples to label as control
+     */
+    public void setControlSamples(ArrayList<Integer> controlSamples) {
+        this.controlSamples = controlSamples;
+    }
+    
+    /**
+     * Indicates whether the normalisation factors are set.
+     * 
+     * @return a boolean indicating whether the normalisation factors are set
+     */
+    public boolean hasNormalisationFactors() {
+        return !normalisationFactors.isEmpty();
+    }
+    
+    /**
+     * Resets the normalisation factors
+     */
+    public void resetNormalisationFactors() {
+        normalisationFactors.clear();
+    }
+    
+    /**
+     * Adds a normalisation factor.
+     * 
+     * @param sampleIndex the index of the sample
+     * @param normalisationFactor  the normalisation factor
+     */
+    public void addNormalisationFactor(int sampleIndex, double normalisationFactor) {
+        normalisationFactors.put(sampleIndex, normalisationFactor);
+    }
+    
+    /**
+     * Returns the normalisation factor for the given sample.
+     * 
+     * @param sampleIndex the index of the sample
+     * 
+     * @return the normalisation factor, 1.0 if not set.
+     */
+    public double getNormalisationFactor(int sampleIndex) {
+        Double normalisationFactor = normalisationFactors.get(sampleIndex);
+        if (normalisationFactor == null) {
+            return 1.0;
+        }
+            return normalisationFactor;
+    }
+    
+    /**
+     * Returns a set containing the indexes of every sample.
+     * 
+     * @return a set containing the indexes of every sample
+     */
+    public Set<Integer> getSampleIndexes() {
+        return sampleAssignement.keySet();
     }
 }

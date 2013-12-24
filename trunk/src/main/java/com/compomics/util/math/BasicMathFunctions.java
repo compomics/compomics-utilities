@@ -70,6 +70,38 @@ public class BasicMathFunctions {
     }
 
     /**
+     * Returns the desired percentile in a given array of double. If the
+     * percentile is between two values a linear interpolation is done.
+     *
+     * @param input the input array
+     * @param percentile the desired percentile. 0.01 returns the first
+     * percentile. 0.5 returns the median.
+     *
+     * @return the desired percentile
+     */
+    public static double percentile(double[] input, double percentile) {
+        if (percentile < 0 || percentile > 1) {
+            throw new IllegalArgumentException("Incorrect input for percentile: " + percentile + ". Input must be between 0 and 1.");
+        }
+        Arrays.sort(input);
+        int length = input.length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
+        }
+        if (length == 1) {
+            return input[0];
+        }
+        double indexDouble = percentile * length;
+        int index = (int) (indexDouble);
+        double valueAtIndex = input[index];
+        double rest = indexDouble - index;
+        if (index == input.length - 1 || rest == 0) {
+            return valueAtIndex;
+        }
+        return valueAtIndex + rest * (input[index + 1] - valueAtIndex);
+    }
+
+    /**
      * Returns the desired percentile in a given list of double. If the
      * percentile is between two values a linear interpolation is done.
      *

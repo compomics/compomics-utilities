@@ -25,6 +25,10 @@ public class Util {
      * Forbidden characters in file names.
      */
     public static final String[] forbiddenCharacters = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
+    /**
+     * Separator which can be used to separate things.
+     */
+    public static final String separator = "_cus_";
 
     /**
      * Removes the forbidden characters from a string.

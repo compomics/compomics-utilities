@@ -14,6 +14,7 @@ import com.compomics.util.experiment.identification.spectrum_annotators.TagSpect
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.io.FileNotFoundException;
@@ -551,6 +552,29 @@ public abstract class SpectrumAnnotator {
                         result.get(charge).add(peptideIon);
                     }
                 }
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Convenience method to match a reporter ion in a spectrum. The charge is assumed to be 1.
+     * 
+     * @param theoreticIon the theoretic ion to look for
+     * @param spectrum the spectrum
+     * @param massTolerance the mass tolerance to use
+     * 
+     * @return a list of all the ion matches
+     */
+    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, Spectrum spectrum, double massTolerance) {
+        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
+        double targetMass = theoreticIon.getTheoreticMass();
+        for (double mz : spectrum.getOrderedMzValues()) {
+            if (Math.abs(mz-targetMass) <= massTolerance) {
+                result.add(new IonMatch(spectrum.getPeakMap().get(mz), theoreticIon, new Charge(Charge.PLUS, 1)));
+            }
+            if (mz > targetMass + massTolerance) {
+                break;
             }
         }
         return result;

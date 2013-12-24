@@ -244,7 +244,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor of the desired spectrum.
+     * Returns the precursor of the desired spectrum. The value will not be saved in cache.
      *
      * @param spectrumKey the key of the spectrum
      * @return the corresponding precursor

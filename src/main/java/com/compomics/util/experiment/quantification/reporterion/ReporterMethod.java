@@ -3,9 +3,10 @@ package com.compomics.util.experiment.quantification.reporterion;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
- * This class models a reporter quantification method.
+ * This class contains information relative to a reporter quantification method.
  *
  * @author Marc Vaudel Date: Sep 29, 2010 Time: 5:52:30 PM
  */
@@ -14,7 +15,7 @@ public class ReporterMethod {
     /**
      * The reporter ions of the method.
      */
-    private ArrayList<ReporterIon> reporterIons;
+    private HashMap<Integer, ReporterIon> reporterIons = new HashMap<Integer, ReporterIon>();
     /**
      * The correction factors corresponding to the ions.
      */
@@ -33,18 +34,31 @@ public class ReporterMethod {
      * reporter ions
      */
     public ReporterMethod(String name, ArrayList<ReporterIon> reporterIons, ArrayList<CorrectionFactor> correctionFactors) {
-        this.reporterIons = reporterIons;
         this.correctionFactors = correctionFactors;
         this.name = name;
+        for (ReporterIon reporterIon : reporterIons) {
+            this.reporterIons.put(reporterIon.getIndex(), reporterIon);
+        }
     }
-
+    
     /**
-     * Returns the reporter ions used.
-     *
-     * @return the reporter ions used
+     * Returns a list containing the indexes of the reporter ions.
+     * 
+     * @return a list containing the indexes of the reporter ions
      */
-    public ArrayList<ReporterIon> getReporterIons() {
-        return reporterIons;
+    public ArrayList<Integer> getReporterIonIndexes() {
+        return new ArrayList<Integer>(reporterIons.keySet());
+    }
+    
+    /**
+     * Returns the reporter ion indexed by the given index, null if not found.
+     * 
+     * @param reporterIonIndex the index of the reporter ion
+     * 
+     * @return the reporter ion of interest
+     */
+    public ReporterIon getReporterIon(int reporterIonIndex) {
+        return reporterIons.get(reporterIonIndex);
     }
 
     /**

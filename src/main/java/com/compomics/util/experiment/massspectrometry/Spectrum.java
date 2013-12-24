@@ -3,6 +3,7 @@ package com.compomics.util.experiment.massspectrometry;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,6 +49,42 @@ public abstract class Spectrum extends ExperimentObject {
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
     public static final String SPECTRUM_KEY_SPLITTER = "_cus_";
+    /**
+     * The peak list as an array directly plottable by JFreeChart
+     */
+    private double[][] jFreePeakList = null;
+    /**
+     * The mz values as array. Null until set by the getter.
+     */
+    private double[] mzValuesAsArray = null;
+    /**
+     * boolean indicating whether the mzValuesAsArray is sorted
+     */
+    private Boolean mzOrdered = false;
+    /**
+     * The intensity values as array. Null until set by the getter.
+     */
+    private double[] intensityValuesAsArray = null;
+    /**
+     * The mz and intensity values as array. Null until set by the getter.
+     */
+    private double[][] mzAndIntensityAsArray = null;
+    /**
+     * The total intensity.
+     */
+    private Double totalIntensity;
+    /**
+     * The maximal intensity
+     */
+    private Double maxIntensity;
+    /**
+     * The maximal m/z
+     */
+    private Double maxMz;
+    /**
+     * The minimal m/z
+     */
+    private Double minMz;
 
     /**
      * Convenience method returning the key for a spectrum.
@@ -114,24 +151,25 @@ public abstract class Spectrum extends ExperimentObject {
      * @return a table containing the peaks
      */
     public double[][] getJFreePeakList() {
-        double[] mz = new double[peakList.size()];
-        double[] intensity = new double[peakList.size()];
-        int cpt = 0;
-        for (Peak currentPeak : peakList.values()) {
-            mz[cpt] = currentPeak.mz;
-            intensity[cpt] = currentPeak.intensity;
-            cpt++;
+        if (jFreePeakList == null) {
+            double[] mz = new double[peakList.size()];
+            double[] intensity = new double[peakList.size()];
+            int cpt = 0;
+            for (Peak currentPeak : peakList.values()) {
+                mz[cpt] = currentPeak.mz;
+                intensity[cpt] = currentPeak.intensity;
+                cpt++;
+            }
+
+            jFreePeakList = new double[6][mz.length];
+            jFreePeakList[0] = mz;
+            jFreePeakList[1] = mz;
+            jFreePeakList[2] = mz;
+            jFreePeakList[3] = intensity;
+            jFreePeakList[4] = intensity;
+            jFreePeakList[5] = intensity;
         }
-
-        double[][] coordinates = new double[6][mz.length];
-        coordinates[0] = mz;
-        coordinates[1] = mz;
-        coordinates[2] = mz;
-        coordinates[3] = intensity;
-        coordinates[4] = intensity;
-        coordinates[5] = intensity;
-
-        return coordinates;
+        return jFreePeakList;
     }
 
     /**
@@ -257,22 +295,39 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the mz values as an array.
+     * Returns the mz values as an array. Note: the array is not necessarily
+     * ordered
      *
      * @return the mz values as an array
      */
     public double[] getMzValuesAsArray() {
 
-        double[] mz = new double[peakList.size()];
+        if (mzValuesAsArray == null) {
+            mzValuesAsArray = new double[peakList.size()];
 
-        int counter = 0;
+            int counter = 0;
 
-        for (double currentMz : peakList.keySet()) {
-            mz[counter] = currentMz;
-            counter++;
+            for (double currentMz : peakList.keySet()) {
+                mzValuesAsArray[counter] = currentMz;
+                counter++;
+            }
         }
 
-        return mz;
+        return mzValuesAsArray;
+    }
+    
+    /**
+     * Returns a list of the m/z values sorted in ascending order.
+     * 
+     * @return a list of the m/z values sorted in ascending order
+     */
+    public double[] getOrderedMzValues() {
+        if (mzOrdered == null || !mzOrdered) {
+            getMzValuesAsArray();
+            Arrays.sort(mzValuesAsArray);
+            mzOrdered = true;
+        }
+        return mzValuesAsArray;
     }
 
     /**
@@ -282,16 +337,18 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double[] getIntensityValuesAsArray() {
 
-        double[] intensity = new double[peakList.size()];
+        if (intensityValuesAsArray == null) {
+            intensityValuesAsArray = new double[peakList.size()];
 
-        int counter = 0;
+            int counter = 0;
 
-        for (Peak currentPeak : peakList.values()) {
-            intensity[counter] = currentPeak.intensity;
-            counter++;
+            for (Peak currentPeak : peakList.values()) {
+                intensityValuesAsArray[counter] = currentPeak.intensity;
+                counter++;
+            }
         }
 
-        return intensity;
+        return intensityValuesAsArray;
     }
 
     /**
@@ -302,47 +359,51 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double[][] getMzAndIntensityAsArray() {
 
-        double[][] values = new double[2][peakList.size()];
-        ArrayList<Double> mz = new ArrayList<Double>(peakList.keySet());
-        Collections.sort(mz);
-
-        for (int i = 0; i < mz.size(); i++) {
-            Peak currentPeak = peakList.get(mz.get(i));
-            values[0][i] = currentPeak.mz;
-            values[1][i] = currentPeak.intensity;
+        if (mzAndIntensityAsArray == null) {
+            mzAndIntensityAsArray = new double[2][peakList.size()];
+            int i = 0;
+            for (double mz : getOrderedMzValues()) {
+                Peak currentPeak = peakList.get(mz);
+                mzAndIntensityAsArray[0][i] = currentPeak.mz;
+                mzAndIntensityAsArray[1][i] = currentPeak.intensity;
+                i++;
+            }
         }
-
-        return values;
+        return mzAndIntensityAsArray;
     }
 
     /**
      * Returns the total intensity of the spectrum.
      *
-     * @return the total intensity
+     * @return the total intensity. 0 if no peak.
      */
     public double getTotalIntensity() {
 
-        double tempIntensity = 0;
+        if (totalIntensity == null) {
+            totalIntensity = 0.0;
 
-        for (Peak currentPeak : peakList.values()) {
-            tempIntensity += currentPeak.intensity;
+            for (Peak currentPeak : peakList.values()) {
+                totalIntensity += currentPeak.intensity;
+            }
         }
 
-        return tempIntensity;
+        return totalIntensity;
     }
 
     /**
      * Returns the max intensity value.
      *
-     * @return the max intensity value
+     * @return the max intensity value. 0 if no peak.
      */
     public double getMaxIntensity() {
 
-        double maxIntensity = Double.MIN_VALUE;
+        if (maxIntensity == null) {
+            maxIntensity = 0.0;
 
-        for (Peak currentPeak : peakList.values()) {
-            if (currentPeak.intensity > maxIntensity) {
-                maxIntensity = currentPeak.intensity;
+            for (Peak currentPeak : peakList.values()) {
+                if (currentPeak.intensity > maxIntensity) {
+                    maxIntensity = currentPeak.intensity;
+                }
             }
         }
 
@@ -356,12 +417,8 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double getMaxMz() {
 
-        double maxMz = Double.MIN_VALUE;
-
-        for (double currentmz : peakList.keySet()) {
-            if (currentmz > maxMz) {
-                maxMz = currentmz;
-            }
+        if (maxMz == null) {
+            maxMz = Collections.max(peakList.keySet());
         }
 
         return maxMz;
@@ -374,12 +431,8 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double getMinMz() {
 
-        double minMz = Double.MAX_VALUE;
-
-        for (double currentmz : peakList.keySet()) {
-            if (currentmz < minMz) {
-                minMz = currentmz;
-            }
+        if (minMz == null) {
+            minMz = Collections.min(peakList.keySet());
         }
 
         return minMz;
@@ -502,9 +555,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) {
         HashMap<Double, Peak> result = new HashMap<Double, Peak>();
-        ArrayList<Double> mzList = new ArrayList<Double>(peakList.keySet());
-        Collections.sort(mzList);
-        for (double mz : mzList) {
+        for (double mz : getOrderedMzValues()) {
             if (mz >= mzMin && mz < mzMax) {
                 result.put(mz, peakList.get(mz));
             } else if (mz >= mzMax) {

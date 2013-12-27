@@ -50,7 +50,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public static final String SPECTRUM_KEY_SPLITTER = "_cus_";
     /**
-     * The peak list as an array directly plottable by JFreeChart
+     * The peak list as an array directly plottable by JFreeChart.
      */
     private double[][] jFreePeakList = null;
     /**
@@ -58,7 +58,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private double[] mzValuesAsArray = null;
     /**
-     * boolean indicating whether the mzValuesAsArray is sorted
+     * Boolean indicating whether the mzValuesAsArray is sorted.
      */
     private Boolean mzOrdered = false;
     /**
@@ -74,15 +74,15 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private Double totalIntensity;
     /**
-     * The maximal intensity
+     * The maximal intensity.
      */
     private Double maxIntensity;
     /**
-     * The maximal m/z
+     * The maximal m/z.
      */
     private Double maxMz;
     /**
-     * The minimal m/z
+     * The minimal m/z.
      */
     private Double minMz;
 
@@ -315,10 +315,10 @@ public abstract class Spectrum extends ExperimentObject {
 
         return mzValuesAsArray;
     }
-    
+
     /**
      * Returns a list of the m/z values sorted in ascending order.
-     * 
+     *
      * @return a list of the m/z values sorted in ascending order
      */
     public double[] getOrderedMzValues() {

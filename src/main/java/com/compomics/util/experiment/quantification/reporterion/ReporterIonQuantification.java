@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * This class contains quantification parameters.
- * 
+ *
  * @author Marc Vaudel
  */
 public class ReporterIonQuantification extends Quantification {
@@ -20,11 +20,13 @@ public class ReporterIonQuantification extends Quantification {
      */
     private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
     /**
-     * List of control samples. The index should be the same as for the sample assignment.
+     * List of control samples. The index should be the same as for the sample
+     * assignment.
      */
     private ArrayList<Integer> controlSamples;
     /**
-     * List of normalisation factors. The index should be the same as for the sample assignment.
+     * List of normalisation factors. The index should be the same as for the
+     * sample assignment.
      */
     private HashMap<Integer, Double> normalisationFactors = new HashMap<Integer, Double>();
     /**
@@ -75,7 +77,7 @@ public class ReporterIonQuantification extends Quantification {
         }
         return null;
     }
-    
+
     /**
      * returns the reporter method used.
      *
@@ -108,7 +110,7 @@ public class ReporterIonQuantification extends Quantification {
 
     /**
      * Returns the indexes of the samples labelled as control.
-     * 
+     *
      * @return the indexes of the samples labelled as control
      */
     public ArrayList<Integer> getControlSamples() {
@@ -117,44 +119,44 @@ public class ReporterIonQuantification extends Quantification {
 
     /**
      * Sets the indexes of the samples labelled as control.
-     * 
+     *
      * @param controlSamples the indexes of the samples to label as control
      */
     public void setControlSamples(ArrayList<Integer> controlSamples) {
         this.controlSamples = controlSamples;
     }
-    
+
     /**
      * Indicates whether the normalisation factors are set.
-     * 
+     *
      * @return a boolean indicating whether the normalisation factors are set
      */
     public boolean hasNormalisationFactors() {
         return !normalisationFactors.isEmpty();
     }
-    
+
     /**
-     * Resets the normalisation factors
+     * Resets the normalisation factors.
      */
     public void resetNormalisationFactors() {
         normalisationFactors.clear();
     }
-    
+
     /**
      * Adds a normalisation factor.
-     * 
+     *
      * @param sampleIndex the index of the sample
-     * @param normalisationFactor  the normalisation factor
+     * @param normalisationFactor the normalisation factor
      */
     public void addNormalisationFactor(int sampleIndex, double normalisationFactor) {
         normalisationFactors.put(sampleIndex, normalisationFactor);
     }
-    
+
     /**
      * Returns the normalisation factor for the given sample.
-     * 
+     *
      * @param sampleIndex the index of the sample
-     * 
+     *
      * @return the normalisation factor, 1.0 if not set.
      */
     public double getNormalisationFactor(int sampleIndex) {
@@ -162,12 +164,12 @@ public class ReporterIonQuantification extends Quantification {
         if (normalisationFactor == null) {
             return 1.0;
         }
-            return normalisationFactor;
+        return normalisationFactor;
     }
-    
+
     /**
      * Returns a set containing the indexes of every sample.
-     * 
+     *
      * @return a set containing the indexes of every sample
      */
     public Set<Integer> getSampleIndexes() {

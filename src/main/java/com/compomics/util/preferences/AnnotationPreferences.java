@@ -144,6 +144,7 @@ public class AnnotationPreferences implements Serializable {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public void setCurrentSettings(SpectrumIdentificationAssumption spectrumIdentificationAssumption, boolean newSpectrum, AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
@@ -168,6 +169,7 @@ public class AnnotationPreferences implements Serializable {
      * while reading a protein sequence
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public void resetAutomaticAnnotation(AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         selectedCharges.clear();

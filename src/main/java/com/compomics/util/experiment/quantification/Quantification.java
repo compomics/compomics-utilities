@@ -3,7 +3,9 @@ package com.compomics.util.experiment.quantification;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * an abstract quantification class
+ * An abstract quantification class.
+ *
+ * @author Marc Vaudel
  */
 public abstract class Quantification extends ExperimentObject {
 

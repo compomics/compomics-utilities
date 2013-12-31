@@ -25,6 +25,10 @@ public class ExceptionHandler {
      * http://code.google.com/p/peptide-shaker/issues/list.
      */
     private String toolIssuesPage;
+    /**
+     * if true exceptions will be ignored
+     */
+    private boolean ignoreExceptions = false;
 
     /**
      * Constructor.
@@ -50,7 +54,7 @@ public class ExceptionHandler {
      * @param e the exception caught
      */
     public void catchException(Exception e) {
-        if (!exceptionCaught.contains(getExceptionType(e))) {
+        if (!ignoreExceptions && !exceptionCaught.contains(getExceptionType(e))) {
             e.printStackTrace();
             exceptionCaught.add(getExceptionType(e));
             if (parent != null) {
@@ -119,5 +123,14 @@ public class ExceptionHandler {
         } else {
             return e.getLocalizedMessage();
         }
+    }
+
+    /**
+     * Sets whether exceptions should be ignored.
+     * 
+     * @param ignoreExceptions if true exceptions will be ignored
+     */
+    public void setIgnoreExceptions(boolean ignoreExceptions) {
+        this.ignoreExceptions = ignoreExceptions;
     }
 }

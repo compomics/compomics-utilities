@@ -26,7 +26,7 @@ public class ExceptionHandler {
      */
     private String toolIssuesPage;
     /**
-     * if true exceptions will be ignored
+     * If true exceptions will be ignored.
      */
     private boolean ignoreExceptions = false;
 

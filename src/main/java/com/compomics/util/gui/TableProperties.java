@@ -1,18 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.gui;
 
 /**
  * This class groups properties for the tables
  *
- * @author Marc
+ * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class TableProperties {
-    
+
     /**
      * The label with for the numbers in the jsparklines columns.
      */
@@ -27,7 +22,6 @@ public class TableProperties {
      * HTML color code.
      */
     private static final String notSelectedRowHtmlTagFontColor = "#0101DF";
-    
 
     /**
      * Returns the label width for the sparklines.

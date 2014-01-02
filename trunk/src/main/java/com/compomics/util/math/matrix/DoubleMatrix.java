@@ -138,7 +138,7 @@ public class DoubleMatrix {
      *
      * @param lineIndex
      * @param columnIndex
-     * @return
+     * @return the value of the matrix at given indexes,  0 is the first index
      */
     public Double getValueAt(int lineIndex, int columnIndex) {
         return content.get(columnIndex).get(lineIndex);
@@ -279,7 +279,7 @@ public class DoubleMatrix {
      * Returns a score based on the non-diagonal values. Score is 0 for
      * identity, 1 for the (1) matrix.
      *
-     * @return
+     * @return a score based on the non-diagonal values
      */
     public double getNonDiagonalScore() {
         if (!isSquare()) {

@@ -1151,10 +1151,26 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
             if (value == JOptionPane.YES_OPTION) {
 
-                // no params file > have the user select a file
-                if (tempSearchParameters.getParametersFile() == null) {
+                boolean userSelectFile = false;
+
+                // see if the user wants to overwrite the current settings file
+                if (tempSearchParameters.getParametersFile() != null) {
+                    value = JOptionPane.showConfirmDialog(this, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                    if (value == JOptionPane.NO_OPTION) {
+                        userSelectFile = true;
+                    } else if (value == JOptionPane.CANCEL_OPTION) {
+                        return;
+                    }
+
+                } else {
+                    // no params file > have the user select a file
+                    userSelectFile = true;
+                }
+
+                if (userSelectFile) {
                     saveAsPressed();
-                    tempSearchParameters = getSearchParameters(); // see if the settings have changed
+                    tempSearchParameters = getSearchParameters();
                 }
 
                 if (tempSearchParameters.getParametersFile() != null) {

@@ -38,11 +38,11 @@ public interface Advocate extends Serializable {
      */
     public static final int PEPTIDE_SHAKER = 5;
     /**
-     * PepNovo
+     * PepNovo.
      */
     public static final int PEPNOVO = 6;
     /**
-     * DeNovoGUI
+     * DeNovoGUI.
      */
     public static final int DENOVOGUI = 7;
 
@@ -59,5 +59,4 @@ public interface Advocate extends Serializable {
      * @return the index of the advocate
      */
     public int getId();
-
 }

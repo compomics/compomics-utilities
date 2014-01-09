@@ -180,6 +180,9 @@ public class ReporterIon extends Ion {
 
     @Override
     public CvTerm getPrideCvTerm() {
+        
+        // @TODO: implement when the required cv terms are added
+        
         return null;
     }
 

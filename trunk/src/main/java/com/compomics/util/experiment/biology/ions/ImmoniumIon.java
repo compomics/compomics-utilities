@@ -248,45 +248,45 @@ public class ImmoniumIon extends Ion {
     public CvTerm getPrideCvTerm() {
         switch (subType) {
             case ALANINE:
-                return new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", null);
+                return new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", "0");
             case CYSTEINE:
-                return new CvTerm("PRIDE", "PRIDE:0000241", "immonium C", null);
+                return new CvTerm("PRIDE", "PRIDE:0000241", "immonium C", "0");
             case ASPARTIC_ACID:
-                return new CvTerm("PRIDE", "PRIDE:0000242", "immonium D", null);
+                return new CvTerm("PRIDE", "PRIDE:0000242", "immonium D", "0");
             case GLUTAMIC_ACID:
-                return new CvTerm("PRIDE", "PRIDE:0000243", "immonium E", null);
+                return new CvTerm("PRIDE", "PRIDE:0000243", "immonium E", "0");
             case PHENYLALANINE:
-                return new CvTerm("PRIDE", "PRIDE:0000244", "immonium F", null);
+                return new CvTerm("PRIDE", "PRIDE:0000244", "immonium F", "0");
             case GLYCINE:
-                return new CvTerm("PRIDE", "PRIDE:0000245", "immonium G", null);
+                return new CvTerm("PRIDE", "PRIDE:0000245", "immonium G", "0");
             case HISTIDINE:
-                return new CvTerm("PRIDE", "PRIDE:0000246", "immonium H", null);
+                return new CvTerm("PRIDE", "PRIDE:0000246", "immonium H", "0");
             case ISOLEUCINE:
-                return new CvTerm("PRIDE", "PRIDE:0000247", "immonium I", null);
+                return new CvTerm("PRIDE", "PRIDE:0000247", "immonium I", "0");
             case LYSINE:
-                return new CvTerm("PRIDE", "PRIDE:0000248", "immonium K", null);
+                return new CvTerm("PRIDE", "PRIDE:0000248", "immonium K", "0");
             case LEUCINE:
-                return new CvTerm("PRIDE", "PRIDE:0000249", "immonium L", null);
+                return new CvTerm("PRIDE", "PRIDE:0000249", "immonium L", "0");
             case METHIONINE:
-                return new CvTerm("PRIDE", "PRIDE:0000250", "immonium M", null);
+                return new CvTerm("PRIDE", "PRIDE:0000250", "immonium M", "0");
             case ASPARAGINE:
-                return new CvTerm("PRIDE", "PRIDE:0000251", "immonium N", null);
+                return new CvTerm("PRIDE", "PRIDE:0000251", "immonium N", "0");
             case PROLINE:
-                return new CvTerm("PRIDE", "PRIDE:0000252", "immonium P", null);
+                return new CvTerm("PRIDE", "PRIDE:0000252", "immonium P", "0");
             case GLUTAMINE:
-                return new CvTerm("PRIDE", "PRIDE:0000253", "immonium Q", null);
+                return new CvTerm("PRIDE", "PRIDE:0000253", "immonium Q", "0");
             case ARGININE:
-                return new CvTerm("PRIDE", "PRIDE:0000254", "immonium R", null);
+                return new CvTerm("PRIDE", "PRIDE:0000254", "immonium R", "0");
             case SERINE:
-                return new CvTerm("PRIDE", "PRIDE:0000255", "immonium S", null);
+                return new CvTerm("PRIDE", "PRIDE:0000255", "immonium S", "0");
             case THREONINE:
-                return new CvTerm("PRIDE", "PRIDE:0000256", "immonium T", null);
+                return new CvTerm("PRIDE", "PRIDE:0000256", "immonium T", "0");
             case VALINE:
-                return new CvTerm("PRIDE", "PRIDE:0000257", "immonium V", null);
+                return new CvTerm("PRIDE", "PRIDE:0000257", "immonium V", "0");
             case TRYPTOPHAN:
-                return new CvTerm("PRIDE", "PRIDE:0000258", "immonium W", null);
+                return new CvTerm("PRIDE", "PRIDE:0000258", "immonium W", "0");
             case TYROSINE:
-                return new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", null);
+                return new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", "0");
             default:
                 return null;
         }

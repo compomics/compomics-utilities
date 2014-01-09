@@ -80,11 +80,11 @@ public class PrecursorIon extends Ion {
     @Override
     public CvTerm getPrideCvTerm() {
         if (neutralLosses.isEmpty()) {
-            return new CvTerm("PRIDE", "PRIDE:0000263", "precursor ion", null);
+            return new CvTerm("PRIDE", "PRIDE:0000263", "precursor ion", "0");
         } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-            return new CvTerm("PRIDE", "PRIDE:0000262", "precursor ion -H2O", null);
+            return new CvTerm("PRIDE", "PRIDE:0000262", "precursor ion -H2O", "0");
         } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-            return new CvTerm("PRIDE", "PRIDE:0000261", "precursor ion -NH3", null);
+            return new CvTerm("PRIDE", "PRIDE:0000261", "precursor ion -NH3", "0");
         } else {
             return null;
         }

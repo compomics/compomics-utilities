@@ -8,44 +8,44 @@ package com.compomics.util.experiment.identification;
 public enum Advocate {
 
     /**
-     * The search engine Mascot
+     * The search engine Mascot.
      */
     Mascot(0, "Mascot"),
     /**
-     * The search engine OMSSA
+     * The search engine OMSSA.
      */
     OMSSA(1, "OMSSA"),
     /**
-     * The search engine X!Tandem
+     * The search engine X!Tandem.
      */
     XTandem(2, "X!Tandem"),
     /**
-     * The de novo algorithm Pepnovo
+     * The de novo algorithm PepNovo.
      */
     pepnovo(3, "Pepnovo"),
     /**
-     * The search engine Andromeda
+     * The search engine Andromeda.
      */
     andromeda(4, "Andromeda"),
     /**
-     * The search engine MS-Amanda
+     * The search engine MS-Amanda.
      */
     msAmanda(5, "MS-Amanda"),
     /**
-     * The post processing tool PeptideShaker
+     * The post processing tool PeptideShaker.
      */
     PeptideShaker(6, "PeptideShaker");
     /**
-     * The index of the advocate
+     * The index of the advocate.
      */
     private final int index;
     /**
-     * The name of the advocate
+     * The name of the advocate.
      */
     private final String name;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param index
      * @param name

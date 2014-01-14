@@ -1,7 +1,5 @@
 package com.compomics.util.experiment.identification.search_parameters_cli;
 
-import org.apache.commons.cli.Options;
-
 /**
  * Enum class specifying the SearchParameter command line option parameters to
  * create a SearchParameters object
@@ -73,7 +71,7 @@ public enum IdentificationParametersCLIParams {
     XTANDEM_OUTPUT_SPECTRA("xtandem_output_spectra", "X!Tandem 'output, spectra' option. 1: true, 0: false, default is '0'.", false),
     XTANDEM_SKYLINE("xtandem_skyline_path", "X!Tandem 'spectrum, skyline path' option.", false),
     //////////////////////////////////
-    // pepnovo specific parameters
+    // PepNovo specific parameters
     //////////////////////////////////
     PEPNOVO_HITLIST_LENGTH("pepnovo_hitlist_length", "Pepnovo+ number of de novo solutions [0-2000]. Default is '10'.", false),
     PEPTNOVO_ESTIMATE_CHARGE("pepnovo_estimate_charge", "Pepnovo+ estimate precursor charge option. 1: true, 0: false, default is '1'.", false),
@@ -108,5 +106,4 @@ public enum IdentificationParametersCLIParams {
         this.description = description;
         this.mandatory = mandatory;
     }
-    
 }

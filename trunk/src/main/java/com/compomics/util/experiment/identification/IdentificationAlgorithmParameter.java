@@ -1,16 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification;
 
 import java.io.Serializable;
 
 /**
- * interface for the algorithm specific parameters
+ * Interface for the algorithm specific parameters.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public interface IdentificationAlgorithmParameter extends Serializable {
 
@@ -23,14 +18,15 @@ public interface IdentificationAlgorithmParameter extends Serializable {
 
     /**
      * Indicates whether another identificationAlgorithmParameter has the same
-     * parameters
+     * parameters.
      *
      * @param identificationAlgorithmParameter the other
      * identificationAlgorithmParameter
-     * 
+     *
      * @return true if the algorithm and parameters are the same
      */
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter);
+
     /**
      * Returns the parameters as a string.
      *

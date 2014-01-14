@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.search_parameters_cli;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -23,12 +17,12 @@ import org.apache.commons.cli.Options;
  * IdentificationParametersCLI extend this class and call initiate in the
  * constructor of your class.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public abstract class AbstractIdentificationParametersCli implements Callable {
 
     /**
-     * The parameters input bean containing the command line arguments
+     * The parameters input bean containing the command line arguments.
      */
     private IdentificationParametersInputBean input;
     /**
@@ -41,7 +35,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
 
     /**
-     * Initiates the IdentificationParametersCli
+     * Initiates the IdentificationParametersCli.
      *
      * @param args the command line arguments
      */
@@ -99,20 +93,15 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     public Object call() {
 
         try {
-
             if (input.isListMods()) {
-
                 printModifications();
-
             } else {
 
                 File outputFile = input.getDestinationFile();
                 SearchParameters searchParameters = input.getSearchParameters();
                 SearchParameters.saveIdentificationParameters(searchParameters, outputFile);
                 System.out.println(System.getProperty("line.separator") + "Identification Parameters file created: " + outputFile.getAbsolutePath() + System.getProperty("line.separator"));
-
             }
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,7 +110,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     }
 
     /**
-     * Prints the available modifications on the screen
+     * Prints the available modifications on the screen.
      */
     public void printModifications() {
 
@@ -142,9 +131,9 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
 
     /**
      * Returns the description line for a PTM.
-     * 
+     *
      * @param ptm the PTM to display
-     * 
+     *
      * @return the description line for a PTM
      */
     private String getProteinLine(PTM ptm) {
@@ -223,6 +212,8 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
 
     /**
      * IdentificationParametersCLI header message when printing the usage.
+     * 
+     * @return the header message as a string
      */
     public static String getHeader() {
         return System.getProperty("line.separator")

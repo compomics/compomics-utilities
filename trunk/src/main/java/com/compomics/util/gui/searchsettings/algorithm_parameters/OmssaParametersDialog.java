@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.searchsettings.algorithm_parameters;
 
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
@@ -15,23 +10,23 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 /**
- * dialog for the OMSSA specific parameters
+ * Dialog for the OMSSA specific parameters.
  *
- * @author Marc
+ * @author Marc Vaudeø
  */
 public class OmssaParametersDialog extends javax.swing.JDialog {
 
     /**
-     * The omssa parameters class containing the information to display
+     * The omssa parameters class containing the information to display.
      */
     private OmssaParameters omssaParameters;
     /**
-     * boolean indicating whether the used cancelled the editing
+     * Boolean indicating whether the used cancelled the editing.
      */
     private boolean cancelled = false;
 
     /**
-     * Creates new form OmssaParametersDialog
+     * Creates new form OmssaParametersDialog.
      *
      * @param parent the parent frame
      * @param omssaParameters the omssa parameters
@@ -48,7 +43,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
 
     /**
      * Fills the GUI with the information contained in the omssa parameters
-     * object
+     * object.
      */
     private void fillGUI() {
         if (omssaParameters.getMaxEValue() != null) {
@@ -96,9 +91,9 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
                 chargeEstimationCombo.setSelectedIndex(1);
             }
         }
-        
+
         omssaOutputFormatComboBox.setSelectedItem(omssaParameters.getSelectedOutput());
-        
+
         eliminatePrecursorCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         precursorScalingCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         chargeEstimationCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -106,7 +101,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Indicates whether the user cancelled the process
+     * Indicates whether the user cancelled the process.
      *
      * @return true if cancel was pressed
      */
@@ -116,7 +111,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
 
     /**
      * Returns the user selection as omssa parameters object.
-     * 
+     *
      * @return the user selection
      */
     public OmssaParameters getInput() {

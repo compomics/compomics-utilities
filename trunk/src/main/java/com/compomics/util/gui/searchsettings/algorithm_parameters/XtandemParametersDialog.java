@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui.searchsettings.algorithm_parameters;
 
 import com.compomics.util.experiment.biology.PTM;
@@ -13,31 +8,31 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 
 /**
- * dialog for the X!Tandem specific parameters
+ * dialog for the X!Tandem specific parameters.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class XtandemParametersDialog extends javax.swing.JDialog {
 
     /**
-     * The X!Tandem parameters class containing the information to display
+     * The X!Tandem parameters class containing the information to display.
      */
     private XtandemParameters xtandemParameters;
     /**
-     * The modification profile used for the search
+     * The modification profile used for the search.
      */
     private ModificationProfile modificationProfile;
     /**
-     * The fragment ion mass accuracy
+     * The fragment ion mass accuracy.
      */
     private double fragmentIonMassAccuracy;
     /**
-     * boolean indicating whether the used cancelled the editing
+     * boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
 
     /**
-     * Creates new form XtandemParametersDialog
+     * Creates new form XtandemParametersDialog.
      *
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
@@ -59,7 +54,7 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
 
     /**
      * Fills the GUI with the information contained in the omssa parameters
-     * object
+     * object.
      */
     private void fillGUI() {
         if (xtandemParameters.getDynamicRange() != null) {
@@ -183,7 +178,7 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Indicates whether the user cancelled the process
+     * Indicates whether the user canceled the process.
      *
      * @return true if cancel was pressed
      */

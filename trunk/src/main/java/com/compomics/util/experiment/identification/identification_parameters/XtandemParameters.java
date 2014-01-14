@@ -1,27 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
-import java.io.Serializable;
 
 /**
- * The X!Tandem specific parameters
+ * The X!Tandem specific parameters.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     /**
-     * version number for deserialization
+     * Version number for deserialization.
      */
     static final long serialVersionUID = -5898951075262732261L;
     /**
-     * Maximal e-value cut-off
+     * Maximal e-value cut-off.
      */
     private Double maxEValue = 100.0;
     /**
@@ -31,99 +25,99 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      */
     private Double dynamicRange = 100.0;
     /**
-     * The number of most intense peaks to consider
+     * The number of most intense peaks to consider.
      */
     private Integer nPeaks = 50;
     /**
-     * The minimum precursor mass
+     * The minimum precursor mass.
      */
     private Double minPrecursorMass = 500.0;
     /**
-     * The minimum fragment mass
+     * The minimum fragment mass.
      */
     private Double minFragmentMz = 200.0;
     /**
-     * The minimum number of peaks per spectrum
+     * The minimum number of peaks per spectrum.
      */
     private Integer minPeaksPerSpectrum = 5;
     /**
-     * indicates whether the protein quick acetylation option should be
-     * triggered
+     * Indicates whether the protein quick acetylation option should be
+     * triggered.
      */
     private Boolean proteinQuickAcetyl = true;
     /**
-     * indicates whether the quick pyrolidone option should be triggered
+     * indicates whether the quick pyrolidone option should be triggered.
      */
     private Boolean quickPyrolidone = true;
     /**
-     * Triggers the refinement process
+     * Triggers the refinement process.
      */
     private Boolean refine = true;
     /**
      * Sets whether semi enzymatic peptides should be search for during the
-     * refinement process
+     * refinement process.
      */
     private Boolean refineSemi = false;
     /**
      * Sets whether point mutations should be search for during the refinement
-     * process
+     * process.
      */
     private Boolean refinePointMutations = false;
     /**
      * Sets whether the spectrum synthesis option should be used during the
-     * refinement process
+     * refinement process.
      */
     private Boolean refineSpectrumSynthesis = true;
     /**
      * Sets whether unexpected cleavages should be search for during the
-     * refinement process
+     * refinement process.
      */
     private Boolean refineUnanticipatedCleavages = true;
     /**
-     * Indicates whether snAPs should be used during the refinement process
+     * Indicates whether snAPs should be used during the refinement process.
      */
     private Boolean refineSnaps = true;
     /**
      * The maximum expectation value for a hit to be considered during the
-     * refinement process
+     * refinement process.
      */
     private Double maximumExpectationValueRefinement = 0.01;
     /**
-     * Sets the modifications to be used during the refinement process
+     * Sets the modifications to be used during the refinement process.
      */
     private Boolean potentialModificationsForFullRefinment = false;
     /**
-     * The skyline path
+     * The skyline path.
      */
     private String skylinePath = "";
     /**
-     * if true protein details will be exported to the to the result file
+     * If true protein details will be exported to the to the result file.
      */
     private Boolean outputProteins = true;
     /**
-     * if true protein sequences will be added to the protein details to the
-     * result file
+     * If true protein sequences will be added to the protein details to the
+     * result file.
      */
     private boolean outputSequences = false;
     /**
-     * if true spectra will be exported to the result file
+     * If true spectra will be exported to the result file.
      */
     private Boolean outputSpectra = true;
     /**
-     * if true histograms will be exported to the result file
+     * If true histograms will be exported to the result file.
      */
     private Boolean outputHistograms = false;
     /**
-     * indicates whether the phospho stp bias option should be triggered
+     * Indicates whether the phospho stp bias option should be triggered.
      */
     private Boolean stpBias = false;
     /**
-     * Triggers the noise suppression function
+     * Triggers the noise suppression function.
      */
     private Boolean useNoiseSuppression = false;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public XtandemParameters() {
 
@@ -378,11 +372,11 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns whether the unanticipated cleavages option should be used during the
-     * refinement process.
+     * Returns whether the unanticipated cleavages option should be used during
+     * the refinement process.
      *
-     * @return true if the unanticipated cleavages option should be used during the
-     * refinement process
+     * @return true if the unanticipated cleavages option should be used during
+     * the refinement process
      */
     public Boolean isRefineUnanticipatedCleavages() {
         return refineUnanticipatedCleavages;
@@ -392,8 +386,8 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * Sets whether the unanticipated cleavages option should be used during the
      * refinement process.
      *
-     * @param refineUnanticipatedCleavages true if the unanticipated cleavages option
-     * should be used during the refinement process
+     * @param refineUnanticipatedCleavages true if the unanticipated cleavages
+     * option should be used during the refinement process
      */
     public void setRefineUnanticipatedCleavages(Boolean refineUnanticipatedCleavages) {
         this.refineUnanticipatedCleavages = refineUnanticipatedCleavages;
@@ -582,7 +576,6 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     @Override
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
-
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
             if (!getMaxEValue().equals(xtandemParameters.getMaxEValue())) {
@@ -763,6 +756,6 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
         }
         output.append(newLine);
 
-    return output.toString ();
-}
+        return output.toString();
+    }
 }

@@ -6,7 +6,6 @@ import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.TagAssumption;
-import com.compomics.util.experiment.identification.advocates.SpectrumIdentificationAlgorithm;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -173,11 +172,12 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @param otherAdvocateId The index of the new advocate
      * @param otherAssumption The new identification assumption
+     * @param ascendingScore indicates whether the score is ascending when hits get better
      */
-    public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption) {
+    public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption, boolean ascendingScore) {
         if (!firstHitsMap.containsKey(otherAdvocateId)
-                || !SpectrumIdentificationAlgorithm.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() > otherAssumption.getScore()
-                || SpectrumIdentificationAlgorithm.isAscendingScore(otherAdvocateId) && firstHitsMap.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
+                || !ascendingScore && firstHitsMap.get(otherAdvocateId).getScore() > otherAssumption.getScore()
+                || ascendingScore && firstHitsMap.get(otherAdvocateId).getScore() < otherAssumption.getScore()) {
             firstHitsMap.put(otherAdvocateId, otherAssumption);
         }
         if (!assumptionsMap.containsKey(otherAdvocateId)) {
@@ -341,6 +341,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * in the ascending order; ie the higher the score, the better the match.
      * @param fixedModifications the fixed modifications to account for
      * @param variableModifications the variable modifications to account for
+     * @param ascendingScore indicates whether the score is ascending when hits get better
      *
      * @return a new spectrum match containing the peptide assumptions made from
      * the tag assumptions.
@@ -351,7 +352,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws SQLException
      */
     public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance, 
-            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications) 
+            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean ascendingScore) 
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
@@ -378,7 +379,7 @@ public class SpectrumMatch extends IdentificationMatch {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, 
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?
                             peptideAssumption.addUrParam(tagAssumption);
-                            spectrumMatch.addHit(advocateId, peptideAssumption);
+                            spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
                         }
                     }
                 }

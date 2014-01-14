@@ -118,7 +118,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
             while ((line = bufferedRandomAccessFile.getNextLine()) != null
                     && !line.startsWith(">")) {
-                currentMatch.addHit(Advocate.ANDROMEDA, getAssumptionFromLine(line, cpt));
+                currentMatch.addHit(Advocate.andromeda.getIndex(), getAssumptionFromLine(line, cpt), true);
                 cpt++;
             }
             result.add(currentMatch);
@@ -153,7 +153,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         double score = new Double(temp[1]);
 
-        return new PeptideAssumption(peptide, rank, Advocate.ANDROMEDA, charge, score, fileName);
+        return new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, score, fileName);
     }
 
     @Override

@@ -57,8 +57,8 @@ public class MDScore {
         HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
         Double firstScore = null, secondScore = null;
 
-        if (spectrumMatch.getAllAssumptions(Advocate.MASCOT) != null) {
-            for (ArrayList<SpectrumIdentificationAssumption> assumptionList : spectrumMatch.getAllAssumptions(Advocate.MASCOT).values()) {
+        if (spectrumMatch.getAllAssumptions(Advocate.Mascot.getIndex()) != null) {
+            for (ArrayList<SpectrumIdentificationAssumption> assumptionList : spectrumMatch.getAllAssumptions(Advocate.Mascot.getIndex()).values()) {
                 for (SpectrumIdentificationAssumption assumption : assumptionList) {
                     PeptideAssumption peptideAssumption = (PeptideAssumption) assumption;
                     if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate, matchingType, massTolerance)) {

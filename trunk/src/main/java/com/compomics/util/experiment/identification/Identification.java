@@ -5,7 +5,6 @@ import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
-import com.compomics.util.experiment.identification.advocates.SpectrumIdentificationAlgorithm;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -1163,6 +1162,8 @@ public abstract class Identification extends ExperimentObject {
      * Adds a spectrum match to the identification.
      *
      * @param newMatch the new match
+     * @param ascendingScore indicates whether the score is ascending when hits get better
+     * 
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while saving the file
      * @throws IOException exception thrown whenever an error occurred while
@@ -1175,7 +1176,7 @@ public abstract class Identification extends ExperimentObject {
      * occurred while saving the file
      * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(SpectrumMatch newMatch) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
+    public void addSpectrumMatch(SpectrumMatch newMatch, boolean ascendingScore) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
         boolean containsSpectrumKey = spectrumIdentificationMap.containsKey(spectrumFile);
@@ -1185,7 +1186,7 @@ public abstract class Identification extends ExperimentObject {
                 throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
             }
             for (int searchEngine : newMatch.getAdvocates()) {
-                oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine));
+                oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine), ascendingScore);
             }
             identificationDB.updateSpectrumMatch(oldMatch);
         } else {
@@ -1272,9 +1273,6 @@ public abstract class Identification extends ExperimentObject {
             peptide.getParentProteins(matchingType, massTolerance);
         }
         String peptideKey = peptide.getMatchingKey(matchingType, massTolerance);
-        if (!peptideKey.equals(peptide.getKey())) {
-            int debug = 1;
-        }
         PeptideMatch peptideMatch;
 
         if (peptideIdentification.contains(peptideKey)) {
@@ -1314,7 +1312,7 @@ public abstract class Identification extends ExperimentObject {
             if (!proteinMatch.getKey().equals(proteinKey)) {
                 throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
                         + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
-                        + SpectrumIdentificationAlgorithm.getName(spectrumMatch.getBestPeptideAssumption().getAdvocate()) + ".");
+                        + Advocate.getAdvocate(spectrumMatch.getBestPeptideAssumption().getAdvocate()).getName() + ".");
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteinsNoRemapping()) {
@@ -1341,6 +1339,8 @@ public abstract class Identification extends ExperimentObject {
      * Add a set of spectrumMatches to the model.
      *
      * @param spectrumMatches The spectrum matches
+     * @param ascendingScore indicates whether the score is ascending when hits get better
+     * 
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while saving the file
      * @throws IOException exception thrown whenever an error occurred while
@@ -1353,9 +1353,9 @@ public abstract class Identification extends ExperimentObject {
      * occurred while saving the file
      * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
+    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches, boolean ascendingScore) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
-            addSpectrumMatch(spectrumMatch);
+            addSpectrumMatch(spectrumMatch, ascendingScore);
         }
     }
 

@@ -127,9 +127,9 @@ public class IdFilter implements Serializable {
         int searchEngine = assumption.getAdvocate();
         double eValue = assumption.getScore();
 
-        if ((searchEngine == Advocate.MASCOT && mascotMaxEvalue > 0 && eValue > mascotMaxEvalue)
-                || (searchEngine == Advocate.OMSSA && omssaMaxEvalue > 0 && eValue > omssaMaxEvalue)
-                || (searchEngine == Advocate.XTANDEM && xtandemMaxEvalue > 0 && eValue > xtandemMaxEvalue)) {
+        if ((searchEngine == Advocate.Mascot.getIndex() && mascotMaxEvalue > 0 && eValue > mascotMaxEvalue)
+                || (searchEngine == Advocate.OMSSA.getIndex() && omssaMaxEvalue > 0 && eValue > omssaMaxEvalue)
+                || (searchEngine == Advocate.XTandem.getIndex() && xtandemMaxEvalue > 0 && eValue > xtandemMaxEvalue)) {
             return false;
         }
         return true;

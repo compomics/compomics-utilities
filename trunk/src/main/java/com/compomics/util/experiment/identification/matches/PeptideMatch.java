@@ -28,7 +28,7 @@ public class PeptideMatch extends IdentificationMatch {
      */
     private String mainMatchKey;
     /**
-     * All spectrum matches indexed by spectrum id: FILE_TITLE.
+     * All spectrum matches indexed by spectrum id. See Spectrum class.
      */
     private ArrayList<String> spectrumMatches = new ArrayList<String>();
     /**

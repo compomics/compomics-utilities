@@ -3,13 +3,20 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import no.uib.jsparklines.data.XYDataPoint;
 
 /**
@@ -27,14 +34,18 @@ public class SearchParameters implements Serializable {
     /**
      * Possible mass accuracy types.
      */
-    public enum PrecursorAccuracyType {
+    public enum MassAccuracyType {
 
         PPM, DA
     };
     /**
      * The precursor accuracy type. Default is ppm.
      */
-    private PrecursorAccuracyType currentPrecursorAccuracyType = PrecursorAccuracyType.PPM;
+    private MassAccuracyType precursorAccuracyType = MassAccuracyType.PPM;
+    /**
+     * The fragment accuracy type. Default is Da.
+     */
+    private MassAccuracyType fragmentAccuracyType = MassAccuracyType.DA;
     /**
      * The precursor mass tolerance.
      */
@@ -105,65 +116,111 @@ public class SearchParameters implements Serializable {
      */
     private static String[] rewindIons = {"x", "y", "z"};
     /**
+     * The algorithm specific parameters
+     */
+    private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;
+    /**
      * Maximal e-value cut-off. (OMSSA and X!Tandem only)
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Double maxEValue = 100.0;
     /**
      * The maximal hit list length (OMSSA setting only).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Integer hitListLength = 25;
     /**
      * The maximal hit list length for PepNovo+.
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Integer hitListLengthDeNovo = 10; // max is 20
     /**
      * The minimal charge to be considered for multiple fragment charges for
      * OMSSA.
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Charge minimalChargeForMultipleChargedFragments = new Charge(Charge.PLUS, 3);
     /**
      * The minimum peptide length (for semi and non tryptic searches with
      * OMSSA).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Integer minPeptideLength = 6;
     /**
      * The maximal peptide length (for semi and non tryptic searches with
      * OMSSA).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Integer maxPeptideLength = 30;
     /**
      * Indicates whether the precursor removal option of OMSSA is used.
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Boolean removePrecursor = false;
     /**
      * Indicates whether the precursor scaling option of OMSSA is used.
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Boolean scalePrecursor = true;
     /**
      * Indicates whether the precursor charge estimation option (OMSSA and
      * DeNovoGUI).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Boolean estimateCharge = true;
     /**
      * Indicates whether the precursor mass shall be corrected (DeNovoGUI
      * setting).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Boolean correctPrecursorMass = true;
     /**
      * Indicates whether the low quality spectra shall be discarded (DeNovoGUI
      * setting).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Boolean discardLowQualitySpectra = true;
     /**
      * DeNovoGUI fragmentation model.
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private String fragmentationModel = "CID_IT_TRYP";
     /**
      * Indicates whether a blast query shall be generated (DeNovoGUI setting).
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Boolean generateQuery = false;
     /**
      * A map from the PepNovo PTM symbols to the utilities PTM names.
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      */
     private Map<String, String> pepNovoPtmMap;
 
@@ -423,17 +480,38 @@ public class SearchParameters implements Serializable {
      *
      * @return the precursor accuracy type
      */
-    public PrecursorAccuracyType getPrecursorAccuracyType() {
-        return currentPrecursorAccuracyType;
+    public MassAccuracyType getPrecursorAccuracyType() {
+        return precursorAccuracyType;
     }
 
     /**
      * Sets the precursor accuracy type.
      *
-     * @param currentPrecursorAccuracyType the precursor accuracy type
+     * @param precursorAccuracyType the precursor accuracy type
      */
-    public void setPrecursorAccuracyType(PrecursorAccuracyType currentPrecursorAccuracyType) {
-        this.currentPrecursorAccuracyType = currentPrecursorAccuracyType;
+    public void setPrecursorAccuracyType(MassAccuracyType precursorAccuracyType) {
+        this.precursorAccuracyType = precursorAccuracyType;
+    }
+
+    /**
+     * Returns the fragment accuracy type.
+     *
+     * @return the fragment accuracy type
+     */
+    public MassAccuracyType getFragmentAccuracyType() {
+        if (fragmentAccuracyType == null) { // Backward compatibility check
+            fragmentAccuracyType = MassAccuracyType.DA;
+        }
+        return fragmentAccuracyType;
+    }
+
+    /**
+     * Sets the fragment accuracy type.
+     *
+     * @param fragmentAccuracyType the fragment accuracy type
+     */
+    public void setFragmentAccuracyType(MassAccuracyType fragmentAccuracyType) {
+        this.fragmentAccuracyType = fragmentAccuracyType;
     }
 
     /**
@@ -442,7 +520,7 @@ public class SearchParameters implements Serializable {
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
-        return currentPrecursorAccuracyType == PrecursorAccuracyType.PPM;
+        return precursorAccuracyType == MassAccuracyType.PPM;
     }
 
     /**
@@ -527,6 +605,8 @@ public class SearchParameters implements Serializable {
     /**
      * Returns the maximal e-value searched for.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the maximal e-value searched for
      */
     public Double getMaxEValue() {
@@ -536,6 +616,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the maximal e-value searched for.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param maxEValue the maximal e-value searched for
      */
     public void setMaxEValue(Double maxEValue) {
@@ -545,6 +627,8 @@ public class SearchParameters implements Serializable {
     /**
      * Returns the length of the hit list for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the length of the hit list for OMSSA
      */
     public Integer getHitListLength() {
@@ -554,6 +638,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the length of the hit list for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param hitListLength the length of the hit list for OMSSA
      */
     public void setHitListLength(Integer hitListLength) {
@@ -563,6 +649,8 @@ public class SearchParameters implements Serializable {
     /**
      * Returns the length of the hit list for PepNovo+.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the length of the hit list for OMSSA
      */
     public Integer getHitListLengthDeNovo() {
@@ -572,6 +660,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the length of the hit list for PepNovo.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param hitListLengthDeNovo the length of the hit list for PepNovo
      */
     public void setHitListLengthDeNovo(Integer hitListLengthDeNovo) {
@@ -582,6 +672,8 @@ public class SearchParameters implements Serializable {
      * Returns the minimal precursor charge to account for multiply charged
      * fragments in OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the minimal precursor charge to account for multiply charged
      * fragments in OMSSA
      */
@@ -593,6 +685,8 @@ public class SearchParameters implements Serializable {
      * Sets the minimal precursor charge to account for multiply charged
      * fragments in OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param minimalChargeForMultipleChargedFragments the minimal precursor
      * charge to account for multiply charged fragments in OMSSA
      */
@@ -603,6 +697,8 @@ public class SearchParameters implements Serializable {
     /**
      * Returns the maximal peptide length allowed.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the maximal peptide length allowed
      */
     public Integer getMaxPeptideLength() {
@@ -612,6 +708,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the maximal peptide length allowed.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param maxPeptideLength the maximal peptide length allowed
      */
     public void setMaxPeptideLength(Integer maxPeptideLength) {
@@ -621,6 +719,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the minimal peptide length allowed.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the minimal peptide length allowed
      */
     public Integer getMinPeptideLength() {
@@ -630,6 +730,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the minimal peptide length allowed.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param minPeptideLength the minimal peptide length allowed
      */
     public void setMinPeptideLength(Integer minPeptideLength) {
@@ -639,6 +741,8 @@ public class SearchParameters implements Serializable {
     /**
      * Indicates whether the precursor charge shall be estimated for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return a boolean indicating whether the precursor charge shall be
      * estimated for OMSSA
      */
@@ -649,6 +753,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets whether the precursor charge shall be estimated for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param estimateCharge a boolean indicating whether the precursor charge
      * shall be estimated for OMSSA
      */
@@ -659,6 +765,8 @@ public class SearchParameters implements Serializable {
     /**
      * Indicates whether the precursor shall be removed for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return a boolean indicating whether the precursor shall be removed for
      * OMSSA
      */
@@ -669,6 +777,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets whether the precursor shall be removed for OMSSA
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param removePrecursor a boolean indicating whether the precursor shall
      * be removed for OMSSA
      */
@@ -679,6 +789,8 @@ public class SearchParameters implements Serializable {
     /**
      * Indicates whether the precursor shall be scaled for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return a boolean indicating whether the precursor shall be scaled for
      * OMSSA
      */
@@ -689,11 +801,66 @@ public class SearchParameters implements Serializable {
     /**
      * Sets whether the precursor shall be scaled for OMSSA.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param scalePrecursor a boolean indicating whether the precursor shall be
      * scaled for OMSSA
      */
     public void setScalePrecursor(Boolean scalePrecursor) {
         this.scalePrecursor = scalePrecursor;
+    }
+
+    /**
+     * Returns the algorithm specific parameters in a map: algorithm as indexed
+     * in the Advocate class -> parameters. null if not set.
+     *
+     * @return the algorithm specific parameters in a map
+     */
+    public HashMap<Integer, IdentificationAlgorithmParameter> getAlgorithmSpecificParameters() {
+        return algorithmParameters;
+    }
+
+    /**
+     * Returns the algorithm specific parameters, null if not found.
+     *
+     * @param algorithmID the index of the search engine as indexed in the
+     * Advocate class
+     *
+     * @return the algorithm specific parameters
+     */
+    public IdentificationAlgorithmParameter getIdentificationAlgorithmParameter(int algorithmID) {
+        if (algorithmParameters == null) {
+            return null;
+        }
+        return algorithmParameters.get(algorithmID);
+    }
+
+    /**
+     * Adds identification algorithm specific paramters
+     *
+     * @param algorithmID the algorithm id as indexed in the Advocate class
+     *
+     * @param identificationAlgorithmParameter the specific parameters
+     */
+    public void setIdentificationAlgorithmParameter(int algorithmID, IdentificationAlgorithmParameter identificationAlgorithmParameter) {
+        if (algorithmParameters == null) {
+            algorithmParameters = new HashMap<Integer, IdentificationAlgorithmParameter>();
+        }
+        algorithmParameters.put(algorithmID, identificationAlgorithmParameter);
+    }
+
+    /**
+     * Returns the algorithms for which specific parameters are stored. Warning:
+     * this does not mean that the algorithm was actually used.
+     *
+     * @return the algorithms for which specific parameters are stored in a set
+     * of indexes as listed in the Advocate class
+     */
+    public Set<Integer> getAlgorithms() {
+        if (algorithmParameters == null) {
+            return new HashSet<Integer>();
+        }
+        return algorithmParameters.keySet();
     }
 
     /**
@@ -707,10 +874,39 @@ public class SearchParameters implements Serializable {
      */
     public static SearchParameters getIdentificationParameters(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SearchParameters result = (SearchParameters) SerializationUtils.readObject(file);
+
         // compatibility check
         ModificationProfile modificationProfile = result.getModificationProfile();
         if (!modificationProfile.hasOMSSAIndexes()) {
             PTMFactory.getInstance().setSearchedOMSSAIndexes(modificationProfile);
+        }
+
+        // compatibility check
+        if (result.getAlgorithmSpecificParameters() == null) {
+
+            OmssaParameters omssaParameters = new OmssaParameters();
+            omssaParameters.setEstimateCharge(result.isEstimateCharge());
+            omssaParameters.setHitListLength(result.getHitListLength());
+            omssaParameters.setMaxEValue(result.getMaxEValue());
+            omssaParameters.setMaxPeptideLength(result.getMaxPeptideLength());
+            omssaParameters.setMinPeptideLength(result.getMinPeptideLength());
+            omssaParameters.setMinimalChargeForMultipleChargedFragments(result.getMinimalChargeForMultipleChargedFragments());
+            omssaParameters.setRemovePrecursor(result.isRemovePrecursor());
+            omssaParameters.setScalePrecursor(result.isScalePrecursor());
+            result.setIdentificationAlgorithmParameter(omssaParameters.getAlgorithm().getIndex(), omssaParameters);
+
+            XtandemParameters xtandemParameters = new XtandemParameters();
+            xtandemParameters.setMaxEValue(result.getMaxEValue());
+            result.setIdentificationAlgorithmParameter(xtandemParameters.getAlgorithm().getIndex(), xtandemParameters);
+
+            PepnovoParameters pepnovoParameters = new PepnovoParameters();
+            pepnovoParameters.setDiscardLowQualitySpectra(result.getDiscardLowQualitySpectra());
+            pepnovoParameters.setEstimateCharge(result.isEstimateCharge());
+            pepnovoParameters.setFragmentationModel(result.getFragmentationModel());
+            pepnovoParameters.setGenerateQuery(result.generateQuery());
+            pepnovoParameters.setHitListLength(result.getHitListLengthDeNovo());
+            pepnovoParameters.setPepNovoPtmMap(result.getPepNovoPtmMap());
+            result.setIdentificationAlgorithmParameter(pepnovoParameters.getAlgorithm().getIndex(), pepnovoParameters);
         }
         return result;
     }
@@ -764,10 +960,9 @@ public class SearchParameters implements Serializable {
 
         StringBuilder output = new StringBuilder();
 
-        // Write the file header.
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
-        output.append("# Search Parameters");
+        output.append("# General Identification Parameters");
         output.append(newLine);
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
@@ -815,6 +1010,21 @@ public class SearchParameters implements Serializable {
         }
         output.append(newLine);
 
+        output.append("REFINEMENT_MODIFICATIONS=");
+        if (utilitiesModificationProfile != null) {
+            ArrayList<String> fixedPtms = utilitiesModificationProfile.getRefinementModifications();
+            boolean first = true;
+            for (String ptm : fixedPtms) {
+                if (first) {
+                    output.append(ptm);
+                    first = false;
+                } else {
+                    output.append("//").append(ptm);
+                }
+            }
+        }
+        output.append(newLine);
+
         output.append("MAX_MISSED_CLEAVAGES=");
         output.append(nMissedCleavages);
         output.append(newLine);
@@ -824,7 +1034,7 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("PRECURSOR_MASS_TOLERANCE_UNIT=");
-        if (currentPrecursorAccuracyType == PrecursorAccuracyType.PPM) {
+        if (precursorAccuracyType == MassAccuracyType.PPM) {
             output.append("ppm");
         } else {
             output.append("Da");
@@ -875,57 +1085,11 @@ public class SearchParameters implements Serializable {
         output.append(maxChargeSearched);
         output.append(newLine);
 
-        output.append("EVALUE_CUTOFF=");
-        output.append(maxEValue);
-        output.append(newLine);
-
-        output.append("MAXIMUM_HITLIST_LENGTH=");
-        output.append(hitListLength);
-        output.append(newLine);
-
-        output.append("OMSSA_PRECURSOR_ELIMINATION=");
-        output.append(removePrecursor);
-        output.append(newLine);
-
-        output.append("OMSSA_PRECURSOR_SCALING=");
-        output.append(scalePrecursor);
-        output.append(newLine);
-
-        output.append("OMSSA_MINIMAL_PEPTIDE_SIZE=");
-        output.append(minPeptideLength);
-        output.append(newLine);
-
-        output.append("OMSSA_MAXIMAL_PEPTIDE_SIZE=");
-        output.append(maxPeptideLength);
-        output.append(newLine);
-
-        output.append("OMSSA_PRECURSOR_CHARGE_TO_CONSIDER_MULTIPLY_CHARGED_FRAGMENTS=");
-        output.append(minimalChargeForMultipleChargedFragments);
-        output.append(newLine);
-
-        output.append("OMSSA_CHARGE_ESTIMATION=");
-        output.append(estimateCharge);
-        output.append(newLine);
-
-        // de novo options
-        output.append(newLine);
-        output.append("DeNovo Options:");
-        output.append(newLine);
-        output.append("CORRECT_PRECURSOR_MASS=");
-        output.append(correctPrecursorMass);
-        output.append(newLine);
-        output.append("DISCARD_LOW_QUALITY_SPECTRA=");
-        output.append(discardLowQualitySpectra);
-        output.append(newLine);
-        output.append("FRAGMENTATION_MODEL=");
-        output.append(fragmentationModel);
-        output.append(newLine);
-        output.append("GENERATE_QUERY=");
-        output.append(generateQuery);
-        output.append(newLine);
-        output.append("HIT_LIST_LENGTH=");
-        output.append(hitListLengthDeNovo);
-        output.append(newLine);
+        for (int index : algorithmParameters.keySet()) {
+            output.append(newLine);
+            output.append(newLine);
+            output.append(algorithmParameters.get(index).toString(html));
+        }
 
         return output.toString();
     }
@@ -974,40 +1138,6 @@ public class SearchParameters implements Serializable {
         if (!this.getMaxChargeSearched().equals(otherSearchParameters.getMaxChargeSearched())) {
             return false;
         }
-        if ((this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() != null)
-                && (this.getMinPeptideLength().intValue() != otherSearchParameters.getMinPeptideLength().intValue())) {
-            return false;
-        }
-        if ((this.getMinPeptideLength() != null && otherSearchParameters.getMinPeptideLength() == null)
-                || (this.getMinPeptideLength() == null && otherSearchParameters.getMinPeptideLength() != null)) {
-            return false;
-        }
-        if ((this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() != null)
-                && (this.getMaxPeptideLength().intValue() != otherSearchParameters.getMaxPeptideLength().intValue())) {
-            return false;
-        }
-        if ((this.getMaxPeptideLength() != null && otherSearchParameters.getMaxPeptideLength() == null)
-                || (this.getMaxPeptideLength() == null && otherSearchParameters.getMaxPeptideLength() != null)) {
-            return false;
-        }
-        if (this.getMaxEValue().doubleValue() != otherSearchParameters.getMaxEValue().doubleValue()) {
-            return false;
-        }
-        if (this.getHitListLength().intValue() != otherSearchParameters.getHitListLength().intValue()) {
-            return false;
-        }
-        if (!this.getMinimalChargeForMultipleChargedFragments().equals(otherSearchParameters.getMinimalChargeForMultipleChargedFragments())) {
-            return false;
-        }
-        if (this.isRemovePrecursor().booleanValue() != otherSearchParameters.isRemovePrecursor().booleanValue()) {
-            return false;
-        }
-        if (this.isScalePrecursor().booleanValue() != otherSearchParameters.isScalePrecursor().booleanValue()) {
-            return false;
-        }
-        if (this.isEstimateCharge().booleanValue() != otherSearchParameters.isEstimateCharge().booleanValue()) {
-            return false;
-        }
         if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() != null)
                 && (!this.getEnzyme().equals(otherSearchParameters.getEnzyme()))) {
             return false;
@@ -1037,17 +1167,20 @@ public class SearchParameters implements Serializable {
             return false;
         }
 
-        // de novo sequencing parameters
-        if (!this.getFragmentationModel().equalsIgnoreCase(otherSearchParameters.getFragmentationModel())) {
-            return false;
-        }
-        if (this.isCorrectPrecursorMass().booleanValue() != otherSearchParameters.isCorrectPrecursorMass()) {
-            return false;
-        }
-        if (this.getDiscardLowQualitySpectra().booleanValue() != otherSearchParameters.getDiscardLowQualitySpectra()) {
+        if (this.getAlgorithms().size() != otherSearchParameters.getAlgorithms().size()) {
             return false;
         }
 
+        for (int se : getAlgorithms()) {
+            IdentificationAlgorithmParameter otherParameter = otherSearchParameters.getIdentificationAlgorithmParameter(se);
+            if (otherParameter == null) {
+                return false;
+            }
+            IdentificationAlgorithmParameter thisParameter = getIdentificationAlgorithmParameter(se);
+            if (!otherParameter.equals(thisParameter)) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -1055,6 +1188,8 @@ public class SearchParameters implements Serializable {
      * Returns a boolean indicating whether the precursor mass shall be
      * corrected (TagDB setting).
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return a boolean indicating whether the precursor mass shall be
      * corrected (TagDB setting)
      */
@@ -1069,6 +1204,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets whether the precursor mass shall be corrected (TagDB setting).
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param correctPrecursorMass a boolean indicating whether the precursor
      * mass shall be corrected (TagDB setting)
      */
@@ -1080,6 +1217,8 @@ public class SearchParameters implements Serializable {
      * Returns a boolean indicating whether low quality spectra shall be
      * discarded.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return a boolean indicating whether low quality spectra shall be
      * discarded
      */
@@ -1094,6 +1233,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets whether low quality spectra shall be discarded.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param discardLowQualitySpectra a boolean indicating whether low quality
      * spectra shall be discarded
      */
@@ -1104,6 +1245,8 @@ public class SearchParameters implements Serializable {
     /**
      * Returns the name of the fragmentation model.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the name of the fragmentation model
      */
     public String getFragmentationModel() {
@@ -1113,6 +1256,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the name of the fragmentation model.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param fragmentationModel the name of the fragmentation model
      */
     public void setFragmentationModel(String fragmentationModel) {
@@ -1122,6 +1267,8 @@ public class SearchParameters implements Serializable {
     /**
      * Returns a boolean indicating whether a blast query shall be generated.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return a boolean indicating whether a blast query shall be generated
      */
     public Boolean generateQuery() {
@@ -1131,6 +1278,8 @@ public class SearchParameters implements Serializable {
     /**
      * Sets a boolean indicating whether a blast query shall be generated.
      *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param generateQuery a boolean indicating whether a blast query shall be
      * generated
      */
@@ -1140,7 +1289,9 @@ public class SearchParameters implements Serializable {
 
     /**
      * Returns the PepNovo to utilities PTM map. Null if not set.
-     * 
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @return the PepNovo to utilities PTM map, null if not set
      */
     public Map<String, String> getPepNovoPtmMap() {
@@ -1149,7 +1300,9 @@ public class SearchParameters implements Serializable {
 
     /**
      * Set the PepNovo to utilities PTM map
-     * 
+     *
+     * @deprecated use the appropriated IdentificationAlgorithmParameters
+     * instead
      * @param pepNovoPtmMap the pepNovoPtmMap to set
      */
     public void setPepNovoPtmMap(Map<String, String> pepNovoPtmMap) {

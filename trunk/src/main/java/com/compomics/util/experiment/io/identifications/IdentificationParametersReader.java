@@ -315,9 +315,9 @@ public class IdentificationParametersReader {
         temp = aProps.getProperty(IdentificationParametersReader.PRECURSOR_MASS_ACCURACY_UNIT);
         if (temp != null) {
             if (temp.equals("ppm")) {
-                searchParameters.setPrecursorAccuracyType(SearchParameters.PrecursorAccuracyType.PPM);
+                searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
             } else if (temp.equals("Da")) {
-                searchParameters.setPrecursorAccuracyType(SearchParameters.PrecursorAccuracyType.DA);
+                searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
             }
         }
 

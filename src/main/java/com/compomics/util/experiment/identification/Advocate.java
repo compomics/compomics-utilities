@@ -1,62 +1,99 @@
 package com.compomics.util.experiment.identification;
 
-import java.io.Serializable;
-
 /**
  * The advocate of a hit can be a search engine, a re-scoring algorithm, etc.
  *
  * @author Marc Vaudel
  */
-public interface Advocate extends Serializable {
+public enum Advocate {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
+     * The search engine Mascot
      */
-    static final long serialVersionUID = -9081265337103997591L;
+    Mascot(0, "Mascot"),
     /**
-     * Mascot index.
+     * The search engine OMSSA
      */
-    public static final int MASCOT = 0;
+    OMSSA(1, "OMSSA"),
     /**
-     * OMSSA index.
+     * The search engine X!Tandem
      */
-    public static final int OMSSA = 1;
+    XTandem(2, "X!Tandem"),
     /**
-     * X!Tandem index.
+     * The de novo algorithm Pepnovo
      */
-    public static final int XTANDEM = 2;
+    pepnovo(3, "Pepnovo"),
     /**
-     * Peptizer index.
+     * The search engine Andromeda
      */
-    public static final int PEPTIZER = 3;
+    andromeda(4, "Andromeda"),
     /**
-     * Andromeda index.
+     * The search engine MS-Amanda
      */
-    public static final int ANDROMEDA = 4;
+    msAmanda(5, "MS-Amanda"),
     /**
-     * PeptideShaker.
+     * The post processing tool PeptideShaker
      */
-    public static final int PEPTIDE_SHAKER = 5;
+    PeptideShaker(6, "PeptideShaker");
     /**
-     * PepNovo.
+     * The index of the advocate
      */
-    public static final int PEPNOVO = 6;
+    private final int index;
     /**
-     * DeNovoGUI.
+     * The name of the advocate
      */
-    public static final int DENOVOGUI = 7;
+    private final String name;
 
     /**
-     * Getter for the name of the Advocate.
+     * Constructor
      *
-     * @return the name of the advocate
+     * @param index
+     * @param name
      */
-    public String getName();
+    private Advocate(int index, String name) {
+        this.index = index;
+        this.name = name;
+    }
 
     /**
-     * Getter for the index of the advocate.
-     *
+     * Returns the index of the advocate.
+     * 
      * @return the index of the advocate
      */
-    public int getId();
+    public int getIndex() {
+        return index;
+    }
+    /**
+     * Returns the name of the advocate.
+     * 
+     * @return the name of the advocate
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the implemented advocates.
+     * 
+     * @return the implemented advocates
+     */
+    public static Advocate[] getPossibilities() {
+        return new Advocate[]{Mascot, OMSSA, XTandem, pepnovo, andromeda};
+    }
+    
+    /**
+     * Returns the advocate corresponding to the given index. Null if not found.
+     * 
+     * @param index the index of the advocate
+     * 
+     * @return the advocate of interest
+     */
+    public static Advocate getAdvocate(int index) {
+        for (Advocate advocate : getPossibilities()) {
+            if (advocate.getIndex() == index) {
+                return advocate;
+            }
+        }
+        return null;
+    }
 }

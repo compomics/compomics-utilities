@@ -5,8 +5,10 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -1744,9 +1746,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
 
         if (searchParameters.getPrecursorAccuracyType() != null) {
-            if (searchParameters.getPrecursorAccuracyType() == SearchParameters.PrecursorAccuracyType.PPM) {
+            if (searchParameters.getPrecursorAccuracyType() == SearchParameters.MassAccuracyType.PPM) {
                 precursorIonUnit.setSelectedItem("ppm");
-            } else if (searchParameters.getPrecursorAccuracyType() == SearchParameters.PrecursorAccuracyType.DA) {
+            } else if (searchParameters.getPrecursorAccuracyType() == SearchParameters.MassAccuracyType.DA) {
                 precursorIonUnit.setSelectedItem("Da");
             }
         }
@@ -2178,6 +2180,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     public SearchParameters getSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters();
+        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()));
+        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()));
 
         String dbPath = databaseSettingsTxt.getText().trim();
         if (!dbPath.equals("")) {
@@ -2188,11 +2192,22 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         Enzyme enzyme = enzymeFactory.getEnzyme(enzymesCmb.getSelectedItem().toString());
         tempSearchParameters.setEnzyme(enzyme);
 
+        double fragmentAccuracy = new Double(fragmentIonAccuracyTxt.getText().trim());
+
+        boolean acetylConflict = false;
+        boolean pyroConflict = false;
         ModificationProfile modificationProfile = new ModificationProfile();
         for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
             String modName = (String) fixedModsTable.getValueAt(i, 1);
             modificationProfile.addFixedModification(ptmFactory.getPTM(modName));
             modificationProfile.setColor(modName, (Color) fixedModsTable.getValueAt(i, 0));
+            PTM ptm = ptmFactory.getPTM(modName);
+            if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) && Math.abs(ptm.getMass() - 42.010565) < fragmentAccuracy) {
+                acetylConflict = true;
+            }
+            if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) && Math.abs(ptm.getMass() + 17.026549) < fragmentAccuracy) {
+                pyroConflict = true;
+            }
         }
 
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
@@ -2205,12 +2220,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         tempSearchParameters.setnMissedCleavages(new Integer(missedCleavagesTxt.getText().trim()));
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));
         if (precursorIonUnit.getSelectedIndex() == 0) {
-            tempSearchParameters.setPrecursorAccuracyType(SearchParameters.PrecursorAccuracyType.PPM);
+            tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
         } else {
-            tempSearchParameters.setPrecursorAccuracyType(SearchParameters.PrecursorAccuracyType.DA);
+            tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
-        tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
+        tempSearchParameters.setFragmentIonAccuracy(fragmentAccuracy);
         tempSearchParameters.setIonSearched1(fragmentIon1Cmb.getSelectedItem().toString().trim());
+        tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
         tempSearchParameters.setIonSearched2(fragmentIon2Cmb.getSelectedItem().toString().trim());
         int charge = new Integer(minPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMinChargeSearched(new Charge(Charge.PLUS, charge));
@@ -2221,7 +2237,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         }
 
+        // Set omssa indexes
         ptmFactory.setSearchedOMSSAIndexes(tempSearchParameters.getModificationProfile());
+
+        // Adapt X!Tandem options
+        XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex());
+        xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
+        xtandemParameters.setQuickPyrolidone(!pyroConflict);
 
         return tempSearchParameters;
     }

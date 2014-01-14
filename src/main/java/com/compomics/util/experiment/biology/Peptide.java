@@ -1283,6 +1283,10 @@ public class Peptide extends ExperimentObject {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
+        if (sequence.contains("C")) {
+            int debug = 1;
+        }
+        
         for (ModificationMatch ptmMatch : modifications) {
             mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
         }

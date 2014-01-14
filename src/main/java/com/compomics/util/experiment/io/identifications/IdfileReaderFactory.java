@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.identification.advocates.SpectrumIdentificationAlgorithm;
+import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.File;
@@ -179,17 +179,17 @@ public class IdfileReaderFactory {
     public int getSearchEngine(File aFile) {
         String fileName = Util.getFileName(aFile);
         if (fileName.endsWith(".dat")) {
-            return SpectrumIdentificationAlgorithm.MASCOT;
+            return Advocate.Mascot.getIndex();
         } else if (fileName.endsWith(".omx")) {
-            return SpectrumIdentificationAlgorithm.OMSSA;
+            return Advocate.OMSSA.getIndex();
         } else if (fileName.endsWith(".t.xml")) {
             if (!fileName.equals("mods.xml") && !fileName.equals("usermods.xml")) {
-                return SpectrumIdentificationAlgorithm.XTANDEM;
+            return Advocate.XTandem.getIndex();
             }
         } else if (fileName.endsWith(".out")) {
-            return SpectrumIdentificationAlgorithm.PEPNOVO;
+            return Advocate.pepnovo.getIndex();
         } else if (fileName.endsWith(".res")) {
-            return SpectrumIdentificationAlgorithm.ANDROMEDA;
+            return Advocate.andromeda.getIndex();
         }
         return -1;
     }

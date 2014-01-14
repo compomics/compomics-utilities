@@ -119,6 +119,22 @@ public class SearchParameters implements Serializable {
      * The algorithm specific parameters
      */
     private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;
+
+    /**
+     * Possible mass accuracy types.
+     *
+     * @deprecated use MassAccuracyType
+     */
+    public enum PrecursorAccuracyType {
+
+        PPM, DA
+    };
+    /**
+     * The precursor accuracy type. Default is ppm.
+     *
+     * @deprecated use precursorAccuracyType
+     */
+    private PrecursorAccuracyType currentPrecursorAccuracyType = PrecursorAccuracyType.PPM;
     /**
      * Maximal e-value cut-off. (OMSSA and X!Tandem only)
      *
@@ -520,6 +536,12 @@ public class SearchParameters implements Serializable {
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
+        if (precursorAccuracyType == null) {
+            if (currentPrecursorAccuracyType == PrecursorAccuracyType.PPM) {
+                precursorAccuracyType = MassAccuracyType.PPM;
+            }
+            precursorAccuracyType = MassAccuracyType.DA;
+        }
         return precursorAccuracyType == MassAccuracyType.PPM;
     }
 

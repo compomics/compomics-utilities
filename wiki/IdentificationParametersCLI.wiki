@@ -1,0 +1,3 @@
+#summary How to create utilities search parameter objects from the command line.
+
+_(work in progress...)_

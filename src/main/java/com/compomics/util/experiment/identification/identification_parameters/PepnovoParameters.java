@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
@@ -10,14 +5,14 @@ import com.compomics.util.experiment.identification.IdentificationAlgorithmParam
 import java.util.Map;
 
 /**
- * Pepnovo specific parameters
+ * PepNovo specific parameters.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PepnovoParameters implements IdentificationAlgorithmParameter {
 
     /**
-     * version number for deserialization
+     * Version number for deserialization.
      */
     static final long serialVersionUID = -8056507693211793829L;
     /**
@@ -25,23 +20,23 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
      */
     private Integer hitListLength = 10;
     /**
-     * Indicates whether the precursor charge estimation option
+     * Indicates whether the precursor charge estimation option.
      */
     private Boolean estimateCharge = true;
     /**
-     * Indicates whether the precursor mass shall be corrected
+     * Indicates whether the precursor mass shall be corrected.
      */
     private Boolean correctPrecursorMass = true;
     /**
-     * Indicates whether the low quality spectra shall be discarded
+     * Indicates whether the low quality spectra shall be discarded.
      */
     private Boolean discardLowQualitySpectra = true;
     /**
-     * pepnovo fragmentation model.
+     * PepNovo fragmentation model.
      */
     private String fragmentationModel = "CID_IT_TRYP";
     /**
-     * Indicates whether a blast query shall be generated
+     * Indicates whether a blast query shall be generated.
      */
     private Boolean generateQuery = false;
     /**
@@ -50,7 +45,7 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
     private Map<String, String> pepNovoPtmMap;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public PepnovoParameters() {
 
@@ -191,7 +186,7 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Set the PepNovo to utilities PTM map
+     * Set the PepNovo to utilities PTM map.
      *
      * @param pepNovoPtmMap the pepNovoPtmMap to set
      */

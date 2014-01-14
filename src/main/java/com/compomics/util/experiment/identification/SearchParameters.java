@@ -11,10 +11,8 @@ import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import no.uib.jsparklines.data.XYDataPoint;
@@ -116,7 +114,7 @@ public class SearchParameters implements Serializable {
      */
     private static String[] rewindIons = {"x", "y", "z"};
     /**
-     * The algorithm specific parameters
+     * The algorithm specific parameters.
      */
     private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;
 
@@ -136,7 +134,7 @@ public class SearchParameters implements Serializable {
      */
     private PrecursorAccuracyType currentPrecursorAccuracyType = PrecursorAccuracyType.PPM;
     /**
-     * Maximal e-value cut-off. (OMSSA and X!Tandem only)
+     * Maximal e-value cut-off. (OMSSA and X!Tandem only.)
      *
      * @deprecated use the appropriated IdentificationAlgorithmParameters
      * instead

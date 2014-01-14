@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
@@ -10,26 +5,26 @@ import com.compomics.util.experiment.identification.IdentificationAlgorithmParam
 import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**
- * The OMSSA specific parameters
+ * The OMSSA specific parameters.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
-     * version number for deserialization
+     * Version number for deserialization.
      */
     static final long serialVersionUID = -6704164074092668637L;
     /**
-     * Maximal e-value cut-off
+     * Maximal e-value cut-off.
      */
     private Double maxEValue = 100.0;
     /**
-     * The maximal hit list length
+     * The maximal hit list length.
      */
     private Integer hitListLength = 25;
     /**
-     * The minimal charge to be considered for multiple fragment charges
+     * The minimal charge to be considered for multiple fragment charges.
      */
     private Charge minimalChargeForMultipleChargedFragments = new Charge(Charge.PLUS, 3);
     /**
@@ -49,20 +44,20 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      */
     private Boolean scalePrecursor = true;
     /**
-     * Indicates whether the precursor charge estimation option
+     * Indicates whether the precursor charge estimation option.
      */
     private Boolean estimateCharge = true;
     /**
-     * The selected output type (see omssaOutputTypes)
+     * The selected output type (see omssaOutputTypes).
      */
     private String selectedOutput = "OMX";
     /**
-     * The available types of output
+     * The available types of output.
      */
     private static String[] omssaOutputTypes = {"OMX", "CSV"};
 
     /**
-     * Constructor
+     * Constructor.
      */
     public OmssaParameters() {
 
@@ -193,7 +188,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Sets whether the precursor shall be removed for OMSSA
+     * Sets whether the precursor shall be removed for OMSSA.
      *
      * @param removePrecursor a boolean indicating whether the precursor shall
      * be removed for OMSSA
@@ -241,7 +236,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the output types available
+     * Returns the output types available.
      *
      * @return the output types available
      */

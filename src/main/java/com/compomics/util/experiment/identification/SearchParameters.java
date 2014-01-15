@@ -537,8 +537,9 @@ public class SearchParameters implements Serializable {
         if (precursorAccuracyType == null) {
             if (currentPrecursorAccuracyType == PrecursorAccuracyType.PPM) {
                 precursorAccuracyType = MassAccuracyType.PPM;
+            } else {
+                precursorAccuracyType = MassAccuracyType.DA;
             }
-            precursorAccuracyType = MassAccuracyType.DA;
         }
         return precursorAccuracyType == MassAccuracyType.PPM;
     }

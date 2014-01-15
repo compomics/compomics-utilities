@@ -31,7 +31,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The peptide mass.
      */
-    private Double mass;
+    private Double mass = null;
     /**
      * The parent proteins.
      */
@@ -101,7 +101,6 @@ public class Peptide extends ExperimentObject {
             ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
         }
-        estimateTheoreticMass();
     }
 
     /**
@@ -137,6 +136,9 @@ public class Peptide extends ExperimentObject {
      * @return the peptide mass
      */
     public Double getMass() {
+        if (mass == null) {
+            estimateTheoreticMass();
+        }
         return mass;
     }
 
@@ -1282,7 +1284,7 @@ public class Peptide extends ExperimentObject {
         mass += Atom.H.mass + Atom.O.mass;
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        
+
         for (ModificationMatch ptmMatch : modifications) {
             mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
         }

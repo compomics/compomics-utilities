@@ -2242,8 +2242,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         // Adapt X!Tandem options
         XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex());
-        xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
-        xtandemParameters.setQuickPyrolidone(!pyroConflict);
+        if (xtandemParameters != null) {
+            xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
+            xtandemParameters.setQuickPyrolidone(!pyroConflict);
+        }
 
         return tempSearchParameters;
     }

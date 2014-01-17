@@ -495,6 +495,13 @@ public class SearchParameters implements Serializable {
      * @return the precursor accuracy type
      */
     public MassAccuracyType getPrecursorAccuracyType() {
+        if (precursorAccuracyType == null) { // Backward compatibility check
+            if (currentPrecursorAccuracyType == PrecursorAccuracyType.PPM) {
+                precursorAccuracyType = MassAccuracyType.PPM;
+            } else {
+                precursorAccuracyType = MassAccuracyType.DA;
+            }
+        }
         return precursorAccuracyType;
     }
 
@@ -1055,7 +1062,7 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("PRECURSOR_MASS_TOLERANCE_UNIT=");
-        if (precursorAccuracyType == MassAccuracyType.PPM) {
+        if (getPrecursorAccuracyType() == MassAccuracyType.PPM) {
             output.append("ppm");
         } else {
             output.append("Da");

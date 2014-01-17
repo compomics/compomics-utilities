@@ -1,4 +1,4 @@
-package com.compomics.util.gui.searchsettings.algorithm_parameters;
+package com.compomics.util.gui.searchsettings.algorithm_settings;
 
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -12,16 +12,17 @@ import javax.swing.SwingUtilities;
 /**
  * Dialog for the OMSSA specific parameters.
  *
- * @author Marc Vaudeø
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
-public class OmssaParametersDialog extends javax.swing.JDialog {
+public class OmssaSettingsDialog extends javax.swing.JDialog {
 
     /**
-     * The omssa parameters class containing the information to display.
+     * The OMSSA parameters class containing the information to display.
      */
     private OmssaParameters omssaParameters;
     /**
-     * Boolean indicating whether the used cancelled the editing.
+     * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
 
@@ -29,20 +30,19 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
      * Creates new form OmssaParametersDialog.
      *
      * @param parent the parent frame
-     * @param omssaParameters the omssa parameters
+     * @param omssaParameters the OMSSA parameters
      */
-    public OmssaParametersDialog(java.awt.Frame parent, OmssaParameters omssaParameters) {
+    public OmssaSettingsDialog(java.awt.Frame parent, OmssaParameters omssaParameters) {
         super(parent, true);
         this.omssaParameters = omssaParameters;
         initComponents();
         fillGUI();
-        setTitle("OMSSA Advanced Parameters");
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Fills the GUI with the information contained in the omssa parameters
+     * Fills the GUI with the information contained in the OMSSA parameters
      * object.
      */
     private void fillGUI() {
@@ -110,38 +110,38 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the user selection as omssa parameters object.
+     * Returns the user selection as OMSSA parameters object.
      *
      * @return the user selection
      */
     public OmssaParameters getInput() {
-        OmssaParameters omssaParameters = new OmssaParameters();
+        OmssaParameters tempOmssaParameters = new OmssaParameters();
         String input = maxEvalueTxt.getText().trim();
         if (!input.equals("")) {
-            omssaParameters.setMaxEValue(new Double(input));
+            tempOmssaParameters.setMaxEValue(new Double(input));
         }
         input = hitlistTxt.getText().trim();
         if (!input.equals("")) {
-            omssaParameters.setHitListLength(new Integer(input));
+            tempOmssaParameters.setHitListLength(new Integer(input));
         }
         input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            omssaParameters.setMinPeptideLength(new Integer(input));
+            tempOmssaParameters.setMinPeptideLength(new Integer(input));
         }
         input = maxPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            omssaParameters.setMaxPeptideLength(new Integer(input));
+            tempOmssaParameters.setMaxPeptideLength(new Integer(input));
         }
         input = minPrecChargeMultipleChargedFragmentsTxt.getText().trim();
         if (!input.equals("")) {
             int charge = new Integer(minPrecChargeMultipleChargedFragmentsTxt.getText().trim());
-            omssaParameters.setMinimalChargeForMultipleChargedFragments(new Charge(Charge.PLUS, charge));
+            tempOmssaParameters.setMinimalChargeForMultipleChargedFragments(new Charge(Charge.PLUS, charge));
         }
-        omssaParameters.setRemovePrecursor(eliminatePrecursorCombo.getSelectedIndex() == 0);
-        omssaParameters.setScalePrecursor(precursorScalingCombo.getSelectedIndex() == 0);
-        omssaParameters.setEstimateCharge(chargeEstimationCombo.getSelectedIndex() == 0);
-        omssaParameters.setSelectedOutput(omssaOutputFormatComboBox.getSelectedItem().toString());
-        return omssaParameters;
+        tempOmssaParameters.setRemovePrecursor(eliminatePrecursorCombo.getSelectedIndex() == 0);
+        tempOmssaParameters.setScalePrecursor(precursorScalingCombo.getSelectedIndex() == 0);
+        tempOmssaParameters.setEstimateCharge(chargeEstimationCombo.getSelectedIndex() == 0);
+        tempOmssaParameters.setSelectedOutput(omssaOutputFormatComboBox.getSelectedItem().toString());
+        return tempOmssaParameters;
     }
 
     /**
@@ -153,6 +153,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        backgroundPanel = new javax.swing.JPanel();
         omssaParametersPanel = new javax.swing.JPanel();
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel = new javax.swing.JLabel();
         chargeReductionLabel = new javax.swing.JLabel();
@@ -164,12 +165,12 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
         chargeEstimationCombo = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        SemiEnzymaticParametersPanel = new javax.swing.JPanel();
         maxPepLengthTxt = new javax.swing.JTextField();
         peptideLengthDividerLabel = new javax.swing.JLabel();
         minPepLengthTxt = new javax.swing.JTextField();
         peptideLengthJLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        outputParametersPanel = new javax.swing.JPanel();
         omssaOutputFormatComboBox = new javax.swing.JComboBox();
         omssaOutputFormatLabel = new javax.swing.JLabel();
         eValueLbl = new javax.swing.JLabel();
@@ -178,8 +179,12 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
         hitlistTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("OMSSA Settings");
+        setResizable(false);
 
-        omssaParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Parameters"));
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        omssaParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Settings"));
         omssaParametersPanel.setOpaque(false);
 
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel.setText("Minimum Precursor Charge for Multiply Charged Fragments");
@@ -210,15 +215,15 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
             .addGroup(omssaParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(precursorChargeEstimationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                    .addComponent(chargeReductionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                    .addComponent(precursorMassScalingLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                    .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
+                    .addComponent(precursorChargeEstimationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chargeReductionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(precursorMassScalingLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(minPrecChargeMultipleChargedFragmentsTxt)
-                    .addComponent(eliminatePrecursorCombo, 0, 149, Short.MAX_VALUE)
-                    .addComponent(precursorScalingCombo, 0, 1, Short.MAX_VALUE)
+                    .addComponent(eliminatePrecursorCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(precursorScalingCombo, 0, 149, Short.MAX_VALUE)
                     .addComponent(chargeEstimationCombo, 0, 1, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -258,7 +263,8 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters in Semi-Enzymatic Mode"));
+        SemiEnzymaticParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Semi-Enzymatic Mode Settings"));
+        SemiEnzymaticParametersPanel.setOpaque(false);
 
         maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -278,13 +284,13 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
 
         peptideLengthJLabel.setText("Peptide Length (min - max)");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout SemiEnzymaticParametersPanelLayout = new javax.swing.GroupLayout(SemiEnzymaticParametersPanel);
+        SemiEnzymaticParametersPanel.setLayout(SemiEnzymaticParametersPanelLayout);
+        SemiEnzymaticParametersPanelLayout.setHorizontalGroup(
+            SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SemiEnzymaticParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -293,11 +299,11 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
                 .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        SemiEnzymaticParametersPanelLayout.setVerticalGroup(
+            SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SemiEnzymaticParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(peptideLengthJLabel)
                     .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -305,7 +311,8 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Parameters"));
+        outputParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
+        outputParametersPanel.setOpaque(false);
 
         omssaOutputFormatComboBox.setModel(new DefaultComboBoxModel(OmssaParameters.getOmssaOutputTypes()));
         omssaOutputFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -334,100 +341,130 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout outputParametersPanelLayout = new javax.swing.GroupLayout(outputParametersPanel);
+        outputParametersPanel.setLayout(outputParametersPanelLayout);
+        outputParametersPanelLayout.setHorizontalGroup(
+            outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(omssaOutputFormatLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-                        .addGap(215, 215, 215)
-                        .addComponent(omssaOutputFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(eValueLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(hitListLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(hitlistTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                            .addComponent(maxEvalueTxt))))
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(omssaOutputFormatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eValueLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hitListLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxEvalueTxt)
+                    .addComponent(hitlistTxt, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(omssaOutputFormatComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+
+        outputParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {eValueLbl, hitListLbl, omssaOutputFormatLabel});
+
+        outputParametersPanelLayout.setVerticalGroup(
+            outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eValueLbl)
                     .addComponent(maxEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hitListLbl)
                     .addComponent(hitlistTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(omssaOutputFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(omssaOutputFormatLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SemiEnzymaticParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(omssaParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addComponent(outputParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(omssaParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SemiEnzymaticParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(outputParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(closeButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
     private void minPrecChargeMultipleChargedFragmentsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecChargeMultipleChargedFragmentsTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_minPrecChargeMultipleChargedFragmentsTxtKeyReleased
 
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
     private void minPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_minPepLengthTxtKeyReleased
 
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
     private void maxPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxPepLengthTxtKeyReleased
 
+    /**
+     * Give OMSSA output format warning.
+     * 
+     * @param evt 
+     */
     private void omssaOutputFormatComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_omssaOutputFormatComboBoxActionPerformed
         if (((String) omssaOutputFormatComboBox.getSelectedItem()).equalsIgnoreCase("OMSSA CSV") && this.isVisible()) {
 
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    JOptionPane.showMessageDialog(OmssaParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                    JOptionPane.showMessageDialog(OmssaSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
                             "Note that the OMSSA CSV format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.ERROR_MESSAGE);
                 }
@@ -435,20 +472,40 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_omssaOutputFormatComboBoxActionPerformed
 
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
     private void maxEvalueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxEvalueTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxEvalueTxtKeyReleased
 
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
     private void hitlistTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_hitlistTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_hitlistTxtKeyReleased
 
+    /**
+     * Save the settings and close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Close the without saving.
+     * 
+     * @param evt 
+     */
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         cancelled = true;
         dispose();
@@ -651,6 +708,8 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel SemiEnzymaticParametersPanel;
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JComboBox chargeEstimationCombo;
     private javax.swing.JLabel chargeReductionLabel;
     private javax.swing.JButton closeButton;
@@ -658,8 +717,6 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox eliminatePrecursorCombo;
     private javax.swing.JLabel hitListLbl;
     private javax.swing.JTextField hitlistTxt;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField maxEvalueTxt;
     private javax.swing.JTextField maxPepLengthTxt;
     private javax.swing.JTextField minPepLengthTxt;
@@ -669,6 +726,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox omssaOutputFormatComboBox;
     private javax.swing.JLabel omssaOutputFormatLabel;
     private javax.swing.JPanel omssaParametersPanel;
+    private javax.swing.JPanel outputParametersPanel;
     private javax.swing.JLabel peptideLengthDividerLabel;
     private javax.swing.JLabel peptideLengthJLabel;
     private javax.swing.JLabel precursorChargeEstimationLabel;

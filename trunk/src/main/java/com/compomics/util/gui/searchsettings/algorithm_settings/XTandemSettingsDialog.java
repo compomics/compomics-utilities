@@ -1,18 +1,21 @@
-package com.compomics.util.gui.searchsettings.algorithm_parameters;
+package com.compomics.util.gui.searchsettings.algorithm_settings;
 
+import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 
 /**
  * dialog for the X!Tandem specific parameters.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
-public class XtandemParametersDialog extends javax.swing.JDialog {
+public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * The X!Tandem parameters class containing the information to display.
@@ -27,7 +30,7 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
      */
     private double fragmentIonMassAccuracy;
     /**
-     * boolean indicating whether the used canceled the editing.
+     * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
 
@@ -40,16 +43,37 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
      * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
      * spectrometer
      */
-    public XtandemParametersDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
+    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
         super(parent, true);
         this.xtandemParameters = xtandemParameters;
         this.modificationProfile = modificationProfile;
         this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
         initComponents();
+        setUpGUI();
         fillGUI();
-        setTitle("X!Tandem Advanced Parameters");
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    /**
+     * Set up the GUI.
+     */
+    private void setUpGUI() {
+        noiseSuppressionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        quickAcetylCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        quickPyroCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        stpBiasCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputProteinsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputSequencesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputSpectraCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputHistogramsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        refinementCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        unanticipatedCleavageCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        semiEnzymaticCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        potentialModificationsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        pointMutationsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        snapsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        spectrumSynthesisCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -252,181 +276,82 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        omssaParametersPanel = new javax.swing.JPanel();
-        eValueLbl = new javax.swing.JLabel();
-        eValueTxt = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        outputSequencesCmb = new javax.swing.JComboBox();
-        outputProteinsCmb = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        outputSpectraCmb = new javax.swing.JComboBox();
-        skylineTxt = new javax.swing.JTextField();
-        eValueLbl3 = new javax.swing.JLabel();
-        outputHistogramsCmb = new javax.swing.JComboBox();
-        jLabel17 = new javax.swing.JLabel();
-        okButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        backgroundPanel = new javax.swing.JPanel();
+        spectrumImportSettingsPanel = new javax.swing.JPanel();
         dynamicRangeLbl = new javax.swing.JLabel();
         dynamicRangeTxt = new javax.swing.JTextField();
         nPeaksTxt = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         nPeaksLbl = new javax.swing.JLabel();
         minFragMzLbl = new javax.swing.JLabel();
         minFragmentMzTxt = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
         minPeaksLbl = new javax.swing.JLabel();
         minPeaksTxt = new javax.swing.JTextField();
         minPrecMassLbl = new javax.swing.JLabel();
         minPrecMassTxt = new javax.swing.JTextField();
         noiseSuppressionCmb = new javax.swing.JComboBox();
-        jLabel6 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        noiseSuppressionLabel = new javax.swing.JLabel();
+        advancedSearchSettingsPanel = new javax.swing.JPanel();
         quickPyroCmb = new javax.swing.JComboBox();
         quickAcetylCmb = new javax.swing.JComboBox();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        quickAcetylLabel = new javax.swing.JLabel();
+        quickPyroLabel = new javax.swing.JLabel();
+        stpBiasLabel = new javax.swing.JLabel();
         stpBiasCmb = new javax.swing.JComboBox();
-        jPanel3 = new javax.swing.JPanel();
+        refinementSettingsPanel = new javax.swing.JPanel();
         refinementCmb = new javax.swing.JComboBox();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        refinementLabel = new javax.swing.JLabel();
+        semiEnzumaticLabel = new javax.swing.JLabel();
         semiEnzymaticCmb = new javax.swing.JComboBox();
         maxEValueRefineTxt = new javax.swing.JTextField();
         maxEValueRefinmentLbl = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        pointMutarionLabel = new javax.swing.JLabel();
         pointMutationsCmb = new javax.swing.JComboBox();
-        jLabel12 = new javax.swing.JLabel();
+        snapsLabel = new javax.swing.JLabel();
         snapsCmb = new javax.swing.JComboBox();
         spectrumSynthesisCmb = new javax.swing.JComboBox();
-        jLabel13 = new javax.swing.JLabel();
+        spectrumSynthesisLabel = new javax.swing.JLabel();
         unanticipatedCleavageCmb = new javax.swing.JComboBox();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        unanticipatedCleavageLabel = new javax.swing.JLabel();
+        usePotentialModsLabel = new javax.swing.JLabel();
         potentialModificationsCmb = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        outputSettingsPanel = new javax.swing.JPanel();
+        eValueLbl = new javax.swing.JLabel();
+        eValueTxt = new javax.swing.JTextField();
+        outputSequencesLabel = new javax.swing.JLabel();
+        outputSequencesCmb = new javax.swing.JComboBox();
+        outputProteinsCmb = new javax.swing.JComboBox();
+        outputProteinsLabel = new javax.swing.JLabel();
+        outputSpectraLabel = new javax.swing.JLabel();
+        outputSpectraCmb = new javax.swing.JComboBox();
+        skylineTxt = new javax.swing.JTextField();
+        eValueLbl3 = new javax.swing.JLabel();
+        outputHistogramsCmb = new javax.swing.JComboBox();
+        outputHistogramsLabel = new javax.swing.JLabel();
+        okButton = new javax.swing.JButton();
+        closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("X!Tandem Settings");
+        setResizable(false);
 
-        omssaParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Parameters"));
-        omssaParametersPanel.setOpaque(false);
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        eValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/omvev.html\">E-value Cutoff</a></html>");
+        spectrumImportSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Import Settings"));
+        spectrumImportSettingsPanel.setOpaque(false);
 
-        eValueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        eValueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                eValueTxtKeyReleased(evt);
+        dynamicRangeLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/sdr.html\">Dynamic Range (Da)</a></html>");
+        dynamicRangeLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                dynamicRangeLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dynamicRangeLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dynamicRangeLblMouseExited(evt);
             }
         });
-
-        jLabel1.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/osequ.html\">Output Sequences</a></html>");
-
-        outputSequencesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        outputProteinsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        outputProteinsCmb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputProteinsCmbActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/oprot.html\">Output Proteins</a></html>");
-
-        jLabel3.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ospec.html\">Output Spectra</a></html>");
-
-        outputSpectraCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        skylineTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        skylineTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                skylineTxtKeyReleased(evt);
-            }
-        });
-
-        eValueLbl3.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ssp.html\">Skyline Path</a></html>");
-
-        outputHistogramsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        jLabel17.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ohist.html\">Output Histograms</a></html>");
-
-        javax.swing.GroupLayout omssaParametersPanelLayout = new javax.swing.GroupLayout(omssaParametersPanel);
-        omssaParametersPanel.setLayout(omssaParametersPanelLayout);
-        omssaParametersPanelLayout.setHorizontalGroup(
-            omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eValueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(eValueLbl3, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(skylineTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(265, 265, 265)
-                        .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(outputHistogramsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(outputSpectraCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(outputProteinsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(outputSequencesCmb, 0, 148, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        omssaParametersPanelLayout.setVerticalGroup(
-            omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eValueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(outputProteinsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputSequencesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputSpectraCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueLbl3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(skylineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Import Parameters"));
-
-        dynamicRangeLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/sdr.html\">Dynamic Range</a></html>");
 
         dynamicRangeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         dynamicRangeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -442,8 +367,6 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setText("Da");
-
         nPeaksLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/stp.html\">Number of Peaks</a></html>");
 
         minFragMzLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smfmz.html\">Minimum Fragment m/z</a></html>");
@@ -454,8 +377,6 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
                 minFragmentMzTxtKeyReleased(evt);
             }
         });
-
-        jLabel5.setText("m/z");
 
         minPeaksLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smp.html\">Minimum Peaks</a></html>");
 
@@ -482,79 +403,73 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel6.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/suns.html\">Noise suppression</a></html>");
+        noiseSuppressionLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/suns.html\">Noise suppression</a></html>");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout spectrumImportSettingsPanelLayout = new javax.swing.GroupLayout(spectrumImportSettingsPanel);
+        spectrumImportSettingsPanel.setLayout(spectrumImportSettingsPanelLayout);
+        spectrumImportSettingsPanelLayout.setHorizontalGroup(
+            spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(dynamicRangeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dynamicRangeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nPeaksTxt)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(dynamicRangeTxt)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dynamicRangeTxt)))
+                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minFragmentMzTxt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(minPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(minFragmentMzTxt))
+                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(minPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(minPeaksTxt))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(minPrecMassLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(minPrecMassLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(noiseSuppressionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(minPrecMassTxt)
+                        .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(minPrecMassTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                             .addComponent(noiseSuppressionCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        spectrumImportSettingsPanelLayout.setVerticalGroup(
+            spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dynamicRangeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dynamicRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(dynamicRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minFragmentMzTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                    .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(minPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(noiseSuppressionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(noiseSuppressionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPrecMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(minPrecMassLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Parameters"));
+        advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Settings"));
+        advancedSearchSettingsPanel.setOpaque(false);
 
         quickPyroCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         quickPyroCmb.addActionListener(new java.awt.event.ActionListener() {
@@ -570,50 +485,51 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqa.html\">Quick Acetyl</a></html>");
+        quickAcetylLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqa.html\">Quick Acetyl</a></html>");
 
-        jLabel8.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqp.html\">Quick Pyrolidone</a></html>");
+        quickPyroLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqp.html\">Quick Pyrolidone</a></html>");
 
-        jLabel16.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pstpb.html\">stP bias</a></html>");
+        stpBiasLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pstpb.html\">stP bias</a></html>");
 
         stpBiasCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
+        advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
+        advancedSearchSettingsPanelLayout.setHorizontalGroup(
+            advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(quickPyroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quickAcetylLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stpBiasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(stpBiasCmb, 0, 149, Short.MAX_VALUE)
-                    .addComponent(quickAcetylCmb, 0, 149, Short.MAX_VALUE)
-                    .addComponent(quickPyroCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(quickPyroCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(quickAcetylCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        advancedSearchSettingsPanelLayout.setVerticalGroup(
+            advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(quickAcetylLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(quickAcetylCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(quickPyroCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(quickPyroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stpBiasCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stpBiasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Refinement Parameters"));
+        refinementSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Refinement Settings"));
+        refinementSettingsPanel.setOpaque(false);
 
         refinementCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         refinementCmb.addActionListener(new java.awt.event.ActionListener() {
@@ -622,9 +538,9 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel9.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refine.html\">Refinement</a></html>");
+        refinementLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refine.html\">Refinement</a></html>");
 
-        jLabel10.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rcsemi.html\">Semi-Enzymatic Cleavage</a></html>");
+        semiEnzumaticLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rcsemi.html\">Semi-Enzymatic Cleavage</a></html>");
 
         semiEnzymaticCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -637,195 +553,341 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
 
         maxEValueRefinmentLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refmvev.html\">Maximum Valid Expectation Value</a></html>");
 
-        jLabel11.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rpm.html\">Point Mutations</a></html>");
+        pointMutarionLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rpm.html\">Point Mutations</a></html>");
 
         pointMutationsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        jLabel12.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rsaps.html\">snAPs</a></html>");
+        snapsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rsaps.html\">snAPs</a></html>");
 
         snapsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         spectrumSynthesisCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        jLabel13.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rss.html\">Spectrum Synthesis</a></html>");
+        spectrumSynthesisLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rss.html\">Spectrum Synthesis</a></html>");
 
         unanticipatedCleavageCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        jLabel14.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ruc.html\">Unanticipated Cleavage</a></html>");
+        unanticipatedCleavageLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ruc.html\">Unanticipated Cleavage</a></html>");
 
-        jLabel15.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rupmffr.html\">Use Potential Modifications for Full Refinement</a></html>");
+        usePotentialModsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rupmffr.html\">Use Potential Modifications for Full Refinement</a></html>");
 
         potentialModificationsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jLabel1.setText("... Refinement Modifications...");
+
+        javax.swing.GroupLayout refinementSettingsPanelLayout = new javax.swing.GroupLayout(refinementSettingsPanel);
+        refinementSettingsPanel.setLayout(refinementSettingsPanelLayout);
+        refinementSettingsPanelLayout.setHorizontalGroup(
+            refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(refinementLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(refinementCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(semiEnzumaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(semiEnzymaticCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(maxEValueRefinmentLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxEValueRefineTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(maxEValueRefinmentLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(maxEValueRefineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(pointMutarionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pointMutationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(snapsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(snapsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(spectrumSynthesisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(spectrumSynthesisCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(unanticipatedCleavageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(unanticipatedCleavageCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(usePotentialModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        refinementSettingsPanelLayout.setVerticalGroup(
+            refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refinementCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(refinementLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxEValueRefineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxEValueRefinmentLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(unanticipatedCleavageCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(unanticipatedCleavageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(semiEnzymaticCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(semiEnzumaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usePotentialModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pointMutationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pointMutarionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(snapsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(snapsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spectrumSynthesisCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spectrumSynthesisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(127, 127, 127))
+        );
+
+        outputSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
+        outputSettingsPanel.setOpaque(false);
+
+        eValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/omvev.html\">E-value Cutoff</a></html>");
+
+        eValueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        eValueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                eValueTxtKeyReleased(evt);
+            }
+        });
+
+        outputSequencesLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/osequ.html\">Output Sequences</a></html>");
+
+        outputSequencesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        outputProteinsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        outputProteinsCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputProteinsCmbActionPerformed(evt);
+            }
+        });
+
+        outputProteinsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/oprot.html\">Output Proteins</a></html>");
+
+        outputSpectraLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ospec.html\">Output Spectra</a></html>");
+
+        outputSpectraCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        skylineTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        eValueLbl3.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ssp.html\">Skyline Path</a></html>");
+
+        outputHistogramsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        outputHistogramsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ohist.html\">Output Histograms</a></html>");
+
+        javax.swing.GroupLayout outputSettingsPanelLayout = new javax.swing.GroupLayout(outputSettingsPanel);
+        outputSettingsPanel.setLayout(outputSettingsPanelLayout);
+        outputSettingsPanelLayout.setHorizontalGroup(
+            outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eValueTxt))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(eValueLbl3, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(skylineTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                    .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(outputSequencesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(outputProteinsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(outputSpectraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(outputHistogramsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(outputSequencesCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(outputProteinsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, outputSettingsPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(outputSpectraCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                .addContainerGap())
+        );
+        outputSettingsPanelLayout.setVerticalGroup(
+            outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eValueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputProteinsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputProteinsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputSequencesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputSequencesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputSpectraCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputSpectraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputHistogramsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eValueLbl3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(skylineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(closeButton))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(outputSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spectrumImportSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(refinementSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addComponent(spectrumImportSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(outputSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(refinementSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(closeButton)
+                    .addComponent(okButton))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(omssaParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(closeButton)))
-                .addContainerGap())
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(omssaParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(closeButton)
-                    .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void eValueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eValueTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_eValueTxtKeyReleased
+    /**
+     * Close the dialog without saving the settings.
+     * 
+     * @param evt 
+     */
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        cancelled = true;
+        dispose();
+    }//GEN-LAST:event_closeButtonActionPerformed
 
+    /**
+     * Save the settings and then close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        cancelled = true;
-        dispose();
-    }//GEN-LAST:event_closeButtonActionPerformed
+    /**
+     * Enable/disable the output sequence combo box.
+     * 
+     * @param evt 
+     */
+    private void outputProteinsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputProteinsCmbActionPerformed
+        if (outputProteinsCmb.getSelectedIndex() == 0) {
+            outputSequencesCmb.setEnabled(true);
+        } else {
+            outputSequencesCmb.setSelectedIndex(1);
+            outputSequencesCmb.setEnabled(false);
+        }
+    }//GEN-LAST:event_outputProteinsCmbActionPerformed
 
-    private void dynamicRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dynamicRangeTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dynamicRangeTxtKeyReleased
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
+    private void eValueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eValueTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_eValueTxtKeyReleased
 
-    private void nPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nPeaksTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nPeaksTxtKeyReleased
-
-    private void skylineTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_skylineTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_skylineTxtKeyReleased
-
-    private void minFragmentMzTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minFragmentMzTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minFragmentMzTxtKeyReleased
-
-    private void minPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPeaksTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minPeaksTxtKeyReleased
-
-    private void minPrecMassTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecMassTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_minPrecMassTxtKeyReleased
-
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
     private void maxEValueRefineTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxEValueRefineTxtKeyReleased
-        // TODO add your handling code here:
+        validateInput(false);
     }//GEN-LAST:event_maxEValueRefineTxtKeyReleased
 
-    private void noiseSuppressionCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noiseSuppressionCmbActionPerformed
-        if (noiseSuppressionCmb.getSelectedIndex() == 0) {
-            minPrecMassTxt.setEnabled(true);
-        } else {
-            minPrecMassTxt.setEnabled(false);
-        }
-    }//GEN-LAST:event_noiseSuppressionCmbActionPerformed
-
+    /**
+     * Enable/disable the refinement setting.
+     * 
+     * @param evt 
+     */
     private void refinementCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refinementCmbActionPerformed
         if (refinementCmb.getSelectedIndex() == 0) {
             maxEValueRefineTxt.setEnabled(true);
@@ -846,12 +908,18 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_refinementCmbActionPerformed
 
+    /**
+     * Check for quick acetyl conflict.
+     * 
+     * @param evt 
+     */
     private void quickAcetylCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickAcetylCmbActionPerformed
         if (quickAcetylCmb.getSelectedIndex() == 0) {
             PTMFactory ptmFactory = PTMFactory.getInstance();
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
-                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracy) {
+                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) 
+                        && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracy) {
                     JOptionPane.showMessageDialog(this, "The quick acetyl option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
                     quickAcetylCmb.setSelectedIndex(1);
@@ -861,12 +929,18 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_quickAcetylCmbActionPerformed
 
+    /**
+     * Check for quick pyrolidone conflict.
+     * 
+     * @param evt 
+     */
     private void quickPyroCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickPyroCmbActionPerformed
         if (quickPyroCmb.getSelectedIndex() == 0) {
             PTMFactory ptmFactory = PTMFactory.getInstance();
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
-                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracy) {
+                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) 
+                        && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracy) {
                     JOptionPane.showMessageDialog(this, "The quick pyrolidone option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
                     quickAcetylCmb.setSelectedIndex(1);
@@ -876,14 +950,92 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_quickPyroCmbActionPerformed
 
-    private void outputProteinsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputProteinsCmbActionPerformed
-        if (outputProteinsCmb.getSelectedIndex() == 0) {
-            outputSequencesCmb.setEnabled(true);
+    /**
+     * Enable/disable the noise min precursor mass.
+     * 
+     * @param evt 
+     */
+    private void noiseSuppressionCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noiseSuppressionCmbActionPerformed
+        if (noiseSuppressionCmb.getSelectedIndex() == 0) {
+            minPrecMassTxt.setEnabled(true);
         } else {
-            outputSequencesCmb.setSelectedIndex(1);
-            outputSequencesCmb.setEnabled(false);
+            minPrecMassTxt.setEnabled(false);
         }
-    }//GEN-LAST:event_outputProteinsCmbActionPerformed
+    }//GEN-LAST:event_noiseSuppressionCmbActionPerformed
+
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
+    private void minPrecMassTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecMassTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minPrecMassTxtKeyReleased
+
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
+    private void minPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPeaksTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minPeaksTxtKeyReleased
+
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
+    private void minFragmentMzTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minFragmentMzTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minFragmentMzTxtKeyReleased
+
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
+    private void nPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nPeaksTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_nPeaksTxtKeyReleased
+
+    /**
+     * Validate the input.
+     * 
+     * @param evt 
+     */
+    private void dynamicRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dynamicRangeTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_dynamicRangeTxtKeyReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void dynamicRangeLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dynamicRangeLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_dynamicRangeLblMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void dynamicRangeLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dynamicRangeLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_dynamicRangeLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void dynamicRangeLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dynamicRangeLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/sdr.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_dynamicRangeLblMouseReleased
 
     /**
      * Inspects the parameters validity.
@@ -1173,6 +1325,8 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel advancedSearchSettingsPanel;
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel dynamicRangeLbl;
     private javax.swing.JTextField dynamicRangeTxt;
@@ -1180,25 +1334,6 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
     private javax.swing.JLabel eValueLbl3;
     private javax.swing.JTextField eValueTxt;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField maxEValueRefineTxt;
     private javax.swing.JLabel maxEValueRefinmentLbl;
     private javax.swing.JLabel minFragMzLbl;
@@ -1210,22 +1345,39 @@ public class XtandemParametersDialog extends javax.swing.JDialog {
     private javax.swing.JLabel nPeaksLbl;
     private javax.swing.JTextField nPeaksTxt;
     private javax.swing.JComboBox noiseSuppressionCmb;
+    private javax.swing.JLabel noiseSuppressionLabel;
     private javax.swing.JButton okButton;
-    private javax.swing.JPanel omssaParametersPanel;
     private javax.swing.JComboBox outputHistogramsCmb;
+    private javax.swing.JLabel outputHistogramsLabel;
     private javax.swing.JComboBox outputProteinsCmb;
+    private javax.swing.JLabel outputProteinsLabel;
     private javax.swing.JComboBox outputSequencesCmb;
+    private javax.swing.JLabel outputSequencesLabel;
+    private javax.swing.JPanel outputSettingsPanel;
     private javax.swing.JComboBox outputSpectraCmb;
+    private javax.swing.JLabel outputSpectraLabel;
+    private javax.swing.JLabel pointMutarionLabel;
     private javax.swing.JComboBox pointMutationsCmb;
     private javax.swing.JComboBox potentialModificationsCmb;
     private javax.swing.JComboBox quickAcetylCmb;
+    private javax.swing.JLabel quickAcetylLabel;
     private javax.swing.JComboBox quickPyroCmb;
+    private javax.swing.JLabel quickPyroLabel;
     private javax.swing.JComboBox refinementCmb;
+    private javax.swing.JLabel refinementLabel;
+    private javax.swing.JPanel refinementSettingsPanel;
+    private javax.swing.JLabel semiEnzumaticLabel;
     private javax.swing.JComboBox semiEnzymaticCmb;
     private javax.swing.JTextField skylineTxt;
     private javax.swing.JComboBox snapsCmb;
+    private javax.swing.JLabel snapsLabel;
+    private javax.swing.JPanel spectrumImportSettingsPanel;
     private javax.swing.JComboBox spectrumSynthesisCmb;
+    private javax.swing.JLabel spectrumSynthesisLabel;
     private javax.swing.JComboBox stpBiasCmb;
+    private javax.swing.JLabel stpBiasLabel;
     private javax.swing.JComboBox unanticipatedCleavageCmb;
+    private javax.swing.JLabel unanticipatedCleavageLabel;
+    private javax.swing.JLabel usePotentialModsLabel;
     // End of variables declaration//GEN-END:variables
 }

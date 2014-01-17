@@ -541,14 +541,7 @@ public class SearchParameters implements Serializable {
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
-        if (precursorAccuracyType == null) {
-            if (currentPrecursorAccuracyType == PrecursorAccuracyType.PPM) {
-                precursorAccuracyType = MassAccuracyType.PPM;
-            } else {
-                precursorAccuracyType = MassAccuracyType.DA;
-            }
-        }
-        return precursorAccuracyType == MassAccuracyType.PPM;
+        return getPrecursorAccuracyType() == MassAccuracyType.PPM;
     }
 
     /**

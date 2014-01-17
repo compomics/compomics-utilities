@@ -329,8 +329,118 @@ public class MgfReader {
     }
 
     /**
-     * Fix duplicate spectrum titles. Adds (2), (3) etc, behind the duplicate
-     * spectrum titles.
+     * Removes duplicate spectrum titles (the first occurrence is kept).
+     *
+     * @param mgfFile the MGF file to validate
+     * @param waitingHandler a waitingHandler showing the progress, can be null
+     *
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
+     * @throws UnsupportedEncodingException if the decoding of a spectrum title
+     * fails
+     */
+    public static void removeDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+
+        ArrayList<String> spectrumTitles = new ArrayList<String>();
+
+        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
+        }
+
+        BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        try {
+
+            long progressUnit = br.length() / 100;
+
+            FileWriter fw = new FileWriter(tempSpectrumFile);
+            try {
+                BufferedWriter bw = new BufferedWriter(fw);
+                try {
+
+                    String line;
+
+                    while ((line = br.readLine()) != null) {
+
+                        if (line.startsWith("TITLE")) {
+
+                            if (waitingHandler != null) {
+                                if (waitingHandler.isRunCanceled()) {
+                                    break;
+                                }
+                                waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
+                            }
+
+                            String title = line.substring(line.indexOf('=') + 1).trim();
+
+                            try {
+                                title = URLDecoder.decode(title, "utf-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                                throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
+                            }
+
+                            while (spectrumTitles.contains(title) && (line = br.readLine()) != null) {
+                                if (line.startsWith("TITLE")) {
+
+                                    title = line.substring(line.indexOf('=') + 1).trim();
+
+                                    try {
+                                        title = URLDecoder.decode(title, "utf-8");
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                        throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
+                                    }
+                                }
+                            }
+                            spectrumTitles.add(title);
+                        }
+
+                        if (line != null) {
+                            bw.write(line);
+                            bw.newLine();
+                        }
+
+                    }
+
+                } finally {
+
+                    bw.close();
+                }
+            } finally {
+                fw.close();
+            }
+        } finally {
+            br.close();
+        }
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+        }
+
+        // replace the old file
+        String orignalFilePath = mgfFile.getAbsolutePath();
+        boolean fileDeleted = mgfFile.delete();
+
+        if (!fileDeleted) {
+            throw new IOException("Failed to delete the original spectrum file.");
+        }
+
+        boolean fileRenamed = tempSpectrumFile.renameTo(new File(orignalFilePath));
+
+        if (!fileRenamed) {
+            throw new IOException("Failed to replace the original spectrum file.");
+        }
+    }
+
+    /**
+     * Renames duplicate spectrum titles. Adds (2), (3) etc, behind the
+     * duplicate spectrum titles.
      *
      * @param mgfFile the MGF file to validate
      * @param waitingHandler a waitingHandler showing the progress
@@ -341,10 +451,9 @@ public class MgfReader {
      * @throws UnsupportedEncodingException if the decoding of a spectrum title
      * fails
      */
-    public static void fixDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+    public static void renameDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
         // @TODO: use the waitingHandler??
-
         ArrayList<String> spectrumTitles = new ArrayList<String>();
 
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
@@ -422,7 +531,6 @@ public class MgfReader {
 
         // @TODO: possible to make this method even faster?? 
         // replacing RandomAccessFile with BufferedRandomAccessFile helped a lot, but might still be room for more
-
         String fileName = mgfFile.getName();
 
         if (fileName.toLowerCase().endsWith(".mgf")) {
@@ -625,7 +733,6 @@ public class MgfReader {
     public static MSnSpectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
 
         // @TODO get fileName from the random access file?
-
         bufferedRandomAccessFile.seek(index);
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
@@ -777,7 +884,6 @@ public class MgfReader {
     public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
 
         // @TODO: get fileName from the random access file?
-
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
@@ -835,7 +941,6 @@ public class MgfReader {
             } else if (line.equals("END IONS")) {
 
                 // @TODO: would perhaps be faster to return as soon as a peak is read?
-
                 if (rt1 != -1 && rt2 != -1) {
                     return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                 }

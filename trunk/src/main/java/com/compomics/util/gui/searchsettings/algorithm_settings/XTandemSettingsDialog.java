@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.gui.ptm.PtmDialogParent;
-import com.compomics.util.gui.searchsettings.SearchSettingsDialogParent;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import java.awt.Frame;
@@ -56,24 +55,18 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * The SearchSettingsDialogParent.
-     */
-    private SearchSettingsDialogParent searchSettingsDialogParent;
 
     /**
      * Creates new form XtandemParametersDialog.
      *
      * @param parent the parent frame
-     * @param searchSettingsDialogParent
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
      * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
      * spectrometer
      */
-    public XTandemSettingsDialog(java.awt.Frame parent, SearchSettingsDialogParent searchSettingsDialogParent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
+    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
         super(parent, true);
-        this.searchSettingsDialogParent = searchSettingsDialogParent;
         this.xtandemParameters = xtandemParameters;
         this.modificationProfile = modificationProfile;
         this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;

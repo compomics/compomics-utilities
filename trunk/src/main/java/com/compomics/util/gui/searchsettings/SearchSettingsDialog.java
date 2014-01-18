@@ -145,6 +145,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         modificationTypesSplitPane.setDividerLocation(0.5);
 
+        fixedModsTable.getTableHeader().setReorderingAllowed(false);
+        variableModsTable.getTableHeader().setReorderingAllowed(false);
+        modificationsTable.getTableHeader().setReorderingAllowed(false);
+
         // centrally align the comboboxes
         modificationsListCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         enzymesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -1319,7 +1323,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }//GEN-LAST:event_modificationsTableMouseMoved
 
     /**
-     * Opens a file chooser where the color for the PTM can be changed.
+     * Opens a color chooser where the color for the PTM can be changed, or
+     * allows the users to change of a PTM is in the most used PTMs list.
      *
      * @param evt
      */
@@ -1365,9 +1370,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 if (row < modificationsTable.getRowCount()) {
                     modificationsTable.setRowSelectionInterval(row, row);
                 } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
-                    {
-                        modificationsTable.setRowSelectionInterval(row - 1, row - 1);
-                    }
+                    modificationsTable.setRowSelectionInterval(row - 1, row - 1);
                 }
             }
 

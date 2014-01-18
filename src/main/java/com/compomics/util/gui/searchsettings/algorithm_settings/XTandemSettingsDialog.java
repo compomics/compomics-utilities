@@ -4,18 +4,33 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
+import com.compomics.util.gui.ptm.ModificationsDialog;
+import com.compomics.util.gui.ptm.PtmDialogParent;
+import com.compomics.util.gui.searchsettings.SearchSettingsDialogParent;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
+import no.uib.jsparklines.renderers.JSparklinesBarChartTableCellRenderer;
+import no.uib.jsparklines.renderers.JSparklinesColorTableCellRenderer;
+import org.jfree.chart.plot.PlotOrientation;
 
 /**
- * dialog for the X!Tandem specific parameters.
+ * Dialog for the X!Tandem specific settings.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class XTandemSettingsDialog extends javax.swing.JDialog {
+public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDialogParent {
 
     /**
      * The X!Tandem parameters class containing the information to display.
@@ -33,18 +48,32 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * The modification table column header tooltips.
+     */
+    private ArrayList<String> modificationTableToolTips;
+    /**
+     * The post translational modifications factory.
+     */
+    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    /**
+     * The SearchSettingsDialogParent.
+     */
+    private SearchSettingsDialogParent searchSettingsDialogParent;
 
     /**
      * Creates new form XtandemParametersDialog.
      *
      * @param parent the parent frame
+     * @param searchSettingsDialogParent
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
      * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
      * spectrometer
      */
-    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
+    public XTandemSettingsDialog(java.awt.Frame parent, SearchSettingsDialogParent searchSettingsDialogParent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
         super(parent, true);
+        this.searchSettingsDialogParent = searchSettingsDialogParent;
         this.xtandemParameters = xtandemParameters;
         this.modificationProfile = modificationProfile;
         this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
@@ -74,10 +103,35 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         pointMutationsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         snapsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         spectrumSynthesisCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+
+        modificationTableToolTips = new ArrayList<String>();
+        modificationTableToolTips.add(null);
+        modificationTableToolTips.add("Modification Name");
+        modificationTableToolTips.add("Modification Mass");
+        modificationTableToolTips.add("Refinement Modification");
+        
+        modificationsJScrollPane.getViewport().setOpaque(false);
+        modificationsTable.getTableHeader().setReorderingAllowed(false);
+
+        setAllModificationTableProperties();
     }
 
     /**
-     * Fills the GUI with the information contained in the omssa parameters
+     * Set the properties of the all modification table.
+     */
+    private void setAllModificationTableProperties() {
+        modificationsTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
+        modificationsTable.getColumn(" ").setMaxWidth(35);
+        modificationsTable.getColumn(" ").setMinWidth(35);
+        modificationsTable.getColumn("Mass").setMaxWidth(100);
+        modificationsTable.getColumn("Mass").setMinWidth(100);
+        modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
+        modificationsTable.getColumn("  ").setMaxWidth(30);
+        modificationsTable.getColumn("  ").setMinWidth(30);
+    }
+
+    /**
+     * Fills the GUI with the information contained in the X!Tandem settings
      * object.
      */
     private void fillGUI() {
@@ -199,6 +253,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         if (xtandemParameters.getSkylinePath() != null) {
             skylineTxt.setText(xtandemParameters.getSkylinePath() + "");
         }
+
+        // load the ptms
+        updateModificationList();
     }
 
     /**
@@ -300,11 +357,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         refinementSettingsPanel = new javax.swing.JPanel();
         refinementCmb = new javax.swing.JComboBox();
         refinementLabel = new javax.swing.JLabel();
-        semiEnzumaticLabel = new javax.swing.JLabel();
+        semiEnzymaticLabel = new javax.swing.JLabel();
         semiEnzymaticCmb = new javax.swing.JComboBox();
         maxEValueRefineTxt = new javax.swing.JTextField();
         maxEValueRefinmentLbl = new javax.swing.JLabel();
-        pointMutarionLabel = new javax.swing.JLabel();
+        pointMutationLabel = new javax.swing.JLabel();
         pointMutationsCmb = new javax.swing.JComboBox();
         snapsLabel = new javax.swing.JLabel();
         snapsCmb = new javax.swing.JComboBox();
@@ -314,7 +371,23 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         unanticipatedCleavageLabel = new javax.swing.JLabel();
         usePotentialModsLabel = new javax.swing.JLabel();
         potentialModificationsCmb = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        fixedModificationsLabel = new javax.swing.JLabel();
+        openModificationSettingsJButton = new javax.swing.JButton();
+        modificationsJScrollPane = new javax.swing.JScrollPane();
+        modificationsTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        String tip = (String) modificationTableToolTips.get(realIndex);
+                        return tip;
+                    }
+                };
+            }
+        };
         outputSettingsPanel = new javax.swing.JPanel();
         eValueLbl = new javax.swing.JLabel();
         eValueTxt = new javax.swing.JTextField();
@@ -325,7 +398,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         outputSpectraLabel = new javax.swing.JLabel();
         outputSpectraCmb = new javax.swing.JComboBox();
         skylineTxt = new javax.swing.JTextField();
-        eValueLbl3 = new javax.swing.JLabel();
+        skylinePathValueLbl = new javax.swing.JLabel();
         outputHistogramsCmb = new javax.swing.JComboBox();
         outputHistogramsLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
@@ -368,8 +441,30 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         nPeaksLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/stp.html\">Number of Peaks</a></html>");
+        nPeaksLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                nPeaksLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nPeaksLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nPeaksLblMouseExited(evt);
+            }
+        });
 
         minFragMzLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smfmz.html\">Minimum Fragment m/z</a></html>");
+        minFragMzLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                minFragMzLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                minFragMzLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                minFragMzLblMouseExited(evt);
+            }
+        });
 
         minFragmentMzTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minFragmentMzTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -379,6 +474,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         minPeaksLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smp.html\">Minimum Peaks</a></html>");
+        minPeaksLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                minPeaksLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                minPeaksLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                minPeaksLblMouseExited(evt);
+            }
+        });
 
         minPeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minPeaksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -388,6 +494,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         minPrecMassLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smpmh.html\">Minimum Precursor Mass</a></html>");
+        minPrecMassLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                minPrecMassLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                minPrecMassLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                minPrecMassLblMouseExited(evt);
+            }
+        });
 
         minPrecMassTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minPrecMassTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -403,7 +520,18 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        noiseSuppressionLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/suns.html\">Noise suppression</a></html>");
+        noiseSuppressionLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/suns.html\">Noise Suppression</a></html>");
+        noiseSuppressionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                noiseSuppressionLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                noiseSuppressionLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                noiseSuppressionLabelMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout spectrumImportSettingsPanelLayout = new javax.swing.GroupLayout(spectrumImportSettingsPanel);
         spectrumImportSettingsPanel.setLayout(spectrumImportSettingsPanelLayout);
@@ -418,24 +546,24 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                             .addComponent(nPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nPeaksTxt)
-                            .addComponent(dynamicRangeTxt)))
+                            .addComponent(nPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dynamicRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minFragmentMzTxt))
+                        .addComponent(minFragmentMzTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minPeaksTxt))
+                        .addComponent(minPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(minPrecMassLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(noiseSuppressionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(minPrecMassTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                            .addComponent(noiseSuppressionCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(minPrecMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(noiseSuppressionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         spectrumImportSettingsPanelLayout.setVerticalGroup(
@@ -486,10 +614,43 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         quickAcetylLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqa.html\">Quick Acetyl</a></html>");
+        quickAcetylLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                quickAcetylLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                quickAcetylLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                quickAcetylLabelMouseExited(evt);
+            }
+        });
 
         quickPyroLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqp.html\">Quick Pyrolidone</a></html>");
+        quickPyroLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                quickPyroLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                quickPyroLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                quickPyroLabelMouseExited(evt);
+            }
+        });
 
         stpBiasLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pstpb.html\">stP bias</a></html>");
+        stpBiasLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                stpBiasLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                stpBiasLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                stpBiasLabelMouseExited(evt);
+            }
+        });
 
         stpBiasCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -505,9 +666,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                     .addComponent(stpBiasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(stpBiasCmb, 0, 149, Short.MAX_VALUE)
-                    .addComponent(quickPyroCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(quickAcetylCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(stpBiasCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quickPyroCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quickAcetylCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         advancedSearchSettingsPanelLayout.setVerticalGroup(
@@ -539,8 +700,30 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         refinementLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refine.html\">Refinement</a></html>");
+        refinementLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                refinementLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                refinementLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                refinementLabelMouseExited(evt);
+            }
+        });
 
-        semiEnzumaticLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rcsemi.html\">Semi-Enzymatic Cleavage</a></html>");
+        semiEnzymaticLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rcsemi.html\">Semi-Enzymatic Cleavage</a></html>");
+        semiEnzymaticLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                semiEnzymaticLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                semiEnzymaticLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                semiEnzymaticLabelMouseExited(evt);
+            }
+        });
 
         semiEnzymaticCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -552,28 +735,188 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         maxEValueRefinmentLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refmvev.html\">Maximum Valid Expectation Value</a></html>");
+        maxEValueRefinmentLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                maxEValueRefinmentLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                maxEValueRefinmentLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                maxEValueRefinmentLblMouseExited(evt);
+            }
+        });
 
-        pointMutarionLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rpm.html\">Point Mutations</a></html>");
+        pointMutationLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rpm.html\">Point Mutations</a></html>");
+        pointMutationLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                pointMutationLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                pointMutationLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                pointMutationLabelMouseExited(evt);
+            }
+        });
 
         pointMutationsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         snapsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rsaps.html\">snAPs</a></html>");
+        snapsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                snapsLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                snapsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                snapsLabelMouseExited(evt);
+            }
+        });
 
         snapsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         spectrumSynthesisCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         spectrumSynthesisLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rss.html\">Spectrum Synthesis</a></html>");
+        spectrumSynthesisLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                spectrumSynthesisLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                spectrumSynthesisLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                spectrumSynthesisLabelMouseExited(evt);
+            }
+        });
 
         unanticipatedCleavageCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         unanticipatedCleavageLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ruc.html\">Unanticipated Cleavage</a></html>");
+        unanticipatedCleavageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                unanticipatedCleavageLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                unanticipatedCleavageLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                unanticipatedCleavageLabelMouseExited(evt);
+            }
+        });
 
         usePotentialModsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rupmffr.html\">Use Potential Modifications for Full Refinement</a></html>");
+        usePotentialModsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                usePotentialModsLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                usePotentialModsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                usePotentialModsLabelMouseExited(evt);
+            }
+        });
 
         potentialModificationsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        jLabel1.setText("... Refinement Modifications...");
+        jPanel8.setOpaque(false);
+
+        fixedModificationsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refpmm.htmll\">Refinement Modifications</a></html>");
+        fixedModificationsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                fixedModificationsLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fixedModificationsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fixedModificationsLabelMouseExited(evt);
+            }
+        });
+
+        openModificationSettingsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        openModificationSettingsJButton.setToolTipText("Edit Modifications");
+        openModificationSettingsJButton.setBorder(null);
+        openModificationSettingsJButton.setBorderPainted(false);
+        openModificationSettingsJButton.setContentAreaFilled(false);
+        openModificationSettingsJButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        openModificationSettingsJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openModificationSettingsJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openModificationSettingsJButtonMouseExited(evt);
+            }
+        });
+        openModificationSettingsJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openModificationSettingsJButtonActionPerformed(evt);
+            }
+        });
+
+        modificationsJScrollPane.setPreferredSize(new java.awt.Dimension(100, 60));
+
+        modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                " ", "Name", "Mass", "  "
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseExited(evt);
+            }
+        });
+        modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseMoved(evt);
+            }
+        });
+        modificationsJScrollPane.setViewportView(modificationsTable);
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(fixedModificationsLabel)
+                .addGap(246, 246, 246)
+                .addComponent(openModificationSettingsJButton)
+                .addGap(2, 2, 2))
+            .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(openModificationSettingsJButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout refinementSettingsPanelLayout = new javax.swing.GroupLayout(refinementSettingsPanel);
         refinementSettingsPanel.setLayout(refinementSettingsPanelLayout);
@@ -582,12 +925,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
             .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(usePotentialModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
                         .addComponent(refinementLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(refinementCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(semiEnzumaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(semiEnzymaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(semiEnzymaticCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
@@ -595,7 +943,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(maxEValueRefineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(pointMutarionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pointMutationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pointMutationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
@@ -609,17 +957,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                     .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
                         .addComponent(unanticipatedCleavageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(unanticipatedCleavageCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(usePotentialModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(unanticipatedCleavageCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         refinementSettingsPanelLayout.setVerticalGroup(
             refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -639,7 +978,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(semiEnzymaticCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(semiEnzumaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(semiEnzymaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -647,7 +986,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pointMutationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pointMutarionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pointMutationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(snapsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -656,15 +995,26 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spectrumSynthesisCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(spectrumSynthesisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(127, 127, 127))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         outputSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
         outputSettingsPanel.setOpaque(false);
 
         eValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/omvev.html\">E-value Cutoff</a></html>");
+        eValueLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                eValueLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                eValueLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                eValueLblMouseExited(evt);
+            }
+        });
 
         eValueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         eValueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -674,6 +1024,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         outputSequencesLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/osequ.html\">Output Sequences</a></html>");
+        outputSequencesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputSequencesLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                outputSequencesLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                outputSequencesLabelMouseExited(evt);
+            }
+        });
 
         outputSequencesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -685,18 +1046,62 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         });
 
         outputProteinsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/oprot.html\">Output Proteins</a></html>");
+        outputProteinsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputProteinsLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                outputProteinsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                outputProteinsLabelMouseExited(evt);
+            }
+        });
 
         outputSpectraLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ospec.html\">Output Spectra</a></html>");
+        outputSpectraLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputSpectraLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                outputSpectraLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                outputSpectraLabelMouseExited(evt);
+            }
+        });
 
         outputSpectraCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         skylineTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        eValueLbl3.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ssp.html\">Skyline Path</a></html>");
+        skylinePathValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ssp.html\">Skyline Path</a></html>");
+        skylinePathValueLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                skylinePathValueLblMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                skylinePathValueLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                skylinePathValueLblMouseExited(evt);
+            }
+        });
 
         outputHistogramsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         outputHistogramsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ohist.html\">Output Histograms</a></html>");
+        outputHistogramsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputHistogramsLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                outputHistogramsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                outputHistogramsLabelMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout outputSettingsPanelLayout = new javax.swing.GroupLayout(outputSettingsPanel);
         outputSettingsPanel.setLayout(outputSettingsPanelLayout);
@@ -708,11 +1113,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                     .addGroup(outputSettingsPanelLayout.createSequentialGroup()
                         .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eValueTxt))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(eValueLbl3, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eValueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(skylinePathValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(skylineTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                        .addComponent(skylineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(outputSettingsPanelLayout.createSequentialGroup()
                         .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(outputSequencesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -723,14 +1128,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                             .addGroup(outputSettingsPanelLayout.createSequentialGroup()
                                 .addGap(4, 4, 4)
                                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(outputSequencesCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(outputProteinsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(outputSequencesCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(outputProteinsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, outputSettingsPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(outputSpectraCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addContainerGap())
+                                    .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(outputSpectraCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         outputSettingsPanelLayout.setVerticalGroup(
             outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -757,7 +1162,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                     .addComponent(outputHistogramsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueLbl3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(skylinePathValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(skylineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -780,23 +1185,26 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spectrumImportSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(outputSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(refinementSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(closeButton))
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(outputSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(spectrumImportSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refinementSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(closeButton)))
                 .addContainerGap())
         );
+
+        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {advancedSearchSettingsPanel, outputSettingsPanel, refinementSettingsPanel, spectrumImportSettingsPanel});
+
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
@@ -820,7 +1228,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -832,8 +1240,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Close the dialog without saving the settings.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         cancelled = true;
@@ -842,8 +1250,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Save the settings and then close the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
@@ -853,8 +1261,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Enable/disable the output sequence combo box.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void outputProteinsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputProteinsCmbActionPerformed
         if (outputProteinsCmb.getSelectedIndex() == 0) {
@@ -867,8 +1275,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void eValueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eValueTxtKeyReleased
         validateInput(false);
@@ -876,8 +1284,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void maxEValueRefineTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxEValueRefineTxtKeyReleased
         validateInput(false);
@@ -885,8 +1293,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Enable/disable the refinement setting.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void refinementCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refinementCmbActionPerformed
         if (refinementCmb.getSelectedIndex() == 0) {
@@ -910,15 +1318,15 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Check for quick acetyl conflict.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void quickAcetylCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickAcetylCmbActionPerformed
         if (quickAcetylCmb.getSelectedIndex() == 0) {
             PTMFactory ptmFactory = PTMFactory.getInstance();
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
-                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) 
+                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
                         && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracy) {
                     JOptionPane.showMessageDialog(this, "The quick acetyl option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
@@ -931,15 +1339,15 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Check for quick pyrolidone conflict.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void quickPyroCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickPyroCmbActionPerformed
         if (quickPyroCmb.getSelectedIndex() == 0) {
             PTMFactory ptmFactory = PTMFactory.getInstance();
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
-                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) 
+                if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
                         && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracy) {
                     JOptionPane.showMessageDialog(this, "The quick pyrolidone option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
@@ -952,8 +1360,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Enable/disable the noise min precursor mass.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void noiseSuppressionCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noiseSuppressionCmbActionPerformed
         if (noiseSuppressionCmb.getSelectedIndex() == 0) {
@@ -965,8 +1373,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void minPrecMassTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecMassTxtKeyReleased
         validateInput(false);
@@ -974,8 +1382,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void minPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPeaksTxtKeyReleased
         validateInput(false);
@@ -983,8 +1391,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void minFragmentMzTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minFragmentMzTxtKeyReleased
         validateInput(false);
@@ -992,8 +1400,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void nPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nPeaksTxtKeyReleased
         validateInput(false);
@@ -1001,8 +1409,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Validate the input.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void dynamicRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dynamicRangeTxtKeyReleased
         validateInput(false);
@@ -1036,6 +1444,765 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/sdr.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_dynamicRangeLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void minFragMzLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minFragMzLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_minFragMzLblMouseEntered
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void minFragMzLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minFragMzLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_minFragMzLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void minFragMzLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minFragMzLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/smfmz.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_minFragMzLblMouseReleased
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void nPeaksLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nPeaksLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_nPeaksLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void nPeaksLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nPeaksLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/stp.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_nPeaksLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void nPeaksLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nPeaksLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_nPeaksLblMouseEntered
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void minPeaksLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPeaksLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_minPeaksLblMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void minPeaksLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPeaksLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_minPeaksLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void minPeaksLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPeaksLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/smp.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_minPeaksLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void noiseSuppressionLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noiseSuppressionLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_noiseSuppressionLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void noiseSuppressionLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noiseSuppressionLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_noiseSuppressionLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void noiseSuppressionLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noiseSuppressionLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/suns.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_noiseSuppressionLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void minPrecMassLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPrecMassLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_minPrecMassLblMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void minPrecMassLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPrecMassLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_minPrecMassLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void minPrecMassLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_minPrecMassLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/smpmh.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_minPrecMassLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void quickAcetylLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickAcetylLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_quickAcetylLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void quickAcetylLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickAcetylLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_quickAcetylLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void quickAcetylLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickAcetylLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/pqa.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_quickAcetylLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void quickPyroLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickPyroLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_quickPyroLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void quickPyroLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickPyroLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_quickPyroLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void quickPyroLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_quickPyroLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/pqp.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_quickPyroLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void stpBiasLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stpBiasLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_stpBiasLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void stpBiasLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stpBiasLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_stpBiasLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void stpBiasLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stpBiasLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/pstpb.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_stpBiasLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void eValueLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eValueLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_eValueLblMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void eValueLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eValueLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_eValueLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void eValueLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eValueLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/omvev.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_eValueLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void outputProteinsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputProteinsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_outputProteinsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void outputProteinsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputProteinsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputProteinsLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void outputProteinsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputProteinsLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/oprot.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputProteinsLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void outputSequencesLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSequencesLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_outputSequencesLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void outputSequencesLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSequencesLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputSequencesLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void outputSequencesLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSequencesLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/osequ.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputSequencesLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void outputSpectraLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSpectraLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_outputSpectraLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void outputSpectraLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSpectraLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputSpectraLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void outputSpectraLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputSpectraLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ospec.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputSpectraLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void outputHistogramsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputHistogramsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_outputHistogramsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void outputHistogramsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputHistogramsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputHistogramsLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void outputHistogramsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputHistogramsLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ohist.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputHistogramsLabelMouseReleased
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void skylinePathValueLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_skylinePathValueLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_skylinePathValueLblMouseExited
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void skylinePathValueLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_skylinePathValueLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_skylinePathValueLblMouseEntered
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void skylinePathValueLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_skylinePathValueLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ssp.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_skylinePathValueLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void refinementLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_refinementLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void refinementLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_refinementLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void refinementLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refine.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_refinementLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void maxEValueRefinmentLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxEValueRefinmentLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_maxEValueRefinmentLblMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void maxEValueRefinmentLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxEValueRefinmentLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_maxEValueRefinmentLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void maxEValueRefinmentLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maxEValueRefinmentLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refmvev.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_maxEValueRefinmentLblMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void unanticipatedCleavageLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unanticipatedCleavageLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_unanticipatedCleavageLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void unanticipatedCleavageLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unanticipatedCleavageLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_unanticipatedCleavageLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void unanticipatedCleavageLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unanticipatedCleavageLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/ruc.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_unanticipatedCleavageLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void semiEnzymaticLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_semiEnzymaticLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_semiEnzymaticLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void semiEnzymaticLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_semiEnzymaticLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_semiEnzymaticLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void semiEnzymaticLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_semiEnzymaticLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rcsemi.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_semiEnzymaticLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void usePotentialModsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usePotentialModsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_usePotentialModsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void usePotentialModsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usePotentialModsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_usePotentialModsLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void usePotentialModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usePotentialModsLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rupmffr.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_usePotentialModsLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void pointMutationLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pointMutationLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_pointMutationLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void pointMutationLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pointMutationLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_pointMutationLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void pointMutationLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pointMutationLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rpm.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_pointMutationLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void snapsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_snapsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_snapsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void snapsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_snapsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_snapsLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void snapsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_snapsLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rsaps.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_snapsLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void spectrumSynthesisLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumSynthesisLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_spectrumSynthesisLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void spectrumSynthesisLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumSynthesisLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_spectrumSynthesisLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void spectrumSynthesisLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spectrumSynthesisLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/rss.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_spectrumSynthesisLabelMouseReleased
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void modificationsTableMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsTableMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_modificationsTableMouseExited
+
+    /**
+     * Opens a color chooser where the color for the PTM can be changed, or
+     * allows the users to change of a PTM is in the most used PTMs list.
+     *
+     * @param evt
+     */
+    private void modificationsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsTableMouseReleased
+        int row = modificationsTable.rowAtPoint(evt.getPoint());
+        int column = modificationsTable.columnAtPoint(evt.getPoint());
+
+        if (row != -1) {
+            if (column == modificationsTable.getColumn(" ").getModelIndex()) {
+                Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) modificationsTable.getValueAt(row, column));
+
+                if (newColor != null) {
+                    ptmFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
+                    modificationsTable.setValueAt(newColor, row, 0);
+                    ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
+                    modificationsTable.repaint();
+                }
+            } else if (column == modificationsTable.getColumn("  ").getModelIndex()
+                    && modificationsTable.getValueAt(row, column) != null) {
+
+                boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
+                String ptmName = (String) modificationsTable.getValueAt(row, 1);
+
+                // add/remove the ptm as a refinement ptm
+                if (selected) {
+                    // add as refinement ptm
+                    if (!modificationProfile.getRefinementModifications().contains(ptmName)) {
+                        modificationProfile.addRefinementModification(ptmFactory.getPTM(ptmName));
+                    }
+                } else {
+                    // remove the ptm as refinement ptm
+                    modificationProfile.removeRefinementModification(ptmName);
+                }
+
+                updateModificationList();
+
+                if (row < modificationsTable.getRowCount()) {
+                    modificationsTable.setRowSelectionInterval(row, row);
+                } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
+                    modificationsTable.setRowSelectionInterval(row - 1, row - 1);
+                }
+            }
+        }
+    }//GEN-LAST:event_modificationsTableMouseReleased
+
+    private void modificationsTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificationsTableMouseMoved
+        int row = modificationsTable.rowAtPoint(evt.getPoint());
+        int column = modificationsTable.columnAtPoint(evt.getPoint());
+
+        if (row != -1) {
+            if (column == modificationsTable.getColumn(" ").getModelIndex()) {
+                this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            } else {
+                this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            }
+        }
+    }//GEN-LAST:event_modificationsTableMouseMoved
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void openModificationSettingsJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_openModificationSettingsJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void openModificationSettingsJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_openModificationSettingsJButtonMouseExited
+
+    private void openModificationSettingsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonActionPerformed
+        new ModificationsDialog((Frame) this.getParent(), this, true);
+    }//GEN-LAST:event_openModificationSettingsJButtonActionPerformed
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void fixedModificationsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModificationsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_fixedModificationsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void fixedModificationsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModificationsLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_fixedModificationsLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void fixedModificationsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModificationsLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refpmm.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_fixedModificationsLabelMouseReleased
 
     /**
      * Inspects the parameters validity.
@@ -1324,6 +2491,75 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         return valid;
     }
 
+    /**
+     * Updates the modification list.
+     */
+    private void updateModificationList() {
+
+        ArrayList<String> allModificationsList = ptmFactory.getPTMs();
+        String[] allModificationsAsArray = new String[allModificationsList.size()];
+
+        for (int i = 0; i < allModificationsList.size(); i++) {
+            allModificationsAsArray[i] = allModificationsList.get(i);
+        }
+
+        Arrays.sort(allModificationsAsArray);
+
+        modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    " ", "Name", "Mass", "  "
+                }
+        ) {
+            Class[] types = new Class[]{
+                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean[]{
+                false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+
+        for (String mod : allModificationsAsArray) {
+            ((DefaultTableModel) modificationsTable.getModel()).addRow(
+                    new Object[]{ptmFactory.getColor(mod),
+                        mod,
+                        ptmFactory.getPTM(mod).getMass(),
+                        modificationProfile.getRefinementModifications().contains(mod)});
+        }
+        ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
+        modificationsTable.repaint();
+
+        // get the min and max values for the mass sparklines
+        double maxMass = Double.MIN_VALUE;
+        double minMass = Double.MAX_VALUE;
+
+        for (String ptm : ptmFactory.getPTMs()) {
+            if (ptmFactory.getPTM(ptm).getMass() > maxMass) {
+                maxMass = ptmFactory.getPTM(ptm).getMass();
+            }
+            if (ptmFactory.getPTM(ptm).getMass() < minMass) {
+                minMass = ptmFactory.getPTM(ptm).getMass();
+            }
+        }
+
+        setAllModificationTableProperties();
+
+        modificationsTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, minMass, maxMass));
+        ((JSparklinesBarChartTableCellRenderer) modificationsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 50);
+
+        if (modificationsTable.getRowCount() > 0) {
+            modificationsTable.setRowSelectionInterval(0, 0);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedSearchSettingsPanel;
     private javax.swing.JPanel backgroundPanel;
@@ -1331,9 +2567,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel dynamicRangeLbl;
     private javax.swing.JTextField dynamicRangeTxt;
     private javax.swing.JLabel eValueLbl;
-    private javax.swing.JLabel eValueLbl3;
     private javax.swing.JTextField eValueTxt;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel fixedModificationsLabel;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JTextField maxEValueRefineTxt;
     private javax.swing.JLabel maxEValueRefinmentLbl;
     private javax.swing.JLabel minFragMzLbl;
@@ -1342,11 +2578,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField minPeaksTxt;
     private javax.swing.JLabel minPrecMassLbl;
     private javax.swing.JTextField minPrecMassTxt;
+    private javax.swing.JScrollPane modificationsJScrollPane;
+    private javax.swing.JTable modificationsTable;
     private javax.swing.JLabel nPeaksLbl;
     private javax.swing.JTextField nPeaksTxt;
     private javax.swing.JComboBox noiseSuppressionCmb;
     private javax.swing.JLabel noiseSuppressionLabel;
     private javax.swing.JButton okButton;
+    private javax.swing.JButton openModificationSettingsJButton;
     private javax.swing.JComboBox outputHistogramsCmb;
     private javax.swing.JLabel outputHistogramsLabel;
     private javax.swing.JComboBox outputProteinsCmb;
@@ -1356,7 +2595,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JPanel outputSettingsPanel;
     private javax.swing.JComboBox outputSpectraCmb;
     private javax.swing.JLabel outputSpectraLabel;
-    private javax.swing.JLabel pointMutarionLabel;
+    private javax.swing.JLabel pointMutationLabel;
     private javax.swing.JComboBox pointMutationsCmb;
     private javax.swing.JComboBox potentialModificationsCmb;
     private javax.swing.JComboBox quickAcetylCmb;
@@ -1366,8 +2605,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox refinementCmb;
     private javax.swing.JLabel refinementLabel;
     private javax.swing.JPanel refinementSettingsPanel;
-    private javax.swing.JLabel semiEnzumaticLabel;
     private javax.swing.JComboBox semiEnzymaticCmb;
+    private javax.swing.JLabel semiEnzymaticLabel;
+    private javax.swing.JLabel skylinePathValueLbl;
     private javax.swing.JTextField skylineTxt;
     private javax.swing.JComboBox snapsCmb;
     private javax.swing.JLabel snapsLabel;
@@ -1380,4 +2620,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel unanticipatedCleavageLabel;
     private javax.swing.JLabel usePotentialModsLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void updateModifications() {
+        updateModificationList();
+    }
 }

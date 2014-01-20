@@ -364,10 +364,13 @@ public class MgfReader {
                 try {
 
                     String line;
+                    String currentSpectrum = "";
+                    boolean includeSpectrum = true;
 
                     while ((line = br.readLine()) != null) {
 
-                        if (line.startsWith("TITLE")) {
+                        if (line.equals("BEGIN IONS")) {
+                            currentSpectrum = line + System.getProperty("line.separator");
 
                             if (waitingHandler != null) {
                                 if (waitingHandler.isRunCanceled()) {
@@ -375,6 +378,9 @@ public class MgfReader {
                                 }
                                 waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
                             }
+
+                        } else if (line.startsWith("TITLE")) {
+                            currentSpectrum += line + System.getProperty("line.separator");
 
                             String title = line.substring(line.indexOf('=') + 1).trim();
 
@@ -385,31 +391,25 @@ public class MgfReader {
                                 throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
                             }
 
-                            while (spectrumTitles.contains(title) && (line = br.readLine()) != null) {
-                                if (line.startsWith("TITLE")) {
-
-                                    title = line.substring(line.indexOf('=') + 1).trim();
-
-                                    try {
-                                        title = URLDecoder.decode(title, "utf-8");
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
-                                        throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
-                                    }
-                                }
+                            if (!spectrumTitles.contains(title)) {
+                                spectrumTitles.add(title);
+                                includeSpectrum = true;
+                            } else {
+                                includeSpectrum = false;
                             }
-                            spectrumTitles.add(title);
-                        }
 
-                        if (line != null) {
-                            bw.write(line);
-                            bw.newLine();
+                        } else if (line.equals("END IONS")) {
+                            currentSpectrum += line + System.getProperty("line.separator");
+                            if (includeSpectrum) {
+                                bw.write(currentSpectrum);
+                                bw.newLine();
+                            }
+                        } else {
+                            currentSpectrum += line + System.getProperty("line.separator");
                         }
-
                     }
 
                 } finally {
-
                     bw.close();
                 }
             } finally {
@@ -452,8 +452,7 @@ public class MgfReader {
      * fails
      */
     public static void renameDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
-
-        // @TODO: use the waitingHandler??
+ 
         ArrayList<String> spectrumTitles = new ArrayList<String>();
 
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
@@ -470,22 +469,30 @@ public class MgfReader {
 
             if (line.startsWith("TITLE")) {
 
-                String title = line.substring(line.indexOf('=') + 1).trim();
+                if (waitingHandler != null) {
+                    if (waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                    //waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit)); // @TODO: use the waitingHandler??
+                }
+
+                String originalTitle = line.substring(line.indexOf('=') + 1).trim();
 
                 try {
-                    title = URLDecoder.decode(title, "utf-8");
+                    originalTitle = URLDecoder.decode(originalTitle, "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                    throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
+                    throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + originalTitle);
                 }
 
+                String tempTitle = originalTitle;
                 int counter = 2;
-                while (spectrumTitles.contains(title)) {
-                    title = title + " (" + counter++ + ")";
+                while (spectrumTitles.contains(tempTitle)) {
+                    tempTitle = originalTitle + " (" + counter++ + ")";
                 }
 
-                spectrumTitles.add(title);
-                bw.write("TITLE=" + title + System.getProperty("line.separator"));
+                spectrumTitles.add(tempTitle);
+                bw.write("TITLE=" + tempTitle + System.getProperty("line.separator"));
             } else {
                 bw.write(line + System.getProperty("line.separator"));
             }

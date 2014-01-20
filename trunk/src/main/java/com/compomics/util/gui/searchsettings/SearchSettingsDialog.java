@@ -1464,7 +1464,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      */
     private void openDialogHelpJButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1ActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/Modifications.html"),
+        new HelpDialog(this, getClass().getResource("/helpFiles/SearchSettingsDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 normalIcon,
                 "Search Settings Help", 500, 100);

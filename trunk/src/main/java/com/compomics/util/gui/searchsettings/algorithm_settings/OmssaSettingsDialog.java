@@ -3,7 +3,9 @@ package com.compomics.util.gui.searchsettings.algorithm_settings;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.gui.JOptionEditorPane;
+import com.compomics.util.gui.error_handlers.HelpDialog;
 import java.awt.Color;
+import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -177,6 +179,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         hitListLbl = new javax.swing.JLabel();
         maxEvalueTxt = new javax.swing.JTextField();
         hitlistTxt = new javax.swing.JTextField();
+        openDialogHelpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("OMSSA Settings");
@@ -379,6 +382,25 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        openDialogHelpJButton.setToolTipText("Help");
+        openDialogHelpJButton.setBorder(null);
+        openDialogHelpJButton.setBorderPainted(false);
+        openDialogHelpJButton.setContentAreaFilled(false);
+        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseExited(evt);
+            }
+        });
+        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openDialogHelpJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -390,7 +412,9 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                     .addComponent(omssaParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(outputParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(openDialogHelpJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)))
@@ -406,9 +430,10 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(closeButton)
-                    .addComponent(okButton))
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(openDialogHelpJButton)
+                    .addComponent(okButton)
+                    .addComponent(closeButton))
                 .addContainerGap())
         );
 
@@ -510,6 +535,38 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         cancelled = true;
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void openDialogHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_openDialogHelpJButtonMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void openDialogHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_openDialogHelpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     *
+     * @param evt
+     */
+    private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(this, getClass().getResource("/helpFiles/OmssaSettingsDialog.html"),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui.gif")),
+            "SearchGUI - Help", 500, 50);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 
     /**
      * Inspects the parameters validity.
@@ -726,6 +783,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox omssaOutputFormatComboBox;
     private javax.swing.JLabel omssaOutputFormatLabel;
     private javax.swing.JPanel omssaParametersPanel;
+    private javax.swing.JButton openDialogHelpJButton;
     private javax.swing.JPanel outputParametersPanel;
     private javax.swing.JLabel peptideLengthDividerLabel;
     private javax.swing.JLabel peptideLengthJLabel;

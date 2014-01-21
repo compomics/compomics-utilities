@@ -576,6 +576,9 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     @Override
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
+        
+        // @TODO: extend with all the new parameters!!!
+        
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
             if (!getMaxEValue().equals(xtandemParameters.getMaxEValue())) {

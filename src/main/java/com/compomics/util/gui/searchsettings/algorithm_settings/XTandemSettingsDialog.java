@@ -401,7 +401,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         openDialogHelpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("X!Tandem Settings");
+        setTitle("Advanced X!Tandem Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));

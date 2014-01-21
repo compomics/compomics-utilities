@@ -7,7 +7,7 @@ import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.NormalDistributionImpl;
 
 /**
- * This class represents a normal distribution. A diract if the standard
+ * This class represents a normal distribution. A dirac distribution if the standard
  * deviation is null.
  *
  * @author Marc Vaudel

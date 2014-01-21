@@ -160,4 +160,9 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public void close() throws IOException {
         bufferedRandomAccessFile.close();
     }
+
+    @Override
+    public String getSoftwareVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); // @TODO: implement me!!
+    }
 }

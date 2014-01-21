@@ -3,7 +3,6 @@ package com.compomics.util.test.experiment.io.identifications;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
-import com.compomics.util.experiment.io.identifications.idfilereaders.AndromedaIdfileReader;
 import com.compomics.util.waiting.WaitingHandler;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -42,7 +41,12 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             public void close() throws IOException {
-                //To change body of implemented methods use File | Settings | File Templates.
+                // Does nothing.
+            }
+
+            @Override
+            public String getSoftwareVersion() {
+                return "X.Y.Z";
             }
         };
 
@@ -98,6 +102,11 @@ public class TestIdfileReaderFactory extends TestCase {
 
         public void close() throws IOException {
             // Does nothing.
+        }
+
+        @Override
+        public String getSoftwareVersion() {
+            return "X.Y.Z";
         }
     }
 }

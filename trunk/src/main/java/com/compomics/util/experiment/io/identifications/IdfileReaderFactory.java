@@ -184,7 +184,7 @@ public class IdfileReaderFactory {
             return Advocate.OMSSA.getIndex();
         } else if (fileName.endsWith(".t.xml")) {
             if (!fileName.equals("mods.xml") && !fileName.equals("usermods.xml")) {
-            return Advocate.XTandem.getIndex();
+                return Advocate.XTandem.getIndex();
             }
         } else if (fileName.endsWith(".out")) {
             return Advocate.pepnovo.getIndex();

@@ -209,6 +209,155 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             omssaParameters.setSelectedOutput(OmssaParameters.getOmssaOutputTypes()[option]);
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                omssaParameters.setMemoryMappedSequenceLibraries(true);
+            } else {
+                omssaParameters.setMemoryMappedSequenceLibraries(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setNumberOfItotopicPeaks(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_NEUTRON.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_NEUTRON.id);
+            Double option = new Double(arg);
+            omssaParameters.setNeutronThreshold(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id);
+            Double option = new Double(arg);
+            omssaParameters.setLowIntensityCutOff(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id);
+            Double option = new Double(arg);
+            omssaParameters.setHighIntensityCutOff(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id);
+            Double option = new Double(arg);
+            omssaParameters.setIntensityCutOffIncrement(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setSingleChargeWindow(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setDoubleChargeWindow(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setnPeaksInSingleChargeWindow(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setnPeaksInDoubleChargeWindow(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setnAnnotatedMostIntensePeaks(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMinAnnotatedPeaks(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMinPeaks(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_METHIONINE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_METHIONINE.id);
+            Integer option = new Integer(arg);
+                omssaParameters.setCleaveNterMethionine(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMaxMzLadders(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMaxFragmentCharge(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id);
+            Double option = new Double(arg);
+            omssaParameters.setFractionOfPeaksForChargeEstimation(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id);
+            Integer option = new Integer(arg);
+                omssaParameters.setDetermineChargePlusOneAlgorithmically(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id);
+            Integer option = new Integer(arg);
+                omssaParameters.setSearchPositiveIons(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMinPrecPerSpectrum(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id);
+            Integer option = new Integer(arg);
+                omssaParameters.setSearchForwardFragmentFirst(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id);
+            Integer option = new Integer(arg);
+                omssaParameters.setSearchRewindFragments(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMaxFragmentPerSeries(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id);
+            Integer option = new Integer(arg);
+                omssaParameters.setUseCorrelationCorrectionScore(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id);
+            Double option = new Double(arg);
+            omssaParameters.setConsecutiveIonProbability(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id);
+            Double option = new Double(arg);
+            omssaParameters.setIterativeSequenceEvalue(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id);
+            Double option = new Double(arg);
+            omssaParameters.setIterativeSpectrumEvalue(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id);
+            Double option = new Double(arg);
+            omssaParameters.setIterativeReplaceEvalue(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id);
+            Integer option = new Integer(arg);
+            omssaParameters.setMaxFragmentPerSeries(option);
+        }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), omssaParameters);
         ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
 
@@ -725,6 +874,20 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEP_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEP_LENGTH.id);
             try {
@@ -762,6 +925,398 @@ public class IdentificationParametersInputBean {
                 }
             } catch (Exception e) {
                 System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_FORMAT.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_ISOTOPES.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_NEUTRON.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_NEUTRON.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_NEUTRON.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_METHIONINE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_METHIONINE.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_METHIONINE.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id);
+            try {
+                int value = new Integer(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id);
+            try {
+                int value = new Integer(arg);
+                if (value != 0 && value != 1) {
+                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id + " option."
+                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id);
+            try {
+                double value = new Double(arg);
+                if (value <= 0) {
+                    throw new IllegalArgumentException("Negative or null value found.");
+                }
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id + " option."
                         + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;

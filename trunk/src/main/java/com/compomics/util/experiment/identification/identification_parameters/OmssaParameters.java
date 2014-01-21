@@ -174,6 +174,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     private Double iterativeSpectrumEvalue = 0.01;
     /**
      * id numbers of ion series to apply no product ions at proline rule at
+     * NOTE: not implemented for now
      */
     private ArrayList<Integer> noProlineRuleSeries = new ArrayList<Integer>();
     
@@ -943,6 +944,88 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
             if (!getSelectedOutput().equals(omssaParameters.getSelectedOutput())) {
                 return false;
             }
+            if (!isMemoryMappedSequenceLibraries().equals(omssaParameters.isMemoryMappedSequenceLibraries())) {
+                return false;
+            }
+            if (!getNumberOfItotopicPeaks().equals(omssaParameters.getNumberOfItotopicPeaks())) {
+                return false;
+            }
+            if (!getNeutronThreshold().equals(omssaParameters.getNeutronThreshold())) {
+                return false;
+            }
+            if (!getLowIntensityCutOff().equals(omssaParameters.getLowIntensityCutOff())) {
+                return false;
+            }
+            if (!getHighIntensityCutOff().equals(omssaParameters.getHighIntensityCutOff())) {
+                return false;
+            }
+            if (!getIntensityCutOffIncrement().equals(omssaParameters.getIntensityCutOffIncrement())) {
+                return false;
+            }
+            if (!getSingleChargeWindow().equals(omssaParameters.getSingleChargeWindow())) {
+                return false;
+            }
+            if (!getDoubleChargeWindow().equals(omssaParameters.getDoubleChargeWindow())) {
+                return false;
+            }
+            if (!getnPeaksInSingleChargeWindow().equals(omssaParameters.getnPeaksInSingleChargeWindow())) {
+                return false;
+            }
+            if (!getnPeaksInDoubleChargeWindow().equals(omssaParameters.getnPeaksInDoubleChargeWindow())) {
+                return false;
+            }
+            if (!getMaxHitsPerSpectrumPerCharge().equals(omssaParameters.getMaxHitsPerSpectrumPerCharge())) {
+                return false;
+            }
+            if (!getnAnnotatedMostIntensePeaks().equals(omssaParameters.getnAnnotatedMostIntensePeaks())) {
+                return false;
+            }
+            if (!getMinAnnotatedPeaks().equals(omssaParameters.getMinAnnotatedPeaks())) {
+                return false;
+            }
+            if (!getMinPeaks().equals(omssaParameters.getMinPeaks())) {
+                return false;
+            }
+            if (!isCleaveNterMethionine().equals(omssaParameters.isCleaveNterMethionine())) {
+                return false;
+            }
+            if (!getMaxMzLadders().equals(omssaParameters.getMaxMzLadders())) {
+                return false;
+            }
+            if (!getMaxFragmentCharge().equals(omssaParameters.getMaxFragmentCharge())) {
+                return false;
+            }
+            if (!getFractionOfPeaksForChargeEstimation().equals(omssaParameters.getFractionOfPeaksForChargeEstimation())) {
+                return false;
+            }
+            if (!isDetermineChargePlusOneAlgorithmically().equals(omssaParameters.isDetermineChargePlusOneAlgorithmically())) {
+                return false;
+            }
+            if (!isSearchPositiveIons().equals(omssaParameters.isSearchPositiveIons())) {
+                return false;
+            }
+            if (!isSearchRewindFragments().equals(omssaParameters.isSearchRewindFragments())) {
+                return false;
+            }
+            if (!getMaxFragmentPerSeries().equals(omssaParameters.getMaxFragmentPerSeries())) {
+                return false;
+            }
+            if (!isUseCorrelationCorrectionScore().equals(omssaParameters.isUseCorrelationCorrectionScore())) {
+                return false;
+            }
+            if (!getConsecutiveIonProbability().equals(omssaParameters.getConsecutiveIonProbability())) {
+                return false;
+            }
+            if (!getIterativeSequenceEvalue().equals(omssaParameters.getIterativeSequenceEvalue())) {
+                return false;
+            }
+            if (!getIterativeSpectrumEvalue().equals(omssaParameters.getIterativeSpectrumEvalue())) {
+                return false;
+            }
+            if (!getIterativeReplaceEvalue().equals(omssaParameters.getIterativeReplaceEvalue())) {
+                return false;
+            }
+
             return true;
         }
         return false;
@@ -1000,6 +1083,122 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
         output.append("OUTPUT_TYPE=");
         output.append(selectedOutput);
+        output.append(newLine);
+
+        output.append("MEMORY_MAPPED_SEQUENCES=");
+        output.append(memoryMappedSequenceLibraries);
+        output.append(newLine);
+
+        output.append("NUMBER_OF_ISOTOPES=");
+        output.append(numberOfItotopicPeaks);
+        output.append(newLine);
+
+        output.append("MASS_TO_CONSIDER_EXACT_NEUTRON_MASS=");
+        output.append(neutronThreshold);
+        output.append(newLine);
+
+        output.append("LOW_INTENSITY_CUTOFF=");
+        output.append(lowIntensityCutOff);
+        output.append(newLine);
+
+        output.append("HIGH_INTENSITY_CUTOFF=");
+        output.append(highIntensityCutOff);
+        output.append(newLine);
+
+        output.append("INTENSITY_INCREMENT=");
+        output.append(intensityCutOffIncrement);
+        output.append(newLine);
+
+        output.append("SINGLE_CHARGE_WINDOW_WIDTH=");
+        output.append(singleChargeWindow);
+        output.append(newLine);
+
+        output.append("DOUBLE_CHARGE_WINDOW_WIDTH=");
+        output.append(doubleChargeWindow);
+        output.append(newLine);
+
+        output.append("SINGLE_CHARGE_WINDOW_NPEAKS=");
+        output.append(nPeaksInSingleChargeWindow);
+        output.append(newLine);
+
+        output.append("DOUBLE_CHARGE_WINDOW_NPEAKS=");
+        output.append(nPeaksInDoubleChargeWindow);
+        output.append(newLine);
+
+        output.append("MAX_HITS_PER_SPECTRUM_PER_CHARGE=");
+        output.append(maxHitsPerSpectrumPerCharge);
+        output.append(newLine);
+
+        output.append("MIN_ANNOTATED_INTENSE_PEAKS=");
+        output.append(nAnnotatedMostIntensePeaks);
+        output.append(newLine);
+
+        output.append("MIN_ANNOTATED_PEAKS=");
+        output.append(minAnnotatedPeaks);
+        output.append(newLine);
+
+        output.append("MIN_PEAKS=");
+        output.append(minPeaks);
+        output.append(newLine);
+
+        output.append("CLEAVE_TERMINAL_METHIONINE=");
+        output.append(cleaveNtermMethionine);
+        output.append(newLine);
+
+        output.append("MAX_MZ_LADDERS=");
+        output.append(maxMzLadders);
+        output.append(newLine);
+
+        output.append("MAX_FRAGMENT_CHARGE=");
+        output.append(maxFragmentCharge);
+        output.append(newLine);
+
+        output.append("FRACTION_PEAKS_FOR_CHARGE_1_ESTIMATION=");
+        output.append(fractionOfPeaksForChargeEstimation);
+        output.append(newLine);
+
+        output.append("AUTO_DETERMINE_CHARGE_ONE=");
+        output.append(determineChargePlusOneAlgorithmically);
+        output.append(newLine);
+
+        output.append("SEARCH_POSITIVE_IONS=");
+        output.append(searchPositiveIons);
+        output.append(newLine);
+
+        output.append("MIN_PERCURSORS_PER_SPECTRUM=");
+        output.append(minPrecPerSpectrum);
+        output.append(newLine);
+
+        output.append("FORWARD_FRAGMENTS_FIRST=");
+        output.append(searchForwardFragmentFirst);
+        output.append(newLine);
+
+        output.append("REWIND_FRAGMENTS=");
+        output.append(searchRewindFragments);
+        output.append(newLine);
+
+        output.append("FRAGMENTS_PER_SERIES=");
+        output.append(maxFragmentPerSeries);
+        output.append(newLine);
+
+        output.append("CORRELATION_CORRECTION_SCORE=");
+        output.append(useCorrelationCorrectionScore);
+        output.append(newLine);
+
+        output.append("CONSECUTIVE_ION_PROBABILITY=");
+        output.append(consecutiveIonProbability);
+        output.append(newLine);
+
+        output.append("ITERATIVE_SEARCH_SEQUENCE_EVALUE=");
+        output.append(iterativeSequenceEvalue);
+        output.append(newLine);
+
+        output.append("ITERATIVE_SEARCH_SPECTRUM_EVALUE=");
+        output.append(iterativeSpectrumEvalue);
+        output.append(newLine);
+
+        output.append("ITERATIVE_SEARCH_REPLACEMENT_EVALUE=");
+        output.append(iterativeReplaceEvalue);
         output.append(newLine);
 
         return output.toString();

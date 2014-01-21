@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.identification_parameters;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import java.util.ArrayList;
 
 /**
  * The OMSSA specific parameters.
@@ -55,6 +56,127 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      * The available types of output.
      */
     private static String[] omssaOutputTypes = {"OMX", "CSV"};
+    /**
+     * Map sequence in libraries in memory
+     */
+    private Boolean memoryMappedSequenceLibraries = true;
+    /**
+     * number of isotopic peaks to consider
+     */
+    private Integer numberOfItotopicPeaks = 0;
+    /**
+     * mass after which a the exact mass of a neutron should be considered
+     */
+    private Double neutronThreshold = 1446.94;
+    /**
+     * Low intensity cut-off as percentage of the most intense peak
+     */
+    private Double lowIntensityCutOff = 0.0;
+    /**
+     * High intensity cut-off as percentage of the most intense peak
+     */
+    private Double highIntensityCutOff = 0.2;
+    /**
+     * Intensity cut-off increment
+     */
+    private Double intensityCutOffIncrement = 0.0005;
+    /**
+     * window width for singly charged fragments
+     */
+    private Integer singleChargeWindow = 27;
+    /**
+     * window width for doubly charged fragments
+     */
+    private Integer doubleChargeWindow = 14;
+    /**
+     * number of peaks allowed in a singly charged window
+     */
+    private Integer nPeaksInSingleChargeWindow = 2;
+    /**
+     * number of peaks allowed in a doubly charged window
+     */
+    private Integer nPeaksInDoubleChargeWindow = 2;
+    /**
+     * Maximum number of hits searched per spectrum and per charge
+     */
+    private Integer maxHitsPerSpectrumPerCharge = 30;
+    /**
+     * Number of annotated most intense peaks required per spectrum
+     */
+    private Integer nAnnotatedMostIntensePeaks = 6;
+    /**
+     * Minimal number of annotated peaks required per spectrum
+     */
+    private Integer minAnnotatedPeaks = 2;
+    /**
+     * Minimal number of peaks per spectrum
+     */
+    private Integer minPeaks = 4;
+    /**
+     * Cleave the N-term methionines
+     */
+    private Boolean cleaveNtermMethionine = true;
+    /**
+     * Maximum length of m/z ladders
+     */
+    private Integer maxMzLadders = 128;
+    /**
+     * Maximum fragment charge
+     */
+    private Integer maxFragmentCharge = 2;
+    /**
+     * Fraction of peaks below the precursor to estimate charge >1
+     */
+    private Double fractionOfPeaksForChargeEstimation = 0.95;
+    /**
+     * Determine charge plus one algorithmically
+     */
+    private Boolean determineChargePlusOneAlgorithmically = true;
+    /**
+     * Search positive ions (if false, negative ions)
+     */
+    private Boolean searchPositiveIons = true;
+    /**
+     * minimal precursor per spectrum
+     */
+    private Integer minPrecPerSpectrum = 1;
+    /**
+     * Search forward ions (b1) first
+     */
+    private Boolean searchForwardFragmentFirst = false;
+    /**
+     * Search c-terminal ions
+     */
+    private Boolean searchRewindFragments = true;
+    /**
+     * Maximal number of fragment per series
+     */
+    private Integer maxFragmentPerSeries = 100;
+    /**
+     * Use correlation correction score
+     */
+    private Boolean useCorrelationCorrectionScore = true;
+    /**
+     * probability of consecutive ions
+     */
+    private Double consecutiveIonProbability = 0.5;
+    /**
+     * E-value threshold to include a sequence in the iterative search (0 means all)
+     */
+    private Double iterativeSequenceEvalue = 0.0;
+    /**
+     * E-value threshold to replace a hit in the iterative search (0 means replace if better)
+     */
+    private Double iterativeReplaceEvalue = 0.0;
+    /**
+     * E-value threshold to include a spectrum in the iterative search (0 means all)
+     */
+    private Double iterativeSpectrumEvalue = 0.01;
+    /**
+     * id numbers of ion series to apply no product ions at proline rule at
+     */
+    private ArrayList<Integer> noProlineRuleSeries = new ArrayList<Integer>();
+    
 
     /**
      * Constructor.
@@ -244,6 +366,546 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
         return omssaOutputTypes;
     }
 
+    /**
+     * Indicates whether sequence libraries should be mapped in memory.
+     * 
+     * @return a boolean indicating whether sequence libraries should be mapped in memory
+     */
+    public Boolean isMemoryMappedSequenceLibraries() {
+        return memoryMappedSequenceLibraries;
+    }
+
+    /**
+     * Sets whether sequence libraries should be mapped in memory.
+     * 
+     * @param memoryMappedSequenceLibraries a boolean indicating whether sequence libraries should be mapped in memory
+     */
+    public void setMemoryMappedSequenceLibraries(Boolean memoryMappedSequenceLibraries) {
+        this.memoryMappedSequenceLibraries = memoryMappedSequenceLibraries;
+    }
+
+    /**
+     * Reutns the number of isotopic peaks to consider.
+     * 
+     * @return the number of isotopic peaks to consider
+     */
+    public Integer getNumberOfItotopicPeaks() {
+        return numberOfItotopicPeaks;
+    }
+
+    /**
+     * Sets the number of isotopic peaks to consider.
+     * 
+     * @param numberOfItotopicPeaks the number of isotopic peaks to consider
+     */
+    public void setNumberOfItotopicPeaks(Integer numberOfItotopicPeaks) {
+        this.numberOfItotopicPeaks = numberOfItotopicPeaks;
+    }
+
+    /**
+     * Returns the mass after which exact neutron mass should be considered in the calculation.
+     * 
+     * @return the mass after which exact neutron mass should be considered in the calculation
+     */
+    public Double getNeutronThreshold() {
+        return neutronThreshold;
+    }
+
+    /**
+     * Sets the mass after which exact neutron mass should be considered in the calculation.
+     * 
+     * @param neutronThreshold the mass after which exact neutron mass should be considered in the calculation
+     */
+    public void setNeutronThreshold(Double neutronThreshold) {
+        this.neutronThreshold = neutronThreshold;
+    }
+
+    /**
+     * Returns the low intensity cut-off as percentage of the most intense ion peak.
+     * 
+     * @return the low intensity cut-off as percentage of the most intense ion peak
+     */
+    public Double getLowIntensityCutOff() {
+        return lowIntensityCutOff;
+    }
+
+    /**
+     * Sets the low intensity cut-off as percentage of the most intense ion peak.
+     * 
+     * @param lowIntensityCutOff the low intensity cut-off as percentage of the most intense ion peak
+     */
+    public void setLowIntensityCutOff(Double lowIntensityCutOff) {
+        this.lowIntensityCutOff = lowIntensityCutOff;
+    }
+
+    /**
+     * Returns the high intensity cut-off as percentage of the most intense ion peak.
+     * 
+     * @return the high intensity cut-off as percentage of the most intense ion peak
+     */
+    public Double getHighIntensityCutOff() {
+        return highIntensityCutOff;
+    }
+
+    /**
+     * Sets the high intensity cut-off as percentage of the most intense ion peak.
+     * 
+     * @param highIntensityCutOff the high intensity cut-off as percentage of the most intense ion peak
+     */
+    public void setHighIntensityCutOff(Double highIntensityCutOff) {
+        this.highIntensityCutOff = highIntensityCutOff;
+    }
+
+    /**
+     * Returns the intensity cut-off increment.
+     * 
+     * @return the intensity cut-off increment
+     */
+    public Double getIntensityCutOffIncrement() {
+        return intensityCutOffIncrement;
+    }
+
+    /**
+     * Sets the intensity cut-off increment.
+     * 
+     * @param intensityCutOffIncrement the intensity cut-off increment
+     */
+    public void setIntensityCutOffIncrement(Double intensityCutOffIncrement) {
+        this.intensityCutOffIncrement = intensityCutOffIncrement;
+    }
+
+    /**
+     * Returns the window size for singly charged ions.
+     * 
+     * @return the window size for singly charged ions
+     */
+    public Integer getSingleChargeWindow() {
+        return singleChargeWindow;
+    }
+
+    /**
+     * Sets the window size for singly charged ions.
+     * 
+     * @param singleChargeWindow the window size for singly charged ions
+     */
+    public void setSingleChargeWindow(Integer singleChargeWindow) {
+        this.singleChargeWindow = singleChargeWindow;
+    }
+
+    /**
+     * Returns the window size for doubly charged ions.
+     * 
+     * @return the window size for doubly charged ions
+     */
+    public Integer getDoubleChargeWindow() {
+        return doubleChargeWindow;
+    }
+
+    /**
+     * Sets the window size for doubly charged ions.
+     * 
+     * @param doubleChargeWindow the window size for doubly charged ions
+     */
+    public void setDoubleChargeWindow(Integer doubleChargeWindow) {
+        this.doubleChargeWindow = doubleChargeWindow;
+    }
+
+    /**
+     * Returns the number of peaks in singly charged windows.
+     * 
+     * @return the number of peaks in singly charged windows
+     */
+    public Integer getnPeaksInSingleChargeWindow() {
+        return nPeaksInSingleChargeWindow;
+    }
+
+    /**
+     * Sets the number of peaks in singly charged windows.
+     * 
+     * @param nPeaksInSingleChargeWindow the number of peaks in singly charged windows
+     */
+    public void setnPeaksInSingleChargeWindow(Integer nPeaksInSingleChargeWindow) {
+        this.nPeaksInSingleChargeWindow = nPeaksInSingleChargeWindow;
+    }
+
+    /**
+     * Returns the number of peaks in doubly charged windows.
+     * 
+     * @return the number of peaks in doubly charged windows
+     */
+    public Integer getnPeaksInDoubleChargeWindow() {
+        return nPeaksInDoubleChargeWindow;
+    }
+
+    /**
+     * Sets the number of peaks in doubly charged windows.
+     * 
+     * @param nPeaksInDoubleChargeWindow the number of peaks in doubly charged windows
+     */
+    public void setnPeaksInDoubleChargeWindow(Integer nPeaksInDoubleChargeWindow) {
+        this.nPeaksInDoubleChargeWindow = nPeaksInDoubleChargeWindow;
+    }
+
+    /**
+     * Returns the maximal number of hits searched per spectrum and per charge.
+     * 
+     * @return the maximal number of hits searched per spectrum and per charge
+     */
+    public Integer getMaxHitsPerSpectrumPerCharge() {
+        return maxHitsPerSpectrumPerCharge;
+    }
+
+    /**
+     * Set the maximal number of hits searched per spectrum and per charge.
+     * 
+     * @param maxHitsPerSpectrumPerCharge the maximal number of hits searched per spectrum and per charge
+     */
+    public void setMaxHitsPerSpectrumPerCharge(Integer maxHitsPerSpectrumPerCharge) {
+        this.maxHitsPerSpectrumPerCharge = maxHitsPerSpectrumPerCharge;
+    }
+
+    /**
+     * Returns the minimal number of annotated most intense peaks.
+     * 
+     * @return the minimal number of annotated most intense peaks
+     */
+    public Integer getnAnnotatedMostIntensePeaks() {
+        return nAnnotatedMostIntensePeaks;
+    }
+
+    /**
+     * Sets the minimal number of annotated most intense peaks.
+     * 
+     * @param nAnnotatedMostIntensePeaks the minimal number of annotated most intense peaks
+     */
+    public void setnAnnotatedMostIntensePeaks(Integer nAnnotatedMostIntensePeaks) {
+        this.nAnnotatedMostIntensePeaks = nAnnotatedMostIntensePeaks;
+    }
+
+    /**
+     * Returns the minimal number of annotated peaks a peptide should have.
+     * 
+     * @return the minimal number of annotated peaks a peptide should have
+     */
+    public Integer getMinAnnotatedPeaks() {
+        return minAnnotatedPeaks;
+    }
+
+    /**
+     * Sets the minimal number of annotated peaks a peptide should have.
+     * 
+     * @param minAnnotatedPeaks the minimal number of annotated peaks a peptide should have
+     */
+    public void setMinAnnotatedPeaks(Integer minAnnotatedPeaks) {
+        this.minAnnotatedPeaks = minAnnotatedPeaks;
+    }
+
+    /**
+     * Returns the minimal number of peaks a spectrum should contain.
+     * 
+     * @return the minimal number of peaks a spectrum should contain
+     */
+    public Integer getMinPeaks() {
+        return minPeaks;
+    }
+
+    /**
+     * Sets the minimal number of peaks a spectrum should contain.
+     * 
+     * @param minPeaks the minimal number of peaks a spectrum should contain
+     */
+    public void setMinPeaks(Integer minPeaks) {
+        this.minPeaks = minPeaks;
+    }
+
+    /**
+     * Indicates whether N-terminal methionines should be cleaved.
+     * 
+     * @return a boolean indicating whether N-terminal methionines should be cleaved
+     */
+    public Boolean isCleaveNterMethionine() {
+        return cleaveNtermMethionine;
+    }
+
+    /**
+     * Sets whether N-terminal methionines should be cleaved.
+     * 
+     * @param cleaveNterMethionine whether N-terminal methionines should be cleaved
+     */
+    public void setCleaveNterMethionine(Boolean cleaveNterMethionine) {
+        this.cleaveNtermMethionine = cleaveNterMethionine;
+    }
+
+    /**
+     * Returns the maximal m/z ladder length.
+     * 
+     * @return the maximal m/z ladder length
+     */
+    public Integer getMaxMzLadders() {
+        return maxMzLadders;
+    }
+
+    /**
+     * Sets the maximal m/z ladder length.
+     * 
+     * @param maxMzLadders the maximal m/z ladder length
+     */
+    public void setMaxMzLadders(Integer maxMzLadders) {
+        this.maxMzLadders = maxMzLadders;
+    }
+
+    /**
+     * Returns the maximal fragment charge.
+     * 
+     * @return the maximal fragment charge
+     */
+    public Integer getMaxFragmentCharge() {
+        return maxFragmentCharge;
+    }
+
+    /**
+     * Sets the maximal fragment charge.
+     * 
+     * @param maxFragmentCharge the maximal fragment charge
+     */
+    public void setMaxFragmentCharge(Integer maxFragmentCharge) {
+        this.maxFragmentCharge = maxFragmentCharge;
+    }
+
+    /**
+     * Returns the fraction of peaks to be retained for charge >1 estimation.
+     * 
+     * @return the fraction of peaks to be retained for charge >1 estimation
+     */
+    public Double getFractionOfPeaksForChargeEstimation() {
+        return fractionOfPeaksForChargeEstimation;
+    }
+
+    /**
+     * Sets the fraction of peaks to be retained for charge >1 estimation
+     * @param fractionOfPeaksForChargeEstimation the fraction of peaks to be retained for charge >1 estimation
+     */
+    public void setFractionOfPeaksForChargeEstimation(Double fractionOfPeaksForChargeEstimation) {
+        this.fractionOfPeaksForChargeEstimation = fractionOfPeaksForChargeEstimation;
+    }
+
+    /**
+     * Indicates whether charge plus one should be determined algorithmically.
+     * 
+     * @return whether charge plus one should be determined algorithmically
+     */
+    public Boolean isDetermineChargePlusOneAlgorithmically() {
+        return determineChargePlusOneAlgorithmically;
+    }
+
+    /**
+     * Sets whether charge plus one should be determined algorithmically.
+     * 
+     * @param determineChargePlusOneAlgorithmically whether charge plus one should be determined algorithmically
+     */
+    public void setDetermineChargePlusOneAlgorithmically(Boolean determineChargePlusOneAlgorithmically) {
+        this.determineChargePlusOneAlgorithmically = determineChargePlusOneAlgorithmically;
+    }
+
+    /**
+     * Indicates whether positive ions are searched. False means negative ions.
+     * 
+     * @return a boolean indicating whether positive ions are searched
+     */
+    public Boolean isSearchPositiveIons() {
+        return searchPositiveIons;
+    }
+
+    /**
+     * Sets whether positive ions are searched. False means negative ions.
+     * 
+     * @param searchPositiveIons a boolean indicating whether positive ions are searched
+     */
+    public void setSearchPositiveIons(Boolean searchPositiveIons) {
+        this.searchPositiveIons = searchPositiveIons;
+    }
+
+    /**
+     * Returns the minimal number of precursors per spectrum.
+     * 
+     * @return the minimal number of precursors per spectrum
+     */
+    public Integer getMinPrecPerSpectrum() {
+        return minPrecPerSpectrum;
+    }
+
+    /**
+     * Sets the minimal number of precursors per spectrum.
+     * 
+     * @param minPrecPerSpectrum the minimal number of precursors per spectrum
+     */
+    public void setMinPrecPerSpectrum(Integer minPrecPerSpectrum) {
+        this.minPrecPerSpectrum = minPrecPerSpectrum;
+    }
+
+    /**
+     * Indicates whether forward ions (b1) should be searched first.
+     * 
+     * @return a boolean indicating whether forward ions (b1) should be searched first
+     */
+    public Boolean isSearchForwardFragmentFirst() {
+        return searchForwardFragmentFirst;
+    }
+
+    /**
+     * Sets whether forward ions (b1) should be searched first.
+     * 
+     * @param searchForwardFragmentFirst whether forward ions (b1) should be searched first
+     */
+    public void setSearchForwardFragmentFirst(Boolean searchForwardFragmentFirst) {
+        this.searchForwardFragmentFirst = searchForwardFragmentFirst;
+    }
+
+    /**
+     * Indicates whether C-terminal fragments should be searched.
+     * 
+     * @return a boolean indicating whether C-terminal fragments should be searched
+     */
+    public Boolean isSearchRewindFragments() {
+        return searchRewindFragments;
+    }
+
+    /**
+     * Sets whether C-terminal fragments should be searched.
+     * 
+     * @param searchRewindFragments whether C-terminal fragments should be searched
+     */
+    public void setSearchRewindFragments(Boolean searchRewindFragments) {
+        this.searchRewindFragments = searchRewindFragments;
+    }
+
+    /**
+     * Returns the maximal number of fragments to retain per series.
+     * 
+     * @return the maximal number of fragments to retain per series
+     */
+    public Integer getMaxFragmentPerSeries() {
+        return maxFragmentPerSeries;
+    }
+
+    /**
+     * Sets the maximal number of fragments to retain per series.
+     * 
+     * @param maxFragmentPerSeries the maximal number of fragments to retain per series
+     */
+    public void setMaxFragmentPerSeries(Integer maxFragmentPerSeries) {
+        this.maxFragmentPerSeries = maxFragmentPerSeries;
+    }
+
+    /**
+     * Indicates whether the correlation correction score should be used.
+     * 
+     * @return a booelan indicating whether the correlation correction score should be used
+     */
+    public Boolean isUseCorrelationCorrectionScore() {
+        return useCorrelationCorrectionScore;
+    }
+
+    /**
+     * Sets whether the correlation correction score should be used.
+     * 
+     * @param useCorrelationCorrectionScore a boolean indicating whether the correlation correction score should be used
+     */
+    public void setUseCorrelationCorrectionScore(Boolean useCorrelationCorrectionScore) {
+        this.useCorrelationCorrectionScore = useCorrelationCorrectionScore;
+    }
+
+    /**
+     * Returns the consecutive ion probability.
+     * 
+     * @return the consecutive ion probability
+     */
+    public Double getConsecutiveIonProbability() {
+        return consecutiveIonProbability;
+    }
+
+    /**
+     * Set the consecutive ion probability.
+     * 
+     * @param consecutiveIonProbability the consecutive ion probability
+     */
+    public void setConsecutiveIonProbability(Double consecutiveIonProbability) {
+        this.consecutiveIonProbability = consecutiveIonProbability;
+    }
+
+    /**
+     * Returns the e-value threshold to use to consider a sequence for the iterative search. 0.0 means all.
+     * 
+     * @return the e-value threshold to use to consider a sequence for the iterative search
+     */
+    public Double getIterativeSequenceEvalue() {
+        return iterativeSequenceEvalue;
+    }
+
+    /**
+     * Sets the e-value threshold to use to consider a sequence for the iterative search. 0.0 means all.
+     * 
+     * @param iterativeSequenceEvalue the e-value threshold to use to consider a sequence for the iterative search
+     */
+    public void setIterativeSequenceEvalue(Double iterativeSequenceEvalue) {
+        this.iterativeSequenceEvalue = iterativeSequenceEvalue;
+    }
+
+    /**
+     * Returns the e-value threshold to use to replace a hit for the iterative search. 0.0 means the best hit will be retained.
+     * 
+     * @return the e-value threshold to use to replace a hit for the iterative search
+     */
+    public Double getIterativeReplaceEvalue() {
+        return iterativeReplaceEvalue;
+    }
+
+    /**
+     * Sets the e-value threshold to use to replace a hit for the iterative search. 0.0 means the best hit will be retained.
+     * 
+     * @param iterativeReplaceEvalue the e-value threshold to use to replace a hit for the iterative search
+     */
+    public void setIterativeReplaceEvalue(Double iterativeReplaceEvalue) {
+        this.iterativeReplaceEvalue = iterativeReplaceEvalue;
+    }
+
+    /**
+     * Returns the e-value threshold to use consider a spectrum for the iterative search. 0.0 means all.
+     * 
+     * @return the e-value threshold to use consider a spectrum for the iterative search
+     */
+    public Double getIterativeSpectrumEvalue() {
+        return iterativeSpectrumEvalue;
+    }
+
+    /**
+     * Sets the e-value threshold to use consider a spectrum for the iterative search. 0.0 means all.
+     * 
+     * @param iterativeSpectrumEvalue the e-value threshold to use consider a spectrum for the iterative search
+     */
+    public void setIterativeSpectrumEvalue(Double iterativeSpectrumEvalue) {
+        this.iterativeSpectrumEvalue = iterativeSpectrumEvalue;
+    }
+
+    /**
+     * Returns the id numbers of ion series to apply no product ions at proline rule at.
+     * 
+     * @return the id numbers of ion series to apply no product ions at proline rule at
+     */
+    public ArrayList<Integer> getNoProlineRuleSeries() {
+        return noProlineRuleSeries;
+    }
+
+    /**
+     * Sets the id numbers of ion series to apply no product ions at proline rule at.
+     * 
+     * @param noProlineRuleSeries the id numbers of ion series to apply no product ions at proline rule at
+     */
+    public void setNoProlineRuleSeries(ArrayList<Integer> noProlineRuleSeries) {
+        this.noProlineRuleSeries = noProlineRuleSeries;
+    }
+    
+    
     @Override
     public Advocate getAlgorithm() {
         return Advocate.OMSSA;

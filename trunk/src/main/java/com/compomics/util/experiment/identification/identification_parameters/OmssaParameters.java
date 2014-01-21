@@ -61,123 +61,125 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      */
     private Boolean memoryMappedSequenceLibraries = true;
     /**
-     * number of isotopic peaks to consider
+     * Number of isotopic peaks to consider.
      */
     private Integer numberOfItotopicPeaks = 0;
     /**
-     * mass after which a the exact mass of a neutron should be considered
+     * Mass after which a the exact mass of a neutron should be considered.
      */
     private Double neutronThreshold = 1446.94;
     /**
-     * Low intensity cut-off as percentage of the most intense peak
+     * Low intensity cut-off as percentage of the most intense peak.
      */
     private Double lowIntensityCutOff = 0.0;
     /**
-     * High intensity cut-off as percentage of the most intense peak
+     * High intensity cut-off as percentage of the most intense peak.
      */
     private Double highIntensityCutOff = 0.2;
     /**
-     * Intensity cut-off increment
+     * Intensity cut-off increment.
      */
     private Double intensityCutOffIncrement = 0.0005;
     /**
-     * window width for singly charged fragments
+     * Window width for singly charged fragments.
      */
     private Integer singleChargeWindow = 27;
     /**
-     * window width for doubly charged fragments
+     * Window width for doubly charged fragments.
      */
     private Integer doubleChargeWindow = 14;
     /**
-     * number of peaks allowed in a singly charged window
+     * Number of peaks allowed in a singly charged window.
      */
     private Integer nPeaksInSingleChargeWindow = 2;
     /**
-     * number of peaks allowed in a doubly charged window
+     * Number of peaks allowed in a doubly charged window.
      */
     private Integer nPeaksInDoubleChargeWindow = 2;
     /**
-     * Maximum number of hits searched per spectrum and per charge
+     * Maximum number of hits searched per spectrum and per charge.
      */
     private Integer maxHitsPerSpectrumPerCharge = 30;
     /**
-     * Number of annotated most intense peaks required per spectrum
+     * Number of annotated most intense peaks required per spectrum.
      */
     private Integer nAnnotatedMostIntensePeaks = 6;
     /**
-     * Minimal number of annotated peaks required per spectrum
+     * Minimal number of annotated peaks required per spectrum.
      */
     private Integer minAnnotatedPeaks = 2;
     /**
-     * Minimal number of peaks per spectrum
+     * Minimal number of peaks per spectrum.
      */
     private Integer minPeaks = 4;
     /**
-     * Cleave the N-term methionines
+     * Cleave the N-term methionines.
      */
     private Boolean cleaveNtermMethionine = true;
     /**
-     * Maximum length of m/z ladders
+     * Maximum length of m/z ladders.
      */
     private Integer maxMzLadders = 128;
     /**
-     * Maximum fragment charge
+     * Maximum fragment charge.
      */
     private Integer maxFragmentCharge = 2;
     /**
-     * Fraction of peaks below the precursor to estimate charge >1
+     * Fraction of peaks below the precursor to estimate charge >1.
      */
     private Double fractionOfPeaksForChargeEstimation = 0.95;
     /**
-     * Determine charge plus one algorithmically
+     * Determine charge plus one algorithmically.
      */
     private Boolean determineChargePlusOneAlgorithmically = true;
     /**
-     * Search positive ions (if false, negative ions)
+     * Search positive ions (if false, negative ions).
      */
     private Boolean searchPositiveIons = true;
     /**
-     * minimal precursor per spectrum
+     * Minimal precursor per spectrum.
      */
     private Integer minPrecPerSpectrum = 1;
     /**
-     * Search forward ions (b1) first
+     * Search forward ions (b1) first.
      */
     private Boolean searchForwardFragmentFirst = false;
     /**
-     * Search c-terminal ions
+     * Search c-terminal ions.
      */
     private Boolean searchRewindFragments = true;
     /**
-     * Maximal number of fragment per series
+     * Maximal number of fragment per series.
      */
     private Integer maxFragmentPerSeries = 100;
     /**
-     * Use correlation correction score
+     * Use correlation correction score.
      */
     private Boolean useCorrelationCorrectionScore = true;
     /**
-     * probability of consecutive ions
+     * Probability of consecutive ions.
      */
     private Double consecutiveIonProbability = 0.5;
     /**
-     * E-value threshold to include a sequence in the iterative search (0 means all)
+     * E-value threshold to include a sequence in the iterative search (0 means
+     * all).
      */
     private Double iterativeSequenceEvalue = 0.0;
     /**
-     * E-value threshold to replace a hit in the iterative search (0 means replace if better)
+     * E-value threshold to replace a hit in the iterative search (0 means
+     * replace if better).
      */
     private Double iterativeReplaceEvalue = 0.0;
     /**
-     * E-value threshold to include a spectrum in the iterative search (0 means all)
+     * E-value threshold to include a spectrum in the iterative search (0 means
+     * all).
      */
     private Double iterativeSpectrumEvalue = 0.01;
     /**
-     * id numbers of ion series to apply no product ions at proline rule at
-     * NOTE: not implemented for now
+     * ID numbers of ion series to apply no product ions at proline rule at.
+     * NOTE: not implemented for now.
      */
     private ArrayList<Integer> noProlineRuleSeries = new ArrayList<Integer>();
-    
 
     /**
      * Constructor.
@@ -369,8 +371,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether sequence libraries should be mapped in memory.
-     * 
-     * @return a boolean indicating whether sequence libraries should be mapped in memory
+     *
+     * @return a boolean indicating whether sequence libraries should be mapped
+     * in memory
      */
     public Boolean isMemoryMappedSequenceLibraries() {
         return memoryMappedSequenceLibraries;
@@ -378,16 +381,17 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether sequence libraries should be mapped in memory.
-     * 
-     * @param memoryMappedSequenceLibraries a boolean indicating whether sequence libraries should be mapped in memory
+     *
+     * @param memoryMappedSequenceLibraries a boolean indicating whether
+     * sequence libraries should be mapped in memory
      */
     public void setMemoryMappedSequenceLibraries(Boolean memoryMappedSequenceLibraries) {
         this.memoryMappedSequenceLibraries = memoryMappedSequenceLibraries;
     }
 
     /**
-     * Reutns the number of isotopic peaks to consider.
-     * 
+     * Returns the number of isotopic peaks to consider.
+     *
      * @return the number of isotopic peaks to consider
      */
     public Integer getNumberOfItotopicPeaks() {
@@ -396,7 +400,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the number of isotopic peaks to consider.
-     * 
+     *
      * @param numberOfItotopicPeaks the number of isotopic peaks to consider
      */
     public void setNumberOfItotopicPeaks(Integer numberOfItotopicPeaks) {
@@ -404,54 +408,66 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the mass after which exact neutron mass should be considered in the calculation.
-     * 
-     * @return the mass after which exact neutron mass should be considered in the calculation
+     * Returns the mass after which exact neutron mass should be considered in
+     * the calculation.
+     *
+     * @return the mass after which exact neutron mass should be considered in
+     * the calculation
      */
     public Double getNeutronThreshold() {
         return neutronThreshold;
     }
 
     /**
-     * Sets the mass after which exact neutron mass should be considered in the calculation.
-     * 
-     * @param neutronThreshold the mass after which exact neutron mass should be considered in the calculation
+     * Sets the mass after which exact neutron mass should be considered in the
+     * calculation.
+     *
+     * @param neutronThreshold the mass after which exact neutron mass should be
+     * considered in the calculation
      */
     public void setNeutronThreshold(Double neutronThreshold) {
         this.neutronThreshold = neutronThreshold;
     }
 
     /**
-     * Returns the low intensity cut-off as percentage of the most intense ion peak.
-     * 
-     * @return the low intensity cut-off as percentage of the most intense ion peak
+     * Returns the low intensity cut-off as percentage of the most intense ion
+     * peak.
+     *
+     * @return the low intensity cut-off as percentage of the most intense ion
+     * peak
      */
     public Double getLowIntensityCutOff() {
         return lowIntensityCutOff;
     }
 
     /**
-     * Sets the low intensity cut-off as percentage of the most intense ion peak.
-     * 
-     * @param lowIntensityCutOff the low intensity cut-off as percentage of the most intense ion peak
+     * Sets the low intensity cut-off as percentage of the most intense ion
+     * peak.
+     *
+     * @param lowIntensityCutOff the low intensity cut-off as percentage of the
+     * most intense ion peak
      */
     public void setLowIntensityCutOff(Double lowIntensityCutOff) {
         this.lowIntensityCutOff = lowIntensityCutOff;
     }
 
     /**
-     * Returns the high intensity cut-off as percentage of the most intense ion peak.
-     * 
-     * @return the high intensity cut-off as percentage of the most intense ion peak
+     * Returns the high intensity cut-off as percentage of the most intense ion
+     * peak.
+     *
+     * @return the high intensity cut-off as percentage of the most intense ion
+     * peak
      */
     public Double getHighIntensityCutOff() {
         return highIntensityCutOff;
     }
 
     /**
-     * Sets the high intensity cut-off as percentage of the most intense ion peak.
-     * 
-     * @param highIntensityCutOff the high intensity cut-off as percentage of the most intense ion peak
+     * Sets the high intensity cut-off as percentage of the most intense ion
+     * peak.
+     *
+     * @param highIntensityCutOff the high intensity cut-off as percentage of
+     * the most intense ion peak
      */
     public void setHighIntensityCutOff(Double highIntensityCutOff) {
         this.highIntensityCutOff = highIntensityCutOff;
@@ -459,7 +475,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the intensity cut-off increment.
-     * 
+     *
      * @return the intensity cut-off increment
      */
     public Double getIntensityCutOffIncrement() {
@@ -468,7 +484,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the intensity cut-off increment.
-     * 
+     *
      * @param intensityCutOffIncrement the intensity cut-off increment
      */
     public void setIntensityCutOffIncrement(Double intensityCutOffIncrement) {
@@ -477,7 +493,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the window size for singly charged ions.
-     * 
+     *
      * @return the window size for singly charged ions
      */
     public Integer getSingleChargeWindow() {
@@ -486,7 +502,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the window size for singly charged ions.
-     * 
+     *
      * @param singleChargeWindow the window size for singly charged ions
      */
     public void setSingleChargeWindow(Integer singleChargeWindow) {
@@ -495,7 +511,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the window size for doubly charged ions.
-     * 
+     *
      * @return the window size for doubly charged ions
      */
     public Integer getDoubleChargeWindow() {
@@ -504,7 +520,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the window size for doubly charged ions.
-     * 
+     *
      * @param doubleChargeWindow the window size for doubly charged ions
      */
     public void setDoubleChargeWindow(Integer doubleChargeWindow) {
@@ -513,7 +529,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the number of peaks in singly charged windows.
-     * 
+     *
      * @return the number of peaks in singly charged windows
      */
     public Integer getnPeaksInSingleChargeWindow() {
@@ -522,8 +538,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the number of peaks in singly charged windows.
-     * 
-     * @param nPeaksInSingleChargeWindow the number of peaks in singly charged windows
+     *
+     * @param nPeaksInSingleChargeWindow the number of peaks in singly charged
+     * windows
      */
     public void setnPeaksInSingleChargeWindow(Integer nPeaksInSingleChargeWindow) {
         this.nPeaksInSingleChargeWindow = nPeaksInSingleChargeWindow;
@@ -531,7 +548,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the number of peaks in doubly charged windows.
-     * 
+     *
      * @return the number of peaks in doubly charged windows
      */
     public Integer getnPeaksInDoubleChargeWindow() {
@@ -540,8 +557,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the number of peaks in doubly charged windows.
-     * 
-     * @param nPeaksInDoubleChargeWindow the number of peaks in doubly charged windows
+     *
+     * @param nPeaksInDoubleChargeWindow the number of peaks in doubly charged
+     * windows
      */
     public void setnPeaksInDoubleChargeWindow(Integer nPeaksInDoubleChargeWindow) {
         this.nPeaksInDoubleChargeWindow = nPeaksInDoubleChargeWindow;
@@ -549,7 +567,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal number of hits searched per spectrum and per charge.
-     * 
+     *
      * @return the maximal number of hits searched per spectrum and per charge
      */
     public Integer getMaxHitsPerSpectrumPerCharge() {
@@ -558,8 +576,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Set the maximal number of hits searched per spectrum and per charge.
-     * 
-     * @param maxHitsPerSpectrumPerCharge the maximal number of hits searched per spectrum and per charge
+     *
+     * @param maxHitsPerSpectrumPerCharge the maximal number of hits searched
+     * per spectrum and per charge
      */
     public void setMaxHitsPerSpectrumPerCharge(Integer maxHitsPerSpectrumPerCharge) {
         this.maxHitsPerSpectrumPerCharge = maxHitsPerSpectrumPerCharge;
@@ -567,7 +586,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the minimal number of annotated most intense peaks.
-     * 
+     *
      * @return the minimal number of annotated most intense peaks
      */
     public Integer getnAnnotatedMostIntensePeaks() {
@@ -576,8 +595,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the minimal number of annotated most intense peaks.
-     * 
-     * @param nAnnotatedMostIntensePeaks the minimal number of annotated most intense peaks
+     *
+     * @param nAnnotatedMostIntensePeaks the minimal number of annotated most
+     * intense peaks
      */
     public void setnAnnotatedMostIntensePeaks(Integer nAnnotatedMostIntensePeaks) {
         this.nAnnotatedMostIntensePeaks = nAnnotatedMostIntensePeaks;
@@ -585,7 +605,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the minimal number of annotated peaks a peptide should have.
-     * 
+     *
      * @return the minimal number of annotated peaks a peptide should have
      */
     public Integer getMinAnnotatedPeaks() {
@@ -594,8 +614,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the minimal number of annotated peaks a peptide should have.
-     * 
-     * @param minAnnotatedPeaks the minimal number of annotated peaks a peptide should have
+     *
+     * @param minAnnotatedPeaks the minimal number of annotated peaks a peptide
+     * should have
      */
     public void setMinAnnotatedPeaks(Integer minAnnotatedPeaks) {
         this.minAnnotatedPeaks = minAnnotatedPeaks;
@@ -603,7 +624,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the minimal number of peaks a spectrum should contain.
-     * 
+     *
      * @return the minimal number of peaks a spectrum should contain
      */
     public Integer getMinPeaks() {
@@ -612,7 +633,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the minimal number of peaks a spectrum should contain.
-     * 
+     *
      * @param minPeaks the minimal number of peaks a spectrum should contain
      */
     public void setMinPeaks(Integer minPeaks) {
@@ -621,8 +642,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether N-terminal methionines should be cleaved.
-     * 
-     * @return a boolean indicating whether N-terminal methionines should be cleaved
+     *
+     * @return a boolean indicating whether N-terminal methionines should be
+     * cleaved
      */
     public Boolean isCleaveNterMethionine() {
         return cleaveNtermMethionine;
@@ -630,8 +652,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether N-terminal methionines should be cleaved.
-     * 
-     * @param cleaveNterMethionine whether N-terminal methionines should be cleaved
+     *
+     * @param cleaveNterMethionine whether N-terminal methionines should be
+     * cleaved
      */
     public void setCleaveNterMethionine(Boolean cleaveNterMethionine) {
         this.cleaveNtermMethionine = cleaveNterMethionine;
@@ -639,7 +662,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal m/z ladder length.
-     * 
+     *
      * @return the maximal m/z ladder length
      */
     public Integer getMaxMzLadders() {
@@ -648,7 +671,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal m/z ladder length.
-     * 
+     *
      * @param maxMzLadders the maximal m/z ladder length
      */
     public void setMaxMzLadders(Integer maxMzLadders) {
@@ -657,7 +680,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal fragment charge.
-     * 
+     *
      * @return the maximal fragment charge
      */
     public Integer getMaxFragmentCharge() {
@@ -666,7 +689,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal fragment charge.
-     * 
+     *
      * @param maxFragmentCharge the maximal fragment charge
      */
     public void setMaxFragmentCharge(Integer maxFragmentCharge) {
@@ -675,7 +698,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the fraction of peaks to be retained for charge >1 estimation.
-     * 
+     *
      * @return the fraction of peaks to be retained for charge >1 estimation
      */
     public Double getFractionOfPeaksForChargeEstimation() {
@@ -683,8 +706,10 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Sets the fraction of peaks to be retained for charge >1 estimation
-     * @param fractionOfPeaksForChargeEstimation the fraction of peaks to be retained for charge >1 estimation
+     * Sets the fraction of peaks to be retained for charge >1 estimation.
+     *
+     * @param fractionOfPeaksForChargeEstimation the fraction of peaks to be
+     * retained for charge >1 estimation
      */
     public void setFractionOfPeaksForChargeEstimation(Double fractionOfPeaksForChargeEstimation) {
         this.fractionOfPeaksForChargeEstimation = fractionOfPeaksForChargeEstimation;
@@ -692,7 +717,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether charge plus one should be determined algorithmically.
-     * 
+     *
      * @return whether charge plus one should be determined algorithmically
      */
     public Boolean isDetermineChargePlusOneAlgorithmically() {
@@ -701,8 +726,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether charge plus one should be determined algorithmically.
-     * 
-     * @param determineChargePlusOneAlgorithmically whether charge plus one should be determined algorithmically
+     *
+     * @param determineChargePlusOneAlgorithmically whether charge plus one
+     * should be determined algorithmically
      */
     public void setDetermineChargePlusOneAlgorithmically(Boolean determineChargePlusOneAlgorithmically) {
         this.determineChargePlusOneAlgorithmically = determineChargePlusOneAlgorithmically;
@@ -710,7 +736,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether positive ions are searched. False means negative ions.
-     * 
+     *
      * @return a boolean indicating whether positive ions are searched
      */
     public Boolean isSearchPositiveIons() {
@@ -719,8 +745,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether positive ions are searched. False means negative ions.
-     * 
-     * @param searchPositiveIons a boolean indicating whether positive ions are searched
+     *
+     * @param searchPositiveIons a boolean indicating whether positive ions are
+     * searched
      */
     public void setSearchPositiveIons(Boolean searchPositiveIons) {
         this.searchPositiveIons = searchPositiveIons;
@@ -728,7 +755,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the minimal number of precursors per spectrum.
-     * 
+     *
      * @return the minimal number of precursors per spectrum
      */
     public Integer getMinPrecPerSpectrum() {
@@ -737,7 +764,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the minimal number of precursors per spectrum.
-     * 
+     *
      * @param minPrecPerSpectrum the minimal number of precursors per spectrum
      */
     public void setMinPrecPerSpectrum(Integer minPrecPerSpectrum) {
@@ -746,8 +773,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether forward ions (b1) should be searched first.
-     * 
-     * @return a boolean indicating whether forward ions (b1) should be searched first
+     *
+     * @return a boolean indicating whether forward ions (b1) should be searched
+     * first
      */
     public Boolean isSearchForwardFragmentFirst() {
         return searchForwardFragmentFirst;
@@ -755,8 +783,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether forward ions (b1) should be searched first.
-     * 
-     * @param searchForwardFragmentFirst whether forward ions (b1) should be searched first
+     *
+     * @param searchForwardFragmentFirst whether forward ions (b1) should be
+     * searched first
      */
     public void setSearchForwardFragmentFirst(Boolean searchForwardFragmentFirst) {
         this.searchForwardFragmentFirst = searchForwardFragmentFirst;
@@ -764,8 +793,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether C-terminal fragments should be searched.
-     * 
-     * @return a boolean indicating whether C-terminal fragments should be searched
+     *
+     * @return a boolean indicating whether C-terminal fragments should be
+     * searched
      */
     public Boolean isSearchRewindFragments() {
         return searchRewindFragments;
@@ -773,8 +803,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether C-terminal fragments should be searched.
-     * 
-     * @param searchRewindFragments whether C-terminal fragments should be searched
+     *
+     * @param searchRewindFragments whether C-terminal fragments should be
+     * searched
      */
     public void setSearchRewindFragments(Boolean searchRewindFragments) {
         this.searchRewindFragments = searchRewindFragments;
@@ -782,7 +813,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal number of fragments to retain per series.
-     * 
+     *
      * @return the maximal number of fragments to retain per series
      */
     public Integer getMaxFragmentPerSeries() {
@@ -791,8 +822,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal number of fragments to retain per series.
-     * 
-     * @param maxFragmentPerSeries the maximal number of fragments to retain per series
+     *
+     * @param maxFragmentPerSeries the maximal number of fragments to retain per
+     * series
      */
     public void setMaxFragmentPerSeries(Integer maxFragmentPerSeries) {
         this.maxFragmentPerSeries = maxFragmentPerSeries;
@@ -800,8 +832,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether the correlation correction score should be used.
-     * 
-     * @return a booelan indicating whether the correlation correction score should be used
+     *
+     * @return a boolean indicating whether the correlation correction score
+     * should be used
      */
     public Boolean isUseCorrelationCorrectionScore() {
         return useCorrelationCorrectionScore;
@@ -809,8 +842,9 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether the correlation correction score should be used.
-     * 
-     * @param useCorrelationCorrectionScore a boolean indicating whether the correlation correction score should be used
+     *
+     * @param useCorrelationCorrectionScore a boolean indicating whether the
+     * correlation correction score should be used
      */
     public void setUseCorrelationCorrectionScore(Boolean useCorrelationCorrectionScore) {
         this.useCorrelationCorrectionScore = useCorrelationCorrectionScore;
@@ -818,7 +852,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the consecutive ion probability.
-     * 
+     *
      * @return the consecutive ion probability
      */
     public Double getConsecutiveIonProbability() {
@@ -827,7 +861,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Set the consecutive ion probability.
-     * 
+     *
      * @param consecutiveIonProbability the consecutive ion probability
      */
     public void setConsecutiveIonProbability(Double consecutiveIonProbability) {
@@ -835,78 +869,93 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the e-value threshold to use to consider a sequence for the iterative search. 0.0 means all.
-     * 
-     * @return the e-value threshold to use to consider a sequence for the iterative search
+     * Returns the e-value threshold to use to consider a sequence for the
+     * iterative search. 0.0 means all.
+     *
+     * @return the e-value threshold to use to consider a sequence for the
+     * iterative search
      */
     public Double getIterativeSequenceEvalue() {
         return iterativeSequenceEvalue;
     }
 
     /**
-     * Sets the e-value threshold to use to consider a sequence for the iterative search. 0.0 means all.
-     * 
-     * @param iterativeSequenceEvalue the e-value threshold to use to consider a sequence for the iterative search
+     * Sets the e-value threshold to use to consider a sequence for the
+     * iterative search. 0.0 means all.
+     *
+     * @param iterativeSequenceEvalue the e-value threshold to use to consider a
+     * sequence for the iterative search
      */
     public void setIterativeSequenceEvalue(Double iterativeSequenceEvalue) {
         this.iterativeSequenceEvalue = iterativeSequenceEvalue;
     }
 
     /**
-     * Returns the e-value threshold to use to replace a hit for the iterative search. 0.0 means the best hit will be retained.
-     * 
-     * @return the e-value threshold to use to replace a hit for the iterative search
+     * Returns the e-value threshold to use to replace a hit for the iterative
+     * search. 0.0 means the best hit will be retained.
+     *
+     * @return the e-value threshold to use to replace a hit for the iterative
+     * search
      */
     public Double getIterativeReplaceEvalue() {
         return iterativeReplaceEvalue;
     }
 
     /**
-     * Sets the e-value threshold to use to replace a hit for the iterative search. 0.0 means the best hit will be retained.
-     * 
-     * @param iterativeReplaceEvalue the e-value threshold to use to replace a hit for the iterative search
+     * Sets the e-value threshold to use to replace a hit for the iterative
+     * search. 0.0 means the best hit will be retained.
+     *
+     * @param iterativeReplaceEvalue the e-value threshold to use to replace a
+     * hit for the iterative search
      */
     public void setIterativeReplaceEvalue(Double iterativeReplaceEvalue) {
         this.iterativeReplaceEvalue = iterativeReplaceEvalue;
     }
 
     /**
-     * Returns the e-value threshold to use consider a spectrum for the iterative search. 0.0 means all.
-     * 
-     * @return the e-value threshold to use consider a spectrum for the iterative search
+     * Returns the e-value threshold to use consider a spectrum for the
+     * iterative search. 0.0 means all.
+     *
+     * @return the e-value threshold to use consider a spectrum for the
+     * iterative search
      */
     public Double getIterativeSpectrumEvalue() {
         return iterativeSpectrumEvalue;
     }
 
     /**
-     * Sets the e-value threshold to use consider a spectrum for the iterative search. 0.0 means all.
-     * 
-     * @param iterativeSpectrumEvalue the e-value threshold to use consider a spectrum for the iterative search
+     * Sets the e-value threshold to use consider a spectrum for the iterative
+     * search. 0.0 means all.
+     *
+     * @param iterativeSpectrumEvalue the e-value threshold to use consider a
+     * spectrum for the iterative search
      */
     public void setIterativeSpectrumEvalue(Double iterativeSpectrumEvalue) {
         this.iterativeSpectrumEvalue = iterativeSpectrumEvalue;
     }
 
     /**
-     * Returns the id numbers of ion series to apply no product ions at proline rule at.
-     * 
-     * @return the id numbers of ion series to apply no product ions at proline rule at
+     * Returns the id numbers of ion series to apply no product ions at proline
+     * rule at.
+     *
+     * @return the id numbers of ion series to apply no product ions at proline
+     * rule at
      */
     public ArrayList<Integer> getNoProlineRuleSeries() {
         return noProlineRuleSeries;
     }
 
     /**
-     * Sets the id numbers of ion series to apply no product ions at proline rule at.
-     * 
-     * @param noProlineRuleSeries the id numbers of ion series to apply no product ions at proline rule at
+     * Sets the id numbers of ion series to apply no product ions at proline
+     * rule at.
+     *
+     * @param noProlineRuleSeries the id numbers of ion series to apply no
+     * product ions at proline rule at
      */
     public void setNoProlineRuleSeries(ArrayList<Integer> noProlineRuleSeries) {
         this.noProlineRuleSeries = noProlineRuleSeries;
     }
-    
-    
+
     @Override
     public Advocate getAlgorithm() {
         return Advocate.OMSSA;

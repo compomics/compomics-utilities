@@ -2,12 +2,14 @@ package com.compomics.util.gui.searchsettings.algorithm_settings;
 
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 /**
  * Dialog for the OMSSA specific parameters.
@@ -36,10 +38,28 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         super(parent, true);
         this.omssaParameters = omssaParameters;
         initComponents();
+        setUpGui();
         fillGUI();
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    /**
+     * Set up the GUI.
+     */
+    private void setUpGui() {
+        eliminatePrecursorCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        chargeEstimationCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        plusOneChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        precursorScalingCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        sequenceMappingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        cleaveNterminalMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        searchPositiveIonsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        forwardIonsFirstCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        cTermIonsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        correlationCorrectionScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        omssaOutputFormatComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -248,25 +268,13 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             iterativeReplaceEvalueTxt.setText(omssaParameters.getIterativeReplaceEvalue() + "");
         }
 
-        if (omssaParameters.getMaxHitsPerSpectrumPerCharge()!= null) {
+        if (omssaParameters.getMaxHitsPerSpectrumPerCharge() != null) {
             nHitsPerSpectrumPerChargeTxt.setText(omssaParameters.getMaxHitsPerSpectrumPerCharge() + "");
         }
-
-        eliminatePrecursorCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        chargeEstimationCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        plusOneChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        precursorScalingCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        sequenceMappingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        cleaveNterminalMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        omssaOutputFormatComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        searchPositiveIonsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        forwardIonsFirstCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        cTermIonsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        correlationCorrectionScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
-     * Indicates whether the user cancelled the process.
+     * Indicates whether the user canceled the process.
      *
      * @return true if cancel was pressed
      */
@@ -314,8 +322,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         tempOmssaParameters.setHitListLength(new Integer(input));
         tempOmssaParameters.setSelectedOutput(omssaOutputFormatComboBox.getSelectedItem().toString());
         input = minPrecChargeMultipleChargedFragmentsTxt.getText().trim();
-            int charge = new Integer(minPrecChargeMultipleChargedFragmentsTxt.getText().trim());
-            tempOmssaParameters.setMinimalChargeForMultipleChargedFragments(new Charge(Charge.PLUS, charge));
+        int charge = new Integer(input);
+        tempOmssaParameters.setMinimalChargeForMultipleChargedFragments(new Charge(Charge.PLUS, charge));
         input = nIsotopesTxt.getText().trim();
         tempOmssaParameters.setNumberOfItotopicPeaks(new Integer(input));
         input = neutronTxt.getText().trim();
@@ -352,7 +360,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         tempOmssaParameters.setIterativeSpectrumEvalue(new Double(input));
         input = iterativeReplaceEvalueTxt.getText().trim();
         tempOmssaParameters.setIterativeReplaceEvalue(new Double(input));
-            
+
         return tempOmssaParameters;
     }
 
@@ -366,7 +374,45 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        omssaParametersPanel = new javax.swing.JPanel();
+        spectrumProcessingPanel = new javax.swing.JPanel();
+        lowIntensityLbl = new javax.swing.JLabel();
+        highIntensityLbl = new javax.swing.JLabel();
+        intensityIncrementLbl = new javax.swing.JLabel();
+        lowIntensityTxt = new javax.swing.JTextField();
+        nPeaksLbl = new javax.swing.JLabel();
+        highIntensityTxt = new javax.swing.JTextField();
+        intensityIncrementTxt = new javax.swing.JTextField();
+        nPeaksTxt = new javax.swing.JTextField();
+        chargeReductionLabel = new javax.swing.JLabel();
+        eliminatePrecursorCombo = new javax.swing.JComboBox();
+        chargeEstimationCombo = new javax.swing.JComboBox();
+        precursorChargeEstimationLabel = new javax.swing.JLabel();
+        plusOneChargeCmb = new javax.swing.JComboBox();
+        plusOneChargeAutomaticLbl = new javax.swing.JLabel();
+        fractionChargeLbl = new javax.swing.JLabel();
+        fractionChargeTxt = new javax.swing.JTextField();
+        minPrecPerSpectrumLbl = new javax.swing.JLabel();
+        minPrecPerSpectrumTxt = new javax.swing.JTextField();
+        precursorMassScalingLabel = new javax.swing.JLabel();
+        precursorScalingCombo = new javax.swing.JComboBox();
+        databaseProcessingPanel = new javax.swing.JPanel();
+        sequenceMappingLbl = new javax.swing.JLabel();
+        sequenceMappingCmb = new javax.swing.JComboBox();
+        cleaveNterminalMethionineCmb = new javax.swing.JComboBox();
+        cleaveNterminalMethionineLbl = new javax.swing.JLabel();
+        semiEnzymaticParametersPanel = new javax.swing.JPanel();
+        maxPepLengthTxt = new javax.swing.JTextField();
+        peptideLengthDividerLabel1 = new javax.swing.JLabel();
+        minPepLengthTxt = new javax.swing.JTextField();
+        peptideLengthJLabel = new javax.swing.JLabel();
+        iterativeSearchSettingsPanel = new javax.swing.JPanel();
+        iterativeSequenceEvalueLbl = new javax.swing.JLabel();
+        iterativeSequenceEvalueTxt = new javax.swing.JTextField();
+        iterativeSpectraEvalueLbl = new javax.swing.JLabel();
+        iterativeSpectraEvalueTxt = new javax.swing.JTextField();
+        iterativeReplaceEvalueLbl = new javax.swing.JLabel();
+        iterativeReplaceEvalueTxt = new javax.swing.JTextField();
+        advancedSearchSettingsPanel = new javax.swing.JPanel();
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel = new javax.swing.JLabel();
         minPrecChargeMultipleChargedFragmentsTxt = new javax.swing.JTextField();
         nIsotopesLbl = new javax.swing.JLabel();
@@ -401,68 +447,337 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         correlationCorrectionScoreLbl = new javax.swing.JLabel();
         consecutiveIonProbabilityTxt = new javax.swing.JTextField();
         consecutiveIonProbabilityLbl = new javax.swing.JLabel();
-        nHitsPerSpectrumPerChargeTxt = new javax.swing.JTextField();
         nHitsPerSpectrumPerChargeLbl = new javax.swing.JLabel();
-        okButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
-        SemiEnzymaticParametersPanel = new javax.swing.JPanel();
-        iterativeSequenceEvalueLbl = new javax.swing.JLabel();
-        iterativeSequenceEvalueTxt = new javax.swing.JTextField();
-        iterativeSpectraEvalueLbl = new javax.swing.JLabel();
-        iterativeSpectraEvalueTxt = new javax.swing.JTextField();
-        iterativeReplaceEvalueLbl = new javax.swing.JLabel();
-        iterativeReplaceEvalueTxt = new javax.swing.JTextField();
-        databaseProcessingPanel = new javax.swing.JPanel();
-        sequenceMappingLbl = new javax.swing.JLabel();
-        sequenceMappingCmb = new javax.swing.JComboBox();
-        cleaveNterminalMethionineCmb = new javax.swing.JComboBox();
-        cleaveNterminalMethionineLbl = new javax.swing.JLabel();
-        openDialogHelpJButton = new javax.swing.JButton();
-        spectrumProcessingPanel = new javax.swing.JPanel();
-        lowIntensityLbl = new javax.swing.JLabel();
-        highIntensityLbl = new javax.swing.JLabel();
-        intensityIncrementLbl = new javax.swing.JLabel();
-        lowIntensityTxt = new javax.swing.JTextField();
-        nPeaksLbl = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        highIntensityTxt = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        intensityIncrementTxt = new javax.swing.JTextField();
-        nPeaksTxt = new javax.swing.JTextField();
-        chargeReductionLabel = new javax.swing.JLabel();
-        eliminatePrecursorCombo = new javax.swing.JComboBox();
-        chargeEstimationCombo = new javax.swing.JComboBox();
-        precursorChargeEstimationLabel = new javax.swing.JLabel();
-        plusOneChargeCmb = new javax.swing.JComboBox();
-        plusOneChargeAutomaticLbl = new javax.swing.JLabel();
-        fractionChargeLbl = new javax.swing.JLabel();
-        fractionChargeTxt = new javax.swing.JTextField();
-        minPrecPerSpectrumLbl = new javax.swing.JLabel();
-        minPrecPerSpectrumTxt = new javax.swing.JTextField();
-        precursorMassScalingLabel = new javax.swing.JLabel();
-        precursorScalingCombo = new javax.swing.JComboBox();
-        outputParametersPanel1 = new javax.swing.JPanel();
+        nHitsPerSpectrumPerChargeTxt = new javax.swing.JTextField();
+        outputParametersPanel = new javax.swing.JPanel();
         omssaOutputFormatComboBox = new javax.swing.JComboBox();
         omssaOutputFormatLabel = new javax.swing.JLabel();
         eValueLbl = new javax.swing.JLabel();
         hitListLbl = new javax.swing.JLabel();
         maxEvalueTxt = new javax.swing.JTextField();
         hitlistTxt = new javax.swing.JTextField();
-        SemiEnzymaticParametersPanel1 = new javax.swing.JPanel();
-        maxPepLengthTxt = new javax.swing.JTextField();
-        peptideLengthDividerLabel1 = new javax.swing.JLabel();
-        minPepLengthTxt = new javax.swing.JTextField();
-        peptideLengthJLabel = new javax.swing.JLabel();
+        openDialogHelpJButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("OMSSA Settings");
+        setTitle("Advanced OMSSA Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        omssaParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Settings"));
-        omssaParametersPanel.setOpaque(false);
-        omssaParametersPanel.setPreferredSize(new java.awt.Dimension(518, 143));
+        spectrumProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Processing Settings"));
+        spectrumProcessingPanel.setOpaque(false);
+        spectrumProcessingPanel.setPreferredSize(new java.awt.Dimension(518, 143));
+
+        lowIntensityLbl.setText("Low Intensity Cutoff (percent of most intense peak)");
+
+        highIntensityLbl.setText("High Intensity Cutoff (percent of most intense peak)");
+
+        intensityIncrementLbl.setText("Intensity Cutoff Increment");
+
+        lowIntensityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        lowIntensityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                lowIntensityTxtKeyReleased(evt);
+            }
+        });
+
+        nPeaksLbl.setText("Minimal Number of Peaks");
+
+        highIntensityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        highIntensityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                highIntensityTxtKeyReleased(evt);
+            }
+        });
+
+        intensityIncrementTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        intensityIncrementTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                intensityIncrementTxtKeyReleased(evt);
+            }
+        });
+
+        nPeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        nPeaksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nPeaksTxtKeyReleased(evt);
+            }
+        });
+
+        chargeReductionLabel.setText("Eliminate Charge Reduced Precursors in Spectra");
+
+        eliminatePrecursorCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        chargeEstimationCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        precursorChargeEstimationLabel.setText("Precursor Charge Estimation");
+
+        plusOneChargeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        plusOneChargeAutomaticLbl.setText("Plus One Charge Estimated Algorithmically");
+
+        fractionChargeLbl.setText("Fraction of Precursor m/z for Charge One Estimation");
+
+        fractionChargeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fractionChargeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fractionChargeTxtKeyReleased(evt);
+            }
+        });
+
+        minPrecPerSpectrumLbl.setText("Minimal Number of Precursors per Spectrum");
+
+        minPrecPerSpectrumTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minPrecPerSpectrumTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minPrecPerSpectrumTxtKeyReleased(evt);
+            }
+        });
+
+        precursorMassScalingLabel.setText("Precursor Mass Scaling");
+
+        precursorScalingCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        javax.swing.GroupLayout spectrumProcessingPanelLayout = new javax.swing.GroupLayout(spectrumProcessingPanel);
+        spectrumProcessingPanel.setLayout(spectrumProcessingPanelLayout);
+        spectrumProcessingPanelLayout.setHorizontalGroup(
+            spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(precursorMassScalingLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
+                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(intensityIncrementLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(nPeaksLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                                .addComponent(chargeReductionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+                            .addComponent(highIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(minPrecPerSpectrumLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(fractionChargeLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(plusOneChargeAutomaticLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(precursorChargeEstimationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+                            .addComponent(lowIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lowIntensityTxt)
+                    .addComponent(highIntensityTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(nPeaksTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(eliminatePrecursorCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE)
+                    .addComponent(chargeEstimationCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE)
+                    .addComponent(plusOneChargeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE)
+                    .addComponent(fractionChargeTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(minPrecPerSpectrumTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(intensityIncrementTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        spectrumProcessingPanelLayout.setVerticalGroup(
+            spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lowIntensityLbl)
+                    .addComponent(lowIntensityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(highIntensityLbl)
+                    .addComponent(highIntensityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(intensityIncrementLbl)
+                    .addComponent(intensityIncrementTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nPeaksLbl)
+                    .addComponent(nPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chargeReductionLabel)
+                    .addComponent(eliminatePrecursorCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(precursorChargeEstimationLabel)
+                    .addComponent(chargeEstimationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(plusOneChargeAutomaticLbl)
+                    .addComponent(plusOneChargeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(fractionChargeLbl)
+                    .addComponent(fractionChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(minPrecPerSpectrumLbl)
+                    .addComponent(minPrecPerSpectrumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(precursorMassScalingLabel)
+                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        databaseProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Processing Settings"));
+        databaseProcessingPanel.setOpaque(false);
+
+        sequenceMappingLbl.setText("Sequences Mapping in Memory");
+
+        sequenceMappingCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        cleaveNterminalMethionineCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        cleaveNterminalMethionineLbl.setText("Cleave N-terminal Methionine");
+
+        javax.swing.GroupLayout databaseProcessingPanelLayout = new javax.swing.GroupLayout(databaseProcessingPanel);
+        databaseProcessingPanel.setLayout(databaseProcessingPanelLayout);
+        databaseProcessingPanelLayout.setHorizontalGroup(
+            databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(databaseProcessingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sequenceMappingLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cleaveNterminalMethionineLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cleaveNterminalMethionineCmb, 0, 109, Short.MAX_VALUE)
+                    .addComponent(sequenceMappingCmb, 0, 109, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        databaseProcessingPanelLayout.setVerticalGroup(
+            databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, databaseProcessingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sequenceMappingLbl)
+                    .addComponent(sequenceMappingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cleaveNterminalMethionineLbl)
+                    .addComponent(cleaveNterminalMethionineCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        semiEnzymaticParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Semi-Enzymatic Mode Settings"));
+        semiEnzymaticParametersPanel.setOpaque(false);
+
+        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        peptideLengthDividerLabel1.setText("-");
+
+        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        peptideLengthJLabel.setText("Peptide Length (min - max)");
+
+        javax.swing.GroupLayout semiEnzymaticParametersPanelLayout = new javax.swing.GroupLayout(semiEnzymaticParametersPanel);
+        semiEnzymaticParametersPanel.setLayout(semiEnzymaticParametersPanelLayout);
+        semiEnzymaticParametersPanelLayout.setHorizontalGroup(
+            semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, semiEnzymaticParametersPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(peptideLengthDividerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        semiEnzymaticParametersPanelLayout.setVerticalGroup(
+            semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(semiEnzymaticParametersPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peptideLengthJLabel)
+                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideLengthDividerLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        iterativeSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Iterative Search Settings"));
+        iterativeSearchSettingsPanel.setOpaque(false);
+
+        iterativeSequenceEvalueLbl.setText("E-value Cutoff for Sequences (0 means all)");
+
+        iterativeSequenceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iterativeSequenceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                iterativeSequenceEvalueTxtKeyReleased(evt);
+            }
+        });
+
+        iterativeSpectraEvalueLbl.setText("E-value Cutoff for Spectra (0 means all)");
+
+        iterativeSpectraEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iterativeSpectraEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                iterativeSpectraEvalueTxtKeyReleased(evt);
+            }
+        });
+
+        iterativeReplaceEvalueLbl.setText("E-value Cutoff to Replace a Hit (0 means keep best)");
+
+        iterativeReplaceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iterativeReplaceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                iterativeReplaceEvalueTxtKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout iterativeSearchSettingsPanelLayout = new javax.swing.GroupLayout(iterativeSearchSettingsPanel);
+        iterativeSearchSettingsPanel.setLayout(iterativeSearchSettingsPanelLayout);
+        iterativeSearchSettingsPanelLayout.setHorizontalGroup(
+            iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iterativeSequenceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iterativeSpectraEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iterativeReplaceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        iterativeSearchSettingsPanelLayout.setVerticalGroup(
+            iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iterativeSequenceEvalueLbl)
+                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iterativeSpectraEvalueLbl)
+                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iterativeReplaceEvalueLbl)
+                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Settings"));
+        advancedSearchSettingsPanel.setOpaque(false);
+        advancedSearchSettingsPanel.setPreferredSize(new java.awt.Dimension(518, 143));
 
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel.setText("Minimum Precursor Charge for Multiply Charged Fragments");
 
@@ -482,7 +797,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        neutronLbl.setText("Mass threshold to consider exact neutron mass");
+        neutronLbl.setText("Mass Threshold to Consider Exact Neutron Mass");
 
         neutronTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         neutronTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -527,7 +842,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        minAnnotatedMostIntensePeaksLbl.setText("Minimum Number of Annotated Peaks Among The Most Intense Ones");
+        minAnnotatedMostIntensePeaksLbl.setText("Minimum Annotated Peaks Among the Most Intense Ones");
 
         minAnnotatedMostIntensePeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minAnnotatedMostIntensePeaksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -576,7 +891,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         forwardIonsFirstCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        cTermIonsLbl.setText("Search Rewind (C-terminal) ions");
+        cTermIonsLbl.setText("Search Rewind (C-terminal) Ions");
 
         cTermIonsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -612,6 +927,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         consecutiveIonProbabilityLbl.setText("Consecutive Ion Probability");
 
+        nHitsPerSpectrumPerChargeLbl.setText("Number of Hits per Spectrum per Charge");
+
         nHitsPerSpectrumPerChargeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         nHitsPerSpectrumPerChargeTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -624,491 +941,167 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        nHitsPerSpectrumPerChargeLbl.setText("Number of hits per spectrum per charge");
-
-        javax.swing.GroupLayout omssaParametersPanelLayout = new javax.swing.GroupLayout(omssaParametersPanel);
-        omssaParametersPanel.setLayout(omssaParametersPanelLayout);
-        omssaParametersPanelLayout.setHorizontalGroup(
-            omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(omssaParametersPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
+        advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
+        advancedSearchSettingsPanelLayout.setHorizontalGroup(
+            advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(nIsotopesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(nIsotopesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nIsotopesTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(neutronLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nIsotopesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(neutronLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(neutronTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(singlyChargedWindowWidthLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(neutronTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(singlyChargedWindowWidthLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singlyChargedWindowWidthTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(doublyChargedWindowWidthLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(singlyChargedWindowWidthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(doublyChargedWindowWidthLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doublyChargedWindowWidthTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(singlyChargedNPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(doublyChargedWindowWidthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(singlyChargedNPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singlyChargedNpeaksTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(doublyChargedNPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(singlyChargedNpeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(doublyChargedNPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doublyChargedNpeaksTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(minAnnotatedMostIntensePeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(doublyChargedNpeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(minAnnotatedMostIntensePeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minAnnotatedMostIntensePeaksTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(minAnnotatedPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(minAnnotatedMostIntensePeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(minAnnotatedPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minAnnotatedPeaksTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(maxLaddersLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(minAnnotatedPeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(maxLaddersLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxLaddersTxt))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(maxFragmentChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(searchPositiveIonsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(maxLaddersTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxFragmentChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchPositiveIonsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(searchPositiveIonsCmb, 0, 142, Short.MAX_VALUE)
-                            .addComponent(maxFragmentChargeTxt)))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(forwardIonsFirstLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(searchPositiveIonsCmb, 0, 105, Short.MAX_VALUE)
+                            .addComponent(maxFragmentChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(forwardIonsFirstLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(forwardIonsFirstCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(cTermIonsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(forwardIonsFirstCmb, 0, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(cTermIonsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cTermIonsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(maxFragmentsPerSeriesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cTermIonsCmb, 0, 105, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(maxFragmentsPerSeriesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxFragmentsPerSeriesTxt))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(correlationCorrectionScoreLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(maxFragmentsPerSeriesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(correlationCorrectionScoreLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(correlationCorrectionScoreCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(consecutiveIonProbabilityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(correlationCorrectionScoreCmb, 0, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(consecutiveIonProbabilityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(consecutiveIonProbabilityTxt))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, omssaParametersPanelLayout.createSequentialGroup()
-                        .addComponent(nHitsPerSpectrumPerChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(consecutiveIonProbabilityTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(nHitsPerSpectrumPerChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nHitsPerSpectrumPerChargeTxt)))
+                        .addComponent(nHitsPerSpectrumPerChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        omssaParametersPanelLayout.setVerticalGroup(
-            omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(omssaParametersPanelLayout.createSequentialGroup()
+        advancedSearchSettingsPanelLayout.setVerticalGroup(
+            advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel)
                     .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nIsotopesLbl)
                     .addComponent(nIsotopesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neutronLbl)
                     .addComponent(neutronTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(singlyChargedWindowWidthLbl)
                     .addComponent(singlyChargedWindowWidthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(doublyChargedWindowWidthLbl)
                     .addComponent(doublyChargedWindowWidthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(singlyChargedNPeaksLbl)
                     .addComponent(singlyChargedNpeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(doublyChargedNPeaksLbl)
                     .addComponent(doublyChargedNpeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minAnnotatedMostIntensePeaksLbl)
                     .addComponent(minAnnotatedMostIntensePeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minAnnotatedPeaksLbl)
                     .addComponent(minAnnotatedPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxLaddersLbl)
                     .addComponent(maxLaddersTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxFragmentChargeLbl)
                     .addComponent(maxFragmentChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchPositiveIonsLbl)
                     .addComponent(searchPositiveIonsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(forwardIonsFirstLbl)
                     .addComponent(forwardIonsFirstCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cTermIonsLbl)
                     .addComponent(cTermIonsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxFragmentsPerSeriesLbl)
                     .addComponent(maxFragmentsPerSeriesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(correlationCorrectionScoreLbl)
                     .addComponent(correlationCorrectionScoreCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(consecutiveIonProbabilityLbl)
                     .addComponent(consecutiveIonProbabilityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nHitsPerSpectrumPerChargeLbl)
                     .addComponent(nHitsPerSpectrumPerChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
-        SemiEnzymaticParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Iterative Search Settings"));
-        SemiEnzymaticParametersPanel.setOpaque(false);
-
-        iterativeSequenceEvalueLbl.setText("e-Value Cut-off for Sequences (0 means all)");
-
-        iterativeSequenceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iterativeSequenceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                iterativeSequenceEvalueTxtKeyReleased(evt);
-            }
-        });
-
-        iterativeSpectraEvalueLbl.setText("e-Value Cut-off for Spectra (0 means all)");
-
-        iterativeSpectraEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iterativeSpectraEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                iterativeSpectraEvalueTxtKeyReleased(evt);
-            }
-        });
-
-        iterativeReplaceEvalueLbl.setText("e-Value Cut-off to Replace a Hit (0 means keep best)");
-
-        iterativeReplaceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iterativeReplaceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                iterativeReplaceEvalueTxtKeyReleased(evt);
-            }
-        });
-
-        javax.swing.GroupLayout SemiEnzymaticParametersPanelLayout = new javax.swing.GroupLayout(SemiEnzymaticParametersPanel);
-        SemiEnzymaticParametersPanel.setLayout(SemiEnzymaticParametersPanelLayout);
-        SemiEnzymaticParametersPanelLayout.setHorizontalGroup(
-            SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SemiEnzymaticParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(SemiEnzymaticParametersPanelLayout.createSequentialGroup()
-                        .addComponent(iterativeSequenceEvalueLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(55, 55, 55))
-                    .addGroup(SemiEnzymaticParametersPanelLayout.createSequentialGroup()
-                        .addComponent(iterativeSpectraEvalueLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(14, 14, 14))
-                    .addGroup(SemiEnzymaticParametersPanelLayout.createSequentialGroup()
-                        .addComponent(iterativeReplaceEvalueLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-                        .addGap(14, 14, 14)))
-                .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                    .addComponent(iterativeSpectraEvalueTxt)
-                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        SemiEnzymaticParametersPanelLayout.setVerticalGroup(
-            SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SemiEnzymaticParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iterativeSequenceEvalueLbl)
-                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iterativeSpectraEvalueLbl)
-                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iterativeReplaceEvalueLbl)
-                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(61, Short.MAX_VALUE))
-        );
-
-        databaseProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Processing Settings"));
-        databaseProcessingPanel.setOpaque(false);
-
-        sequenceMappingLbl.setText("Sequences Mapping in Memory");
-
-        sequenceMappingCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        cleaveNterminalMethionineCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        cleaveNterminalMethionineLbl.setText("Cleave N-terminal Methionine");
-
-        javax.swing.GroupLayout databaseProcessingPanelLayout = new javax.swing.GroupLayout(databaseProcessingPanel);
-        databaseProcessingPanel.setLayout(databaseProcessingPanelLayout);
-        databaseProcessingPanelLayout.setHorizontalGroup(
-            databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(databaseProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(databaseProcessingPanelLayout.createSequentialGroup()
-                        .addComponent(sequenceMappingLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(46, 46, 46)
-                        .addComponent(sequenceMappingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(databaseProcessingPanelLayout.createSequentialGroup()
-                        .addComponent(cleaveNterminalMethionineLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(46, 46, 46)
-                        .addComponent(cleaveNterminalMethionineCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        databaseProcessingPanelLayout.setVerticalGroup(
-            databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, databaseProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sequenceMappingLbl)
-                    .addComponent(sequenceMappingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cleaveNterminalMethionineLbl)
-                    .addComponent(cleaveNterminalMethionineCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        openDialogHelpJButton.setToolTipText("Help");
-        openDialogHelpJButton.setBorder(null);
-        openDialogHelpJButton.setBorderPainted(false);
-        openDialogHelpJButton.setContentAreaFilled(false);
-        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButtonMouseExited(evt);
-            }
-        });
-        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openDialogHelpJButtonActionPerformed(evt);
-            }
-        });
-
-        spectrumProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Processing Settings"));
-        spectrumProcessingPanel.setOpaque(false);
-        spectrumProcessingPanel.setPreferredSize(new java.awt.Dimension(518, 143));
-
-        lowIntensityLbl.setText("Low Intensity Cut-off (percent of most intense peak)");
-
-        highIntensityLbl.setText("High Intensity Cut-off (percent of most intense peak)");
-
-        intensityIncrementLbl.setText("Intensity Cut-off increment");
-
-        lowIntensityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        lowIntensityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                lowIntensityTxtKeyReleased(evt);
-            }
-        });
-
-        nPeaksLbl.setText("Minimal Number of Peaks");
-
-        jLabel1.setText("%");
-
-        highIntensityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        highIntensityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                highIntensityTxtKeyReleased(evt);
-            }
-        });
-
-        jLabel2.setText("%");
-
-        intensityIncrementTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        intensityIncrementTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                intensityIncrementTxtKeyReleased(evt);
-            }
-        });
-
-        nPeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        nPeaksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                nPeaksTxtKeyReleased(evt);
-            }
-        });
-
-        chargeReductionLabel.setText("Eliminate Charge Reduced Precursors in Spectra");
-
-        eliminatePrecursorCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        chargeEstimationCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        precursorChargeEstimationLabel.setText("Precursor Charge Estimation");
-
-        plusOneChargeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        plusOneChargeAutomaticLbl.setText("Plus One Charge Estimated Algorithmically");
-
-        fractionChargeLbl.setText("Fraction of Precursor m/z for charge 1 estimation");
-
-        fractionChargeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        fractionChargeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                fractionChargeTxtKeyReleased(evt);
-            }
-        });
-
-        minPrecPerSpectrumLbl.setText("Minimal Number of Precursors per Spectrum");
-
-        minPrecPerSpectrumTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPrecPerSpectrumTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                minPrecPerSpectrumTxtKeyReleased(evt);
-            }
-        });
-
-        precursorMassScalingLabel.setText("Precursor Mass Scaling");
-
-        precursorScalingCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        javax.swing.GroupLayout spectrumProcessingPanelLayout = new javax.swing.GroupLayout(spectrumProcessingPanel);
-        spectrumProcessingPanel.setLayout(spectrumProcessingPanelLayout);
-        spectrumProcessingPanelLayout.setHorizontalGroup(
-            spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addComponent(plusOneChargeAutomaticLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(109, 109, 109))
-                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addComponent(precursorMassScalingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(106, 106, 106))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fractionChargeLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                            .addComponent(minPrecPerSpectrumLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(93, 93, 93))
-                    .addComponent(intensityIncrementLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precursorChargeEstimationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(nPeaksLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(chargeReductionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
-                    .addComponent(highIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(8, 8, 8)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                                .addComponent(highIntensityTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2))
-                            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                                .addComponent(lowIntensityTxt)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)))
-                        .addGap(8, 8, 8))
-                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(plusOneChargeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(fractionChargeTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(precursorScalingCombo, 0, 142, Short.MAX_VALUE)
-                                .addComponent(minPrecPerSpectrumTxt))
-                            .addComponent(chargeEstimationCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(eliminatePrecursorCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nPeaksTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(intensityIncrementTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
-        );
-        spectrumProcessingPanelLayout.setVerticalGroup(
-            spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lowIntensityLbl)
-                    .addComponent(lowIntensityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(highIntensityLbl)
-                    .addComponent(highIntensityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(intensityIncrementLbl)
-                    .addComponent(intensityIncrementTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nPeaksLbl)
-                    .addComponent(nPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chargeReductionLabel)
-                    .addComponent(eliminatePrecursorCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(precursorChargeEstimationLabel)
-                    .addComponent(chargeEstimationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(plusOneChargeAutomaticLbl)
-                    .addComponent(plusOneChargeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fractionChargeLbl)
-                    .addComponent(fractionChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minPrecPerSpectrumLbl)
-                    .addComponent(minPrecPerSpectrumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(precursorMassScalingLabel)
-                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        outputParametersPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
-        outputParametersPanel1.setOpaque(false);
+        outputParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
+        outputParametersPanel.setOpaque(false);
 
         omssaOutputFormatComboBox.setModel(new DefaultComboBoxModel(OmssaParameters.getOmssaOutputTypes()));
         omssaOutputFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -1137,88 +1130,73 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout outputParametersPanel1Layout = new javax.swing.GroupLayout(outputParametersPanel1);
-        outputParametersPanel1.setLayout(outputParametersPanel1Layout);
-        outputParametersPanel1Layout.setHorizontalGroup(
-            outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(outputParametersPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout outputParametersPanelLayout = new javax.swing.GroupLayout(outputParametersPanel);
+        outputParametersPanel.setLayout(outputParametersPanelLayout);
+        outputParametersPanelLayout.setHorizontalGroup(
+            outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(omssaOutputFormatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eValueLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hitListLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(omssaOutputFormatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hitListLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(maxEvalueTxt)
-                    .addComponent(hitlistTxt, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(omssaOutputFormatComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 142, Short.MAX_VALUE))
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(hitlistTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                    .addComponent(maxEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                    .addComponent(omssaOutputFormatComboBox, 0, 105, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        outputParametersPanel1Layout.setVerticalGroup(
-            outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputParametersPanel1Layout.createSequentialGroup()
+        outputParametersPanelLayout.setVerticalGroup(
+            outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputParametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eValueLbl)
                     .addComponent(maxEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hitListLbl)
                     .addComponent(hitlistTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(outputParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(omssaOutputFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(omssaOutputFormatLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        SemiEnzymaticParametersPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Semi-Enzymatic Mode Settings"));
-        SemiEnzymaticParametersPanel1.setOpaque(false);
-
-        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxPepLengthTxtKeyReleased(evt);
+        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        openDialogHelpJButton.setToolTipText("Help");
+        openDialogHelpJButton.setBorder(null);
+        openDialogHelpJButton.setBorderPainted(false);
+        openDialogHelpJButton.setContentAreaFilled(false);
+        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseExited(evt);
+            }
+        });
+        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openDialogHelpJButtonActionPerformed(evt);
             }
         });
 
-        peptideLengthDividerLabel1.setText("-");
-
-        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                minPepLengthTxtKeyReleased(evt);
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
             }
         });
 
-        peptideLengthJLabel.setText("Peptide Length (min - max)");
-
-        javax.swing.GroupLayout SemiEnzymaticParametersPanel1Layout = new javax.swing.GroupLayout(SemiEnzymaticParametersPanel1);
-        SemiEnzymaticParametersPanel1.setLayout(SemiEnzymaticParametersPanel1Layout);
-        SemiEnzymaticParametersPanel1Layout.setHorizontalGroup(
-            SemiEnzymaticParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SemiEnzymaticParametersPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peptideLengthDividerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        SemiEnzymaticParametersPanel1Layout.setVerticalGroup(
-            SemiEnzymaticParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SemiEnzymaticParametersPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(SemiEnzymaticParametersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(peptideLengthJLabel)
-                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(peptideLengthDividerLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -1235,16 +1213,15 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                         .addComponent(closeButton))
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(SemiEnzymaticParametersPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(SemiEnzymaticParametersPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(iterativeSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
+                            .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(semiEnzymaticParametersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(omssaParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(outputParametersPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
+                            .addComponent(outputParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -1252,38 +1229,34 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SemiEnzymaticParametersPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SemiEnzymaticParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(omssaParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(outputParametersPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(semiEnzymaticParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iterativeSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(outputParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(okButton)
                     .addComponent(closeButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -1351,126 +1324,293 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void omssaOutputFormatComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_omssaOutputFormatComboBoxActionPerformed
-       validateInput(false);
+
+        if (((String) omssaOutputFormatComboBox.getSelectedItem()).equalsIgnoreCase("CSV") && this.isVisible()) {
+            // invoke later to give time for components to update
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(OmssaSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                            "Note that the OMSSA CSV format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
+                            "Format Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        }
+
+        validateInput(false);
     }//GEN-LAST:event_omssaOutputFormatComboBoxActionPerformed
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxEvalueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxEvalueTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxEvalueTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void hitlistTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_hitlistTxtKeyReleased
-       validateInput(false);
+        validateInput(false);
     }//GEN-LAST:event_hitlistTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxPepLengthTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void minPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_minPepLengthTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void iterativeSequenceEvalueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_iterativeSequenceEvalueTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_iterativeSequenceEvalueTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void iterativeSpectraEvalueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_iterativeSpectraEvalueTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_iterativeSpectraEvalueTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void iterativeReplaceEvalueTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_iterativeReplaceEvalueTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_iterativeReplaceEvalueTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void nIsotopesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nIsotopesTxtKeyReleased
-       validateInput(false);
+        validateInput(false);
     }//GEN-LAST:event_nIsotopesTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void neutronTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_neutronTxtKeyReleased
-       validateInput(false);
+        validateInput(false);
     }//GEN-LAST:event_neutronTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void singlyChargedWindowWidthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_singlyChargedWindowWidthTxtKeyReleased
-       validateInput(false);
+        validateInput(false);
     }//GEN-LAST:event_singlyChargedWindowWidthTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void doublyChargedWindowWidthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_doublyChargedWindowWidthTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_doublyChargedWindowWidthTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void singlyChargedNpeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_singlyChargedNpeaksTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_singlyChargedNpeaksTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void doublyChargedNpeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_doublyChargedNpeaksTxtKeyReleased
-       validateInput(false);
+        validateInput(false);
     }//GEN-LAST:event_doublyChargedNpeaksTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void minAnnotatedMostIntensePeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minAnnotatedMostIntensePeaksTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_minAnnotatedMostIntensePeaksTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void minAnnotatedPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minAnnotatedPeaksTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_minAnnotatedPeaksTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxLaddersTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxLaddersTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxLaddersTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxFragmentChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxFragmentChargeTxtKeyReleased
-       validateInput(false);
+        validateInput(false);
     }//GEN-LAST:event_maxFragmentChargeTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxFragmentChargeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxFragmentChargeTxtActionPerformed
         validateInput(false);
     }//GEN-LAST:event_maxFragmentChargeTxtActionPerformed
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxFragmentsPerSeriesTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxFragmentsPerSeriesTxtActionPerformed
         validateInput(false);
     }//GEN-LAST:event_maxFragmentsPerSeriesTxtActionPerformed
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void maxFragmentsPerSeriesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxFragmentsPerSeriesTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxFragmentsPerSeriesTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void consecutiveIonProbabilityTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consecutiveIonProbabilityTxtActionPerformed
         validateInput(false);
     }//GEN-LAST:event_consecutiveIonProbabilityTxtActionPerformed
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void consecutiveIonProbabilityTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_consecutiveIonProbabilityTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_consecutiveIonProbabilityTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void minPrecPerSpectrumTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecPerSpectrumTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_minPrecPerSpectrumTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void fractionChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fractionChargeTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_fractionChargeTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void nPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nPeaksTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_nPeaksTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void intensityIncrementTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_intensityIncrementTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_intensityIncrementTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void highIntensityTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_highIntensityTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_highIntensityTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void lowIntensityTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lowIntensityTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_lowIntensityTxtKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void nHitsPerSpectrumPerChargeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nHitsPerSpectrumPerChargeTxtActionPerformed
         validateInput(false);
     }//GEN-LAST:event_nHitsPerSpectrumPerChargeTxtActionPerformed
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
     private void nHitsPerSpectrumPerChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nHitsPerSpectrumPerChargeTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_nHitsPerSpectrumPerChargeTxtKeyReleased
@@ -1737,7 +1877,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             minPrecPerSpectrumLbl.setForeground(Color.RED);
             minPrecPerSpectrumLbl.setToolTipText("Please select a positive number");
         }
-        
 
         // Validate peptide sizes
         if (minPepLengthTxt.getText() != null && !minPepLengthTxt.getText().trim().equals("") || maxPepLengthTxt.getText() != null && !maxPepLengthTxt.getText().trim().equals("")) {
@@ -2427,8 +2566,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel SemiEnzymaticParametersPanel;
-    private javax.swing.JPanel SemiEnzymaticParametersPanel1;
+    private javax.swing.JPanel advancedSearchSettingsPanel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JComboBox cTermIonsCmb;
     private javax.swing.JLabel cTermIonsLbl;
@@ -2460,12 +2598,11 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField intensityIncrementTxt;
     private javax.swing.JLabel iterativeReplaceEvalueLbl;
     private javax.swing.JTextField iterativeReplaceEvalueTxt;
+    private javax.swing.JPanel iterativeSearchSettingsPanel;
     private javax.swing.JLabel iterativeSequenceEvalueLbl;
     private javax.swing.JTextField iterativeSequenceEvalueTxt;
     private javax.swing.JLabel iterativeSpectraEvalueLbl;
     private javax.swing.JTextField iterativeSpectraEvalueTxt;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lowIntensityLbl;
     private javax.swing.JTextField lowIntensityTxt;
     private javax.swing.JTextField maxEvalueTxt;
@@ -2496,9 +2633,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JComboBox omssaOutputFormatComboBox;
     private javax.swing.JLabel omssaOutputFormatLabel;
-    private javax.swing.JPanel omssaParametersPanel;
     private javax.swing.JButton openDialogHelpJButton;
-    private javax.swing.JPanel outputParametersPanel1;
+    private javax.swing.JPanel outputParametersPanel;
     private javax.swing.JLabel peptideLengthDividerLabel1;
     private javax.swing.JLabel peptideLengthJLabel;
     private javax.swing.JLabel plusOneChargeAutomaticLbl;
@@ -2508,6 +2644,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox precursorScalingCombo;
     private javax.swing.JComboBox searchPositiveIonsCmb;
     private javax.swing.JLabel searchPositiveIonsLbl;
+    private javax.swing.JPanel semiEnzymaticParametersPanel;
     private javax.swing.JComboBox sequenceMappingCmb;
     private javax.swing.JLabel sequenceMappingLbl;
     private javax.swing.JLabel singlyChargedNPeaksLbl;

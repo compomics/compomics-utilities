@@ -84,7 +84,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" attributes="0">
                           <Component id="spectrumProcessingPanel" min="-2" pref="299" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="databaseProcessingPanel" min="-2" max="-2" attributes="0"/>
@@ -93,10 +93,11 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="SemiEnzymaticParametersPanel" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="omssaParametersPanel" min="-2" pref="481" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="omssaParametersPanel" min="-2" pref="500" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="outputParametersPanel1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -216,6 +217,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="consecutiveIonProbabilityTxt" max="32767" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="nHitsPerSpectrumPerChargeLbl" min="-2" pref="340" max="-2" attributes="1"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="nHitsPerSpectrumPerChargeTxt" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -308,6 +314,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="consecutiveIonProbabilityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="consecutiveIonProbabilityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="nHitsPerSpectrumPerChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nHitsPerSpectrumPerChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -547,6 +558,20 @@
                 <Property name="text" type="java.lang.String" value="Consecutive Ion Probability"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JTextField" name="nHitsPerSpectrumPerChargeTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nHitsPerSpectrumPerChargeTxtActionPerformed"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nHitsPerSpectrumPerChargeTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="nHitsPerSpectrumPerChargeLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Number of hits per spectrum per charge"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JButton" name="okButton">
@@ -596,10 +621,8 @@
                       </Group>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="iterativeReplaceEvalueTxt" pref="142" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="iterativeSpectraEvalueTxt" max="32767" attributes="0"/>
-                              <Component id="iterativeSequenceEvalueTxt" pref="142" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="iterativeSpectraEvalueTxt" max="32767" attributes="0"/>
+                          <Component id="iterativeSequenceEvalueTxt" pref="142" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -623,7 +646,7 @@
                           <Component id="iterativeReplaceEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="iterativeReplaceEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="61" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

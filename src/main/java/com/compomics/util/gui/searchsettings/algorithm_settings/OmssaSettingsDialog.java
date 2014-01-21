@@ -248,6 +248,10 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             iterativeReplaceEvalueTxt.setText(omssaParameters.getIterativeReplaceEvalue() + "");
         }
 
+        if (omssaParameters.getMaxHitsPerSpectrumPerCharge()!= null) {
+            nHitsPerSpectrumPerChargeTxt.setText(omssaParameters.getMaxHitsPerSpectrumPerCharge() + "");
+        }
+
         eliminatePrecursorCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         chargeEstimationCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         plusOneChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -328,6 +332,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         tempOmssaParameters.setnAnnotatedMostIntensePeaks(new Integer(input));
         input = minAnnotatedPeaksTxt.getText().trim();
         tempOmssaParameters.setMinAnnotatedPeaks(new Integer(input));
+        input = nHitsPerSpectrumPerChargeTxt.getText().trim();
+        tempOmssaParameters.setMaxHitsPerSpectrumPerCharge(new Integer(input));
         input = maxLaddersTxt.getText().trim();
         tempOmssaParameters.setMaxMzLadders(new Integer(input));
         input = maxFragmentChargeTxt.getText().trim();
@@ -395,6 +401,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         correlationCorrectionScoreLbl = new javax.swing.JLabel();
         consecutiveIonProbabilityTxt = new javax.swing.JTextField();
         consecutiveIonProbabilityLbl = new javax.swing.JLabel();
+        nHitsPerSpectrumPerChargeTxt = new javax.swing.JTextField();
+        nHitsPerSpectrumPerChargeLbl = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         SemiEnzymaticParametersPanel = new javax.swing.JPanel();
@@ -604,6 +612,20 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         consecutiveIonProbabilityLbl.setText("Consecutive Ion Probability");
 
+        nHitsPerSpectrumPerChargeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        nHitsPerSpectrumPerChargeTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nHitsPerSpectrumPerChargeTxtActionPerformed(evt);
+            }
+        });
+        nHitsPerSpectrumPerChargeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nHitsPerSpectrumPerChargeTxtKeyReleased(evt);
+            }
+        });
+
+        nHitsPerSpectrumPerChargeLbl.setText("Number of hits per spectrum per charge");
+
         javax.swing.GroupLayout omssaParametersPanelLayout = new javax.swing.GroupLayout(omssaParametersPanel);
         omssaParametersPanel.setLayout(omssaParametersPanelLayout);
         omssaParametersPanelLayout.setHorizontalGroup(
@@ -678,7 +700,11 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                     .addGroup(omssaParametersPanelLayout.createSequentialGroup()
                         .addComponent(consecutiveIonProbabilityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(consecutiveIonProbabilityTxt)))
+                        .addComponent(consecutiveIonProbabilityTxt))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, omssaParametersPanelLayout.createSequentialGroup()
+                        .addComponent(nHitsPerSpectrumPerChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nHitsPerSpectrumPerChargeTxt)))
                 .addContainerGap())
         );
         omssaParametersPanelLayout.setVerticalGroup(
@@ -752,6 +778,10 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(consecutiveIonProbabilityLbl)
                     .addComponent(consecutiveIonProbabilityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(omssaParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nHitsPerSpectrumPerChargeLbl)
+                    .addComponent(nHitsPerSpectrumPerChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -817,9 +847,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                         .addGap(14, 14, 14)))
                 .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                    .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(iterativeSpectraEvalueTxt)
-                        .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)))
+                    .addComponent(iterativeSpectraEvalueTxt)
+                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
                 .addContainerGap())
         );
         SemiEnzymaticParametersPanelLayout.setVerticalGroup(
@@ -837,7 +866,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addGroup(SemiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iterativeReplaceEvalueLbl)
                     .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         databaseProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Processing Settings"));
@@ -1223,7 +1252,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1231,10 +1260,11 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                         .addComponent(SemiEnzymaticParametersPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(SemiEnzymaticParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(omssaParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addComponent(omssaParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(outputParametersPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(outputParametersPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -1437,6 +1467,14 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         validateInput(false);
     }//GEN-LAST:event_lowIntensityTxtKeyReleased
 
+    private void nHitsPerSpectrumPerChargeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nHitsPerSpectrumPerChargeTxtActionPerformed
+        validateInput(false);
+    }//GEN-LAST:event_nHitsPerSpectrumPerChargeTxtActionPerformed
+
+    private void nHitsPerSpectrumPerChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nHitsPerSpectrumPerChargeTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_nHitsPerSpectrumPerChargeTxtKeyReleased
+
     /**
      * Inspects the parameters validity.
      *
@@ -1472,6 +1510,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         iterativeSequenceEvalueLbl.setForeground(Color.BLACK);
         iterativeSpectraEvalueLbl.setForeground(Color.BLACK);
         iterativeReplaceEvalueLbl.setForeground(Color.BLACK);
+        nHitsPerSpectrumPerChargeLbl.setForeground(Color.BLACK);
 
         lowIntensityLbl.setToolTipText(null);
         highIntensityLbl.setToolTipText(null);
@@ -1499,6 +1538,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         iterativeSequenceEvalueLbl.setToolTipText(null);
         iterativeSpectraEvalueLbl.setToolTipText(null);
         iterativeReplaceEvalueLbl.setToolTipText(null);
+        nHitsPerSpectrumPerChargeLbl.setToolTipText(null);
 
         // Low intensity cutoff
         if (lowIntensityTxt.getText() == null || lowIntensityTxt.getText().trim().equals("")) {
@@ -1819,6 +1859,39 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             valid = false;
             hitListLbl.setForeground(Color.RED);
             hitListLbl.setToolTipText("Please select a positive number");
+        }
+
+        // hits per spectrum and per charge
+        if (nHitsPerSpectrumPerChargeTxt.getText() == null || nHitsPerSpectrumPerChargeTxt.getText().trim().equals("")) {
+            if (showMessage && valid) {
+                JOptionPane.showMessageDialog(this, "You need to specify a number for the number of hits per spectrum and per charge.",
+                        "Hits per Spectrum and per Charge Error", JOptionPane.WARNING_MESSAGE);
+            }
+            valid = false;
+            nHitsPerSpectrumPerChargeLbl.setForeground(Color.RED);
+            nHitsPerSpectrumPerChargeLbl.setToolTipText("Please select a hitlist length");
+        }
+        intInput = -1;
+        try {
+            intInput = new Integer(nHitsPerSpectrumPerChargeTxt.getText().trim());
+        } catch (NumberFormatException nfe) {
+            // Unparseable number!
+            if (showMessage && valid) {
+                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the number of hits per spectrum and per charge.",
+                        "Hits per Spectrum and per Charge Error", JOptionPane.WARNING_MESSAGE);
+            }
+            valid = false;
+            nHitsPerSpectrumPerChargeLbl.setForeground(Color.RED);
+            nHitsPerSpectrumPerChargeLbl.setToolTipText("Please select a positive number");
+        }
+        if (intInput < 0) {
+            if (showMessage && valid) {
+                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the number of hits per spectrum and per charge.",
+                        "Hits per Spectrum and per Charge Error", JOptionPane.WARNING_MESSAGE);
+            }
+            valid = false;
+            nHitsPerSpectrumPerChargeLbl.setForeground(Color.RED);
+            nHitsPerSpectrumPerChargeLbl.setToolTipText("Please select a positive number");
         }
 
         // precursor charge for multiple charged fragment ions
@@ -2412,6 +2485,8 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel minPrecPerSpectrumLbl;
     private javax.swing.JTextField minPrecPerSpectrumTxt;
     private javax.swing.JLabel minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel;
+    private javax.swing.JLabel nHitsPerSpectrumPerChargeLbl;
+    private javax.swing.JTextField nHitsPerSpectrumPerChargeTxt;
     private javax.swing.JLabel nIsotopesLbl;
     private javax.swing.JTextField nIsotopesTxt;
     private javax.swing.JLabel nPeaksLbl;

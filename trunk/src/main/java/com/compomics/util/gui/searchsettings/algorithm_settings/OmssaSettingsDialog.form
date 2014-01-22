@@ -81,7 +81,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="advancedSearchSettingsPanel" alignment="0" pref="507" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="spectrumProcessingPanel" pref="329" max="32767" attributes="0"/>
+                          <Component id="spectrumProcessingPanel" pref="336" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="databaseProcessingPanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -859,7 +859,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="singlyChargedWindowWidthLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Singly Charged Window Width"/>
+                <Property name="text" type="java.lang.String" value="Singly Charged Window Width (Da)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="singlyChargedWindowWidthTxt">
@@ -872,7 +872,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="doublyChargedWindowWidthLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Doubly Charged Window Width"/>
+                <Property name="text" type="java.lang.String" value="Doubly Charged Window Width (Da)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="doublyChargedWindowWidthTxt">
@@ -1142,7 +1142,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="hitListLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Maximum HitList Length"/>
+                <Property name="text" type="java.lang.String" value="Maximum HitList Length (0 means all)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="maxEvalueTxt">

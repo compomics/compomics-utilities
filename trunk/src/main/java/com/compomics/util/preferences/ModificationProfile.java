@@ -45,9 +45,10 @@ public class ModificationProfile implements Serializable {
     private ArrayList<String> refinementFixedModifications = new ArrayList<String>();
     /**
      * List of modifications searched during the second pass search.
-     * @deprecated use the variable/fix versions
+     *
+     * @deprecated use the variable/fixed versions
      */
-        private ArrayList<String> refinementModifications = null;
+    private ArrayList<String> refinementModifications = null;
     /**
      * Map of the OMSSA indexes used for user modifications in this search.
      */
@@ -100,7 +101,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Return the refinement variable modifications used for the second pass search.
+     * Return the refinement variable modifications used for the second pass
+     * search.
      *
      * @return the refinement variable modifications
      */
@@ -109,7 +111,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Return the refinement fixed modifications used for the second pass search.
+     * Return the refinement fixed modifications used for the second pass
+     * search.
      *
      * @return the refinement fixed modifications
      */
@@ -144,7 +147,9 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns a list of all searched modifications but the fixed ones. Note: to be fixed a modification must be fixed during the first and second pass searches.
+     * Returns a list of all searched modifications but the fixed ones. Note: to
+     * be fixed a modification must be fixed during the first and second pass
+     * searches.
      *
      * @return a list of all searched modifications but the fixed ones
      */
@@ -191,10 +196,10 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Adds a refinement variable modification. The modification name is added in the
-     * refinement modifications names list and the modification is saved in the
-     * back-up. In case a modification with the same name was already used it
-     * will be silently overwritten.
+     * Adds a variable refinement modification. The modification name is added
+     * in the refinement modifications names list and the modification is saved
+     * in the back-up. In case a modification with the same name was already
+     * used it will be silently overwritten.
      *
      * @param modification The modification to add
      */
@@ -208,10 +213,10 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Adds a refinement fixed modification. The modification name is added in the
-     * refinement modifications names list and the modification is saved in the
-     * back-up. In case a modification with the same name was already used it
-     * will be silently overwritten.
+     * Adds a fixed refinement modification. The modification name is added in
+     * the refinement modifications names list and the modification is saved in
+     * the back-up. In case a modification with the same name was already used
+     * it will be silently overwritten.
      *
      * @param modification The modification to add
      */
@@ -240,7 +245,7 @@ public class ModificationProfile implements Serializable {
         modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
-    
+
     /**
      * Sets a new color for the given expected modification.
      *
@@ -264,10 +269,10 @@ public class ModificationProfile implements Serializable {
         }
         return colors.get(modification);
     }
-    
+
     /**
      * Returns the modification colors as a map.
-     * 
+     *
      * @return the modifications colors as a map
      */
     public HashMap<String, Color> getColors() {
@@ -327,10 +332,10 @@ public class ModificationProfile implements Serializable {
     public PTM getPtm(String modName) {
         return backUp.get(modName);
     }
-    
+
     /**
      * Returns the PTMs backed-up as a map. PTM name -> PTM.
-     * 
+     *
      * @return the PTMs backed-up as a map
      */
     public HashMap<String, PTM> getBackedUpPtmsMap() {
@@ -360,7 +365,8 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Removes a variable modification from the list of refinement modifications.
+     * Removes a variable modification from the list of refinement
+     * modifications.
      *
      * @param modificationName the name of the modification
      */
@@ -403,10 +409,10 @@ public class ModificationProfile implements Serializable {
     public String getModification(int omssaIndex) {
         return omssaIndexes.get(omssaIndex);
     }
-    
+
     /**
-     * Indicates whether the modification profile has OMSSA indexes. 
-     * 
+     * Indicates whether the modification profile has OMSSA indexes.
+     *
      * @return true if an OMSSA indexes map is set
      */
     public boolean hasOMSSAIndexes() {
@@ -427,10 +433,10 @@ public class ModificationProfile implements Serializable {
         }
         return null;
     }
-    
+
     /**
      * Returns the omssa indexes as a map.
-     * 
+     *
      * @return the omssa indexes
      */
     public HashMap<Integer, String> getOmssaIndexes() {
@@ -485,7 +491,6 @@ public class ModificationProfile implements Serializable {
         }
 
         // note that the following three tests results in false even if only the order is different
-
         if (!this.getVariableModifications().equals(otherProfile.getVariableModifications())) {
             return false;
         }

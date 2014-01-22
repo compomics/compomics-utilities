@@ -1031,9 +1031,24 @@ public class SearchParameters implements Serializable {
         }
         output.append(newLine);
 
-        output.append("REFINEMENT_MODIFICATIONS=");
+        output.append("REFINEMENT_FIXED_MODIFICATIONS=");
         if (utilitiesModificationProfile != null) {
-            ArrayList<String> fixedPtms = utilitiesModificationProfile.getRefinementModifications();
+            ArrayList<String> fixedPtms = utilitiesModificationProfile.getRefinementFixedModifications();
+            boolean first = true;
+            for (String ptm : fixedPtms) {
+                if (first) {
+                    output.append(ptm);
+                    first = false;
+                } else {
+                    output.append("//").append(ptm);
+                }
+            }
+        }
+        output.append(newLine);
+
+        output.append("REFINEMENT_VARIABLE_MODIFICATIONS=");
+        if (utilitiesModificationProfile != null) {
+            ArrayList<String> fixedPtms = utilitiesModificationProfile.getRefinementVariableModifications();
             boolean first = true;
             for (String ptm : fixedPtms) {
                 if (first) {

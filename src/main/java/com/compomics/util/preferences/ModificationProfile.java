@@ -36,9 +36,18 @@ public class ModificationProfile implements Serializable {
      */
     private ArrayList<String> variableModifications = new ArrayList<String>();
     /**
-     * List of modifications searched during the second pass search.
+     * List of variable modifications searched during the second pass search.
      */
-    private ArrayList<String> refinementModifications = new ArrayList<String>();
+    private ArrayList<String> refinementVariableModifications = new ArrayList<String>();
+    /**
+     * List of variable modifications searched during the second pass search.
+     */
+    private ArrayList<String> refinementFixedModifications = new ArrayList<String>();
+    /**
+     * List of modifications searched during the second pass search.
+     * @deprecated use the variable/fix versions
+     */
+        private ArrayList<String> refinementModifications = null;
     /**
      * Map of the OMSSA indexes used for user modifications in this search.
      */
@@ -56,6 +65,19 @@ public class ModificationProfile implements Serializable {
      * Constructor.
      */
     public ModificationProfile() {
+    }
+
+    /**
+     * Constructor creating a new Modification profile based on the given one.
+     */
+    public ModificationProfile(ModificationProfile modificationProfile) {
+        fixedModifications = modificationProfile.getFixedModifications();
+        variableModifications = modificationProfile.getVariableModifications();
+        refinementFixedModifications = modificationProfile.getRefinementFixedModifications();
+        refinementVariableModifications = modificationProfile.getRefinementVariableModifications();
+        omssaIndexes = modificationProfile.getOmssaIndexes();
+        colors = modificationProfile.getColors();
+        backUp = modificationProfile.getBackedUpPtmsMap();
     }
 
     /**
@@ -78,12 +100,21 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Return the refinement modifications used for the second pass search.
+     * Return the refinement variable modifications used for the second pass search.
      *
-     * @return the refinement modifications
+     * @return the refinement variable modifications
      */
-    public ArrayList<String> getRefinementModifications() {
-        return refinementModifications;
+    public ArrayList<String> getRefinementVariableModifications() {
+        return refinementVariableModifications;
+    }
+
+    /**
+     * Return the refinement fixed modifications used for the second pass search.
+     *
+     * @return the refinement fixed modifications
+     */
+    public ArrayList<String> getRefinementFixedModifications() {
+        return refinementFixedModifications;
     }
 
     /**
@@ -96,19 +127,49 @@ public class ModificationProfile implements Serializable {
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(fixedModifications);
         result.addAll(variableModifications);
-        result.addAll(refinementModifications);
+        if (refinementFixedModifications == null) {
+            repair();
+        }
+        for (String ptmName : refinementFixedModifications) {
+            if (!result.contains(ptmName)) {
+                result.add(ptmName);
+            }
+        }
+        for (String ptmName : refinementVariableModifications) {
+            if (!result.contains(ptmName)) {
+                result.add(ptmName);
+            }
+        }
         return result;
     }
 
     /**
-     * Returns a list of all searched modifications but the fixed ones.
+     * Returns a list of all searched modifications but the fixed ones. Note: to be fixed a modification must be fixed during the first and second pass searches.
      *
      * @return a list of all searched modifications but the fixed ones
      */
     public ArrayList<String> getAllNotFixedModifications() {
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(variableModifications);
-        result.addAll(refinementModifications);
+        for (String ptmName : refinementVariableModifications) {
+            if (!result.contains(ptmName)) {
+                result.add(ptmName);
+            }
+        }
+        if (refinementFixedModifications == null) {
+            repair();
+        }
+        // In the honour of Kenneth: add variable fixed modifications
+        for (String ptmName : fixedModifications) {
+            if (!refinementFixedModifications.contains(ptmName) && !result.contains(ptmName)) {
+                result.add(ptmName);
+            }
+        }
+        for (String ptmName : refinementFixedModifications) {
+            if (!fixedModifications.contains(ptmName) && !result.contains(ptmName)) {
+                result.add(ptmName);
+            }
+        }
         return result;
     }
 
@@ -130,17 +191,34 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Adds a refinement modification. The modification name is added in the
+     * Adds a refinement variable modification. The modification name is added in the
      * refinement modifications names list and the modification is saved in the
      * back-up. In case a modification with the same name was already used it
      * will be silently overwritten.
      *
      * @param modification The modification to add
      */
-    public void addRefinementModification(PTM modification) {
+    public void addRefinementVariableModification(PTM modification) {
         String modName = modification.getName();
-        if (!refinementModifications.contains(modName)) {
-            refinementModifications.add(modName);
+        if (!refinementVariableModifications.contains(modName)) {
+            refinementVariableModifications.add(modName);
+        }
+        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
+        backUp.put(modName, modification);
+    }
+
+    /**
+     * Adds a refinement fixed modification. The modification name is added in the
+     * refinement modifications names list and the modification is saved in the
+     * back-up. In case a modification with the same name was already used it
+     * will be silently overwritten.
+     *
+     * @param modification The modification to add
+     */
+    public void addRefinementFixedModification(PTM modification) {
+        String modName = modification.getName();
+        if (!refinementFixedModifications.contains(modName)) {
+            refinementFixedModifications.add(modName);
         }
         modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
@@ -162,7 +240,7 @@ public class ModificationProfile implements Serializable {
         modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
-
+    
     /**
      * Sets a new color for the given expected modification.
      *
@@ -186,6 +264,15 @@ public class ModificationProfile implements Serializable {
         }
         return colors.get(modification);
     }
+    
+    /**
+     * Returns the modification colors as a map.
+     * 
+     * @return the modifications colors as a map
+     */
+    public HashMap<String, Color> getColors() {
+        return colors;
+    }
 
     /**
      * Checks the compatibility with older versions of the class and makes the
@@ -201,8 +288,18 @@ public class ModificationProfile implements Serializable {
                 variableModifications.add(modName);
             }
         }
-        if (refinementModifications == null) {
-            refinementModifications = new ArrayList<String>();
+        if (refinementVariableModifications == null) {
+            refinementVariableModifications = new ArrayList<String>();
+        }
+        if (refinementFixedModifications == null) {
+            refinementFixedModifications = new ArrayList<String>();
+        }
+        if (refinementModifications != null && !refinementModifications.isEmpty()) {
+            for (String ptm : refinementFixedModifications) {
+                if (!refinementVariableModifications.contains(ptm)) {
+                    refinementVariableModifications.add(ptm);
+                }
+            }
         }
         if (backUp == null) {
             backUp = new HashMap<String, PTM>();
@@ -230,6 +327,15 @@ public class ModificationProfile implements Serializable {
     public PTM getPtm(String modName) {
         return backUp.get(modName);
     }
+    
+    /**
+     * Returns the PTMs backed-up as a map. PTM name -> PTM.
+     * 
+     * @return the PTMs backed-up as a map
+     */
+    public HashMap<String, PTM> getBackedUpPtmsMap() {
+        return backUp;
+    }
 
     /**
      * Removes a modification from the list of variable modifications.
@@ -254,14 +360,24 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Removes a modification from the list of refinement modifications
-     * modifications.
+     * Removes a variable modification from the list of refinement modifications.
      *
      * @param modificationName the name of the modification
      */
-    public void removeRefinementModification(String modificationName) {
-        while (refinementModifications.contains(modificationName)) {
-            refinementModifications.remove(modificationName);
+    public void removeRefinementVariableModification(String modificationName) {
+        while (refinementVariableModifications.contains(modificationName)) {
+            refinementVariableModifications.remove(modificationName);
+        }
+    }
+
+    /**
+     * Removes a fixed modification from the list of refinement modifications.
+     *
+     * @param modificationName the name of the modification
+     */
+    public void removeRefinementFixedModification(String modificationName) {
+        while (refinementVariableModifications.contains(modificationName)) {
+            refinementVariableModifications.remove(modificationName);
         }
     }
 
@@ -311,6 +427,15 @@ public class ModificationProfile implements Serializable {
         }
         return null;
     }
+    
+    /**
+     * Returns the omssa indexes as a map.
+     * 
+     * @return the omssa indexes
+     */
+    public HashMap<Integer, String> getOmssaIndexes() {
+        return omssaIndexes;
+    }
 
     /**
      * Indicates whether the modification is contained in the profile, looking
@@ -323,7 +448,8 @@ public class ModificationProfile implements Serializable {
     public boolean contains(String modificationName) {
         return variableModifications.contains(modificationName)
                 || fixedModifications.contains(modificationName)
-                || refinementModifications.contains(modificationName);
+                || refinementVariableModifications.contains(modificationName)
+                || refinementFixedModifications.contains(modificationName);
     }
 
     /**
@@ -366,7 +492,10 @@ public class ModificationProfile implements Serializable {
         if (!this.getFixedModifications().equals(otherProfile.getFixedModifications())) {
             return false;
         }
-        if (!this.getRefinementModifications().equals(otherProfile.getRefinementModifications())) {
+        if (!this.getRefinementVariableModifications().equals(otherProfile.getRefinementVariableModifications())) {
+            return false;
+        }
+        if (!this.getRefinementFixedModifications().equals(otherProfile.getRefinementFixedModifications())) {
             return false;
         }
 
@@ -434,8 +563,11 @@ public class ModificationProfile implements Serializable {
         if (variableModifications == null) {
             variableModifications = new ArrayList<String>();
         }
-        if (refinementModifications == null) {
-            refinementModifications = new ArrayList<String>();
+        if (refinementVariableModifications == null) {
+            refinementVariableModifications = new ArrayList<String>();
+        }
+        if (refinementFixedModifications == null) {
+            refinementFixedModifications = new ArrayList<String>();
         }
         if (omssaIndexes == null) {
             omssaIndexes = new HashMap<Integer, String>();

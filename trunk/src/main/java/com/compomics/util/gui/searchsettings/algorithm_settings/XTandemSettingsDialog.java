@@ -103,8 +103,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         modificationTableToolTips.add(null);
         modificationTableToolTips.add("Modification Name");
         modificationTableToolTips.add("Modification Mass");
-        modificationTableToolTips.add("Fixed Refinement Modification");
         modificationTableToolTips.add("Variable Refinement Modification");
+        modificationTableToolTips.add("Fixed Refinement Modification");
 
         modificationsJScrollPane.getViewport().setOpaque(false);
         modificationsTable.getTableHeader().setReorderingAllowed(false);
@@ -121,9 +121,12 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         modificationsTable.getColumn(" ").setMinWidth(35);
         modificationsTable.getColumn("Mass").setMaxWidth(100);
         modificationsTable.getColumn("Mass").setMinWidth(100);
-        modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
-        modificationsTable.getColumn("  ").setMaxWidth(30);
-        modificationsTable.getColumn("  ").setMinWidth(30);
+        modificationsTable.getColumn("F").setCellRenderer(new NimbusCheckBoxRenderer());
+        modificationsTable.getColumn("V").setCellRenderer(new NimbusCheckBoxRenderer());
+        modificationsTable.getColumn("F").setMaxWidth(30);
+        modificationsTable.getColumn("F").setMinWidth(30);
+        modificationsTable.getColumn("V").setMaxWidth(30);
+        modificationsTable.getColumn("V").setMinWidth(30);
     }
 
     /**
@@ -871,7 +874,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
             },
             new String [] {
-                " ", "Name", "Mass", "Fixed", "Variable"
+                " ", "Name", "Mass", "V", "F"
             }
         ) {
             Class[] types = new Class [] {
@@ -2146,7 +2149,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
                 }
-            } else if (column == modificationsTable.getColumn("Variable").getModelIndex()
+            } else if (column == modificationsTable.getColumn("V").getModelIndex()
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
@@ -2170,7 +2173,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
                     modificationsTable.setRowSelectionInterval(row - 1, row - 1);
                 }
-            } else if (column == modificationsTable.getColumn("Fixed").getModelIndex()
+            } else if (column == modificationsTable.getColumn("F").getModelIndex()
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
@@ -2598,14 +2601,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    " ", "Name", "Mass", "  "
+                    " ", "Name", "Mass", "V", "F"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false, false, true
+                false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -2622,8 +2625,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     new Object[]{ptmFactory.getColor(mod),
                         mod,
                         ptmFactory.getPTM(mod).getMass(),
-                        modificationProfile.getRefinementFixedModifications().contains(mod),
-                        modificationProfile.getRefinementVariableModifications().contains(mod)});
+                        modificationProfile.getRefinementVariableModifications().contains(mod),
+                        modificationProfile.getRefinementFixedModifications().contains(mod)});
         }
         ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
         modificationsTable.repaint();

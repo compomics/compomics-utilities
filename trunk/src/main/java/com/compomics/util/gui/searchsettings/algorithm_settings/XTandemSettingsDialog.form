@@ -783,8 +783,8 @@
                             <Column editable="false" title=" " type="java.lang.Object"/>
                             <Column editable="false" title="Name" type="java.lang.String"/>
                             <Column editable="false" title="Mass" type="java.lang.Double"/>
-                            <Column editable="true" title="Fixed" type="java.lang.Boolean"/>
-                            <Column editable="true" title="Variable" type="java.lang.Boolean"/>
+                            <Column editable="true" title="V" type="java.lang.Boolean"/>
+                            <Column editable="true" title="F" type="java.lang.Boolean"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

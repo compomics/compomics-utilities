@@ -407,7 +407,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        spectrumImportSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Import Settings"));
+        spectrumImportSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Import"));
         spectrumImportSettingsPanel.setOpaque(false);
 
         dynamicRangeLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/sdr.html\">Dynamic Range (Da)</a></html>");
@@ -593,7 +593,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Settings"));
+        advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search"));
         advancedSearchSettingsPanel.setOpaque(false);
 
         quickPyroCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
@@ -686,7 +686,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        refinementSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Refinement Settings"));
+        refinementSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Refinement"));
         refinementSettingsPanel.setOpaque(false);
 
         refinementCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
@@ -997,7 +997,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 .addContainerGap())
         );
 
-        outputSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
+        outputSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
         outputSettingsPanel.setOpaque(false);
 
         eValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/omvev.html\">E-value Cutoff</a></html>");

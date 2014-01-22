@@ -103,7 +103,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         modificationTableToolTips.add(null);
         modificationTableToolTips.add("Modification Name");
         modificationTableToolTips.add("Modification Mass");
-        modificationTableToolTips.add("Refinement Modification");
+        modificationTableToolTips.add("Fixed Refinement Modification");
+        modificationTableToolTips.add("Variable Refinement Modification");
 
         modificationsJScrollPane.getViewport().setOpaque(false);
         modificationsTable.getTableHeader().setReorderingAllowed(false);
@@ -870,7 +871,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
             },
             new String [] {
-                " ", "Name", "Mass", "  Fixed", "Variable"
+                " ", "Name", "Mass", "Fixed", "Variable"
             }
         ) {
             Class[] types = new Class [] {

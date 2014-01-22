@@ -103,7 +103,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Spectrum Import Settings"/>
+                <TitledBorder title="Spectrum Import"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -310,7 +310,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Advanced Search Settings"/>
+                <TitledBorder title="Advanced Search"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -432,7 +432,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Refinement Settings"/>
+                <TitledBorder title="Refinement"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -806,7 +806,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Output Settings"/>
+                <TitledBorder title="Output"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>

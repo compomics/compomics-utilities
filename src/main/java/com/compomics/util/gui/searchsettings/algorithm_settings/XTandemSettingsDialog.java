@@ -399,6 +399,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
+        advancedSettingsWarningLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Advanced X!Tandem Settings");
@@ -1196,6 +1197,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
+        advancedSettingsWarningLabel.setText("Note: The advanced settings are for expert use only. See the help for details.");
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -1213,6 +1216,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(advancedSettingsWarningLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1238,7 +1243,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(okButton)
-                    .addComponent(closeButton))
+                    .addComponent(closeButton)
+                    .addComponent(advancedSettingsWarningLabel))
                 .addContainerGap())
         );
 
@@ -2612,6 +2618,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedSearchSettingsPanel;
+    private javax.swing.JLabel advancedSettingsWarningLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel dynamicRangeLbl;

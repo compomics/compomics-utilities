@@ -374,6 +374,11 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
+        openDialogHelpJButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        closeButton = new javax.swing.JButton();
+        advancedSettingsWarningLabel = new javax.swing.JLabel();
+        tabbedPane = new javax.swing.JTabbedPane();
         spectrumProcessingPanel = new javax.swing.JPanel();
         lowIntensityLbl = new javax.swing.JLabel();
         highIntensityLbl = new javax.swing.JLabel();
@@ -456,9 +461,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         hitListLbl = new javax.swing.JLabel();
         maxEvalueTxt = new javax.swing.JTextField();
         hitlistTxt = new javax.swing.JTextField();
-        openDialogHelpJButton = new javax.swing.JButton();
-        okButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Advanced OMSSA Settings");
@@ -466,8 +469,45 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        spectrumProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Processing Settings"));
-        spectrumProcessingPanel.setOpaque(false);
+        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        openDialogHelpJButton.setToolTipText("Help");
+        openDialogHelpJButton.setBorder(null);
+        openDialogHelpJButton.setBorderPainted(false);
+        openDialogHelpJButton.setContentAreaFilled(false);
+        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseExited(evt);
+            }
+        });
+        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openDialogHelpJButtonActionPerformed(evt);
+            }
+        });
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
+
+        advancedSettingsWarningLabel.setText("Note: The advanced settings are for expert use only. See the help for details.");
+
+        tabbedPane.setBackground(new java.awt.Color(230, 230, 230));
+        tabbedPane.setOpaque(true);
+
+        spectrumProcessingPanel.setBackground(new java.awt.Color(230, 230, 230));
         spectrumProcessingPanel.setPreferredSize(new java.awt.Dimension(518, 143));
 
         lowIntensityLbl.setText("Low Intensity Cutoff (percent of most intense peak)");
@@ -545,41 +585,38 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         spectrumProcessingPanelLayout.setHorizontalGroup(
             spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(precursorMassScalingLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(intensityIncrementLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(nPeaksLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                                .addComponent(chargeReductionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
-                            .addComponent(highIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(minPrecPerSpectrumLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(fractionChargeLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(plusOneChargeAutomaticLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(precursorChargeEstimationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
-                            .addComponent(lowIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(intensityIncrementLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(nPeaksLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                        .addComponent(chargeReductionLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+                    .addComponent(highIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(minPrecPerSpectrumLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fractionChargeLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(plusOneChargeAutomaticLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(precursorChargeEstimationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+                    .addComponent(lowIntensityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(precursorMassScalingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lowIntensityTxt)
-                    .addComponent(highIntensityTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(nPeaksTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(eliminatePrecursorCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE)
-                    .addComponent(chargeEstimationCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE)
-                    .addComponent(plusOneChargeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE)
-                    .addComponent(fractionChargeTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(minPrecPerSpectrumTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(intensityIncrementTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 109, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(highIntensityTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                    .addComponent(nPeaksTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                    .addComponent(eliminatePrecursorCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 179, Short.MAX_VALUE)
+                    .addComponent(chargeEstimationCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 179, Short.MAX_VALUE)
+                    .addComponent(plusOneChargeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 179, Short.MAX_VALUE)
+                    .addComponent(fractionChargeTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                    .addComponent(minPrecPerSpectrumTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                    .addComponent(intensityIncrementTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 179, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
         spectrumProcessingPanelLayout.setVerticalGroup(
             spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lowIntensityLbl)
                     .addComponent(lowIntensityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -616,14 +653,15 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                     .addComponent(minPrecPerSpectrumLbl)
                     .addComponent(minPrecPerSpectrumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(precursorMassScalingLabel)
-                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(precursorScalingCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(precursorMassScalingLabel))
+                .addContainerGap(318, Short.MAX_VALUE))
         );
 
-        databaseProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Processing Settings"));
-        databaseProcessingPanel.setOpaque(false);
+        tabbedPane.addTab("Spectrum", spectrumProcessingPanel);
+
+        databaseProcessingPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         sequenceMappingLbl.setText("Sequences Mapping in Memory");
 
@@ -638,20 +676,20 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         databaseProcessingPanelLayout.setHorizontalGroup(
             databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databaseProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sequenceMappingLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cleaveNterminalMethionineLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cleaveNterminalMethionineCmb, 0, 109, Short.MAX_VALUE)
-                    .addComponent(sequenceMappingCmb, 0, 109, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(cleaveNterminalMethionineCmb, 0, 180, Short.MAX_VALUE)
+                    .addComponent(sequenceMappingCmb, 0, 180, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
         databaseProcessingPanelLayout.setVerticalGroup(
             databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, databaseProcessingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(databaseProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sequenceMappingLbl)
                     .addComponent(sequenceMappingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -662,8 +700,9 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        semiEnzymaticParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Semi-Enzymatic Mode Settings"));
-        semiEnzymaticParametersPanel.setOpaque(false);
+        tabbedPane.addTab("Database", databaseProcessingPanel);
+
+        semiEnzymaticParametersPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -688,20 +727,20 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         semiEnzymaticParametersPanelLayout.setHorizontalGroup(
             semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, semiEnzymaticParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(peptideLengthDividerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                .addGap(25, 25, 25))
         );
         semiEnzymaticParametersPanelLayout.setVerticalGroup(
             semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(semiEnzymaticParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(peptideLengthJLabel)
                     .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -710,8 +749,9 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        iterativeSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Iterative Search Settings"));
-        iterativeSearchSettingsPanel.setOpaque(false);
+        tabbedPane.addTab("Semi-Enzymatic", semiEnzymaticParametersPanel);
+
+        iterativeSearchSettingsPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         iterativeSequenceEvalueLbl.setText("E-value Cutoff for Sequences (0 means all)");
 
@@ -745,22 +785,22 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         iterativeSearchSettingsPanelLayout.setHorizontalGroup(
             iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(iterativeSequenceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(iterativeSpectraEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(iterativeReplaceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                     .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                .addGap(25, 25, 25))
         );
         iterativeSearchSettingsPanelLayout.setVerticalGroup(
             iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iterativeSequenceEvalueLbl)
                     .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -775,8 +815,9 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Advanced Search Settings"));
-        advancedSearchSettingsPanel.setOpaque(false);
+        tabbedPane.addTab("Iterative Search", iterativeSearchSettingsPanel);
+
+        advancedSearchSettingsPanel.setBackground(new java.awt.Color(230, 230, 230));
         advancedSearchSettingsPanel.setPreferredSize(new java.awt.Dimension(518, 143));
 
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel.setText("Minimum Precursor Charge for Multiply Charged Fragments");
@@ -946,86 +987,86 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
             advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(nIsotopesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nIsotopesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(nIsotopesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(neutronLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(neutronTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(neutronTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(singlyChargedWindowWidthLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singlyChargedWindowWidthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(singlyChargedWindowWidthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(doublyChargedWindowWidthLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doublyChargedWindowWidthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(doublyChargedWindowWidthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(singlyChargedNPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singlyChargedNpeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(singlyChargedNpeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(doublyChargedNPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doublyChargedNpeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(doublyChargedNpeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minAnnotatedMostIntensePeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minAnnotatedMostIntensePeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(minAnnotatedMostIntensePeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minAnnotatedPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minAnnotatedPeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(minAnnotatedPeaksTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxLaddersLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxLaddersTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(maxLaddersTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(maxFragmentChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(searchPositiveIonsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(searchPositiveIonsCmb, 0, 105, Short.MAX_VALUE)
-                            .addComponent(maxFragmentChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)))
+                            .addComponent(searchPositiveIonsCmb, 0, 180, Short.MAX_VALUE)
+                            .addComponent(maxFragmentChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(forwardIonsFirstLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(forwardIonsFirstCmb, 0, 105, Short.MAX_VALUE))
+                        .addComponent(forwardIonsFirstCmb, 0, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(cTermIonsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cTermIonsCmb, 0, 105, Short.MAX_VALUE))
+                        .addComponent(cTermIonsCmb, 0, 180, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxFragmentsPerSeriesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxFragmentsPerSeriesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(maxFragmentsPerSeriesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(correlationCorrectionScoreLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(correlationCorrectionScoreCmb, 0, 105, Short.MAX_VALUE))
+                        .addComponent(correlationCorrectionScoreCmb, 0, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(consecutiveIonProbabilityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(consecutiveIonProbabilityTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                        .addComponent(consecutiveIonProbabilityTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(nHitsPerSpectrumPerChargeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nHitsPerSpectrumPerChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(nHitsPerSpectrumPerChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)))
+                .addGap(25, 25, 25))
         );
         advancedSearchSettingsPanelLayout.setVerticalGroup(
             advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel)
                     .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1100,8 +1141,9 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        outputParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output Settings"));
-        outputParametersPanel.setOpaque(false);
+        tabbedPane.addTab("Advanced Search", advancedSearchSettingsPanel);
+
+        outputParametersPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         omssaOutputFormatComboBox.setModel(new DefaultComboBoxModel(OmssaParameters.getOmssaOutputTypes()));
         omssaOutputFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -1135,22 +1177,22 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         outputParametersPanelLayout.setHorizontalGroup(
             outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(omssaOutputFormatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(hitListLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(hitlistTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                    .addComponent(maxEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                    .addComponent(omssaOutputFormatComboBox, 0, 105, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(hitlistTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(maxEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(omssaOutputFormatComboBox, 0, 180, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
         outputParametersPanelLayout.setVerticalGroup(
             outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(25, 25, 25)
                 .addGroup(outputParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eValueLbl)
                     .addComponent(maxEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1165,84 +1207,39 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        openDialogHelpJButton.setToolTipText("Help");
-        openDialogHelpJButton.setBorder(null);
-        openDialogHelpJButton.setBorderPainted(false);
-        openDialogHelpJButton.setContentAreaFilled(false);
-        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButtonMouseExited(evt);
-            }
-        });
-        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openDialogHelpJButtonActionPerformed(evt);
-            }
-        });
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
+        tabbedPane.addTab("Output", outputParametersPanel);
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                    .addComponent(tabbedPane)
+                    .addComponent(jSeparator1)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(advancedSettingsWarningLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(closeButton))
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(iterativeSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
-                            .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(semiEnzymaticParametersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
-                            .addComponent(outputParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(closeButton)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(semiEnzymaticParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iterativeSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(outputParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
+                    .addComponent(advancedSettingsWarningLabel)
                     .addComponent(okButton)
                     .addComponent(closeButton))
                 .addContainerGap())
@@ -2567,6 +2564,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedSearchSettingsPanel;
+    private javax.swing.JLabel advancedSettingsWarningLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JComboBox cTermIonsCmb;
     private javax.swing.JLabel cTermIonsLbl;
@@ -2603,6 +2601,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField iterativeSequenceEvalueTxt;
     private javax.swing.JLabel iterativeSpectraEvalueLbl;
     private javax.swing.JTextField iterativeSpectraEvalueTxt;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lowIntensityLbl;
     private javax.swing.JTextField lowIntensityTxt;
     private javax.swing.JTextField maxEvalueTxt;
@@ -2652,5 +2651,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel singlyChargedWindowWidthLbl;
     private javax.swing.JTextField singlyChargedWindowWidthTxt;
     private javax.swing.JPanel spectrumProcessingPanel;
+    private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 }

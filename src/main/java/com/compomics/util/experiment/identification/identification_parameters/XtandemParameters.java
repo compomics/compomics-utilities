@@ -477,7 +477,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * @return true if the protein sequences should be included in the protein
      * block of the export
      */
-    public boolean isOutputSequences() {
+    public Boolean isOutputSequences() {
         return outputSequences;
     }
 
@@ -582,6 +582,72 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
             if (!getMaxEValue().equals(xtandemParameters.getMaxEValue())) {
+                return false;
+            }
+            if (!getDynamicRange().equals(xtandemParameters.getDynamicRange())) {
+                return false;
+            }
+            if (!getnPeaks().equals(xtandemParameters.getnPeaks())) {
+                return false;
+            }
+            if (!getMinPrecursorMass().equals(xtandemParameters.getMinPrecursorMass())) {
+                return false;
+            }
+            if (!getMinFragmentMz().equals(xtandemParameters.getMinFragmentMz())) {
+                return false;
+            }
+            if (!getMinPeaksPerSpectrum().equals(xtandemParameters.getMinPeaksPerSpectrum())) {
+                return false;
+            }
+            if (!isProteinQuickAcetyl().equals(xtandemParameters.isProteinQuickAcetyl())) {
+                return false;
+            }
+            if (!isQuickPyrolidone().equals(xtandemParameters.isQuickPyrolidone())) {
+                return false;
+            }
+            if (!isRefine().equals(xtandemParameters.isRefine())) {
+                return false;
+            }
+            if (!isRefineSemi().equals(xtandemParameters.isRefineSemi())) {
+                return false;
+            }
+            if (!isRefinePointMutations().equals(xtandemParameters.isRefinePointMutations())) {
+                return false;
+            }
+            if (!isRefineSpectrumSynthesis().equals(xtandemParameters.isRefineSpectrumSynthesis())) {
+                return false;
+            }
+            if (!isRefineUnanticipatedCleavages().equals(xtandemParameters.isRefineUnanticipatedCleavages())) {
+                return false;
+            }
+            if (!isRefineSnaps().equals(xtandemParameters.isRefineSnaps())) {
+                return false;
+            }
+            if (!getMaximumExpectationValueRefinement().equals(xtandemParameters.getMaximumExpectationValueRefinement())) {
+                return false;
+            }
+            if (!isPotentialModificationsForFullRefinment().equals(xtandemParameters.isPotentialModificationsForFullRefinment())) {
+                return false;
+            }
+            if (!getSkylinePath().equals(xtandemParameters.getSkylinePath())) {
+                return false;
+            }
+            if (!isOutputProteins().equals(xtandemParameters.isOutputProteins())) {
+                return false;
+            }
+            if (!isOutputSpectra().equals(xtandemParameters.isOutputSpectra())) {
+                return false;
+            }
+            if (!isOutputSequences().equals(xtandemParameters.isOutputSequences())) {
+                return false;
+            }
+            if (!isOutputHistograms().equals(xtandemParameters.isOutputHistograms())) {
+                return false;
+            }
+            if (!isStpBias().equals(xtandemParameters.isStpBias())) {
+                return false;
+            }
+            if (!isUseNoiseSuppression().equals(xtandemParameters.isUseNoiseSuppression())) {
                 return false;
             }
             return true;

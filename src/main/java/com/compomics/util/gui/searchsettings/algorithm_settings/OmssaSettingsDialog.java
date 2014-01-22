@@ -806,7 +806,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        singlyChargedWindowWidthLbl.setText("Singly Charged Window Width");
+        singlyChargedWindowWidthLbl.setText("Singly Charged Window Width (Da)");
 
         singlyChargedWindowWidthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         singlyChargedWindowWidthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -815,7 +815,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        doublyChargedWindowWidthLbl.setText("Doubly Charged Window Width");
+        doublyChargedWindowWidthLbl.setText("Doubly Charged Window Width (Da)");
 
         doublyChargedWindowWidthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         doublyChargedWindowWidthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1114,7 +1114,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         eValueLbl.setText("E-value Cutoff");
 
-        hitListLbl.setText("Maximum HitList Length");
+        hitListLbl.setText("Maximum HitList Length (0 means all)");
 
         maxEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1231,7 +1231,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                        .addComponent(spectrumProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(databaseProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

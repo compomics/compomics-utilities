@@ -23,7 +23,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximal hit list length.
      */
-    private Integer hitListLength = 25;
+    private Integer hitListLength = 0;
     /**
      * The minimal charge to be considered for multiple fragment charges.
      */

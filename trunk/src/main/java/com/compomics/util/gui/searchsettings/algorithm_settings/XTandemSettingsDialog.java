@@ -70,7 +70,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
     public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
         super(parent, true);
         this.xtandemParameters = xtandemParameters;
-        this.modificationProfile = modificationProfile;
+        this.modificationProfile = new ModificationProfile(modificationProfile);
         this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
         initComponents();
         setUpGUI();
@@ -317,6 +317,15 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             result.setSkylinePath(input);
         }
         return result;
+    }
+    
+    /**
+     * Returns the modification profile corresponding to the input by the user.
+     * 
+     * @return the modification profile corresponding to the input by the user
+     */
+    public ModificationProfile getModificationProfile() {
+        return modificationProfile;
     }
 
     /**
@@ -861,14 +870,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
             },
             new String [] {
-                " ", "Name", "Mass", "  "
+                " ", "Name", "Mass", "  Fixed", "Variable"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -880,11 +889,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
         modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                modificationsTableMouseReleased(evt);
-            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 modificationsTableMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseReleased(evt);
             }
         });
         modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -2136,7 +2145,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
                 }
-            } else if (column == modificationsTable.getColumn("  ").getModelIndex()
+            } else if (column == modificationsTable.getColumn("Variable").getModelIndex()
                     && modificationsTable.getValueAt(row, column) != null) {
 
                 boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
@@ -2145,12 +2154,36 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 // add/remove the ptm as a refinement ptm
                 if (selected) {
                     // add as refinement ptm
-                    if (!modificationProfile.getRefinementModifications().contains(ptmName)) {
-                        modificationProfile.addRefinementModification(ptmFactory.getPTM(ptmName));
+                    if (!modificationProfile.getRefinementVariableModifications().contains(ptmName)) {
+                        modificationProfile.addRefinementVariableModification(ptmFactory.getPTM(ptmName));
                     }
                 } else {
                     // remove the ptm as refinement ptm
-                    modificationProfile.removeRefinementModification(ptmName);
+                    modificationProfile.removeRefinementVariableModification(ptmName);
+                }
+
+                updateModificationList();
+
+                if (row < modificationsTable.getRowCount()) {
+                    modificationsTable.setRowSelectionInterval(row, row);
+                } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
+                    modificationsTable.setRowSelectionInterval(row - 1, row - 1);
+                }
+            } else if (column == modificationsTable.getColumn("Fixed").getModelIndex()
+                    && modificationsTable.getValueAt(row, column) != null) {
+
+                boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
+                String ptmName = (String) modificationsTable.getValueAt(row, 1);
+
+                // add/remove the ptm as a refinement ptm
+                if (selected) {
+                    // add as refinement ptm
+                    if (!modificationProfile.getRefinementFixedModifications().contains(ptmName)) {
+                        modificationProfile.addRefinementFixedModification(ptmFactory.getPTM(ptmName));
+                    }
+                } else {
+                    // remove the ptm as refinement ptm
+                    modificationProfile.removeRefinementFixedModification(ptmName);
                 }
 
                 updateModificationList();
@@ -2588,7 +2621,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     new Object[]{ptmFactory.getColor(mod),
                         mod,
                         ptmFactory.getPTM(mod).getMass(),
-                        modificationProfile.getRefinementModifications().contains(mod)});
+                        modificationProfile.getRefinementFixedModifications().contains(mod),
+                        modificationProfile.getRefinementVariableModifications().contains(mod)});
         }
         ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
         modificationsTable.repaint();

@@ -452,6 +452,9 @@ public class ModificationProfile implements Serializable {
      * mapping
      */
     public boolean contains(String modificationName) {
+        if (refinementVariableModifications == null) {
+            repair();
+        }
         return variableModifications.contains(modificationName)
                 || fixedModifications.contains(modificationName)
                 || refinementVariableModifications.contains(modificationName)
@@ -573,6 +576,7 @@ public class ModificationProfile implements Serializable {
         }
         if (refinementFixedModifications == null) {
             refinementFixedModifications = new ArrayList<String>();
+            refinementFixedModifications.addAll(fixedModifications);
         }
         if (omssaIndexes == null) {
             omssaIndexes = new HashMap<Integer, String>();

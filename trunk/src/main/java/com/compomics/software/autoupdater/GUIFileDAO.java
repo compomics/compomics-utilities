@@ -1,5 +1,6 @@
 package com.compomics.software.autoupdater;
 
+import com.compomics.util.gui.UtilitiesGUIDefaults;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
  * GUIFileDAO.
  *
  * @author Davy Maddelein
+ * @author Harald Barsnes
  */
 public class GUIFileDAO extends FileDAO {
 
@@ -20,9 +22,11 @@ public class GUIFileDAO extends FileDAO {
      */
     @Override
     public boolean createDesktopShortcut(MavenJarFile file, String iconName, boolean deleteOldShortcut) throws IOException {
+
         Properties compomicsArtifactProperties = new Properties();
         File compomicsArtifactPropertiesFile = new File(new StringBuilder().append(System.getProperty("user.home")).append("/.compomics/").append(file.getArtifactId()).append("/updatesettings.properties").toString());
         FileReader propFileReader = null;
+
         if (compomicsArtifactPropertiesFile.exists()) {
             try {
                 propFileReader = new FileReader(compomicsArtifactPropertiesFile);
@@ -37,11 +41,21 @@ public class GUIFileDAO extends FileDAO {
         } else {
             compomicsArtifactProperties = new Properties();
         }
-        int selection;
+
         if (!compomicsArtifactProperties.contains("create_shortcut")) {
-            Object[] options = new Object[]{"yes", "no", "ask me next update"};
+
+            // set the look and feel
+            try {
+                UtilitiesGUIDefaults.setLookAndFeel();
+            } catch (Exception e) {
+                // ignore error, use default look and feel
+            }
+
+            Object[] options = new Object[]{"Yes", "No", "Ask me next update"};
             boolean rememberOption = false;
-            selection = JOptionPane.showOptionDialog(null, "do you want to create a desktop shortcut?", "shortcut", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, JOptionPane.CANCEL_OPTION);
+            int selection = JOptionPane.showOptionDialog(null, "Do you want to create a desktop shortcut?",
+                    "Create Desktop Shortcut?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, JOptionPane.CANCEL_OPTION);
+
             //also check (as in add checkbox) to remember choice
             if (selection == JOptionPane.CANCEL_OPTION || selection == JOptionPane.CLOSED_OPTION || rememberOption) {
                 compomicsArtifactProperties.setProperty("create_shortcut", String.valueOf(selection));
@@ -72,6 +86,7 @@ public class GUIFileDAO extends FileDAO {
         } else {
             // @TODO: do something here??
         }
+
         return true;
     }
 
@@ -86,8 +101,11 @@ public class GUIFileDAO extends FileDAO {
             file = file.getParentFile();
         }
         if (file == null) {
-            Object[] options = {"yes...", "specify other location...", "quit"};
-            int choice = JOptionPane.showOptionDialog(null, "there has been a problem with finding the location of the original file\n Do you want to download the latest update to your home folder or specify another location?", "specify download location", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, JOptionPane.CANCEL_OPTION);
+            Object[] options = {"Yes", "Specify Other Location", "Quit"};
+            int choice = JOptionPane.showOptionDialog(null,
+                    "Cannot find the location of the original file. Download\n"
+                    + "to your home folder or specify another location?", "Download Location",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, JOptionPane.CANCEL_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
                 file = new File(System.getProperty("users.home"));
             } else if (choice == JOptionPane.NO_OPTION) {

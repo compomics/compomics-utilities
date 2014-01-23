@@ -20,8 +20,28 @@ import org.apache.commons.io.FileUtils;
  * Download the latest zip file from the repository.
  *
  * @author Davy Maddelein
+ * @author Harald Barsnes
  */
 public class DownloadLatestZipFromRepo {
+
+    /**
+     * Main method for testing purposes only.
+     * 
+     * @param args 
+     */
+    public static void main(String[] args) {
+
+        try {
+            File jarFile = new File("C:\\Users\\hba041\\My_Applications\\peptide-shaker\\target\\PeptideShaker-0.24.2\\PeptideShaker-0.24.2.jar");
+            downloadLatestZipFromRepo(jarFile.toURI().toURL(), true, "peptide-shaker.ico", args, new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString()), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Downloads the latest deploy from the genesis maven repository of the
@@ -122,7 +142,6 @@ public class DownloadLatestZipFromRepo {
             downloadLatestZipFromRepo(jarPath, deleteOldFiles, iconName, args, jarRepository, startDownloadedVersion, new HeadlessFileDAO());
         } else {
             downloadLatestZipFromRepo(jarPath, deleteOldFiles, iconName, args, jarRepository, startDownloadedVersion, new GUIFileDAO());
-
         }
     }
 
@@ -168,12 +187,15 @@ public class DownloadLatestZipFromRepo {
                 //update symlinks?
             }
             try {
+                // close the access to the old zip file so that it can be deleted
+                oldMavenJarFile.close(); 
+
                 Process launchedJar = null;
                 if (startDownloadedVersion) {
                     launchedJar = launchJar(downloadedJarFile, args);
                 }
-                if (deleteOldFiles && launchedJar != null) {
-                    Runtime.getRuntime().addShutdownHook(new Thread() {
+                if (deleteOldFiles) { // && launchedJar != null) {
+                    Runtime.getRuntime().addShutdownHook(new Thread() { // @TODO: not sure why why need to wait until shutdown?
                         @Override
                         public void run() {
                             try {
@@ -183,12 +205,16 @@ public class DownloadLatestZipFromRepo {
                                     FileUtils.deleteDirectory(jarParent);
                                 }
                             } catch (URISyntaxException ex) {
+                                ex.printStackTrace();
                             } catch (IOException ex) {
+                                ex.printStackTrace();
                                 //todo handle stuff did not get done
                             }
                         }
                     });
-                    launchedJar.waitFor();
+                    if (launchedJar != null) {
+                        launchedJar.waitFor();
+                    }
                 }
             } catch (InterruptedException ie) {
                 throw new InterruptedIOException("jvm ended unexpectedly, old files have not been deleted");
@@ -214,6 +240,7 @@ public class DownloadLatestZipFromRepo {
             processToRun.add(downloadedFile.getAbsoluteFilePath());
             processToRun.addAll(Arrays.asList(args));
             p = new ProcessBuilder(processToRun);
+            p.directory(new File(downloadedFile.getAbsoluteFilePath()).getParentFile());
             jar = p.start();
         } catch (NullPointerException npe) {
             throw new IOException("could not start the jar");
@@ -243,7 +270,7 @@ public class DownloadLatestZipFromRepo {
             }
         }
         File downloadedFile = fileDAO.writeStreamToDisk(archiveURL.openStream(), archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")), downloadFolder);
-        fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder);
+        fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder.getParentFile());
         newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
         if (cleanupZipFile) {
             if (!downloadedFile.delete()) {

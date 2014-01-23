@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
  * FileDAO file access.
  *
  * @author Davy Maddelein
+ * @author Harald Barsnes
  */
 public abstract class FileDAO {
 
@@ -64,7 +65,7 @@ public abstract class FileDAO {
         link.setFolder(JShellLink.getDirectory("desktop"));
         link.setName(new StringBuilder().append(mavenJarFile.getArtifactId()).append("-").append(mavenJarFile.getVersionNumber()).toString());
         if (iconName != null) {
-            link.setIconLocation(new StringBuilder().append(mavenJarFile.getAbsoluteFilePath()).append("/resources/").append(iconName).toString());
+            link.setIconLocation(new StringBuilder().append(new File(mavenJarFile.getAbsoluteFilePath()).getParentFile().getAbsolutePath()).append("/resources/").append(iconName).toString());
         }
         link.setPath(mavenJarFile.getAbsoluteFilePath());
         link.save();
@@ -210,8 +211,10 @@ public abstract class FileDAO {
      * (e.g peptideshaker or ms-lims).
      *
      * @param folder the folder to look in
-     * @param artifactId the artifactid in the properties of the (@code MavenJarFile) in the folder
-     * @return the last found {@code MavenJarFile} with the given artifactid, can be null
+     * @param artifactId the artifactid in the properties of the (@code
+     * MavenJarFile) in the folder
+     * @return the last found {@code MavenJarFile} with the given artifactid,
+     * can be null
      * @throws IOException
      */
     public MavenJarFile getMavenJarFileFromFolderWithArtifactId(File folder, String artifactId) throws IOException {

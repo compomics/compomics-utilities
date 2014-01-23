@@ -466,6 +466,47 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
+     * Returns the pattern in the prosite format.
+     *
+     * @return the pattern in the prosite format
+     */
+    public String getPrositeFormat() {
+        StringBuilder result = new StringBuilder();
+        int cpt = 0;
+        for (int i = 0; i < length(); i++) {
+            ArrayList<AminoAcid> targetedAa = getTargetedAA(i),
+                    excludedAa = getExcludedAA(i);
+            if (!targetedAa.isEmpty() || !excludedAa.isEmpty()) {
+                if (cpt > 0) {
+                    result.append("(" + cpt + ")");
+                    cpt = 0;
+                }
+                if (!targetedAa.isEmpty()) {
+                    result.append("[");
+                    for (AminoAcid aa : targetedAa) {
+                        if (!excludedAa.contains(aa)) {
+                            result.append(aa.singleLetterCode);
+                        }
+                    }
+                    result.append("]");
+                } else if (!excludedAa.isEmpty()) {
+                    result.append("{");
+                    for (AminoAcid aa : excludedAa) {
+                        result.append(aa.singleLetterCode);
+                    }
+                    result.append("}");
+                }
+            } else {
+                cpt++;
+            }
+            if (i == target) {
+                result.append("!");
+            }
+        }
+        return result.toString();
+    }
+
+    /**
      * Returns the indexes where the amino acid pattern was found in the input
      * using default single letter code of amino acids. 1 is the first amino
      * acid.
@@ -593,7 +634,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             boolean match = true;
 
             for (int j = 0; j < patternLength; j++) {
-                char aa = aminoAcidSequence.charAt(i+j);
+                char aa = aminoAcidSequence.charAt(i + j);
                 boolean reject = isExcluded(aa, j, matchingType, massTolerance);
                 if (reject) {
                     match = false;
@@ -1521,7 +1562,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 if (aminoAcids.size() == 1) {
                     mass += getTargetedAA(i).get(0).monoisotopicMass;
                 } else {
-                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". " 
+                    throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". "
                             + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid.");
                 }
             } else {

@@ -929,8 +929,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             sequenceDbDetailsDialog.setVisible(true);
         }
 
-        searchSettingsDialogParent.setLastSelectedFolder(sequenceDbDetailsDialog.getLastSelectedFolder());
-
         if (sequenceFactory.getCurrentFastaFile() != null) {
             databaseSettingsTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
         }
@@ -2202,9 +2200,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         ModificationProfile modificationProfile = new ModificationProfile();
         for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
             String modName = (String) fixedModsTable.getValueAt(i, 1);
-            modificationProfile.addFixedModification(ptmFactory.getPTM(modName));
-            modificationProfile.setColor(modName, (Color) fixedModsTable.getValueAt(i, 0));
             PTM ptm = ptmFactory.getPTM(modName);
+            modificationProfile.addFixedModification(ptm);
+            modificationProfile.addRefinementFixedModification(ptm);
+            modificationProfile.setColor(modName, (Color) fixedModsTable.getValueAt(i, 0));
             if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA) && Math.abs(ptm.getMass() - 42.010565) < fragmentAccuracy) {
                 acetylConflict = true;
             }
@@ -2218,6 +2217,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             modificationProfile.addVariableModification(ptmFactory.getPTM(modName));
             modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
         }
+        
         tempSearchParameters.setModificationProfile(modificationProfile);
 
         tempSearchParameters.setnMissedCleavages(new Integer(missedCleavagesTxt.getText().trim()));

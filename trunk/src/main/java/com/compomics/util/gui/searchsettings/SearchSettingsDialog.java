@@ -932,6 +932,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         if (sequenceFactory.getCurrentFastaFile() != null) {
             databaseSettingsTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
         }
+
         validateParametersInput(false);
     }//GEN-LAST:event_editDatabaseSettingsActionPerformed
 

@@ -156,6 +156,9 @@ public class ModificationProfile implements Serializable {
     public ArrayList<String> getAllNotFixedModifications() {
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(variableModifications);
+        if (refinementVariableModifications == null) {
+            repair();
+        }
         for (String ptmName : refinementVariableModifications) {
             if (!result.contains(ptmName)) {
                 result.add(ptmName);

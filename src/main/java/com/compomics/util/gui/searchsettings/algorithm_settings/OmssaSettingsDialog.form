@@ -319,8 +319,8 @@
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="2">
-                        <StringItem index="0" value="Yes"/>
-                        <StringItem index="1" value="No"/>
+                        <StringItem index="0" value="Use Range"/>
+                        <StringItem index="1" value="Believe Input File"/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -471,179 +471,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="semiEnzymaticParametersPanel">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="e6" green="e6" red="e6" type="rgb"/>
-                </Property>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Semi-Enzymatic">
-                    <Property name="tabTitle" type="java.lang.String" value="Semi-Enzymatic"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Component id="peptideLengthJLabel" min="-2" pref="370" max="-2" attributes="1"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="minPepLengthTxt" pref="84" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="peptideLengthDividerLabel1" min="-2" pref="4" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="maxPepLengthTxt" pref="84" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="peptideLengthJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="peptideLengthDividerLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JTextField" name="maxPepLengthTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPepLengthTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="peptideLengthDividerLabel1">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="-"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="minPepLengthTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPepLengthTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="peptideLengthJLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Peptide Length (min - max)"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="iterativeSearchSettingsPanel">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="e6" green="e6" red="e6" type="rgb"/>
-                </Property>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Iterative Search">
-                    <Property name="tabTitle" type="java.lang.String" value="Iterative Search"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="iterativeSequenceEvalueLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                              <Component id="iterativeSpectraEvalueLbl" min="-2" pref="374" max="-2" attributes="1"/>
-                              <Component id="iterativeReplaceEvalueLbl" min="-2" pref="374" max="-2" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="iterativeReplaceEvalueTxt" pref="180" max="32767" attributes="0"/>
-                              <Component id="iterativeSequenceEvalueTxt" alignment="1" max="32767" attributes="0"/>
-                              <Component id="iterativeSpectraEvalueTxt" alignment="1" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="iterativeSequenceEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="iterativeSequenceEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="iterativeSpectraEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="iterativeSpectraEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="iterativeReplaceEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="iterativeReplaceEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="iterativeSequenceEvalueLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="E-value Cutoff for Sequences (0 means all)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="iterativeSequenceEvalueTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="iterativeSequenceEvalueTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="iterativeSpectraEvalueLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="E-value Cutoff for Spectra (0 means all)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="iterativeSpectraEvalueTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="iterativeSpectraEvalueTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="iterativeReplaceEvalueLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="E-value Cutoff to Replace a Hit (0 means keep best)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="iterativeReplaceEvalueTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="iterativeReplaceEvalueTxtKeyReleased"/>
-                  </Events>
-                </Component>
-              </SubComponents>
-            </Container>
             <Container class="javax.swing.JPanel" name="advancedSearchSettingsPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -655,8 +482,8 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Advanced Search">
-                    <Property name="tabTitle" type="java.lang.String" value="Advanced Search"/>
+                  <JTabbedPaneConstraints tabName="Search">
+                    <Property name="tabTitle" type="java.lang.String" value="Search"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -1023,7 +850,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="forwardIonsFirstLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Search Forward Ions First"/>
+                    <Property name="text" type="java.lang.String" value="Search First Forward Ion (b1)"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="forwardIonsFirstCmb">
@@ -1107,6 +934,179 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nHitsPerSpectrumPerChargeTxtActionPerformed"/>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nHitsPerSpectrumPerChargeTxtKeyReleased"/>
                   </Events>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="iterativeSearchSettingsPanel">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="e6" green="e6" red="e6" type="rgb"/>
+                </Property>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="Iterative Search">
+                    <Property name="tabTitle" type="java.lang.String" value="Iterative Search"/>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="iterativeSequenceEvalueLbl" min="-2" pref="370" max="-2" attributes="1"/>
+                              <Component id="iterativeSpectraEvalueLbl" min="-2" pref="374" max="-2" attributes="1"/>
+                              <Component id="iterativeReplaceEvalueLbl" min="-2" pref="374" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="iterativeReplaceEvalueTxt" pref="180" max="32767" attributes="0"/>
+                              <Component id="iterativeSequenceEvalueTxt" alignment="1" max="32767" attributes="0"/>
+                              <Component id="iterativeSpectraEvalueTxt" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="iterativeSequenceEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="iterativeSequenceEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="iterativeSpectraEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="iterativeSpectraEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="iterativeReplaceEvalueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="iterativeReplaceEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="iterativeSequenceEvalueLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="E-value Cutoff for Sequences (0 means all)"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="iterativeSequenceEvalueTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="iterativeSequenceEvalueTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="iterativeSpectraEvalueLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="E-value Cutoff for Spectra (0 means all)"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="iterativeSpectraEvalueTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="iterativeSpectraEvalueTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="iterativeReplaceEvalueLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="E-value Cutoff to Replace a Hit (0 means keep best)"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="iterativeReplaceEvalueTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="iterativeReplaceEvalueTxtKeyReleased"/>
+                  </Events>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="semiEnzymaticParametersPanel">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="e6" green="e6" red="e6" type="rgb"/>
+                </Property>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="Semi-Enzymatic">
+                    <Property name="tabTitle" type="java.lang.String" value="Semi-Enzymatic"/>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Component id="peptideLengthJLabel" min="-2" pref="370" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="minPepLengthTxt" pref="84" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideLengthDividerLabel1" min="-2" pref="4" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="maxPepLengthTxt" pref="84" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="peptideLengthJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="peptideLengthDividerLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JTextField" name="maxPepLengthTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPepLengthTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="peptideLengthDividerLabel1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="-"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="minPepLengthTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPepLengthTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="peptideLengthJLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Peptide Length (min - max)"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

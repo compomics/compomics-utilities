@@ -405,18 +405,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         sequenceMappingCmb = new javax.swing.JComboBox();
         cleaveNterminalMethionineCmb = new javax.swing.JComboBox();
         cleaveNterminalMethionineLbl = new javax.swing.JLabel();
-        semiEnzymaticParametersPanel = new javax.swing.JPanel();
-        maxPepLengthTxt = new javax.swing.JTextField();
-        peptideLengthDividerLabel1 = new javax.swing.JLabel();
-        minPepLengthTxt = new javax.swing.JTextField();
-        peptideLengthJLabel = new javax.swing.JLabel();
-        iterativeSearchSettingsPanel = new javax.swing.JPanel();
-        iterativeSequenceEvalueLbl = new javax.swing.JLabel();
-        iterativeSequenceEvalueTxt = new javax.swing.JTextField();
-        iterativeSpectraEvalueLbl = new javax.swing.JLabel();
-        iterativeSpectraEvalueTxt = new javax.swing.JTextField();
-        iterativeReplaceEvalueLbl = new javax.swing.JLabel();
-        iterativeReplaceEvalueTxt = new javax.swing.JTextField();
         advancedSearchSettingsPanel = new javax.swing.JPanel();
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel = new javax.swing.JLabel();
         minPrecChargeMultipleChargedFragmentsTxt = new javax.swing.JTextField();
@@ -454,6 +442,18 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         consecutiveIonProbabilityLbl = new javax.swing.JLabel();
         nHitsPerSpectrumPerChargeLbl = new javax.swing.JLabel();
         nHitsPerSpectrumPerChargeTxt = new javax.swing.JTextField();
+        iterativeSearchSettingsPanel = new javax.swing.JPanel();
+        iterativeSequenceEvalueLbl = new javax.swing.JLabel();
+        iterativeSequenceEvalueTxt = new javax.swing.JTextField();
+        iterativeSpectraEvalueLbl = new javax.swing.JLabel();
+        iterativeSpectraEvalueTxt = new javax.swing.JTextField();
+        iterativeReplaceEvalueLbl = new javax.swing.JLabel();
+        iterativeReplaceEvalueTxt = new javax.swing.JTextField();
+        semiEnzymaticParametersPanel = new javax.swing.JPanel();
+        maxPepLengthTxt = new javax.swing.JTextField();
+        peptideLengthDividerLabel1 = new javax.swing.JLabel();
+        minPepLengthTxt = new javax.swing.JTextField();
+        peptideLengthJLabel = new javax.swing.JLabel();
         outputParametersPanel = new javax.swing.JPanel();
         omssaOutputFormatComboBox = new javax.swing.JComboBox();
         omssaOutputFormatLabel = new javax.swing.JLabel();
@@ -550,7 +550,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         eliminatePrecursorCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        chargeEstimationCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        chargeEstimationCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Use Range", "Believe Input File" }));
 
         precursorChargeEstimationLabel.setText("Precursor Charge Estimation");
 
@@ -702,121 +702,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         tabbedPane.addTab("Database", databaseProcessingPanel);
 
-        semiEnzymaticParametersPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxPepLengthTxtKeyReleased(evt);
-            }
-        });
-
-        peptideLengthDividerLabel1.setText("-");
-
-        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                minPepLengthTxtKeyReleased(evt);
-            }
-        });
-
-        peptideLengthJLabel.setText("Peptide Length (min - max)");
-
-        javax.swing.GroupLayout semiEnzymaticParametersPanelLayout = new javax.swing.GroupLayout(semiEnzymaticParametersPanel);
-        semiEnzymaticParametersPanel.setLayout(semiEnzymaticParametersPanelLayout);
-        semiEnzymaticParametersPanelLayout.setHorizontalGroup(
-            semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, semiEnzymaticParametersPanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peptideLengthDividerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                .addGap(25, 25, 25))
-        );
-        semiEnzymaticParametersPanelLayout.setVerticalGroup(
-            semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(semiEnzymaticParametersPanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(peptideLengthJLabel)
-                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(peptideLengthDividerLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        tabbedPane.addTab("Semi-Enzymatic", semiEnzymaticParametersPanel);
-
-        iterativeSearchSettingsPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        iterativeSequenceEvalueLbl.setText("E-value Cutoff for Sequences (0 means all)");
-
-        iterativeSequenceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iterativeSequenceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                iterativeSequenceEvalueTxtKeyReleased(evt);
-            }
-        });
-
-        iterativeSpectraEvalueLbl.setText("E-value Cutoff for Spectra (0 means all)");
-
-        iterativeSpectraEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iterativeSpectraEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                iterativeSpectraEvalueTxtKeyReleased(evt);
-            }
-        });
-
-        iterativeReplaceEvalueLbl.setText("E-value Cutoff to Replace a Hit (0 means keep best)");
-
-        iterativeReplaceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iterativeReplaceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                iterativeReplaceEvalueTxtKeyReleased(evt);
-            }
-        });
-
-        javax.swing.GroupLayout iterativeSearchSettingsPanelLayout = new javax.swing.GroupLayout(iterativeSearchSettingsPanel);
-        iterativeSearchSettingsPanel.setLayout(iterativeSearchSettingsPanelLayout);
-        iterativeSearchSettingsPanelLayout.setHorizontalGroup(
-            iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iterativeSequenceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iterativeSpectraEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iterativeReplaceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(25, 25, 25))
-        );
-        iterativeSearchSettingsPanelLayout.setVerticalGroup(
-            iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iterativeSequenceEvalueLbl)
-                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iterativeSpectraEvalueLbl)
-                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iterativeReplaceEvalueLbl)
-                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        tabbedPane.addTab("Iterative Search", iterativeSearchSettingsPanel);
-
         advancedSearchSettingsPanel.setBackground(new java.awt.Color(230, 230, 230));
         advancedSearchSettingsPanel.setPreferredSize(new java.awt.Dimension(518, 143));
 
@@ -928,7 +813,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
 
         searchPositiveIonsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        forwardIonsFirstLbl.setText("Search Forward Ions First");
+        forwardIonsFirstLbl.setText("Search First Forward Ion (b1)");
 
         forwardIonsFirstCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -1141,7 +1026,122 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tabbedPane.addTab("Advanced Search", advancedSearchSettingsPanel);
+        tabbedPane.addTab("Search", advancedSearchSettingsPanel);
+
+        iterativeSearchSettingsPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        iterativeSequenceEvalueLbl.setText("E-value Cutoff for Sequences (0 means all)");
+
+        iterativeSequenceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iterativeSequenceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                iterativeSequenceEvalueTxtKeyReleased(evt);
+            }
+        });
+
+        iterativeSpectraEvalueLbl.setText("E-value Cutoff for Spectra (0 means all)");
+
+        iterativeSpectraEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iterativeSpectraEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                iterativeSpectraEvalueTxtKeyReleased(evt);
+            }
+        });
+
+        iterativeReplaceEvalueLbl.setText("E-value Cutoff to Replace a Hit (0 means keep best)");
+
+        iterativeReplaceEvalueTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iterativeReplaceEvalueTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                iterativeReplaceEvalueTxtKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout iterativeSearchSettingsPanelLayout = new javax.swing.GroupLayout(iterativeSearchSettingsPanel);
+        iterativeSearchSettingsPanel.setLayout(iterativeSearchSettingsPanelLayout);
+        iterativeSearchSettingsPanelLayout.setHorizontalGroup(
+            iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iterativeSequenceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iterativeSpectraEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iterativeReplaceEvalueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(25, 25, 25))
+        );
+        iterativeSearchSettingsPanelLayout.setVerticalGroup(
+            iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iterativeSearchSettingsPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iterativeSequenceEvalueLbl)
+                    .addComponent(iterativeSequenceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iterativeSpectraEvalueLbl)
+                    .addComponent(iterativeSpectraEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(iterativeSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iterativeReplaceEvalueLbl)
+                    .addComponent(iterativeReplaceEvalueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Iterative Search", iterativeSearchSettingsPanel);
+
+        semiEnzymaticParametersPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        peptideLengthDividerLabel1.setText("-");
+
+        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        peptideLengthJLabel.setText("Peptide Length (min - max)");
+
+        javax.swing.GroupLayout semiEnzymaticParametersPanelLayout = new javax.swing.GroupLayout(semiEnzymaticParametersPanel);
+        semiEnzymaticParametersPanel.setLayout(semiEnzymaticParametersPanelLayout);
+        semiEnzymaticParametersPanelLayout.setHorizontalGroup(
+            semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, semiEnzymaticParametersPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(peptideLengthDividerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                .addGap(25, 25, 25))
+        );
+        semiEnzymaticParametersPanelLayout.setVerticalGroup(
+            semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(semiEnzymaticParametersPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(semiEnzymaticParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peptideLengthJLabel)
+                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideLengthDividerLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Semi-Enzymatic", semiEnzymaticParametersPanel);
 
         outputParametersPanel.setBackground(new java.awt.Color(230, 230, 230));
 

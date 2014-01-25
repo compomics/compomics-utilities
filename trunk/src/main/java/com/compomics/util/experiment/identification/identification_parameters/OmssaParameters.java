@@ -59,7 +59,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     /**
      * Map sequence in libraries in memory
      */
-    private Boolean memoryMappedSequenceLibraries = true;
+    private Boolean memoryMappedSequenceLibraries = false;
     /**
      * Number of isotopic peaks to consider.
      */

@@ -4,6 +4,10 @@
 
 IdentificationParametersCLI can be used to create an identification parameter file via the command line, for use in tools like [http://searchgui.googlecode.com SearchGUI], [http://denovogui.googlecode.com DeNovoGUI] and [http://peptide-shaker.googlecode.com  PeptideShaker].
 
+Note that in most cases it is not recommended to use the command line to generate the identification parameter file, but rather to set up the wanted identification parameter file in the GUI, save it, and than use it in the command line processing.
+
+Also note that most OMSSA, X!Tandem and PepNovo+ settings listed below are for export usage only. Changes from the default settings should be done with care.
+
 *General command lines:*
 
 {{{

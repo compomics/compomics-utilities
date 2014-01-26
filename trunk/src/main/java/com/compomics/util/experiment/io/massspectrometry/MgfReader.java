@@ -184,6 +184,7 @@ public class MgfReader {
         int cpt = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
         int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
+        boolean peakPicked = true;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -304,9 +305,12 @@ public class MgfReader {
             } else if (!line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
-                    new Double(values[0]);
-                    new Double(values[1]);
-                    peakCount++; // @TODO: is there a better/faster way of doing this?
+                    Double mz = new Double(values[0]);
+                    Double intensity = new Double(values[1]);
+                    if (peakPicked && intensity == 0) {
+                        peakPicked = false;
+                    }
+                    peakCount++;
                 } catch (Exception e1) {
                     // ignore comments and all other lines
                 }
@@ -325,7 +329,7 @@ public class MgfReader {
 
         long lastModified = mgfFile.lastModified();
 
-        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, lastModified);
+        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified);
     }
 
     /**
@@ -452,7 +456,7 @@ public class MgfReader {
      * fails
      */
     public static void renameDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
- 
+
         ArrayList<String> spectrumTitles = new ArrayList<String>();
 
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
@@ -560,6 +564,7 @@ public class MgfReader {
             long typicalSize = 0;
             double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
             int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
+            boolean peakPicked = true;
 
             HashMap<String, Long> indexes = new HashMap<String, Long>();
             String currentName = splittedName + "_" + fileCounter + ".mgf";
@@ -593,7 +598,7 @@ public class MgfReader {
 
                             long lastModified = testFile.lastModified();
 
-                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, lastModified));
+                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified));
 
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
@@ -694,9 +699,12 @@ public class MgfReader {
                 } else if (!line.equals("")) {
                     try {
                         String values[] = line.split("\\s+");
-                        new Double(values[0]);
-                        new Double(values[1]);
-                        peakCount++; // @TODO: is there a better/faster way of doing this?
+                        Double mz = new Double(values[0]);
+                        Double intensity = new Double(values[1]);
+                        if (peakPicked && intensity == 0) {
+                            peakPicked = false;
+                        }
+                        peakCount++;
                     } catch (Exception e1) {
                         // ignore comments and all other lines
                     }
@@ -709,7 +717,7 @@ public class MgfReader {
 
             long lastModified = testFile.lastModified();
 
-            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, lastModified));
+            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified));
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);

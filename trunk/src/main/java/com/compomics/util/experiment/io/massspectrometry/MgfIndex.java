@@ -57,6 +57,11 @@ public class MgfIndex extends ExperimentObject {
      * The maximal peak count.
      */
     private Integer maxPeakCount;
+    /**
+     * Indicates if the spectra seem to be peak picked or not. A null value
+     * indicated that the check for peak picking was not performed.
+     */
+    private Boolean peakPicked = null;
 
     /**
      * Constructor.
@@ -70,11 +75,12 @@ public class MgfIndex extends ExperimentObject {
      * @param maxIntensity the maximum precursor intensity
      * @param maxCharge the maximum peak precursor charge
      * @param maxPeakCount the maximum peak count
+     * @param peakPicked indicates if the spectra seem to be peak picked or not
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
-            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, long lastModified) {
+            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = null; //information not provided
         this.indexMap = indexMap;
@@ -86,6 +92,7 @@ public class MgfIndex extends ExperimentObject {
         this.maxCharge = maxCharge;
         this.maxPeakCount = maxPeakCount;
         this.lastModified = lastModified;
+        this.peakPicked = peakPicked;
     }
 
     /**
@@ -102,11 +109,12 @@ public class MgfIndex extends ExperimentObject {
      * @param maxIntensity the maximum precursor intensity
      * @param maxCharge the maximum peak precursor charge
      * @param maxPeakCount the maximum peak count
+     * @param peakPicked indicates if the spectra seem to be peak picked or not
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
-            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, long lastModified) {
+            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
@@ -118,6 +126,7 @@ public class MgfIndex extends ExperimentObject {
         this.maxCharge = maxCharge;
         this.maxPeakCount = maxPeakCount;
         this.lastModified = lastModified;
+        this.peakPicked = peakPicked;
     }
 
     /**
@@ -298,5 +307,28 @@ public class MgfIndex extends ExperimentObject {
      */
     public Long getLastModified() {
         return lastModified;
+    }
+
+    /**
+     * Returns true of the indexed file seems to contain only peak picked
+     * spectra.
+     *
+     * @return true of the indexed file seems to contain only peak picked
+     * spectra
+     */
+    public Boolean isPeakPicked() {
+        if (peakPicked == null) {
+            peakPicked = true;
+        }
+        return peakPicked;
+    }
+
+    /**
+     * Set if the indexed file seems to contain only peak picked spectra or not.
+     *
+     * @param peakPicked the peakPicked to set
+     */
+    public void setPeakPicked(Boolean peakPicked) {
+        this.peakPicked = peakPicked;
     }
 }

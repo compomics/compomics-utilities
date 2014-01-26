@@ -385,8 +385,8 @@ public class ModificationProfile implements Serializable {
      * @param modificationName the name of the modification
      */
     public void removeRefinementFixedModification(String modificationName) {
-        while (refinementVariableModifications.contains(modificationName)) {
-            refinementVariableModifications.remove(modificationName);
+        while (refinementFixedModifications.contains(modificationName)) {
+            refinementFixedModifications.remove(modificationName);
         }
     }
 

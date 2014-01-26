@@ -9,92 +9,79 @@
         <H2>OMSSA Advanced Settings</H2>
 
         <p align="justify">
-            The Open Mass Spectrometry Search Engine (<a href="http://www.ncbi.nlm.nih.gov/pubmed/15473683">OMSSA</a>) comes with many options allowing you to fine tune the search settings. These settings aim to be used by advanced users only, it is highly recommended to carefully test any change to the default settings, to document them and report them in any publication/report.
-			<br>
-			Running OMSSA with the -help option will display all details of the available settings. If you are missing a parameter, please contact the developpers.
+            The Open Mass Spectrometry Search Engine (<a href="http://www.ncbi.nlm.nih.gov/pubmed/15473683">OMSSA</a>) comes with many options for 
+            fine tuning the search settings. Note that these settings aim to be used by advanced users only. It is highly recommended to carefully test any 
+            changes from the default settings, to document them and report them in any publication/report.
             <br><br>
+            Running OMSSA with the -help option will display all details of the available settings. If you are missing a parameter, please contact the developers.
         </p>
 
         <H3>Spectrum</H3>
-
-        <p align="left">
-            The <i>Spectrum</i> category groups all settings related to the spectrum preprocessing:<br>
-			- Low intensity cutoff as fraction of max peak (-cl command line option)<br>
-			- High intensity cutoff as fraction of max peak (-ch command line option)<br>
-			- Intensity cutoff increment as fraction of max peak (-ci command line option)<br>
-			- The minimum number of m/< values a spectrum must have to be searched (-hm command line option)<br>
-			- Eliminate charge reduced precursors in spectra (-cp command line option)<br>
-			- How should precursor charges be determined? (-zcc command line option)<br>
-			- Should charge plus one be determined algorithmically? (-zc command line option)<br>
-			- Fraction of peaks below precursor used to determine if spectrum is charge 1 (-z1 command line option)<br>
-			- Minimum number of precursors that match a spectrum (-pc command line option)<br>
-			- Charge dependency of precursor mass tolerance (-tez command line option)
-            <br><br>
-        </p>
+        The <i>Spectrum</i> category groups all settings related to the spectrum preprocessing:
+        <ul>
+            <li>Low intensity cutoff as fraction of max peak (-cl command line option)</li>
+            <li>High intensity cutoff as fraction of max peak (-ch command line option)</li>
+            <li>Intensity cutoff increment as fraction of max peak (-ci command line option)</li>
+            <li>The minimum number of m/< values a spectrum must have to be searched (-hm command line option)</li>
+            <li>Eliminate charge reduced precursors in spectra (-cp command line option)</li>
+            <li>How should precursor charges be determined? (-zcc command line option)</li>
+            <li>Should charge plus one be determined algorithmically? (-zc command line option)</li>
+            <li>Fraction of peaks below precursor used to determine if spectrum is charge 1 (-z1 command line option)</li>
+            <li>Minimum number of precursors that match a spectrum (-pc command line option)</li>
+            <li>Charge dependency of precursor mass tolerance (-tez command line option)</li>
+        </ul>
 
         <H3>Database</H3>
-
-        <p align="left">
-            The <i>Database</i> category groups all settings related to the database preprocessing:<br>
-			- Use memory mapped sequence libraries (-umm command line option)<br>
-			- N-term methionine should be cleaved (-mnm command line option)
-            <br><br>
-        </p>
+        The <i>Database</i> category groups all settings related to the database preprocessing:
+        <ul>
+            <li>Use memory mapped sequence libraries (-umm command line option)</li>
+            <li>N-term methionine should be cleaved (-mnm command line option)</li>
+        </ul>
 
         <H3>Search</H3>
-
-        <p align="left">
-            The <i>Search</i> category groups all settings related to the search itself:<br>
-			- Minimum precursor charge to start considering multiply charged products (-zt command line option)<br>
-			- When doing multiisotope search, the number of isotopic peaks to search (0 equals monoisotopic peak only, -mnm command line option)<br>
-			- Threshold in Da above which the mass of neutron should be added in exact mass search (-tex command line option)<br>
-			- Single charge window in Da (-w1 command line option)<br>
-			- Double charge window in Da (-w2 command line option)<br>
-			- Number of peaks allowed in single charge window (0 equals number of ion species, -h1 command line option)<br>
-			- Number of peaks allowed in double charge window (0 equals number of ion species, -h2 command line option)<br>
-			- Number of m/z values corresponding to the most intense peaks that must include one match to the theoretical peptide (-ht command line option)<br>
-			- The minimum number of m/z values a spectrum must have to be searched (-hs command line option)<br>
-			- The maximum number of mass ladders to generate per database peptide (-mm command line option)<br>
-			- Maximum product charge to search (-zoh command line option)<br>
-			- Search using negative or positive ions (-zn command line option)<br>
-			- Should first forward (b1) product ions be in search (-sb1 command line option)<br>
-			- Should c terminus ions be searched (-sct command line option)<br>
-			- Max number of ions in search series being searched (-sp command line option)<br>
-			- Turn off correlation correction score (-scorr command line option)<br>
-			- Probability of consecutive ion (used in correlation correction, -scorp command line option)<br>
-			- Number of hits retained per precursor charge state per spectrum during the search (-hl command line option)
-            <br><br>
-        </p>
+        The <i>Search</i> category groups all settings related to the search itself:
+        <ul>
+            <li>Minimum precursor charge to start considering multiply charged products (-zt command line option)</li>
+            <li>When doing multi isotope search, the number of isotopic peaks to search (0 equals monoisotopic peak only, -mnm command line option)</li>
+            <li>Threshold in Da above which the mass of neutron should be added in exact mass search (-tex command line option)</li>
+            <li>Single charge window in Da (-w1 command line option)</li>
+            <li>Double charge window in Da (-w2 command line option)</li>
+            <li>Number of peaks allowed in single charge window (0 equals number of ion species, -h1 command line option)</li>
+            <li>Number of peaks allowed in double charge window (0 equals number of ion species, -h2 command line option)</li>
+            <li>Number of m/z values corresponding to the most intense peaks that must include one match to the theoretical peptide (-ht command line option)</li>
+            <li>The minimum number of m/z values a spectrum must have to be searched (-hs command line option)</li>
+            <li>The maximum number of mass ladders to generate per database peptide (-mm command line option)</li>
+            <li>Maximum product charge to search (-zoh command line option)</li>
+            <li>Search using negative or positive ions (-zn command line option)</li>
+            <li>Should first forward (b1) product ions be in search (-sb1 command line option)</li>
+            <li>Should c terminus ions be searched (-sct command line option)</li>
+            <li>Max number of ions in search series being searched (-sp command line option)</li>
+            <li>Turn off correlation correction score (-scorr command line option)</li>
+            <li>Probability of consecutive ion (used in correlation correction, -scorp command line option)</li>
+            <li>Number of hits retained per precursor charge state per spectrum during the search (-hl command line option)</li>
+        </ul>
 
         <H3>Iterative Search</H3>
-
-        <p align="left">
-            The <i>Iterative Search</i> category groups all settings related to the thresholding of the iterative search:<br>
-			- Evalue threshold to include sequences in the iterative search (0 equals all, -is command line option)<br>
-			- Evalue threshold to iteratively search a spectrum again (0 equals always, -ii command line option)<br>
-			- Evalue threshold to replace a hit (0 equals only if better, -ir command line option)
-            <br><br>
-        </p>
+        The <i>Iterative Search</i> category groups all settings related to the thresholding of the iterative search:
+        <ul>
+            <li>E-value threshold to include sequences in the iterative search (0 equals all, -is command line option)</li>
+            <li>E-value threshold to iteratively search a spectrum again (0 equals always, -ii command line option)</li>
+            <li>E-value threshold to replace a hit (0 equals only if better, -ir command line option)</li>
+        </ul>
 
         <H3>Semi-Enzymatic</H3>
-
-        <p align="left">
-            The <i>Semi-Enzymatic</i> category groups all settings related to the use of OMSSA in no-enzyme and semi-tryptic searches mode:<br>
-			- Minimum and maximum sizes of peptides for no-enzyme and semi-tryptic searches (0 equals none, -no and -nox command line options)<br>
-            <br><br>
-        </p>
+        The <i>Semi-Enzymatic</i> category groups all settings related to the use of OMSSA in no-enzyme and semi-tryptic searches mode:
+        <ul>
+            <li>Minimum and maximum sizes of peptides for no-enzyme and semi-tryptic searches (0 equals none, -no and -nox command line options)</li>
+        </ul>
 
         <H3>Output</H3>
+        The <i>Output</i> category groups all settings related to the file output:
+        <ul>
+            <li>The maximum evalue allowed in the hit list (for accurate FNR estimation keep this value as high as possible, -he command line option)</li>
+            <li>Maximum number of hits reported per spectrum (0 equals all, for accurate PTM scoring retain all, -hc command line option)</li>
+            <li>OMSSA output format (for compatibility with PeptideShaker use omx, -ox or -oc command line option)</li>
+        </ul>
 
-        <p align="left">
-            The <i>Output</i> category groups all settings related to the file output:<br>
-			- The maximum evalue allowed in the hit list (for accurate FNR estimation keep this value as high as possible, -he command line option)<br>
-			- Maximum number of hits reported per spectrum (0 equals all, for accurate PTM scoring retain all, -hc command line option)<br>
-			- OMSSA output format (for compatibility with PeptideShaker use omx, -ox or -oc command line option)
-            <br><br>
-        </p>
-		
-		
-        <br><br>
     </BODY>
 </HTML>

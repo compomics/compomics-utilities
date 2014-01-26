@@ -68,9 +68,9 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
 
             if (!IdentificationParametersInputBean.isValidStartup(line)) {
                 PrintWriter lPrintWriter = new PrintWriter(System.out);
-                lPrintWriter.print(System.getProperty("line.separator") + "======================" + System.getProperty("line.separator"));
+                lPrintWriter.print(System.getProperty("line.separator") + "============================" + System.getProperty("line.separator"));
                 lPrintWriter.print("IdentificationParametersCLI" + System.getProperty("line.separator"));
-                lPrintWriter.print("======================" + System.getProperty("line.separator"));
+                lPrintWriter.print("============================" + System.getProperty("line.separator"));
                 lPrintWriter.print(AbstractIdentificationParametersCli.getHeader());
                 lPrintWriter.print(getOptionsAsString());
                 lPrintWriter.flush();
@@ -96,7 +96,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             if (input.isListMods()) {
                 printModifications();
             } else {
-
                 File outputFile = input.getDestinationFile();
                 SearchParameters searchParameters = input.getSearchParameters();
                 SearchParameters.saveIdentificationParameters(searchParameters, outputFile);
@@ -114,17 +113,25 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      */
     public void printModifications() {
 
-        System.out.println("Available modifications:" + System.getProperty("line.separator"));
-        System.out.println("    Default modifications:");
+        System.out.println(System.getProperty("line.separator") 
+                + "========================" + System.getProperty("line.separator")
+                + "Available Modifications:" + System.getProperty("line.separator")
+                + "========================"
+                + System.getProperty("line.separator"));
+        System.out.println("----------------------");
+        System.out.println("Default Modifications:");
+        System.out.println("----------------------");
         for (String ptmName : ptmFactory.getDefaultModificationsOrdered()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
-            System.out.println(getProteinLine(ptm));
+            System.out.println(getPtmLine(ptm));
         }
         System.out.println();
-        System.out.println("    User modifications:");
+        System.out.println("-------------------");
+        System.out.println("User Modifications:");
+        System.out.println("-------------------");
         for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
-            System.out.println(getProteinLine(ptm));
+            System.out.println(getPtmLine(ptm));
         }
         System.out.println();
     }
@@ -136,7 +143,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      *
      * @return the description line for a PTM
      */
-    private String getProteinLine(PTM ptm) {
+    private String getPtmLine(PTM ptm) {
         double ptmMass = ptm.getMass();
         String sign = "";
         if (ptmMass > 0) {
@@ -172,7 +179,8 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 target = "Peptide N-terminus starting with " + ptm.getPattern().toString();
                 break;
         }
-        return ptm.getName() + " (" + sign + ptm.getMass() + " targeting " + target + " )";
+
+        return ptm.getName() + " (" + sign + ptm.getMass() + " targeting " + target + ")";
     }
 
     /**
@@ -221,7 +229,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 + System.getProperty("line.separator")
                 + "Use the out option to specify the output file or the mods option to list the available modifications." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
-                + "For further help see http://searchgui.googlecode.com and http://code.google.com/p/searchgui/wiki/IdentificationParametersCLI." + System.getProperty("line.separator")
+                + "For further help see http://code.google.com/p/searchgui/wiki/IdentificationParametersCLI." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
                 + "Or contact the developers at https://groups.google.com/group/peptide-shaker." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")

@@ -260,7 +260,7 @@ public class ObjectsCache {
      * is lower than 99% of the heap
      */
     public boolean memoryCheck() {
-        return Runtime.getRuntime().totalMemory() < (long) (memoryShare * Runtime.getRuntime().maxMemory());
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() < (long) (memoryShare * Runtime.getRuntime().maxMemory());
     }
 
     /**

@@ -9,17 +9,27 @@
         <H2>Search Settings</H2>
 
         <p align="justify">
-            The search settings allow you to tune the search for your experiment, workflow and instrument. These settings have a strong impact on the identification results, for detailed help see our <a href="http://compomics.com/bioinformatics-for-proteomics/identification/">free tutorials</a> on protein identification. To optimise these settings you can also see <a href="http://www.ncbi.nlm.nih.gov/pubmed/21500347">here</a>.
+            The search settings allow you to tune the search for your experiment, workflow and instrument. These settings have a strong impact 
+            on the identification results, for detailed help see our <a href="http://compomics.com/bioinformatics-for-proteomics/identification/">free tutorials</a> 
+            on protein identification. To optimize these settings you can also see <a href="http://www.ncbi.nlm.nih.gov/pubmed/21500347">Vaudel et al. Proteomics. 2011 May;11(10):2105-14.</a>.
+            <br><br>
         </p>
 
         <H3>Database</H3>
 
         <p align="justify">
-            The first setting required is the protein sequences database. The database must be in the <a href="http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml">fasta format</a>, most databases formats are recognised. We recommend the use of <a href="http://www.uniprot.org/">UniProt databases</a>, if you are using home made databases please refer to our <a href="https://code.google.com/p/searchgui/wiki/DatabaseHelp">online help</a>.
-            <br>
-            Only proteins present in the database will be identified, your database must hence be as comprehensive as possible. However, large databases (typically >100,000 sequences) are challenging for the algorithms and result in longer processing time and higher hardware requirement. Moreover, large databases leave more room for the search engine to make errors resulting in false positive identifications. It is hence advised to tailor your database to fit the proteins in your sample - by restricting to a given species for example.
-            <br>
-            Finally, note that search engines will make their best to match unrecognised spectra to any resembling sequence. These false identifications are typically not accounted for by target/decoy error rates (see <a href="http://www.ncbi.nlm.nih.gov/pubmed/21995378">here</a> for more details). It is for example crucial to include known contaminants in your database (see <a href="http://www.ncbi.nlm.nih.gov/pubmed/21695130">here</a> for more details and <a href="http://www.matrixscience.com/help/seq_db_setup_contaminants.html">here</a> for lists of standard contaminants).
+            The first setting required is the protein sequences database. The database has to be in the <a href="http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml">FASTA format</a>, 
+            and most common databases formats are recognized. We recommend the use of <a href="http://www.uniprot.org/">UniProt databases</a>, if you are using home made databases please refer 
+            to our <a href="https://code.google.com/p/searchgui/wiki/DatabaseHelp">online help</a>.
+            <br><br>
+            Only proteins present in the database will be identified, your database should hence be as comprehensive as possible. However, large databases (typically >100,000 sequences) 
+            are challenging for the algorithms and result in longer processing times and increased hardware requirements. Moreover, large databases leave more room for the search engine to 
+            make errors resulting in false positive identifications. It is hence advised to tailor your database to fit the proteins in your sample, e.g., by restricting to a given species.
+            <br><br>
+            Finally, note that search engines will make their best to match unrecognized spectra to any resembling sequence. These false identifications are typically not accounted 
+            for by target/decoy error rates (see <a href="http://www.ncbi.nlm.nih.gov/pubmed/21995378">Colaert at al. J Proteome Res. 2011 Dec 2;10(12):5555-61</a> for more details). 
+            It is for example crucial to include known contaminants in your database (see <a href="http://www.ncbi.nlm.nih.gov/pubmed/21695130">Knudsen et al. PLoS One. 2011;6(6):e20873</a> for more details and 
+            <a href="http://www.matrixscience.com/help/seq_db_setup_contaminants.html">here</a> for lists of standard contaminants).
             <br><br>
         </p>
 
@@ -29,25 +39,25 @@
             There are two types of modifications, fixed and variable. Fixed modifications will 
             be added to every residue that can be modified by the given modification, while the variable modifications 
             are sometimes added and sometimes not. Which type to choose depends on your experimental setup.
-            <br>
+            <br><br>
             You can add multiple modifications of each type, but remember that the more variable modifications you 
             add the more complex the search becomes which increases the risk of false positives.
-            <br>
+            <br><br>
             Initially only the most used modifications are shown. To show all modifications simply select 'All 
             Modifications' in the drop down menu above the list of modifications. Here you can also see more 
             details about each modification. Note that you can add and edit your own modifications.
             <br><br>
         </p>
 
-        <H3>Enzyme and fragmentation</H3>
+        <H3>Enzyme and Fragmentation</H3>
 
         <p align="justify">
             You can set the enzyme used for protein digestion, if your enzyme is not available please <a href="http://groups.google.com/group/peptide-shaker">contact us</a>.
-            <br>
-            The fragmentation settings allow you to target the ion species expected upon fragmentation (see more help on fragmentation <a href="http://www.matrixscience.com/help/fragmentation_help.html">here</a>) according to your instrument resolution.
+            <br><br>
+            The fragmentation settings allow you to target the ion species expected upon fragmentation (see more help on fragmentation 
+            <a href="http://www.matrixscience.com/help/fragmentation_help.html">here</a>) according to your instrument resolution.
             <br><br>
         </p>
 
-        <br><br>
     </BODY>
 </HTML>

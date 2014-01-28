@@ -4,7 +4,6 @@ import com.compomics.util.io.export.ExportFactory;
 import com.compomics.util.io.export.ExportFeature;
 import com.compomics.util.io.export.ExportScheme;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;

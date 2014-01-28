@@ -1,6 +1,5 @@
 package com.compomics.util.io.export;
 
-import com.compomics.util.io.export.ExportFeature;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;

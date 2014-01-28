@@ -1,21 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.io.export;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * An export factory manages and generates reports
+ * An export factory manages and generates reports.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public interface ExportFactory extends Serializable {
-    
 
     /**
      * Returns the export scheme indexed by the given name.
@@ -24,6 +17,7 @@ public interface ExportFactory extends Serializable {
      * @return the desired export scheme
      */
     public ExportScheme getExportScheme(String schemeName);
+
     /**
      * Removes a user scheme.
      *
@@ -45,11 +39,12 @@ public interface ExportFactory extends Serializable {
      * @return the implemented sections
      */
     public ArrayList<String> getImplementedSections();
+
     /**
      * Returns the export features implemented for the given section.
-     * 
-     * @param sectionName the name of the sectoin of interest
-     * 
+     *
+     * @param sectionName the name of the section of interest
+     *
      * @return a list of export features
      */
     public ArrayList<ExportFeature> getExportFeatures(String sectionName);

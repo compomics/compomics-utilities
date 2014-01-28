@@ -1,8 +1,8 @@
 package com.compomics.util.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
-import com.compomics.util.gui.export_graphics.ExportGraphicsDialog;
-import com.compomics.util.gui.export_graphics.ExportGraphicsDialogParent;
+import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
+import com.compomics.util.gui.export.graphics.ExportGraphicsDialogParent;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
